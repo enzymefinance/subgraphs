@@ -58,6 +58,9 @@ export function handleNewFund(event: NewFund): void {
   fund.version = version;
   fund.routes = routes.id;
   fund.name = hexToAscii(contract.name());
-  fund.shutdown = contract.isShutDown();
+  fund.creationTime = contract.creationTime();
+  fund.isShutdown = contract.isShutDown();
+  fund.manager = contract.manager().toHexString();
+  fund.creator = contract.creator().toHexString();
   fund.save();
 }

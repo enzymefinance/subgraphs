@@ -23,7 +23,10 @@ type Routes @entity {
 type Fund @entity {
   id: ID!
   name: String!
-  shutdown: Boolean!
-  version: String!
+  manager: String!
+  creator: String!
+  creationTime: BigInt!
+  isShutdown: Boolean!
+  version: Universe!
   routes: Routes!
 }
