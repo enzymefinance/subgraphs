@@ -1,0 +1,47 @@
+specVersion: 0.0.1
+description: Melon protocol
+repository: https://github.com/melonproject/melon-subgraph
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: Version
+    network: mainnet
+    source:
+      address: '0x01Bde0b02740D6311e4a87CA112DeEEddb057EFB'
+      abi: Version
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.2
+      language: wasm/assemblyscript
+      file: ./src/mappings/Version.ts
+      entities:
+        - Universe
+      abis:
+        - name: Version
+          file: ./abis/Version.json
+        - name: Hub
+          file: ./abis/Hub.json
+      eventHandlers:
+        - event: NewFund(address,address,address[12])
+          handler: handleNewFund
+    templates:
+      - name: Hub
+        kind: ethereum/contract
+        network: mainnet
+        source:
+          abi: Hub
+        mapping:
+          kind: ethereum/events
+          apiVersion: 0.0.2
+          language: wasm/assemblyscript
+          file: ./src/mappings/Hub.ts
+          entities:
+            - Hub
+            - Routes
+          abis:
+            - name: Hub
+              file: ./abis/Hub.json
+          eventHandlers:
+            - event: FundShutDown()
+              handler: handleFundShutDown

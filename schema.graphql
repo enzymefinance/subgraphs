@@ -1,0 +1,29 @@
+type Universe @entity {
+  id: ID!
+  count: Int!
+  funds: [Fund!]! @derivedFrom(field: "version")
+}
+
+type Routes @entity {
+  id: ID!
+  accounting: String!
+  feeManager: String!
+  participation: String!
+  policyManager: String!
+  priceSource: String!
+  registry: String!
+  shares: String!
+  trading: String!
+  vault: String!
+  version: String!
+  engine: String!
+  mlnToken: String!
+}
+
+type Fund @entity {
+  id: ID!
+  name: String!
+  shutdown: Boolean!
+  version: String!
+  routes: Routes!
+}
