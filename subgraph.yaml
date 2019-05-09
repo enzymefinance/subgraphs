@@ -16,12 +16,13 @@ dataSources:
       language: wasm/assemblyscript
       file: ./src/mappings/Version.ts
       entities:
-        - Universe
+        - Hub
+        - Routes
       abis:
         - name: Version
-          file: ./abis/Version.json
+          file: ./node_modules/@melonproject/protocol/out/Version.abi.json
         - name: Hub
-          file: ./abis/Hub.json
+          file: ./node_modules/@melonproject/protocol/out/Hub.abi.json
       eventHandlers:
         - event: NewFund(address,address,address[12])
           handler: handleNewFund
@@ -38,10 +39,30 @@ dataSources:
           file: ./src/mappings/Hub.ts
           entities:
             - Hub
-            - Routes
           abis:
             - name: Hub
-              file: ./abis/Hub.json
+              file: ./node_modules/@melonproject/protocol/out/Hub.abi.json
           eventHandlers:
             - event: FundShutDown()
               handler: handleFundShutDown
+      - name: Participation
+        kind: ethereum/contract
+        network: mainnet
+        source:
+          abi: Participation
+        mapping:
+          kind: ethereum/events
+          apiVersion: 0.0.2
+          language: wasm/assemblyscript
+          file: ./src/mappings/Participation.ts
+          entities:
+            - Investor
+            - Investment
+          abis:
+            - name: Participation
+              file: ./node_modules/@melonproject/protocol/out/Participation.abi.json
+          eventHandlers:
+            - event: RequestExecution(address,address,address,uint256,uint256)
+              handler: handleRequestExecution
+            - event: Redemption(address,address[],uint256[],uint256)
+              handler: handleRedemption

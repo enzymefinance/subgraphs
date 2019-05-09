@@ -1,9 +1,3 @@
-type Universe @entity {
-  id: ID!
-  count: Int!
-  funds: [Fund!]! @derivedFrom(field: "version")
-}
-
 type Routes @entity {
   id: ID!
   accounting: String!
@@ -20,13 +14,24 @@ type Routes @entity {
   mlnToken: String!
 }
 
+type Investor @entity {
+  id: ID!
+  investments: [Investment!]! @derivedFrom(field: "owner")
+}
+
+type Investment @entity {
+  id: ID!
+  fund: Fund!
+  owner: Investor!
+  shares: BigInt!
+}
+
 type Fund @entity {
   id: ID!
   name: String!
   manager: String!
-  creator: String!
+  routes: Routes!
+  investments: [Investment!]! @derivedFrom(field: "fund")
   creationTime: BigInt!
   isShutdown: Boolean!
-  version: Universe!
-  routes: Routes!
 }
