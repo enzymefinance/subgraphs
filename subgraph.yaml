@@ -4,65 +4,97 @@ repository: https://github.com/melonproject/melon-subgraph
 schema:
   file: ./schema.graphql
 dataSources:
-  - kind: ethereum/contract
-    name: Version
+  - name: VersionDataSource
+    kind: ethereum/contract
     network: mainnet
     source:
       address: '0x01Bde0b02740D6311e4a87CA112DeEEddb057EFB'
-      abi: Version
+      abi: VersionContract
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.2
       language: wasm/assemblyscript
       file: ./src/mappings/Version.ts
       entities:
-        - Hub
+        - Asset
+        - Fund
+        - Accounting
+        - Participation
         - Routes
       abis:
-        - name: Version
+        - name: ERC20WithFieldsContract
+          file: ./node_modules/@melonproject/protocol/out/ERC20WithFields.abi.json
+        - name: VersionContract
           file: ./node_modules/@melonproject/protocol/out/Version.abi.json
-        - name: Hub
+        - name: AccountingContract
+          file: ./node_modules/@melonproject/protocol/out/Accounting.abi.json
+        - name: HubContract
           file: ./node_modules/@melonproject/protocol/out/Hub.abi.json
       eventHandlers:
         - event: NewFund(address,address,address[12])
           handler: handleNewFund
     templates:
-      - name: Hub
+      - name: HubDataSource
         kind: ethereum/contract
         network: mainnet
         source:
-          abi: Hub
+          abi: HubContract
         mapping:
           kind: ethereum/events
           apiVersion: 0.0.2
           language: wasm/assemblyscript
           file: ./src/mappings/Hub.ts
           entities:
-            - Hub
+            - Fund
           abis:
-            - name: Hub
+            - name: HubContract
               file: ./node_modules/@melonproject/protocol/out/Hub.abi.json
           eventHandlers:
             - event: FundShutDown()
               handler: handleFundShutDown
-      - name: Participation
+      - name: ParticipationDataSource
         kind: ethereum/contract
         network: mainnet
         source:
-          abi: Participation
+          abi: ParticipationContract
         mapping:
           kind: ethereum/events
           apiVersion: 0.0.2
           language: wasm/assemblyscript
           file: ./src/mappings/Participation.ts
           entities:
+            - Asset
+            - Participation
             - Investor
             - Investment
           abis:
-            - name: Participation
+            - name: ParticipationContract
               file: ./node_modules/@melonproject/protocol/out/Participation.abi.json
+            - name: ERC20WithFieldsContract
+              file: ./node_modules/@melonproject/protocol/out/ERC20WithFields.abi.json
           eventHandlers:
             - event: RequestExecution(address,address,address,uint256,uint256)
               handler: handleRequestExecution
             - event: Redemption(address,address[],uint256[],uint256)
               handler: handleRedemption
+            - event: EnableInvestment(address[])
+              handler: handleEnableInvestment
+            - event: DisableInvestment(address[])
+              handler: handleDisableInvestment
+      - name: AccountingDataSource
+        kind: ethereum/contract
+        network: mainnet
+        source:
+          abi: AccountingContract
+        mapping:
+          kind: ethereum/events
+          apiVersion: 0.0.2
+          language: wasm/assemblyscript
+          file: ./src/mappings/Accounting.ts
+          entities:
+            - Accounting
+          abis:
+            - name: AccountingContract
+              file: ./node_modules/@melonproject/protocol/out/Accounting.abi.json
+          # blockHandlers:
+          #   - handler: handleBlock

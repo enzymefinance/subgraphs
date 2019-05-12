@@ -1,5 +1,5 @@
 import { Fund } from '../types/schema'
-import { FundShutDown } from '../types/Version/templates/Hub/Hub';
+import { FundShutDown } from '../types/VersionDataSource/HubContract';
 
 export function handleFundShutDown(event: FundShutDown): void {
   let fund = Fund.load(event.address.toHexString());

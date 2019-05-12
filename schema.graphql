@@ -1,8 +1,31 @@
+type Participation @entity {
+  id: ID!
+  allowedAssets: [Asset!]!
+  investmentRequests: [InvestmentRequest!]!
+}
+
+type InvestmentRequest @entity {
+  id: ID!
+}
+
+type Accounting @entity {
+  id: ID!
+  demoniationAsset: Asset!
+  nativeAsset: Asset!
+}
+
+type Asset @entity {
+  id: ID!
+  decimals: Int!
+  symbol: String!
+  name: String!
+}
+
 type Routes @entity {
   id: ID!
-  accounting: String!
+  accounting: Accounting!
+  participation: Participation!
   feeManager: String!
-  participation: String!
   policyManager: String!
   priceSource: String!
   registry: String!

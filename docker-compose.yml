@@ -1,5 +1,12 @@
 version: '3'
 services:
+  # ganache-cli:
+  #   image: trufflesuite/ganache-cli
+  #   command: "ganache-cli --db /data/ganache --gasLimit 0x7a1200 --networkId 4 --defaultBalanceEther 10000000000000 -m 'exhibit now news planet fame thank swear reform tilt accident bitter axis'"
+  #   ports:
+  #     - '8545:8545'
+  #   volumes:
+  #     - ./data/ganache:/data/ganache
   graph-node:
     image: graphprotocol/graph-node
     ports:
@@ -9,16 +16,18 @@ services:
     depends_on:
       - ipfs
       - postgres
+    network_mode: host
     environment:
-      postgres_host: postgres:5432
+      postgres_host: localhost:5432
       postgres_user: graph-node
       postgres_pass: let-me-in
       postgres_db: graph-node
-      ipfs: 'ipfs:5001'
-      ethereum: 'mainnet:https://mainnet.infura.io/v3/8332aa03fcfa4c889aeee4d0e0628660'
+      ipfs: 'localhost:5001'
+      ethereum: 'dev:http://localhost:8545'
       RUST_LOG: info
   ipfs:
     image: ipfs/go-ipfs
+    network_mode: host
     ports:
       - '5001:5001'
     volumes:
