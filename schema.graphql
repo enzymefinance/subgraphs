@@ -1,24 +1,18 @@
-type Participation @entity {
-  id: ID!
-  allowedAssets: [Asset!]!
-  investmentRequests: [InvestmentRequest!]!
-}
-
-type InvestmentRequest @entity {
-  id: ID!
-}
-
-type Accounting @entity {
-  id: ID!
-  demoniationAsset: Asset!
-  nativeAsset: Asset!
-}
-
 type Asset @entity {
   id: ID!
   decimals: Int!
-  symbol: String!
+  # symbol: String!
+  # name: String!
+}
+
+type Fund @entity {
+  id: ID!
   name: String!
+  manager: String!
+  routes: Routes!
+  investments: [Investment!]! @derivedFrom(field: "fund")
+  creationTime: BigInt!
+  isShutdown: Boolean!
 }
 
 type Routes @entity {
@@ -37,6 +31,23 @@ type Routes @entity {
   mlnToken: String!
 }
 
+type Participation @entity {
+  id: ID!
+  allowedAssets: [Asset!]!
+  investmentRequests: [InvestmentRequest!]!
+}
+
+type Accounting @entity {
+  id: ID!
+  demoniationAsset: Asset!
+  nativeAsset: Asset!
+  ownedAssets: [Asset!]!
+}
+
+type InvestmentRequest @entity {
+  id: ID!
+}
+
 type Investor @entity {
   id: ID!
   investments: [Investment!]! @derivedFrom(field: "owner")
@@ -47,14 +58,4 @@ type Investment @entity {
   fund: Fund!
   owner: Investor!
   shares: BigInt!
-}
-
-type Fund @entity {
-  id: ID!
-  name: String!
-  manager: String!
-  routes: Routes!
-  investments: [Investment!]! @derivedFrom(field: "fund")
-  creationTime: BigInt!
-  isShutdown: Boolean!
 }

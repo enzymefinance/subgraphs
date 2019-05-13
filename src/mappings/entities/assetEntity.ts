@@ -10,8 +10,8 @@ export function assetEntity(address: Address): Asset {
     let contract = ERC20WithFieldsContract.bind(address);
 
     asset = new Asset(id);
-    asset.name = contract.name();
-    asset.symbol = contract.symbol();
+    // asset.name = contract.name();
+    // asset.symbol = contract.symbol();
     asset.decimals = contract.decimals();
     asset.save();
   }

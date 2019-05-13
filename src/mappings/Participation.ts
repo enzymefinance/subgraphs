@@ -27,8 +27,7 @@ export function handleEnableInvestment(event: EnableInvestment): void {
 
 export function handleDisableInvestment(event: DisableInvestment): void {
   let participation = participationEntity(event.address);
-  let disabled = event.params.assets.map<string>(value => value.toHexString());
-
+  let disabled = event.params.assets.map<string>(value => value.toHex());
   let allowed = new Array<string>();
   for (let i: i32 = 0; i < participation.allowedAssets.length; i++) {
     let current = (participation.allowedAssets as string[])[i];

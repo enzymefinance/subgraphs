@@ -13,20 +13,20 @@ export function routesEntity(address: Address): Routes {
     routes = new Routes(id);
     routes.accounting = accountingEntity(contract.accounting()).id;
     routes.participation = participationEntity(contract.participation()).id;
-    routes.policyManager = contract.policyManager().toHexString();
-    routes.shares = contract.shares().toHexString();
-    routes.trading = contract.trading().toHexString();
-    routes.vault = contract.vault().toHexString();
-    routes.priceSource = contract.priceSource().toHexString();
-    routes.registry = contract.registry().toHexString();
-    routes.version = contract.version().toHexString();
+    routes.policyManager = contract.policyManager().toHex();
+    routes.shares = contract.shares().toHex();
+    routes.trading = contract.trading().toHex();
+    routes.vault = contract.vault().toHex();
+    routes.priceSource = contract.priceSource().toHex();
+    routes.registry = contract.registry().toHex();
+    routes.version = contract.version().toHex();
     
     // TODO: Some routes don't have explicit calls.
     // TODO: How to read these values directly from the event array.
     let routesMap = contract.routes();
-    routes.feeManager = routesMap.value1.toHexString();
-    routes.engine = routesMap.value10.toHexString();
-    routes.mlnToken = routesMap.value11.toHexString();
+    routes.feeManager = routesMap.value1.toHex();
+    routes.engine = routesMap.value10.toHex();
+    routes.mlnToken = routesMap.value11.toHex();
     routes.save();
   }
 

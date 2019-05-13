@@ -96,5 +96,12 @@ dataSources:
           abis:
             - name: AccountingContract
               file: ./node_modules/@melonproject/protocol/out/Accounting.abi.json
+            - name: ERC20WithFieldsContract
+              file: ./node_modules/@melonproject/protocol/out/ERC20WithFields.abi.json
+          eventHandlers:
+            - event: AssetAddition(address)
+              handler: handleAssetAddition
+            - event: AssetRemoval(address)
+              handler: handleAssetRemoval
           # blockHandlers:
           #   - handler: handleBlock

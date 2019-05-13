@@ -18,7 +18,7 @@ export function fundEntity(address: Address): Fund {
     fund.name = hexToAscii(contract.name());
     fund.creationTime = contract.creationTime();
     fund.isShutdown = contract.isShutDown();
-    fund.manager = contract.manager().toHexString();
+    fund.manager = contract.manager().toHex();
     fund.save();
   }
 

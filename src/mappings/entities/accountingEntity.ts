@@ -15,6 +15,7 @@ export function accountingEntity(address: Address): Accounting {
     accounting = new Accounting(id);
     accounting.demoniationAsset = assetEntity(contract.DENOMINATION_ASSET()).id;
     accounting.nativeAsset = assetEntity(contract.NATIVE_ASSET()).id;
+    accounting.ownedAssets = [];
     accounting.save();
   }
 
