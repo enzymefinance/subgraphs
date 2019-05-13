@@ -20,7 +20,6 @@ export function handleRedemption(event: Redemption): void {
 export function handleEnableInvestment(event: EnableInvestment): void {
   let participation = participationEntity(event.address);
   let enabled = event.params.asset.map<string>((value) => assetEntity(value).id)
-
   participation.allowedAssets = participation.allowedAssets.concat(enabled);
   participation.save();
 }

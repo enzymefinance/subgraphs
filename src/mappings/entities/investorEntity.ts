@@ -5,7 +5,7 @@ export function investorEntity(address: Address): Investor {
   let id = address.toHex();
   let investor = Investor.load(id);
 
-  if (investor === null) {
+  if (!investor) {
     investor = new Investor(id);
     investor.save();
   }

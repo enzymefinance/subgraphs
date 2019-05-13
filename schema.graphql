@@ -33,12 +33,14 @@ type Routes @entity {
 
 type Participation @entity {
   id: ID!
+  fund: Fund!
   allowedAssets: [Asset!]!
   investmentRequests: [InvestmentRequest!]!
 }
 
 type Accounting @entity {
   id: ID!
+  fund: Fund!
   demoniationAsset: Asset!
   nativeAsset: Asset!
   ownedAssets: [Asset!]!

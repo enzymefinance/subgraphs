@@ -8,11 +8,12 @@ export function accountingEntity(address: Address): Accounting {
   let id = address.toHex()
   let accounting = Accounting.load(id);
 
-  if (accounting === null) {
+  if (!accounting) {
     AccountingDataSource.create(address);
 
     let contract = AccountingContract.bind(address);
     accounting = new Accounting(id);
+    accounting.fund = contract.hub().toHex();
     accounting.demoniationAsset = assetEntity(contract.DENOMINATION_ASSET()).id;
     accounting.nativeAsset = assetEntity(contract.NATIVE_ASSET()).id;
     accounting.ownedAssets = [];

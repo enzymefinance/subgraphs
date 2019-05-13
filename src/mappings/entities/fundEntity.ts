@@ -9,7 +9,7 @@ export function fundEntity(address: Address): Fund {
   let id = address.toHex();
   let fund = Fund.load(id);
 
-  if (fund === null) {
+  if (!fund) {
     HubDataSource.create(address);
 
     let contract = HubContract.bind(address);

@@ -8,7 +8,7 @@ export function routesEntity(address: Address): Routes {
   let id = address.toHex();
   let routes = Routes.load(id);
 
-  if (routes === null) {
+  if (!routes) {
     let contract = HubContract.bind(address);
     routes = new Routes(id);
     routes.accounting = accountingEntity(contract.accounting()).id;

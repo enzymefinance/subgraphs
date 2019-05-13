@@ -22,14 +22,16 @@ dataSources:
         - Participation
         - Routes
       abis:
-        - name: ERC20WithFieldsContract
-          file: ./node_modules/@melonproject/protocol/out/ERC20WithFields.abi.json
         - name: VersionContract
           file: ./node_modules/@melonproject/protocol/out/Version.abi.json
-        - name: AccountingContract
-          file: ./node_modules/@melonproject/protocol/out/Accounting.abi.json
         - name: HubContract
           file: ./node_modules/@melonproject/protocol/out/Hub.abi.json
+        - name: AccountingContract
+          file: ./node_modules/@melonproject/protocol/out/Accounting.abi.json
+        - name: ParticipationContract
+          file: ./node_modules/@melonproject/protocol/out/Participation.abi.json
+        - name: ERC20WithFieldsContract
+          file: ./node_modules/@melonproject/protocol/out/ERC20WithFields.abi.json
       eventHandlers:
         - event: NewFund(address,address,address[12])
           handler: handleNewFund
@@ -49,6 +51,10 @@ dataSources:
           abis:
             - name: HubContract
               file: ./node_modules/@melonproject/protocol/out/Hub.abi.json
+            - name: AccountingContract
+              file: ./node_modules/@melonproject/protocol/out/Accounting.abi.json
+            - name: ParticipationContract
+              file: ./node_modules/@melonproject/protocol/out/Participation.abi.json
           eventHandlers:
             - event: FundShutDown()
               handler: handleFundShutDown
@@ -68,6 +74,8 @@ dataSources:
             - Investor
             - Investment
           abis:
+            - name: HubContract
+              file: ./node_modules/@melonproject/protocol/out/Hub.abi.json
             - name: ParticipationContract
               file: ./node_modules/@melonproject/protocol/out/Participation.abi.json
             - name: ERC20WithFieldsContract
@@ -94,6 +102,8 @@ dataSources:
           entities:
             - Accounting
           abis:
+            - name: HubContract
+              file: ./node_modules/@melonproject/protocol/out/Hub.abi.json
             - name: AccountingContract
               file: ./node_modules/@melonproject/protocol/out/Accounting.abi.json
             - name: ERC20WithFieldsContract

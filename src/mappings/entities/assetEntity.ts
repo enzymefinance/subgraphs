@@ -6,7 +6,7 @@ export function assetEntity(address: Address): Asset {
   let id = address.toHex();
   let asset = Asset.load(id);
 
-  if (asset === null) {
+  if (!asset) {
     let contract = ERC20WithFieldsContract.bind(address);
 
     asset = new Asset(id);
