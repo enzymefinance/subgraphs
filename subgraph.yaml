@@ -1,4 +1,4 @@
-specVersion: 0.0.1
+specVersion: 0.0.2
 description: Melon protocol
 repository: https://github.com/melonproject/melon-subgraph
 schema:
@@ -16,22 +16,13 @@ dataSources:
       language: wasm/assemblyscript
       file: ./src/mappings/Version.ts
       entities:
-        - Asset
-        - Fund
-        - Accounting
-        - Participation
         - Routes
+        - Fund
       abis:
         - name: VersionContract
           file: ./node_modules/@melonproject/protocol/out/Version.abi.json
         - name: HubContract
           file: ./node_modules/@melonproject/protocol/out/Hub.abi.json
-        - name: AccountingContract
-          file: ./node_modules/@melonproject/protocol/out/Accounting.abi.json
-        - name: ParticipationContract
-          file: ./node_modules/@melonproject/protocol/out/Participation.abi.json
-        - name: ERC20WithFieldsContract
-          file: ./node_modules/@melonproject/protocol/out/ERC20WithFields.abi.json
       eventHandlers:
         - event: NewFund(address,address,address[12])
           handler: handleNewFund
@@ -51,13 +42,32 @@ dataSources:
           abis:
             - name: HubContract
               file: ./node_modules/@melonproject/protocol/out/Hub.abi.json
-            - name: AccountingContract
-              file: ./node_modules/@melonproject/protocol/out/Accounting.abi.json
-            - name: ParticipationContract
-              file: ./node_modules/@melonproject/protocol/out/Participation.abi.json
           eventHandlers:
             - event: FundShutDown()
               handler: handleFundShutDown
+  - name: ParticipationFactoryDataSource
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      address: '0xA48227baEa91825c23b2A38B0A90CE2e2ae59987'
+      abi: ParticipationFactoryContract
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.2
+      language: wasm/assemblyscript
+      file: ./src/mappings/ParticipationFactory.ts
+      entities:
+        - Asset
+        - Participation
+      abis:
+        - name: ParticipationFactoryContract
+          file: ./node_modules/@melonproject/protocol/out/ParticipationFactory.abi.json
+        - name: ERC20WithFieldsContract
+          file: ./node_modules/@melonproject/protocol/out/ERC20WithFields.abi.json
+      eventHandlers:
+        - event: NewInstance(address,address,address[],address)
+          handler: handleNewInstance
+    templates:
       - name: ParticipationDataSource
         kind: ethereum/contract
         network: mainnet
@@ -73,9 +83,8 @@ dataSources:
             - Participation
             - Investor
             - Investment
+            - InvestmentRequest
           abis:
-            - name: HubContract
-              file: ./node_modules/@melonproject/protocol/out/Hub.abi.json
             - name: ParticipationContract
               file: ./node_modules/@melonproject/protocol/out/Participation.abi.json
             - name: ERC20WithFieldsContract
@@ -89,6 +98,29 @@ dataSources:
               handler: handleEnableInvestment
             - event: DisableInvestment(address[])
               handler: handleDisableInvestment
+  - name: AccountingFactoryDataSource
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      address: '0xeA41FD17121AAC5c79717C8528ce66a8e143e0c8'
+      abi: AccountingFactoryContract
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.2
+      language: wasm/assemblyscript
+      file: ./src/mappings/AccountingFactory.ts
+      entities:
+        - Asset
+        - Accounting
+      abis:
+        - name: AccountingFactoryContract
+          file: ./node_modules/@melonproject/protocol/out/AccountingFactory.abi.json
+        - name: ERC20WithFieldsContract
+          file: ./node_modules/@melonproject/protocol/out/ERC20WithFields.abi.json
+      eventHandlers:
+        - event: NewInstance(address,address,address,address,address[])
+          handler: handleNewInstance
+    templates:
       - name: AccountingDataSource
         kind: ethereum/contract
         network: mainnet
@@ -102,8 +134,6 @@ dataSources:
           entities:
             - Accounting
           abis:
-            - name: HubContract
-              file: ./node_modules/@melonproject/protocol/out/Hub.abi.json
             - name: AccountingContract
               file: ./node_modules/@melonproject/protocol/out/Accounting.abi.json
             - name: ERC20WithFieldsContract
