@@ -150,7 +150,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: '0xeA41FD17121AAC5c79717C8528ce66a8e143e0c8'
+      address: '0xCB9CC04622ebb6D751E3516503Bc5418d980Ef13'
       abi: FeeManagerFactoryContract
     mapping:
       kind: ethereum/events
@@ -191,7 +191,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: '0xeA41FD17121AAC5c79717C8528ce66a8e143e0c8'
+      address: '0xe06835e09Dd3eB24433252a77Ef573E022FcfB0b'
       abi: PolicyManagerFactoryContract
     mapping:
       kind: ethereum/events
@@ -230,7 +230,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: '0xeA41FD17121AAC5c79717C8528ce66a8e143e0c8'
+      address: '0xC563Fb444441fd73431384006e7A81955c0d4F89'
       abi: SharesFactoryContract
     mapping:
       kind: ethereum/events
@@ -271,7 +271,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: '0xeA41FD17121AAC5c79717C8528ce66a8e143e0c8'
+      address: '0x6E57E54Ba53495066F400c026ecA1ef7FCa9Cb44'
       abi: TradingFactoryContract
     mapping:
       kind: ethereum/events
@@ -307,7 +307,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: '0xeA41FD17121AAC5c79717C8528ce66a8e143e0c8'
+      address: '0x42822b1f64249154Fc82f7F6246AE7C69254F30A'
       abi: VaultFactoryContract
     mapping:
       kind: ethereum/events

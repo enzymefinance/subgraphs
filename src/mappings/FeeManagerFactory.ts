@@ -6,5 +6,6 @@ export function handleNewInstance(event: NewInstance): void {
   FeeManagerDataSource.create(event.params.instance);
 
   let feeManager = new FeeManager(event.params.instance.toHex());
+  feeManager.fund = event.params.hub.toHex();
   feeManager.save();
 }

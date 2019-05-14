@@ -6,5 +6,6 @@ export function handleNewInstance(event: NewInstance): void {
   SharesDataSource.create(event.params.instance);
 
   let shares = new Shares(event.params.instance.toHex());
+  shares.fund = event.params.hub.toHex();
   shares.save();
 }

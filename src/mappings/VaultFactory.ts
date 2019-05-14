@@ -6,5 +6,6 @@ export function handleNewInstance(event: NewInstance): void {
   VaultDataSource.create(event.params.instance);
 
   let vault = new Vault(event.params.instance.toHex());
+  vault.fund = event.params.hub.toHex();
   vault.save();
 }

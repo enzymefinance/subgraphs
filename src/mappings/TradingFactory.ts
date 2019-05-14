@@ -6,5 +6,6 @@ export function handleNewInstance(event: NewInstance): void {
   TradingDataSource.create(event.params.instance);
 
   let trading = new Trading(event.params.instance.toHex());
+  trading.fund = event.params.hub.toHex();
   trading.save();
 }

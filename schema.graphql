@@ -48,26 +48,32 @@ type Participation @entity {
 
 type FeeManager @entity {
   id: ID!
+  fund: Fund!
 }
 
 type PolicyManager @entity {
   id: ID!
+  fund: Fund!
 }
 
 type Shares @entity {
   id: ID!
+  fund: Fund!
 }
 
 type Trading @entity {
   id: ID!
+  fund: Fund!
 }
 
 type Vault @entity {
   id: ID!
+  fund: Fund!
 }
 
 type InvestmentRequest @entity {
   id: ID!
+  fund: Fund!
 }
 
 type Investor @entity {
