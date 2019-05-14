@@ -19,16 +19,24 @@ type Routes @entity {
   id: ID!
   accounting: Accounting!
   participation: Participation!
-  feeManager: String!
-  policyManager: String!
-  priceSource: String!
+  feeManager: FeeManager!
+  policyManager: PolicyManager!
+  shares: Shares!
+  trading: Trading!
+  vault: Vault!
   registry: String!
-  shares: String!
-  trading: String!
-  vault: String!
   version: String!
   engine: String!
   mlnToken: String!
+  priceSource: String!
+}
+
+type Accounting @entity {
+  id: ID!
+  fund: Fund!
+  demoniationAsset: Asset!
+  nativeAsset: Asset!
+  ownedAssets: [Asset!]!
 }
 
 type Participation @entity {
@@ -38,12 +46,24 @@ type Participation @entity {
   investmentRequests: [InvestmentRequest!]!
 }
 
-type Accounting @entity {
+type FeeManager @entity {
   id: ID!
-  fund: Fund!
-  demoniationAsset: Asset!
-  nativeAsset: Asset!
-  ownedAssets: [Asset!]!
+}
+
+type PolicyManager @entity {
+  id: ID!
+}
+
+type Shares @entity {
+  id: ID!
+}
+
+type Trading @entity {
+  id: ID!
+}
+
+type Vault @entity {
+  id: ID!
 }
 
 type InvestmentRequest @entity {
