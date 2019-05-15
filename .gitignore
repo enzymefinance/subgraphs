@@ -11,6 +11,9 @@ pids
 *.seed
 *.pid.lock
 
+# The generated subgraph.yml
+subgraph.yaml
+
 # Generated build output, code and data
 build/
 data/
