@@ -1,22 +1,30 @@
+type Registry @entity {
+  id: ID!
+  versions: [Version!]!
+  assets: [Asset!]!
+  funds: [Fund!]! @derivedFrom(field: "registry")
+}
+
+type Version @entity {
+  id: ID!
+  registry: Registry!
+  funds: [Fund!]! @derivedFrom(field: "version")
+}
+
 type Asset @entity {
   id: ID!
   decimals: Int!
-  # symbol: String!
-  # name: String!
+  symbol: String!
+  name: String!
 }
 
 type Fund @entity {
   id: ID!
   name: String!
   manager: String!
-  routes: Routes!
   investments: [Investment!]! @derivedFrom(field: "fund")
   creationTime: BigInt!
   isShutdown: Boolean!
-}
-
-type Routes @entity {
-  id: ID!
   accounting: Accounting!
   participation: Participation!
   feeManager: FeeManager!
@@ -24,8 +32,8 @@ type Routes @entity {
   shares: Shares!
   trading: Trading!
   vault: Vault!
-  registry: String!
-  version: String!
+  registry: Registry!
+  version: Version!
   engine: String!
   mlnToken: String!
   priceSource: String!

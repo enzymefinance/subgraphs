@@ -1,8 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "script": "node ./scripts",
-    "codegen": "graph codegen --debug --output-dir src/types/",
+    "codegen": "node scripts generate-subgraph && graph codegen --debug --output-dir src/types/",
     "build": "graph build --debug",
     "create": "graph create fubhy/melon --node https://api.thegraph.com/deploy/",
     "create-local": "graph create fubhy/melon --node http://127.0.0.1:8020",

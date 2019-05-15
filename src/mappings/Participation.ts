@@ -1,4 +1,3 @@
-import { assetEntity } from "./entities/assetEntity";
 import { investmentEntity } from "./entities/investmentEntity";
 import { RequestExecution, ParticipationContract, Redemption, EnableInvestment, DisableInvestment } from "../types/ParticipationFactoryDataSource/templates/ParticipationDataSource/ParticipationContract";
 import { Participation } from "../types/schema";
@@ -19,7 +18,7 @@ export function handleRedemption(event: Redemption): void {
 
 export function handleEnableInvestment(event: EnableInvestment): void {
   let participation = Participation.load(event.address.toHex()) as Participation;
-  let enabled = event.params.asset.map<string>((value) => assetEntity(value).id)
+  let enabled = event.params.asset.map<string>((value) => value.toHex())
   participation.allowedAssets = participation.allowedAssets.concat(enabled);
   participation.save();
 }
@@ -31,7 +30,7 @@ export function handleDisableInvestment(event: DisableInvestment): void {
   for (let i: i32 = 0; i < participation.allowedAssets.length; i++) {
     let current = (participation.allowedAssets as string[])[i];
     if (disabled.indexOf(current) === -1) {
-      allowed.push(current);
+      allowed = allowed.concat([current]);
     }
   }
 
