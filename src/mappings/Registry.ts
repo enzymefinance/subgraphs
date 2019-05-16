@@ -1,6 +1,11 @@
 import { Address } from "@graphprotocol/graph-ts";
-import { Registry, Version, Asset } from "../types/schema";
-import { VersionRegistration, AssetRemoval, AssetUpsert } from "../types/Registry/RegistryContract";
+import { Registry, Version, Asset, Engine } from "../types/schema";
+import {
+  VersionRegistration,
+  AssetRemoval,
+  AssetUpsert,
+  EngineChange
+} from "../types/RegistryDataSource/RegistryContract";
 
 function registryEntity(address: Address): Registry {
   let id = address.toHex();
@@ -10,6 +15,7 @@ function registryEntity(address: Address): Registry {
     registry = new Registry(id);
     registry.versions = [];
     registry.assets = [];
+    registry.engines = [];
     registry.save();
   }
 
@@ -27,6 +33,20 @@ function versionEntity(registry: Address, address: Address): Version {
   }
 
   return version as Version;
+}
+
+function engineEntity(address: Address, registry: Address): Engine {
+  let id = address.toHex();
+  let engine = Engine.load(id);
+
+  if (!engine) {
+    engine = new Engine(id);
+    engine.registry = [registry.toHex()];
+    engine.amguPaid = [];
+    engine.amguPrices = [];
+    engine.save();
+  }
+  return engine as Engine;
 }
 
 export function handleVersionRegistration(event: VersionRegistration): void {
@@ -61,5 +81,12 @@ export function handleAssetRemoval(event: AssetRemoval): void {
   }
 
   registry.assets = assets;
+  registry.save();
+}
+
+export function handleEngineChange(event: EngineChange): void {
+  let registry = registryEntity(event.address);
+  let engine = engineEntity(event.params.engine, event.address);
+  registry.engines = registry.engines.concat([engine.id]);
   registry.save();
 }

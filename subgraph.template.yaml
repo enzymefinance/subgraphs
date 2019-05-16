@@ -29,6 +29,33 @@ dataSources:
           handler: handleAssetUpsert
         - event: AssetRemoval(address)
           handler: handleAssetRemoval
+        - event: EngineChange(address)
+          handler: handleEngineChange
+  
+  - name: EngineDataSource
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      address: '{{melonContracts.engine}}'
+      abi: EngineContract
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.2
+      language: wasm/assemblyscript
+      file: ./src/mappings/Engine.ts
+      entities:
+        - Engine
+        - Registry
+      abis:
+        - name: EngineContract
+          file: ./node_modules/@melonproject/protocol/out/Engine.abi.json
+      eventHandlers:
+        - event: SetAmguPrice(uint256)
+          handler: handleSetAmguPrice
+        - event: RegistryChange(address)
+          handler: handleRegistryChange
+        - event: AmguPaid(uint256)
+          handler: handleAmguPaid
 
   - name: VersionDataSource
     kind: ethereum/contract
