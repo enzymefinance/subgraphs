@@ -46,7 +46,7 @@ export function handleBurn(event: Burn): void {
 }
 
 export function handleRegistryChange(event: RegistryChange): void {
-  let registry = registryEntity(event.address);
+  let registry = registryEntity(event.params.registry);
   let engine = engineEntity(event.address, event.params.registry);
   engine.registry = registry.id;
   engine.save();

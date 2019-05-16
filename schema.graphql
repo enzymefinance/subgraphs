@@ -132,4 +132,5 @@ type Investment @entity {
   fund: Fund!
   owner: Investor!
   shares: BigInt!
+  sharePrice: BigInt!
 }

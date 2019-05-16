@@ -1,11 +1,18 @@
 import { investmentEntity } from "./entities/investmentEntity";
 import { RequestExecution, ParticipationContract, Redemption, EnableInvestment, DisableInvestment } from "../types/ParticipationFactoryDataSource/templates/ParticipationDataSource/ParticipationContract";
 import { Participation } from "../types/schema";
+import { HubContract } from "../types/ParticipationFactoryDataSource/templates/ParticipationDataSource/HubContract";
+import { AccountingContract } from "../types/ParticipationFactoryDataSource/templates/ParticipationDataSource/AccountingContract";
 
 export function handleRequestExecution(event: RequestExecution): void {
   let contract = ParticipationContract.bind(event.address);
+  let fundContract = HubContract.bind(contract.hub());
+  let accountingContract = AccountingContract.bind(fundContract.accounting());
+  let currentSharePrice = accountingContract.calcSharePrice();
+
   let investment = investmentEntity(event.params.requestOwner, contract.hub());
   investment.shares = investment.shares.plus(event.params.requestedShares);
+  investment.sharePrice = currentSharePrice;
   investment.save();
 }
 

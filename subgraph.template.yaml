@@ -138,6 +138,10 @@ dataSources:
           abis:
             - name: ParticipationContract
               file: ./node_modules/@melonproject/protocol/out/Participation.abi.json
+            - name: AccountingContract
+              file: ./node_modules/@melonproject/protocol/out/Accounting.abi.json
+            - name: HubContract
+              file: ./node_modules/@melonproject/protocol/out/Hub.abi.json
           eventHandlers:
             - event: RequestExecution(address,address,address,uint256,uint256)
               handler: handleRequestExecution
