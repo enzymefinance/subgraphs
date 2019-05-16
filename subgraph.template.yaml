@@ -292,9 +292,12 @@ dataSources:
           file: ./src/mappings/PolicyManager.ts
           entities:
             - PolicyManager
+            - Policy
           abis:
             - name: PolicyManagerContract
               file: ./node_modules/@melonproject/protocol/out/PolicyManager.abi.json
+            - name: PolicyContract
+              file: ./node_modules/@melonproject/protocol/out/Policy.abi.json
           eventHandlers:
             - event: Registration(bytes4,uint8,address)
               handler: handleRegistration

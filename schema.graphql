@@ -103,6 +103,13 @@ type PolicyManager @entity {
   fund: Fund!
 }
 
+type Policy @entity {
+  id: ID!
+  signature: String!
+  position: Int!
+  policy: String!
+}
+
 type Shares @entity {
   id: ID!
   fund: Fund!
