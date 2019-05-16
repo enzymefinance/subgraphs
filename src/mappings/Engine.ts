@@ -6,7 +6,6 @@ import {
   Burn
 } from "../types/EngineDataSource/EngineContract";
 import {
-  Engine,
   AmguPrice,
   AmguPayment,
   ThawEther,
@@ -20,10 +19,6 @@ export function handleSetAmguPrice(event: SetAmguPrice): void {
   amguPrice.engine = event.address.toHex();
   amguPrice.timestamp = event.block.timestamp;
   amguPrice.save();
-
-  let engine = Engine.load(event.address.toHex());
-  engine!.amguPrices = engine!.amguPrices.concat([amguPrice.id]);
-  engine!.save();
 }
 
 export function handleAmguPaid(event: AmguPaid): void {
@@ -32,10 +27,6 @@ export function handleAmguPaid(event: AmguPaid): void {
   amguPayment.engine = event.address.toHex();
   amguPayment.timestamp = event.block.timestamp;
   amguPayment.save();
-
-  let engine = Engine.load(event.address.toHex());
-  engine!.amguPayments = engine!.amguPayments.concat([amguPayment.id]);
-  engine!.save();
 }
 
 export function handleThaw(event: Thaw): void {
@@ -44,10 +35,6 @@ export function handleThaw(event: Thaw): void {
   thawEther.engine = event.address.toHex();
   thawEther.timestamp = event.block.timestamp;
   thawEther.save();
-
-  let engine = Engine.load(event.address.toHex());
-  engine!.etherThawings = engine!.etherThawings.concat([thawEther.id]);
-  engine!.save();
 }
 
 export function handleBurn(event: Burn): void {
@@ -56,15 +43,11 @@ export function handleBurn(event: Burn): void {
   burnEther.engine = event.address.toHex();
   burnEther.timestamp = event.block.timestamp;
   burnEther.save();
-
-  let engine = Engine.load(event.address.toHex());
-  engine!.etherBurnings = engine!.etherBurnings.concat([burnEther.id]);
-  engine!.save();
 }
 
 export function handleRegistryChange(event: RegistryChange): void {
   let registry = registryEntity(event.address);
   let engine = engineEntity(event.address, event.params.registry);
-  engine.registries = engine.registries.concat([registry.id]);
+  engine.registry = registry.id;
   engine.save();
 }

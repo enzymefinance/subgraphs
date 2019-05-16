@@ -16,7 +16,6 @@ export function registryEntity(address: Address): Registry {
     registry = new Registry(id);
     registry.versions = [];
     registry.assets = [];
-    registry.engines = [];
     registry.save();
   }
 
@@ -42,12 +41,10 @@ export function engineEntity(address: Address, registry: Address): Engine {
 
   if (!engine) {
     engine = new Engine(id);
-    engine.registries = [registry.toHex()];
-    engine.amguPayments = [];
-    engine.amguPrices = [];
-    engine.etherThawings = [];
+    engine.registry = registry.toHex();
     engine.save();
   }
+
   return engine as Engine;
 }
 
@@ -89,7 +86,7 @@ export function handleAssetRemoval(event: AssetRemoval): void {
 export function handleEngineChange(event: EngineChange): void {
   let registry = registryEntity(event.address);
   let engine = engineEntity(event.params.engine, event.address);
-  registry.engines = registry.engines.concat([engine.id]);
+  registry.engine = engine.id;
   registry.save();
 }
 
