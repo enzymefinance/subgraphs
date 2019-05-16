@@ -1,7 +1,7 @@
 type Registry @entity {
   id: ID!
   versions: [Version!]!
-  engines: [Engine!]!
+  engines: [Engine!]! @derivedFrom(field: "registry")
   assets: [Asset!]!
   funds: [Fund!]! @derivedFrom(field: "registry")
 }
@@ -14,9 +14,11 @@ type Version @entity {
 
 type Engine @entity {
   id: ID!
-  registry: [Registry!]!
+  registries: [Registry!]!
   amguPrices: [AmguPrice!]!
-  amguPaid: [Amgu!]!
+  amguPayments: [AmguPayment!]!
+  etherThawings: [ThawEther!]!
+  etherBurnings: [BurnEther!]!
 }
 
 type AmguPrice @entity {
@@ -26,9 +28,24 @@ type AmguPrice @entity {
   timestamp: BigInt!
 }
 
-type Amgu @entity {
+type AmguPayment @entity {
   id: ID!
+  engine: Engine!
   amount: BigInt!
+  timestamp: BigInt!
+}
+
+type ThawEther @entity {
+  id: ID!
+  engine: Engine!
+  ether: BigInt!
+  timestamp: BigInt!
+}
+
+type BurnEther @entity {
+  id: ID!
+  engine: Engine!
+  ether: BigInt!
   timestamp: BigInt!
 }
 

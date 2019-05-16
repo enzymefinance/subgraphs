@@ -4,10 +4,11 @@ import {
   VersionRegistration,
   AssetRemoval,
   AssetUpsert,
-  EngineChange
+  EngineChange,
+  NativeAssetChange
 } from "../types/RegistryDataSource/RegistryContract";
 
-function registryEntity(address: Address): Registry {
+export function registryEntity(address: Address): Registry {
   let id = address.toHex();
   let registry = Registry.load(id);
 
@@ -35,15 +36,16 @@ function versionEntity(registry: Address, address: Address): Version {
   return version as Version;
 }
 
-function engineEntity(address: Address, registry: Address): Engine {
+export function engineEntity(address: Address, registry: Address): Engine {
   let id = address.toHex();
   let engine = Engine.load(id);
 
   if (!engine) {
     engine = new Engine(id);
-    engine.registry = [registry.toHex()];
-    engine.amguPaid = [];
+    engine.registries = [registry.toHex()];
+    engine.amguPayments = [];
     engine.amguPrices = [];
+    engine.etherThawings = [];
     engine.save();
   }
   return engine as Engine;
@@ -90,3 +92,5 @@ export function handleEngineChange(event: EngineChange): void {
   registry.engines = registry.engines.concat([engine.id]);
   registry.save();
 }
+
+export function handleNativeAssetChange(event: NativeAssetChange): void {}
