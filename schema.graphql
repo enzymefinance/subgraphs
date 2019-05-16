@@ -1,6 +1,6 @@
 type Registry @entity {
   id: ID!
-  engine: Engine!
+  engine: Engine
   assets: [Asset!]!
   versions: [Version!]!
   funds: [Fund!]! @derivedFrom(field: "registry")
@@ -8,13 +8,13 @@ type Registry @entity {
 
 type Version @entity {
   id: ID!
-  registry: Registry!
+  registry: Registry
   funds: [Fund!]! @derivedFrom(field: "version")
 }
 
 type Engine @entity {
   id: ID!
-  registry: Registry!
+  registry: Registry
   amguPrices: [AmguPrice!]! @derivedFrom(field: "engine")
   amguPayments: [AmguPayment!]! @derivedFrom(field: "engine")
   etherThawings: [ThawEther!]! @derivedFrom(field: "engine")
