@@ -1,8 +1,8 @@
 type Registry @entity {
   id: ID!
   engine: Engine
-  assets: [Asset!]!
   versions: [Version!]!
+  assets: [Asset!]! @derivedFrom(field: "registry")
   funds: [Fund!]! @derivedFrom(field: "registry")
 }
 
@@ -54,6 +54,7 @@ type Asset @entity {
   decimals: Int!
   symbol: String!
   name: String!
+  registry: Registry!
 }
 
 type Fund @entity {
@@ -133,4 +134,18 @@ type Investment @entity {
   owner: Investor!
   shares: BigInt!
   sharePrice: BigInt!
+}
+
+type AssetPriceUpdate @entity {
+  id: ID!
+  prices: [AssetPrice!]! @derivedFrom(field: "assetPriceUpdate")
+  timestamp: BigInt!
+}
+
+type AssetPrice @entity {
+  id: ID!
+  asset: Asset!
+  price: BigInt!
+  timestamp: BigInt!
+  assetPriceUpdate: AssetPriceUpdate!
 }

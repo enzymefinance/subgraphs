@@ -9,9 +9,38 @@ import {
   AmguPrice,
   AmguPayment,
   ThawEther,
-  BurnEther
+  BurnEther,
+  Registry,
+  Engine
 } from "../types/schema";
-import { registryEntity, engineEntity } from "./Registry";
+import { Address } from "@graphprotocol/graph-ts";
+
+function engineEntity(address: Address, registry: Address): Engine {
+  let id = address.toHex();
+  let engine = Engine.load(id);
+
+  if (!engine) {
+    engine = new Engine(id);
+    engine.registry = registry.toHex();
+    engine.save();
+  }
+
+  return engine as Engine;
+}
+
+function registryEntity(address: Address): Registry {
+  let id = address.toHex();
+  let registry = Registry.load(id);
+
+  if (!registry) {
+    registry = new Registry(id);
+    registry.versions = [];
+    registry.assets = [];
+    registry.save();
+  }
+
+  return registry as Registry;
+}
 
 export function handleSetAmguPrice(event: SetAmguPrice): void {
   let amguPrice = new AmguPrice(event.transaction.hash.toHex());

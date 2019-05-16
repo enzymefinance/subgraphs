@@ -8,7 +8,7 @@ import {
   NativeAssetChange
 } from "../types/RegistryDataSource/RegistryContract";
 
-export function registryEntity(address: Address): Registry {
+function registryEntity(address: Address): Registry {
   let id = address.toHex();
   let registry = Registry.load(id);
 
@@ -22,7 +22,7 @@ export function registryEntity(address: Address): Registry {
   return registry as Registry;
 }
 
-function versionEntity(registry: Address, address: Address): Version {
+function versionEntity(address: Address, registry: Address): Version {
   let id = address.toHex();
   let version = Version.load(id);
 
@@ -35,7 +35,7 @@ function versionEntity(registry: Address, address: Address): Version {
   return version as Version;
 }
 
-export function engineEntity(address: Address, registry: Address): Engine {
+function engineEntity(address: Address, registry: Address): Engine {
   let id = address.toHex();
   let engine = Engine.load(id);
 
@@ -50,7 +50,7 @@ export function engineEntity(address: Address, registry: Address): Engine {
 
 export function handleVersionRegistration(event: VersionRegistration): void {
   let registry = registryEntity(event.address);
-  let version = versionEntity(event.address, event.params.version);
+  let version = versionEntity(event.params.version, event.address);
   registry.versions = registry.versions.concat([version.id]);
   registry.save();
 }
@@ -61,11 +61,8 @@ export function handleAssetUpsert(event: AssetUpsert): void {
   asset.name = event.params.name;
   asset.symbol = event.params.symbol;
   asset.decimals = event.params.decimals.toI32();
+  asset.registry = event.address.toHex();
   asset.save();
-
-  let registry = registryEntity(event.address);
-  registry.assets = registry.assets.concat([asset.id]);
-  registry.save();
 }
 
 export function handleAssetRemoval(event: AssetRemoval): void {
