@@ -20,4 +20,8 @@ export function handlePriceUpdate(event: PriceUpdate): void {
     price.assetPriceUpdate = event.transaction.hash.toHex();
     price.save();
   }
+
+  // perform calculations (for a fund)
+
+  // network aggregate
 }

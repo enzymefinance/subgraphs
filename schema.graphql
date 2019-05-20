@@ -53,8 +53,9 @@ type Asset @entity {
   id: ID!
   decimals: Int!
   symbol: String!
-  name: String!
+  name: String! # from JSON file
   registry: Registry!
+  history: [AssetPrice!]! @derivedFrom(field: "asset")
 }
 
 type Fund @entity {
@@ -76,6 +77,8 @@ type Fund @entity {
   engine: String!
   mlnToken: String!
   priceSource: String!
+  # current numbers
+  # history (derivedFrom)
 }
 
 type Accounting @entity {
@@ -143,6 +146,7 @@ type Investment @entity {
   sharePrice: BigInt!
 }
 
+# delete
 type AssetPriceUpdate @entity {
   id: ID!
   prices: [AssetPrice!]! @derivedFrom(field: "assetPriceUpdate")
