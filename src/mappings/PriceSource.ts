@@ -56,23 +56,12 @@ function updateFundCalculations(event: PriceUpdate): void {
 
       let versionContract = VersionContract.bind(versions[i]);
       let lastFundId = versionContract.getLastFundId();
-
       // Bail out if no fund has been registered yet.
       if (lastFundId.lt(BigInt.fromI32(0))) {
         return;
       }
 
-      // TODO: What the actual fuck?
-      if (lastFundId.gt(BigInt.fromI32(99999999))) {
-        return;
-      }
-
       for (let j: i32 = 0; j < lastFundId.toI32(); j++) {
-        // TODO: Seriously, what the fuck?!
-        if (j === 4) {
-          continue;
-        }
-
         let fundAddress = versionContract.getFundById(BigInt.fromI32(j)).toHex();
         let fund = Fund.load(fundAddress);
         if (!fund) {
