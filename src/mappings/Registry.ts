@@ -14,25 +14,11 @@ function registryEntity(address: Address): Registry {
 
   if (!registry) {
     registry = new Registry(id);
-    registry.versions = [];
     registry.assets = [];
     registry.save();
   }
 
   return registry as Registry;
-}
-
-function versionEntity(address: Address, registry: Address): Version {
-  let id = address.toHex();
-  let version = Version.load(id);
-
-  if (!version) {
-    version = new Version(id);
-    version.registry = registry.toHex();
-    version.save();
-  }
-
-  return version as Version;
 }
 
 function engineEntity(address: Address, registry: Address): Engine {
@@ -49,20 +35,27 @@ function engineEntity(address: Address, registry: Address): Engine {
 }
 
 export function handleVersionRegistration(event: VersionRegistration): void {
-  let registry = registryEntity(event.address);
-  let version = versionEntity(event.params.version, event.address);
-  registry.versions = registry.versions.concat([version.id]);
-  registry.save();
+  let id = event.params.version.toHex();
+  let version = Version.load(id);
+
+  if (!version) {
+    version = new Version(id);
+    version.registry = event.address.toHex();
+    version.save();
+  }
 }
 
 export function handleAssetUpsert(event: AssetUpsert): void {
+  let registry = registryEntity(event.address);
   let id = event.params.asset.toHex();
   let asset = Asset.load(id) || new Asset(id);
   asset.name = event.params.name;
   asset.symbol = event.params.symbol;
   asset.decimals = event.params.decimals.toI32();
-  asset.registry = event.address.toHex();
   asset.save();
+
+  registry.assets = registry.assets.concat([asset.id]);
+  registry.save();
 }
 
 export function handleAssetRemoval(event: AssetRemoval): void {

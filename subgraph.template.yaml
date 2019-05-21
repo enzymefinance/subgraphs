@@ -75,9 +75,18 @@ dataSources:
       entities:
         - AssetPrice
         - AssetPriceUpdate
+        - FundCalculation
       abis:
         - name: PriceSourceContract
-          file: ./node_modules/@melonproject/protocol/out/PriceSourceInterface.abi.json
+          file: ./node_modules/@melonproject/protocol/out/KyberPriceFeed.abi.json
+        - name: RegistryContract
+          file: ./node_modules/@melonproject/protocol/out/Registry.abi.json
+        - name: VersionContract
+          file: ./node_modules/@melonproject/protocol/out/Version.abi.json
+        - name: HubContract
+          file: ./node_modules/@melonproject/protocol/out/Hub.abi.json
+        - name: AccountingContract
+          file: ./node_modules/@melonproject/protocol/out/Accounting.abi.json
       eventHandlers:
         - event: PriceUpdate(address[],uint256[])
           handler: handlePriceUpdate

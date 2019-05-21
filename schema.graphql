@@ -1,8 +1,8 @@
 type Registry @entity {
   id: ID!
   engine: Engine
-  versions: [Version!]!
-  assets: [Asset!]! @derivedFrom(field: "registry")
+  assets: [Asset!]!
+  versions: [Version!]! @derivedFrom(field: "registry")
   funds: [Fund!]! @derivedFrom(field: "registry")
 }
 
@@ -55,16 +55,16 @@ type Asset @entity {
   symbol: String!
   name: String! # from JSON file
   registry: Registry!
-  history: [AssetPrice!]! @derivedFrom(field: "asset")
+  prices: [AssetPrice!]! @derivedFrom(field: "asset")
 }
 
 type Fund @entity {
   id: ID!
   name: String!
   manager: String!
-  investments: [Investment!]! @derivedFrom(field: "fund")
   creationTime: BigInt!
   isShutdown: Boolean!
+  shutDownTime: BigInt
   accounting: Accounting!
   participation: Participation!
   feeManager: FeeManager!
@@ -77,8 +77,23 @@ type Fund @entity {
   engine: String!
   mlnToken: String!
   priceSource: String!
-  # current numbers
-  # history (derivedFrom)
+  calculations: FundCalculations
+  calculationsHistory: [FundCalculations!]! @derivedFrom(field: "fund")
+  investments: [Investment!]! @derivedFrom(field: "fund")
+}
+
+type FundCalculations @entity {
+  id: ID!
+  fund: Fund!
+  gav: BigInt!
+  feesInDenominationAsset: BigInt!
+  feesInShares: BigInt!
+  nav: BigInt!
+  sharePrice: BigInt!
+  gavPerShareNetManagementFee: BigInt!
+  allocatedFees: BigInt!
+  totalSupply: BigInt!
+  timestamp: BigInt!
 }
 
 type Accounting @entity {
@@ -128,6 +143,7 @@ type Vault @entity {
   fund: Fund!
 }
 
+# seems to be unused / empty
 type InvestmentRequest @entity {
   id: ID!
   fund: Fund!
@@ -140,7 +156,7 @@ type Investor @entity {
 
 type Investment @entity {
   id: ID!
-  fund: Fund!
+  fund: Fund
   owner: Investor!
   shares: BigInt!
   sharePrice: BigInt!

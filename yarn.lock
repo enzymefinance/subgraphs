@@ -391,10 +391,10 @@
   dependencies:
     regenerator-runtime "^0.13.2"
 
-"@graphprotocol/graph-cli@^0.11.2":
-  version "0.11.2"
-  resolved "https://registry.yarnpkg.com/@graphprotocol/graph-cli/-/graph-cli-0.11.2.tgz#e0f356873f023c71f4d3e9288fe82c5a3d2d92a3"
-  integrity sha512-3hWeo+HDJ73voolCaPmusgzSLNTgYSlD5tes8Lr2ciIjv8Nxu11zk34MCGWtaKDaMvRBL9H4irPmpPsk9ZUP6A==
+"@graphprotocol/graph-cli@^0.12.0":
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/@graphprotocol/graph-cli/-/graph-cli-0.12.0.tgz#bd923afe8961a145987540c7d04b8509da33f57c"
+  integrity sha512-fUdBm06w7vGrxz/zmTsYKILPfowxxEoZwNB60QWEpEb8oGa3Wsm5UlQDN9mDgGN06HAWPO33C94JC6pukQRNPQ==
   dependencies:
     assemblyscript "https://github.com/AssemblyScript/assemblyscript#36040d5b5312f19a025782b5e36663823494c2f3"
     chalk "^2.4.1"
@@ -413,12 +413,12 @@
     prettier "^1.13.5"
     request "^2.88.0"
   optionalDependencies:
-    keytar "^4.3.0"
+    keytar "^4.6.0"
 
-"@graphprotocol/graph-ts@^0.11.0":
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/@graphprotocol/graph-ts/-/graph-ts-0.11.0.tgz#a9f997497f766a7f178329dae649413fdd5c68f3"
-  integrity sha512-aDgXJcQy7VJcXS6nRs/Ur/yU0THi27uZGxnylo5We0W/n65SEvuPH1b4gARw1+1pZg58karwuWPeI9mzD8A+qw==
+"@graphprotocol/graph-ts@^0.12.0":
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/@graphprotocol/graph-ts/-/graph-ts-0.12.0.tgz#b6d8a7d8ec4e8d69a8834064dd6867fb87b96966"
+  integrity sha512-1facmqAi/cKQVzK4g+DunpYQ+aDl8r6Ra87fBsQF0oNJfYAEPuk1QnxlZc8/uW9/SATesB+ljt9Bs/1+5AJRpg==
   dependencies:
     assemblyscript "https://github.com/AssemblyScript/assemblyscript#36040d5b5312f19a025782b5e36663823494c2f3"
 
@@ -820,9 +820,9 @@ asn1@~0.2.3:
   dependencies:
     safer-buffer "~2.1.0"
 
-"assemblyscript@https://github.com/AssemblyScript/assemblyscript#36040d5b5312f19a025782b5e36663823494c2f3":
+"assemblyscript@git+https://github.com/AssemblyScript/assemblyscript.git#36040d5b5312f19a025782b5e36663823494c2f3":
   version "0.6.0"
-  resolved "https://github.com/AssemblyScript/assemblyscript#36040d5b5312f19a025782b5e36663823494c2f3"
+  resolved "git+https://github.com/AssemblyScript/assemblyscript.git#36040d5b5312f19a025782b5e36663823494c2f3"
   dependencies:
     "@protobufjs/utf8" "^1.1.0"
     binaryen "77.0.0-nightly.20190407"
@@ -4832,10 +4832,10 @@ keypair@^1.0.1:
   resolved "https://registry.yarnpkg.com/keypair/-/keypair-1.0.1.tgz#7603719270afb6564ed38a22087a06fc9aa4ea1b"
   integrity sha1-dgNxknCvtlZO04oiCHoG/Jqk6hs=
 
-keytar@^4.3.0:
-  version "4.6.0"
-  resolved "https://registry.yarnpkg.com/keytar/-/keytar-4.6.0.tgz#18b2e9d6ba68ed32e30ccc78b209b4f6cdc1cbbb"
-  integrity sha512-8wWWTC62QHvUvgW/QYyJv7X0GFZfp2Ykr5n3PuXKADro0Sv2RKvuYxbkzoZvsw33EDNAKnUTSA0/KLGN/MbwDw==
+keytar@^4.6.0:
+  version "4.7.0"
+  resolved "https://registry.yarnpkg.com/keytar/-/keytar-4.7.0.tgz#992f646ace0862ee72a513a9f6cf7c21ef97078f"
+  integrity sha512-0hLlRRkhdR0068fVQo21hnIndGvacsh9PtAHGAPMPzxFjJwP8idAkVAcbdb1P5B+gterCBa3+4hxL0NPMDlZtw==
   dependencies:
     nan "2.13.2"
     prebuild-install "5.3.0"

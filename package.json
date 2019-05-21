@@ -13,8 +13,8 @@
     "deploy-local:ivh": "graph deploy iherger/melontest --debug --ipfs http://localhost:5001 --node http://127.0.0.1:8020"
   },
   "devDependencies": {
-    "@graphprotocol/graph-cli": "^0.11.2",
-    "@graphprotocol/graph-ts": "^0.11.0",
+    "@graphprotocol/graph-cli": "^0.12.0",
+    "@graphprotocol/graph-ts": "^0.12.0",
     "@melonproject/protocol": "^1.0.8",
     "commander": "^2.20.0",
     "glob": "^7.1.4",
