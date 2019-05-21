@@ -1,6 +1,7 @@
 import { Address, BigInt } from "@graphprotocol/graph-ts";
 import {
-  PriceUpdate, PriceSourceContract,
+  PriceUpdate,
+  PriceSourceContract
 } from "../types/PriceSourceDataSource/PriceSourceContract";
 import {
   Fund,
@@ -62,7 +63,9 @@ function updateFundCalculations(event: PriceUpdate): void {
       }
 
       for (let j: i32 = 0; j < lastFundId.toI32(); j++) {
-        let fundAddress = versionContract.getFundById(BigInt.fromI32(j)).toHex();
+        let fundAddress = versionContract
+          .getFundById(BigInt.fromI32(j))
+          .toHex();
         let fund = Fund.load(fundAddress);
         if (!fund) {
           continue;
@@ -72,33 +75,33 @@ function updateFundCalculations(event: PriceUpdate): void {
           continue;
         }
 
-        let accountingAddress = Address.fromString(fund.accounting);
-        let accountingContract = AccountingContract.bind(accountingAddress);
-        let values = accountingContract.performCalculations();
+        // let accountingAddress = Address.fromString(fund.accounting);
+        // let accountingContract = AccountingContract.bind(accountingAddress);
+        // let values = accountingContract.performCalculations();
 
-        let timestamp = event.block.timestamp;
-        let calculationsId = fundAddress + "/" + timestamp.toString();
-        let calculations = new FundCalculationsUpdate(calculationsId);
-        calculations.fund = fundAddress;
-        calculations.timestamp = timestamp;
-        calculations.gav = values.value0;
-        calculations.feesInDenominationAsset = values.value1;
-        calculations.feesInShares = values.value2;
-        calculations.nav = values.value3;
-        calculations.sharePrice = values.value4;
-        calculations.gavPerShareNetManagementFee = values.value5;
-        calculations.save();
+        // let timestamp = event.block.timestamp;
+        // let calculationsId = fundAddress + "/" + timestamp.toString();
+        // let calculations = new FundCalculationsUpdate(calculationsId);
+        // calculations.fund = fundAddress;
+        // calculations.timestamp = timestamp;
+        // calculations.gav = values.value0;
+        // calculations.feesInDenominationAsset = values.value1;
+        // calculations.feesInShares = values.value2;
+        // calculations.nav = values.value3;
+        // calculations.sharePrice = values.value4;
+        // calculations.gavPerShareNetManagementFee = values.value5;
+        // calculations.save();
 
-        fund.gav = values.value0;
-        fund.feesInDenominationAsset = values.value1;
-        fund.feesInShares = values.value2;
-        fund.nav = values.value3;
-        fund.sharePrice = values.value4;
-        fund.gavPerShareNetManagementFee = values.value5;
-        fund.lastCalculationsUpdate = timestamp;
-        fund.save();
+        // fund.gav = values.value0;
+        // fund.feesInDenominationAsset = values.value1;
+        // fund.feesInShares = values.value2;
+        // fund.nav = values.value3;
+        // fund.sharePrice = values.value4;
+        // fund.gavPerShareNetManagementFee = values.value5;
+        // fund.lastCalculationsUpdate = timestamp;
+        // fund.save();
       }
-    
+
       state.save();
     }
   }
@@ -107,4 +110,4 @@ function updateFundCalculations(event: PriceUpdate): void {
 export function handlePriceUpdate(event: PriceUpdate): void {
   updateAssetPrices(event);
   updateFundCalculations(event);
-} 
+}

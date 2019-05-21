@@ -3,7 +3,7 @@ import { Investment } from "../../types/schema";
 import { investorEntity } from "./investorEntity";
 
 export function investmentEntity(owner: Address, fund: Address): Investment {
-  let id = owner.toHex() + '/' + fund.toHex();
+  let id = owner.toHex() + "/" + fund.toHex();
   let investment = Investment.load(id);
 
   if (!investment) {

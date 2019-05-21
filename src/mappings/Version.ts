@@ -1,8 +1,9 @@
-import { NewFund } from '../types/VersionDataSource/VersionContract';
-import { HubDataSource } from '../types/VersionDataSource/templates';
-import { Fund } from '../types/schema';
-import { hexToAscii } from './utils/hexToAscii';
-import { HubContract } from '../types/VersionDataSource/HubContract';
+import { NewFund } from "../types/VersionDataSource/VersionContract";
+import { HubDataSource } from "../types/VersionDataSource/templates";
+import { Fund, FundCount, State } from "../types/schema";
+import { hexToAscii } from "./utils/hexToAscii";
+import { HubContract } from "../types/VersionDataSource/HubContract";
+import { BigInt } from "@graphprotocol/graph-ts";
 
 export function handleNewFund(event: NewFund): void {
   HubDataSource.create(event.params.hub);
@@ -26,4 +27,30 @@ export function handleNewFund(event: NewFund): void {
   fund.version = addresses[9];
   fund.engine = addresses[10];
   fund.save();
+
+  // update fund counts
+  let state = State.load("0x");
+  if (!state) {
+    state = new State("0x");
+    state.activeFunds = BigInt.fromI32(0);
+    state.nonActiveFunds = BigInt.fromI32(0);
+    state.timestampFundCount = BigInt.fromI32(0);
+    state.lastCalculation = BigInt.fromI32(0);
+  }
+
+  let fundCount = new FundCount(event.transaction.hash.toHex());
+  if (fund.isShutdown) {
+    fundCount.active = state.activeFunds;
+    fundCount.nonActive = state.nonActiveFunds.plus(BigInt.fromI32(1));
+  } else {
+    fundCount.active = state.activeFunds.plus(BigInt.fromI32(1));
+    fundCount.nonActive = state.nonActiveFunds;
+  }
+  fundCount.timestamp = event.block.timestamp;
+  fundCount.save();
+
+  state.activeFunds = fundCount.active;
+  state.nonActiveFunds = fundCount.nonActive;
+  state.timestampFundCount = event.block.timestamp;
+  state.save();
 }

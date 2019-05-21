@@ -1,6 +1,9 @@
 type State @entity {
   id: ID!
   lastCalculation: BigInt!
+  activeFunds: BigInt!
+  nonActiveFunds: BigInt!
+  timestampFundCount: BigInt!
 }
 
 type Registry @entity {
@@ -115,6 +118,13 @@ type FundCalculationsUpdate @entity {
   timestamp: BigInt!
 }
 
+type FundCount @entity {
+  id: ID!
+  active: BigInt!
+  nonActive: BigInt!
+  timestamp: BigInt!
+}
+
 type Accounting @entity {
   id: ID!
   fund: Fund!
@@ -175,7 +185,7 @@ type Investor @entity {
 
 type Investment @entity {
   id: ID!
-  fund: Fund
+  fund: Fund!
   owner: Investor!
   shares: BigInt!
   sharePrice: BigInt!
