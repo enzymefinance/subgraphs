@@ -22,10 +22,8 @@ export function handleNewFund(event: NewFund): void {
   fund.shares = addresses[4];
   fund.trading = addresses[5];
   fund.vault = addresses[6];
-  fund.priceSource = addresses[7];
   fund.registry = addresses[8];
   fund.version = addresses[9];
   fund.engine = addresses[10];
-  fund.mlnToken = addresses[11];
   fund.save();
 }

@@ -18,6 +18,7 @@ subgraph.yaml
 build/
 data/
 src/types/
-
+src/statics.ts
+ 
 # Dependency directories
 node_modules/

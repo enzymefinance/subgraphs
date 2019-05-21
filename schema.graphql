@@ -1,3 +1,8 @@
+type State @entity {
+  id: ID!
+  lastCalculation: BigInt!
+}
+
 type Registry @entity {
   id: ID!
   engine: Engine
@@ -53,9 +58,17 @@ type Asset @entity {
   id: ID!
   decimals: Int!
   symbol: String!
-  name: String! # from JSON file
-  registry: Registry!
-  prices: [AssetPrice!]! @derivedFrom(field: "asset")
+  name: String!
+  price: BigInt
+  priceUpdates: [AssetPriceUpdate!]! @derivedFrom(field: "asset")
+  lastPriceUpdate: BigInt
+}
+
+type AssetPriceUpdate @entity {
+  id: ID!
+  asset: Asset!
+  price: BigInt!
+  timestamp: BigInt!
 }
 
 type Fund @entity {
@@ -74,15 +87,21 @@ type Fund @entity {
   vault: Vault!
   registry: Registry!
   version: Version!
-  engine: String!
-  mlnToken: String!
-  priceSource: String!
-  calculations: FundCalculations
-  calculationsHistory: [FundCalculations!]! @derivedFrom(field: "fund")
+  engine: Engine!
+  gav: BigInt
+  feesInDenominationAsset: BigInt
+  feesInShares: BigInt
+  nav: BigInt
+  sharePrice: BigInt
+  gavPerShareNetManagementFee: BigInt
+  allocatedFees: BigInt
+  totalSupply: BigInt
   investments: [Investment!]! @derivedFrom(field: "fund")
+  calculationsUpdates: [FundCalculationsUpdate!]! @derivedFrom(field: "fund")
+  lastCalculationsUpdate: BigInt
 }
 
-type FundCalculations @entity {
+type FundCalculationsUpdate @entity {
   id: ID!
   fund: Fund!
   gav: BigInt!
@@ -143,7 +162,7 @@ type Vault @entity {
   fund: Fund!
 }
 
-# seems to be unused / empty
+# TODO: Add mappings.
 type InvestmentRequest @entity {
   id: ID!
   fund: Fund!
@@ -160,19 +179,4 @@ type Investment @entity {
   owner: Investor!
   shares: BigInt!
   sharePrice: BigInt!
-}
-
-# delete
-type AssetPriceUpdate @entity {
-  id: ID!
-  prices: [AssetPrice!]! @derivedFrom(field: "assetPriceUpdate")
-  timestamp: BigInt!
-}
-
-type AssetPrice @entity {
-  id: ID!
-  asset: Asset!
-  price: BigInt!
-  timestamp: BigInt!
-  assetPriceUpdate: AssetPriceUpdate!
 }

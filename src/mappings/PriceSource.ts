@@ -1,101 +1,121 @@
-import { Address, log, BigInt } from "@graphprotocol/graph-ts";
+import { Address, BigInt } from "@graphprotocol/graph-ts";
 import {
-  PriceUpdate,
-  PriceSourceContract
+  PriceUpdate, PriceSourceContract,
 } from "../types/PriceSourceDataSource/PriceSourceContract";
 import {
-  AssetPrice,
-  AssetPriceUpdate,
-  Asset,
-  Version,
   Fund,
-  FundCalculations
+  Asset,
+  AssetPriceUpdate,
+  FundCalculationsUpdate
 } from "../types/schema";
 import { AccountingContract } from "../types/PriceSourceDataSource/AccountingContract";
-import { RegistryContract } from "../types/PriceSourceDataSource/RegistryContract";
 import { VersionContract } from "../types/PriceSourceDataSource/VersionContract";
-import { isBlacklisted } from "./utils/ignoreVersions";
+import { currentState } from "./utils/currentState";
+import { versionAddress } from "../statics";
+import { RegistryContract } from "../types/PriceSourceDataSource/RegistryContract";
 
-export function handlePriceUpdate(event: PriceUpdate): void {
-  let assetPriceUpdate = new AssetPriceUpdate(event.transaction.hash.toHex());
-  assetPriceUpdate.timestamp = event.block.timestamp;
-  assetPriceUpdate.save();
-
+function updateAssetPrices(event: PriceUpdate): void {
   let prices = event.params.price;
   let tokens = event.params.token;
 
   for (let i: i32 = 0; i < prices.length; i++) {
-    let price = new AssetPrice(
-      event.transaction.hash.toHex() + "/" + tokens[i].toHex()
-    );
-    price.price = prices[i];
-    let asset = new Asset(tokens[i].toHex());
-    price.asset = asset.id;
-    price.timestamp = event.block.timestamp;
-    price.assetPriceUpdate = event.transaction.hash.toHex();
-    price.save();
-  }
+    let asset = Asset.load(tokens[i].toHex());
+    if (!asset) {
+      continue;
+    }
 
+    let id = event.transaction.hash.toHex() + "/" + asset.id;
+    let price = new AssetPriceUpdate(id);
+    price.asset = asset.id;
+    price.price = prices[i];
+    price.timestamp = event.block.timestamp;
+    price.save();
+
+    asset.lastPriceUpdate = event.block.timestamp;
+    asset.save();
+  }
+}
+
+function updateFundCalculations(event: PriceUpdate): void {
   let priceSourceContract = PriceSourceContract.bind(event.address);
   let registryAddress = priceSourceContract.REGISTRY();
   let registryContract = RegistryContract.bind(registryAddress);
-  let versionAddresses = registryContract.getRegisteredVersions();
+  let versions = registryContract.getRegisteredVersions();
 
-  for (let i: i32 = 0; i < versionAddresses.length; i++) {
-    // Bail out if this is a blacklisted version.
-    if (isBlacklisted(versionAddresses[i].toHexString())) {
+  for (let i: i32 = 0; i < versions.length; i++) {
+    // Only run on the current version.
+    if (versions[i].toHex() != versionAddress.toHex()) {
       continue;
     }
 
-    let versionContract = VersionContract.bind(versionAddresses[i]);
-    let lastFundId = versionContract.getLastFundId();
+    // Only update at most once an hour.
+    let state = currentState();
+    let interval = BigInt.fromI32(3600);
+    if (event.block.timestamp.minus(state.lastCalculation).gt(interval)) {
+      state.lastCalculation = event.block.timestamp;
 
-    // Bail out if no fund has been registered yet.
-    if (lastFundId.lt(BigInt.fromI32(0))) {
-      continue;
-    }
+      let versionContract = VersionContract.bind(versions[i]);
+      let lastFundId = versionContract.getLastFundId();
 
-    // TODO: What the actual fuck?
-    if (lastFundId.gt(BigInt.fromI32(99999999))) {
-      continue;
-    }
-
-    log.warning("Version is: {}", [versionAddresses[i].toHexString()]);
-
-    for (
-      let j: BigInt = BigInt.fromI32(0);
-      j.le(lastFundId);
-      j = j.plus(BigInt.fromI32(1))
-    ) {
-      log.warning("Loading fund number {}", [j.toString()]);
-      let fundAddress = versionContract.getFundById(j).toHex();
-      let fund = Fund.load(fundAddress);
-
-      if (!fund || fund.isShutdown) {
-        continue;
+      // Bail out if no fund has been registered yet.
+      if (lastFundId.lt(BigInt.fromI32(0))) {
+        return;
       }
 
-      let accountingAddress = Address.fromString(fund.accounting);
-      let accountingContract = AccountingContract.bind(
-        accountingAddress as Address
-      );
+      // TODO: What the actual fuck?
+      if (lastFundId.gt(BigInt.fromI32(99999999))) {
+        return;
+      }
 
-      let values = accountingContract.performCalculations();
-      let timestamp = event.block.timestamp;
-      let calculationsId = fundAddress + "/" + timestamp.toString();
-      let calculations = new FundCalculations(calculationsId);
-      calculations.fund = fundAddress;
-      calculations.timestamp = timestamp;
-      calculations.gav = values.value0;
-      calculations.feesInDenominationAsset = values.value1;
-      calculations.feesInShares = values.value2;
-      calculations.nav = values.value3;
-      calculations.sharePrice = values.value4;
-      calculations.gavPerShareNetManagementFee = values.value5;
-      calculations.save();
+      for (let j: i32 = 0; j < lastFundId.toI32(); j++) {
+        // TODO: Seriously, what the fuck?!
+        if (j === 4) {
+          continue;
+        }
 
-      fund.calculations = calculationsId;
-      fund.save();
+        let fundAddress = versionContract.getFundById(BigInt.fromI32(j)).toHex();
+        let fund = Fund.load(fundAddress);
+        if (!fund) {
+          continue;
+        }
+
+        if (fund.isShutdown) {
+          continue;
+        }
+
+        let accountingAddress = Address.fromString(fund.accounting);
+        let accountingContract = AccountingContract.bind(accountingAddress);
+        let values = accountingContract.performCalculations();
+
+        let timestamp = event.block.timestamp;
+        let calculationsId = fundAddress + "/" + timestamp.toString();
+        let calculations = new FundCalculationsUpdate(calculationsId);
+        calculations.fund = fundAddress;
+        calculations.timestamp = timestamp;
+        calculations.gav = values.value0;
+        calculations.feesInDenominationAsset = values.value1;
+        calculations.feesInShares = values.value2;
+        calculations.nav = values.value3;
+        calculations.sharePrice = values.value4;
+        calculations.gavPerShareNetManagementFee = values.value5;
+        calculations.save();
+
+        fund.gav = values.value0;
+        fund.feesInDenominationAsset = values.value1;
+        fund.feesInShares = values.value2;
+        fund.nav = values.value3;
+        fund.sharePrice = values.value4;
+        fund.gavPerShareNetManagementFee = values.value5;
+        fund.lastCalculationsUpdate = timestamp;
+        fund.save();
+      }
+    
+      state.save();
     }
   }
 }
+
+export function handlePriceUpdate(event: PriceUpdate): void {
+  updateAssetPrices(event);
+  updateFundCalculations(event);
+} 

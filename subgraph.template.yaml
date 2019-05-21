@@ -73,9 +73,11 @@ dataSources:
       language: wasm/assemblyscript
       file: ./src/mappings/PriceSource.ts
       entities:
-        - AssetPrice
+        - State
+        - Asset
         - AssetPriceUpdate
-        - FundCalculation
+        - Fund
+        - FundCalculationsUpdate
       abis:
         - name: PriceSourceContract
           file: ./node_modules/@melonproject/protocol/out/KyberPriceFeed.abi.json

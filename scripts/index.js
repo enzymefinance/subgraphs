@@ -33,12 +33,20 @@ commander.command('generate-subgraph [<deployment>]').action(async deployment =>
     encoding: 'UTF-8'
   }));
 
-  const template = fs.readFileSync(path.join(__dirname, '..', 'subgraph.template.yaml'), {
+  const rootDir = path.join(__dirname, '..');
+  const staticsTemplate = fs.readFileSync(path.join(rootDir, 'src', 'statics.template.ts'), {
     encoding: 'UTF-8',
   });
 
-  const output = mustache.render(template, view);
-  fs.writeFileSync(path.join(__dirname, '..', 'subgraph.yaml'), output);
+  const subgraphTemplate = fs.readFileSync(path.join(rootDir, 'subgraph.template.yaml'), {
+    encoding: 'UTF-8',
+  });
+
+  const subgraphOutput = mustache.render(subgraphTemplate, view);
+  const staticsOutput = mustache.render(staticsTemplate, view);
+
+  fs.writeFileSync(path.join(rootDir, 'subgraph.yaml'), subgraphOutput);
+  fs.writeFileSync(path.join(rootDir, 'src', 'statics.ts'), staticsOutput);
 });
 
 commander.on('command:*', () => {
