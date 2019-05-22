@@ -103,6 +103,7 @@ type Fund @entity {
   totalSupply: BigInt
   investments: [Investment!]! @derivedFrom(field: "fund")
   calculationsUpdates: [FundCalculationsUpdate!]! @derivedFrom(field: "fund")
+  investmentLog: [InvestmentLog!]! @derivedFrom(field: "fund")
   lastCalculationsUpdate: BigInt
 }
 
@@ -110,13 +111,13 @@ type FundCalculationsUpdate @entity {
   id: ID!
   fund: Fund!
   gav: BigInt!
-  feesInDenominationAsset: BigInt!
-  feesInShares: BigInt!
-  nav: BigInt!
-  sharePrice: BigInt!
-  gavPerShareNetManagementFee: BigInt!
-  allocatedFees: BigInt!
-  totalSupply: BigInt!
+  feesInDenominationAsset: BigInt
+  feesInShares: BigInt
+  nav: BigInt
+  sharePrice: BigInt
+  gavPerShareNetManagementFee: BigInt
+  allocatedFees: BigInt
+  totalSupply: BigInt
   timestamp: BigInt!
 }
 
@@ -189,6 +190,7 @@ type InvestmentRequest @entity {
 type Investor @entity {
   id: ID!
   investments: [Investment!]! @derivedFrom(field: "owner")
+  investmentLog: [InvestmentLog!]! @derivedFrom(field: "owner")
 }
 
 type Investment @entity {
@@ -197,4 +199,16 @@ type Investment @entity {
   owner: Investor!
   shares: BigInt!
   sharePrice: BigInt!
+  log: [InvestmentLog!]! @derivedFrom(field: "investment")
+}
+
+type InvestmentLog @entity {
+  id: ID!
+  timestamp: BigInt!
+  investment: Investment!
+  owner: Investor!
+  fund: Fund!
+  action: String!
+  shares: BigInt!
+  sharePrice: BigInt
 }

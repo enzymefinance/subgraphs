@@ -6,7 +6,12 @@ import {
   EnableInvestment,
   DisableInvestment
 } from "../types/ParticipationFactoryDataSource/templates/ParticipationDataSource/ParticipationContract";
-import { Participation, Fund, InvestorCount } from "../types/schema";
+import {
+  Participation,
+  Fund,
+  InvestorCount,
+  InvestmentLog
+} from "../types/schema";
 import { HubContract } from "../types/ParticipationFactoryDataSource/templates/ParticipationDataSource/HubContract";
 import { AccountingContract } from "../types/ParticipationFactoryDataSource/templates/ParticipationDataSource/AccountingContract";
 import { currentState } from "./utils/currentState";
@@ -43,6 +48,17 @@ export function handleRequestExecution(event: RequestExecution): void {
   state.numberOfInvestors = investorCount.numberOfInvestors;
   state.timestamptNumberOfInvestors = investorCount.timestamp;
   state.save();
+
+  let investmentLog = new InvestmentLog(event.transaction.hash.toHex());
+  investmentLog.timestamp = event.block.timestamp;
+  investmentLog.investment =
+    event.params.requestOwner.toHex() + "/" + contract.hub().toHex();
+  investmentLog.owner = event.params.requestOwner.toHex();
+  investmentLog.fund = contract.hub().toHex();
+  investmentLog.action = "investment";
+  investmentLog.shares = event.params.requestedShares;
+  investmentLog.sharePrice = currentSharePrice;
+  investmentLog.save();
 }
 
 export function handleRedemption(event: Redemption): void {
@@ -73,6 +89,17 @@ export function handleRedemption(event: Redemption): void {
     state.timestamptNumberOfInvestors = investorCount.timestamp;
     state.save();
   }
+
+  let investmentLog = new InvestmentLog(event.transaction.hash.toHex());
+  investmentLog.timestamp = event.block.timestamp;
+  investmentLog.investment =
+    event.params.redeemer.toHex() + "/" + contract.hub().toHex();
+  investmentLog.owner = event.params.redeemer.toHex();
+  investmentLog.fund = contract.hub().toHex();
+  investmentLog.action = "redemption";
+  investmentLog.shares = event.params.redeemedShares;
+  // investmentLog.sharePrice = get current share price from accounting contract
+  investmentLog.save();
 }
 
 export function handleEnableInvestment(event: EnableInvestment): void {
