@@ -179,6 +179,7 @@ dataSources:
             - InvestorCount
             - State
             - InvestmentLog
+            - FundHoldingsLog
           abis:
             - name: ParticipationContract
               file: ./node_modules/@melonproject/protocol/out/Participation.abi.json

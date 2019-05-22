@@ -7,7 +7,8 @@ import {
   Fund,
   Asset,
   AssetPriceUpdate,
-  FundCalculationsUpdate
+  FundCalculationsUpdate,
+  FundHoldingsLog
 } from "../types/schema";
 import { AccountingContract } from "../types/PriceSourceDataSource/AccountingContract";
 import { VersionContract } from "../types/PriceSourceDataSource/VersionContract";
@@ -87,9 +88,9 @@ function updateFundCalculations(event: PriceUpdate): void {
           continue;
         }
 
-        if (fund.isShutdown) {
-          continue;
-        }
+        // if (fund.isShutdown) {
+        //   continue;
+        // }
 
         let accountingAddress = Address.fromString(fund.accounting);
         let accountingContract = AccountingContract.bind(accountingAddress);
@@ -118,6 +119,25 @@ function updateFundCalculations(event: PriceUpdate): void {
         // fund.gavPerShareNetManagementFee = values.value5;
         fund.lastCalculationsUpdate = timestamp;
         fund.save();
+
+        let holdings = accountingContract.getFundHoldings();
+
+        // this part leads to a timeout for the event handler....
+
+        // for (let k: i32 = 0; k < holdings.value0.length; j++) {
+        //   let holdingsId =
+        //     fundAddress +
+        //     "/" +
+        //     timestamp.toString() +
+        //     "/" +
+        //     holdings.value1[k].toHex();
+        //   let fundHoldingsLog = new FundHoldingsLog(holdingsId);
+        //   fundHoldingsLog.timestamp = timestamp;
+        //   fundHoldingsLog.fund = fundAddress;
+        //   fundHoldingsLog.asset = holdings.value1[k].toHex();
+        //   fundHoldingsLog.holding = holdings.value0[k];
+        //   fundHoldingsLog.save();
+        // }
       }
 
       state.save();

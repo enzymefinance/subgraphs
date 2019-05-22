@@ -104,6 +104,7 @@ type Fund @entity {
   investments: [Investment!]! @derivedFrom(field: "fund")
   calculationsUpdates: [FundCalculationsUpdate!]! @derivedFrom(field: "fund")
   investmentLog: [InvestmentLog!]! @derivedFrom(field: "fund")
+  holdingsLog: [FundHoldingsLog!]! @derivedFrom(field: "fund")
   lastCalculationsUpdate: BigInt
 }
 
@@ -211,4 +212,12 @@ type InvestmentLog @entity {
   action: String!
   shares: BigInt!
   sharePrice: BigInt
+}
+
+type FundHoldingsLog @entity {
+  id: ID!
+  timestamp: BigInt!
+  fund: Fund!
+  asset: Asset!
+  holding: BigInt!
 }
