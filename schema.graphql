@@ -4,6 +4,8 @@ type State @entity {
   activeFunds: BigInt!
   nonActiveFunds: BigInt!
   timestampFundCount: BigInt!
+  numberOfInvestors: BigInt!
+  timestamptNumberOfInvestors: BigInt!
 }
 
 type Registry @entity {
@@ -122,6 +124,12 @@ type FundCount @entity {
   id: ID!
   active: BigInt!
   nonActive: BigInt!
+  timestamp: BigInt!
+}
+
+type InvestorCount @entity {
+  id: ID!
+  numberOfInvestors: BigInt!
   timestamp: BigInt!
 }
 

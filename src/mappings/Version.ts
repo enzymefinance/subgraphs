@@ -4,6 +4,7 @@ import { Fund, FundCount, State } from "../types/schema";
 import { hexToAscii } from "./utils/hexToAscii";
 import { HubContract } from "../types/VersionDataSource/HubContract";
 import { BigInt } from "@graphprotocol/graph-ts";
+import { currentState } from "./utils/currentState";
 
 export function handleNewFund(event: NewFund): void {
   HubDataSource.create(event.params.hub);
@@ -29,14 +30,7 @@ export function handleNewFund(event: NewFund): void {
   fund.save();
 
   // update fund counts
-  let state = State.load("0x");
-  if (!state) {
-    state = new State("0x");
-    state.activeFunds = BigInt.fromI32(0);
-    state.nonActiveFunds = BigInt.fromI32(0);
-    state.timestampFundCount = BigInt.fromI32(0);
-    state.lastCalculation = BigInt.fromI32(0);
-  }
+  let state = currentState();
 
   let fundCount = new FundCount(event.transaction.hash.toHex());
   if (fund.isShutdown) {

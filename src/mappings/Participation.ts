@@ -6,9 +6,11 @@ import {
   EnableInvestment,
   DisableInvestment
 } from "../types/ParticipationFactoryDataSource/templates/ParticipationDataSource/ParticipationContract";
-import { Participation, Fund } from "../types/schema";
+import { Participation, Fund, InvestorCount } from "../types/schema";
 import { HubContract } from "../types/ParticipationFactoryDataSource/templates/ParticipationDataSource/HubContract";
 import { AccountingContract } from "../types/ParticipationFactoryDataSource/templates/ParticipationDataSource/AccountingContract";
+import { currentState } from "./utils/currentState";
+import { BigInt } from "@graphprotocol/graph-ts";
 
 export function handleRequestExecution(event: RequestExecution): void {
   let contract = ParticipationContract.bind(event.address);
@@ -27,6 +29,20 @@ export function handleRequestExecution(event: RequestExecution): void {
   investment.sharePrice = currentSharePrice;
   // TODO: calculate amount in ETH that was invested (save to investmenthistory entity)
   investment.save();
+
+  // this is currently investment-count, not investor-count (misnamed entity)
+  // TODO: have both investment-count and investor-count
+  let state = currentState();
+  let investorCount = new InvestorCount(event.transaction.hash.toHex());
+  investorCount.numberOfInvestors = state.numberOfInvestors.plus(
+    BigInt.fromI32(1)
+  );
+  investorCount.timestamp = event.block.timestamp;
+  investorCount.save();
+
+  state.numberOfInvestors = investorCount.numberOfInvestors;
+  state.timestamptNumberOfInvestors = investorCount.timestamp;
+  state.save();
 }
 
 export function handleRedemption(event: Redemption): void {
@@ -41,6 +57,22 @@ export function handleRedemption(event: Redemption): void {
   investment.shares = investment.shares.minus(event.params.redeemedShares);
   // TODO: calculate amount in ETH that was withdrawn (save to investmenthistory entity)
   investment.save();
+
+  // this is currently investment-count, not investor-count (misnamed entity)
+  // TODO: have both investment-count and investor-count
+  if (investment.shares.gt(BigInt.fromI32(0))) {
+    let state = currentState();
+    let investorCount = new InvestorCount(event.transaction.hash.toHex());
+    investorCount.numberOfInvestors = state.numberOfInvestors.minus(
+      BigInt.fromI32(1)
+    );
+    investorCount.timestamp = event.block.timestamp;
+    investorCount.save();
+
+    state.numberOfInvestors = investorCount.numberOfInvestors;
+    state.timestamptNumberOfInvestors = investorCount.timestamp;
+    state.save();
+  }
 }
 
 export function handleEnableInvestment(event: EnableInvestment): void {

@@ -9,6 +9,8 @@ export function currentState(): State {
     state.activeFunds = BigInt.fromI32(0);
     state.nonActiveFunds = BigInt.fromI32(0);
     state.timestampFundCount = BigInt.fromI32(0);
+    state.numberOfInvestors = BigInt.fromI32(0);
+    state.timestamptNumberOfInvestors = BigInt.fromI32(0);
     state.save();
   }
 

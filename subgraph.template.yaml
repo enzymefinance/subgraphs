@@ -107,7 +107,7 @@ dataSources:
       entities:
         - Fund
         - FundCount
-        - FundCountUpdate
+        - State
       abis:
         - name: VersionContract
           file: ./node_modules/@melonproject/protocol/out/Version.abi.json
@@ -130,7 +130,7 @@ dataSources:
           entities:
             - Fund
             - FundCount
-            - FundCountUpdate
+            - State
           abis:
             - name: HubContract
               file: ./node_modules/@melonproject/protocol/out/Hub.abi.json
@@ -176,6 +176,8 @@ dataSources:
             - Investment
             - InvestmentRequest
             - Fund
+            - InvestorCount
+            - State
           abis:
             - name: ParticipationContract
               file: ./node_modules/@melonproject/protocol/out/Participation.abi.json
