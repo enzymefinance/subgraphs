@@ -78,6 +78,10 @@ dataSources:
         - AssetPriceUpdate
         - Fund
         - FundCalculationsUpdate
+        - AggregateValue
+        - Investment
+        - Investor
+        - InvestmentValuationLog
       abis:
         - name: PriceSourceContract
           file: ./node_modules/@melonproject/protocol/out/KyberPriceFeed.abi.json
@@ -89,6 +93,10 @@ dataSources:
           file: ./node_modules/@melonproject/protocol/out/Hub.abi.json
         - name: AccountingContract
           file: ./node_modules/@melonproject/protocol/out/Accounting.abi.json
+        - name: SharesContract
+          file: ./node_modules/@melonproject/protocol/out/Shares.abi.json
+        - name: ParticipationContract
+          file: ./node_modules/@melonproject/protocol/out/Participation.abi.json
       eventHandlers:
         - event: PriceUpdate(address[],uint256[])
           handler: handlePriceUpdate

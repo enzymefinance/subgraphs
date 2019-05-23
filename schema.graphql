@@ -101,6 +101,7 @@ type Fund @entity {
   gavPerShareNetManagementFee: BigInt
   allocatedFees: BigInt
   totalSupply: BigInt
+  grossSharePrice: BigDecimal
   investments: [Investment!]! @derivedFrom(field: "fund")
   calculationsUpdates: [FundCalculationsUpdate!]! @derivedFrom(field: "fund")
   investmentLog: [InvestmentLog!]! @derivedFrom(field: "fund")
@@ -119,6 +120,7 @@ type FundCalculationsUpdate @entity {
   gavPerShareNetManagementFee: BigInt
   allocatedFees: BigInt
   totalSupply: BigInt
+  grossSharePrice: BigDecimal
   timestamp: BigInt!
 }
 
@@ -200,7 +202,16 @@ type Investment @entity {
   owner: Investor!
   shares: BigInt!
   sharePrice: BigInt!
+  gav: BigDecimal!
   log: [InvestmentLog!]! @derivedFrom(field: "investment")
+  valuations: [InvestmentValuationLog!]! @derivedFrom(field: "investment")
+}
+
+type InvestmentValuationLog @entity {
+  id: ID!
+  investment: Investment!
+  gav: BigDecimal!
+  timestamp: BigInt!
 }
 
 type InvestmentLog @entity {
@@ -220,4 +231,10 @@ type FundHoldingsLog @entity {
   fund: Fund!
   asset: Asset!
   holding: BigInt!
+}
+
+type AggregateValue @entity {
+  id: ID!
+  timestamp: BigInt!
+  gav: BigInt!
 }
