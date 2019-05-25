@@ -5,6 +5,7 @@ import { hexToAscii } from "./utils/hexToAscii";
 import { HubContract } from "../types/VersionDataSource/HubContract";
 import { BigInt } from "@graphprotocol/graph-ts";
 import { currentState } from "./utils/currentState";
+import { saveContract } from "./utils/saveContract";
 
 export function handleNewFund(event: NewFund): void {
   HubDataSource.create(event.params.hub);
@@ -28,6 +29,14 @@ export function handleNewFund(event: NewFund): void {
   fund.version = addresses[9];
   fund.engine = addresses[10];
   fund.save();
+
+  saveContract(
+    hub,
+    "Hub/Fund",
+    event.block.timestamp,
+    event.block.number,
+    addresses[9]
+  );
 
   // update fund counts
   let state = currentState();

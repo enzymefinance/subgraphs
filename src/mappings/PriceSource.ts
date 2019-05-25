@@ -15,12 +15,11 @@ import {
 import { AccountingContract } from "../types/PriceSourceDataSource/AccountingContract";
 import { VersionContract } from "../types/PriceSourceDataSource/VersionContract";
 import { currentState } from "./utils/currentState";
-import { versionAddress } from "../statics";
+// import { versionAddress } from "../statics";
 import { RegistryContract } from "../types/PriceSourceDataSource/RegistryContract";
 import { SharesContract } from "../types/PriceSourceDataSource/SharesContract";
 import { ParticipationContract } from "../types/PriceSourceDataSource/ParticipationContract";
 import { investmentEntity } from "./entities/investmentEntity";
-// import { investmentEntity } from "./entities/investmentEntity";
 
 function updateAssetPrices(event: PriceUpdate): void {
   let prices = event.params.price;
@@ -55,24 +54,8 @@ function updateFundCalculations(event: PriceUpdate): void {
 
   for (let i: i32 = 0; i < versions.length; i++) {
     // Only run on the current version.
-    if (versions[i].toHex() != versionAddress.toHex()) {
-      continue;
-    }
-
-    // // performCalculations currently fails at these blocks...
-    // if (
-    //   event.block.number.equals(BigInt.fromI32(7590658)) ||
-    //   event.block.number.equals(BigInt.fromI32(7597036)) ||
-    //   event.block.number.equals(BigInt.fromI32(7642402)) ||
-    //   event.block.number.equals(BigInt.fromI32(7648899)) ||
-    //   event.block.number.equals(BigInt.fromI32(7649380)) ||
-    //   event.block.number.equals(BigInt.fromI32(7655806))
-    // ) {
+    // if (versions[i].toHex() != versionAddress.toHex()) {
     //   continue;
-    // }
-
-    // if (event.block.number.gt(BigInt.fromI32(7648899))) {
-    //   log.warning("updateFundCalculations", []);
     // }
 
     // Only update at most once an hour.
@@ -182,11 +165,7 @@ function updateFundCalculations(event: PriceUpdate): void {
 
           let value = grossSharePrice.times(investment.shares.toBigDecimal());
           let investmentValuationLog = new InvestmentValuationLog(
-            fundAddress +
-              "/" +
-              investment.id +
-              "/" +
-              event.block.timestamp.toString()
+            investment.id + "/" + event.block.timestamp.toString()
           );
           investmentValuationLog.investment = investment.id;
           investmentValuationLog.gav = value;

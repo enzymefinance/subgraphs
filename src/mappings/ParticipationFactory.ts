@@ -1,6 +1,7 @@
-import { NewInstance } from '../types/ParticipationFactoryDataSource/ParticipationFactoryContract';
-import { ParticipationDataSource } from '../types/ParticipationFactoryDataSource/templates';
-import { Participation } from '../types/schema';
+import { NewInstance } from "../types/ParticipationFactoryDataSource/ParticipationFactoryContract";
+import { ParticipationDataSource } from "../types/ParticipationFactoryDataSource/templates";
+import { Participation } from "../types/schema";
+import { saveContract } from "./utils/saveContract";
 
 export function handleNewInstance(event: NewInstance): void {
   ParticipationDataSource.create(event.params.instance);
@@ -10,4 +11,12 @@ export function handleNewInstance(event: NewInstance): void {
   participation.allowedAssets = [];
   participation.investmentRequests = [];
   participation.save();
+
+  saveContract(
+    participation.id,
+    "Participation",
+    event.block.timestamp,
+    event.block.number,
+    event.params.hub.toHex()
+  );
 }

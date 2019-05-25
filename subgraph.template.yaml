@@ -19,6 +19,8 @@ dataSources:
         - Asset
         - Version
         - Registry
+        - Engine
+        - Contract
       abis:
         - name: RegistryContract
           file: ./node_modules/@melonproject/protocol/out/Registry.abi.json
@@ -101,11 +103,58 @@ dataSources:
         - event: PriceUpdate(address[],uint256[])
           handler: handlePriceUpdate
 
+  # current version contract 
   - name: VersionDataSource
     kind: ethereum/contract
     network: mainnet
     source:
       address: '{{melonContracts.version}}'
+      abi: VersionContract
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.2
+      language: wasm/assemblyscript
+      file: ./src/mappings/Version.ts
+      entities:
+        - Fund
+        - FundCount
+        - State
+      abis:
+        - name: VersionContract
+          file: ./node_modules/@melonproject/protocol/out/Version.abi.json
+        - name: HubContract
+          file: ./node_modules/@melonproject/protocol/out/Hub.abi.json
+      eventHandlers:
+        - event: NewFund(address,address,address[12])
+          handler: handleNewFund
+    templates:
+      - name: HubDataSource
+        kind: ethereum/contract
+        network: mainnet
+        source:
+          abi: HubContract
+        mapping:
+          kind: ethereum/events
+          apiVersion: 0.0.2
+          language: wasm/assemblyscript
+          file: ./src/mappings/Hub.ts
+          entities:
+            - Fund
+            - FundCount
+            - State
+          abis:
+            - name: HubContract
+              file: ./node_modules/@melonproject/protocol/out/Hub.abi.json
+          eventHandlers:
+            - event: FundShutDown()
+              handler: handleFundShutDown
+
+  # old Version Contract (first deployment)
+  - name: VersionDataSource
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      address: '0xCB6c6Bdf0AA4cF0188518783b871931EFB64248f'
       abi: VersionContract
     mapping:
       kind: ethereum/events

@@ -14,6 +14,7 @@ import {
   Engine
 } from "../types/schema";
 import { Address } from "@graphprotocol/graph-ts";
+import { saveContract } from "./utils/saveContract";
 
 function engineEntity(address: Address, registry: Address): Engine {
   let id = address.toHex();
@@ -79,4 +80,12 @@ export function handleRegistryChange(event: RegistryChange): void {
   let engine = engineEntity(event.address, event.params.registry);
   engine.registry = registry.id;
   engine.save();
+
+  saveContract(
+    registry.id,
+    "Registry",
+    event.block.timestamp,
+    event.block.number,
+    engine.id
+  );
 }

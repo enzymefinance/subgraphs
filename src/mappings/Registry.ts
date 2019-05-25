@@ -1,5 +1,5 @@
-import { Address } from "@graphprotocol/graph-ts";
-import { Registry, Version, Asset, Engine } from "../types/schema";
+import { Address, log } from "@graphprotocol/graph-ts";
+import { Registry, Version, Asset, Engine, Contract } from "../types/schema";
 import {
   VersionRegistration,
   AssetRemoval,
@@ -7,6 +7,7 @@ import {
   EngineChange,
   NativeAssetChange
 } from "../types/RegistryDataSource/RegistryContract";
+import { saveContract } from "./utils/saveContract";
 
 function registryEntity(address: Address): Registry {
   let id = address.toHex();
@@ -42,6 +43,14 @@ export function handleVersionRegistration(event: VersionRegistration): void {
     version = new Version(id);
     version.registry = event.address.toHex();
     version.save();
+
+    saveContract(
+      id,
+      "Version",
+      event.block.timestamp,
+      event.block.number,
+      event.address.toHex()
+    );
   }
 }
 
@@ -56,6 +65,14 @@ export function handleAssetUpsert(event: AssetUpsert): void {
 
   registry.assets = registry.assets.concat([asset.id]);
   registry.save();
+
+  saveContract(
+    id,
+    "Asset",
+    event.block.timestamp,
+    event.block.number,
+    event.address.toHex()
+  );
 }
 
 export function handleAssetRemoval(event: AssetRemoval): void {
@@ -78,6 +95,22 @@ export function handleEngineChange(event: EngineChange): void {
   let engine = engineEntity(event.params.engine, event.address);
   registry.engine = engine.id;
   registry.save();
+
+  saveContract(
+    registry.id,
+    "Registry",
+    event.block.timestamp,
+    event.block.number,
+    ""
+  );
+
+  saveContract(
+    engine.id,
+    "Engine",
+    event.block.timestamp,
+    event.block.number,
+    event.address.toHex()
+  );
 }
 
 export function handleNativeAssetChange(event: NativeAssetChange): void {}
