@@ -21,6 +21,7 @@ type Registry @entity {
   id: ID!
   engine: Engine
   assets: [Asset!]!
+  exchangeAdapters: [ExchangeAdapter!]!
   versions: [Version!]! @derivedFrom(field: "registry")
   priceSources: [PriceSource!]! @derivedFrom(field: "registry")
   mlnTokens: [MlnToken!]! @derivedFrom(field: "registry")
@@ -91,6 +92,9 @@ type Asset @entity {
   decimals: Int!
   symbol: String!
   name: String!
+  url: String!
+  reserveMin: BigInt!
+  registry: Registry
   price: BigInt
   priceUpdates: [AssetPriceUpdate!]! @derivedFrom(field: "asset")
   lastPriceUpdate: BigInt
@@ -101,6 +105,14 @@ type AssetPriceUpdate @entity {
   asset: Asset!
   price: BigInt!
   timestamp: BigInt!
+}
+
+type ExchangeAdapter @entity {
+  id: ID!
+  exchange: String!
+  takesCustody: Boolean!
+  sigs: String!
+  registry: Registry
 }
 
 type Fund @entity {

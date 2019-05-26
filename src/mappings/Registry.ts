@@ -4,10 +4,10 @@ import {
   Version,
   Asset,
   Engine,
-  Contract,
   PriceSource,
   MlnToken,
-  NativeAsset
+  NativeAsset,
+  ExchangeAdapter
 } from "../types/schema";
 import {
   VersionRegistration,
@@ -15,7 +15,9 @@ import {
   AssetUpsert,
   EngineChange,
   NativeAssetChange,
-  MlnTokenChange
+  MlnTokenChange,
+  ExchangeAdapterUpsert,
+  ExchangeAdapterRemoval
 } from "../types/RegistryDataSource/RegistryContract";
 import { saveContract } from "./utils/saveContract";
 import { PriceSourceChange } from "../types/PriceSourceDataSource/RegistryContract";
@@ -72,6 +74,8 @@ export function handleAssetUpsert(event: AssetUpsert): void {
   asset.name = event.params.name;
   asset.symbol = event.params.symbol;
   asset.decimals = event.params.decimals.toI32();
+  asset.url = event.params.url;
+  asset.reserveMin = event.params.reserveMin;
   asset.save();
 
   registry.assets = registry.assets.concat([asset.id]);
@@ -87,8 +91,9 @@ export function handleAssetUpsert(event: AssetUpsert): void {
 }
 
 export function handleAssetRemoval(event: AssetRemoval): void {
+  let assetId = event.params.asset.toHex();
   let registry = registryEntity(event.address);
-  let removed = event.params.asset.toHex();
+  let removed = assetId;
   let assets = new Array<string>();
   for (let i: i32 = 0; i < registry.assets.length; i++) {
     let current = (registry.assets as string[])[i];
@@ -96,9 +101,61 @@ export function handleAssetRemoval(event: AssetRemoval): void {
       assets = assets.concat([current]);
     }
   }
-
   registry.assets = assets;
   registry.save();
+
+  let asset = Asset.load(assetId) || new Asset(assetId);
+  asset.registry = "";
+  asset.save();
+}
+
+export function handleExchangeAdapterUpsert(
+  event: ExchangeAdapterUpsert
+): void {
+  let registry = registryEntity(event.address);
+  let id = event.params.adapter.toHex();
+  let exchangeAdapter = ExchangeAdapter.load(id) || new ExchangeAdapter(id);
+  exchangeAdapter.exchange = event.params.exchange.toString();
+  exchangeAdapter.takesCustody = event.params.takesCustody;
+  exchangeAdapter.sigs = event.params.sigs.toString();
+  exchangeAdapter.registry = event.address.toString();
+  exchangeAdapter.save();
+
+  registry.exchangeAdapters = registry.exchangeAdapters.concat([
+    exchangeAdapter.id
+  ]);
+  registry.save();
+
+  saveContract(
+    id,
+    "ExchangeAdapter",
+    event.block.timestamp,
+    event.block.number,
+    event.address.toHex()
+  );
+}
+
+export function handleExchangeAdapterRemoval(
+  event: ExchangeAdapterRemoval
+): void {
+  let exchangeAdapterId = event.params.exchange.toHex();
+  let registry = registryEntity(event.address);
+  let removed = exchangeAdapterId;
+  let exchangeAdapters = new Array<string>();
+  for (let i: i32 = 0; i < registry.exchangeAdapters.length; i++) {
+    let current = (registry.exchangeAdapters as string[])[i];
+    if (current !== removed) {
+      exchangeAdapters = exchangeAdapters.concat([current]);
+    }
+  }
+  registry.exchangeAdapters = exchangeAdapters;
+  registry.save();
+
+  let exchangeAdapter =
+    ExchangeAdapter.load(exchangeAdapterId) ||
+    new ExchangeAdapter(exchangeAdapterId);
+  exchangeAdapter.registry = "";
+  exchangeAdapter.save();
 }
 
 export function handleEngineChange(event: EngineChange): void {

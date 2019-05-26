@@ -34,6 +34,10 @@ dataSources:
           handler: handleAssetUpsert
         - event: AssetRemoval(address)
           handler: handleAssetRemoval
+        - event: ExchangeAdapterUpsert(address,address,bool,bytes4[])
+          handler: handleExchangeAdapterUpsert
+        - event: ExchangeAdapterRemoval(address)
+          handler: handleExchangeAdapterRemoval
         - event: EngineChange(address)
           handler: handleEngineChange
         - event: PriceSourceChange(address)
@@ -464,6 +468,9 @@ dataSources:
           abis:
             - name: TradingContract
               file: ./node_modules/@melonproject/protocol/out/Trading.abi.json
+          eventHandlers:
+            - event: ExchangeMethodCall(address,string,address[6],uint256[8],bytes32,bytes,bytes,bytes)
+              handler: handleExchangeMethodCall
 
   - name: VaultFactoryDataSource
     kind: ethereum/contract
