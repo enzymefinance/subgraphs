@@ -1,6 +1,7 @@
-import { NewInstance } from '../types/AccountingFactoryDataSource/AccountingFactoryContract';
-import { AccountingDataSource } from '../types/AccountingFactoryDataSource/templates';
-import { Accounting } from '../types/schema';
+import { NewInstance } from "../types/AccountingFactoryDataSource/AccountingFactoryContract";
+import { AccountingDataSource } from "../types/AccountingFactoryDataSource/templates";
+import { Accounting } from "../types/schema";
+import { saveContract } from "./utils/saveContract";
 
 export function handleNewInstance(event: NewInstance): void {
   AccountingDataSource.create(event.params.instance);
@@ -11,4 +12,12 @@ export function handleNewInstance(event: NewInstance): void {
   accounting.nativeAsset = event.params.nativeAsset.toHex();
   accounting.ownedAssets = [];
   accounting.save();
+
+  saveContract(
+    accounting.id,
+    "Accounting",
+    event.block.timestamp,
+    event.block.number,
+    event.params.hub.toHex()
+  );
 }

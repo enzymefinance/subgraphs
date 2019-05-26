@@ -14,8 +14,6 @@ import {
 } from "../types/schema";
 import { AccountingContract } from "../types/PriceSourceDataSource/AccountingContract";
 import { VersionContract } from "../types/PriceSourceDataSource/VersionContract";
-import { currentState } from "./utils/currentState";
-import { versionAddress } from "../statics";
 import { RegistryContract } from "../types/PriceSourceDataSource/RegistryContract";
 import { SharesContract } from "../types/PriceSourceDataSource/SharesContract";
 import { ParticipationContract } from "../types/PriceSourceDataSource/ParticipationContract";

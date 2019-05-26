@@ -22,6 +22,9 @@ type Registry @entity {
   engine: Engine
   assets: [Asset!]!
   versions: [Version!]! @derivedFrom(field: "registry")
+  priceSources: [PriceSource!]! @derivedFrom(field: "registry")
+  mlnTokens: [MlnToken!]! @derivedFrom(field: "registry")
+  nativeAssets: [NativeAsset!]! @derivedFrom(field: "registry")
   funds: [Fund!]! @derivedFrom(field: "registry")
 }
 
@@ -38,6 +41,21 @@ type Engine @entity {
   amguPayments: [AmguPayment!]! @derivedFrom(field: "engine")
   etherThawings: [ThawEther!]! @derivedFrom(field: "engine")
   etherBurnings: [BurnEther!]! @derivedFrom(field: "engine")
+}
+
+type PriceSource @entity {
+  id: ID!
+  registry: Registry!
+}
+
+type MlnToken @entity {
+  id: ID!
+  registry: Registry!
+}
+
+type NativeAsset @entity {
+  id: ID!
+  registry: Registry!
 }
 
 type AmguPrice @entity {

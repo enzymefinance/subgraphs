@@ -1,13 +1,24 @@
 import { Address, log } from "@graphprotocol/graph-ts";
-import { Registry, Version, Asset, Engine, Contract } from "../types/schema";
+import {
+  Registry,
+  Version,
+  Asset,
+  Engine,
+  Contract,
+  PriceSource,
+  MlnToken,
+  NativeAsset
+} from "../types/schema";
 import {
   VersionRegistration,
   AssetRemoval,
   AssetUpsert,
   EngineChange,
-  NativeAssetChange
+  NativeAssetChange,
+  MlnTokenChange
 } from "../types/RegistryDataSource/RegistryContract";
 import { saveContract } from "./utils/saveContract";
+import { PriceSourceChange } from "../types/PriceSourceDataSource/RegistryContract";
 
 function registryEntity(address: Address): Registry {
   let id = address.toHex();
@@ -113,4 +124,68 @@ export function handleEngineChange(event: EngineChange): void {
   );
 }
 
-export function handleNativeAssetChange(event: NativeAssetChange): void {}
+export function handlePriceSourceChange(event: PriceSourceChange): void {
+  let priceSource = new PriceSource(event.params.priceSource.toHex());
+  priceSource.registry = event.address.toHex();
+  priceSource.save();
+
+  saveContract(
+    event.address.toHex(),
+    "Registry",
+    event.block.timestamp,
+    event.block.number,
+    ""
+  );
+
+  saveContract(
+    priceSource.id,
+    "PriceSource",
+    event.block.timestamp,
+    event.block.number,
+    event.address.toHex()
+  );
+}
+
+export function handleMlnTokenChange(event: MlnTokenChange): void {
+  let mlnToken = new MlnToken(event.params.mlnToken.toHex());
+  mlnToken.registry = event.address.toHex();
+  mlnToken.save();
+
+  saveContract(
+    event.address.toHex(),
+    "Registry",
+    event.block.timestamp,
+    event.block.number,
+    ""
+  );
+
+  saveContract(
+    mlnToken.id,
+    "MlnToken",
+    event.block.timestamp,
+    event.block.number,
+    event.address.toHex()
+  );
+}
+
+export function handleNativeAssetChange(event: NativeAssetChange): void {
+  let nativeAssset = new NativeAsset(event.params.nativeAsset.toHex());
+  nativeAssset.registry = event.address.toHex();
+  nativeAssset.save();
+
+  saveContract(
+    event.address.toHex(),
+    "Registry",
+    event.block.timestamp,
+    event.block.number,
+    ""
+  );
+
+  saveContract(
+    nativeAssset.id,
+    "NativeAsset",
+    event.block.timestamp,
+    event.block.number,
+    event.address.toHex()
+  );
+}

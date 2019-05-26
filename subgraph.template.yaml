@@ -21,6 +21,9 @@ dataSources:
         - Registry
         - Engine
         - Contract
+        - PriceSource
+        - MlnToken
+        - NativeAsset
       abis:
         - name: RegistryContract
           file: ./node_modules/@melonproject/protocol/out/Registry.abi.json
@@ -33,6 +36,12 @@ dataSources:
           handler: handleAssetRemoval
         - event: EngineChange(address)
           handler: handleEngineChange
+        - event: PriceSourceChange(address)
+          handler: handlePriceSourceChange
+        - event: MlnTokenChange(address)
+          handler: handleMlnTokenChange
+        - event: NativeAssetChange(address)
+          handler: handleNativeAssetChange
   
   - name: EngineDataSource
     kind: ethereum/contract
