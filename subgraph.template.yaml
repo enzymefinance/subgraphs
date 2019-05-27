@@ -97,7 +97,7 @@ dataSources:
         - Investment
         - InvestmentValuationLog
         - Investor
-        # - InvestorValuationLog
+        - InvestorValuationLog
       abis:
         - name: PriceSourceContract
           file: ./node_modules/@melonproject/protocol/out/KyberPriceFeed.abi.json
@@ -475,44 +475,44 @@ dataSources:
               handler: handleExchangeMethodCall
 
    # old trading factory
-  # - name: TradingFactoryDataSource
-  #   kind: ethereum/contract
-  #   network: mainnet
-  #   source:
-  #     abi: TradingFactoryContract
-  #     address: '0xe2c3fe25336eE3bD71dcA3380b7423a3bDef3d8C'
-  #   mapping:
-  #     kind: ethereum/events
-  #     apiVersion: 0.0.2
-  #     language: wasm/assemblyscript
-  #     file: ./src/mappings/TradingFactory.ts
-  #     entities:
-  #       - Trading
-  #     abis:
-  #       - name: TradingFactoryContract
-  #         file: ./node_modules/@melonproject/protocol/out/TradingFactory.abi.json
-  #     eventHandlers:
-  #       - event: NewInstance(address,address,address[],address[],address)
-  #         handler: handleNewInstance
-  #   templates:
-  #     - name: TradingDataSource
-  #       kind: ethereum/contract
-  #       network: mainnet
-  #       source:
-  #         abi: TradingContract
-  #       mapping:
-  #         kind: ethereum/events
-  #         apiVersion: 0.0.2
-  #         language: wasm/assemblyscript
-  #         file: ./src/mappings/Trading.ts
-  #         entities:
-  #           - Trading
-  #         abis:
-  #           - name: TradingContract
-  #             file: ./node_modules/@melonproject/protocol/out/Trading.abi.json
-  #         eventHandlers:
-  #           - event: ExchangeMethodCall(address,string,address[6],uint256[8],bytes32,bytes,bytes,bytes)
-  #             handler: handleExchangeMethodCall
+  - name: TradingFactoryDataSource
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      abi: TradingFactoryContract
+      address: '0xe2c3fe25336eE3bD71dcA3380b7423a3bDef3d8C'
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.2
+      language: wasm/assemblyscript
+      file: ./src/mappings/TradingFactory.ts
+      entities:
+        - Trading
+      abis:
+        - name: TradingFactoryContract
+          file: ./node_modules/@melonproject/protocol/out/TradingFactory.abi.json
+      eventHandlers:
+        - event: NewInstance(address,address,address[],address[],address)
+          handler: handleNewInstance
+    templates:
+      - name: TradingDataSource
+        kind: ethereum/contract
+        network: mainnet
+        source:
+          abi: TradingContract
+        mapping:
+          kind: ethereum/events
+          apiVersion: 0.0.2
+          language: wasm/assemblyscript
+          file: ./src/mappings/Trading.ts
+          entities:
+            - Trading
+          abis:
+            - name: TradingContract
+              file: ./node_modules/@melonproject/protocol/out/Trading.abi.json
+          eventHandlers:
+            - event: ExchangeMethodCall(address,string,address[6],uint256[8],bytes32,bytes,bytes,bytes)
+              handler: handleExchangeMethodCall
 
   - name: VaultFactoryDataSource
     kind: ethereum/contract
