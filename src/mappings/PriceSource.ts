@@ -1,4 +1,4 @@
-import { Address, BigInt, BigDecimal } from "@graphprotocol/graph-ts";
+import { Address, BigInt, BigDecimal, log } from "@graphprotocol/graph-ts";
 import {
   PriceUpdate,
   PriceSourceContract
@@ -45,6 +45,12 @@ function updateAssetPrices(event: PriceUpdate): void {
 }
 
 function updateFundCalculations(event: PriceUpdate): void {
+  // if we skip 7560279, then it fails at 7566765...
+  // if (event.block.number.equals(BigInt.fromI32(7560279))) {
+  //   log.warning("Skipping block 7560279", []);
+  //   return;
+  // }
+
   let priceSourceContract = PriceSourceContract.bind(event.address);
   let registryAddress = priceSourceContract.REGISTRY();
   let registryContract = RegistryContract.bind(registryAddress);
