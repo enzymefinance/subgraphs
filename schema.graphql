@@ -111,14 +111,14 @@ type ExchangeAdapter @entity {
   id: ID!
   exchange: String!
   takesCustody: Boolean!
-  sigs: String!
+  sigs: String
   registry: Registry
 }
 
 type Fund @entity {
   id: ID!
   name: String!
-  manager: String!
+  manager: FundManager!
   creationTime: BigInt!
   isShutdown: Boolean!
   shutDownTime: BigInt
@@ -146,6 +146,11 @@ type Fund @entity {
   investmentLog: [InvestmentLog!]! @derivedFrom(field: "fund")
   holdingsLog: [FundHoldingsLog!]! @derivedFrom(field: "fund")
   lastCalculationsUpdate: BigInt
+}
+
+type FundManager @entity {
+  id: ID!
+  funds: [Fund!]! @derivedFrom(field: "manager")
 }
 
 type FundCalculationsUpdate @entity {
@@ -231,6 +236,7 @@ type InvestmentRequest @entity {
 
 type Investor @entity {
   id: ID!
+  valuations: [InvestorValuationLog!]! @derivedFrom(field: "owner")
   investments: [Investment!]! @derivedFrom(field: "owner")
   investmentLog: [InvestmentLog!]! @derivedFrom(field: "owner")
 }
@@ -241,7 +247,7 @@ type Investment @entity {
   owner: Investor!
   shares: BigInt!
   sharePrice: BigInt!
-  gav: BigDecimal!
+  gav: BigInt!
   log: [InvestmentLog!]! @derivedFrom(field: "investment")
   valuations: [InvestmentValuationLog!]! @derivedFrom(field: "investment")
 }
@@ -249,7 +255,14 @@ type Investment @entity {
 type InvestmentValuationLog @entity {
   id: ID!
   investment: Investment!
-  gav: BigDecimal!
+  gav: BigInt!
+  timestamp: BigInt!
+}
+
+type InvestorValuationLog @entity {
+  id: ID!
+  owner: Investor!
+  gav: BigInt!
   timestamp: BigInt!
 }
 
@@ -276,4 +289,28 @@ type AggregateValue @entity {
   id: ID!
   timestamp: BigInt!
   gav: BigInt!
+}
+
+type ExchangeMethodCall @entity {
+  id: ID!
+  exchange: String
+  methodSignature: String
+  orderAddress1: String
+  orderAddress2: String
+  orderAddress3: String
+  orderAddress4: String
+  orderAddress5: String
+  orderAddress6: String
+  orderValue1: BigInt
+  orderValue2: BigInt
+  orderValue3: BigInt
+  orderValue4: BigInt
+  orderValue5: BigInt
+  orderValue6: BigInt
+  orderValue7: BigInt
+  orderValue8: BigInt
+  identifier: String
+  makerAssetData: String
+  takerAssetData: String
+  signature: String
 }

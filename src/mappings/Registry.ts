@@ -28,6 +28,7 @@ function registryEntity(address: Address): Registry {
 
   if (!registry) {
     registry = new Registry(id);
+    registry.exchangeAdapters = [];
     registry.assets = [];
     registry.save();
   }
@@ -76,6 +77,7 @@ export function handleAssetUpsert(event: AssetUpsert): void {
   asset.decimals = event.params.decimals.toI32();
   asset.url = event.params.url;
   asset.reserveMin = event.params.reserveMin;
+  asset.registry = event.address.toHex();
   asset.save();
 
   registry.assets = registry.assets.concat([asset.id]);
@@ -112,19 +114,23 @@ export function handleAssetRemoval(event: AssetRemoval): void {
 export function handleExchangeAdapterUpsert(
   event: ExchangeAdapterUpsert
 ): void {
-  let registry = registryEntity(event.address);
+  // let registry = registryEntity(event.address);
+
+  let sigs = event.params.sigs.map<string>(value => value.toHexString());
+
   let id = event.params.adapter.toHex();
   let exchangeAdapter = ExchangeAdapter.load(id) || new ExchangeAdapter(id);
-  exchangeAdapter.exchange = event.params.exchange.toString();
+  exchangeAdapter.exchange = event.params.exchange.toHex();
   exchangeAdapter.takesCustody = event.params.takesCustody;
-  exchangeAdapter.sigs = event.params.sigs.toString();
-  exchangeAdapter.registry = event.address.toString();
+  exchangeAdapter.sigs =
+    sigs[0] + "-" + sigs[1] + "-" + sigs[2] + "-" + sigs[3];
+  exchangeAdapter.registry = event.address.toHex();
   exchangeAdapter.save();
 
-  registry.exchangeAdapters = registry.exchangeAdapters.concat([
-    exchangeAdapter.id
-  ]);
-  registry.save();
+  // registry.exchangeAdapters = registry.exchangeAdapters.concat([
+  //   exchangeAdapter.id
+  // ]);
+  // registry.save();
 
   saveContract(
     id,
