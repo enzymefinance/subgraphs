@@ -1,4 +1,4 @@
-import { Address, BigInt, BigDecimal } from "@graphprotocol/graph-ts";
+import { Address, BigInt } from "@graphprotocol/graph-ts";
 import { Investment } from "../../types/schema";
 import { investorEntity } from "./investorEntity";
 
@@ -9,7 +9,7 @@ export function investmentEntity(owner: Address, fund: Address): Investment {
   if (!investment) {
     investment = new Investment(id);
     investment.shares = BigInt.fromI32(0);
-    investment.gav = BigDecimal.fromString("0");
+    investment.gav = BigInt.fromI32(0);
     investment.fund = fund.toHex();
     investment.owner = investorEntity(owner).id;
     investment.save();

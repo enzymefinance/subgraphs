@@ -1,4 +1,4 @@
-import { Address, BigInt, log, BigDecimal } from "@graphprotocol/graph-ts";
+import { Address, BigInt, BigDecimal } from "@graphprotocol/graph-ts";
 import {
   PriceUpdate,
   PriceSourceContract
@@ -10,7 +10,8 @@ import {
   FundCalculationsUpdate,
   FundHoldingsLog,
   AggregateValue,
-  InvestmentValuationLog
+  InvestmentValuationLog,
+  InvestorValuationLog
 } from "../types/schema";
 import { AccountingContract } from "../types/PriceSourceDataSource/AccountingContract";
 import { VersionContract } from "../types/PriceSourceDataSource/VersionContract";
@@ -18,6 +19,7 @@ import { RegistryContract } from "../types/PriceSourceDataSource/RegistryContrac
 import { SharesContract } from "../types/PriceSourceDataSource/SharesContract";
 import { ParticipationContract } from "../types/PriceSourceDataSource/ParticipationContract";
 import { investmentEntity } from "./entities/investmentEntity";
+import { investorValuationLogEntity } from "./entities/investorValuationLogEntity";
 
 function updateAssetPrices(event: PriceUpdate): void {
   let prices = event.params.price;
@@ -76,7 +78,6 @@ function updateFundCalculations(event: PriceUpdate): void {
     let maxUint256 =
       "115792089237316195423570985008687907853269984665640564039457584007913129639935";
     if (lastFundId.toString() == maxUint256) {
-      log.warning("Last Fund id returned {}", [lastFundId.toString()]);
       continue;
     }
 
@@ -110,18 +111,17 @@ function updateFundCalculations(event: PriceUpdate): void {
       const outlier =
         "3963877391197344453575983046348115674221700746820753546331534351508065746944";
       if (gav.toString() == outlier) {
-        log.warning("Found outlier! Gav {}", [gav.toString()]);
         continue;
       }
       aggregateGAV = aggregateGAV.plus(gav);
 
       let sharesAddress = Address.fromString(fund.shares);
       let sharesContract = SharesContract.bind(sharesAddress);
-      let totalSuppy = sharesContract.totalSupply();
+      let totalSupply = sharesContract.totalSupply();
 
       let grossSharePrice = BigDecimal.fromString("0");
-      if (!totalSuppy.isZero()) {
-        grossSharePrice = gav.toBigDecimal().div(totalSuppy.toBigDecimal());
+      if (!totalSupply.isZero()) {
+        grossSharePrice = gav.toBigDecimal().div(totalSupply.toBigDecimal());
       }
 
       let timestamp = event.block.timestamp;
@@ -135,12 +135,12 @@ function updateFundCalculations(event: PriceUpdate): void {
       // calculations.nav = values.value3;
       // calculations.sharePrice = values.value4;
       // calculations.gavPerShareNetManagementFee = values.value5;
-      calculations.totalSupply = totalSuppy;
+      calculations.totalSupply = totalSupply;
       calculations.grossSharePrice = grossSharePrice;
       calculations.save();
 
       fund.gav = gav;
-      fund.totalSupply = totalSuppy;
+      fund.totalSupply = totalSupply;
       fund.grossSharePrice = grossSharePrice;
       // fund.feesInDenominationAsset = values.value1;
       // fund.feesInShares = values.value2;
@@ -164,6 +164,7 @@ function updateFundCalculations(event: PriceUpdate): void {
         fundHoldingsLog.fund = fundAddress;
         fundHoldingsLog.asset = holdings.value1[k].toHex();
         fundHoldingsLog.holding = holdings.value0[k];
+        // TODO: calculate/store holding in WETH
         fundHoldingsLog.save();
       }
 
@@ -173,6 +174,7 @@ function updateFundCalculations(event: PriceUpdate): void {
       );
       let historicalInvestors = participationContract.getHistoricalInvestors();
 
+      // valuations for individual investments / investors
       for (let l: i32 = 0; l < historicalInvestors.length; l++) {
         let investor = historicalInvestors[l];
         let investment = investmentEntity(
@@ -180,17 +182,29 @@ function updateFundCalculations(event: PriceUpdate): void {
           Address.fromString(fundAddress)
         );
 
-        let value = grossSharePrice.times(investment.shares.toBigDecimal());
+        let investmentGav = gav.times(investment.shares).div(totalSupply);
+        investment.gav = investmentGav;
+        investment.save();
+
+        // update investment valuation
         let investmentValuationLog = new InvestmentValuationLog(
           investment.id + "/" + event.block.timestamp.toString()
         );
         investmentValuationLog.investment = investment.id;
-        investmentValuationLog.gav = value;
+        investmentValuationLog.gav = investmentGav;
         investmentValuationLog.timestamp = event.block.timestamp;
         investmentValuationLog.save();
 
-        investment.gav = value;
-        investment.save();
+        // update investor valuation
+        // let investorValuationLogId =
+        //   investor.toHex() + "/" + event.block.timestamp.toString();
+        // let investorValuationLog = investorValuationLogEntity(
+        //   investor,
+        //   investorValuationLogId
+        // );
+        // investorValuationLog.gav = investorValuationLog.gav.plus(value);
+        // investorValuationLog.timestamp = event.block.timestamp;
+        // investorValuationLog.save();
       }
     }
 

@@ -1,6 +1,6 @@
 import { NewFund } from "../types/VersionDataSource/VersionContract";
 import { HubDataSource } from "../types/VersionDataSource/templates";
-import { Fund, FundCount, State } from "../types/schema";
+import { Fund, FundCount, FundManager } from "../types/schema";
 import { hexToAscii } from "./utils/hexToAscii";
 import { HubContract } from "../types/VersionDataSource/HubContract";
 import { BigInt } from "@graphprotocol/graph-ts";
@@ -13,8 +13,14 @@ export function handleNewFund(event: NewFund): void {
   let hub = event.params.hub.toHex();
   let addresses = event.params.routes.map<string>(value => value.toHex());
   let contract = HubContract.bind(event.params.hub);
+
+  let manager =
+    FundManager.load(event.params.manager.toHex()) ||
+    new FundManager(event.params.manager.toHex());
+  manager.save();
+
   let fund = new Fund(hub);
-  fund.manager = event.params.manager.toHex();
+  fund.manager = manager.id;
   fund.name = hexToAscii(contract.name());
   fund.creationTime = contract.creationTime();
   fund.isShutdown = contract.isShutDown();
