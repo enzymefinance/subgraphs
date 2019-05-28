@@ -92,12 +92,12 @@ dataSources:
         - Asset
         - AssetPriceUpdate
         - Fund
-        - FundCalculationsUpdate
-        - AggregateValue
+        - FundCalculationsHistory
+        - NetworkValue
         - Investment
-        - InvestmentValuationLog
+        - InvestmentValuationHistory
         - Investor
-        - InvestorValuationLog
+        - InvestorValuationHistory
       abis:
         - name: PriceSourceContract
           file: ./node_modules/@melonproject/protocol/out/KyberPriceFeed.abi.json
@@ -113,6 +113,8 @@ dataSources:
           file: ./node_modules/@melonproject/protocol/out/Shares.abi.json
         - name: ParticipationContract
           file: ./node_modules/@melonproject/protocol/out/Participation.abi.json
+        - name: FeeManagerContract
+          file: ./node_modules/@melonproject/protocol/out/FeeManager.abi.json
       eventHandlers:
         - event: PriceUpdate(address[],uint256[])
           handler: handlePriceUpdate
@@ -249,8 +251,8 @@ dataSources:
             - Fund
             - InvestorCount
             - State
-            - InvestmentLog
-            - FundHoldingsLog
+            - InvestmentHistory
+            - FundHoldingsHistory
           abis:
             - name: ParticipationContract
               file: ./node_modules/@melonproject/protocol/out/Participation.abi.json
@@ -329,6 +331,9 @@ dataSources:
       eventHandlers:
         - event: NewInstance(address,address)
           handler: handleNewInstance
+      # callHandlers:
+      #   - function: createInstance(address,address,address[],uint256[],uint256[],address)
+      #     handler: handleCreateInstance
     templates:
       - name: FeeManagerDataSource
         kind: ethereum/contract
@@ -342,9 +347,15 @@ dataSources:
           file: ./src/mappings/FeeManager.ts
           entities:
             - FeeManager
+            - ManagementFee
+            - PerformanceFee
           abis:
             - name: FeeManagerContract
               file: ./node_modules/@melonproject/protocol/out/FeeManager.abi.json
+            - name: ManagementFeeContract
+              file: ./node_modules/@melonproject/protocol/out/ManagementFee.abi.json   
+            - name: PerformanceFeeContract
+              file: ./node_modules/@melonproject/protocol/out/PerformanceFee.abi.json  
           eventHandlers:
             - event: FeeRegistration(address)
               handler: handleFeeRegistration

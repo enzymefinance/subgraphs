@@ -136,15 +136,15 @@ type Fund @entity {
   feesInDenominationAsset: BigInt
   feesInShares: BigInt
   nav: BigInt
-  sharePrice: BigInt
-  gavPerShareNetManagementFee: BigInt
+  sharePrice: BigDecimal
+  gavPerShareNetManagementFee: BigDecimal
   allocatedFees: BigInt
   totalSupply: BigInt
   grossSharePrice: BigDecimal
   investments: [Investment!]! @derivedFrom(field: "fund")
-  calculationsUpdates: [FundCalculationsUpdate!]! @derivedFrom(field: "fund")
-  investmentLog: [InvestmentLog!]! @derivedFrom(field: "fund")
-  holdingsLog: [FundHoldingsLog!]! @derivedFrom(field: "fund")
+  calculationsHistory: [FundCalculationsHistory!]! @derivedFrom(field: "fund")
+  investmentHistory: [InvestmentHistory!]! @derivedFrom(field: "fund")
+  holdingsHistory: [FundHoldingsHistory!]! @derivedFrom(field: "fund")
   lastCalculationsUpdate: BigInt
 }
 
@@ -153,15 +153,15 @@ type FundManager @entity {
   funds: [Fund!]! @derivedFrom(field: "manager")
 }
 
-type FundCalculationsUpdate @entity {
+type FundCalculationsHistory @entity {
   id: ID!
   fund: Fund!
   gav: BigInt!
   feesInDenominationAsset: BigInt
   feesInShares: BigInt
   nav: BigInt
-  sharePrice: BigInt
-  gavPerShareNetManagementFee: BigInt
+  sharePrice: BigDecimal
+  gavPerShareNetManagementFee: BigDecimal
   allocatedFees: BigInt
   totalSupply: BigInt
   grossSharePrice: BigDecimal
@@ -199,6 +199,34 @@ type Participation @entity {
 type FeeManager @entity {
   id: ID!
   fund: Fund!
+  managementFee: ManagementFee
+  performanceFee: PerformanceFee
+  totalFeeReward: BigInt!
+  feeRewardHistory: [FeeRewardHistory!]! @derivedFrom(field: "feeManager")
+}
+
+type ManagementFee @entity {
+  id: ID!
+  feeManager: FeeManager!
+  managementFeeRate: BigInt
+  lastPayoutTime: BigInt
+}
+
+type PerformanceFee @entity {
+  id: ID!
+  feeManager: FeeManager!
+  performanceFeeRate: BigInt
+  performanceFeePeriod: BigInt
+  lastPayoutTime: BigInt
+  initializeTime: BigInt
+  highWaterMark: BigInt
+}
+
+type FeeRewardHistory @entity {
+  id: ID!
+  feeManager: FeeManager!
+  shares: BigInt!
+  timestamp: BigInt!
 }
 
 type PolicyManager @entity {
@@ -236,9 +264,9 @@ type InvestmentRequest @entity {
 
 type Investor @entity {
   id: ID!
-  valuations: [InvestorValuationLog!]! @derivedFrom(field: "owner")
+  valuationHistory: [InvestorValuationHistory!]! @derivedFrom(field: "owner")
   investments: [Investment!]! @derivedFrom(field: "owner")
-  investmentLog: [InvestmentLog!]! @derivedFrom(field: "owner")
+  investmentHistory: [InvestmentHistory!]! @derivedFrom(field: "owner")
 }
 
 type Investment @entity {
@@ -248,25 +276,26 @@ type Investment @entity {
   shares: BigInt!
   sharePrice: BigInt!
   gav: BigInt!
-  log: [InvestmentLog!]! @derivedFrom(field: "investment")
-  valuations: [InvestmentValuationLog!]! @derivedFrom(field: "investment")
+  history: [InvestmentHistory!]! @derivedFrom(field: "investment")
+  valuationHistory: [InvestmentValuationHistory!]!
+    @derivedFrom(field: "investment")
 }
 
-type InvestmentValuationLog @entity {
+type InvestmentValuationHistory @entity {
   id: ID!
   investment: Investment!
   gav: BigInt!
   timestamp: BigInt!
 }
 
-type InvestorValuationLog @entity {
+type InvestorValuationHistory @entity {
   id: ID!
   owner: Investor!
   gav: BigInt!
   timestamp: BigInt!
 }
 
-type InvestmentLog @entity {
+type InvestmentHistory @entity {
   id: ID!
   timestamp: BigInt!
   investment: Investment!
@@ -277,7 +306,7 @@ type InvestmentLog @entity {
   sharePrice: BigInt
 }
 
-type FundHoldingsLog @entity {
+type FundHoldingsHistory @entity {
   id: ID!
   timestamp: BigInt!
   fund: Fund!
@@ -285,7 +314,7 @@ type FundHoldingsLog @entity {
   holding: BigInt!
 }
 
-type AggregateValue @entity {
+type NetworkValue @entity {
   id: ID!
   timestamp: BigInt!
   gav: BigInt!

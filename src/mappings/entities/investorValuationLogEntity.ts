@@ -1,19 +1,19 @@
 import { Address, BigInt } from "@graphprotocol/graph-ts";
-import { InvestorValuationLog } from "../../types/schema";
+import { InvestorValuationHistory } from "../../types/schema";
 import { investorEntity } from "./investorEntity";
 
 export function investorValuationLogEntity(
   owner: Address,
   id: string
-): InvestorValuationLog {
-  let investorValuationLog = InvestorValuationLog.load(id);
+): InvestorValuationHistory {
+  let investorValuationHistory = InvestorValuationHistory.load(id);
 
-  if (!investorValuationLog) {
-    investorValuationLog = new InvestorValuationLog(id);
-    investorValuationLog.gav = BigInt.fromI32(0);
-    investorValuationLog.owner = investorEntity(owner).id;
-    investorValuationLog.save();
+  if (!investorValuationHistory) {
+    investorValuationHistory = new InvestorValuationHistory(id);
+    investorValuationHistory.gav = BigInt.fromI32(0);
+    investorValuationHistory.owner = investorEntity(owner).id;
+    investorValuationHistory.save();
   }
 
-  return investorValuationLog as InvestorValuationLog;
+  return investorValuationHistory as InvestorValuationHistory;
 }

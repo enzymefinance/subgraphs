@@ -7,11 +7,10 @@ import {
   Fund,
   Asset,
   AssetPriceUpdate,
-  FundCalculationsUpdate,
-  FundHoldingsLog,
-  AggregateValue,
-  InvestmentValuationLog,
-  InvestorValuationLog
+  FundHoldingsHistory,
+  NetworkValue,
+  InvestmentValuationHistory,
+  FundCalculationsHistory
 } from "../types/schema";
 import { AccountingContract } from "../types/PriceSourceDataSource/AccountingContract";
 import { VersionContract } from "../types/PriceSourceDataSource/VersionContract";
@@ -21,6 +20,7 @@ import { ParticipationContract } from "../types/PriceSourceDataSource/Participat
 import { investmentEntity } from "./entities/investmentEntity";
 import { investorValuationLogEntity } from "./entities/investorValuationLogEntity";
 import { currentState } from "./utils/currentState";
+import { FeeManagerContract } from "../types/PriceSourceDataSource/FeeManagerContract";
 
 function updateAssetPrices(event: PriceUpdate): void {
   let prices = event.params.price;
@@ -112,6 +112,9 @@ function updateFundCalculations(event: PriceUpdate): void {
         let accountingContract = AccountingContract.bind(accountingAddress);
         // let values = accountingContract.performCalculations();
 
+        // this is doing performCalculations manually, because performCalculations
+        // is not reliable!!!!
+        // .... from here
         let gav = accountingContract.calcGav();
 
         const outlier =
@@ -125,6 +128,39 @@ function updateFundCalculations(event: PriceUpdate): void {
         let sharesContract = SharesContract.bind(sharesAddress);
         let totalSupply = sharesContract.totalSupply();
 
+        let feeManagerAddress = Address.fromString(fund.feeManager);
+        let feeManagerContract = FeeManagerContract.bind(feeManagerAddress);
+        let feesInShares = feeManagerContract.totalFeeAmount();
+
+        let feesInDenomiationAsset = BigInt.fromI32(0);
+        if (!totalSupply.isZero()) {
+          feesInDenomiationAsset = gav
+            .times(feesInShares)
+            .div(totalSupply.plus(feesInShares));
+        }
+
+        let nav = gav.minus(feesInDenomiationAsset);
+
+        let totalSupplyAccountingForFees = totalSupply.plus(feesInShares);
+        let sharePrice = BigDecimal.fromString("0");
+        let gavPerShareNetManagementFee = BigDecimal.fromString("0");
+        let managementFeeAmount = feeManagerContract.managementFeeAmount();
+        if (!totalSupply.isZero()) {
+          sharePrice = gav
+            .toBigDecimal()
+            .div(totalSupplyAccountingForFees.toBigDecimal());
+          gavPerShareNetManagementFee = gav
+            .toBigDecimal()
+            .div(totalSupply.plus(managementFeeAmount).toBigDecimal());
+        } else {
+          let defaultSharePrice = accountingContract
+            .DEFAULT_SHARE_PRICE()
+            .toBigDecimal();
+          sharePrice = defaultSharePrice;
+          gavPerShareNetManagementFee = defaultSharePrice;
+        }
+        // until here....
+
         let grossSharePrice = BigDecimal.fromString("0");
         if (!totalSupply.isZero()) {
           grossSharePrice = gav.toBigDecimal().div(totalSupply.toBigDecimal());
@@ -132,15 +168,15 @@ function updateFundCalculations(event: PriceUpdate): void {
 
         let timestamp = event.block.timestamp;
         let calculationsId = fundAddress + "/" + timestamp.toString();
-        let calculations = new FundCalculationsUpdate(calculationsId);
+        let calculations = new FundCalculationsHistory(calculationsId);
         calculations.fund = fundAddress;
         calculations.timestamp = timestamp;
         calculations.gav = gav;
-        // calculations.feesInDenominationAsset = values.value1;
-        // calculations.feesInShares = values.value2;
-        // calculations.nav = values.value3;
-        // calculations.sharePrice = values.value4;
-        // calculations.gavPerShareNetManagementFee = values.value5;
+        calculations.feesInDenominationAsset = feesInDenomiationAsset;
+        calculations.feesInShares = feesInShares;
+        calculations.nav = nav;
+        calculations.sharePrice = sharePrice;
+        calculations.gavPerShareNetManagementFee = gavPerShareNetManagementFee;
         calculations.totalSupply = totalSupply;
         calculations.grossSharePrice = grossSharePrice;
         calculations.save();
@@ -148,11 +184,11 @@ function updateFundCalculations(event: PriceUpdate): void {
         fund.gav = gav;
         fund.totalSupply = totalSupply;
         fund.grossSharePrice = grossSharePrice;
-        // fund.feesInDenominationAsset = values.value1;
-        // fund.feesInShares = values.value2;
-        // fund.nav = values.value3;
-        // fund.sharePrice = values.value4;
-        // fund.gavPerShareNetManagementFee = values.value5;
+        fund.feesInDenominationAsset = feesInDenomiationAsset;
+        fund.feesInShares = feesInShares;
+        fund.nav = nav;
+        fund.sharePrice = sharePrice;
+        fund.gavPerShareNetManagementFee = gavPerShareNetManagementFee;
         fund.lastCalculationsUpdate = timestamp;
         fund.save();
 
@@ -165,13 +201,13 @@ function updateFundCalculations(event: PriceUpdate): void {
             timestamp.toString() +
             "/" +
             holdings.value1[k].toHex();
-          let fundHoldingsLog = new FundHoldingsLog(holdingsId);
-          fundHoldingsLog.timestamp = timestamp;
-          fundHoldingsLog.fund = fundAddress;
-          fundHoldingsLog.asset = holdings.value1[k].toHex();
-          fundHoldingsLog.holding = holdings.value0[k];
+          let fundHoldingsHistory = new FundHoldingsHistory(holdingsId);
+          fundHoldingsHistory.timestamp = timestamp;
+          fundHoldingsHistory.fund = fundAddress;
+          fundHoldingsHistory.asset = holdings.value1[k].toHex();
+          fundHoldingsHistory.holding = holdings.value0[k];
           // TODO: calculate/store holding in WETH
-          fundHoldingsLog.save();
+          fundHoldingsHistory.save();
         }
 
         let participationAddress = Address.fromString(fund.participation);
@@ -196,13 +232,13 @@ function updateFundCalculations(event: PriceUpdate): void {
           investment.save();
 
           // update investment valuation
-          let investmentValuationLog = new InvestmentValuationLog(
+          let investmentValuationHistory = new InvestmentValuationHistory(
             investment.id + "/" + event.block.timestamp.toString()
           );
-          investmentValuationLog.investment = investment.id;
-          investmentValuationLog.gav = investmentGav;
-          investmentValuationLog.timestamp = event.block.timestamp;
-          investmentValuationLog.save();
+          investmentValuationHistory.investment = investment.id;
+          investmentValuationHistory.gav = investmentGav;
+          investmentValuationHistory.timestamp = event.block.timestamp;
+          investmentValuationHistory.save();
 
           // update investor valuation
           let investorValuationLogId =
@@ -219,10 +255,10 @@ function updateFundCalculations(event: PriceUpdate): void {
         }
       }
     }
-    let aggregateValue = new AggregateValue(event.block.timestamp.toString());
-    aggregateValue.timestamp = event.block.timestamp;
-    aggregateValue.gav = aggregateGAV;
-    aggregateValue.save();
+    let networkValue = new NetworkValue(event.block.timestamp.toString());
+    networkValue.timestamp = event.block.timestamp;
+    networkValue.gav = aggregateGAV;
+    networkValue.save();
 
     state.save();
   }

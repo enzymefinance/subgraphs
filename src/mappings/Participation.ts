@@ -10,7 +10,7 @@ import {
   Participation,
   Fund,
   InvestorCount,
-  InvestmentLog
+  InvestmentHistory
 } from "../types/schema";
 import { HubContract } from "../types/ParticipationFactoryDataSource/templates/ParticipationDataSource/HubContract";
 import { AccountingContract } from "../types/ParticipationFactoryDataSource/templates/ParticipationDataSource/AccountingContract";
@@ -49,16 +49,16 @@ export function handleRequestExecution(event: RequestExecution): void {
   state.timestamptNumberOfInvestors = investorCount.timestamp;
   state.save();
 
-  let investmentLog = new InvestmentLog(event.transaction.hash.toHex());
-  investmentLog.timestamp = event.block.timestamp;
-  investmentLog.investment =
+  let investmentHistory = new InvestmentHistory(event.transaction.hash.toHex());
+  investmentHistory.timestamp = event.block.timestamp;
+  investmentHistory.investment =
     event.params.requestOwner.toHex() + "/" + contract.hub().toHex();
-  investmentLog.owner = event.params.requestOwner.toHex();
-  investmentLog.fund = contract.hub().toHex();
-  investmentLog.action = "investment";
-  investmentLog.shares = event.params.requestedShares;
-  investmentLog.sharePrice = currentSharePrice;
-  investmentLog.save();
+  investmentHistory.owner = event.params.requestOwner.toHex();
+  investmentHistory.fund = contract.hub().toHex();
+  investmentHistory.action = "investment";
+  investmentHistory.shares = event.params.requestedShares;
+  investmentHistory.sharePrice = currentSharePrice;
+  investmentHistory.save();
 }
 
 export function handleRedemption(event: Redemption): void {
@@ -90,16 +90,16 @@ export function handleRedemption(event: Redemption): void {
     state.save();
   }
 
-  let investmentLog = new InvestmentLog(event.transaction.hash.toHex());
-  investmentLog.timestamp = event.block.timestamp;
-  investmentLog.investment =
+  let investmentHistory = new InvestmentHistory(event.transaction.hash.toHex());
+  investmentHistory.timestamp = event.block.timestamp;
+  investmentHistory.investment =
     event.params.redeemer.toHex() + "/" + contract.hub().toHex();
-  investmentLog.owner = event.params.redeemer.toHex();
-  investmentLog.fund = contract.hub().toHex();
-  investmentLog.action = "redemption";
-  investmentLog.shares = event.params.redeemedShares;
+  investmentHistory.owner = event.params.redeemer.toHex();
+  investmentHistory.fund = contract.hub().toHex();
+  investmentHistory.action = "redemption";
+  investmentHistory.shares = event.params.redeemedShares;
   // investmentLog.sharePrice = get current share price from accounting contract
-  investmentLog.save();
+  investmentHistory.save();
 }
 
 export function handleEnableInvestment(event: EnableInvestment): void {
