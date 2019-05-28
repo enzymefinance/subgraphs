@@ -331,9 +331,6 @@ dataSources:
       eventHandlers:
         - event: NewInstance(address,address)
           handler: handleNewInstance
-      # callHandlers:
-      #   - function: createInstance(address,address,address[],uint256[],uint256[],address)
-      #     handler: handleCreateInstance
     templates:
       - name: FeeManagerDataSource
         kind: ethereum/contract

@@ -136,11 +136,10 @@ type Fund @entity {
   feesInDenominationAsset: BigInt
   feesInShares: BigInt
   nav: BigInt
-  sharePrice: BigDecimal
-  gavPerShareNetManagementFee: BigDecimal
+  sharePrice: BigInt
+  gavPerShareNetManagementFee: BigInt
   allocatedFees: BigInt
   totalSupply: BigInt
-  grossSharePrice: BigDecimal
   investments: [Investment!]! @derivedFrom(field: "fund")
   calculationsHistory: [FundCalculationsHistory!]! @derivedFrom(field: "fund")
   investmentHistory: [InvestmentHistory!]! @derivedFrom(field: "fund")
@@ -160,11 +159,10 @@ type FundCalculationsHistory @entity {
   feesInDenominationAsset: BigInt
   feesInShares: BigInt
   nav: BigInt
-  sharePrice: BigDecimal
-  gavPerShareNetManagementFee: BigDecimal
+  sharePrice: BigInt
+  gavPerShareNetManagementFee: BigInt
   allocatedFees: BigInt
   totalSupply: BigInt
-  grossSharePrice: BigDecimal
   timestamp: BigInt!
 }
 
@@ -276,6 +274,7 @@ type Investment @entity {
   shares: BigInt!
   sharePrice: BigInt!
   gav: BigInt!
+  nav: BigInt!
   history: [InvestmentHistory!]! @derivedFrom(field: "investment")
   valuationHistory: [InvestmentValuationHistory!]!
     @derivedFrom(field: "investment")
@@ -285,6 +284,8 @@ type InvestmentValuationHistory @entity {
   id: ID!
   investment: Investment!
   gav: BigInt!
+  nav: BigInt!
+  sharePrice: BigInt!
   timestamp: BigInt!
 }
 
@@ -292,6 +293,7 @@ type InvestorValuationHistory @entity {
   id: ID!
   owner: Investor!
   gav: BigInt!
+  nav: BigInt!
   timestamp: BigInt!
 }
 
@@ -303,7 +305,7 @@ type InvestmentHistory @entity {
   fund: Fund!
   action: String!
   shares: BigInt!
-  sharePrice: BigInt
+  sharePrice: BigInt!
 }
 
 type FundHoldingsHistory @entity {

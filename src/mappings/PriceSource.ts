@@ -18,7 +18,7 @@ import { RegistryContract } from "../types/PriceSourceDataSource/RegistryContrac
 import { SharesContract } from "../types/PriceSourceDataSource/SharesContract";
 import { ParticipationContract } from "../types/PriceSourceDataSource/ParticipationContract";
 import { investmentEntity } from "./entities/investmentEntity";
-import { investorValuationLogEntity } from "./entities/investorValuationLogEntity";
+import { investorValuationHistoryEntity } from "./entities/investorValuationHistoryEntity";
 import { currentState } from "./utils/currentState";
 import { FeeManagerContract } from "../types/PriceSourceDataSource/FeeManagerContract";
 
@@ -142,20 +142,19 @@ function updateFundCalculations(event: PriceUpdate): void {
         let nav = gav.minus(feesInDenomiationAsset);
 
         let totalSupplyAccountingForFees = totalSupply.plus(feesInShares);
-        let sharePrice = BigDecimal.fromString("0");
-        let gavPerShareNetManagementFee = BigDecimal.fromString("0");
+        let sharePrice = BigInt.fromI32(0);
+        let gavPerShareNetManagementFee = BigInt.fromI32(0);
         let managementFeeAmount = feeManagerContract.managementFeeAmount();
+
+        let defaultSharePrice = accountingContract.DEFAULT_SHARE_PRICE();
         if (!totalSupply.isZero()) {
           sharePrice = gav
-            .toBigDecimal()
-            .div(totalSupplyAccountingForFees.toBigDecimal());
+            .times(defaultSharePrice)
+            .div(totalSupplyAccountingForFees);
           gavPerShareNetManagementFee = gav
-            .toBigDecimal()
-            .div(totalSupply.plus(managementFeeAmount).toBigDecimal());
+            .times(defaultSharePrice)
+            .div(totalSupply.plus(managementFeeAmount));
         } else {
-          let defaultSharePrice = accountingContract
-            .DEFAULT_SHARE_PRICE()
-            .toBigDecimal();
           sharePrice = defaultSharePrice;
           gavPerShareNetManagementFee = defaultSharePrice;
         }
@@ -178,12 +177,10 @@ function updateFundCalculations(event: PriceUpdate): void {
         calculations.sharePrice = sharePrice;
         calculations.gavPerShareNetManagementFee = gavPerShareNetManagementFee;
         calculations.totalSupply = totalSupply;
-        calculations.grossSharePrice = grossSharePrice;
         calculations.save();
 
         fund.gav = gav;
         fund.totalSupply = totalSupply;
-        fund.grossSharePrice = grossSharePrice;
         fund.feesInDenominationAsset = feesInDenomiationAsset;
         fund.feesInShares = feesInShares;
         fund.nav = nav;
@@ -225,10 +222,14 @@ function updateFundCalculations(event: PriceUpdate): void {
           );
 
           let investmentGav = BigInt.fromI32(0);
+          let investmentNav = BigInt.fromI32(0);
           if (!totalSupply.isZero()) {
             investmentGav = gav.times(investment.shares).div(totalSupply);
+            investmentNav = nav.times(investment.shares).div(totalSupply);
           }
           investment.gav = investmentGav;
+          investment.nav = investmentNav;
+          investment.sharePrice = sharePrice;
           investment.save();
 
           // update investment valuation
@@ -237,17 +238,22 @@ function updateFundCalculations(event: PriceUpdate): void {
           );
           investmentValuationHistory.investment = investment.id;
           investmentValuationHistory.gav = investmentGav;
+          investmentValuationHistory.nav = investmentNav;
+          investmentValuationHistory.sharePrice = sharePrice;
           investmentValuationHistory.timestamp = event.block.timestamp;
           investmentValuationHistory.save();
 
           // update investor valuation
-          let investorValuationLogId =
+          let investorValuationHistoryId =
             investor.toHex() + "/" + event.block.timestamp.toString();
-          let investorValuationLog = investorValuationLogEntity(
+          let investorValuationLog = investorValuationHistoryEntity(
             investor,
-            investorValuationLogId
+            investorValuationHistoryId
           );
           investorValuationLog.gav = investorValuationLog.gav.plus(
+            investmentGav
+          );
+          investorValuationLog.nav = investorValuationLog.nav.plus(
             investmentGav
           );
           investorValuationLog.timestamp = event.block.timestamp;
