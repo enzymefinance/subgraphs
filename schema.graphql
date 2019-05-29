@@ -305,7 +305,7 @@ type InvestmentHistory @entity {
   fund: Fund!
   action: String!
   shares: BigInt!
-  sharePrice: BigInt!
+  sharePrice: BigInt
 }
 
 type FundHoldingsHistory @entity {
