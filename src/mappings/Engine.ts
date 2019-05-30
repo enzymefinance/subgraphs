@@ -3,18 +3,20 @@ import {
   RegistryChange,
   AmguPaid,
   Thaw,
-  Burn
+  Burn,
+  EngineContract
 } from "../types/EngineDataSource/EngineContract";
 import {
   AmguPrice,
   AmguPayment,
-  ThawEther,
-  BurnEther,
+  EngineEtherEvent,
   Registry,
-  Engine
+  Engine,
+  EngineHistory
 } from "../types/schema";
-import { Address } from "@graphprotocol/graph-ts";
+import { Address, BigInt } from "@graphprotocol/graph-ts";
 import { saveContract } from "./utils/saveContract";
+import { currentState } from "./utils/currentState";
 
 function engineEntity(address: Address, registry: Address): Engine {
   let id = address.toHex();
@@ -49,6 +51,12 @@ export function handleSetAmguPrice(event: SetAmguPrice): void {
   amguPrice.engine = event.address.toHex();
   amguPrice.timestamp = event.block.timestamp;
   amguPrice.save();
+
+  let engine = Engine.load(event.address.toHex());
+  if (engine) {
+    engine.amguPrice = event.params.amguPrice;
+    engine.save();
+  }
 }
 
 export function handleAmguPaid(event: AmguPaid): void {
@@ -57,22 +65,69 @@ export function handleAmguPaid(event: AmguPaid): void {
   amguPayment.engine = event.address.toHex();
   amguPayment.timestamp = event.block.timestamp;
   amguPayment.save();
+
+  // Update engine history at most once every 24 hours.
+  let state = currentState();
+  let interval = BigInt.fromI32(24 * 60 * 60);
+  if (event.block.timestamp.minus(state.lastEngineUpdate).gt(interval)) {
+    state.lastEngineUpdate = event.block.timestamp;
+    state.save();
+
+    let engine =
+      Engine.load(event.address.toHex()) || new Engine(event.address.toHex());
+    let engineContract = EngineContract.bind(event.address);
+    engine.amguPrice = engineContract.amguPrice();
+    engine.frozenEther = engineContract.frozenEther();
+    engine.liquidEther = engineContract.liquidEther();
+    engine.lastThaw = engineContract.lastThaw();
+    engine.thawingDelay = engineContract.thawingDelay();
+    engine.totalEtherConsumed = engineContract.totalEtherConsumed();
+    engine.totalAmguConsumed = engineContract.totalAmguConsumed();
+    engine.totalMlnBurned = engineContract.totalMlnBurned();
+    engine.premiumPercent = engineContract.premiumPercent();
+    engine.lastUpdate = event.block.timestamp;
+
+    let engineHistory = new EngineHistory(
+      event.address.toHex() + "/" + event.block.timestamp.toString()
+    );
+    engineHistory.amguPrice = engineContract.amguPrice();
+    engineHistory.frozenEther = engineContract.frozenEther();
+    engineHistory.liquidEther = engineContract.liquidEther();
+    engineHistory.lastThaw = engineContract.lastThaw();
+    engineHistory.thawingDelay = engineContract.thawingDelay();
+    engineHistory.totalEtherConsumed = engineContract.totalEtherConsumed();
+    engineHistory.totalAmguConsumed = engineContract.totalAmguConsumed();
+    engineHistory.totalMlnBurned = engineContract.totalMlnBurned();
+    engineHistory.premiumPercent = engineContract.premiumPercent();
+    engineHistory.timestamp = event.block.timestamp;
+    engineHistory.engine = event.address.toHex();
+    engineHistory.save();
+
+    engine.save();
+  }
 }
 
 export function handleThaw(event: Thaw): void {
-  let thawEther = new ThawEther(event.transaction.hash.toHex());
-  thawEther.ether = event.params.amount;
-  thawEther.engine = event.address.toHex();
-  thawEther.timestamp = event.block.timestamp;
-  thawEther.save();
+  let etherEvent = new EngineEtherEvent(event.transaction.hash.toHex());
+  etherEvent.event = "Thaw";
+  etherEvent.amount = event.params.amount;
+  etherEvent.engine = event.address.toHex();
+  etherEvent.timestamp = event.block.timestamp;
+  etherEvent.save();
+
+  let engine =
+    Engine.load(event.address.toHex()) || new Engine(event.address.toHex());
+  engine.lastThaw = event.block.timestamp;
+  engine.save();
 }
 
 export function handleBurn(event: Burn): void {
-  let burnEther = new BurnEther(event.transaction.hash.toHex());
-  burnEther.ether = event.params.amount;
-  burnEther.engine = event.address.toHex();
-  burnEther.timestamp = event.block.timestamp;
-  burnEther.save();
+  let etherEvent = new EngineEtherEvent(event.transaction.hash.toHex());
+  etherEvent.event = "Burn";
+  etherEvent.amount = event.params.amount;
+  etherEvent.engine = event.address.toHex();
+  etherEvent.timestamp = event.block.timestamp;
+  etherEvent.save();
 }
 
 export function handleRegistryChange(event: RegistryChange): void {

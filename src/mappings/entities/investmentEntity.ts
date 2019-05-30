@@ -10,6 +10,7 @@ export function investmentEntity(owner: Address, fund: Address): Investment {
     investment = new Investment(id);
     investment.shares = BigInt.fromI32(0);
     investment.gav = BigInt.fromI32(0);
+    investment.nav = BigInt.fromI32(0);
     investment.fund = fund.toHex();
     investment.owner = investorEntity(owner).id;
     investment.save();

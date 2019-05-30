@@ -1,20 +1,22 @@
 type Contract @entity {
   id: ID!
-  name: String!
-  creationTime: BigInt!
-  creationBlock: BigInt!
+  name: String
+  creationTime: BigInt
+  creationBlock: BigInt
   parent: Contract
   children: [Contract!] @derivedFrom(field: "parent")
 }
 
 type State @entity {
   id: ID!
-  lastCalculation: BigInt!
+  lastPriceUpdate: BigInt!
   activeFunds: BigInt!
   nonActiveFunds: BigInt!
   timestampFundCount: BigInt!
   numberOfInvestors: BigInt!
   timestamptNumberOfInvestors: BigInt!
+  lastEngineUpdate: BigInt!
+  currentEngine: Engine
 }
 
 type Registry @entity {
@@ -38,10 +40,35 @@ type Version @entity {
 type Engine @entity {
   id: ID!
   registry: Registry
+  amguPrice: BigInt
+  frozenEther: BigInt
+  liquidEther: BigInt
+  lastThaw: BigInt
+  thawingDelay: BigInt
+  totalEtherConsumed: BigInt
+  totalAmguConsumed: BigInt
+  totalMlnBurned: BigInt
+  premiumPercent: BigInt
+  lastUpdate: BigInt
+  history: [EngineHistory!]! @derivedFrom(field: "engine")
   amguPrices: [AmguPrice!]! @derivedFrom(field: "engine")
   amguPayments: [AmguPayment!]! @derivedFrom(field: "engine")
-  etherThawings: [ThawEther!]! @derivedFrom(field: "engine")
-  etherBurnings: [BurnEther!]! @derivedFrom(field: "engine")
+  etherEvents: [EngineEtherEvent!]! @derivedFrom(field: "engine")
+}
+
+type EngineHistory @entity {
+  id: ID!
+  engine: Engine!
+  timestamp: BigInt!
+  amguPrice: BigInt!
+  frozenEther: BigInt!
+  liquidEther: BigInt!
+  lastThaw: BigInt!
+  thawingDelay: BigInt!
+  totalEtherConsumed: BigInt!
+  totalAmguConsumed: BigInt!
+  totalMlnBurned: BigInt!
+  premiumPercent: BigInt!
 }
 
 type PriceSource @entity {
@@ -73,17 +100,11 @@ type AmguPayment @entity {
   timestamp: BigInt!
 }
 
-type ThawEther @entity {
+type EngineEtherEvent @entity {
   id: ID!
   engine: Engine!
-  ether: BigInt!
-  timestamp: BigInt!
-}
-
-type BurnEther @entity {
-  id: ID!
-  engine: Engine!
-  ether: BigInt!
+  event: String!
+  amount: BigInt!
   timestamp: BigInt!
 }
 
@@ -96,11 +117,11 @@ type Asset @entity {
   reserveMin: BigInt!
   registry: Registry
   price: BigInt
-  priceUpdates: [AssetPriceUpdate!]! @derivedFrom(field: "asset")
+  priceHistory: [AssetPriceHistory!]! @derivedFrom(field: "asset")
   lastPriceUpdate: BigInt
 }
 
-type AssetPriceUpdate @entity {
+type AssetPriceHistory @entity {
   id: ID!
   asset: Asset!
   price: BigInt!

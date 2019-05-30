@@ -5,12 +5,13 @@ export function currentState(): State {
   let state = State.load("0x");
   if (!state) {
     state = new State("0x");
-    state.lastCalculation = BigInt.fromI32(0);
+    state.lastPriceUpdate = BigInt.fromI32(0);
     state.activeFunds = BigInt.fromI32(0);
     state.nonActiveFunds = BigInt.fromI32(0);
     state.timestampFundCount = BigInt.fromI32(0);
     state.numberOfInvestors = BigInt.fromI32(0);
     state.timestamptNumberOfInvestors = BigInt.fromI32(0);
+    state.lastEngineUpdate = BigInt.fromI32(0);
     state.save();
   }
 

@@ -6,7 +6,7 @@ import {
 import {
   Fund,
   Asset,
-  AssetPriceUpdate,
+  AssetPriceHistory,
   FundHoldingsHistory,
   NetworkValue,
   InvestmentValuationHistory,
@@ -37,7 +37,7 @@ function updateAssetPrices(event: PriceUpdate): void {
     asset.save();
 
     let id = asset.id + "/" + event.block.timestamp.toString();
-    let priceUpdate = new AssetPriceUpdate(id);
+    let priceUpdate = new AssetPriceHistory(id);
     priceUpdate.asset = asset.id;
     priceUpdate.price = prices[i];
     priceUpdate.timestamp = event.block.timestamp;
@@ -52,11 +52,12 @@ function updateFundCalculations(event: PriceUpdate): void {
   //   return;
   // }
 
-  // Only update at most once an hour.
+  // Only update at most once per day
+  // (interval is set to 23 hours because priceUpdate is not as regular as it should be...)
   let state = currentState();
-  let interval = BigInt.fromI32(3600);
-  if (event.block.timestamp.minus(state.lastCalculation).gt(interval)) {
-    state.lastCalculation = event.block.timestamp;
+  let interval = BigInt.fromI32(23 * 3600);
+  if (event.block.timestamp.minus(state.lastPriceUpdate).gt(interval)) {
+    state.lastPriceUpdate = event.block.timestamp;
 
     let priceSourceContract = PriceSourceContract.bind(event.address);
     let registryAddress = priceSourceContract.REGISTRY();

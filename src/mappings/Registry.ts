@@ -21,6 +21,7 @@ import {
 } from "../types/RegistryDataSource/RegistryContract";
 import { saveContract } from "./utils/saveContract";
 import { PriceSourceChange } from "../types/PriceSourceDataSource/RegistryContract";
+import { currentState } from "./utils/currentState";
 
 function registryEntity(address: Address): Registry {
   let id = address.toHex();
@@ -169,6 +170,10 @@ export function handleEngineChange(event: EngineChange): void {
   let engine = engineEntity(event.params.engine, event.address);
   registry.engine = engine.id;
   registry.save();
+
+  let state = currentState();
+  state.currentEngine = event.params.engine.toHex();
+  state.save();
 
   saveContract(
     registry.id,
