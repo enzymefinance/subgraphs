@@ -14,6 +14,9 @@ import {
 } from "../types/schema";
 import { HubContract } from "../types/ParticipationFactoryDataSource/templates/ParticipationDataSource/HubContract";
 import { AccountingContract } from "../types/ParticipationFactoryDataSource/templates/ParticipationDataSource/AccountingContract";
+import { SharesContract } from "../types/ParticipationFactoryDataSource/templates/ParticipationDataSource/SharesContract";
+
+
 import { currentState } from "./utils/currentState";
 import { BigInt } from "@graphprotocol/graph-ts";
 
@@ -28,11 +31,23 @@ export function handleRequestExecution(event: RequestExecution): void {
   let fundContract = HubContract.bind(contract.hub());
   let accountingContract = AccountingContract.bind(fundContract.accounting());
   let currentSharePrice = accountingContract.calcSharePrice();
+  let defaultSharePrice = accountingContract.DEFAULT_SHARE_PRICE();
+  let gav = accountingContract.calcGav();
+
+  let sharesContract = SharesContract.bind(fundContract.shares());
+  let totalSupply = sharesContract.totalSupply();
+
+  let requestedShares = event.params.requestedShares;
+  let investmentAmount = event.params.investmentAmount;
+  let investmentAsset = event.params.investmentAsset;
+
+  let amountInDenomationAsset = gav
+    .times(event.params.requestedShares)
+    .div(totalSupply);
 
   let investment = investmentEntity(event.params.requestOwner, contract.hub());
-  investment.shares = investment.shares.plus(event.params.requestedShares);
+  investment.shares = investment.shares.plus(requestedShares);
   investment.sharePrice = currentSharePrice;
-  // TODO: calculate amount in ETH that was invested (save to investmenthistory entity)
   investment.save();
 
   // this is currently investment-count, not investor-count (misnamed entity)
@@ -55,9 +70,12 @@ export function handleRequestExecution(event: RequestExecution): void {
     event.params.requestOwner.toHex() + "/" + contract.hub().toHex();
   investmentHistory.owner = event.params.requestOwner.toHex();
   investmentHistory.fund = contract.hub().toHex();
-  investmentHistory.action = "investment";
-  investmentHistory.shares = event.params.requestedShares;
+  investmentHistory.action = "Investment";
+  investmentHistory.shares = requestedShares;
   investmentHistory.sharePrice = currentSharePrice;
+  investmentHistory.amount = investmentAmount;
+  investmentHistory.asset = investmentAsset.toHex();
+  investmentHistory.amountInDenominationAsset = amountInDenomationAsset;
   investmentHistory.save();
 }
 
@@ -69,9 +87,18 @@ export function handleRedemption(event: Redemption): void {
     return;
   }
 
+  let fundContract = HubContract.bind(contract.hub());
+  let accountingContract = AccountingContract.bind(fundContract.accounting());
+  let currentSharePrice = accountingContract.calcSharePrice();
+  let defaultSharePrice = accountingContract.DEFAULT_SHARE_PRICE();
+  let asset = accountingContract.NATIVE_ASSET();
+
+  let amount = currentSharePrice
+    .times(event.params.redeemedShares)
+    .div(defaultSharePrice);
+
   let investment = investmentEntity(event.params.redeemer, contract.hub());
   investment.shares = investment.shares.minus(event.params.redeemedShares);
-  // TODO: calculate amount in ETH that was withdrawn (save to investmenthistory entity)
   investment.save();
 
   // this is currently investment-count, not investor-count (misnamed entity)
@@ -96,9 +123,12 @@ export function handleRedemption(event: Redemption): void {
     event.params.redeemer.toHex() + "/" + contract.hub().toHex();
   investmentHistory.owner = event.params.redeemer.toHex();
   investmentHistory.fund = contract.hub().toHex();
-  investmentHistory.action = "redemption";
+  investmentHistory.action = "Redemption";
   investmentHistory.shares = event.params.redeemedShares;
-  // investmentLog.sharePrice = get current share price from accounting contract
+  investmentHistory.sharePrice = currentSharePrice;
+  investmentHistory.amount = amount;
+  investmentHistory.asset = asset.toHex();
+  investmentHistory.amountInDenominationAsset = amount;
   investmentHistory.save();
 }
 

@@ -96,14 +96,14 @@ function updateFundCalculations(event: PriceUpdate): void {
         continue;
       }
 
-      for (let j: i32 = 0; j < lastFundId.toI32(); j++) {
+      for (let j: i32 = 0; j <= lastFundId.toI32(); j++) {
         let fundAddress = versionContract
           .getFundById(BigInt.fromI32(j))
           .toHex();
-        let fund = Fund.load(fundAddress);
-        if (!fund) {
-          continue;
-        }
+        let fund = Fund.load(fundAddress) || new Fund(fundAddress);
+        // if (!fund) {
+        //   continue;
+        // }
 
         // if (fund.isShutdown) {
         //   continue;
@@ -161,11 +161,6 @@ function updateFundCalculations(event: PriceUpdate): void {
         }
         // until here....
 
-        let grossSharePrice = BigDecimal.fromString("0");
-        if (!totalSupply.isZero()) {
-          grossSharePrice = gav.toBigDecimal().div(totalSupply.toBigDecimal());
-        }
-
         let timestamp = event.block.timestamp;
         let calculationsId = fundAddress + "/" + timestamp.toString();
         let calculations = new FundCalculationsHistory(calculationsId);
@@ -204,7 +199,12 @@ function updateFundCalculations(event: PriceUpdate): void {
           fundHoldingsHistory.fund = fundAddress;
           fundHoldingsHistory.asset = holdings.value1[k].toHex();
           fundHoldingsHistory.holding = holdings.value0[k];
-          // TODO: calculate/store holding in WETH
+
+          let assetGav = BigInt.fromI32(0);
+          if (!holdings.value0[k].isZero()) {
+            assetGav = accountingContract.calcAssetGAV(holdings.value1[k]);
+          }
+          fundHoldingsHistory.assetGav = assetGav;
           fundHoldingsHistory.save();
         }
 
@@ -254,8 +254,11 @@ function updateFundCalculations(event: PriceUpdate): void {
           investorValuationLog.gav = investorValuationLog.gav.plus(
             investmentGav
           );
+          if (!investorValuationLog.nav) {
+            investorValuationLog.nav = BigInt.fromI32(0);
+          }
           investorValuationLog.nav = investorValuationLog.nav.plus(
-            investmentGav
+            investmentNav
           );
           investorValuationLog.timestamp = event.block.timestamp;
           investorValuationLog.save();

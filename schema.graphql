@@ -314,7 +314,7 @@ type InvestorValuationHistory @entity {
   id: ID!
   owner: Investor!
   gav: BigInt!
-  nav: BigInt!
+  nav: BigInt
   timestamp: BigInt!
 }
 
@@ -327,6 +327,9 @@ type InvestmentHistory @entity {
   action: String!
   shares: BigInt!
   sharePrice: BigInt
+  amount: BigInt
+  asset: Asset
+  amountInDenominationAsset: BigInt
 }
 
 type FundHoldingsHistory @entity {
@@ -335,6 +338,7 @@ type FundHoldingsHistory @entity {
   fund: Fund!
   asset: Asset!
   holding: BigInt!
+  assetGav: BigInt!
 }
 
 type NetworkValue @entity {

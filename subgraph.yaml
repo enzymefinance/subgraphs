@@ -8,7 +8,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: '{{melonContracts.registry}}'
+      address: '0x1Bfd21f7db126a5966d2C09492676807a68859Ba'
       abi: RegistryContract
     mapping:
       kind: ethereum/events
@@ -51,7 +51,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: '{{melonContracts.engine}}'
+      address: '0x7CaEc96607c5c7190d63B5A650E7CE34472352f5'
       abi: EngineContract
     mapping:
       kind: ethereum/events
@@ -80,7 +80,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: '{{melonContracts.priceSource}}'
+      address: '0x4559DDD9E0a567bD8AB071ac106C1bC2d0C0b6Ef'
       abi: PriceSourceContract
     mapping:
       kind: ethereum/events
@@ -124,7 +124,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: '{{melonContracts.version}}'
+      address: '0x01Bde0b02740D6311e4a87CA112DeEEddb057EFB'
       abi: VersionContract
     mapping:
       kind: ethereum/events
@@ -216,7 +216,7 @@ dataSources:
     network: mainnet
     source:
       abi: ParticipationFactoryContract
-      address: '{{melonContracts.factories.participationFactory}}'
+      address: '0xA48227baEa91825c23b2A38B0A90CE2e2ae59987'
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.2
@@ -256,10 +256,10 @@ dataSources:
           abis:
             - name: ParticipationContract
               file: ./node_modules/@melonproject/protocol/out/Participation.abi.json
-            - name: SharesContract
-              file: ./node_modules/@melonproject/protocol/out/Shares.abi.json 
             - name: AccountingContract
               file: ./node_modules/@melonproject/protocol/out/Accounting.abi.json
+            - name: SharesContract
+              file: ./node_modules/@melonproject/protocol/out/Shares.abi.json
             - name: HubContract
               file: ./node_modules/@melonproject/protocol/out/Hub.abi.json
           eventHandlers:
@@ -277,7 +277,7 @@ dataSources:
     network: mainnet
     source:
       abi: AccountingFactoryContract
-      address: '{{melonContracts.factories.accountingFactory}}'
+      address: '0xeA41FD17121AAC5c79717C8528ce66a8e143e0c8'
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.2
@@ -319,7 +319,7 @@ dataSources:
     network: mainnet
     source:
       abi: FeeManagerFactoryContract
-      address: '{{melonContracts.factories.feeManagerFactory}}'
+      address: '0xCB9CC04622ebb6D751E3516503Bc5418d980Ef13'
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.2
@@ -366,7 +366,7 @@ dataSources:
     network: mainnet
     source:
       abi: PolicyManagerFactoryContract
-      address: '{{melonContracts.factories.policyManagerFactory}}'
+      address: '0xe06835e09Dd3eB24433252a77Ef573E022FcfB0b'
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.2
@@ -408,7 +408,7 @@ dataSources:
     network: mainnet
     source:
       abi: SharesFactoryContract
-      address: '{{melonContracts.factories.sharesFactory}}'
+      address: '0xC563Fb444441fd73431384006e7A81955c0d4F89'
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.2
@@ -450,7 +450,7 @@ dataSources:
     network: mainnet
     source:
       abi: TradingFactoryContract
-      address: '{{melonContracts.factories.tradingFactory}}'
+      address: '0x6E57E54Ba53495066F400c026ecA1ef7FCa9Cb44'
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.2
@@ -529,7 +529,7 @@ dataSources:
     network: mainnet
     source:
       abi: VaultFactoryContract
-      address: '{{melonContracts.factories.vaultFactory}}'
+      address: '0x42822b1f64249154Fc82f7F6246AE7C69254F30A'
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.2
