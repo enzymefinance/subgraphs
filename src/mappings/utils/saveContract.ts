@@ -8,7 +8,6 @@ export function saveContract(
   creationBlock: BigInt,
   parent: string
 ): void {
-  // return if parent contract doesn't exist (unless parent is empty -> root contract)
   let parentContract = Contract.load(parent);
 
   if (!parentContract && name != "Registry") {
@@ -20,11 +19,11 @@ export function saveContract(
   let contract = Contract.load(id);
   if (!contract) {
     contract = new Contract(id);
+    contract.creationTime = creationTime;
+    contract.creationBlock = creationBlock;
   }
 
   contract.name = name;
-  contract.creationTime = creationTime;
-  contract.creationBlock = creationBlock;
   contract.parent = parent;
   contract.save();
 }

@@ -22,9 +22,9 @@ type State @entity {
 type Registry @entity {
   id: ID!
   engine: Engine
-  assets: [Asset!]!
-  exchangeAdapters: [ExchangeAdapter!]!
   versions: [Version!]! @derivedFrom(field: "registry")
+  assets: [Asset!]! @derivedFrom(field: "registry")
+  exchangeAdapters: [ExchangeAdapter!]! @derivedFrom(field: "registry")
   priceSources: [PriceSource!]! @derivedFrom(field: "registry")
   mlnTokens: [MlnToken!]! @derivedFrom(field: "registry")
   nativeAssets: [NativeAsset!]! @derivedFrom(field: "registry")
@@ -34,6 +34,7 @@ type Registry @entity {
 type Version @entity {
   id: ID!
   registry: Registry
+  name: String
   funds: [Fund!]! @derivedFrom(field: "version")
 }
 
@@ -116,8 +117,11 @@ type Asset @entity {
   url: String!
   reserveMin: BigInt!
   registry: Registry
+  removedFromRegistry: Boolean
+  removedFromRegistryAt: BigInt
   price: BigInt
   priceHistory: [AssetPriceHistory!]! @derivedFrom(field: "asset")
+  fundHoldingsHistory: [FundHoldingsHistory!]! @derivedFrom(field: "asset")
   lastPriceUpdate: BigInt
 }
 
@@ -134,6 +138,9 @@ type ExchangeAdapter @entity {
   takesCustody: Boolean!
   sigs: String
   registry: Registry
+  removedFromRegistry: Boolean
+  removedFromRegistryAt: BigInt
+  calls: [ExchangeMethodCall!]! @derivedFrom(field: "exchange")
 }
 
 type Fund @entity {
@@ -203,7 +210,7 @@ type InvestorCount @entity {
 type Accounting @entity {
   id: ID!
   fund: Fund!
-  demoniationAsset: Asset!
+  denominationAsset: Asset!
   nativeAsset: Asset!
   ownedAssets: [Asset!]!
 }

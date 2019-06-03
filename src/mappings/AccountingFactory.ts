@@ -8,7 +8,7 @@ export function handleNewInstance(event: NewInstance): void {
 
   let accounting = new Accounting(event.params.instance.toHex());
   accounting.fund = event.params.hub.toHex();
-  accounting.demoniationAsset = event.params.denominationAsset.toHex();
+  accounting.denominationAsset = event.params.denominationAsset.toHex();
   accounting.nativeAsset = event.params.nativeAsset.toHex();
   accounting.ownedAssets = [];
   accounting.save();

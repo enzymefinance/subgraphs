@@ -348,6 +348,9 @@ dataSources:
             - FeeManager
             - ManagementFee
             - PerformanceFee
+            - Fund
+            - Investment
+            - Investor
           abis:
             - name: FeeManagerContract
               file: ./node_modules/@melonproject/protocol/out/FeeManager.abi.json
@@ -355,6 +358,8 @@ dataSources:
               file: ./node_modules/@melonproject/protocol/out/ManagementFee.abi.json   
             - name: PerformanceFeeContract
               file: ./node_modules/@melonproject/protocol/out/PerformanceFee.abi.json  
+            - name: HubContract
+              file: ./node_modules/@melonproject/protocol/out/Hub.abi.json  
           eventHandlers:
             - event: FeeRegistration(address)
               handler: handleFeeRegistration

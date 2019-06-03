@@ -6,8 +6,14 @@ import {
   FeeManager,
   ManagementFee,
   PerformanceFee,
-  FeeRewardHistory
+  FeeRewardHistory,
+  Fund,
+  InvestmentHistory
 } from "../types/schema";
+import { investmentEntity } from "./entities/investmentEntity";
+import { FeeManagerContract } from "../types/PriceSourceDataSource/FeeManagerContract";
+import { HubContract } from "../types/ParticipationFactoryDataSource/templates/ParticipationDataSource/HubContract";
+import { Address } from "@graphprotocol/graph-ts";
 
 export function handleFeeRegistration(event: FeeRegistration): void {
   // unfortunately, this event only passes very limited data, so
@@ -56,4 +62,27 @@ export function handleFeeReward(event: FeeReward): void {
     event.params.shareQuantity
   );
   feeManager.save();
+
+  // add rewardeded fees to manager
+  let feeManagerContract = FeeManagerContract.bind(event.address);
+  let hubAddress = feeManagerContract.hub();
+  let hubContract = HubContract.bind(hubAddress);
+  let managerAddress = hubContract.manager();
+
+  let investment = investmentEntity(managerAddress, hubAddress);
+  investment.shares = investment.shares.plus(event.params.shareQuantity);
+  investment.save();
+
+  // let investmentHistory = new InvestmentHistory(event.transaction.hash.toHex());
+  // investmentHistory.timestamp = event.block.timestamp;
+  // investmentHistory.investment = managerAddress.toHex() + "/" + hubAddress.toHex();
+  // investmentHistory.owner = managerAddress.toHex();
+  // investmentHistory.fund = hubAddress.toHex();
+  // investmentHistory.action = "Fee reward";
+  // investmentHistory.shares = event.params.shareQuantity;
+  // // investmentHistory.sharePrice = currentSharePrice;
+  // // investmentHistory.amount = amount;
+  // investmentHistory.asset = asset.toHex();
+  // investmentHistory.amountInDenominationAsset = amount;
+  // investmentHistory.save();
 }
