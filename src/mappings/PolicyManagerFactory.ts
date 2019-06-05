@@ -2,6 +2,7 @@ import { PolicyManagerDataSource } from "../types/PolicyManagerFactoryDataSource
 import { NewInstance } from "../types/PolicyManagerFactoryDataSource/PolicyManagerFactoryContract";
 import { PolicyManager } from "../types/schema";
 import { saveContract } from "./utils/saveContract";
+import { log } from "@graphprotocol/graph-ts";
 
 export function handleNewInstance(event: NewInstance): void {
   PolicyManagerDataSource.create(event.params.instance);

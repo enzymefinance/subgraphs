@@ -28,6 +28,7 @@ type Registry @entity {
   priceSources: [PriceSource!]! @derivedFrom(field: "registry")
   mlnTokens: [MlnToken!]! @derivedFrom(field: "registry")
   nativeAssets: [NativeAsset!]! @derivedFrom(field: "registry")
+  mgms: [MGM!]! @derivedFrom(field: "registry")
   funds: [Fund!]! @derivedFrom(field: "registry")
 }
 
@@ -83,6 +84,11 @@ type MlnToken @entity {
 }
 
 type NativeAsset @entity {
+  id: ID!
+  registry: Registry!
+}
+
+type MGM @entity {
   id: ID!
   registry: Registry!
 }
@@ -154,7 +160,7 @@ type Fund @entity {
   participation: Participation!
   feeManager: FeeManager!
   policyManager: PolicyManager!
-  shares: Shares!
+  share: Share!
   trading: Trading!
   vault: Vault!
   registry: Registry!
@@ -209,7 +215,7 @@ type InvestorCount @entity {
 
 type Accounting @entity {
   id: ID!
-  fund: Fund!
+  fund: Fund
   denominationAsset: Asset!
   nativeAsset: Asset!
   ownedAssets: [Asset!]!
@@ -217,16 +223,17 @@ type Accounting @entity {
 
 type Participation @entity {
   id: ID!
-  fund: Fund!
+  fund: Fund
   allowedAssets: [Asset!]!
   investmentRequests: [InvestmentRequest!]!
 }
 
 type FeeManager @entity {
   id: ID!
-  fund: Fund!
-  managementFee: ManagementFee
-  performanceFee: PerformanceFee
+  fund: Fund
+  feesRegistered: BigInt!
+  managementFee: ManagementFee @derivedFrom(field: "feeManager")
+  performanceFee: PerformanceFee @derivedFrom(field: "feeManager")
   totalFeeReward: BigInt!
   feeRewardHistory: [FeeRewardHistory!]! @derivedFrom(field: "feeManager")
 }
@@ -234,15 +241,15 @@ type FeeManager @entity {
 type ManagementFee @entity {
   id: ID!
   feeManager: FeeManager!
-  managementFeeRate: BigInt
+  managementFeeRate: BigInt!
   lastPayoutTime: BigInt
 }
 
 type PerformanceFee @entity {
   id: ID!
   feeManager: FeeManager!
-  performanceFeeRate: BigInt
-  performanceFeePeriod: BigInt
+  performanceFeeRate: BigInt!
+  performanceFeePeriod: BigInt!
   lastPayoutTime: BigInt
   initializeTime: BigInt
   highWaterMark: BigInt
@@ -257,17 +264,30 @@ type FeeRewardHistory @entity {
 
 type PolicyManager @entity {
   id: ID!
-  fund: Fund!
+  fund: Fund
+  policies: [Policy!] @derivedFrom(field: "policyManager")
 }
 
 type Policy @entity {
   id: ID!
+  policyManager: PolicyManager
   signature: String!
   position: Int!
-  policy: String!
+  identifier: String!
+  userWhiteList: [UserWhiteList!] @derivedFrom(field: "policy")
+  assetWhiteList: [Asset!]
+  assetBlackList: [Asset!]
+  maxConcentration: BigInt
+  maxPositions: BigInt
+  priceTolerance: BigInt
 }
 
-type Shares @entity {
+type UserWhiteList @entity {
+  id: ID!
+  policy: Policy!
+}
+
+type Share @entity {
   id: ID!
   fund: Fund!
 }
@@ -282,7 +302,6 @@ type Vault @entity {
   fund: Fund!
 }
 
-# TODO: Add mappings.
 type InvestmentRequest @entity {
   id: ID!
   fund: Fund!

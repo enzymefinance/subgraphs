@@ -46,12 +46,6 @@ function updateAssetPrices(event: PriceUpdate): void {
 }
 
 function updateFundCalculations(event: PriceUpdate): void {
-  // if we skip 7560279, then it fails at 7566765...
-  // if (event.block.number.equals(BigInt.fromI32(7560279))) {
-  //   log.warning("Skipping block 7560279", []);
-  //   return;
-  // }
-
   // Only update at most once per day
   // (interval is set to 23 hours because priceUpdate is not as regular as it should be...)
   let state = currentState();
@@ -101,13 +95,6 @@ function updateFundCalculations(event: PriceUpdate): void {
           .getFundById(BigInt.fromI32(j))
           .toHex();
         let fund = Fund.load(fundAddress) || new Fund(fundAddress);
-        // if (!fund) {
-        //   continue;
-        // }
-
-        // if (fund.isShutdown) {
-        //   continue;
-        // }
 
         let accountingAddress = Address.fromString(fund.accounting);
         let accountingContract = AccountingContract.bind(accountingAddress);
@@ -125,7 +112,7 @@ function updateFundCalculations(event: PriceUpdate): void {
         }
         aggregateGAV = aggregateGAV.plus(gav);
 
-        let sharesAddress = Address.fromString(fund.shares);
+        let sharesAddress = Address.fromString(fund.share);
         let sharesContract = SharesContract.bind(sharesAddress);
         let totalSupply = sharesContract.totalSupply();
 

@@ -6,44 +6,54 @@ import {
   FeeManager,
   ManagementFee,
   PerformanceFee,
-  FeeRewardHistory,
-  Fund,
-  InvestmentHistory
+  FeeRewardHistory
 } from "../types/schema";
 import { investmentEntity } from "./entities/investmentEntity";
 import { FeeManagerContract } from "../types/PriceSourceDataSource/FeeManagerContract";
 import { HubContract } from "../types/ParticipationFactoryDataSource/templates/ParticipationDataSource/HubContract";
-import { Address } from "@graphprotocol/graph-ts";
+import { BigInt } from "@graphprotocol/graph-ts";
+import { ManagementFeeContract } from "../types/FeeManagerFactoryDataSource/templates/FeeManagerDataSource/ManagementFeeContract";
+import { PerformanceFeeContract } from "../types/FeeManagerFactoryDataSource/templates/FeeManagerDataSource/PerformanceFeeContract";
 
 export function handleFeeRegistration(event: FeeRegistration): void {
-  // unfortunately, this event only passes very limited data, so
+  // this event only passes very limited data, so
   // we have to get everything through contract calls...
-
-  let feeManager =
-    FeeManager.load(event.address.toHex()) ||
-    new FeeManager(event.address.toHex());
-
-  if (!feeManager.managementFee) {
-    let feeId = event.params.fee;
-
-    let fee = new ManagementFee(feeId.toHex());
-    fee.feeManager = event.address.toHex();
-    fee.lastPayoutTime = event.block.timestamp;
-    fee.save();
-
-    feeManager.managementFee = feeId.toHex();
-  } else {
-    let feeId = event.params.fee;
-
-    let fee = new PerformanceFee(feeId.toHex());
-    fee.feeManager = event.address.toHex();
-    fee.initializeTime = event.block.timestamp;
-    fee.lastPayoutTime = event.block.timestamp;
-    fee.save();
-
-    feeManager.performanceFee = feeId.toHex();
+  let feeManager = FeeManager.load(event.address.toHex());
+  if (!feeManager) {
+    feeManager = new FeeManager(event.address.toHex());
+    feeManager.feesRegistered = BigInt.fromI32(0);
+    feeManager.save();
   }
-  feeManager.save();
+  let feeManagerContract = FeeManagerContract.bind(event.address);
+  if (
+    !feeManager.feesRegistered ||
+    feeManager.feesRegistered.equals(BigInt.fromI32(0))
+  ) {
+    let mgmtFeeAddress = feeManagerContract.fees(BigInt.fromI32(0));
+    let mgmtFeeContract = ManagementFeeContract.bind(mgmtFeeAddress);
+    let mgmtFee = new ManagementFee(event.address.toHex() + "/mgmt");
+    mgmtFee.feeManager = event.address.toHex();
+    mgmtFee.managementFeeRate = mgmtFeeContract.managementFeeRate(
+      event.address
+    );
+    mgmtFee.save();
+    feeManager.feesRegistered = BigInt.fromI32(1);
+    feeManager.save();
+  } else {
+    let perfFeeAddress = feeManagerContract.fees(BigInt.fromI32(1));
+    let perfFeeContract = PerformanceFeeContract.bind(perfFeeAddress);
+    let perfFee = new PerformanceFee(event.address.toHex() + "/perf");
+    perfFee.feeManager = event.address.toHex();
+    perfFee.performanceFeeRate = perfFeeContract.performanceFeeRate(
+      event.address
+    );
+    perfFee.performanceFeePeriod = perfFeeContract.performanceFeePeriod(
+      event.address
+    );
+    perfFee.save();
+    feeManager.feesRegistered = BigInt.fromI32(2);
+    feeManager.save();
+  }
 }
 
 export function handleFeeReward(event: FeeReward): void {
@@ -63,7 +73,7 @@ export function handleFeeReward(event: FeeReward): void {
   );
   feeManager.save();
 
-  // add rewardeded fees to manager
+  // add rewardeded fees to manager's investment
   let feeManagerContract = FeeManagerContract.bind(event.address);
   let hubAddress = feeManagerContract.hub();
   let hubContract = HubContract.bind(hubAddress);

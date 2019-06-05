@@ -46,6 +46,8 @@ dataSources:
           handler: handleMlnTokenChange
         - event: NativeAssetChange(address)
           handler: handleNativeAssetChange
+        - event: MGMChange(address)
+          handler: handleMGMChange
   
   - name: EngineDataSource
     kind: ethereum/contract
@@ -404,6 +406,16 @@ dataSources:
               file: ./node_modules/@melonproject/protocol/out/PolicyManager.abi.json
             - name: PolicyContract
               file: ./node_modules/@melonproject/protocol/out/Policy.abi.json
+            - name: AssetBlackListContract
+              file: ./node_modules/@melonproject/protocol/out/AssetBlackList.abi.json
+            - name: AssetWhiteListContract
+              file: ./node_modules/@melonproject/protocol/out/AssetWhiteList.abi.json
+            - name: MaxConcentrationContract
+              file: ./node_modules/@melonproject/protocol/out/MaxConcentration.abi.json
+            - name: MaxPositionsContract
+              file: ./node_modules/@melonproject/protocol/out/MaxPositions.abi.json
+            - name: PriceToleranceContract
+              file: ./node_modules/@melonproject/protocol/out/PriceTolerance.abi.json
           eventHandlers:
             - event: Registration(bytes4,uint8,address)
               handler: handleRegistration

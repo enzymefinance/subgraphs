@@ -7,7 +7,8 @@ import {
   PriceSource,
   MlnToken,
   NativeAsset,
-  ExchangeAdapter
+  ExchangeAdapter,
+  MGM
 } from "../types/schema";
 import {
   VersionRegistration,
@@ -18,7 +19,8 @@ import {
   MlnTokenChange,
   ExchangeAdapterUpsert,
   ExchangeAdapterRemoval,
-  RegistryContract
+  RegistryContract,
+  MGMChange
 } from "../types/RegistryDataSource/RegistryContract";
 import { saveContract } from "./utils/saveContract";
 import { PriceSourceChange } from "../types/PriceSourceDataSource/RegistryContract";
@@ -260,4 +262,10 @@ export function handleNativeAssetChange(event: NativeAssetChange): void {
     event.block.number,
     event.address.toHex()
   );
+}
+
+export function handleMGMChange(event: MGMChange): void {
+  let mgm = new MGM(event.params.MGM.toHex());
+  mgm.registry = event.address.toHex();
+  mgm.save();
 }

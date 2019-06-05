@@ -12,6 +12,7 @@ export function handleNewInstance(event: NewInstance): void {
 
   let feeManager = new FeeManager(event.params.instance.toHex());
   feeManager.fund = event.params.hub.toHex();
+  feeManager.feesRegistered = BigInt.fromI32(0);
   feeManager.totalFeeReward = BigInt.fromI32(0);
   feeManager.save();
 
@@ -22,8 +23,4 @@ export function handleNewInstance(event: NewInstance): void {
     event.block.number,
     event.params.hub.toHex()
   );
-}
-
-export function handleCreateInstance(call: CreateInstanceCall): void {
-  log.warning("FeeManager create instance", []);
 }

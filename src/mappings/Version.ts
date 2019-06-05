@@ -28,7 +28,7 @@ export function handleNewFund(event: NewFund): void {
   fund.feeManager = addresses[1];
   fund.participation = addresses[2];
   fund.policyManager = addresses[3];
-  fund.shares = addresses[4];
+  fund.share = addresses[4];
   fund.trading = addresses[5];
   fund.vault = addresses[6];
   fund.registry = addresses[8];
