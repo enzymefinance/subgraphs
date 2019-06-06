@@ -1,4 +1,4 @@
-import { Address, BigInt, TypedMap, log } from "@graphprotocol/graph-ts";
+import { Address, BigInt, TypedMap } from "@graphprotocol/graph-ts";
 import {
   PriceSourceContract,
   PriceUpdate
@@ -33,11 +33,6 @@ function tenToThePowerOf(exponent: BigInt): BigInt {
 }
 
 export function handlePriceUpdate(event: PriceUpdate): void {
-  _handlePriceUpdate(event);
-  log.warning("1st price update handler", []);
-}
-
-export function _handlePriceUpdate(event: PriceUpdate): void {
   // Only update at most once per day (roughly)
   let timestamp = event.block.timestamp;
   let state = currentState();
