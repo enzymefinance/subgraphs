@@ -82,17 +82,4 @@ export function handleFeeReward(event: FeeReward): void {
   let investment = investmentEntity(managerAddress, hubAddress);
   investment.shares = investment.shares.plus(event.params.shareQuantity);
   investment.save();
-
-  // let investmentHistory = new InvestmentHistory(event.transaction.hash.toHex());
-  // investmentHistory.timestamp = event.block.timestamp;
-  // investmentHistory.investment = managerAddress.toHex() + "/" + hubAddress.toHex();
-  // investmentHistory.owner = managerAddress.toHex();
-  // investmentHistory.fund = hubAddress.toHex();
-  // investmentHistory.action = "Fee reward";
-  // investmentHistory.shares = event.params.shareQuantity;
-  // // investmentHistory.sharePrice = currentSharePrice;
-  // // investmentHistory.amount = amount;
-  // investmentHistory.asset = asset.toHex();
-  // investmentHistory.amountInDenominationAsset = amount;
-  // investmentHistory.save();
 }

@@ -14,9 +14,7 @@ export function handleNewFund(event: NewFund): void {
   let addresses = event.params.routes.map<string>(value => value.toHex());
   let contract = HubContract.bind(event.params.hub);
 
-  let manager =
-    FundManager.load(event.params.manager.toHex()) ||
-    new FundManager(event.params.manager.toHex());
+  let manager = new FundManager(event.params.manager.toHex());
   manager.save();
 
   let fund = new Fund(hub);

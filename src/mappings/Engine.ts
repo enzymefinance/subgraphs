@@ -73,8 +73,7 @@ export function handleAmguPaid(event: AmguPaid): void {
     state.lastEngineUpdate = event.block.timestamp;
     state.save();
 
-    let engine =
-      Engine.load(event.address.toHex()) || new Engine(event.address.toHex());
+    let engine = new Engine(event.address.toHex());
     let engineContract = EngineContract.bind(event.address);
     engine.amguPrice = engineContract.amguPrice();
     engine.frozenEther = engineContract.frozenEther();
@@ -115,8 +114,7 @@ export function handleThaw(event: Thaw): void {
   etherEvent.timestamp = event.block.timestamp;
   etherEvent.save();
 
-  let engine =
-    Engine.load(event.address.toHex()) || new Engine(event.address.toHex());
+  let engine = new Engine(event.address.toHex());
   engine.lastThaw = event.block.timestamp;
   engine.save();
 }

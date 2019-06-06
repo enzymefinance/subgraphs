@@ -1,12 +1,5 @@
 version: '3'
 services:
-  # ganache-cli:
-  #   image: trufflesuite/ganache-cli
-  #   command: "ganache-cli --db /data/ganache --gasLimit 0x7a1200 --networkId 4 --defaultBalanceEther 10000000000000 -m 'exhibit now news planet fame thank swear reform tilt accident bitter axis'"
-  #   ports:
-  #     - '8545:8545'
-  #   volumes:
-  #     - ./data/ganache:/data/ganache
   graph-node:
     image: graphprotocol/graph-node
     ports:
@@ -22,7 +15,7 @@ services:
       postgres_pass: let-me-in
       postgres_db: graph-node
       ipfs: 'ipfs:5001'
-      ethereum: 'dev:http://host.docker.internal:8545'
+      ethereum: 'mainnet:https://mainnet.infura.io/v3/b704ae8aa546415fa97118ac9102ec13'
       RUST_LOG: info
   ipfs:
     image: ipfs/go-ipfs
@@ -32,6 +25,8 @@ services:
       - ./data/ipfs:/data/ipfs
   postgres:
     image: postgres
+    ports:
+      - '5432:5432'
     environment:
       POSTGRES_USER: graph-node
       POSTGRES_PASSWORD: let-me-in

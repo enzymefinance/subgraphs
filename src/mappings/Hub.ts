@@ -4,7 +4,7 @@ import { BigInt } from "@graphprotocol/graph-ts";
 import { currentState } from "./utils/currentState";
 
 export function handleFundShutDown(event: FundShutDown): void {
-  let fund = Fund.load(event.address.toHex()) as Fund;
+  let fund = new Fund(event.address.toHex());
   fund.isShutdown = true;
   fund.shutDownTime = event.block.timestamp;
   fund.save();

@@ -8,7 +8,7 @@ export function handleNewInstance(event: NewInstance): void {
 
   let id = event.params.instance.toHex();
 
-  let trading = Trading.load(id) || new Trading(id);
+  let trading = new Trading(id);
   trading.fund = event.params.hub.toHex();
   trading.save();
 

@@ -16,7 +16,6 @@ import { HubContract } from "../types/ParticipationFactoryDataSource/templates/P
 import { AccountingContract } from "../types/ParticipationFactoryDataSource/templates/ParticipationDataSource/AccountingContract";
 import { SharesContract } from "../types/ParticipationFactoryDataSource/templates/ParticipationDataSource/SharesContract";
 
-
 import { currentState } from "./utils/currentState";
 import { BigInt } from "@graphprotocol/graph-ts";
 

@@ -82,7 +82,7 @@ export function handleVersionRegistration(event: VersionRegistration): void {
 export function handleAssetUpsert(event: AssetUpsert): void {
   // let registry = registryEntity(event.address);
   let id = event.params.asset.toHex();
-  let asset = Asset.load(id) || new Asset(id);
+  let asset = new Asset(id);
   asset.name = event.params.name;
   asset.symbol = event.params.symbol;
   asset.decimals = event.params.decimals.toI32();
@@ -202,6 +202,8 @@ export function handlePriceSourceChange(event: PriceSourceChange): void {
   let priceSource = new PriceSource(event.params.priceSource.toHex());
   priceSource.registry = event.address.toHex();
   priceSource.save();
+
+  // use pricesource template
 
   saveContract(
     event.address.toHex(),

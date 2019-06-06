@@ -76,6 +76,7 @@ type EngineHistory @entity {
 type PriceSource @entity {
   id: ID!
   registry: Registry!
+  priceUpdates: [AssetPriceUpdate!] @derivedFrom(field: "priceSource")
 }
 
 type MlnToken @entity {
@@ -125,17 +126,29 @@ type Asset @entity {
   registry: Registry
   removedFromRegistry: Boolean
   removedFromRegistryAt: BigInt
-  price: BigInt
+  lastPrice: BigInt
+  lastPriceUpdate: BigInt
+  lastPriceValid: Boolean
   priceHistory: [AssetPriceHistory!]! @derivedFrom(field: "asset")
   fundHoldingsHistory: [FundHoldingsHistory!]! @derivedFrom(field: "asset")
-  lastPriceUpdate: BigInt
+}
+
+type AssetPriceUpdate @entity {
+  id: ID!
+  timestamp: BigInt!
+  priceSource: PriceSource!
+  numberOfAssets: Int!
+  invalidPrices: Int!
+  assetPrices: [AssetPriceHistory!]! @derivedFrom(field: "priceUpdate")
 }
 
 type AssetPriceHistory @entity {
   id: ID!
+  priceUpdate: AssetPriceUpdate!
   asset: Asset!
   price: BigInt!
   timestamp: BigInt!
+  priceValid: Boolean!
 }
 
 type ExchangeAdapter @entity {
@@ -167,6 +180,7 @@ type Fund @entity {
   version: Version!
   engine: Engine!
   gav: BigInt
+  validPrice: Boolean
   feesInDenominationAsset: BigInt
   feesInShares: BigInt
   nav: BigInt
@@ -190,6 +204,7 @@ type FundCalculationsHistory @entity {
   id: ID!
   fund: Fund!
   gav: BigInt!
+  validPrices: Boolean!
   feesInDenominationAsset: BigInt
   feesInShares: BigInt
   nav: BigInt
@@ -363,11 +378,12 @@ type FundHoldingsHistory @entity {
   timestamp: BigInt!
   fund: Fund!
   asset: Asset!
-  holding: BigInt!
+  amount: BigInt!
   assetGav: BigInt!
+  validPrice: Boolean!
 }
 
-type NetworkValue @entity {
+type MelonNetworkHistory @entity {
   id: ID!
   timestamp: BigInt!
   gav: BigInt!
