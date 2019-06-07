@@ -1,4 +1,4 @@
-import { Address, BigInt, TypedMap } from "@graphprotocol/graph-ts";
+import { Address, BigInt, TypedMap, log } from "@graphprotocol/graph-ts";
 import {
   PriceSourceContract,
   PriceUpdate
@@ -90,10 +90,6 @@ export function handlePriceUpdate(event: PriceUpdate): void {
     numberOfAssets = numberOfAssets + 1;
 
     assetPriceMap.set(tokens[i].toHex(), prices[i]);
-    // log.warning("Asset price {}, address {}", [
-    //   prices[i].toString(),
-    //   tokens[i].toHex()
-    // ]);
     assetDecimalMap.set(tokens[i].toHex(), BigInt.fromI32(asset.decimals));
   }
 
@@ -144,27 +140,25 @@ export function handlePriceUpdate(event: PriceUpdate): void {
     // loop through all funds
     for (let j: i32 = 0; j <= lastFundId.toI32(); j++) {
       let fundAddress = versionContract.getFundById(BigInt.fromI32(j)).toHex();
-      let fund = Fund.load(fundAddress) || new Fund(fundAddress);
+      let fund = Fund.load(fundAddress) as Fund;
+      if (!fund) {
+        continue;
+      }
 
       let accountingAddress = Address.fromString(fund.accounting);
       let accountingContract = AccountingContract.bind(accountingAddress);
 
-      // calculate GAV from fund holdings
+      // fund holdings, incl. finding out if there holdings with invalid prices
       //
       // this is to prevent calling calcGav and performCalculations in the Accounting contract
       // directly, as those functions are unreliable (they fail if prices don't exist)
       //
-      let fundGav = BigInt.fromI32(0);
       let fundGavValid = true;
       let holdings = accountingContract.getFundHoldings();
 
       for (let k: i32 = 0; k < holdings.value0.length; k++) {
         let holdingAmount = holdings.value0[k];
         let holdingAddress = holdings.value1[k];
-
-        if (holdingAmount.isZero()) {
-          continue;
-        }
 
         let holdingsId =
           fundAddress +
@@ -178,17 +172,11 @@ export function handlePriceUpdate(event: PriceUpdate): void {
         fundHoldingsHistory.asset = holdingAddress.toHex();
         fundHoldingsHistory.amount = holdingAmount;
 
-        // calculate fund GAV directly from event prices
+        // see if there are assets with invalid prices in the portfolio
         let assetGav = BigInt.fromI32(0);
         let validPrice = true;
-        let assetPriceIsSet = assetPriceMap.isSet(holdingAddress.toHex());
         let assetPrice =
           assetPriceMap.get(holdingAddress.toHex()) || BigInt.fromI32(0);
-        // log.warning("Asset price {}, address {}, isset {}", [
-        //   assetPrice.toString(),
-        //   holdingAddress.toHex(),
-        //   assetPriceIsSet ? "Yes" : "No"
-        // ]);
         if (!assetPrice.isZero()) {
           let assetDecimals =
             assetDecimalMap.get(holdingAddress.toHex()) || BigInt.fromI32(0);
@@ -202,56 +190,32 @@ export function handlePriceUpdate(event: PriceUpdate): void {
 
         fundHoldingsHistory.assetGav = assetGav;
         fundHoldingsHistory.validPrice = validPrice;
-        fundHoldingsHistory.save();
 
-        fundGav = fundGav.plus(assetGav);
+        // only save non-zero values
+        if (!holdingAmount.isZero()) {
+          fundHoldingsHistory.save();
+        }
       }
 
-      // if (!fundGavValid) {
-      //   fundGav = BigInt.fromI32(0);
-      // }
+      // have to prevent calling any function which uses calcGav
+      // since this fails when any price of an asset is invalid
+      if (invalidPrices > 0) {
+        continue;
+      }
 
-      // const outlier =
-      //   "3963877391197344453575983046348115674221700746820753546331534351508065746944";
-      // if (fundGav.toString() == outlier) {
-      //   continue;
-      // }
+      let calcs = accountingContract.performCalculations();
+      let fundGav = calcs.value0;
+      let feesInDenomiationAsset = calcs.value1;
+      let feesInShares = calcs.value2;
+      let nav = calcs.value3;
+      let sharePrice = calcs.value4;
+      let gavPerShareNetManagementFee = calcs.value5;
+
       melonNetworkGAV = melonNetworkGAV.plus(fundGav);
 
       let sharesAddress = Address.fromString(fund.share);
       let sharesContract = SharesContract.bind(sharesAddress);
       let totalSupply = sharesContract.totalSupply();
-
-      let feeManagerAddress = Address.fromString(fund.feeManager);
-      let feeManagerContract = FeeManagerContract.bind(feeManagerAddress);
-      let feesInShares = feeManagerContract.totalFeeAmount();
-
-      let feesInDenomiationAsset = BigInt.fromI32(0);
-      if (!totalSupply.isZero()) {
-        feesInDenomiationAsset = fundGav
-          .times(feesInShares)
-          .div(totalSupply.plus(feesInShares));
-      }
-
-      let nav = fundGav.minus(feesInDenomiationAsset);
-
-      let totalSupplyAccountingForFees = totalSupply.plus(feesInShares);
-      let sharePrice = BigInt.fromI32(0);
-      let gavPerShareNetManagementFee = BigInt.fromI32(0);
-      let managementFeeAmount = feeManagerContract.managementFeeAmount();
-
-      let defaultSharePrice = accountingContract.DEFAULT_SHARE_PRICE();
-      if (!totalSupply.isZero()) {
-        sharePrice = fundGav
-          .times(defaultSharePrice)
-          .div(totalSupplyAccountingForFees);
-        gavPerShareNetManagementFee = fundGav
-          .times(defaultSharePrice)
-          .div(totalSupply.plus(managementFeeAmount));
-      } else {
-        sharePrice = defaultSharePrice;
-        gavPerShareNetManagementFee = defaultSharePrice;
-      }
 
       // save price calculation to history
       let calculationsId = fundAddress + "/" + timestamp.toString();

@@ -8,7 +8,8 @@ import {
   MlnToken,
   NativeAsset,
   ExchangeAdapter,
-  MGM
+  MGM,
+  Exchange
 } from "../types/schema";
 import {
   VersionRegistration,
@@ -121,14 +122,41 @@ export function handleAssetRemoval(event: AssetRemoval): void {
   asset.save();
 }
 
+function exchangeNameFromAddress(address: Address): string {
+  let name = "";
+  if (address.toHex() == "0x39755357759ce0d7f32dc8dc45414cca409ae24e") {
+    name = "MatchingMarket";
+  }
+  if (address.toHex() == "0x818e6fecd516ecc3849daf6845e3ec868087b755") {
+    name = "KyberNetwork";
+  }
+  if (address.toHex() == "0x4f833a24e1f95d70f028921e27040ca56e09ab0b") {
+    name = "ZeroEx";
+  }
+  if (address.toHex() == "0xdcdb42c9a256690bd153a7b409751adfc8dd5851") {
+    name = "Ethfinex";
+  }
+  if (address.toHex() == "0x7caec96607c5c7190d63b5a650e7ce34472352f5") {
+    name = "MelonEngine";
+  }
+  if (address.toHex() == "0xcbb801141a1704dbe5b4a6224033cfae80c4b336") {
+    name = "MelonEngine (v1)";
+  }
+  return name;
+}
+
 export function handleExchangeAdapterUpsert(
   event: ExchangeAdapterUpsert
 ): void {
-  // let registry = registryEntity(event.address);
+  let id = event.params.adapter.toHex();
+
+  let exchange = new Exchange(event.params.exchange.toHex());
+  exchange.name = exchangeNameFromAddress(event.params.exchange);
+  exchange.adapter = id;
+  exchange.save();
 
   let sigs = event.params.sigs.map<string>(value => value.toHexString());
 
-  let id = event.params.adapter.toHex();
   let exchangeAdapter = ExchangeAdapter.load(id) || new ExchangeAdapter(id);
   exchangeAdapter.exchange = event.params.exchange.toHex();
   exchangeAdapter.takesCustody = event.params.takesCustody;
@@ -144,6 +172,14 @@ export function handleExchangeAdapterUpsert(
     event.block.timestamp,
     event.block.number,
     event.address.toHex()
+  );
+
+  saveContract(
+    event.params.exchange.toHex(),
+    "Exchange",
+    event.block.timestamp,
+    event.block.number,
+    event.params.adapter.toHex()
   );
 }
 

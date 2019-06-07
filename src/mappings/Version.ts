@@ -36,7 +36,7 @@ export function handleNewFund(event: NewFund): void {
 
   saveContract(
     hub,
-    "Hub/Fund",
+    "Fund",
     event.block.timestamp,
     event.block.number,
     addresses[9]

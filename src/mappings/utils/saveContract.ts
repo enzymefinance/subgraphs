@@ -16,14 +16,10 @@ export function saveContract(
     parentContract.save();
   }
 
-  let contract = Contract.load(id);
-  if (!contract) {
-    contract = new Contract(id);
-    contract.creationTime = creationTime;
-    contract.creationBlock = creationBlock;
-  }
-
+  let contract = new Contract(id);
   contract.name = name;
+  contract.creationTime = creationTime;
+  contract.creationBlock = creationBlock;
   contract.parent = parent;
   contract.save();
 }

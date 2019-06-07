@@ -1,6 +1,6 @@
 import { TradingDataSource } from "../types/TradingFactoryDataSource/templates";
 import { NewInstance } from "../types/TradingFactoryDataSource/TradingFactoryContract";
-import { Trading } from "../types/schema";
+import { Trading, Exchange } from "../types/schema";
 import { saveContract } from "./utils/saveContract";
 
 export function handleNewInstance(event: NewInstance): void {
@@ -10,6 +10,12 @@ export function handleNewInstance(event: NewInstance): void {
 
   let trading = new Trading(id);
   trading.fund = event.params.hub.toHex();
+  trading.exchanges = event.params.exchanges.map<string>(address =>
+    address.toHex()
+  );
+  trading.adapters = event.params.adapters.map<string>(address =>
+    address.toHex()
+  );
   trading.save();
 
   saveContract(

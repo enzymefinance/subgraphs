@@ -151,9 +151,15 @@ type AssetPriceHistory @entity {
   priceValid: Boolean!
 }
 
+type Exchange @entity {
+  id: ID!
+  name: String
+  adapter: ExchangeAdapter!
+}
+
 type ExchangeAdapter @entity {
   id: ID!
-  exchange: String!
+  exchange: Exchange!
   takesCustody: Boolean!
   sigs: String
   registry: Registry
@@ -310,6 +316,8 @@ type Share @entity {
 type Trading @entity {
   id: ID!
   fund: Fund!
+  exchanges: [Exchange!]!
+  adapters: [ExchangeAdapter!]!
 }
 
 type Vault @entity {
