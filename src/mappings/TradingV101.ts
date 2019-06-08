@@ -1,6 +1,5 @@
-import { ExchangeMethodCall } from "../types/TradingFactoryDataSource/templates/TradingDataSource/TradingContract";
+import { ExchangeMethodCall } from "../types/TradingFactoryDataSourceV101/templates/TradingDataSourceV101/TradingContractV101";
 import { ExchangeMethodCall as ExchangeMethodCallEntity } from "../types/schema";
-// TODO
 
 export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
   let id = event.transaction.hash.toHex();
@@ -27,7 +26,7 @@ export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
   emCall.orderValue5 = values[4];
   emCall.orderValue6 = values[5];
   emCall.orderValue7 = values[6];
-  emCall.orderValue8 = values[7];
+  // emCall.orderValue8 = values[7];
   emCall.makerAssetData = event.params.makerAssetData.toHexString();
   emCall.takerAssetData = event.params.takerAssetData.toHexString();
   emCall.signature = event.params.signature.toHexString();

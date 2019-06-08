@@ -21,7 +21,6 @@ import { ParticipationContract } from "../types/PriceSourceDataSource/Participat
 import { investmentEntity } from "./entities/investmentEntity";
 import { investorValuationHistoryEntity } from "./entities/investorValuationHistoryEntity";
 import { currentState } from "./utils/currentState";
-import { FeeManagerContract } from "../types/PriceSourceDataSource/FeeManagerContract";
 
 // helper function because graph-ts doesn't have a bigInt.power() function
 function tenToThePowerOf(exponent: BigInt): BigInt {
@@ -199,7 +198,7 @@ export function handlePriceUpdate(event: PriceUpdate): void {
 
       // have to prevent calling any function which uses calcGav
       // since this fails when any price of an asset is invalid
-      if (invalidPrices > 0) {
+      if (!fundGavValid) {
         continue;
       }
 

@@ -1,10 +1,10 @@
-import { TradingDataSource } from "../types/TradingFactoryDataSource/templates";
-import { NewInstance } from "../types/TradingFactoryDataSource/TradingFactoryContract";
 import { Trading } from "../types/schema";
 import { saveContract } from "./utils/saveContract";
+import { NewInstance } from "../types/TradingFactoryDataSourceV101/TradingFactoryContractV101";
+import { TradingDataSourceV101 } from "../types/TradingFactoryDataSourceV101/templates";
 
 export function handleNewInstance(event: NewInstance): void {
-  TradingDataSource.create(event.params.instance);
+  TradingDataSourceV101.create(event.params.instance);
 
   let id = event.params.instance.toHex();
 

@@ -502,41 +502,41 @@ dataSources:
               handler: handleExchangeMethodCall
 
    # old trading factory
-  - name: TradingFactoryDataSource
+  - name: TradingFactoryDataSourceV101
     kind: ethereum/contract
     network: mainnet
     source:
-      abi: TradingFactoryContract
+      abi: TradingFactoryContractV101
       address: '0xe2c3fe25336eE3bD71dcA3380b7423a3bDef3d8C'
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.2
       language: wasm/assemblyscript
-      file: ./src/mappings/TradingFactory.ts
+      file: ./src/mappings/TradingFactoryV101.ts
       entities:
         - Trading
       abis:
-        - name: TradingFactoryContract
-          file: ./node_modules/@melonproject/protocol/out/TradingFactory.abi.json
+        - name: TradingFactoryContractV101
+          file: ./node_modules/@melonproject/protocol-v.1.0.1/out/TradingFactory.abi.json
       eventHandlers:
-        - event: NewInstance(address,address,address[],address[],address)
+        - event: NewInstance(address,address,address[],address[],bool[],address)
           handler: handleNewInstance
     templates:
-      - name: TradingDataSource
+      - name: TradingDataSourceV101
         kind: ethereum/contract
         network: mainnet
         source:
-          abi: TradingContract
+          abi: TradingContractV101
         mapping:
           kind: ethereum/events
           apiVersion: 0.0.2
           language: wasm/assemblyscript
-          file: ./src/mappings/Trading.ts
+          file: ./src/mappings/TradingV101.ts
           entities:
             - Trading
           abis:
-            - name: TradingContract
-              file: ./node_modules/@melonproject/protocol/out/Trading.abi.json
+            - name: TradingContractV101
+              file: ./node_modules/@melonproject/protocol-v.1.0.1/out/Trading.abi.json
           eventHandlers:
             - event: ExchangeMethodCall(address,string,address[6],uint256[8],bytes32,bytes,bytes,bytes)
               handler: handleExchangeMethodCall
