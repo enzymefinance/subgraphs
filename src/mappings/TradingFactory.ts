@@ -2,8 +2,14 @@ import { TradingDataSource } from "../types/TradingFactoryDataSource/templates";
 import { NewInstance } from "../types/TradingFactoryDataSource/TradingFactoryContract";
 import { Trading } from "../types/schema";
 import { saveContract } from "./utils/saveContract";
+import { BigInt } from "@graphprotocol/graph-ts";
 
 export function handleNewInstance(event: NewInstance): void {
+  // ignore contracts created before go-live
+  if (event.block.number.toI32() < 7278328) {
+    return;
+  }
+
   TradingDataSource.create(event.params.instance);
 
   let id = event.params.instance.toHex();

@@ -44,7 +44,11 @@ export function handleRequestExecution(event: RequestExecution): void {
     .times(event.params.requestedShares)
     .div(totalSupply);
 
-  let investment = investmentEntity(event.params.requestOwner, contract.hub());
+  let investment = investmentEntity(
+    event.params.requestOwner,
+    contract.hub(),
+    event.block.timestamp
+  );
   investment.shares = investment.shares.plus(requestedShares);
   investment.sharePrice = currentSharePrice;
   investment.save();
@@ -96,7 +100,11 @@ export function handleRedemption(event: Redemption): void {
     .times(event.params.redeemedShares)
     .div(defaultSharePrice);
 
-  let investment = investmentEntity(event.params.redeemer, contract.hub());
+  let investment = investmentEntity(
+    event.params.redeemer,
+    contract.hub(),
+    event.block.timestamp
+  );
   investment.shares = investment.shares.minus(event.params.redeemedShares);
   investment.save();
 

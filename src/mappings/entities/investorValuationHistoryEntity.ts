@@ -4,15 +4,16 @@ import { investorEntity } from "./investorEntity";
 
 export function investorValuationHistoryEntity(
   owner: Address,
-  id: string
+  createdAt: BigInt
 ): InvestorValuationHistory {
+  let id = owner.toHex() + "/" + createdAt.toString();
   let investorValuationHistory = InvestorValuationHistory.load(id);
 
   if (!investorValuationHistory) {
     investorValuationHistory = new InvestorValuationHistory(id);
     investorValuationHistory.gav = BigInt.fromI32(0);
     investorValuationHistory.nav = BigInt.fromI32(0);
-    investorValuationHistory.owner = investorEntity(owner).id;
+    investorValuationHistory.owner = investorEntity(owner, createdAt).id;
     investorValuationHistory.save();
   }
 

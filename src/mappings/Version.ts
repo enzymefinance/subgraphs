@@ -20,7 +20,7 @@ export function handleNewFund(event: NewFund): void {
   let fund = new Fund(hub);
   fund.manager = manager.id;
   fund.name = hexToAscii(contract.name());
-  fund.creationTime = contract.creationTime();
+  fund.createdAt = contract.creationTime();
   fund.isShutdown = contract.isShutDown();
   fund.accounting = addresses[0];
   fund.feeManager = addresses[1];

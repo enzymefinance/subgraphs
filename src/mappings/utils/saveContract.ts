@@ -18,7 +18,7 @@ export function saveContract(
 
   let contract = new Contract(id);
   contract.name = name;
-  contract.creationTime = creationTime;
+  contract.createdAt = creationTime;
   contract.creationBlock = creationBlock;
   contract.parent = parent;
   contract.save();

@@ -6,7 +6,7 @@ import { currentState } from "./utils/currentState";
 export function handleFundShutDown(event: FundShutDown): void {
   let fund = new Fund(event.address.toHex());
   fund.isShutdown = true;
-  fund.shutDownTime = event.block.timestamp;
+  fund.shutdownAt = event.block.timestamp;
   fund.save();
 
   // update fund counts

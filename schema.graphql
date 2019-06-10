@@ -1,7 +1,7 @@
 type Contract @entity {
   id: ID!
   name: String
-  creationTime: BigInt
+  createdAt: BigInt
   creationBlock: BigInt
   parent: Contract
   children: [Contract!] @derivedFrom(field: "parent")
@@ -121,6 +121,7 @@ type Asset @entity {
   decimals: Int!
   symbol: String!
   name: String!
+  createdAt: BigInt!
   url: String!
   reserveMin: BigInt!
   registry: Registry
@@ -131,6 +132,9 @@ type Asset @entity {
   lastPriceValid: Boolean
   priceHistory: [AssetPriceHistory!]! @derivedFrom(field: "asset")
   fundHoldingsHistory: [FundHoldingsHistory!]! @derivedFrom(field: "asset")
+  fundAccountings: [Accounting!]!
+  melonNetworkAssetHistory: [MelonNetworkAssetHistory!]!
+    @derivedFrom(field: "asset")
 }
 
 type AssetPriceUpdate @entity {
@@ -163,6 +167,7 @@ type ExchangeAdapter @entity {
   takesCustody: Boolean!
   sigs: String
   registry: Registry
+  createdAt: BigInt!
   removedFromRegistry: Boolean
   removedFromRegistryAt: BigInt
   calls: [ExchangeMethodCall!]! @derivedFrom(field: "exchange")
@@ -172,9 +177,9 @@ type Fund @entity {
   id: ID!
   name: String!
   manager: FundManager!
-  creationTime: BigInt!
+  createdAt: BigInt!
   isShutdown: Boolean!
-  shutDownTime: BigInt
+  shutdownAt: BigInt
   accounting: Accounting!
   participation: Participation!
   feeManager: FeeManager!
@@ -206,6 +211,14 @@ type FundManager @entity {
   funds: [Fund!]! @derivedFrom(field: "manager")
 }
 
+type Accounting @entity {
+  id: ID!
+  fund: Fund
+  denominationAsset: Asset!
+  nativeAsset: Asset!
+  ownedAssets: [Asset!]!
+}
+
 type FundCalculationsHistory @entity {
   id: ID!
   fund: Fund!
@@ -219,34 +232,6 @@ type FundCalculationsHistory @entity {
   allocatedFees: BigInt
   totalSupply: BigInt
   timestamp: BigInt!
-}
-
-type FundCount @entity {
-  id: ID!
-  active: BigInt!
-  nonActive: BigInt!
-  timestamp: BigInt!
-}
-
-type InvestorCount @entity {
-  id: ID!
-  numberOfInvestors: BigInt!
-  timestamp: BigInt!
-}
-
-type Accounting @entity {
-  id: ID!
-  fund: Fund
-  denominationAsset: Asset!
-  nativeAsset: Asset!
-  ownedAssets: [Asset!]!
-}
-
-type Participation @entity {
-  id: ID!
-  fund: Fund
-  allowedAssets: [Asset!]!
-  investmentRequests: [InvestmentRequest!]!
 }
 
 type FeeManager @entity {
@@ -283,6 +268,13 @@ type FeeRewardHistory @entity {
   timestamp: BigInt!
 }
 
+type Participation @entity {
+  id: ID!
+  fund: Fund!
+  allowedAssets: [Asset!]!
+  investmentRequests: [InvestmentRequest!]!
+}
+
 type PolicyManager @entity {
   id: ID!
   fund: Fund
@@ -310,36 +302,39 @@ type UserWhiteList @entity {
 
 type Share @entity {
   id: ID!
-  fund: Fund!
+  fund: Fund
 }
 
 type Trading @entity {
   id: ID!
-  fund: Fund!
+  fund: Fund
   exchanges: [Exchange!]!
   adapters: [ExchangeAdapter!]!
 }
 
 type Vault @entity {
   id: ID!
-  fund: Fund!
-}
-
-type InvestmentRequest @entity {
-  id: ID!
-  fund: Fund!
+  fund: Fund
 }
 
 type Investor @entity {
   id: ID!
+  createdAt: BigInt!
   valuationHistory: [InvestorValuationHistory!]! @derivedFrom(field: "owner")
   investments: [Investment!]! @derivedFrom(field: "owner")
   investmentHistory: [InvestmentHistory!]! @derivedFrom(field: "owner")
 }
 
-type Investment @entity {
+# ?
+type InvestmentRequest @entity {
   id: ID!
   fund: Fund!
+}
+
+type Investment @entity {
+  id: ID!
+  createdAt: BigInt!
+  fund: Fund
   owner: Investor!
   shares: BigInt!
   sharePrice: BigInt!
@@ -391,10 +386,37 @@ type FundHoldingsHistory @entity {
   validPrice: Boolean!
 }
 
+type FundCount @entity {
+  id: ID!
+  active: BigInt!
+  nonActive: BigInt!
+  timestamp: BigInt!
+}
+
+type InvestorCount @entity {
+  id: ID!
+  numberOfInvestors: BigInt!
+  timestamp: BigInt!
+}
+
 type MelonNetworkHistory @entity {
   id: ID!
   timestamp: BigInt!
   gav: BigInt!
+  assetAmounts: [MelonNetworkAssetHistory!]!
+    @derivedFrom(field: "melonNetworkHistory")
+}
+
+type MelonNetworkAssetHistory @entity {
+  id: ID!
+  melonNetworkHistory: MelonNetworkHistory!
+  timestamp: BigInt!
+  asset: Asset!
+  amount: BigInt!
+  assetGav: BigInt!
+  numberOfFunds: Int!
+  invalidPrices: Int!
+  fundHoldings: [FundHoldingsHistory!]!
 }
 
 type ExchangeMethodCall @entity {

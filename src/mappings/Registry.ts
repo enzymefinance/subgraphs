@@ -80,17 +80,56 @@ export function handleVersionRegistration(event: VersionRegistration): void {
   }
 }
 
+function assetNameFromAddress(address: Address): string {
+  let name = "";
+  if (address.toHex() == "0x0d8775f648430679a709e98d2b0cb6250d2887ef") {
+    name = "Basic Attention Token";
+  }
+  if (address.toHex() == "0x4f3afec4e5a3f2a6a1a411def7d7dfe50ee057bf") {
+    name = "Digix Gold Token";
+  }
+  if (address.toHex() == "0x1985365e9f78359a9b6ad760e32412f4a445e862") {
+    name = "Rep Token";
+  }
+  if (address.toHex() == "0xe41d2489571d322189246dafa5ebde1f4699f498") {
+    name = "ZeroX Protocol Token";
+  }
+  if (address.toHex() == "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2") {
+    name = "Eth Token";
+  }
+  if (address.toHex() == "0xec67005c4e498ec7f55e092bd1d35cbc47c91892") {
+    name = "Melon Token";
+  }
+  if (address.toHex() == "0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2") {
+    name = "MakerDao";
+  }
+  if (address.toHex() == "0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359") {
+    name = "Dai";
+  }
+  if (address.toHex() == "0xdd974d5c2e2928dea5f71b9825b8b646686bd200") {
+    name = "Kyber Network";
+  }
+  if (address.toHex() == "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48") {
+    name = "USD Coin";
+  }
+  if (address.toHex() == "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599") {
+    name = "Wrapped BTC";
+  }
+  return name;
+}
+
 export function handleAssetUpsert(event: AssetUpsert): void {
-  // let registry = registryEntity(event.address);
   let id = event.params.asset.toHex();
   let asset = new Asset(id);
-  asset.name = event.params.name;
+  asset.name = assetNameFromAddress(event.params.asset);
   asset.symbol = event.params.symbol;
   asset.decimals = event.params.decimals.toI32();
+  asset.createdAt = event.block.timestamp;
   asset.url = event.params.url;
   asset.reserveMin = event.params.reserveMin;
   asset.registry = event.address.toHex();
   asset.removedFromRegistry = false;
+  asset.fundAccountings = [];
   asset.save();
 
   saveContract(
@@ -159,6 +198,7 @@ export function handleExchangeAdapterUpsert(
 
   let exchangeAdapter = ExchangeAdapter.load(id) || new ExchangeAdapter(id);
   exchangeAdapter.exchange = event.params.exchange.toHex();
+  exchangeAdapter.createdAt = event.block.timestamp;
   exchangeAdapter.takesCustody = event.params.takesCustody;
   exchangeAdapter.sigs =
     sigs[0] + "-" + sigs[1] + "-" + sigs[2] + "-" + sigs[3];

@@ -21,6 +21,7 @@ import { ParticipationContract } from "../types/PriceSourceDataSource/Participat
 import { investmentEntity } from "./entities/investmentEntity";
 import { investorValuationHistoryEntity } from "./entities/investorValuationHistoryEntity";
 import { currentState } from "./utils/currentState";
+import { networkAssetHistoryEntity } from "./entities/networkAssetHistoryEntity";
 
 // helper function because graph-ts doesn't have a bigInt.power() function
 function tenToThePowerOf(exponent: BigInt): BigInt {
@@ -194,6 +195,27 @@ export function handlePriceUpdate(event: PriceUpdate): void {
         if (!holdingAmount.isZero()) {
           fundHoldingsHistory.save();
         }
+
+        // add to melonNetworkAssetHistory
+        let networkAssetHistory = networkAssetHistoryEntity(
+          holdingAddress,
+          event.block.timestamp
+        );
+        networkAssetHistory.amount = networkAssetHistory.amount.plus(
+          holdingAmount
+        );
+        networkAssetHistory.assetGav = networkAssetHistory.assetGav.plus(
+          assetGav
+        );
+        if (!holdingAmount.isZero()) {
+          networkAssetHistory.numberOfFunds =
+            networkAssetHistory.numberOfFunds + 1;
+        }
+        if (!validPrice) {
+          networkAssetHistory.invalidPrices =
+            networkAssetHistory.invalidPrices + 1;
+        }
+        networkAssetHistory.save();
       }
 
       // have to prevent calling any function which uses calcGav
@@ -252,7 +274,8 @@ export function handlePriceUpdate(event: PriceUpdate): void {
         let investor = historicalInvestors[l];
         let investment = investmentEntity(
           investor,
-          Address.fromString(fundAddress)
+          Address.fromString(fundAddress),
+          event.block.timestamp
         );
 
         let investmentGav = BigInt.fromI32(0);
@@ -278,19 +301,22 @@ export function handlePriceUpdate(event: PriceUpdate): void {
         investmentValuationHistory.save();
 
         // update investor valuation
-        let investorValuationHistoryId =
-          investor.toHex() + "/" + event.block.timestamp.toString();
-        let investorValuationLog = investorValuationHistoryEntity(
+
+        let investorValuationHistory = investorValuationHistoryEntity(
           investor,
-          investorValuationHistoryId
+          event.block.timestamp
         );
-        investorValuationLog.gav = investorValuationLog.gav.plus(investmentGav);
-        if (!investorValuationLog.nav) {
-          investorValuationLog.nav = BigInt.fromI32(0);
+        investorValuationHistory.gav = investorValuationHistory.gav.plus(
+          investmentGav
+        );
+        if (!investorValuationHistory.nav) {
+          investorValuationHistory.nav = BigInt.fromI32(0);
         }
-        investorValuationLog.nav = investorValuationLog.nav.plus(investmentNav);
-        investorValuationLog.timestamp = event.block.timestamp;
-        investorValuationLog.save();
+        investorValuationHistory.nav = investorValuationHistory.nav.plus(
+          investmentNav
+        );
+        investorValuationHistory.timestamp = event.block.timestamp;
+        investorValuationHistory.save();
       }
     }
   }
