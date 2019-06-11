@@ -159,18 +159,20 @@ type Exchange @entity {
   id: ID!
   name: String
   adapter: ExchangeAdapter!
+  tradings: [Trading!]! @derivedFrom(field: "exchanges")
+  calls: [ExchangeMethodCall!]! @derivedFrom(field: "exchange")
 }
 
 type ExchangeAdapter @entity {
   id: ID!
   exchange: Exchange!
   takesCustody: Boolean!
+  tradings: [Trading!]! @derivedFrom(field: "adapters")
   sigs: String
   registry: Registry
   createdAt: BigInt!
   removedFromRegistry: Boolean
   removedFromRegistryAt: BigInt
-  calls: [ExchangeMethodCall!]! @derivedFrom(field: "exchange")
 }
 
 type Fund @entity {
@@ -208,6 +210,7 @@ type Fund @entity {
 
 type FundManager @entity {
   id: ID!
+  createdAt: BigInt!
   funds: [Fund!]! @derivedFrom(field: "manager")
 }
 
@@ -310,6 +313,7 @@ type Trading @entity {
   fund: Fund
   exchanges: [Exchange!]!
   adapters: [ExchangeAdapter!]!
+  calls: [ExchangeMethodCall!]! @derivedFrom(field: "trading")
 }
 
 type Vault @entity {
@@ -421,14 +425,16 @@ type MelonNetworkAssetHistory @entity {
 
 type ExchangeMethodCall @entity {
   id: ID!
-  exchange: String
+  trading: Trading
+  exchange: Exchange
   methodSignature: String
+  orderAddress0: String
   orderAddress1: String
-  orderAddress2: String
-  orderAddress3: String
+  orderAddress2: Asset
+  orderAddress3: Asset
   orderAddress4: String
   orderAddress5: String
-  orderAddress6: String
+  orderValue0: BigInt
   orderValue1: BigInt
   orderValue2: BigInt
   orderValue3: BigInt
@@ -436,9 +442,9 @@ type ExchangeMethodCall @entity {
   orderValue5: BigInt
   orderValue6: BigInt
   orderValue7: BigInt
-  orderValue8: BigInt
   identifier: String
   makerAssetData: String
   takerAssetData: String
   signature: String
+  timestamp: BigInt!
 }
