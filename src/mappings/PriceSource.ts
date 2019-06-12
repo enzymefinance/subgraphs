@@ -22,17 +22,13 @@ import { investmentEntity } from "./entities/investmentEntity";
 import { investorValuationHistoryEntity } from "./entities/investorValuationHistoryEntity";
 import { currentState } from "./utils/currentState";
 import { networkAssetHistoryEntity } from "./entities/networkAssetHistoryEntity";
-
-// helper function because graph-ts doesn't have a bigInt.power() function
-function tenToThePowerOf(exponent: BigInt): BigInt {
-  let result = BigInt.fromI32(1);
-  for (let i: i32 = 0; i < exponent.toI32(); i++) {
-    result = result.times(BigInt.fromI32(10));
-  }
-  return result;
-}
+import { tenToThePowerOf } from "./utils/tenToThePowerOf";
 
 export function handlePriceUpdate(event: PriceUpdate): void {
+  _handlePriceUpdate(event);
+}
+
+export function _handlePriceUpdate(event: PriceUpdate): void {
   // Only update at most once per day (roughly)
   let timestamp = event.block.timestamp;
   let state = currentState();

@@ -1,11 +1,19 @@
 import { NewFund } from "../types/VersionDataSource/VersionContract";
 import { HubDataSource } from "../types/VersionDataSource/templates";
-import { Fund, FundCount, FundManager } from "../types/schema";
+import {
+  Fund,
+  FundCount,
+  FundManager,
+  FundCalculationsHistory,
+  FundHoldingsHistory
+} from "../types/schema";
 import { hexToAscii } from "./utils/hexToAscii";
 import { HubContract } from "../types/VersionDataSource/HubContract";
-import { BigInt } from "@graphprotocol/graph-ts";
+import { BigInt, Address } from "@graphprotocol/graph-ts";
 import { currentState } from "./utils/currentState";
 import { saveContract } from "./utils/saveContract";
+import { AccountingContract } from "../types/VersionDataSource/AccountingContract";
+import { SharesContract } from "../types/VersionDataSource/SharesContract";
 
 export function handleNewFund(event: NewFund): void {
   HubDataSource.create(event.params.hub);
@@ -64,4 +72,47 @@ export function handleNewFund(event: NewFund): void {
   state.nonActiveFunds = fundCount.nonActive;
   state.timestampFundCount = event.block.timestamp;
   state.save();
+
+  // fund calculations
+
+  let accountingAddress = Address.fromString(fund.accounting);
+  let accountingContract = AccountingContract.bind(accountingAddress);
+
+  let calcs = accountingContract.performCalculations();
+  let fundGav = calcs.value0;
+  let feesInDenomiationAsset = calcs.value1;
+  let feesInShares = calcs.value2;
+  let nav = calcs.value3;
+  let sharePrice = calcs.value4;
+  let gavPerShareNetManagementFee = calcs.value5;
+
+  let sharesAddress = Address.fromString(fund.share);
+  let sharesContract = SharesContract.bind(sharesAddress);
+  let totalSupply = sharesContract.totalSupply();
+
+  // save price calculation to history
+  let calculationsId = fund.id + "/" + event.block.timestamp.toString();
+  let calculations = new FundCalculationsHistory(calculationsId);
+  calculations.fund = fund.id;
+  calculations.timestamp = event.block.timestamp;
+  calculations.gav = fundGav;
+  calculations.feesInDenominationAsset = feesInDenomiationAsset;
+  calculations.feesInShares = feesInShares;
+  calculations.nav = nav;
+  calculations.sharePrice = sharePrice;
+  calculations.gavPerShareNetManagementFee = gavPerShareNetManagementFee;
+  calculations.totalSupply = totalSupply;
+  calculations.save();
+
+  fund.gav = fundGav;
+  fund.totalSupply = totalSupply;
+  fund.feesInDenominationAsset = feesInDenomiationAsset;
+  fund.feesInShares = feesInShares;
+  fund.nav = nav;
+  fund.sharePrice = sharePrice;
+  fund.gavPerShareNetManagementFee = gavPerShareNetManagementFee;
+  fund.lastCalculationsUpdate = event.block.timestamp;
+  fund.save();
+
+  // update fund asset holdings
 }

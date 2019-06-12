@@ -23,9 +23,9 @@ export function handleRequestExecution(event: RequestExecution): void {
   let contract = ParticipationContract.bind(event.address);
 
   // may come from funds not stored (e.g. because they are deployed with an older version contract?)
-  if (!Fund.load(contract.hub().toHex())) {
-    return;
-  }
+  // if (!Fund.load(contract.hub().toHex())) {
+  //   return;
+  // }
 
   let fundContract = HubContract.bind(contract.hub());
   let accountingContract = AccountingContract.bind(fundContract.accounting());
@@ -80,6 +80,8 @@ export function handleRequestExecution(event: RequestExecution): void {
   investmentHistory.asset = investmentAsset.toHex();
   investmentHistory.amountInDenominationAsset = amountInDenomationAsset;
   investmentHistory.save();
+
+  // TODO: update fund asset holdings
 }
 
 export function handleRedemption(event: Redemption): void {
@@ -137,6 +139,8 @@ export function handleRedemption(event: Redemption): void {
   investmentHistory.asset = asset.toHex();
   investmentHistory.amountInDenominationAsset = amount;
   investmentHistory.save();
+
+  // TODO: update fund asset holdings
 }
 
 export function handleEnableInvestment(event: EnableInvestment): void {

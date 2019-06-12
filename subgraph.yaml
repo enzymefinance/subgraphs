@@ -137,11 +137,16 @@ dataSources:
         - Fund
         - FundCount
         - State
+        - FundCalculationsHistory
       abis:
         - name: VersionContract
           file: ./node_modules/@melonproject/protocol/out/Version.abi.json
         - name: HubContract
           file: ./node_modules/@melonproject/protocol/out/Hub.abi.json
+        - name: AccountingContract
+          file: ./node_modules/@melonproject/protocol/out/Accounting.abi.json
+        - name: SharesContract
+          file: ./node_modules/@melonproject/protocol/out/Shares.abi.json
       eventHandlers:
         - event: NewFund(address,address,address[12])
           handler: handleNewFund
@@ -183,11 +188,16 @@ dataSources:
         - Fund
         - FundCount
         - State
+        - FundCalculationsHistory
       abis:
         - name: VersionContract
           file: ./node_modules/@melonproject/protocol/out/Version.abi.json
         - name: HubContract
           file: ./node_modules/@melonproject/protocol/out/Hub.abi.json
+        - name: AccountingContract
+          file: ./node_modules/@melonproject/protocol/out/Accounting.abi.json
+        - name: SharesContract
+          file: ./node_modules/@melonproject/protocol/out/Shares.abi.json
       eventHandlers:
         - event: NewFund(address,address,address[12])
           handler: handleNewFund

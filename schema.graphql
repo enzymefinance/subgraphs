@@ -226,7 +226,7 @@ type FundCalculationsHistory @entity {
   id: ID!
   fund: Fund!
   gav: BigInt!
-  validPrices: Boolean!
+  validPrices: Boolean
   feesInDenominationAsset: BigInt
   feesInShares: BigInt
   nav: BigInt
