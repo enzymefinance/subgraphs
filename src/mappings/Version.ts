@@ -4,8 +4,7 @@ import {
   Fund,
   FundCount,
   FundManager,
-  FundCalculationsHistory,
-  FundHoldingsHistory
+  FundCalculationsHistory
 } from "../types/schema";
 import { hexToAscii } from "./utils/hexToAscii";
 import { HubContract } from "../types/VersionDataSource/HubContract";
@@ -113,6 +112,4 @@ export function handleNewFund(event: NewFund): void {
   fund.gavPerShareNetManagementFee = gavPerShareNetManagementFee;
   fund.lastCalculationsUpdate = event.block.timestamp;
   fund.save();
-
-  // update fund asset holdings
 }

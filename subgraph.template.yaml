@@ -1,4 +1,4 @@
-specVersion: 0.0.2
+specVersion: 0.0.3
 description: Melon protocol
 repository: https://github.com/melonproject/melon-subgraph
 schema:
@@ -12,7 +12,7 @@ dataSources:
       abi: RegistryContract
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.2
+      apiVersion: 0.0.3
       language: wasm/assemblyscript
       file: ./src/mappings/Registry.ts
       entities:
@@ -28,25 +28,25 @@ dataSources:
         - name: RegistryContract
           file: ./node_modules/@melonproject/protocol/out/Registry.abi.json
       eventHandlers:
-        - event: VersionRegistration(address)
+        - event: VersionRegistration(indexed address)
           handler: handleVersionRegistration
-        - event: AssetUpsert(address,string,string,uint256,string,uint256,uint256[],bytes4[])
+        - event: AssetUpsert(indexed address,string,string,uint256,string,uint256,uint256[],bytes4[])
           handler: handleAssetUpsert
-        - event: AssetRemoval(address)
+        - event: AssetRemoval(indexed address)
           handler: handleAssetRemoval
-        - event: ExchangeAdapterUpsert(address,address,bool,bytes4[])
+        - event: ExchangeAdapterUpsert(indexed address,indexed address,bool,bytes4[])
           handler: handleExchangeAdapterUpsert
-        - event: ExchangeAdapterRemoval(address)
+        - event: ExchangeAdapterRemoval(indexed address)
           handler: handleExchangeAdapterRemoval
-        - event: EngineChange(address)
+        - event: EngineChange(indexed address)
           handler: handleEngineChange
-        - event: PriceSourceChange(address)
+        - event: PriceSourceChange(indexed address)
           handler: handlePriceSourceChange
-        - event: MlnTokenChange(address)
+        - event: MlnTokenChange(indexed address)
           handler: handleMlnTokenChange
-        - event: NativeAssetChange(address)
+        - event: NativeAssetChange(indexed address)
           handler: handleNativeAssetChange
-        - event: MGMChange(address)
+        - event: MGMChange(indexed address)
           handler: handleMGMChange
   
   - name: EngineDataSource
@@ -57,7 +57,7 @@ dataSources:
       abi: EngineContract
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.2
+      apiVersion: 0.0.3
       language: wasm/assemblyscript
       file: ./src/mappings/Engine.ts
       entities:
@@ -86,7 +86,7 @@ dataSources:
       abi: PriceSourceContract
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.2
+      apiVersion: 0.0.3
       language: wasm/assemblyscript
       file: ./src/mappings/PriceSource.ts
       entities:
@@ -130,7 +130,7 @@ dataSources:
       abi: VersionContract
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.2
+      apiVersion: 0.0.3
       language: wasm/assemblyscript
       file: ./src/mappings/Version.ts
       entities:
@@ -148,7 +148,7 @@ dataSources:
         - name: SharesContract
           file: ./node_modules/@melonproject/protocol/out/Shares.abi.json
       eventHandlers:
-        - event: NewFund(address,address,address[12])
+        - event: NewFund(indexed address,indexed address,address[12])
           handler: handleNewFund
     templates:
       - name: HubDataSource
@@ -158,7 +158,7 @@ dataSources:
           abi: HubContract
         mapping:
           kind: ethereum/events
-          apiVersion: 0.0.2
+          apiVersion: 0.0.3
           language: wasm/assemblyscript
           file: ./src/mappings/Hub.ts
           entities:
@@ -181,7 +181,7 @@ dataSources:
       abi: VersionContract
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.2
+      apiVersion: 0.0.3
       language: wasm/assemblyscript
       file: ./src/mappings/Version.ts
       entities:
@@ -199,7 +199,7 @@ dataSources:
         - name: SharesContract
           file: ./node_modules/@melonproject/protocol/out/Shares.abi.json
       eventHandlers:
-        - event: NewFund(address,address,address[12])
+        - event: NewFund(indexed address,indexed address,address[12])
           handler: handleNewFund
     templates:
       - name: HubDataSource
@@ -209,7 +209,7 @@ dataSources:
           abi: HubContract
         mapping:
           kind: ethereum/events
-          apiVersion: 0.0.2
+          apiVersion: 0.0.3
           language: wasm/assemblyscript
           file: ./src/mappings/Hub.ts
           entities:
@@ -231,7 +231,7 @@ dataSources:
       address: '{{melonContracts.factories.participationFactory}}'
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.2
+      apiVersion: 0.0.3
       language: wasm/assemblyscript
       file: ./src/mappings/ParticipationFactory.ts
       entities:
@@ -241,7 +241,7 @@ dataSources:
         - name: ParticipationFactoryContract
           file: ./node_modules/@melonproject/protocol/out/ParticipationFactory.abi.json
       eventHandlers:
-        - event: NewInstance(address,address,address[],address)
+        - event: NewInstance(indexed address,indexed address,address[],address)
           handler: handleNewInstance
     templates:
       - name: ParticipationDataSource
@@ -251,7 +251,7 @@ dataSources:
           abi: ParticipationContract
         mapping:
           kind: ethereum/events
-          apiVersion: 0.0.2
+          apiVersion: 0.0.3
           language: wasm/assemblyscript
           file: ./src/mappings/Participation.ts
           entities:
@@ -275,9 +275,9 @@ dataSources:
             - name: HubContract
               file: ./node_modules/@melonproject/protocol/out/Hub.abi.json
           eventHandlers:
-            - event: RequestExecution(address,address,address,uint256,uint256)
+            - event: RequestExecution(indexed address,indexed address,indexed address,uint256,uint256)
               handler: handleRequestExecution
-            - event: Redemption(address,address[],uint256[],uint256)
+            - event: Redemption(indexed address,address[],uint256[],uint256)
               handler: handleRedemption
             - event: EnableInvestment(address[])
               handler: handleEnableInvestment
@@ -292,7 +292,7 @@ dataSources:
       address: '{{melonContracts.factories.accountingFactory}}'
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.2
+      apiVersion: 0.0.3
       language: wasm/assemblyscript
       file: ./src/mappings/AccountingFactory.ts
       entities:
@@ -302,8 +302,10 @@ dataSources:
         - name: AccountingFactoryContract
           file: ./node_modules/@melonproject/protocol/out/AccountingFactory.abi.json
       eventHandlers:
-        - event: NewInstance(address,address,address,address,address[])
+        - event: NewInstance(indexed address,indexed address,address,address,address[])
           handler: handleNewInstance
+        - event: NewInstance(indexed address,indexed address)
+          handler: handleNewInstance1
     templates:
       - name: AccountingDataSource
         kind: ethereum/contract
@@ -312,7 +314,7 @@ dataSources:
           abi: AccountingContract
         mapping:
           kind: ethereum/events
-          apiVersion: 0.0.2
+          apiVersion: 0.0.3
           language: wasm/assemblyscript
           file: ./src/mappings/Accounting.ts
           entities:
@@ -321,9 +323,9 @@ dataSources:
             - name: AccountingContract
               file: ./node_modules/@melonproject/protocol/out/Accounting.abi.json
           eventHandlers:
-            - event: AssetAddition(address)
+            - event: AssetAddition(indexed address)
               handler: handleAssetAddition
-            - event: AssetRemoval(address)
+            - event: AssetRemoval(indexed address)
               handler: handleAssetRemoval
 
   - name: FeeManagerFactoryDataSource
@@ -334,7 +336,7 @@ dataSources:
       address: '{{melonContracts.factories.feeManagerFactory}}'
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.2
+      apiVersion: 0.0.3
       language: wasm/assemblyscript
       file: ./src/mappings/FeeManagerFactory.ts
       entities:
@@ -343,7 +345,7 @@ dataSources:
         - name: FeeManagerFactoryContract
           file: ./node_modules/@melonproject/protocol/out/FeeManagerFactory.abi.json
       eventHandlers:
-        - event: NewInstance(address,address)
+        - event: NewInstance(indexed address,indexed address)
           handler: handleNewInstance
     templates:
       - name: FeeManagerDataSource
@@ -353,7 +355,7 @@ dataSources:
           abi: FeeManagerContract
         mapping:
           kind: ethereum/events
-          apiVersion: 0.0.2
+          apiVersion: 0.0.3
           language: wasm/assemblyscript
           file: ./src/mappings/FeeManager.ts
           entities:
@@ -386,7 +388,7 @@ dataSources:
       address: '{{melonContracts.factories.policyManagerFactory}}'
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.2
+      apiVersion: 0.0.3
       language: wasm/assemblyscript
       file: ./src/mappings/PolicyManagerFactory.ts
       entities:
@@ -395,7 +397,7 @@ dataSources:
         - name: PolicyManagerFactoryContract
           file: ./node_modules/@melonproject/protocol/out/PolicyManagerFactory.abi.json
       eventHandlers:
-        - event: NewInstance(address,address)
+        - event: NewInstance(indexed address,indexed address)
           handler: handleNewInstance
     templates:
       - name: PolicyManagerDataSource
@@ -405,7 +407,7 @@ dataSources:
           abi: PolicyManagerContract
         mapping:
           kind: ethereum/events
-          apiVersion: 0.0.2
+          apiVersion: 0.0.3
           language: wasm/assemblyscript
           file: ./src/mappings/PolicyManager.ts
           entities:
@@ -427,7 +429,7 @@ dataSources:
             - name: PriceToleranceContract
               file: ./node_modules/@melonproject/protocol/out/PriceTolerance.abi.json
           eventHandlers:
-            - event: Registration(bytes4,uint8,address)
+            - event: Registration(indexed bytes4,uint8,indexed address)
               handler: handleRegistration
 
   - name: SharesFactoryDataSource
@@ -438,7 +440,7 @@ dataSources:
       address: '{{melonContracts.factories.sharesFactory}}'
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.2
+      apiVersion: 0.0.3
       language: wasm/assemblyscript
       file: ./src/mappings/SharesFactory.ts
       entities:
@@ -447,7 +449,7 @@ dataSources:
         - name: SharesFactoryContract
           file: ./node_modules/@melonproject/protocol/out/SharesFactory.abi.json
       eventHandlers:
-        - event: NewInstance(address,address)
+        - event: NewInstance(indexed address,indexed address)
           handler: handleNewInstance
     templates:
       - name: SharesDataSource
@@ -457,7 +459,7 @@ dataSources:
           abi: SharesContract
         mapping:
           kind: ethereum/events
-          apiVersion: 0.0.2
+          apiVersion: 0.0.3
           language: wasm/assemblyscript
           file: ./src/mappings/Shares.ts
           entities:
@@ -466,9 +468,9 @@ dataSources:
             - name: SharesContract
               file: ./node_modules/@melonproject/protocol/out/Shares.abi.json
           eventHandlers:
-            - event: Approval(address,address,uint256)
+            - event: Approval(indexed address,indexed address,uint256)
               handler: handleApproval
-            - event: Transfer(address,address,uint256)
+            - event: Transfer(indexed address,indexed address,uint256)
               handler: handleTransfer
 
   # current trading factory
@@ -480,7 +482,7 @@ dataSources:
       address: '{{melonContracts.factories.tradingFactory}}'
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.2
+      apiVersion: 0.0.3
       language: wasm/assemblyscript
       file: ./src/mappings/TradingFactory.ts
       entities:
@@ -489,7 +491,7 @@ dataSources:
         - name: TradingFactoryContract
           file: ./node_modules/@melonproject/protocol/out/TradingFactory.abi.json
       eventHandlers:
-        - event: NewInstance(address,address,address[],address[],address)
+        - event: NewInstance(indexed address,indexed address,address[],address[],address)
           handler: handleNewInstance
     templates:
       - name: TradingDataSource
@@ -499,7 +501,7 @@ dataSources:
           abi: TradingContract
         mapping:
           kind: ethereum/events
-          apiVersion: 0.0.2
+          apiVersion: 0.0.3
           language: wasm/assemblyscript
           file: ./src/mappings/Trading.ts
           entities:
@@ -508,7 +510,7 @@ dataSources:
             - name: TradingContract
               file: ./node_modules/@melonproject/protocol/out/Trading.abi.json
           eventHandlers:
-            - event: ExchangeMethodCall(address,string,address[6],uint256[8],bytes32,bytes,bytes,bytes)
+            - event: ExchangeMethodCall(indexed address,indexed string,address[6],uint256[8],bytes32,bytes,bytes,bytes)
               handler: handleExchangeMethodCall
 
    # old trading factory
@@ -520,7 +522,7 @@ dataSources:
       address: '0xe2c3fe25336eE3bD71dcA3380b7423a3bDef3d8C'
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.2
+      apiVersion: 0.0.3
       language: wasm/assemblyscript
       file: ./src/mappings/TradingFactoryV101.ts
       entities:
@@ -529,7 +531,7 @@ dataSources:
         - name: TradingFactoryContractV101
           file: ./node_modules/@melonproject/protocol-v.1.0.1/out/TradingFactory.abi.json
       eventHandlers:
-        - event: NewInstance(address,address,address[],address[],bool[],address)
+        - event: NewInstance(indexed address,indexed address,address[],address[],bool[],address)
           handler: handleNewInstance
     templates:
       - name: TradingDataSourceV101
@@ -539,7 +541,7 @@ dataSources:
           abi: TradingContractV101
         mapping:
           kind: ethereum/events
-          apiVersion: 0.0.2
+          apiVersion: 0.0.3
           language: wasm/assemblyscript
           file: ./src/mappings/TradingV101.ts
           entities:
@@ -548,7 +550,7 @@ dataSources:
             - name: TradingContractV101
               file: ./node_modules/@melonproject/protocol-v.1.0.1/out/Trading.abi.json
           eventHandlers:
-            - event: ExchangeMethodCall(address,string,address[6],uint256[8],bytes32,bytes,bytes,bytes)
+            - event: ExchangeMethodCall(indexed address,indexed string,address[6],uint256[8],bytes32,bytes,bytes,bytes)
               handler: handleExchangeMethodCall
 
   - name: VaultFactoryDataSource
@@ -559,7 +561,7 @@ dataSources:
       address: '{{melonContracts.factories.vaultFactory}}'
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.2
+      apiVersion: 0.0.3
       language: wasm/assemblyscript
       file: ./src/mappings/VaultFactory.ts
       entities:
@@ -568,7 +570,7 @@ dataSources:
         - name: VaultFactoryContract
           file: ./node_modules/@melonproject/protocol/out/VaultFactory.abi.json
       eventHandlers:
-        - event: NewInstance(address,address)
+        - event: NewInstance(indexed address,indexed address)
           handler: handleNewInstance
     templates:
       - name: VaultDataSource
@@ -578,7 +580,7 @@ dataSources:
           abi: VaultContract
         mapping:
           kind: ethereum/events
-          apiVersion: 0.0.2
+          apiVersion: 0.0.3
           language: wasm/assemblyscript
           file: ./src/mappings/Vault.ts
           entities:
