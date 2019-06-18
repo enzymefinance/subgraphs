@@ -1,5 +1,15 @@
-import { ExchangeMethodCall } from "../types/TradingFactoryDataSource/templates/TradingDataSource/TradingContract";
-import { ExchangeMethodCall as ExchangeMethodCallEntity } from "../types/schema";
+import {
+  ExchangeMethodCall,
+  TradingContract
+} from "../types/TradingFactoryDataSource/templates/TradingDataSource/TradingContract";
+import {
+  ExchangeMethodCall as ExchangeMethodCallEntity,
+  FundHoldingsHistory,
+  FundCalculationsHistory
+} from "../types/schema";
+import { AccountingContract } from "../types/TradingFactoryDataSource/templates/TradingDataSource/AccountingContract";
+import { PriceSourceContract } from "../types/TradingFactoryDataSource/templates/TradingDataSource/PriceSourceContract";
+import { SharesContract } from "../types/TradingFactoryDataSource/templates/TradingDataSource/SharesContract";
 
 export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
   let id = event.transaction.hash.toHex();
@@ -33,4 +43,80 @@ export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
   emCall.signature = event.params.signature.toHexString();
   emCall.timestamp = event.block.timestamp;
   emCall.save();
+
+  // calculate fund holdings
+  let tradingContract = TradingContract.bind(event.address);
+  let routes = tradingContract.routes();
+
+  let hub = tradingContract.hub();
+  let fundAddress = hub.toHex();
+  let accountingContract = AccountingContract.bind(routes.value0);
+
+  let fundGavValid = true;
+  let holdings = accountingContract.getFundHoldings();
+
+  let priceSourceContract = PriceSourceContract.bind(routes.value7);
+  for (let k: i32 = 0; k < holdings.value0.length; k++) {
+    let holdingAmount = holdings.value0[k];
+    let holdingAddress = holdings.value1[k];
+
+    let holdingsId =
+      fundAddress +
+      "/" +
+      event.block.timestamp.toString() +
+      "/" +
+      holdingAddress.toHex();
+    let fundHoldingsHistory = new FundHoldingsHistory(holdingsId);
+    fundHoldingsHistory.timestamp = event.block.timestamp;
+    fundHoldingsHistory.fund = fundAddress;
+    fundHoldingsHistory.asset = holdingAddress.toHex();
+    fundHoldingsHistory.amount = holdingAmount;
+
+    fundHoldingsHistory.validPrice = priceSourceContract.hasValidPrice(
+      holdingAddress
+    );
+    if (fundHoldingsHistory.validPrice) {
+      fundHoldingsHistory.assetGav = accountingContract.calcAssetGAV(
+        holdingAddress
+      );
+    } else {
+      fundGavValid = false;
+    }
+
+    // only save non-zero values
+    if (!holdingAmount.isZero()) {
+      fundHoldingsHistory.save();
+    }
+  }
+
+  // do perform calculations
+  if (!fundGavValid) {
+    return;
+  }
+
+  let calcs = accountingContract.performCalculations();
+  let fundGav = calcs.value0;
+  let feesInDenomiationAsset = calcs.value1;
+  let feesInShares = calcs.value2;
+  let nav = calcs.value3;
+  let sharePrice = calcs.value4;
+  let gavPerShareNetManagementFee = calcs.value5;
+
+  let sharesContract = SharesContract.bind(routes.value4);
+  let totalSupply = sharesContract.totalSupply();
+
+  // save price calculation to history
+  let calculationsId = fundAddress + "/" + event.block.timestamp.toString();
+  let calculations = new FundCalculationsHistory(calculationsId);
+  calculations.fund = fundAddress;
+  calculations.timestamp = event.block.timestamp;
+  calculations.gav = fundGav;
+  calculations.validPrices = fundGavValid;
+  calculations.feesInDenominationAsset = feesInDenomiationAsset;
+  calculations.feesInShares = feesInShares;
+  calculations.nav = nav;
+  calculations.sharePrice = sharePrice;
+  calculations.gavPerShareNetManagementFee = gavPerShareNetManagementFee;
+  calculations.totalSupply = totalSupply;
+  calculations.save();
 }
