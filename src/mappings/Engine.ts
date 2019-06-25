@@ -66,14 +66,21 @@ export function handleAmguPaid(event: AmguPaid): void {
   amguPayment.timestamp = event.block.timestamp;
   amguPayment.save();
 
-  // Update engine history at most once every 24 hours.
+  // update current engine state
+  let engine = Engine.load(event.address.toHex()) as Engine;
+  engine.totalAmguConsumed = engine.totalAmguConsumed!.plus(
+    event.params.amount
+  );
+  engine.lastUpdate = event.block.timestamp;
+  engine.save();
+
+  // Update all engine quantities at most once per day.
   let state = currentState();
   let interval = BigInt.fromI32(24 * 60 * 60);
   if (event.block.timestamp.minus(state.lastEngineUpdate).gt(interval)) {
     state.lastEngineUpdate = event.block.timestamp;
     state.save();
 
-    let engine = new Engine(event.address.toHex());
     let engineContract = EngineContract.bind(event.address);
     engine.amguPrice = engineContract.amguPrice();
     engine.frozenEther = engineContract.frozenEther();
@@ -85,6 +92,7 @@ export function handleAmguPaid(event: AmguPaid): void {
     engine.totalMlnBurned = engineContract.totalMlnBurned();
     engine.premiumPercent = engineContract.premiumPercent();
     engine.lastUpdate = event.block.timestamp;
+    engine.save();
 
     let engineHistory = new EngineHistory(
       event.address.toHex() + "/" + event.block.timestamp.toString()
@@ -101,8 +109,6 @@ export function handleAmguPaid(event: AmguPaid): void {
     engineHistory.timestamp = event.block.timestamp;
     engineHistory.engine = event.address.toHex();
     engineHistory.save();
-
-    engine.save();
   }
 }
 

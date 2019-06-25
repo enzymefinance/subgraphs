@@ -32,7 +32,7 @@ export function _handlePriceUpdate(event: PriceUpdate): void {
   // Only update at most once per day (roughly)
   let timestamp = event.block.timestamp;
   let state = currentState();
-  let interval = BigInt.fromI32(23 * 3600);
+  let interval = BigInt.fromI32(6 * 3600);
   if (event.block.timestamp.minus(state.lastPriceUpdate).lt(interval)) {
     return;
   }
