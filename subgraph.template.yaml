@@ -374,8 +374,12 @@ dataSources:
             - name: PriceSourceContract
               file: ./node_modules/@melonproject/protocol/out/KyberPriceFeed.abi.json
           eventHandlers:
+            - event: InvestmentRequest(indexed address,indexed address,uint256,uint256)
+              handler: handleInvestmentRequest
             - event: RequestExecution(indexed address,indexed address,indexed address,uint256,uint256)
               handler: handleRequestExecution
+            - event: CancelRequest(indexed address)
+              handler: handleCancelRequest
             - event: Redemption(indexed address,address[],uint256[],uint256)
               handler: handleRedemption
             - event: EnableInvestment(address[])

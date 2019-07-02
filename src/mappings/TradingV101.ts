@@ -5,7 +5,8 @@ import {
 import {
   ExchangeMethodCall as ExchangeMethodCallEntity,
   FundCalculationsHistory,
-  FundHoldingsHistory
+  FundHoldingsHistory,
+  Fund
 } from "../types/schema";
 import { AccountingContract } from "../types/TradingFactoryDataSourceV101/templates/TradingDataSourceV101/AccountingContract";
 import { PriceSourceContract } from "../types/TradingFactoryDataSourceV101/templates/TradingDataSourceV101/PriceSourceContract";
@@ -119,4 +120,21 @@ export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
   calculations.gavPerShareNetManagementFee = gavPerShareNetManagementFee;
   calculations.totalSupply = totalSupply;
   calculations.save();
+
+  // update fund entity
+  let fund = Fund.load(fundAddress) as Fund;
+  if (!fund) {
+    return;
+  }
+
+  fund.gav = fundGav;
+  fund.validPrice = fundGavValid;
+  fund.totalSupply = totalSupply;
+  fund.feesInDenominationAsset = feesInDenomiationAsset;
+  fund.feesInShares = feesInShares;
+  fund.nav = nav;
+  fund.sharePrice = sharePrice;
+  fund.gavPerShareNetManagementFee = gavPerShareNetManagementFee;
+  fund.lastCalculationsUpdate = event.block.timestamp;
+  fund.save();
 }

@@ -275,7 +275,6 @@ type Participation @entity {
   id: ID!
   fund: Fund!
   allowedAssets: [Asset!]!
-  investmentRequests: [InvestmentRequest!]!
 }
 
 type PolicyManager @entity {
@@ -326,6 +325,7 @@ type Investor @entity {
   createdAt: BigInt!
   valuationHistory: [InvestorValuationHistory!]! @derivedFrom(field: "owner")
   investments: [Investment!]! @derivedFrom(field: "owner")
+  investmentRequests: [InvestmentRequest!]! @derivedFrom(field: "owner")
   investmentHistory: [InvestmentHistory!]! @derivedFrom(field: "owner")
 }
 
@@ -333,6 +333,13 @@ type Investor @entity {
 type InvestmentRequest @entity {
   id: ID!
   fund: Fund!
+  owner: Investor!
+  status: String!
+  amount: BigInt!
+  asset: Asset!
+  shares: BigInt!
+  requestTimestamp: BigInt!
+  updateTimestamp: BigInt
 }
 
 type Investment @entity {

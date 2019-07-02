@@ -4,13 +4,16 @@ import {
   ParticipationContract,
   Redemption,
   EnableInvestment,
-  DisableInvestment
+  DisableInvestment,
+  InvestmentRequest,
+  CancelRequest
 } from "../types/ParticipationFactoryDataSource/templates/ParticipationDataSource/ParticipationContract";
 import {
   Participation,
   Fund,
   InvestorCount,
   InvestmentHistory,
+  InvestmentRequest as InvestmentRequestEntity,
   FundCalculationsHistory,
   FundHoldingsHistory
 } from "../types/schema";
@@ -19,8 +22,78 @@ import { AccountingContract } from "../types/ParticipationFactoryDataSource/temp
 import { SharesContract } from "../types/ParticipationFactoryDataSource/templates/ParticipationDataSource/SharesContract";
 
 import { currentState } from "./utils/currentState";
-import { BigInt } from "@graphprotocol/graph-ts";
+import { store, BigInt } from "@graphprotocol/graph-ts";
 import { PriceSourceContract } from "../types/ParticipationFactoryDataSource/templates/ParticipationDataSource/PriceSourceContract";
+import { investorEntity } from "./entities/investorEntity";
+
+function archiveInvestmentRequest(
+  owner: string,
+  hub: string,
+  status: string,
+  updateTimestamp: BigInt
+): void {
+  let id = owner + "/" + hub;
+  let investmentRequest = InvestmentRequestEntity.load(id);
+  if (investmentRequest != null && investmentRequest.status == "PENDING") {
+    let copyRequest = new InvestmentRequestEntity(
+      id + "/" + investmentRequest.requestTimestamp.toString()
+    );
+    copyRequest.fund = investmentRequest.fund;
+    copyRequest.owner = investmentRequest.owner;
+    copyRequest.shares = investmentRequest.shares;
+    copyRequest.amount = investmentRequest.amount;
+    copyRequest.asset = investmentRequest.asset;
+    copyRequest.requestTimestamp = investmentRequest.requestTimestamp;
+    copyRequest.updateTimestamp = updateTimestamp;
+    copyRequest.status = status;
+    copyRequest.save();
+
+    store.remove("InvestmentRequest", id);
+  }
+}
+
+export function handleInvestmentRequest(event: InvestmentRequest): void {
+  let participationContract = ParticipationContract.bind(event.address);
+  let hub = participationContract.hub();
+
+  let owner = event.params.requestOwner;
+  let shares = event.params.requestedShares;
+  let amount = event.params.investmentAmount;
+  let asset = event.params.investmentAsset.toHex();
+
+  // requests can either be pending, cancelled or executed,
+  // so, this should not happen, just keeping it for as a test
+  archiveInvestmentRequest(
+    owner.toHex(),
+    hub.toHex(),
+    "ARCHIVED",
+    event.block.timestamp
+  );
+
+  let investmentRequest = new InvestmentRequestEntity(
+    owner.toHex() + "/" + hub.toHex()
+  );
+  investmentRequest.fund = hub.toHex();
+  investmentRequest.owner = investorEntity(owner, event.block.timestamp).id;
+  investmentRequest.shares = shares;
+  investmentRequest.amount = amount;
+  investmentRequest.asset = asset;
+  investmentRequest.requestTimestamp = event.block.timestamp;
+  investmentRequest.status = "PENDING";
+  investmentRequest.save();
+}
+
+export function handleCancelRequest(event: CancelRequest): void {
+  let participationContract = ParticipationContract.bind(event.address);
+  let hub = participationContract.hub();
+
+  archiveInvestmentRequest(
+    event.params.requestOwner.toHex(),
+    hub.toHex(),
+    "CANCELLED",
+    event.block.timestamp
+  );
+}
 
 export function handleRequestExecution(event: RequestExecution): void {
   let participationContract = ParticipationContract.bind(event.address);
@@ -51,6 +124,13 @@ export function handleRequestExecution(event: RequestExecution): void {
   investment.shares = investment.shares.plus(requestedShares);
   investment.sharePrice = currentSharePrice;
   investment.save();
+
+  archiveInvestmentRequest(
+    event.params.requestOwner.toHex(),
+    hub.toHex(),
+    "EXECUTED",
+    event.block.timestamp
+  );
 
   // this is currently investment-count, not investor-count (misnamed entity)
   // TODO: have both investment-count and investor-count
@@ -150,6 +230,23 @@ export function handleRequestExecution(event: RequestExecution): void {
   calculations.gavPerShareNetManagementFee = gavPerShareNetManagementFee;
   calculations.totalSupply = totalSupply;
   calculations.save();
+
+  // update fund entity
+  let fund = Fund.load(fundAddress) as Fund;
+  if (!fund) {
+    return;
+  }
+
+  fund.gav = fundGav;
+  fund.validPrice = fundGavValid;
+  fund.totalSupply = totalSupply;
+  fund.feesInDenominationAsset = feesInDenomiationAsset;
+  fund.feesInShares = feesInShares;
+  fund.nav = nav;
+  fund.sharePrice = sharePrice;
+  fund.gavPerShareNetManagementFee = gavPerShareNetManagementFee;
+  fund.lastCalculationsUpdate = event.block.timestamp;
+  fund.save();
 }
 
 export function handleRedemption(event: Redemption): void {
@@ -209,9 +306,7 @@ export function handleRedemption(event: Redemption): void {
   investmentHistory.save();
 
   // calculate fund holdings
-
   let fundAddress = hub.toHex();
-
   let fundGavValid = true;
   let holdings = accountingContract.getFundHoldings();
 
@@ -276,6 +371,23 @@ export function handleRedemption(event: Redemption): void {
   calculations.gavPerShareNetManagementFee = gavPerShareNetManagementFee;
   calculations.totalSupply = totalSupply;
   calculations.save();
+
+  // update fund entity
+  let fund = Fund.load(fundAddress) as Fund;
+  if (!fund) {
+    return;
+  }
+
+  fund.gav = fundGav;
+  fund.validPrice = fundGavValid;
+  fund.totalSupply = totalSupply;
+  fund.feesInDenominationAsset = feesInDenomiationAsset;
+  fund.feesInShares = feesInShares;
+  fund.nav = nav;
+  fund.sharePrice = sharePrice;
+  fund.gavPerShareNetManagementFee = gavPerShareNetManagementFee;
+  fund.lastCalculationsUpdate = event.block.timestamp;
+  fund.save();
 }
 
 export function handleEnableInvestment(event: EnableInvestment): void {

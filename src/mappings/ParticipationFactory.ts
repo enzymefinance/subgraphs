@@ -14,7 +14,6 @@ export function handleNewInstance(event: NewInstance): void {
   let participation = new Participation(event.params.instance.toHex());
   participation.fund = event.params.hub.toHex();
   participation.allowedAssets = [];
-  participation.investmentRequests = [];
   participation.save();
 
   saveContract(
