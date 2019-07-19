@@ -170,7 +170,10 @@ function exchangeNameFromAddress(address: Address): string {
     name = "KyberNetwork";
   }
   if (address.toHex() == "0x4f833a24e1f95d70f028921e27040ca56e09ab0b") {
-    name = "ZeroEx";
+    name = "ZeroEx (v2.0)";
+  }
+  if (address.toHex() == "0x080bf510fcbf18b91105470639e9561022937712") {
+    name = "ZeroEx (v2.1)";
   }
   if (address.toHex() == "0xdcdb42c9a256690bd153a7b409751adfc8dd5851") {
     name = "Ethfinex";

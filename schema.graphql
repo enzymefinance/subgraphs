@@ -206,6 +206,7 @@ type Fund @entity {
   investmentHistory: [InvestmentHistory!]! @derivedFrom(field: "fund")
   holdingsHistory: [FundHoldingsHistory!]! @derivedFrom(field: "fund")
   lastCalculationsUpdate: BigInt
+  events: [EventHistory!]! @derivedFrom(field: "fund")
 }
 
 type FundManager @entity {
@@ -454,4 +455,21 @@ type ExchangeMethodCall @entity {
   takerAssetData: String
   signature: String
   timestamp: BigInt!
+}
+
+type EventHistory @entity {
+  id: ID!
+  fund: Fund
+  event: String!
+  contract: String!
+  contractAddress: String!
+  params: [EventHistoryParameter!]! @derivedFrom(field: "eventHistory")
+  timestamp: BigInt!
+}
+
+type EventHistoryParameter @entity {
+  id: ID!
+  eventHistory: EventHistory!
+  name: String!
+  value: String!
 }

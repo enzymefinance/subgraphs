@@ -314,6 +314,8 @@ export function _handlePriceUpdate(event: PriceUpdate): void {
         investorValuationHistory.timestamp = event.block.timestamp;
         investorValuationHistory.save();
       }
+
+      // 
     }
   }
 

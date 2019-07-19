@@ -120,8 +120,11 @@ export function handleThaw(event: Thaw): void {
   etherEvent.timestamp = event.block.timestamp;
   etherEvent.save();
 
-  let engine = new Engine(event.address.toHex());
+  let engineContract = EngineContract.bind(event.address);
+
+  let engine = Engine.load(event.address.toHex()) as Engine;
   engine.lastThaw = event.block.timestamp;
+  engine.liquidEther = engineContract.liquidEther();
   engine.save();
 }
 
@@ -132,6 +135,13 @@ export function handleBurn(event: Burn): void {
   etherEvent.engine = event.address.toHex();
   etherEvent.timestamp = event.block.timestamp;
   etherEvent.save();
+
+  let engineContract = EngineContract.bind(event.address);
+  let engine = Engine.load(event.address.toHex()) as Engine;
+  engine.liquidEther = engineContract.liquidEther();
+  engine.totalMlnBurned = engineContract.totalMlnBurned();
+  engine.totalEtherConsumed = engineContract.totalEtherConsumed();
+  engine.save();
 }
 
 export function handleRegistryChange(event: RegistryChange): void {

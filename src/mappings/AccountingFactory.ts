@@ -1,8 +1,8 @@
 import { NewInstance } from "../types/AccountingFactoryDataSource/AccountingFactoryContract";
 import { AccountingDataSource } from "../types/AccountingFactoryDataSource/templates";
-import { Accounting } from "../types/schema";
+import { Accounting, EventHistory } from "../types/schema";
 import { saveContract } from "./utils/saveContract";
-import { BigInt } from "@graphprotocol/graph-ts";
+import { saveEventHistoryParameters } from "./utils/saveEventHistoryParameters";
 
 export function handleNewInstance(event: NewInstance): void {
   // ignore contracts created before go-live
@@ -25,5 +25,20 @@ export function handleNewInstance(event: NewInstance): void {
     event.block.timestamp,
     event.block.number,
     event.params.hub.toHex()
+  );
+
+  let eventHistoryId = event.transaction.hash.toHex();
+  let eventHistory = new EventHistory(eventHistoryId);
+  eventHistory.contract = "AccountingFactory";
+  eventHistory.contractAddress = event.address.toHex();
+  eventHistory.event = "NewInstance";
+  eventHistory.fund = event.params.hub.toHex();
+  eventHistory.timestamp = event.block.timestamp;
+  eventHistory.save();
+
+  saveEventHistoryParameters(
+    eventHistoryId,
+    ["denominationAsset", "nativeAsset"],
+    [event.params.denominationAsset.toHex(), event.params.nativeAsset.toHex()]
   );
 }
