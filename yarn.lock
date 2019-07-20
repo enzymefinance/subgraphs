@@ -502,10 +502,10 @@
     yup "^0.26.6"
     zen-observable-ts "^0.8.10"
 
-"@melonproject/protocol@^1.0.8":
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/@melonproject/protocol/-/protocol-1.0.8.tgz#05234277beab96cfacb08b8c8f9902bf725a9a32"
-  integrity sha512-Qr9kvld83TaTF0kh1AKfdwLI82HwXQd4qPXIWOmJai/vEJlwtMVD91AmVfa2I+QcbGRcevF+Zq7ueicO2Sg7tQ==
+"@melonproject/protocol@^1.0.9":
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/@melonproject/protocol/-/protocol-1.0.9.tgz#611838e58f074fc7ee83285eb7dcbe4502be0892"
+  integrity sha512-9pbJ+qNdFGDoqgFNGdI9oh3A5zQRVyoS99vguJr7ygsoSsIoqgZ6rfYDxFD4j6FMTBr3y/E1gC3NaTSInFlobw==
   dependencies:
     "@0x/contract-wrappers" "^4.1.1"
     "@0x/order-utils" "^3.0.4"

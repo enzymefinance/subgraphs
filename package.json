@@ -13,7 +13,7 @@
   "devDependencies": {
     "@graphprotocol/graph-cli": "^0.13.1",
     "@graphprotocol/graph-ts": "^0.13.0",
-    "@melonproject/protocol": "^1.0.8",
+    "@melonproject/protocol": "^1.0.9",
     "@melonproject/protocol-v.1.0.1": "npm:@melonproject/protocol@1.0.1",
     "commander": "^2.20.0",
     "glob": "^7.1.4",
