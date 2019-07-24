@@ -14,6 +14,7 @@ import { HubContract } from "../types/ParticipationFactoryDataSource/templates/P
 import { BigInt } from "@graphprotocol/graph-ts";
 import { ManagementFeeContract } from "../types/FeeManagerFactoryDataSource/templates/FeeManagerDataSource/ManagementFeeContract";
 import { PerformanceFeeContract } from "../types/FeeManagerFactoryDataSource/templates/FeeManagerDataSource/PerformanceFeeContract";
+import { saveEventHistory } from "./utils/saveEventHistory";
 
 export function handleFeeRegistration(event: FeeRegistration): void {
   // this event only passes very limited data, so
@@ -39,6 +40,17 @@ export function handleFeeRegistration(event: FeeRegistration): void {
     mgmtFee.save();
     feeManager.feesRegistered = BigInt.fromI32(1);
     feeManager.save();
+
+    saveEventHistory(
+      event.transaction.hash.toHex() + "/mgmt",
+      event.block.timestamp,
+      feeManagerContract.hub().toHex(),
+      "FeeManager",
+      event.address.toHex(),
+      "FeeRegistration",
+      ["feeType", "rate"],
+      ["Management Fee", mgmtFee.managementFeeRate.toString()]
+    );
   } else {
     let perfFeeAddress = feeManagerContract.fees(BigInt.fromI32(1));
     let perfFeeContract = PerformanceFeeContract.bind(perfFeeAddress);
@@ -53,6 +65,21 @@ export function handleFeeRegistration(event: FeeRegistration): void {
     perfFee.save();
     feeManager.feesRegistered = BigInt.fromI32(2);
     feeManager.save();
+
+    saveEventHistory(
+      event.transaction.hash.toHex() + "/perf",
+      event.block.timestamp,
+      feeManagerContract.hub().toHex(),
+      "FeeManager",
+      event.address.toHex(),
+      "FeeRegistration",
+      ["feeType", "rate", "period"],
+      [
+        "Performance Fee",
+        perfFee.performanceFeeRate.toString(),
+        perfFee.performanceFeePeriod.toString()
+      ]
+    );
   }
 }
 
@@ -86,4 +113,15 @@ export function handleFeeReward(event: FeeReward): void {
   );
   investment.shares = investment.shares.plus(event.params.shareQuantity);
   investment.save();
+
+  saveEventHistory(
+    event.transaction.hash.toHex(),
+    event.block.timestamp,
+    hubAddress.toHex(),
+    "FeeManager",
+    event.address.toHex(),
+    "FeeReward",
+    ["shares"],
+    [event.params.shareQuantity.toString()]
+  );
 }

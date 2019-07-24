@@ -2,6 +2,7 @@ import { FundShutDown } from "../types/VersionDataSource/templates/HubDataSource
 import { Fund, FundCount, State } from "../types/schema";
 import { BigInt } from "@graphprotocol/graph-ts";
 import { currentState } from "./utils/currentState";
+import { saveEventHistory } from "./utils/saveEventHistory";
 
 export function handleFundShutDown(event: FundShutDown): void {
   let fund = new Fund(event.address.toHex());
@@ -22,4 +23,15 @@ export function handleFundShutDown(event: FundShutDown): void {
   state.nonActiveFunds = fundCountUpdate.nonActive;
   state.timestampFundCount = fundCountUpdate.timestamp;
   state.save();
+
+  saveEventHistory(
+    event.transaction.hash.toHex(),
+    event.block.timestamp,
+    event.address.toHex(),
+    "Hub",
+    event.address.toHex(),
+    "FundShutDown",
+    [],
+    []
+  );
 }

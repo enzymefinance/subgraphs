@@ -2,6 +2,7 @@ import { NewInstance } from "../types/ParticipationFactoryDataSource/Participati
 import { ParticipationDataSource } from "../types/ParticipationFactoryDataSource/templates";
 import { Participation } from "../types/schema";
 import { saveContract } from "./utils/saveContract";
+import { saveEventHistory } from "./utils/saveEventHistory";
 
 export function handleNewInstance(event: NewInstance): void {
   // ignore contracts created before go-live
@@ -22,5 +23,16 @@ export function handleNewInstance(event: NewInstance): void {
     event.block.timestamp,
     event.block.number,
     event.params.hub.toHex()
+  );
+
+  saveEventHistory(
+    event.transaction.hash.toHex(),
+    event.block.timestamp,
+    event.params.hub.toHex(),
+    "ParticipationFactory",
+    event.address.toHex(),
+    "NewInstance",
+    [],
+    []
   );
 }

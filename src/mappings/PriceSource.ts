@@ -103,7 +103,8 @@ export function _handlePriceUpdate(event: PriceUpdate): void {
   let registryContract = RegistryContract.bind(registryAddress);
   let versions = registryContract.getRegisteredVersions();
 
-  let melonNetworkGAV = BigInt.fromI32(0);
+  let melonNetworkGav = BigInt.fromI32(0);
+  let melonNetworkValidGav = true;
 
   for (let i: i32 = 0; i < versions.length; i++) {
     // Don't run for early trial versions (which contain no funds)
@@ -217,6 +218,7 @@ export function _handlePriceUpdate(event: PriceUpdate): void {
       // have to prevent calling any function which uses calcGav
       // since this fails when any price of an asset is invalid
       if (!fundGavValid) {
+        melonNetworkValidGav = false;
         continue;
       }
 
@@ -228,7 +230,7 @@ export function _handlePriceUpdate(event: PriceUpdate): void {
       let sharePrice = calcs.value4;
       let gavPerShareNetManagementFee = calcs.value5;
 
-      melonNetworkGAV = melonNetworkGAV.plus(fundGav);
+      melonNetworkGav = melonNetworkGav.plus(fundGav);
 
       let sharesAddress = Address.fromString(fund.share);
       let sharesContract = SharesContract.bind(sharesAddress);
@@ -315,13 +317,14 @@ export function _handlePriceUpdate(event: PriceUpdate): void {
         investorValuationHistory.save();
       }
 
-      // 
+      //
     }
   }
 
   // save total network GAV
   let networkValue = new MelonNetworkHistory(event.block.timestamp.toString());
   networkValue.timestamp = event.block.timestamp;
-  networkValue.gav = melonNetworkGAV;
+  networkValue.gav = melonNetworkGav;
+  networkValue.validGav = melonNetworkValidGav;
   networkValue.save();
 }

@@ -3,6 +3,7 @@ import { NewInstance } from "../types/SharesFactoryDataSource/SharesFactoryContr
 import { Share } from "../types/schema";
 import { saveContract } from "./utils/saveContract";
 import { BigInt } from "@graphprotocol/graph-ts";
+import { saveEventHistory } from "./utils/saveEventHistory";
 
 export function handleNewInstance(event: NewInstance): void {
   // ignore contracts created before go-live
@@ -22,5 +23,16 @@ export function handleNewInstance(event: NewInstance): void {
     event.block.timestamp,
     event.block.number,
     shares.fund
+  );
+
+  saveEventHistory(
+    event.transaction.hash.toHex(),
+    event.block.timestamp,
+    event.params.hub.toHex(),
+    "SharesFactory",
+    event.address.toHex(),
+    "NewInstance",
+    [],
+    []
   );
 }

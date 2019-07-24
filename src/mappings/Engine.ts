@@ -66,24 +66,27 @@ export function handleAmguPaid(event: AmguPaid): void {
   amguPayment.timestamp = event.block.timestamp;
   amguPayment.save();
 
-  // update current engine state
+  // update current engine state (amguConsumed, frozenEther)
+  let engineContract = EngineContract.bind(event.address);
+
   let engine = Engine.load(event.address.toHex()) as Engine;
   engine.totalAmguConsumed = engine.totalAmguConsumed!.plus(
     event.params.amount
   );
+  engine.frozenEther = engineContract.frozenEther();
+  engine.totalEtherConsumed = engineContract.totalEtherConsumed();
   engine.lastUpdate = event.block.timestamp;
   engine.save();
 
-  // Update all engine quantities at most once per day.
+  // Update all engine quantities every hour
   let state = currentState();
-  let interval = BigInt.fromI32(24 * 60 * 60);
+  let interval = BigInt.fromI32(60 * 60);
   if (event.block.timestamp.minus(state.lastEngineUpdate).gt(interval)) {
     state.lastEngineUpdate = event.block.timestamp;
     state.save();
 
-    let engineContract = EngineContract.bind(event.address);
     engine.amguPrice = engineContract.amguPrice();
-    engine.frozenEther = engineContract.frozenEther();
+    // engine.frozenEther = engineContract.frozenEther();
     engine.liquidEther = engineContract.liquidEther();
     engine.lastThaw = engineContract.lastThaw();
     engine.thawingDelay = engineContract.thawingDelay();
@@ -102,7 +105,7 @@ export function handleAmguPaid(event: AmguPaid): void {
     engineHistory.liquidEther = engineContract.liquidEther();
     engineHistory.lastThaw = engineContract.lastThaw();
     engineHistory.thawingDelay = engineContract.thawingDelay();
-    engineHistory.totalEtherConsumed = engineContract.totalEtherConsumed();
+    // engineHistory.totalEtherConsumed = engineContract.totalEtherConsumed();
     engineHistory.totalAmguConsumed = engineContract.totalAmguConsumed();
     engineHistory.totalMlnBurned = engineContract.totalMlnBurned();
     engineHistory.premiumPercent = engineContract.premiumPercent();
@@ -125,6 +128,7 @@ export function handleThaw(event: Thaw): void {
   let engine = Engine.load(event.address.toHex()) as Engine;
   engine.lastThaw = event.block.timestamp;
   engine.liquidEther = engineContract.liquidEther();
+  engine.frozenEther = engineContract.frozenEther();
   engine.save();
 }
 

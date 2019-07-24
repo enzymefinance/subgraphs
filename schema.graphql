@@ -415,6 +415,7 @@ type MelonNetworkHistory @entity {
   id: ID!
   timestamp: BigInt!
   gav: BigInt!
+  validGav: Boolean!
   assetAmounts: [MelonNetworkAssetHistory!]!
     @derivedFrom(field: "melonNetworkHistory")
 }

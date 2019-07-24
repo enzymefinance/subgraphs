@@ -3,6 +3,7 @@ import { AccountingDataSource } from "../types/AccountingFactoryDataSource/templ
 import { Accounting, EventHistory } from "../types/schema";
 import { saveContract } from "./utils/saveContract";
 import { saveEventHistoryParameters } from "./utils/saveEventHistoryParameters";
+import { saveEventHistory } from "./utils/saveEventHistory";
 
 export function handleNewInstance(event: NewInstance): void {
   // ignore contracts created before go-live
@@ -27,17 +28,13 @@ export function handleNewInstance(event: NewInstance): void {
     event.params.hub.toHex()
   );
 
-  let eventHistoryId = event.transaction.hash.toHex();
-  let eventHistory = new EventHistory(eventHistoryId);
-  eventHistory.contract = "AccountingFactory";
-  eventHistory.contractAddress = event.address.toHex();
-  eventHistory.event = "NewInstance";
-  eventHistory.fund = event.params.hub.toHex();
-  eventHistory.timestamp = event.block.timestamp;
-  eventHistory.save();
-
-  saveEventHistoryParameters(
-    eventHistoryId,
+  saveEventHistory(
+    event.transaction.hash.toHex(),
+    event.block.timestamp,
+    event.params.hub.toHex(),
+    "AccountingFactory",
+    event.address.toHex(),
+    "NewInstance",
     ["denominationAsset", "nativeAsset"],
     [event.params.denominationAsset.toHex(), event.params.nativeAsset.toHex()]
   );

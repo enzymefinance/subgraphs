@@ -13,6 +13,7 @@ import { currentState } from "./utils/currentState";
 import { saveContract } from "./utils/saveContract";
 import { AccountingContract } from "../types/VersionDataSource/AccountingContract";
 import { SharesContract } from "../types/VersionDataSource/SharesContract";
+import { saveEventHistory } from "./utils/saveEventHistory";
 
 export function handleNewFund(event: NewFund): void {
   HubDataSource.create(event.params.hub);
@@ -51,6 +52,17 @@ export function handleNewFund(event: NewFund): void {
     event.block.timestamp,
     event.block.number,
     addresses[9]
+  );
+
+  saveEventHistory(
+    event.transaction.hash.toHex(),
+    event.block.timestamp,
+    event.params.hub.toHex(),
+    "Version",
+    event.address.toHex(),
+    "NewFund",
+    ["hub", "manager"],
+    [event.params.hub.toHex(), event.params.manager.toHex()]
   );
 
   // update fund counts

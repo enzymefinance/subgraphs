@@ -1,4 +1,7 @@
-import { Registration } from "../types/PolicyManagerFactoryDataSource/templates/PolicyManagerDataSource/PolicyManagerContract";
+import {
+  Registration,
+  PolicyManagerContract
+} from "../types/PolicyManagerFactoryDataSource/templates/PolicyManagerDataSource/PolicyManagerContract";
 import { Policy } from "../types/schema";
 import { PolicyContract } from "../types/PolicyManagerFactoryDataSource/templates/PolicyManagerDataSource/PolicyContract";
 import { PriceToleranceContract } from "../types/PolicyManagerFactoryDataSource/templates/PolicyManagerDataSource/PriceToleranceContract";
@@ -6,12 +9,16 @@ import { MaxPositionsContract } from "../types/PolicyManagerFactoryDataSource/te
 import { MaxConcentrationContract } from "../types/PolicyManagerFactoryDataSource/templates/PolicyManagerDataSource/MaxConcentrationContract";
 import { AssetWhiteListContract } from "../types/PolicyManagerFactoryDataSource/templates/PolicyManagerDataSource/AssetWhiteListContract";
 import { AssetBlackListContract } from "../types/PolicyManagerFactoryDataSource/templates/PolicyManagerDataSource/AssetBlackListContract";
+import { saveEventHistory } from "./utils/saveEventHistory";
 
 export function handleRegistration(event: Registration): void {
   let policyAddress = event.params.policy;
 
   let policyContract = PolicyContract.bind(policyAddress);
   let identifier = policyContract.identifier();
+
+  let policyManagerContract = PolicyManagerContract.bind(event.address);
+  let hub = policyManagerContract.hub();
 
   let policy = new Policy(policyAddress.toHex());
   policy.policyManager = event.address.toHex();
@@ -43,4 +50,15 @@ export function handleRegistration(event: Registration): void {
     policy.priceTolerance = priceToleranceContract.tolerance();
   }
   policy.save();
+
+  saveEventHistory(
+    event.transaction.hash.toHex() + "/" + event.params.sig.toHex(),
+    event.block.timestamp,
+    hub.toHex(),
+    "PolicyManager",
+    event.address.toHex(),
+    "Registration",
+    ["policy"],
+    [policyAddress.toHex()]
+  );
 }

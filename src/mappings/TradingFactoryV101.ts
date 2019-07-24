@@ -3,6 +3,7 @@ import { saveContract } from "./utils/saveContract";
 import { NewInstance } from "../types/TradingFactoryDataSourceV101/TradingFactoryContractV101";
 import { TradingDataSourceV101 } from "../types/TradingFactoryDataSourceV101/templates";
 import { BigInt, log } from "@graphprotocol/graph-ts";
+import { saveEventHistory } from "./utils/saveEventHistory";
 
 export function handleNewInstance(event: NewInstance): void {
   // ignore contracts created before go-live
@@ -30,5 +31,16 @@ export function handleNewInstance(event: NewInstance): void {
     event.block.timestamp,
     event.block.number,
     trading.fund
+  );
+
+  saveEventHistory(
+    event.transaction.hash.toHex(),
+    event.block.timestamp,
+    event.params.hub.toHex(),
+    "TradingFactory",
+    event.address.toHex(),
+    "NewInstance",
+    [],
+    []
   );
 }

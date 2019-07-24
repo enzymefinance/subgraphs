@@ -11,6 +11,7 @@ import {
 import { AccountingContract } from "../types/TradingFactoryDataSource/templates/TradingDataSource/AccountingContract";
 import { PriceSourceContract } from "../types/TradingFactoryDataSource/templates/TradingDataSource/PriceSourceContract";
 import { SharesContract } from "../types/TradingFactoryDataSource/templates/TradingDataSource/SharesContract";
+import { saveEventHistory } from "./utils/saveEventHistory";
 
 export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
   let id = event.transaction.hash.toHex();
@@ -45,12 +46,25 @@ export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
   emCall.timestamp = event.block.timestamp;
   emCall.save();
 
-  // calculate fund holdings
   let tradingContract = TradingContract.bind(event.address);
   let routes = tradingContract.routes();
 
   let hub = tradingContract.hub();
   let fundAddress = hub.toHex();
+
+  saveEventHistory(
+    event.transaction.hash.toHex(),
+    event.block.timestamp,
+    hub.toHex(),
+    "Trading",
+    event.address.toHex(),
+    "ExchangeMethodCall",
+    ["trading"],
+    [emCall.trading]
+  );
+
+  // calculate fund holdings
+
   let accountingContract = AccountingContract.bind(routes.value0);
 
   let fundGavValid = true;

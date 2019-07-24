@@ -3,6 +3,7 @@ import {
   AssetRemoval
 } from "../types/AccountingFactoryDataSource/templates/AccountingDataSource/AccountingContract";
 import { Accounting, Asset } from "../types/schema";
+import { saveEventHistory } from "./utils/saveEventHistory";
 
 export function handleAssetAddition(event: AssetAddition): void {
   let accounting = Accounting.load(event.address.toHex()) as Accounting;
@@ -16,6 +17,17 @@ export function handleAssetAddition(event: AssetAddition): void {
   asset.save();
 
   // TODO: log assets over time
+
+  saveEventHistory(
+    event.transaction.hash.toHex() + "/" + event.params.asset.toHex(),
+    event.block.timestamp,
+    accounting.fund as string,
+    "Accounting",
+    event.address.toHex(),
+    "AssetAddition",
+    ["asset"],
+    [event.params.asset.toHex()]
+  );
 }
 
 export function handleAssetRemoval(event: AssetRemoval): void {
@@ -44,4 +56,15 @@ export function handleAssetRemoval(event: AssetRemoval): void {
   asset.save();
 
   // TODO: log assets over time
+
+  saveEventHistory(
+    event.transaction.hash.toHex() + "/" + event.params.asset.toHex(),
+    event.block.timestamp,
+    accounting.fund as string,
+    "Accounting",
+    event.address.toHex(),
+    "AssetRemoval",
+    ["asset"],
+    [event.params.asset.toHex()]
+  );
 }

@@ -25,6 +25,7 @@ import { currentState } from "./utils/currentState";
 import { store, BigInt } from "@graphprotocol/graph-ts";
 import { PriceSourceContract } from "../types/ParticipationFactoryDataSource/templates/ParticipationDataSource/PriceSourceContract";
 import { investorEntity } from "./entities/investorEntity";
+import { saveEventHistory } from "./utils/saveEventHistory";
 
 function archiveInvestmentRequest(
   owner: string,
@@ -56,31 +57,50 @@ export function handleInvestmentRequest(event: InvestmentRequest): void {
   let participationContract = ParticipationContract.bind(event.address);
   let hub = participationContract.hub();
 
-  let owner = event.params.requestOwner;
-  let shares = event.params.requestedShares;
-  let amount = event.params.investmentAmount;
-  let asset = event.params.investmentAsset.toHex();
+  let requestOwner = event.params.requestOwner;
+  let requestedShares = event.params.requestedShares;
+  let investmentAmount = event.params.investmentAmount;
+  let investmentAsset = event.params.investmentAsset.toHex();
 
   // requests can either be pending, cancelled or executed,
   // so, this should not happen, just keeping it for as a test
   archiveInvestmentRequest(
-    owner.toHex(),
+    requestOwner.toHex(),
     hub.toHex(),
     "ARCHIVED",
     event.block.timestamp
   );
 
   let investmentRequest = new InvestmentRequestEntity(
-    owner.toHex() + "/" + hub.toHex()
+    requestOwner.toHex() + "/" + hub.toHex()
   );
   investmentRequest.fund = hub.toHex();
-  investmentRequest.owner = investorEntity(owner, event.block.timestamp).id;
-  investmentRequest.shares = shares;
-  investmentRequest.amount = amount;
-  investmentRequest.asset = asset;
+  investmentRequest.owner = investorEntity(
+    requestOwner,
+    event.block.timestamp
+  ).id;
+  investmentRequest.shares = requestedShares;
+  investmentRequest.amount = investmentAmount;
+  investmentRequest.asset = investmentAsset;
   investmentRequest.requestTimestamp = event.block.timestamp;
   investmentRequest.status = "PENDING";
   investmentRequest.save();
+
+  saveEventHistory(
+    event.transaction.hash.toHex(),
+    event.block.timestamp,
+    hub.toHex(),
+    "Participation",
+    event.address.toHex(),
+    "InvestmentRequest",
+    ["requestOwner", "requestedShares", "investmentAmount", "investmentAsset"],
+    [
+      requestOwner.toHex(),
+      requestedShares.toString(),
+      investmentAmount.toString(),
+      investmentAsset
+    ]
+  );
 }
 
 export function handleCancelRequest(event: CancelRequest): void {
@@ -92,6 +112,17 @@ export function handleCancelRequest(event: CancelRequest): void {
     hub.toHex(),
     "CANCELLED",
     event.block.timestamp
+  );
+
+  saveEventHistory(
+    event.transaction.hash.toHex(),
+    event.block.timestamp,
+    hub.toHex(),
+    "Participation",
+    event.address.toHex(),
+    "InvestmentRequest",
+    ["requestOwner"],
+    [event.params.requestOwner.toHex()]
   );
 }
 
@@ -130,6 +161,22 @@ export function handleRequestExecution(event: RequestExecution): void {
     hub.toHex(),
     "EXECUTED",
     event.block.timestamp
+  );
+
+  saveEventHistory(
+    event.transaction.hash.toHex(),
+    event.block.timestamp,
+    hub.toHex(),
+    "Participation",
+    event.address.toHex(),
+    "RequestExecution",
+    ["requestOwner", "requestedShares", "investmentAmount", "investmentAsset"],
+    [
+      event.params.requestOwner.toHex(),
+      requestedShares.toString(),
+      investmentAmount.toString(),
+      investmentAsset.toHex()
+    ]
   );
 
   // this is currently investment-count, not investor-count (misnamed entity)
@@ -254,7 +301,7 @@ export function handleRedemption(event: Redemption): void {
   let hub = participationContract.hub();
   let routes = participationContract.routes();
 
-  let fundContract = HubContract.bind(participationContract.hub());
+  let fundContract = HubContract.bind(hub);
   let accountingContract = AccountingContract.bind(fundContract.accounting());
   let currentSharePrice = accountingContract.calcSharePrice();
   let defaultSharePrice = accountingContract.DEFAULT_SHARE_PRICE();
@@ -269,11 +316,22 @@ export function handleRedemption(event: Redemption): void {
 
   let investment = investmentEntity(
     event.params.redeemer,
-    participationContract.hub(),
+    hub,
     event.block.timestamp
   );
   investment.shares = investment.shares.minus(event.params.redeemedShares);
   investment.save();
+
+  saveEventHistory(
+    event.transaction.hash.toHex(),
+    event.block.timestamp,
+    hub.toHex(),
+    "Participation",
+    event.address.toHex(),
+    "Redemption",
+    ["redeemer", "redeemedShares"],
+    [event.params.redeemer.toHex(), event.params.redeemedShares.toString()]
+  );
 
   // this is currently investment-count, not investor-count (misnamed entity)
   // TODO: have both investment-count and investor-count
