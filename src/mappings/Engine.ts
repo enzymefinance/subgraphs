@@ -14,7 +14,7 @@ import {
   Engine,
   EngineHistory
 } from "../types/schema";
-import { Address, BigInt } from "@graphprotocol/graph-ts";
+import { Address, BigInt, log } from "@graphprotocol/graph-ts";
 import { saveContract } from "./utils/saveContract";
 import { currentState } from "./utils/currentState";
 
@@ -149,16 +149,15 @@ export function handleBurn(event: Burn): void {
 }
 
 export function handleRegistryChange(event: RegistryChange): void {
-  let registry = registryEntity(event.params.registry);
-  let engine = engineEntity(event.address, event.params.registry);
-  engine.registry = registry.id;
+  let engine = new Engine(event.address.toHex());
+  engine.registry = event.params.registry.toHex();
   engine.save();
 
   saveContract(
-    registry.id,
-    "Registry",
+    event.address.toHex(),
+    "Engine",
+    "",
     event.block.timestamp,
-    event.block.number,
-    engine.id
+    event.params.registry.toHex()
   );
 }

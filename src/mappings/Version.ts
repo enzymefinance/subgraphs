@@ -46,13 +46,7 @@ export function handleNewFund(event: NewFund): void {
   fund.engine = addresses[10];
   fund.save();
 
-  saveContract(
-    hub,
-    "Fund",
-    event.block.timestamp,
-    event.block.number,
-    addresses[9]
-  );
+  saveContract(hub, "Hub", fund.name, event.block.timestamp, addresses[9]);
 
   saveEventHistory(
     event.transaction.hash.toHex(),

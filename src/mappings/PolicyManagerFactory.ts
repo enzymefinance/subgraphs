@@ -20,8 +20,8 @@ export function handleNewInstance(event: NewInstance): void {
   saveContract(
     policyManager.id,
     "PolicyManager",
+    "",
     event.block.timestamp,
-    event.block.number,
     event.params.hub.toHex()
   );
 

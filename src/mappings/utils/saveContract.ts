@@ -1,25 +1,35 @@
-import { Address, BigInt, log } from "@graphprotocol/graph-ts";
+import { BigInt } from "@graphprotocol/graph-ts";
 import { Contract } from "../../types/schema";
 
 export function saveContract(
   id: string,
   name: string,
+  description: string,
   creationTime: BigInt,
-  creationBlock: BigInt,
   parent: string
 ): void {
   let parentContract = Contract.load(parent);
 
+  //
   if (!parentContract && name != "Registry") {
     parentContract = new Contract(parent);
-    parentContract.name = "Parent";
+    parentContract.name = "Hub (incomplete)";
+    parentContract.createdAt = creationTime;
     parentContract.save();
   }
 
-  let contract = new Contract(id);
-  contract.name = name;
-  contract.createdAt = creationTime;
-  contract.creationBlock = creationBlock;
-  contract.parent = parent;
-  contract.save();
+  let contract = Contract.load(id);
+  if (!contract) {
+    contract = new Contract(id);
+    contract.name = name;
+    contract.description = description;
+    contract.createdAt = creationTime;
+    contract.parent = parent;
+    contract.save();
+  } else if (contract.name == "Hub (incomplete)") {
+    contract.name = name;
+    contract.description = description;
+    contract.parent = parent;
+    contract.save();
+  }
 }

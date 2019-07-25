@@ -21,25 +21,12 @@ import {
   ExchangeAdapterUpsert,
   ExchangeAdapterRemoval,
   RegistryContract,
-  MGMChange
+  MGMChange,
+  LogSetOwner
 } from "../types/RegistryDataSource/RegistryContract";
 import { saveContract } from "./utils/saveContract";
 import { PriceSourceChange } from "../types/PriceSourceDataSource/RegistryContract";
 import { currentState } from "./utils/currentState";
-
-function registryEntity(address: Address): Registry {
-  let id = address.toHex();
-  let registry = Registry.load(id);
-
-  if (!registry) {
-    registry = new Registry(id);
-    registry.exchangeAdapters = [];
-    registry.assets = [];
-    registry.save();
-  }
-
-  return registry as Registry;
-}
 
 function engineEntity(address: Address, registry: Address): Engine {
   let id = address.toHex();
@@ -52,6 +39,18 @@ function engineEntity(address: Address, registry: Address): Engine {
   }
 
   return engine as Engine;
+}
+
+//
+
+export function handleLogSetOwner(event: LogSetOwner): void {
+  let registry = new Registry(event.address.toHex());
+  registry.owner = event.params.owner.toHex();
+  registry.exchangeAdapters = [];
+  registry.assets = [];
+  registry.save();
+
+  saveContract(registry.id, "Registry", "", event.block.timestamp, "");
 }
 
 export function handleVersionRegistration(event: VersionRegistration): void {
@@ -73,8 +72,8 @@ export function handleVersionRegistration(event: VersionRegistration): void {
     saveContract(
       id,
       "Version",
+      version.name,
       event.block.timestamp,
-      event.block.number,
       event.address.toHex()
     );
   }
@@ -135,15 +134,15 @@ export function handleAssetUpsert(event: AssetUpsert): void {
   saveContract(
     id,
     "Asset",
+    asset.symbol,
     event.block.timestamp,
-    event.block.number,
     event.address.toHex()
   );
 }
 
 export function handleAssetRemoval(event: AssetRemoval): void {
   let assetId = event.params.asset.toHex();
-  // let registry = registryEntity(event.address);
+  // let registry = Registry.load(event.address.toHex()) as Registry;
   // let removed = assetId;
   // let assets = new Array<string>();
   // for (let i: i32 = 0; i < registry.assets.length; i++) {
@@ -212,16 +211,16 @@ export function handleExchangeAdapterUpsert(
   saveContract(
     id,
     "ExchangeAdapter",
+    exchange.name,
     event.block.timestamp,
-    event.block.number,
     event.address.toHex()
   );
 
   saveContract(
     event.params.exchange.toHex(),
     "Exchange",
+    exchange.name,
     event.block.timestamp,
-    event.block.number,
     event.params.adapter.toHex()
   );
 }
@@ -230,7 +229,7 @@ export function handleExchangeAdapterRemoval(
   event: ExchangeAdapterRemoval
 ): void {
   let exchangeAdapterId = event.params.exchange.toHex();
-  // let registry = registryEntity(event.address);
+  // let registry = Registry.load(event.address.toHex()) as Registry;
   // let removed = exchangeAdapterId;
   // let exchangeAdapters = new Array<string>();
   // for (let i: i32 = 0; i < registry.exchangeAdapters.length; i++) {
@@ -251,7 +250,7 @@ export function handleExchangeAdapterRemoval(
 }
 
 export function handleEngineChange(event: EngineChange): void {
-  let registry = registryEntity(event.address);
+  let registry = Registry.load(event.address.toHex()) as Registry;
   let engine = engineEntity(event.params.engine, event.address);
   registry.engine = engine.id;
   registry.save();
@@ -261,18 +260,10 @@ export function handleEngineChange(event: EngineChange): void {
   state.save();
 
   saveContract(
-    registry.id,
-    "Registry",
-    event.block.timestamp,
-    event.block.number,
-    ""
-  );
-
-  saveContract(
     engine.id,
     "Engine",
+    "",
     event.block.timestamp,
-    event.block.number,
     event.address.toHex()
   );
 }
@@ -285,18 +276,10 @@ export function handlePriceSourceChange(event: PriceSourceChange): void {
   // use pricesource template
 
   saveContract(
-    event.address.toHex(),
-    "Registry",
-    event.block.timestamp,
-    event.block.number,
-    ""
-  );
-
-  saveContract(
     priceSource.id,
     "PriceSource",
+    "",
     event.block.timestamp,
-    event.block.number,
     event.address.toHex()
   );
 }
@@ -307,18 +290,10 @@ export function handleMlnTokenChange(event: MlnTokenChange): void {
   mlnToken.save();
 
   saveContract(
-    event.address.toHex(),
-    "Registry",
-    event.block.timestamp,
-    event.block.number,
-    ""
-  );
-
-  saveContract(
     mlnToken.id,
     "MlnToken",
+    "",
     event.block.timestamp,
-    event.block.number,
     event.address.toHex()
   );
 }
@@ -329,18 +304,10 @@ export function handleNativeAssetChange(event: NativeAssetChange): void {
   nativeAssset.save();
 
   saveContract(
-    event.address.toHex(),
-    "Registry",
-    event.block.timestamp,
-    event.block.number,
-    ""
-  );
-
-  saveContract(
     nativeAssset.id,
     "NativeAsset",
+    "",
     event.block.timestamp,
-    event.block.number,
     event.address.toHex()
   );
 }

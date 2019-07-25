@@ -294,6 +294,8 @@ export function handleRequestExecution(event: RequestExecution): void {
   fund.gavPerShareNetManagementFee = gavPerShareNetManagementFee;
   fund.lastCalculationsUpdate = event.block.timestamp;
   fund.save();
+
+  // TODO: update network gav
 }
 
 export function handleRedemption(event: Redemption): void {
@@ -446,6 +448,8 @@ export function handleRedemption(event: Redemption): void {
   fund.gavPerShareNetManagementFee = gavPerShareNetManagementFee;
   fund.lastCalculationsUpdate = event.block.timestamp;
   fund.save();
+
+  // TODO: update network gav
 }
 
 export function handleEnableInvestment(event: EnableInvestment): void {

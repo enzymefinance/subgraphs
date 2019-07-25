@@ -25,13 +25,7 @@ export function handleNewInstance(event: NewInstance): void {
   );
   trading.save();
 
-  saveContract(
-    id,
-    "Trading",
-    event.block.timestamp,
-    event.block.number,
-    trading.fund
-  );
+  saveContract(id, "Trading", "", event.block.timestamp, trading.fund);
 
   saveEventHistory(
     event.transaction.hash.toHex(),

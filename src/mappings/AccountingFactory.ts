@@ -23,8 +23,8 @@ export function handleNewInstance(event: NewInstance): void {
   saveContract(
     accounting.id,
     "Accounting",
+    "",
     event.block.timestamp,
-    event.block.number,
     event.params.hub.toHex()
   );
 

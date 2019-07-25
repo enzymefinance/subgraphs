@@ -19,8 +19,8 @@ export function handleNewInstance(event: NewInstance): void {
   saveContract(
     vault.id,
     "Vault",
+    "",
     event.block.timestamp,
-    event.block.number,
     event.params.hub.toHex()
   );
 

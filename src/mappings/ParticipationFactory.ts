@@ -20,8 +20,8 @@ export function handleNewInstance(event: NewInstance): void {
   saveContract(
     participation.id,
     "Participation",
+    "",
     event.block.timestamp,
-    event.block.number,
     event.params.hub.toHex()
   );
 

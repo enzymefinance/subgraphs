@@ -17,13 +17,7 @@ export function handleNewInstance(event: NewInstance): void {
   shares.fund = event.params.hub.toHex();
   shares.save();
 
-  saveContract(
-    shares.id,
-    "Shares",
-    event.block.timestamp,
-    event.block.number,
-    shares.fund
-  );
+  saveContract(shares.id, "Shares", "", event.block.timestamp, shares.fund);
 
   saveEventHistory(
     event.transaction.hash.toHex(),

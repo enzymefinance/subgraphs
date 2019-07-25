@@ -1,8 +1,8 @@
 type Contract @entity {
   id: ID!
   name: String
+  description: String
   createdAt: BigInt
-  creationBlock: BigInt
   parent: Contract
   children: [Contract!] @derivedFrom(field: "parent")
 }
@@ -21,6 +21,7 @@ type State @entity {
 
 type Registry @entity {
   id: ID!
+  owner: String!
   engine: Engine
   versions: [Version!]! @derivedFrom(field: "registry")
   assets: [Asset!]! @derivedFrom(field: "registry")
@@ -41,7 +42,7 @@ type Version @entity {
 
 type Engine @entity {
   id: ID!
-  registry: Registry
+  registry: Registry!
   amguPrice: BigInt
   frozenEther: BigInt
   liquidEther: BigInt

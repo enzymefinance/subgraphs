@@ -49,6 +49,8 @@ dataSources:
           handler: handleNativeAssetChange
         - event: MGMChange(indexed address)
           handler: handleMGMChange
+        - event: LogSetOwner(indexed address)
+          handler: handleLogSetOwner
   - name: EngineDataSource
     kind: ethereum/contract
     network: mainnet
@@ -166,6 +168,8 @@ dataSources:
             - name: HubContract
               file: ./node_modules/@melonproject/protocol/out/Hub.abi.json
           eventHandlers:
+            - event: LogSetOwner(indexed address)
+              handler: handleLogSetOwner
             - event: FundShutDown()
               handler: handleFundShutDown
   - name: VersionDataSource

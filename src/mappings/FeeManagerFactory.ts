@@ -25,8 +25,8 @@ export function handleNewInstance(event: NewInstance): void {
   saveContract(
     feeManager.id,
     "FeeManager",
+    "",
     event.block.timestamp,
-    event.block.number,
     event.params.hub.toHex()
   );
 
