@@ -62,6 +62,7 @@ export function handleFeeRegistration(event: FeeRegistration): void {
     perfFee.performanceFeePeriod = perfFeeContract.performanceFeePeriod(
       event.address
     );
+    perfFee.initializeTime = perfFeeContract.initializeTime(event.address);
     perfFee.save();
     feeManager.feesRegistered = BigInt.fromI32(2);
     feeManager.save();
