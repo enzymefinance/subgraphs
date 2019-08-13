@@ -52,6 +52,7 @@ type Engine @entity {
   totalAmguConsumed: BigInt
   totalMlnBurned: BigInt
   premiumPercent: BigInt
+  mlnTotalSupply: BigInt
   lastUpdate: BigInt
   history: [EngineHistory!]! @derivedFrom(field: "engine")
   amguPrices: [AmguPrice!]! @derivedFrom(field: "engine")
@@ -72,6 +73,7 @@ type EngineHistory @entity {
   totalAmguConsumed: BigInt!
   totalMlnBurned: BigInt!
   premiumPercent: BigInt!
+  mlnTotalSupply: BigInt!
 }
 
 type PriceSource @entity {

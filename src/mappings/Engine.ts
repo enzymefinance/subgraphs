@@ -17,6 +17,7 @@ import {
 import { Address, BigInt, log } from "@graphprotocol/graph-ts";
 import { saveContract } from "./utils/saveContract";
 import { currentState } from "./utils/currentState";
+import { MlnContract } from "../types/EngineDataSource/MlnContract";
 
 function engineEntity(address: Address, registry: Address): Engine {
   let id = address.toHex();
@@ -85,6 +86,10 @@ export function handleAmguPaid(event: AmguPaid): void {
     state.lastEngineUpdate = event.block.timestamp;
     state.save();
 
+    let mlnContract = MlnContract.bind(
+      Address.fromString("0xec67005c4e498ec7f55e092bd1d35cbc47c91892")
+    );
+
     engine.amguPrice = engineContract.amguPrice();
     // engine.frozenEther = engineContract.frozenEther();
     engine.liquidEther = engineContract.liquidEther();
@@ -94,21 +99,23 @@ export function handleAmguPaid(event: AmguPaid): void {
     engine.totalAmguConsumed = engineContract.totalAmguConsumed();
     engine.totalMlnBurned = engineContract.totalMlnBurned();
     engine.premiumPercent = engineContract.premiumPercent();
+    engine.mlnTotalSupply = mlnContract.totalSupply();
     engine.lastUpdate = event.block.timestamp;
     engine.save();
 
     let engineHistory = new EngineHistory(
       event.address.toHex() + "/" + event.block.timestamp.toString()
     );
-    engineHistory.amguPrice = engineContract.amguPrice();
+    engineHistory.amguPrice = engine.amguPrice as BigInt;
     engineHistory.frozenEther = engineContract.frozenEther();
-    engineHistory.liquidEther = engineContract.liquidEther();
-    engineHistory.lastThaw = engineContract.lastThaw();
-    engineHistory.thawingDelay = engineContract.thawingDelay();
+    engineHistory.liquidEther = engine.liquidEther as BigInt;
+    engineHistory.lastThaw = engine.lastThaw as BigInt;
+    engineHistory.thawingDelay = engine.thawingDelay as BigInt;
     // engineHistory.totalEtherConsumed = engineContract.totalEtherConsumed();
-    engineHistory.totalAmguConsumed = engineContract.totalAmguConsumed();
-    engineHistory.totalMlnBurned = engineContract.totalMlnBurned();
-    engineHistory.premiumPercent = engineContract.premiumPercent();
+    engineHistory.totalAmguConsumed = engine.totalAmguConsumed as BigInt;
+    engineHistory.totalMlnBurned = engine.totalMlnBurned as BigInt;
+    engineHistory.premiumPercent = engine.premiumPercent as BigInt;
+    engineHistory.mlnTotalSupply = engine.mlnTotalSupply as BigInt;
     engineHistory.timestamp = event.block.timestamp;
     engineHistory.engine = event.address.toHex();
     engineHistory.save();

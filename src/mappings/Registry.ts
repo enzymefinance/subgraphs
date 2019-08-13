@@ -163,25 +163,25 @@ export function handleAssetRemoval(event: AssetRemoval): void {
 function exchangeNameFromAddress(address: Address): string {
   let name = "";
   if (address.toHex() == "0x39755357759ce0d7f32dc8dc45414cca409ae24e") {
-    name = "MatchingMarket";
+    name = "Oasisdex";
   }
   if (address.toHex() == "0x818e6fecd516ecc3849daf6845e3ec868087b755") {
-    name = "KyberNetwork";
+    name = "Kyber Network";
   }
   if (address.toHex() == "0x4f833a24e1f95d70f028921e27040ca56e09ab0b") {
-    name = "ZeroEx (v2.0)";
+    name = "0x (v2.0)";
   }
   if (address.toHex() == "0x080bf510fcbf18b91105470639e9561022937712") {
-    name = "ZeroEx (v2.1)";
+    name = "0x (v2.1)";
   }
   if (address.toHex() == "0xdcdb42c9a256690bd153a7b409751adfc8dd5851") {
     name = "Ethfinex";
   }
   if (address.toHex() == "0x7caec96607c5c7190d63b5a650e7ce34472352f5") {
-    name = "MelonEngine";
+    name = "Melon Engine";
   }
   if (address.toHex() == "0xcbb801141a1704dbe5b4a6224033cfae80c4b336") {
-    name = "MelonEngine (v1)";
+    name = "Melon Engine (v1)";
   }
   return name;
 }

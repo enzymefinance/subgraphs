@@ -68,6 +68,8 @@ dataSources:
       abis:
         - name: EngineContract
           file: ./node_modules/@melonproject/protocol/out/Engine.abi.json
+        - name: MlnContract
+          file: ./node_modules/@melonproject/protocol/out/PreminedToken.abi.json
       eventHandlers:
         - event: SetAmguPrice(uint256)
           handler: handleSetAmguPrice
