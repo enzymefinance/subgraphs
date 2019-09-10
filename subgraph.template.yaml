@@ -4,7 +4,15 @@ repository: https://github.com/melonproject/melon-subgraph
 schema:
   file: ./schema.graphql
 
+###############################################################################
+#
+# Contracts with fixed addresses
+#
+###############################################################################
 dataSources:
+  #
+  # Registry contract as main entry point
+  #
   - name: RegistryDataSource
     kind: ethereum/contract
     network: "{{meta.network}}"
@@ -52,140 +60,9 @@ dataSources:
         - event: LogSetOwner(indexed address)
           handler: handleLogSetOwner
 
-  - name: EngineDataSource
-    kind: ethereum/contract
-    network: "{{meta.network}}"
-    source:
-      address: "{{melonContracts.engine}}"
-      abi: EngineContract
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.3
-      language: wasm/assemblyscript
-      file: ./src/mappings/Engine.ts
-      entities:
-        - Engine
-        - Registry
-      abis:
-        - name: EngineContract
-          file: ./node_modules/@melonproject/protocol/out/Engine.abi.json
-        - name: MlnContract
-          file: ./node_modules/@melonproject/protocol/out/PreminedToken.abi.json
-      eventHandlers:
-        - event: SetAmguPrice(uint256)
-          handler: handleSetAmguPrice
-        - event: RegistryChange(address)
-          handler: handleRegistryChange
-        - event: AmguPaid(uint256)
-          handler: handleAmguPaid
-        - event: Thaw(uint256)
-          handler: handleThaw
-        - event: Burn(uint256)
-          handler: handleBurn
-
-  - name: PriceSourceDataSource
-    kind: ethereum/contract
-    network: "{{meta.network}}"
-    source:
-      address: "{{melonContracts.priceSource}}"
-      abi: PriceSourceContract
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.3
-      language: wasm/assemblyscript
-      file: ./src/mappings/PriceSource.ts
-      entities:
-        - State
-        - Asset
-        - AssetPriceUpdate
-        - Fund
-        - FundCalculationsHistory
-        - NetworkValue
-        - Investment
-        - InvestmentValuationHistory
-        - Investor
-        - InvestorValuationHistory
-      abis:
-        - name: PriceSourceContract
-          file: ./node_modules/@melonproject/protocol/out/KyberPriceFeed.abi.json
-        - name: RegistryContract
-          file: ./node_modules/@melonproject/protocol/out/Registry.abi.json
-        - name: VersionContract
-          file: ./node_modules/@melonproject/protocol/out/Version.abi.json
-        - name: HubContract
-          file: ./node_modules/@melonproject/protocol/out/Hub.abi.json
-        - name: AccountingContract
-          file: ./node_modules/@melonproject/protocol/out/Accounting.abi.json
-        - name: SharesContract
-          file: ./node_modules/@melonproject/protocol/out/Shares.abi.json
-        - name: ParticipationContract
-          file: ./node_modules/@melonproject/protocol/out/Participation.abi.json
-        - name: FeeManagerContract
-          file: ./node_modules/@melonproject/protocol/out/FeeManager.abi.json
-      eventHandlers:
-        - event: PriceUpdate(address[],uint256[])
-          handler: handlePriceUpdate
-
-  # current version contract
-  - name: VersionDataSource
-    kind: ethereum/contract
-    network: "{{meta.network}}"
-    source:
-      address: "{{melonContracts.version}}"
-      abi: VersionContract
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.3
-      language: wasm/assemblyscript
-      file: ./src/mappings/Version.ts
-      entities:
-        - Fund
-        - FundCount
-        - State
-        - FundCalculationsHistory
-      abis:
-        - name: VersionContract
-          file: ./node_modules/@melonproject/protocol/out/Version.abi.json
-        - name: HubContract
-          file: ./node_modules/@melonproject/protocol/out/Hub.abi.json
-        - name: AccountingContract
-          file: ./node_modules/@melonproject/protocol/out/Accounting.abi.json
-        - name: SharesContract
-          file: ./node_modules/@melonproject/protocol/out/Shares.abi.json
-      eventHandlers:
-        - event: NewFund(indexed address,indexed address,address[12])
-          handler: handleNewFund
-
-  # old Version Contract (first deployment)
-  - name: VersionDataSource
-    kind: ethereum/contract
-    network: "{{meta.network}}"
-    source:
-      address: "0xCB6c6Bdf0AA4cF0188518783b871931EFB64248f"
-      abi: VersionContract
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.3
-      language: wasm/assemblyscript
-      file: ./src/mappings/Version.ts
-      entities:
-        - Fund
-        - FundCount
-        - State
-        - FundCalculationsHistory
-      abis:
-        - name: VersionContract
-          file: ./node_modules/@melonproject/protocol/out/Version.abi.json
-        - name: HubContract
-          file: ./node_modules/@melonproject/protocol/out/Hub.abi.json
-        - name: AccountingContract
-          file: ./node_modules/@melonproject/protocol/out/Accounting.abi.json
-        - name: SharesContract
-          file: ./node_modules/@melonproject/protocol/out/Shares.abi.json
-      eventHandlers:
-        - event: NewFund(indexed address,indexed address,address[12])
-          handler: handleNewFund
-
+  #
+  # Factory contracts for fund spokes
+  #
   - name: AccountingFactoryDataSource
     kind: ethereum/contract
     network: "{{meta.network}}"
@@ -290,7 +167,6 @@ dataSources:
         - event: NewInstance(indexed address,indexed address)
           handler: handleNewInstance
 
-  # current trading factory
   - name: TradingFactoryDataSource
     kind: ethereum/contract
     network: "{{meta.network}}"
@@ -352,11 +228,118 @@ dataSources:
         - event: NewInstance(indexed address,indexed address)
           handler: handleNewInstance
 
+###############################################################################
 #
-# TEMPLATES
+# Contracts with dynamically set addresses
 #
-#
+###############################################################################
 templates:
+  #
+  # Infrastructure templates
+  #
+  - name: VersionDataSource
+    kind: ethereum/contract
+    network: "{{meta.network}}"
+    source:
+      abi: VersionContract
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.3
+      language: wasm/assemblyscript
+      file: ./src/mappings/Version.ts
+      entities:
+        - Fund
+        - FundCount
+        - State
+        - FundCalculationsHistory
+      abis:
+        - name: VersionContract
+          file: ./node_modules/@melonproject/protocol/out/Version.abi.json
+        - name: HubContract
+          file: ./node_modules/@melonproject/protocol/out/Hub.abi.json
+        - name: AccountingContract
+          file: ./node_modules/@melonproject/protocol/out/Accounting.abi.json
+        - name: SharesContract
+          file: ./node_modules/@melonproject/protocol/out/Shares.abi.json
+      eventHandlers:
+        - event: NewFund(indexed address,indexed address,address[12])
+          handler: handleNewFund
+
+  - name: EngineDataSource
+    kind: ethereum/contract
+    network: "{{meta.network}}"
+    source:
+      abi: EngineContract
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.3
+      language: wasm/assemblyscript
+      file: ./src/mappings/Engine.ts
+      entities:
+        - Engine
+        - Registry
+      abis:
+        - name: EngineContract
+          file: ./node_modules/@melonproject/protocol/out/Engine.abi.json
+        - name: MlnContract
+          file: ./node_modules/@melonproject/protocol/out/PreminedToken.abi.json
+      eventHandlers:
+        - event: SetAmguPrice(uint256)
+          handler: handleSetAmguPrice
+        - event: RegistryChange(address)
+          handler: handleRegistryChange
+        - event: AmguPaid(uint256)
+          handler: handleAmguPaid
+        - event: Thaw(uint256)
+          handler: handleThaw
+        - event: Burn(uint256)
+          handler: handleBurn
+
+  - name: PriceSourceDataSource
+    kind: ethereum/contract
+    network: "{{meta.network}}"
+    source:
+      abi: PriceSourceContract
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.3
+      language: wasm/assemblyscript
+      file: ./src/mappings/PriceSource.ts
+      entities:
+        - State
+        - Asset
+        - AssetPriceUpdate
+        - Fund
+        - FundCalculationsHistory
+        - NetworkValue
+        - Investment
+        - InvestmentValuationHistory
+        - Investor
+        - InvestorValuationHistory
+      abis:
+        - name: PriceSourceContract
+          file: ./node_modules/@melonproject/protocol/out/KyberPriceFeed.abi.json
+        - name: RegistryContract
+          file: ./node_modules/@melonproject/protocol/out/Registry.abi.json
+        - name: VersionContract
+          file: ./node_modules/@melonproject/protocol/out/Version.abi.json
+        - name: HubContract
+          file: ./node_modules/@melonproject/protocol/out/Hub.abi.json
+        - name: AccountingContract
+          file: ./node_modules/@melonproject/protocol/out/Accounting.abi.json
+        - name: SharesContract
+          file: ./node_modules/@melonproject/protocol/out/Shares.abi.json
+        - name: ParticipationContract
+          file: ./node_modules/@melonproject/protocol/out/Participation.abi.json
+        - name: FeeManagerContract
+          file: ./node_modules/@melonproject/protocol/out/FeeManager.abi.json
+      eventHandlers:
+        - event: PriceUpdate(address[],uint256[])
+          handler: handlePriceUpdate
+
+  #
+  # Fund hub/spokes templates
+  #
   - name: HubDataSource
     kind: ethereum/contract
     network: "{{meta.network}}"

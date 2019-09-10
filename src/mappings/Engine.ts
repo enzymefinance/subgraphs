@@ -10,42 +10,13 @@ import {
   AmguPrice,
   AmguPayment,
   EngineEtherEvent,
-  Registry,
   Engine,
-  EngineHistory,
-  State
+  EngineHistory
 } from "../types/schema";
 import { Address, BigInt, log } from "@graphprotocol/graph-ts";
 import { saveContract } from "./utils/saveContract";
 import { currentState } from "./utils/currentState";
 import { MlnContract } from "../types/EngineDataSource/MlnContract";
-
-function engineEntity(address: Address, registry: Address): Engine {
-  let id = address.toHex();
-  let engine = Engine.load(id);
-
-  if (!engine) {
-    engine = new Engine(id);
-    engine.registry = registry.toHex();
-    engine.save();
-  }
-
-  return engine as Engine;
-}
-
-function registryEntity(address: Address): Registry {
-  let id = address.toHex();
-  let registry = Registry.load(id);
-
-  if (!registry) {
-    registry = new Registry(id);
-    registry.versions = [];
-    registry.assets = [];
-    registry.save();
-  }
-
-  return registry as Registry;
-}
 
 export function handleSetAmguPrice(event: SetAmguPrice): void {
   let amguPrice = new AmguPrice(event.transaction.hash.toHex());

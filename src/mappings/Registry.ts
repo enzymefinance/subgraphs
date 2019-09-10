@@ -1,4 +1,5 @@
-import { Address, log, BigInt } from "@graphprotocol/graph-ts";
+import { Address } from "@graphprotocol/graph-ts";
+import { EngineDataSource, PriceSourceDataSource } from "../types/templates";
 import {
   Registry,
   Version,
@@ -250,6 +251,8 @@ export function handleExchangeAdapterRemoval(
 }
 
 export function handleEngineChange(event: EngineChange): void {
+  EngineDataSource.create(event.params.engine);
+
   let registry = Registry.load(event.address.toHex()) as Registry;
   let engine = engineEntity(event.params.engine, event.address);
   registry.engine = engine.id;
@@ -269,6 +272,8 @@ export function handleEngineChange(event: EngineChange): void {
 }
 
 export function handlePriceSourceChange(event: PriceSourceChange): void {
+  PriceSourceDataSource.create(event.params.priceSource);
+
   let priceSource = new PriceSource(event.params.priceSource.toHex());
   priceSource.registry = event.address.toHex();
   priceSource.save();
@@ -298,7 +303,7 @@ export function handleMlnTokenChange(event: MlnTokenChange): void {
   );
 
   let state = currentState();
-  state.mlnToken = event.address.toHex();
+  state.mlnToken = event.params.mlnToken.toHex();
   state.save();
 }
 
