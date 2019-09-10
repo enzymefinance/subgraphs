@@ -1,5 +1,9 @@
 import { Address } from "@graphprotocol/graph-ts";
-import { EngineDataSource, PriceSourceDataSource } from "../types/templates";
+import {
+  EngineDataSource,
+  PriceSourceDataSource,
+  VersionDataSource
+} from "../types/templates";
 import {
   Registry,
   Version,
@@ -55,6 +59,8 @@ export function handleLogSetOwner(event: LogSetOwner): void {
 }
 
 export function handleVersionRegistration(event: VersionRegistration): void {
+  VersionDataSource.create(event.params.version);
+
   let id = event.params.version.toHex();
 
   let registryContract = RegistryContract.bind(event.address);
