@@ -1,4 +1,4 @@
-import { VaultDataSource } from "../types/VaultFactoryDataSource/templates";
+import { VaultDataSource } from "../types/templates";
 import { NewInstance } from "../types/VaultFactoryDataSource/VaultFactoryContract";
 import { Vault } from "../types/schema";
 import { saveContract } from "./utils/saveContract";

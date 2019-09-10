@@ -1,5 +1,5 @@
 import { NewFund } from "../types/VersionDataSource/VersionContract";
-import { HubDataSource } from "../types/VersionDataSource/templates";
+import { HubDataSource } from "../types/templates";
 import {
   Fund,
   FundCount,

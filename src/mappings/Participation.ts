@@ -7,7 +7,7 @@ import {
   DisableInvestment,
   InvestmentRequest,
   CancelRequest
-} from "../types/ParticipationFactoryDataSource/templates/ParticipationDataSource/ParticipationContract";
+} from "../types/templates/ParticipationDataSource/ParticipationContract";
 import {
   Participation,
   Fund,
@@ -17,13 +17,13 @@ import {
   FundCalculationsHistory,
   FundHoldingsHistory
 } from "../types/schema";
-import { HubContract } from "../types/ParticipationFactoryDataSource/templates/ParticipationDataSource/HubContract";
-import { AccountingContract } from "../types/ParticipationFactoryDataSource/templates/ParticipationDataSource/AccountingContract";
-import { SharesContract } from "../types/ParticipationFactoryDataSource/templates/ParticipationDataSource/SharesContract";
+import { HubContract } from "../types/templates/ParticipationDataSource/HubContract";
+import { AccountingContract } from "../types/templates/ParticipationDataSource/AccountingContract";
+import { SharesContract } from "../types/templates/ParticipationDataSource/SharesContract";
 
 import { currentState } from "./utils/currentState";
 import { store, BigInt } from "@graphprotocol/graph-ts";
-import { PriceSourceContract } from "../types/ParticipationFactoryDataSource/templates/ParticipationDataSource/PriceSourceContract";
+import { PriceSourceContract } from "../types/templates/ParticipationDataSource/PriceSourceContract";
 import { investorEntity } from "./entities/investorEntity";
 import { saveEventHistory } from "./utils/saveEventHistory";
 

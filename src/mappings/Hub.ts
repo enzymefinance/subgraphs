@@ -2,7 +2,7 @@ import {
   FundShutDown,
   LogSetOwner,
   HubContract
-} from "../types/VersionDataSource/templates/HubDataSource/HubContract";
+} from "../types/templates/HubDataSource/HubContract";
 import { Fund, FundCount } from "../types/schema";
 import { BigInt, log } from "@graphprotocol/graph-ts";
 import { currentState } from "./utils/currentState";

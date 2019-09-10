@@ -17,6 +17,7 @@ type State @entity {
   timestamptNumberOfInvestors: BigInt!
   lastEngineUpdate: BigInt!
   currentEngine: Engine
+  mlnToken: String!
 }
 
 type Registry @entity {

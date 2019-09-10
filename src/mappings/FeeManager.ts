@@ -1,7 +1,7 @@
 import {
   FeeRegistration,
   FeeReward
-} from "../types/FeeManagerFactoryDataSource/templates/FeeManagerDataSource/FeeManagerContract";
+} from "../types/templates/FeeManagerDataSource/FeeManagerContract";
 import {
   FeeManager,
   ManagementFee,
@@ -10,10 +10,10 @@ import {
 } from "../types/schema";
 import { investmentEntity } from "./entities/investmentEntity";
 import { FeeManagerContract } from "../types/PriceSourceDataSource/FeeManagerContract";
-import { HubContract } from "../types/ParticipationFactoryDataSource/templates/ParticipationDataSource/HubContract";
+import { HubContract } from "../types/templates/ParticipationDataSource/HubContract";
 import { BigInt } from "@graphprotocol/graph-ts";
-import { ManagementFeeContract } from "../types/FeeManagerFactoryDataSource/templates/FeeManagerDataSource/ManagementFeeContract";
-import { PerformanceFeeContract } from "../types/FeeManagerFactoryDataSource/templates/FeeManagerDataSource/PerformanceFeeContract";
+import { ManagementFeeContract } from "../types/templates/FeeManagerDataSource/ManagementFeeContract";
+import { PerformanceFeeContract } from "../types/templates/FeeManagerDataSource/PerformanceFeeContract";
 import { saveEventHistory } from "./utils/saveEventHistory";
 
 export function handleFeeRegistration(event: FeeRegistration): void {

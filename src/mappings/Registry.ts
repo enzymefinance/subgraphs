@@ -296,6 +296,10 @@ export function handleMlnTokenChange(event: MlnTokenChange): void {
     event.block.timestamp,
     event.address.toHex()
   );
+
+  let state = currentState();
+  state.mlnToken = event.address.toHex();
+  state.save();
 }
 
 export function handleNativeAssetChange(event: NativeAssetChange): void {

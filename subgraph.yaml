@@ -1,12 +1,13 @@
-specVersion: 0.0.1
+specVersion: 0.0.2
 description: Melon protocol
 repository: https://github.com/melonproject/melon-subgraph
 schema:
   file: ./schema.graphql
+
 dataSources:
   - name: RegistryDataSource
     kind: ethereum/contract
-    network: mainnet
+    network: "mainnet"
     source:
       address: "0x1Bfd21f7db126a5966d2C09492676807a68859Ba"
       abi: RegistryContract
@@ -30,8 +31,7 @@ dataSources:
       eventHandlers:
         - event: VersionRegistration(indexed address)
           handler: handleVersionRegistration
-        - event: AssetUpsert(indexed
-            address,string,string,uint256,string,uint256,uint256[],bytes4[])
+        - event: AssetUpsert(indexed address,string,string,uint256,string,uint256,uint256[],bytes4[])
           handler: handleAssetUpsert
         - event: AssetRemoval(indexed address)
           handler: handleAssetRemoval
@@ -51,9 +51,10 @@ dataSources:
           handler: handleMGMChange
         - event: LogSetOwner(indexed address)
           handler: handleLogSetOwner
+
   - name: EngineDataSource
     kind: ethereum/contract
-    network: mainnet
+    network: "mainnet"
     source:
       address: "0x7CaEc96607c5c7190d63B5A650E7CE34472352f5"
       abi: EngineContract
@@ -81,9 +82,10 @@ dataSources:
           handler: handleThaw
         - event: Burn(uint256)
           handler: handleBurn
+
   - name: PriceSourceDataSource
     kind: ethereum/contract
-    network: mainnet
+    network: "mainnet"
     source:
       address: "0x4559DDD9E0a567bD8AB071ac106C1bC2d0C0b6Ef"
       abi: PriceSourceContract
@@ -123,9 +125,11 @@ dataSources:
       eventHandlers:
         - event: PriceUpdate(address[],uint256[])
           handler: handlePriceUpdate
+
+  # current version contract
   - name: VersionDataSource
     kind: ethereum/contract
-    network: mainnet
+    network: "mainnet"
     source:
       address: "0x01Bde0b02740D6311e4a87CA112DeEEddb057EFB"
       abi: VersionContract
@@ -151,32 +155,11 @@ dataSources:
       eventHandlers:
         - event: NewFund(indexed address,indexed address,address[12])
           handler: handleNewFund
-    templates:
-      - name: HubDataSource
-        kind: ethereum/contract
-        network: mainnet
-        source:
-          abi: HubContract
-        mapping:
-          kind: ethereum/events
-          apiVersion: 0.0.3
-          language: wasm/assemblyscript
-          file: ./src/mappings/Hub.ts
-          entities:
-            - Fund
-            - FundCount
-            - State
-          abis:
-            - name: HubContract
-              file: ./node_modules/@melonproject/protocol/out/Hub.abi.json
-          eventHandlers:
-            - event: LogSetOwner(indexed address)
-              handler: handleLogSetOwner
-            - event: FundShutDown()
-              handler: handleFundShutDown
+
+  # old Version Contract (first deployment)
   - name: VersionDataSource
     kind: ethereum/contract
-    network: mainnet
+    network: "mainnet"
     source:
       address: "0xCB6c6Bdf0AA4cF0188518783b871931EFB64248f"
       abi: VersionContract
@@ -202,30 +185,10 @@ dataSources:
       eventHandlers:
         - event: NewFund(indexed address,indexed address,address[12])
           handler: handleNewFund
-    templates:
-      - name: HubDataSource
-        kind: ethereum/contract
-        network: mainnet
-        source:
-          abi: HubContract
-        mapping:
-          kind: ethereum/events
-          apiVersion: 0.0.3
-          language: wasm/assemblyscript
-          file: ./src/mappings/Hub.ts
-          entities:
-            - Fund
-            - FundCount
-            - State
-          abis:
-            - name: HubContract
-              file: ./node_modules/@melonproject/protocol/out/Hub.abi.json
-          eventHandlers:
-            - event: FundShutDown()
-              handler: handleFundShutDown
+
   - name: AccountingFactoryDataSource
     kind: ethereum/contract
-    network: mainnet
+    network: "mainnet"
     source:
       abi: AccountingFactoryContract
       address: "0xeA41FD17121AAC5c79717C8528ce66a8e143e0c8"
@@ -245,30 +208,10 @@ dataSources:
           handler: handleNewInstance
         - event: NewInstance(indexed address,indexed address)
           handler: handleNewInstance1
-    templates:
-      - name: AccountingDataSource
-        kind: ethereum/contract
-        network: mainnet
-        source:
-          abi: AccountingContract
-        mapping:
-          kind: ethereum/events
-          apiVersion: 0.0.3
-          language: wasm/assemblyscript
-          file: ./src/mappings/Accounting.ts
-          entities:
-            - Accounting
-          abis:
-            - name: AccountingContract
-              file: ./node_modules/@melonproject/protocol/out/Accounting.abi.json
-          eventHandlers:
-            - event: AssetAddition(indexed address)
-              handler: handleAssetAddition
-            - event: AssetRemoval(indexed address)
-              handler: handleAssetRemoval
+
   - name: FeeManagerFactoryDataSource
     kind: ethereum/contract
-    network: mainnet
+    network: "mainnet"
     source:
       abi: FeeManagerFactoryContract
       address: "0xCB9CC04622ebb6D751E3516503Bc5418d980Ef13"
@@ -285,41 +228,10 @@ dataSources:
       eventHandlers:
         - event: NewInstance(indexed address,indexed address)
           handler: handleNewInstance
-    templates:
-      - name: FeeManagerDataSource
-        kind: ethereum/contract
-        network: mainnet
-        source:
-          abi: FeeManagerContract
-        mapping:
-          kind: ethereum/events
-          apiVersion: 0.0.3
-          language: wasm/assemblyscript
-          file: ./src/mappings/FeeManager.ts
-          entities:
-            - FeeManager
-            - ManagementFee
-            - PerformanceFee
-            - Fund
-            - Investment
-            - Investor
-          abis:
-            - name: FeeManagerContract
-              file: ./node_modules/@melonproject/protocol/out/FeeManager.abi.json
-            - name: ManagementFeeContract
-              file: ./node_modules/@melonproject/protocol/out/ManagementFee.abi.json
-            - name: PerformanceFeeContract
-              file: ./node_modules/@melonproject/protocol/out/PerformanceFee.abi.json
-            - name: HubContract
-              file: ./node_modules/@melonproject/protocol/out/Hub.abi.json
-          eventHandlers:
-            - event: FeeRegistration(address)
-              handler: handleFeeRegistration
-            - event: FeeReward(uint256)
-              handler: handleFeeReward
+
   - name: ParticipationFactoryDataSource
     kind: ethereum/contract
-    network: mainnet
+    network: "mainnet"
     source:
       abi: ParticipationFactoryContract
       address: "0xA48227baEa91825c23b2A38B0A90CE2e2ae59987"
@@ -337,56 +249,10 @@ dataSources:
       eventHandlers:
         - event: NewInstance(indexed address,indexed address,address[],address)
           handler: handleNewInstance
-    templates:
-      - name: ParticipationDataSource
-        kind: ethereum/contract
-        network: mainnet
-        source:
-          abi: ParticipationContract
-        mapping:
-          kind: ethereum/events
-          apiVersion: 0.0.3
-          language: wasm/assemblyscript
-          file: ./src/mappings/Participation.ts
-          entities:
-            - Asset
-            - Participation
-            - Investor
-            - Investment
-            - InvestmentRequest
-            - Fund
-            - InvestorCount
-            - State
-            - InvestmentHistory
-            - FundHoldingsHistory
-          abis:
-            - name: ParticipationContract
-              file: ./node_modules/@melonproject/protocol/out/Participation.abi.json
-            - name: AccountingContract
-              file: ./node_modules/@melonproject/protocol/out/Accounting.abi.json
-            - name: SharesContract
-              file: ./node_modules/@melonproject/protocol/out/Shares.abi.json
-            - name: HubContract
-              file: ./node_modules/@melonproject/protocol/out/Hub.abi.json
-            - name: PriceSourceContract
-              file: ./node_modules/@melonproject/protocol/out/KyberPriceFeed.abi.json
-          eventHandlers:
-            - event: InvestmentRequest(indexed address,indexed address,uint256,uint256)
-              handler: handleInvestmentRequest
-            - event: RequestExecution(indexed address,indexed address,indexed
-                address,uint256,uint256)
-              handler: handleRequestExecution
-            - event: CancelRequest(indexed address)
-              handler: handleCancelRequest
-            - event: Redemption(indexed address,address[],uint256[],uint256)
-              handler: handleRedemption
-            - event: EnableInvestment(address[])
-              handler: handleEnableInvestment
-            - event: DisableInvestment(address[])
-              handler: handleDisableInvestment
+
   - name: PolicyManagerFactoryDataSource
     kind: ethereum/contract
-    network: mainnet
+    network: "mainnet"
     source:
       abi: PolicyManagerFactoryContract
       address: "0xe06835e09Dd3eB24433252a77Ef573E022FcfB0b"
@@ -403,41 +269,10 @@ dataSources:
       eventHandlers:
         - event: NewInstance(indexed address,indexed address)
           handler: handleNewInstance
-    templates:
-      - name: PolicyManagerDataSource
-        kind: ethereum/contract
-        network: mainnet
-        source:
-          abi: PolicyManagerContract
-        mapping:
-          kind: ethereum/events
-          apiVersion: 0.0.3
-          language: wasm/assemblyscript
-          file: ./src/mappings/PolicyManager.ts
-          entities:
-            - PolicyManager
-            - Policy
-          abis:
-            - name: PolicyManagerContract
-              file: ./node_modules/@melonproject/protocol/out/PolicyManager.abi.json
-            - name: PolicyContract
-              file: ./node_modules/@melonproject/protocol/out/Policy.abi.json
-            - name: AssetBlackListContract
-              file: ./node_modules/@melonproject/protocol/out/AssetBlackList.abi.json
-            - name: AssetWhiteListContract
-              file: ./node_modules/@melonproject/protocol/out/AssetWhiteList.abi.json
-            - name: MaxConcentrationContract
-              file: ./node_modules/@melonproject/protocol/out/MaxConcentration.abi.json
-            - name: MaxPositionsContract
-              file: ./node_modules/@melonproject/protocol/out/MaxPositions.abi.json
-            - name: PriceToleranceContract
-              file: ./node_modules/@melonproject/protocol/out/PriceTolerance.abi.json
-          eventHandlers:
-            - event: Registration(indexed bytes4,uint8,indexed address)
-              handler: handleRegistration
+
   - name: SharesFactoryDataSource
     kind: ethereum/contract
-    network: mainnet
+    network: "mainnet"
     source:
       abi: SharesFactoryContract
       address: "0xC563Fb444441fd73431384006e7A81955c0d4F89"
@@ -454,30 +289,11 @@ dataSources:
       eventHandlers:
         - event: NewInstance(indexed address,indexed address)
           handler: handleNewInstance
-    templates:
-      - name: SharesDataSource
-        kind: ethereum/contract
-        network: mainnet
-        source:
-          abi: SharesContract
-        mapping:
-          kind: ethereum/events
-          apiVersion: 0.0.3
-          language: wasm/assemblyscript
-          file: ./src/mappings/Shares.ts
-          entities:
-            - Shares
-          abis:
-            - name: SharesContract
-              file: ./node_modules/@melonproject/protocol/out/Shares.abi.json
-          eventHandlers:
-            - event: Approval(indexed address,indexed address,uint256)
-              handler: handleApproval
-            - event: Transfer(indexed address,indexed address,uint256)
-              handler: handleTransfer
+
+  # current trading factory
   - name: TradingFactoryDataSource
     kind: ethereum/contract
-    network: mainnet
+    network: "mainnet"
     source:
       abi: TradingFactoryContract
       address: "0x6E57E54Ba53495066F400c026ecA1ef7FCa9Cb44"
@@ -494,35 +310,11 @@ dataSources:
       eventHandlers:
         - event: NewInstance(indexed address,indexed address,address[],address[],address)
           handler: handleNewInstance
-    templates:
-      - name: TradingDataSource
-        kind: ethereum/contract
-        network: mainnet
-        source:
-          abi: TradingContract
-        mapping:
-          kind: ethereum/events
-          apiVersion: 0.0.3
-          language: wasm/assemblyscript
-          file: ./src/mappings/Trading.ts
-          entities:
-            - Trading
-          abis:
-            - name: TradingContract
-              file: ./node_modules/@melonproject/protocol/out/Trading.abi.json
-            - name: AccountingContract
-              file: ./node_modules/@melonproject/protocol/out/Accounting.abi.json
-            - name: PriceSourceContract
-              file: ./node_modules/@melonproject/protocol/out/KyberPriceFeed.abi.json
-            - name: SharesContract
-              file: ./node_modules/@melonproject/protocol/out/Shares.abi.json
-          eventHandlers:
-            - event: ExchangeMethodCall(indexed address,indexed
-                string,address[6],uint256[8],bytes32,bytes,bytes,bytes)
-              handler: handleExchangeMethodCall
+
+    # old trading factory
   - name: TradingFactoryDataSourceV101
     kind: ethereum/contract
-    network: mainnet
+    network: "mainnet"
     source:
       abi: TradingFactoryContractV101
       address: "0xe2c3fe25336eE3bD71dcA3380b7423a3bDef3d8C"
@@ -539,35 +331,10 @@ dataSources:
       eventHandlers:
         - event: NewInstance(indexed address,indexed address,address[],address[],bool[],address)
           handler: handleNewInstance
-    templates:
-      - name: TradingDataSourceV101
-        kind: ethereum/contract
-        network: mainnet
-        source:
-          abi: TradingContractV101
-        mapping:
-          kind: ethereum/events
-          apiVersion: 0.0.3
-          language: wasm/assemblyscript
-          file: ./src/mappings/TradingV101.ts
-          entities:
-            - Trading
-          abis:
-            - name: TradingContractV101
-              file: ./node_modules/@melonproject/protocol-v.1.0.1/out/Trading.abi.json
-            - name: AccountingContract
-              file: ./node_modules/@melonproject/protocol/out/Accounting.abi.json
-            - name: PriceSourceContract
-              file: ./node_modules/@melonproject/protocol/out/KyberPriceFeed.abi.json
-            - name: SharesContract
-              file: ./node_modules/@melonproject/protocol/out/Shares.abi.json
-          eventHandlers:
-            - event: ExchangeMethodCall(indexed address,indexed
-                string,address[6],uint256[8],bytes32,bytes,bytes,bytes)
-              handler: handleExchangeMethodCall
+
   - name: VaultFactoryDataSource
     kind: ethereum/contract
-    network: mainnet
+    network: "mainnet"
     source:
       abi: VaultFactoryContract
       address: "0x42822b1f64249154Fc82f7F6246AE7C69254F30A"
@@ -584,19 +351,251 @@ dataSources:
       eventHandlers:
         - event: NewInstance(indexed address,indexed address)
           handler: handleNewInstance
-    templates:
-      - name: VaultDataSource
-        kind: ethereum/contract
-        network: mainnet
-        source:
-          abi: VaultContract
-        mapping:
-          kind: ethereum/events
-          apiVersion: 0.0.3
-          language: wasm/assemblyscript
-          file: ./src/mappings/Vault.ts
-          entities:
-            - Vault
-          abis:
-            - name: VaultContract
-              file: ./node_modules/@melonproject/protocol/out/Vault.abi.json
+
+#
+# TEMPLATES
+#
+#
+templates:
+  - name: HubDataSource
+    kind: ethereum/contract
+    network: "mainnet"
+    source:
+      abi: HubContract
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.3
+      language: wasm/assemblyscript
+      file: ./src/mappings/Hub.ts
+      entities:
+        - Fund
+        - FundCount
+        - State
+      abis:
+        - name: HubContract
+          file: ./node_modules/@melonproject/protocol/out/Hub.abi.json
+      eventHandlers:
+        - event: LogSetOwner(indexed address)
+          handler: handleLogSetOwner
+        - event: FundShutDown()
+          handler: handleFundShutDown
+
+  - name: AccountingDataSource
+    kind: ethereum/contract
+    network: "mainnet"
+    source:
+      abi: AccountingContract
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.3
+      language: wasm/assemblyscript
+      file: ./src/mappings/Accounting.ts
+      entities:
+        - Accounting
+      abis:
+        - name: AccountingContract
+          file: ./node_modules/@melonproject/protocol/out/Accounting.abi.json
+      eventHandlers:
+        - event: AssetAddition(indexed address)
+          handler: handleAssetAddition
+        - event: AssetRemoval(indexed address)
+          handler: handleAssetRemoval
+
+  - name: FeeManagerDataSource
+    kind: ethereum/contract
+    network: "mainnet"
+    source:
+      abi: FeeManagerContract
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.3
+      language: wasm/assemblyscript
+      file: ./src/mappings/FeeManager.ts
+      entities:
+        - FeeManager
+        - ManagementFee
+        - PerformanceFee
+        - Fund
+        - Investment
+        - Investor
+      abis:
+        - name: FeeManagerContract
+          file: ./node_modules/@melonproject/protocol/out/FeeManager.abi.json
+        - name: ManagementFeeContract
+          file: ./node_modules/@melonproject/protocol/out/ManagementFee.abi.json
+        - name: PerformanceFeeContract
+          file: ./node_modules/@melonproject/protocol/out/PerformanceFee.abi.json
+        - name: HubContract
+          file: ./node_modules/@melonproject/protocol/out/Hub.abi.json
+      eventHandlers:
+        - event: FeeRegistration(address)
+          handler: handleFeeRegistration
+        - event: FeeReward(uint256)
+          handler: handleFeeReward
+
+  - name: ParticipationDataSource
+    kind: ethereum/contract
+    network: "mainnet"
+    source:
+      abi: ParticipationContract
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.3
+      language: wasm/assemblyscript
+      file: ./src/mappings/Participation.ts
+      entities:
+        - Asset
+        - Participation
+        - Investor
+        - Investment
+        - InvestmentRequest
+        - Fund
+        - InvestorCount
+        - State
+        - InvestmentHistory
+        - FundHoldingsHistory
+      abis:
+        - name: ParticipationContract
+          file: ./node_modules/@melonproject/protocol/out/Participation.abi.json
+        - name: AccountingContract
+          file: ./node_modules/@melonproject/protocol/out/Accounting.abi.json
+        - name: SharesContract
+          file: ./node_modules/@melonproject/protocol/out/Shares.abi.json
+        - name: HubContract
+          file: ./node_modules/@melonproject/protocol/out/Hub.abi.json
+        - name: PriceSourceContract
+          file: ./node_modules/@melonproject/protocol/out/KyberPriceFeed.abi.json
+      eventHandlers:
+        - event: InvestmentRequest(indexed address,indexed address,uint256,uint256)
+          handler: handleInvestmentRequest
+        - event: RequestExecution(indexed address,indexed address,indexed address,uint256,uint256)
+          handler: handleRequestExecution
+        - event: CancelRequest(indexed address)
+          handler: handleCancelRequest
+        - event: Redemption(indexed address,address[],uint256[],uint256)
+          handler: handleRedemption
+        - event: EnableInvestment(address[])
+          handler: handleEnableInvestment
+        - event: DisableInvestment(address[])
+          handler: handleDisableInvestment
+
+  - name: PolicyManagerDataSource
+    kind: ethereum/contract
+    network: "mainnet"
+    source:
+      abi: PolicyManagerContract
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.3
+      language: wasm/assemblyscript
+      file: ./src/mappings/PolicyManager.ts
+      entities:
+        - PolicyManager
+        - Policy
+      abis:
+        - name: PolicyManagerContract
+          file: ./node_modules/@melonproject/protocol/out/PolicyManager.abi.json
+        - name: PolicyContract
+          file: ./node_modules/@melonproject/protocol/out/Policy.abi.json
+        - name: AssetBlackListContract
+          file: ./node_modules/@melonproject/protocol/out/AssetBlackList.abi.json
+        - name: AssetWhiteListContract
+          file: ./node_modules/@melonproject/protocol/out/AssetWhiteList.abi.json
+        - name: MaxConcentrationContract
+          file: ./node_modules/@melonproject/protocol/out/MaxConcentration.abi.json
+        - name: MaxPositionsContract
+          file: ./node_modules/@melonproject/protocol/out/MaxPositions.abi.json
+        - name: PriceToleranceContract
+          file: ./node_modules/@melonproject/protocol/out/PriceTolerance.abi.json
+      eventHandlers:
+        - event: Registration(indexed bytes4,uint8,indexed address)
+          handler: handleRegistration
+
+  - name: SharesDataSource
+    kind: ethereum/contract
+    network: "mainnet"
+    source:
+      abi: SharesContract
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.3
+      language: wasm/assemblyscript
+      file: ./src/mappings/Shares.ts
+      entities:
+        - Shares
+      abis:
+        - name: SharesContract
+          file: ./node_modules/@melonproject/protocol/out/Shares.abi.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,uint256)
+          handler: handleApproval
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+
+  # current trading contract
+  - name: TradingDataSource
+    kind: ethereum/contract
+    network: "mainnet"
+    source:
+      abi: TradingContract
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.3
+      language: wasm/assemblyscript
+      file: ./src/mappings/Trading.ts
+      entities:
+        - Trading
+      abis:
+        - name: TradingContract
+          file: ./node_modules/@melonproject/protocol/out/Trading.abi.json
+        - name: AccountingContract
+          file: ./node_modules/@melonproject/protocol/out/Accounting.abi.json
+        - name: PriceSourceContract
+          file: ./node_modules/@melonproject/protocol/out/KyberPriceFeed.abi.json
+        - name: SharesContract
+          file: ./node_modules/@melonproject/protocol/out/Shares.abi.json
+      eventHandlers:
+        - event: ExchangeMethodCall(indexed address,indexed string,address[6],uint256[8],bytes32,bytes,bytes,bytes)
+          handler: handleExchangeMethodCall
+
+  # old trading contract
+  - name: TradingDataSourceV101
+    kind: ethereum/contract
+    network: "mainnet"
+    source:
+      abi: TradingContractV101
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.3
+      language: wasm/assemblyscript
+      file: ./src/mappings/TradingV101.ts
+      entities:
+        - Trading
+      abis:
+        - name: TradingContractV101
+          file: ./node_modules/@melonproject/protocol-v.1.0.1/out/Trading.abi.json
+        - name: AccountingContract
+          file: ./node_modules/@melonproject/protocol/out/Accounting.abi.json
+        - name: PriceSourceContract
+          file: ./node_modules/@melonproject/protocol/out/KyberPriceFeed.abi.json
+        - name: SharesContract
+          file: ./node_modules/@melonproject/protocol/out/Shares.abi.json
+      eventHandlers:
+        - event: ExchangeMethodCall(indexed address,indexed string,address[6],uint256[8],bytes32,bytes,bytes,bytes)
+          handler: handleExchangeMethodCall
+
+  - name: VaultDataSource
+    kind: ethereum/contract
+    network: "mainnet"
+    source:
+      abi: VaultContract
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.3
+      language: wasm/assemblyscript
+      file: ./src/mappings/Vault.ts
+      entities:
+        - Vault
+      abis:
+        - name: VaultContract
+          file: ./node_modules/@melonproject/protocol/out/Vault.abi.json

@@ -1,16 +1,16 @@
 import {
   ExchangeMethodCall,
   TradingContract
-} from "../types/TradingFactoryDataSource/templates/TradingDataSource/TradingContract";
+} from "../types/templates/TradingDataSource/TradingContract";
 import {
   ExchangeMethodCall as ExchangeMethodCallEntity,
   FundHoldingsHistory,
   FundCalculationsHistory,
   Fund
 } from "../types/schema";
-import { AccountingContract } from "../types/TradingFactoryDataSource/templates/TradingDataSource/AccountingContract";
-import { PriceSourceContract } from "../types/TradingFactoryDataSource/templates/TradingDataSource/PriceSourceContract";
-import { SharesContract } from "../types/TradingFactoryDataSource/templates/TradingDataSource/SharesContract";
+import { AccountingContract } from "../types/templates/TradingDataSource/AccountingContract";
+import { PriceSourceContract } from "../types/templates/TradingDataSource/PriceSourceContract";
+import { SharesContract } from "../types/templates/TradingDataSource/SharesContract";
 import { saveEventHistory } from "./utils/saveEventHistory";
 
 export function handleExchangeMethodCall(event: ExchangeMethodCall): void {

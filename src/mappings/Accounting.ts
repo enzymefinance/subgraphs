@@ -1,7 +1,7 @@
 import {
   AssetAddition,
   AssetRemoval
-} from "../types/AccountingFactoryDataSource/templates/AccountingDataSource/AccountingContract";
+} from "../types/templates/AccountingDataSource/AccountingContract";
 import { Accounting, Asset } from "../types/schema";
 import { saveEventHistory } from "./utils/saveEventHistory";
 

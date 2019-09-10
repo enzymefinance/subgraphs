@@ -1,4 +1,4 @@
-import { TradingDataSource } from "../types/TradingFactoryDataSource/templates";
+import { TradingDataSource } from "../types/templates";
 import { NewInstance } from "../types/TradingFactoryDataSource/TradingFactoryContract";
 import { Trading } from "../types/schema";
 import { saveContract } from "./utils/saveContract";

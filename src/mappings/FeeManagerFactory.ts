@@ -1,4 +1,4 @@
-import { FeeManagerDataSource } from "../types/FeeManagerFactoryDataSource/templates";
+import { FeeManagerDataSource } from "../types/templates";
 import {
   NewInstance,
   CreateInstanceCall

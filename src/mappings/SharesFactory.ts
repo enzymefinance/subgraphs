@@ -1,4 +1,4 @@
-import { SharesDataSource } from "../types/SharesFactoryDataSource/templates";
+import { SharesDataSource } from "../types/templates";
 import { NewInstance } from "../types/SharesFactoryDataSource/SharesFactoryContract";
 import { Share } from "../types/schema";
 import { saveContract } from "./utils/saveContract";

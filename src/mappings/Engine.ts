@@ -12,7 +12,8 @@ import {
   EngineEtherEvent,
   Registry,
   Engine,
-  EngineHistory
+  EngineHistory,
+  State
 } from "../types/schema";
 import { Address, BigInt, log } from "@graphprotocol/graph-ts";
 import { saveContract } from "./utils/saveContract";
@@ -87,7 +88,7 @@ export function handleAmguPaid(event: AmguPaid): void {
     state.save();
 
     let mlnContract = MlnContract.bind(
-      Address.fromString("0xec67005c4e498ec7f55e092bd1d35cbc47c91892")
+      Address.fromString(state.mlnToken as string)
     );
 
     engine.amguPrice = engineContract.amguPrice();
@@ -99,7 +100,9 @@ export function handleAmguPaid(event: AmguPaid): void {
     engine.totalAmguConsumed = engineContract.totalAmguConsumed();
     engine.totalMlnBurned = engineContract.totalMlnBurned();
     engine.premiumPercent = engineContract.premiumPercent();
-    engine.mlnTotalSupply = mlnContract.totalSupply();
+    engine.mlnTotalSupply = mlnContract.try_totalSupply().reverted
+      ? BigInt.fromI32(0)
+      : mlnContract.try_totalSupply().value;
     engine.lastUpdate = event.block.timestamp;
     engine.save();
 
