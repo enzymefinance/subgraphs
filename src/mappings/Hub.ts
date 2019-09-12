@@ -4,15 +4,9 @@ import {
   HubContract
 } from "../types/templates/HubDataSource/HubContract";
 import { Fund, FundCount } from "../types/schema";
-import { BigInt, log } from "@graphprotocol/graph-ts";
+import { BigInt } from "@graphprotocol/graph-ts";
 import { currentState } from "./utils/currentState";
 import { saveEventHistory } from "./utils/saveEventHistory";
-import { saveContract } from "./utils/saveContract";
-
-export function handleLogSetOwner(event: LogSetOwner): void {
-  // we never actually get here because the Hub datasource is
-  // only instantiated after this event has been emitted
-}
 
 export function handleFundShutDown(event: FundShutDown): void {
   let fund = new Fund(event.address.toHex());
