@@ -107,7 +107,7 @@ export function _handlePriceUpdate(event: PriceUpdate): void {
   let melonNetworkValidGav = true;
 
   for (let i: i32 = 0; i < versions.length; i++) {
-    // Don't run for early trial versions (which contain no funds)
+    // Don't run for early trial versions
     if (
       versions[i].toHex() ==
         Address.fromString(

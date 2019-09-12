@@ -59,6 +59,18 @@ export function handleLogSetOwner(event: LogSetOwner): void {
 }
 
 export function handleVersionRegistration(event: VersionRegistration): void {
+  // skip two version deployed before going live
+  if (
+    event.params.version.toHex() ==
+      Address.fromString(
+        "0x07ed984b46ff6789ba30b75b5f4690b9f15464d4"
+      ).toHex() ||
+    event.params.version.toHex() ==
+      Address.fromString("0xf1d376db5ed16d183a962eaa719a58773fba5dff").toHex()
+  ) {
+    return;
+  }
+
   VersionDataSource.create(event.params.version);
 
   let id = event.params.version.toHex();
