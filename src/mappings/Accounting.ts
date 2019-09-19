@@ -6,13 +6,21 @@ import { Accounting, Asset } from "../types/schema";
 import { saveEventHistory } from "./utils/saveEventHistory";
 
 export function handleAssetAddition(event: AssetAddition): void {
-  let accounting = Accounting.load(event.address.toHex()) as Accounting;
+  let accounting = Accounting.load(event.address.toHex());
+  if (!accounting) {
+    return;
+  }
+
+  let asset = Asset.load(event.params.asset.toHex());
+  if (!asset) {
+    return;
+  }
+
   accounting.ownedAssets = accounting.ownedAssets.concat([
     event.params.asset.toHex()
   ]);
   accounting.save();
 
-  let asset = Asset.load(event.params.asset.toHex()) as Asset;
   asset.fundAccountings = asset.fundAccountings.concat([event.address.toHex()]);
   asset.save();
 
@@ -31,7 +39,16 @@ export function handleAssetAddition(event: AssetAddition): void {
 }
 
 export function handleAssetRemoval(event: AssetRemoval): void {
-  let accounting = Accounting.load(event.address.toHex()) as Accounting;
+  let accounting = Accounting.load(event.address.toHex());
+  if (!accounting) {
+    return;
+  }
+
+  let asset = Asset.load(event.params.asset.toHex());
+  if (!asset) {
+    return;
+  }
+
   let removed = event.params.asset.toHex();
   let owned = new Array<string>();
   for (let i: i32 = 0; i < accounting.ownedAssets.length; i++) {
@@ -43,7 +60,6 @@ export function handleAssetRemoval(event: AssetRemoval): void {
   accounting.ownedAssets = owned;
   accounting.save();
 
-  let asset = Asset.load(event.params.asset.toHex()) as Asset;
   let removedAccountings = event.address.toHex();
   let remainingAccountings = new Array<string>();
   for (let i: i32 = 0; i < asset.fundAccountings.length; i++) {

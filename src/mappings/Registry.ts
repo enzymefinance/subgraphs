@@ -55,19 +55,16 @@ export function handleLogSetOwner(event: LogSetOwner): void {
   registry.assets = [];
   registry.save();
 
+  let state = currentState();
+  state.registry = event.address.toHex();
+  state.save();
+
   saveContract(registry.id, "Registry", "", event.block.timestamp, "");
 }
 
 export function handleVersionRegistration(event: VersionRegistration): void {
-  // skip two version deployed before going live
-  if (
-    event.params.version.toHex() ==
-      Address.fromString(
-        "0x07ed984b46ff6789ba30b75b5f4690b9f15464d4"
-      ).toHex() ||
-    event.params.version.toHex() ==
-      Address.fromString("0xf1d376db5ed16d183a962eaa719a58773fba5dff").toHex()
-  ) {
+  // ignore contracts created before go-live
+  if (event.block.number.toI32() < 7271061) {
     return;
   }
 
@@ -180,26 +177,36 @@ export function handleAssetRemoval(event: AssetRemoval): void {
 }
 
 function exchangeNameFromAddress(address: Address): string {
+  // match names for mainnet and kovan contracts
   let name = "";
-  if (address.toHex() == "0x39755357759ce0d7f32dc8dc45414cca409ae24e") {
+  if (
+    address.toHex() == "0x39755357759ce0d7f32dc8dc45414cca409ae24e" ||
+    address.toHex() == "0xbed692938e714da2a1d5407e5d99658f7d4c8079"
+  ) {
     name = "Oasisdex";
-  }
-  if (address.toHex() == "0x818e6fecd516ecc3849daf6845e3ec868087b755") {
+  } else if (
+    address.toHex() == "0x818e6fecd516ecc3849daf6845e3ec868087b755" ||
+    address.toHex() == "0x7e6b8b9510d71bf8ef0f893902ebb9c865eef4df"
+  ) {
     name = "Kyber Network";
-  }
-  if (address.toHex() == "0x4f833a24e1f95d70f028921e27040ca56e09ab0b") {
+  } else if (
+    address.toHex() == "0x4f833a24e1f95d70f028921e27040ca56e09ab0b" ||
+    address.toHex() == "0x35dd2932454449b14cee11a94d3674a936d5d7b2"
+  ) {
     name = "0x (v2.0)";
-  }
-  if (address.toHex() == "0x080bf510fcbf18b91105470639e9561022937712") {
+  } else if (address.toHex() == "0x080bf510fcbf18b91105470639e9561022937712") {
     name = "0x (v2.1)";
-  }
-  if (address.toHex() == "0xdcdb42c9a256690bd153a7b409751adfc8dd5851") {
+  } else if (
+    address.toHex() == "0xdcdb42c9a256690bd153a7b409751adfc8dd5851" ||
+    address.toHex() == "0x77ac83faa57974cdb6f7a130df50de3fe0792673"
+  ) {
     name = "Ethfinex";
-  }
-  if (address.toHex() == "0x7caec96607c5c7190d63b5a650e7ce34472352f5") {
+  } else if (
+    address.toHex() == "0x7caec96607c5c7190d63b5a650e7ce34472352f5" ||
+    address.toHex() == "0x8fe493caf7eedb3cc32ac4194ee41cba9470e984"
+  ) {
     name = "Melon Engine";
-  }
-  if (address.toHex() == "0xcbb801141a1704dbe5b4a6224033cfae80c4b336") {
+  } else if (address.toHex() == "0xcbb801141a1704dbe5b4a6224033cfae80c4b336") {
     name = "Melon Engine (v1)";
   }
   return name;
@@ -269,15 +276,19 @@ export function handleExchangeAdapterRemoval(
 }
 
 export function handleEngineChange(event: EngineChange): void {
-  EngineDataSource.create(event.params.engine);
+  let registry = Registry.load(event.address.toHex());
+  if (!registry) {
+    return;
+  }
 
-  let registry = Registry.load(event.address.toHex()) as Registry;
+  EngineDataSource.create(event.params.engine);
   let engine = engineEntity(event.params.engine, event.address);
   registry.engine = engine.id;
   registry.save();
 
   let state = currentState();
   state.currentEngine = event.params.engine.toHex();
+  state.registry = event.address.toHex();
   state.save();
 
   saveContract(
@@ -295,8 +306,6 @@ export function handlePriceSourceChange(event: PriceSourceChange): void {
   let priceSource = new PriceSource(event.params.priceSource.toHex());
   priceSource.registry = event.address.toHex();
   priceSource.save();
-
-  // use pricesource template
 
   saveContract(
     priceSource.id,

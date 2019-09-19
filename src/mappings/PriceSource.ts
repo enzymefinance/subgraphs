@@ -1,8 +1,5 @@
-import { Address, BigInt, TypedMap, log } from "@graphprotocol/graph-ts";
-import {
-  PriceSourceContract,
-  PriceUpdate
-} from "../types/PriceSourceDataSource/PriceSourceContract";
+import { Address, BigInt, TypedMap } from "@graphprotocol/graph-ts";
+import { PriceUpdate } from "../types/PriceSourceDataSource/PriceSourceContract";
 import {
   Fund,
   Asset,
@@ -97,8 +94,7 @@ export function _handlePriceUpdate(event: PriceUpdate): void {
   state.save();
 
   // update values for all funds in all deployed versions
-  let priceSourceContract = PriceSourceContract.bind(event.address);
-  let registryAddress = priceSourceContract.REGISTRY();
+  let registryAddress = Address.fromString(state.registry as string);
 
   let registryContract = RegistryContract.bind(registryAddress);
   let versions = registryContract.getRegisteredVersions();
@@ -137,7 +133,8 @@ export function _handlePriceUpdate(event: PriceUpdate): void {
     // loop through all funds
     for (let j: i32 = 0; j <= lastFundId.toI32(); j++) {
       let fundAddress = versionContract.getFundById(BigInt.fromI32(j)).toHex();
-      let fund = Fund.load(fundAddress) as Fund;
+      let fund = Fund.load(fundAddress);
+
       if (!fund) {
         continue;
       }

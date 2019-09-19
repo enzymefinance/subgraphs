@@ -58,6 +58,9 @@ export function handleAmguPaid(event: AmguPaid): void {
     state.lastEngineUpdate = event.block.timestamp;
     state.save();
 
+    if (state.mlnToken == "") {
+      return;
+    }
     let mlnContract = MlnContract.bind(
       Address.fromString(state.mlnToken as string)
     );

@@ -26,6 +26,8 @@ export function handleFeeRegistration(event: FeeRegistration): void {
     feeManager.save();
   }
   let feeManagerContract = FeeManagerContract.bind(event.address);
+
+  // fee[0] is the management fee
   if (
     !feeManager.feesRegistered ||
     feeManager.feesRegistered.equals(BigInt.fromI32(0))
@@ -51,7 +53,9 @@ export function handleFeeRegistration(event: FeeRegistration): void {
       ["feeType", "rate"],
       ["Management Fee", mgmtFee.managementFeeRate.toString()]
     );
-  } else {
+  }
+  // fee[1] is the performance fee
+  else {
     let perfFeeAddress = feeManagerContract.fees(BigInt.fromI32(1));
     let perfFeeContract = PerformanceFeeContract.bind(perfFeeAddress);
     let perfFee = new PerformanceFee(event.address.toHex() + "/perf");

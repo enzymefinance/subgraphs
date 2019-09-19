@@ -18,6 +18,7 @@ type State @entity {
   lastEngineUpdate: BigInt!
   currentEngine: Engine
   mlnToken: String!
+  registry: Registry
 }
 
 type Registry @entity {
