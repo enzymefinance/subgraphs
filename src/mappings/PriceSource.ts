@@ -13,10 +13,7 @@ import {
   Version
 } from "../types/schema";
 import { AccountingContract } from "../types/PriceSourceDataSource/AccountingContract";
-import { VersionContract } from "../types/PriceSourceDataSource/VersionContract";
-import { RegistryContract } from "../types/PriceSourceDataSource/RegistryContract";
 import { SharesContract } from "../types/PriceSourceDataSource/SharesContract";
-import { ParticipationContract } from "../types/PriceSourceDataSource/ParticipationContract";
 import { investmentEntity } from "./entities/investmentEntity";
 import { investorValuationHistoryEntity } from "./entities/investorValuationHistoryEntity";
 import { currentState } from "./utils/currentState";
@@ -24,17 +21,13 @@ import { networkAssetHistoryEntity } from "./entities/networkAssetHistoryEntity"
 import { tenToThePowerOf } from "./utils/tenToThePowerOf";
 
 export function handlePriceUpdate(event: PriceUpdate): void {
-  // _handlePriceUpdate(event);
+  _handlePriceUpdate(event);
 }
 
 export function _handlePriceUpdate(event: PriceUpdate): void {
-  // TODO: refactor using new graph version
-  // why is this taking longer than the previous live version to execute?
-  // idea: use more information from store, less contract calls ()
-  //
-
   // Only update at most once per day (roughly)
   let timestamp = event.block.timestamp;
+
   let state = currentState();
   let interval = BigInt.fromI32(6 * 3600);
   if (event.block.timestamp.minus(state.lastPriceUpdate).lt(interval)) {
@@ -43,6 +36,10 @@ export function _handlePriceUpdate(event: PriceUpdate): void {
 
   let prices = event.params.price;
   let tokens = event.params.token;
+
+  if (!prices || !tokens) {
+    return;
+  }
 
   // AssetPriceUpdate entity groups all asset prices belonging to one timestamp
   let priceUpdate = new AssetPriceUpdate(event.block.timestamp.toString());
@@ -111,6 +108,9 @@ export function _handlePriceUpdate(event: PriceUpdate): void {
   }
 
   let versions = registryEntity.versions;
+  if (!versions) {
+    return;
+  }
 
   // let registryContract = RegistryContract.bind(registryAddress);
   // let versions = registryContract.getRegisteredVersions();
@@ -119,43 +119,19 @@ export function _handlePriceUpdate(event: PriceUpdate): void {
   let melonNetworkValidGav = true;
 
   for (let i: i32 = 0; i < versions.length; i++) {
-    // Don't run for early trial versions
-    // if (
-    //   versions[i] ==
-    //     Address.fromString(
-    //       "0x07ed984b46ff6789ba30b75b5f4690b9f15464d4"
-    //     ).toHex() ||
-    //   versions[i] ==
-    //     Address.fromString("0xf1d376db5ed16d183a962eaa719a58773fba5dff").toHex()
-    // ) {
-    //   continue;
-    // }
-
-    // // alternative: load version from store, load funds
-    // let versionContract = VersionContract.bind(versions[i]);
-    // let lastFundId = versionContract.getLastFundId();
-
-    // // Bail out if max uint256  was returned (why???)
-    // let maxUint256 =
-    //   "115792089237316195423570985008687907853269984665640564039457584007913129639935";
-    // if (lastFundId.toString() == maxUint256) {
-    //   continue;
-    // }
-
-    // // Bail out if no fund has been registered yet.
-    // if (lastFundId.lt(BigInt.fromI32(0))) {
-    //   continue;
-    // }
-
-    let version = Version.load(versions[i]);
+    let version = Version.load((versions as string[])[i]);
     if (!version) {
       return;
     }
+
     let funds = version.funds;
+    if (!funds) {
+      return;
+    }
 
     // loop through all funds
     for (let j: i32 = 0; j <= funds.length; j++) {
-      let fundAddress = funds[i];
+      let fundAddress = (funds as string[])[i];
       let fund = Fund.load(fundAddress);
 
       if (!fund) {
@@ -284,18 +260,20 @@ export function _handlePriceUpdate(event: PriceUpdate): void {
       fund.save();
 
       // valuations for individual investments / investors
-      let participationAddress = Address.fromString(fund.participation);
-      let participationContract = ParticipationContract.bind(
-        participationAddress
-      );
+      // let participationAddress = Address.fromString(fund.participation);
+      // let participationContract = ParticipationContract.bind(
+      //   participationAddress
+      // );
+
+      let fundInvestments = fund.investments;
 
       // TODO: from store!
-      let historicalInvestors = participationContract.getHistoricalInvestors();
-      for (let l: i32 = 0; l < historicalInvestors.length; l++) {
-        let investor = historicalInvestors[l];
+      // let historicalInvestors = participationContract.getHistoricalInvestors();
+      for (let l: i32 = 0; l < fundInvestments.length; l++) {
+        let investor = fundInvestments[l];
         let investment = investmentEntity(
           investor,
-          Address.fromString(fundAddress),
+          fundAddress,
           event.block.timestamp
         );
 

@@ -3,10 +3,10 @@ import { InvestorValuationHistory } from "../../types/schema";
 import { investorEntity } from "./investorEntity";
 
 export function investorValuationHistoryEntity(
-  owner: Address,
+  owner: string,
   createdAt: BigInt
 ): InvestorValuationHistory {
-  let id = owner.toHex() + "/" + createdAt.toString();
+  let id = owner + "/" + createdAt.toString();
   let investorValuationHistory = InvestorValuationHistory.load(id);
 
   if (!investorValuationHistory) {

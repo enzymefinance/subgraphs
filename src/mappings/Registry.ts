@@ -32,21 +32,7 @@ import {
 import { saveContract } from "./utils/saveContract";
 import { PriceSourceChange } from "../types/PriceSourceDataSource/RegistryContract";
 import { currentState } from "./utils/currentState";
-
-function engineEntity(address: Address, registry: Address): Engine {
-  let id = address.toHex();
-  let engine = Engine.load(id);
-
-  if (!engine) {
-    engine = new Engine(id);
-    engine.registry = registry.toHex();
-    engine.save();
-  }
-
-  return engine as Engine;
-}
-
-//
+import { engineEntity } from "./entities/engineEntity";
 
 export function handleLogSetOwner(event: LogSetOwner): void {
   let registry = new Registry(event.address.toHex());
@@ -282,7 +268,10 @@ export function handleEngineChange(event: EngineChange): void {
   }
 
   EngineDataSource.create(event.params.engine);
-  let engine = engineEntity(event.params.engine, event.address);
+  let engine = engineEntity(event.params.engine.toHex());
+  engine.registry = event.address.toHex();
+  engine.save();
+
   registry.engine = engine.id;
   registry.save();
 

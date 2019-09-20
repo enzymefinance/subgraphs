@@ -1,7 +1,4 @@
-import {
-  ExchangeMethodCall,
-  TradingContract
-} from "../types/templates/TradingDataSource/TradingContract";
+import { ExchangeMethodCall } from "../types/templates/TradingDataSource/TradingContract";
 import {
   ExchangeMethodCall as ExchangeMethodCallEntity,
   FundHoldingsHistory,

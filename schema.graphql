@@ -25,7 +25,7 @@ type Registry @entity {
   id: ID!
   owner: String!
   engine: Engine
-  versions: [Version!]! @derivedFrom(field: "registry")
+  versions: [Version!] @derivedFrom(field: "registry")
   assets: [Asset!]! @derivedFrom(field: "registry")
   exchangeAdapters: [ExchangeAdapter!]! @derivedFrom(field: "registry")
   priceSources: [PriceSource!]! @derivedFrom(field: "registry")
@@ -39,7 +39,7 @@ type Version @entity {
   id: ID!
   registry: Registry
   name: String
-  funds: [Fund!]! @derivedFrom(field: "version")
+  funds: [Fund!] @derivedFrom(field: "version")
 }
 
 type Engine @entity {

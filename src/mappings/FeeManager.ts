@@ -112,8 +112,8 @@ export function handleFeeReward(event: FeeReward): void {
   let managerAddress = hubContract.manager();
 
   let investment = investmentEntity(
-    managerAddress,
-    hubAddress,
+    managerAddress.toHex(),
+    hubAddress.toHex(),
     event.block.timestamp
   );
   investment.shares = investment.shares.plus(event.params.shareQuantity);

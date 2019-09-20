@@ -76,7 +76,7 @@ export function handleInvestmentRequest(event: InvestmentRequest): void {
   );
   investmentRequest.fund = hub.toHex();
   investmentRequest.owner = investorEntity(
-    requestOwner,
+    requestOwner.toHex(),
     event.block.timestamp
   ).id;
   investmentRequest.shares = requestedShares;
@@ -156,8 +156,8 @@ export function handleRequestExecution(event: RequestExecution): void {
     .div(totalSupply);
 
   let investment = investmentEntity(
-    event.params.requestOwner,
-    Address.fromString(fund.id),
+    event.params.requestOwner.toHex(),
+    fund.id,
     event.block.timestamp
   );
   investment.shares = investment.shares.plus(requestedShares);
@@ -316,8 +316,8 @@ export function handleRedemption(event: Redemption): void {
     .div(defaultSharePrice);
 
   let investment = investmentEntity(
-    event.params.redeemer,
-    hub,
+    event.params.redeemer.toHex(),
+    hub.toHex(),
     event.block.timestamp
   );
   investment.shares = investment.shares.minus(event.params.redeemedShares);
