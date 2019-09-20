@@ -6,20 +6,30 @@ import {
   ExchangeMethodCall as ExchangeMethodCallEntity,
   FundHoldingsHistory,
   FundCalculationsHistory,
-  Fund
+  Fund,
+  Trading
 } from "../types/schema";
 import { AccountingContract } from "../types/templates/TradingDataSource/AccountingContract";
 import { PriceSourceContract } from "../types/templates/TradingDataSource/PriceSourceContract";
 import { SharesContract } from "../types/templates/TradingDataSource/SharesContract";
 import { saveEventHistory } from "./utils/saveEventHistory";
+import { Address } from "@graphprotocol/graph-ts";
 
 export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
-  let id = event.transaction.hash.toHex();
+  let trading = Trading.load(event.address.toHex());
+  if (!trading || !trading.fund) {
+    return;
+  }
 
+  let fund = Fund.load(trading.fund);
+  if (!fund) {
+    return;
+  }
+
+  let id = event.transaction.hash.toHex();
   let addresses = event.params.orderAddresses.map<string>(value =>
     value.toHex()
   );
-
   let values = event.params.orderValues;
 
   let emCall = new ExchangeMethodCallEntity(id);
@@ -46,16 +56,10 @@ export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
   emCall.timestamp = event.block.timestamp;
   emCall.save();
 
-  let tradingContract = TradingContract.bind(event.address);
-  let routes = tradingContract.routes();
-
-  let hub = tradingContract.hub();
-  let fundAddress = hub.toHex();
-
   saveEventHistory(
     event.transaction.hash.toHex(),
     event.block.timestamp,
-    hub.toHex(),
+    fund.id,
     "Trading",
     event.address.toHex(),
     "ExchangeMethodCall",
@@ -65,25 +69,29 @@ export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
 
   // calculate fund holdings
 
-  let accountingContract = AccountingContract.bind(routes.value0);
+  let accountingContract = AccountingContract.bind(
+    Address.fromString(fund.accounting)
+  );
 
   let fundGavValid = true;
   let holdings = accountingContract.getFundHoldings();
 
-  let priceSourceContract = PriceSourceContract.bind(routes.value7);
+  let priceSourceContract = PriceSourceContract.bind(
+    Address.fromString(fund.priceSource)
+  );
   for (let k: i32 = 0; k < holdings.value0.length; k++) {
     let holdingAmount = holdings.value0[k];
     let holdingAddress = holdings.value1[k];
 
     let holdingsId =
-      fundAddress +
+      fund.id +
       "/" +
       event.block.timestamp.toString() +
       "/" +
       holdingAddress.toHex();
     let fundHoldingsHistory = new FundHoldingsHistory(holdingsId);
     fundHoldingsHistory.timestamp = event.block.timestamp;
-    fundHoldingsHistory.fund = fundAddress;
+    fundHoldingsHistory.fund = fund.id;
     fundHoldingsHistory.asset = holdingAddress.toHex();
     fundHoldingsHistory.amount = holdingAmount;
 
@@ -117,13 +125,13 @@ export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
   let sharePrice = calcs.value4;
   let gavPerShareNetManagementFee = calcs.value5;
 
-  let sharesContract = SharesContract.bind(routes.value4);
+  let sharesContract = SharesContract.bind(Address.fromString(fund.share));
   let totalSupply = sharesContract.totalSupply();
 
   // save price calculation to history
-  let calculationsId = fundAddress + "/" + event.block.timestamp.toString();
+  let calculationsId = fund.id + "/" + event.block.timestamp.toString();
   let calculations = new FundCalculationsHistory(calculationsId);
-  calculations.fund = fundAddress;
+  calculations.fund = fund.id;
   calculations.timestamp = event.block.timestamp;
   calculations.gav = fundGav;
   calculations.validPrices = fundGavValid;
@@ -134,12 +142,6 @@ export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
   calculations.gavPerShareNetManagementFee = gavPerShareNetManagementFee;
   calculations.totalSupply = totalSupply;
   calculations.save();
-
-  // update fund entity
-  let fund = Fund.load(fundAddress) as Fund;
-  if (!fund) {
-    return;
-  }
 
   fund.gav = fundGav;
   fund.validPrice = fundGavValid;

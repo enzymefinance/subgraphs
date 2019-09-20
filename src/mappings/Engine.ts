@@ -66,33 +66,30 @@ export function handleAmguPaid(event: AmguPaid): void {
     );
 
     engine.amguPrice = engineContract.amguPrice();
-    // engine.frozenEther = engineContract.frozenEther();
     engine.liquidEther = engineContract.liquidEther();
     engine.lastThaw = engineContract.lastThaw();
     engine.thawingDelay = engineContract.thawingDelay();
-    engine.totalEtherConsumed = engineContract.totalEtherConsumed();
     engine.totalAmguConsumed = engineContract.totalAmguConsumed();
     engine.totalMlnBurned = engineContract.totalMlnBurned();
     engine.premiumPercent = engineContract.premiumPercent();
     engine.mlnTotalSupply = mlnContract.try_totalSupply().reverted
       ? BigInt.fromI32(0)
       : mlnContract.try_totalSupply().value;
-    engine.lastUpdate = event.block.timestamp;
     engine.save();
 
     let engineHistory = new EngineHistory(
       event.address.toHex() + "/" + event.block.timestamp.toString()
     );
-    engineHistory.amguPrice = engine.amguPrice as BigInt;
-    engineHistory.frozenEther = engineContract.frozenEther();
-    engineHistory.liquidEther = engine.liquidEther as BigInt;
-    engineHistory.lastThaw = engine.lastThaw as BigInt;
-    engineHistory.thawingDelay = engine.thawingDelay as BigInt;
-    // engineHistory.totalEtherConsumed = engineContract.totalEtherConsumed();
-    engineHistory.totalAmguConsumed = engine.totalAmguConsumed as BigInt;
-    engineHistory.totalMlnBurned = engine.totalMlnBurned as BigInt;
-    engineHistory.premiumPercent = engine.premiumPercent as BigInt;
-    engineHistory.mlnTotalSupply = engine.mlnTotalSupply as BigInt;
+    engineHistory.amguPrice = engine.amguPrice;
+    engineHistory.frozenEther = engine.frozenEther;
+    engineHistory.liquidEther = engine.liquidEther;
+    engineHistory.lastThaw = engine.lastThaw;
+    engineHistory.thawingDelay = engine.thawingDelay;
+    engineHistory.totalEtherConsumed = engine.totalEtherConsumed;
+    engineHistory.totalAmguConsumed = engine.totalAmguConsumed;
+    engineHistory.totalMlnBurned = engine.totalMlnBurned;
+    engineHistory.premiumPercent = engine.premiumPercent;
+    engineHistory.mlnTotalSupply = engine.mlnTotalSupply;
     engineHistory.timestamp = event.block.timestamp;
     engineHistory.engine = event.address.toHex();
     engineHistory.save();

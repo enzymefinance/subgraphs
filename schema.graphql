@@ -45,17 +45,17 @@ type Version @entity {
 type Engine @entity {
   id: ID!
   registry: Registry!
-  amguPrice: BigInt
-  frozenEther: BigInt
-  liquidEther: BigInt
-  lastThaw: BigInt
-  thawingDelay: BigInt
-  totalEtherConsumed: BigInt
-  totalAmguConsumed: BigInt
-  totalMlnBurned: BigInt
-  premiumPercent: BigInt
-  mlnTotalSupply: BigInt
-  lastUpdate: BigInt
+  amguPrice: BigInt!
+  frozenEther: BigInt!
+  liquidEther: BigInt!
+  lastThaw: BigInt!
+  thawingDelay: BigInt!
+  totalEtherConsumed: BigInt!
+  totalAmguConsumed: BigInt!
+  totalMlnBurned: BigInt!
+  premiumPercent: BigInt!
+  mlnTotalSupply: BigInt!
+  lastUpdate: BigInt!
   history: [EngineHistory!]! @derivedFrom(field: "engine")
   amguPrices: [AmguPrice!]! @derivedFrom(field: "engine")
   amguPayments: [AmguPayment!]! @derivedFrom(field: "engine")
@@ -194,6 +194,7 @@ type Fund @entity {
   share: Share!
   trading: Trading!
   vault: Vault!
+  priceSource: PriceSource!
   registry: Registry!
   version: Version!
   engine: Engine!
