@@ -52,49 +52,49 @@ export function handleAmguPaid(event: AmguPaid): void {
   engine.lastUpdate = event.block.timestamp;
   engine.save();
 
-  // // Update all engine quantities every hour
-  // let state = currentState();
-  // let interval = BigInt.fromI32(60 * 60);
-  // if (event.block.timestamp.minus(state.lastEngineUpdate).gt(interval)) {
-  //   state.lastEngineUpdate = event.block.timestamp;
-  //   state.save();
+  // Update all engine quantities every hour
+  let state = currentState();
+  let interval = BigInt.fromI32(60 * 60);
+  if (event.block.timestamp.minus(state.lastEngineUpdate).gt(interval)) {
+    state.lastEngineUpdate = event.block.timestamp;
+    state.save();
 
-  //   if (state.mlnToken == "") {
-  //     return;
-  //   }
-  //   let mlnContract = MlnContract.bind(
-  //     Address.fromString(state.mlnToken as string)
-  //   );
+    if (state.mlnToken == "") {
+      return;
+    }
+    let mlnContract = MlnContract.bind(
+      Address.fromString(state.mlnToken as string)
+    );
 
-  //   engine.amguPrice = engineContract.amguPrice();
-  //   engine.liquidEther = engineContract.liquidEther();
-  //   engine.lastThaw = engineContract.lastThaw();
-  //   engine.thawingDelay = engineContract.thawingDelay();
-  //   engine.totalAmguConsumed = engineContract.totalAmguConsumed();
-  //   engine.totalMlnBurned = engineContract.totalMlnBurned();
-  //   engine.premiumPercent = engineContract.premiumPercent();
-  //   engine.mlnTotalSupply = mlnContract.try_totalSupply().reverted
-  //     ? BigInt.fromI32(0)
-  //     : mlnContract.try_totalSupply().value;
-  //   engine.save();
+    engine.amguPrice = engineContract.amguPrice();
+    engine.liquidEther = engineContract.liquidEther();
+    engine.lastThaw = engineContract.lastThaw();
+    engine.thawingDelay = engineContract.thawingDelay();
+    engine.totalAmguConsumed = engineContract.totalAmguConsumed();
+    engine.totalMlnBurned = engineContract.totalMlnBurned();
+    engine.premiumPercent = engineContract.premiumPercent();
+    engine.mlnTotalSupply = mlnContract.try_totalSupply().reverted
+      ? BigInt.fromI32(0)
+      : mlnContract.try_totalSupply().value;
+    engine.save();
 
-  //   let engineHistory = new EngineHistory(
-  //     event.address.toHex() + "/" + event.block.timestamp.toString()
-  //   );
-  //   engineHistory.amguPrice = engine.amguPrice;
-  //   engineHistory.frozenEther = engine.frozenEther;
-  //   engineHistory.liquidEther = engine.liquidEther;
-  //   engineHistory.lastThaw = engine.lastThaw;
-  //   engineHistory.thawingDelay = engine.thawingDelay;
-  //   engineHistory.totalEtherConsumed = engine.totalEtherConsumed;
-  //   engineHistory.totalAmguConsumed = engine.totalAmguConsumed;
-  //   engineHistory.totalMlnBurned = engine.totalMlnBurned;
-  //   engineHistory.premiumPercent = engine.premiumPercent;
-  //   engineHistory.mlnTotalSupply = engine.mlnTotalSupply;
-  //   engineHistory.timestamp = event.block.timestamp;
-  //   engineHistory.engine = event.address.toHex();
-  //   engineHistory.save();
-  // }
+    let engineHistory = new EngineHistory(
+      event.address.toHex() + "/" + event.block.timestamp.toString()
+    );
+    engineHistory.amguPrice = engine.amguPrice;
+    engineHistory.frozenEther = engine.frozenEther;
+    engineHistory.liquidEther = engine.liquidEther;
+    engineHistory.lastThaw = engine.lastThaw;
+    engineHistory.thawingDelay = engine.thawingDelay;
+    engineHistory.totalEtherConsumed = engine.totalEtherConsumed;
+    engineHistory.totalAmguConsumed = engine.totalAmguConsumed;
+    engineHistory.totalMlnBurned = engine.totalMlnBurned;
+    engineHistory.premiumPercent = engine.premiumPercent;
+    engineHistory.mlnTotalSupply = engine.mlnTotalSupply;
+    engineHistory.timestamp = event.block.timestamp;
+    engineHistory.engine = event.address.toHex();
+    engineHistory.save();
+  }
 }
 
 export function handleThaw(event: Thaw): void {

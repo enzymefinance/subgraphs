@@ -35,11 +35,15 @@ import { currentState } from "./utils/currentState";
 import { engineEntity } from "./entities/engineEntity";
 
 export function handleLogSetOwner(event: LogSetOwner): void {
-  let registry = new Registry(event.address.toHex());
+  let registry = Registry.load(event.address.toHex());
+  if (!registry) {
+    registry = new Registry(event.address.toHex());
+
+    registry.exchangeAdapters = [];
+    registry.assets = [];
+    registry.versions = [];
+  }
   registry.owner = event.params.owner.toHex();
-  registry.exchangeAdapters = [];
-  registry.assets = [];
-  registry.versions = [];
   registry.save();
 
   let state = currentState();
