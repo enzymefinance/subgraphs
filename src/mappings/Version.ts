@@ -4,7 +4,8 @@ import {
   Fund,
   FundCount,
   FundManager,
-  FundCalculationsHistory
+  FundCalculationsHistory,
+  Version
 } from "../types/schema";
 import { hexToAscii } from "./utils/hexToAscii";
 import { HubContract } from "../types/VersionDataSource/HubContract";
@@ -50,7 +51,12 @@ export function handleNewFund(event: NewFund): void {
   fund.registry = addresses[8];
   fund.version = addresses[9];
   fund.engine = addresses[10];
+  fund.investments = [];
   fund.save();
+
+  let version = Version.load(event.address.toHex()) as Version;
+  version.funds = version.funds.concat([fund.id]);
+  version.save();
 
   saveContract(hub, "Hub", fund.name, event.block.timestamp, addresses[9]);
 

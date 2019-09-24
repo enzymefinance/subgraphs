@@ -144,7 +144,7 @@ export function handleRequestExecution(event: RequestExecution): void {
   let currentSharePrice = accountingContract.calcSharePrice();
   let gav = accountingContract.calcGav();
 
-  let sharesContract = SharesContract.bind(Address.fromString(fund.accounting));
+  let sharesContract = SharesContract.bind(Address.fromString(fund.share));
   let totalSupply = sharesContract.totalSupply();
 
   let requestedShares = event.params.requestedShares;
@@ -163,6 +163,9 @@ export function handleRequestExecution(event: RequestExecution): void {
   investment.shares = investment.shares.plus(requestedShares);
   investment.sharePrice = currentSharePrice;
   investment.save();
+
+  fund.investments = fund.investments.concat([investment.id]);
+  fund.save();
 
   archiveInvestmentRequest(
     event.params.requestOwner.toHex(),

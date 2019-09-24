@@ -25,7 +25,7 @@ type Registry @entity {
   id: ID!
   owner: String!
   engine: Engine
-  versions: [Version!] @derivedFrom(field: "registry")
+  versions: [Version!]!
   assets: [Asset!]! @derivedFrom(field: "registry")
   exchangeAdapters: [ExchangeAdapter!]! @derivedFrom(field: "registry")
   priceSources: [PriceSource!]! @derivedFrom(field: "registry")
@@ -37,9 +37,9 @@ type Registry @entity {
 
 type Version @entity {
   id: ID!
-  registry: Registry
+  registry: Registry!
   name: String
-  funds: [Fund!] @derivedFrom(field: "version")
+  funds: [Fund!]!
 }
 
 type Engine @entity {
@@ -207,7 +207,7 @@ type Fund @entity {
   gavPerShareNetManagementFee: BigInt
   allocatedFees: BigInt
   totalSupply: BigInt
-  investments: [Investment!]! @derivedFrom(field: "fund")
+  investments: [Investment!]!
   calculationsHistory: [FundCalculationsHistory!]! @derivedFrom(field: "fund")
   investmentHistory: [InvestmentHistory!]! @derivedFrom(field: "fund")
   holdingsHistory: [FundHoldingsHistory!]! @derivedFrom(field: "fund")

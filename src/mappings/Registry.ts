@@ -39,6 +39,7 @@ export function handleLogSetOwner(event: LogSetOwner): void {
   registry.owner = event.params.owner.toHex();
   registry.exchangeAdapters = [];
   registry.assets = [];
+  registry.versions = [];
   registry.save();
 
   let state = currentState();
@@ -63,22 +64,23 @@ export function handleVersionRegistration(event: VersionRegistration): void {
     event.params.version
   );
 
-  let version = Version.load(id);
+  let version = new Version(id);
+  version.registry = event.address.toHex();
+  version.name = versionInformation.value1.toHexString();
+  version.funds = [];
+  version.save();
 
-  if (!version) {
-    version = new Version(id);
-    version.registry = event.address.toHex();
-    version.name = versionInformation.value1.toHexString();
-    version.save();
+  let registry = Registry.load(event.address.toHex()) as Registry;
+  registry.versions = registry.versions.concat([version.id]);
+  registry.save();
 
-    saveContract(
-      id,
-      "Version",
-      version.name,
-      event.block.timestamp,
-      event.address.toHex()
-    );
-  }
+  saveContract(
+    id,
+    "Version",
+    version.name,
+    event.block.timestamp,
+    event.address.toHex()
+  );
 }
 
 function assetNameFromAddress(address: Address): string {

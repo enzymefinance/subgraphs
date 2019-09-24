@@ -37,10 +37,6 @@ export function _handlePriceUpdate(event: PriceUpdate): void {
   let prices = event.params.price;
   let tokens = event.params.token;
 
-  if (!prices || !tokens) {
-    return;
-  }
-
   // AssetPriceUpdate entity groups all asset prices belonging to one timestamp
   let priceUpdate = new AssetPriceUpdate(event.block.timestamp.toString());
   priceUpdate.timestamp = event.block.timestamp;
@@ -55,6 +51,7 @@ export function _handlePriceUpdate(event: PriceUpdate): void {
 
   let numberOfAssets = 0;
   let invalidPrices = 0;
+
   for (let i: i32 = 0; i < prices.length; i++) {
     let asset = Asset.load(tokens[i].toHex());
     if (!asset) {
@@ -64,6 +61,7 @@ export function _handlePriceUpdate(event: PriceUpdate): void {
     // identify invalid prices
     // (they are set to 0 by the contract event emitter)
     let priceValid = true;
+
     if (prices[i].isZero()) {
       priceValid = false;
       invalidPrices = invalidPrices + 1;
@@ -102,36 +100,22 @@ export function _handlePriceUpdate(event: PriceUpdate): void {
   if (!registryAddress) {
     return;
   }
+
   let registryEntity = Registry.load(registryAddress);
   if (!registryEntity) {
     return;
   }
 
   let versions = registryEntity.versions;
-  if (!versions) {
-    return;
-  }
-
-  // let registryContract = RegistryContract.bind(registryAddress);
-  // let versions = registryContract.getRegisteredVersions();
 
   let melonNetworkGav = BigInt.fromI32(0);
   let melonNetworkValidGav = true;
 
   for (let i: i32 = 0; i < versions.length; i++) {
-    let version = Version.load((versions as string[])[i]);
-    if (!version) {
-      return;
-    }
-
+    let version = Version.load(versions[i]) as Version;
     let funds = version.funds;
-    if (!funds) {
-      return;
-    }
-
-    // loop through all funds
-    for (let j: i32 = 0; j <= funds.length; j++) {
-      let fundAddress = (funds as string[])[i];
+    for (let j: i32 = 0; j < funds.length; j++) {
+      let fundAddress = funds[j];
       let fund = Fund.load(fundAddress);
 
       if (!fund) {
@@ -260,15 +244,7 @@ export function _handlePriceUpdate(event: PriceUpdate): void {
       fund.save();
 
       // valuations for individual investments / investors
-      // let participationAddress = Address.fromString(fund.participation);
-      // let participationContract = ParticipationContract.bind(
-      //   participationAddress
-      // );
-
       let fundInvestments = fund.investments;
-
-      // TODO: from store!
-      // let historicalInvestors = participationContract.getHistoricalInvestors();
       for (let l: i32 = 0; l < fundInvestments.length; l++) {
         let investor = fundInvestments[l];
         let investment = investmentEntity(
