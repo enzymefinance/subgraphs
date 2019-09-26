@@ -1,4 +1,4 @@
-import { Address, BigInt } from "@graphprotocol/graph-ts";
+import { BigInt } from "@graphprotocol/graph-ts";
 import { Investment } from "../../types/schema";
 import { investorEntity } from "./investorEntity";
 

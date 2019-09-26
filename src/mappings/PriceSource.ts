@@ -246,7 +246,7 @@ export function _handlePriceUpdate(event: PriceUpdate): void {
       // valuations for individual investments / investors
       let fundInvestments = fund.investments;
       for (let l: i32 = 0; l < fundInvestments.length; l++) {
-        let investor = fundInvestments[l];
+        let investor = fundInvestments[l].slice(0, 42);
         let investment = investmentEntity(
           investor,
           fundAddress,
