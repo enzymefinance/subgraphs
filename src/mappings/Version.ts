@@ -1,10 +1,11 @@
 import { NewFund } from "../types/VersionDataSource/VersionContract";
-import { HubDataSource } from "../types/VersionDataSource/templates";
+import { HubDataSource } from "../types/templates";
 import {
   Fund,
   FundCount,
   FundManager,
-  FundCalculationsHistory
+  FundCalculationsHistory,
+  Version
 } from "../types/schema";
 import { hexToAscii } from "./utils/hexToAscii";
 import { HubContract } from "../types/VersionDataSource/HubContract";
@@ -16,6 +17,11 @@ import { SharesContract } from "../types/VersionDataSource/SharesContract";
 import { saveEventHistory } from "./utils/saveEventHistory";
 
 export function handleNewFund(event: NewFund): void {
+  // ignore contracts created before go-live
+  if (event.block.number.toI32() < 7278341) {
+    return;
+  }
+
   HubDataSource.create(event.params.hub);
 
   let hub = event.params.hub.toHex();
@@ -41,10 +47,16 @@ export function handleNewFund(event: NewFund): void {
   fund.share = addresses[4];
   fund.trading = addresses[5];
   fund.vault = addresses[6];
+  fund.priceSource = addresses[7];
   fund.registry = addresses[8];
   fund.version = addresses[9];
   fund.engine = addresses[10];
+  fund.investments = [];
   fund.save();
+
+  let version = Version.load(event.address.toHex()) as Version;
+  version.funds = version.funds.concat([fund.id]);
+  version.save();
 
   saveContract(hub, "Hub", fund.name, event.block.timestamp, addresses[9]);
 

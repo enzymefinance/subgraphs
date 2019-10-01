@@ -1,5 +1,5 @@
 import { NewInstance } from "../types/AccountingFactoryDataSource/AccountingFactoryContract";
-import { AccountingDataSource } from "../types/AccountingFactoryDataSource/templates";
+import { AccountingDataSource } from "../types/templates";
 import { Accounting, EventHistory } from "../types/schema";
 import { saveContract } from "./utils/saveContract";
 import { saveEventHistoryParameters } from "./utils/saveEventHistoryParameters";

@@ -1,8 +1,7 @@
 import { Trading } from "../types/schema";
 import { saveContract } from "./utils/saveContract";
 import { NewInstance } from "../types/TradingFactoryDataSourceV101/TradingFactoryContractV101";
-import { TradingDataSourceV101 } from "../types/TradingFactoryDataSourceV101/templates";
-import { BigInt, log } from "@graphprotocol/graph-ts";
+import { TradingDataSourceV101 } from "../types/templates";
 import { saveEventHistory } from "./utils/saveEventHistory";
 
 export function handleNewInstance(event: NewInstance): void {

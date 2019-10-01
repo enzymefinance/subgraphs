@@ -1,8 +1,7 @@
-import { PolicyManagerDataSource } from "../types/PolicyManagerFactoryDataSource/templates";
+import { PolicyManagerDataSource } from "../types/templates";
 import { NewInstance } from "../types/PolicyManagerFactoryDataSource/PolicyManagerFactoryContract";
 import { PolicyManager } from "../types/schema";
 import { saveContract } from "./utils/saveContract";
-import { log, BigInt } from "@graphprotocol/graph-ts";
 import { saveEventHistory } from "./utils/saveEventHistory";
 
 export function handleNewInstance(event: NewInstance): void {

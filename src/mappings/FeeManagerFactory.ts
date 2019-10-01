@@ -1,11 +1,11 @@
-import { FeeManagerDataSource } from "../types/FeeManagerFactoryDataSource/templates";
+import { FeeManagerDataSource } from "../types/templates";
 import {
   NewInstance,
   CreateInstanceCall
 } from "../types/FeeManagerFactoryDataSource/FeeManagerFactoryContract";
 import { FeeManager } from "../types/schema";
 import { saveContract } from "./utils/saveContract";
-import { log, BigInt } from "@graphprotocol/graph-ts";
+import { BigInt } from "@graphprotocol/graph-ts";
 import { saveEventHistory } from "./utils/saveEventHistory";
 
 export function handleNewInstance(event: NewInstance): void {

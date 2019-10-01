@@ -1,5 +1,5 @@
 import { NewInstance } from "../types/ParticipationFactoryDataSource/ParticipationFactoryContract";
-import { ParticipationDataSource } from "../types/ParticipationFactoryDataSource/templates";
+import { ParticipationDataSource } from "../types/templates";
 import { Participation } from "../types/schema";
 import { saveContract } from "./utils/saveContract";
 import { saveEventHistory } from "./utils/saveEventHistory";

@@ -1,4 +1,7 @@
-import { Approval, Transfer } from "../types/SharesFactoryDataSource/templates/SharesDataSource/SharesContract";
+import {
+  Approval,
+  Transfer
+} from "../types/templates/SharesDataSource/SharesContract";
 
 export function handleApproval(event: Approval): void {
   // TODO

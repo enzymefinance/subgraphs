@@ -1,7 +1,7 @@
 import {
   FeeRegistration,
   FeeReward
-} from "../types/FeeManagerFactoryDataSource/templates/FeeManagerDataSource/FeeManagerContract";
+} from "../types/templates/FeeManagerDataSource/FeeManagerContract";
 import {
   FeeManager,
   ManagementFee,
@@ -10,10 +10,10 @@ import {
 } from "../types/schema";
 import { investmentEntity } from "./entities/investmentEntity";
 import { FeeManagerContract } from "../types/PriceSourceDataSource/FeeManagerContract";
-import { HubContract } from "../types/ParticipationFactoryDataSource/templates/ParticipationDataSource/HubContract";
+import { HubContract } from "../types/templates/ParticipationDataSource/HubContract";
 import { BigInt } from "@graphprotocol/graph-ts";
-import { ManagementFeeContract } from "../types/FeeManagerFactoryDataSource/templates/FeeManagerDataSource/ManagementFeeContract";
-import { PerformanceFeeContract } from "../types/FeeManagerFactoryDataSource/templates/FeeManagerDataSource/PerformanceFeeContract";
+import { ManagementFeeContract } from "../types/templates/FeeManagerDataSource/ManagementFeeContract";
+import { PerformanceFeeContract } from "../types/templates/FeeManagerDataSource/PerformanceFeeContract";
 import { saveEventHistory } from "./utils/saveEventHistory";
 
 export function handleFeeRegistration(event: FeeRegistration): void {
@@ -26,6 +26,8 @@ export function handleFeeRegistration(event: FeeRegistration): void {
     feeManager.save();
   }
   let feeManagerContract = FeeManagerContract.bind(event.address);
+
+  // fee[0] is the management fee
   if (
     !feeManager.feesRegistered ||
     feeManager.feesRegistered.equals(BigInt.fromI32(0))
@@ -51,7 +53,9 @@ export function handleFeeRegistration(event: FeeRegistration): void {
       ["feeType", "rate"],
       ["Management Fee", mgmtFee.managementFeeRate.toString()]
     );
-  } else {
+  }
+  // fee[1] is the performance fee
+  else {
     let perfFeeAddress = feeManagerContract.fees(BigInt.fromI32(1));
     let perfFeeContract = PerformanceFeeContract.bind(perfFeeAddress);
     let perfFee = new PerformanceFee(event.address.toHex() + "/perf");
@@ -108,8 +112,8 @@ export function handleFeeReward(event: FeeReward): void {
   let managerAddress = hubContract.manager();
 
   let investment = investmentEntity(
-    managerAddress,
-    hubAddress,
+    managerAddress.toHex(),
+    hubAddress.toHex(),
     event.block.timestamp
   );
   investment.shares = investment.shares.plus(event.params.shareQuantity);
