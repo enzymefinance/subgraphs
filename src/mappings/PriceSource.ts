@@ -1,5 +1,5 @@
 import { Address, BigInt, TypedMap } from "@graphprotocol/graph-ts";
-import { PriceUpdate } from "../types/PriceSourceDataSource/PriceSourceContract";
+import { PriceUpdate } from "../types/templates/PriceSourceDataSource/PriceSourceContract";
 import {
   Fund,
   Asset,
@@ -12,8 +12,9 @@ import {
   Registry,
   Version
 } from "../types/schema";
-import { AccountingContract } from "../types/PriceSourceDataSource/AccountingContract";
-import { SharesContract } from "../types/PriceSourceDataSource/SharesContract";
+import { AccountingContract } from "../types/templates/PriceSourceDataSource/AccountingContract";
+import { ParticipationContract } from "../types/templates/ParticipationDataSource/ParticipationContract";
+import { SharesContract } from "../types/templates/PriceSourceDataSource/SharesContract";
 import { investmentEntity } from "./entities/investmentEntity";
 import { investorValuationHistoryEntity } from "./entities/investorValuationHistoryEntity";
 import { currentState } from "./utils/currentState";
@@ -244,9 +245,15 @@ export function _handlePriceUpdate(event: PriceUpdate): void {
       fund.save();
 
       // valuations for individual investments / investors
-      let fundInvestments = fund.investments;
-      for (let l: i32 = 0; l < fundInvestments.length; l++) {
-        let investor = fundInvestments[l].slice(0, 42);
+      // valuations for individual investments / investors
+      let participationAddress = Address.fromString(fund.participation);
+      let participationContract = ParticipationContract.bind(
+        participationAddress
+      );
+      let historicalInvestors = participationContract.getHistoricalInvestors();
+      for (let l: i32 = 0; l < historicalInvestors.length; l++) {
+        let investor = historicalInvestors[l].toHex();
+
         let investment = investmentEntity(
           investor,
           fundAddress,
@@ -276,7 +283,6 @@ export function _handlePriceUpdate(event: PriceUpdate): void {
         investmentValuationHistory.save();
 
         // update investor valuation
-
         let investorValuationHistory = investorValuationHistoryEntity(
           investor,
           event.block.timestamp
@@ -284,9 +290,6 @@ export function _handlePriceUpdate(event: PriceUpdate): void {
         investorValuationHistory.gav = investorValuationHistory.gav.plus(
           investmentGav
         );
-        if (!investorValuationHistory.nav) {
-          investorValuationHistory.nav = BigInt.fromI32(0);
-        }
         investorValuationHistory.nav = investorValuationHistory.nav.plus(
           investmentNav
         );

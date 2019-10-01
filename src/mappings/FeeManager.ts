@@ -9,7 +9,7 @@ import {
   FeeRewardHistory
 } from "../types/schema";
 import { investmentEntity } from "./entities/investmentEntity";
-import { FeeManagerContract } from "../types/PriceSourceDataSource/FeeManagerContract";
+import { FeeManagerContract } from "../types/templates/PriceSourceDataSource/FeeManagerContract";
 import { HubContract } from "../types/templates/ParticipationDataSource/HubContract";
 import { BigInt } from "@graphprotocol/graph-ts";
 import { ManagementFeeContract } from "../types/templates/FeeManagerDataSource/ManagementFeeContract";

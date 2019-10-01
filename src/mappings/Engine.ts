@@ -5,7 +5,7 @@ import {
   Thaw,
   Burn,
   EngineContract
-} from "../types/EngineDataSource/EngineContract";
+} from "../types/templates/EngineDataSource/EngineContract";
 import {
   AmguPrice,
   AmguPayment,
@@ -16,7 +16,7 @@ import {
 import { Address, BigInt, log } from "@graphprotocol/graph-ts";
 import { saveContract } from "./utils/saveContract";
 import { currentState } from "./utils/currentState";
-import { MlnContract } from "../types/EngineDataSource/MlnContract";
+import { MlnContract } from "../types/templates/EngineDataSource/MlnContract";
 import { engineEntity } from "./entities/engineEntity";
 
 export function handleSetAmguPrice(event: SetAmguPrice): void {

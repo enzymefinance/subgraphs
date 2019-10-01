@@ -30,7 +30,7 @@ import {
   LogSetOwner
 } from "../types/RegistryDataSource/RegistryContract";
 import { saveContract } from "./utils/saveContract";
-import { PriceSourceChange } from "../types/PriceSourceDataSource/RegistryContract";
+import { PriceSourceChange } from "../types/templates/PriceSourceDataSource/RegistryContract";
 import { currentState } from "./utils/currentState";
 import { engineEntity } from "./entities/engineEntity";
 

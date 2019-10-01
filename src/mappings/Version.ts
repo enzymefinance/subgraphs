@@ -1,4 +1,4 @@
-import { NewFund } from "../types/VersionDataSource/VersionContract";
+import { NewFund } from "../types/templates/VersionDataSource/VersionContract";
 import { HubDataSource } from "../types/templates";
 import {
   Fund,
@@ -8,12 +8,12 @@ import {
   Version
 } from "../types/schema";
 import { hexToAscii } from "./utils/hexToAscii";
-import { HubContract } from "../types/VersionDataSource/HubContract";
+import { HubContract } from "../types/templates/VersionDataSource/HubContract";
 import { BigInt, Address } from "@graphprotocol/graph-ts";
 import { currentState } from "./utils/currentState";
 import { saveContract } from "./utils/saveContract";
-import { AccountingContract } from "../types/VersionDataSource/AccountingContract";
-import { SharesContract } from "../types/VersionDataSource/SharesContract";
+import { AccountingContract } from "../types/templates/VersionDataSource/AccountingContract";
+import { SharesContract } from "../types/templates/VersionDataSource/SharesContract";
 import { saveEventHistory } from "./utils/saveEventHistory";
 
 export function handleNewFund(event: NewFund): void {

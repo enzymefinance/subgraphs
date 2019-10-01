@@ -376,7 +376,7 @@ type InvestorValuationHistory @entity {
   id: ID!
   owner: Investor!
   gav: BigInt!
-  nav: BigInt
+  nav: BigInt!
   timestamp: BigInt!
 }
 
