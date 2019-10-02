@@ -30,7 +30,7 @@ export function _handlePriceUpdate(event: PriceUpdate): void {
   let timestamp = event.block.timestamp;
 
   let state = currentState();
-  let interval = BigInt.fromI32(6 * 3600);
+  let interval = BigInt.fromI32(300);
   if (event.block.timestamp.minus(state.lastPriceUpdate).lt(interval)) {
     return;
   }
@@ -161,6 +161,8 @@ export function _handlePriceUpdate(event: PriceUpdate): void {
           assetGav = holdingAmount
             .times(assetPrice as BigInt)
             .div(tenToThePowerOf(assetDecimals as BigInt));
+        } else if (holdingAmount.isZero()) {
+          assetGav = BigInt.fromI32(0);
         } else {
           validPrice = false;
           fundGavValid = false;
