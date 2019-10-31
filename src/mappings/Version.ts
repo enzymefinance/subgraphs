@@ -119,6 +119,7 @@ export function handleNewFund(event: NewFund): void {
   calculations.sharePrice = sharePrice;
   calculations.gavPerShareNetManagementFee = gavPerShareNetManagementFee;
   calculations.totalSupply = totalSupply;
+  calculations.source = "fundCreation";
   calculations.save();
 
   fund.gav = fundGav;
@@ -129,5 +130,7 @@ export function handleNewFund(event: NewFund): void {
   fund.sharePrice = sharePrice;
   fund.gavPerShareNetManagementFee = gavPerShareNetManagementFee;
   fund.lastCalculationsUpdate = event.block.timestamp;
+  fund.currentDailySharePrice = BigInt.fromI32(0);
+  fund.previousDailySharePrice = sharePrice;
   fund.save();
 }

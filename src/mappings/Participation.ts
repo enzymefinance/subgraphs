@@ -284,6 +284,7 @@ export function handleRequestExecution(event: RequestExecution): void {
   calculations.sharePrice = sharePrice;
   calculations.gavPerShareNetManagementFee = gavPerShareNetManagementFee;
   calculations.totalSupply = totalSupply;
+  calculations.source = "investment";
   calculations.save();
 
   fund.gav = fundGav;
@@ -432,6 +433,7 @@ export function handleRedemption(event: Redemption): void {
   calculations.sharePrice = sharePrice;
   calculations.gavPerShareNetManagementFee = gavPerShareNetManagementFee;
   calculations.totalSupply = totalSupply;
+  calculations.source = "redemption";
   calculations.save();
 
   // update fund entity
