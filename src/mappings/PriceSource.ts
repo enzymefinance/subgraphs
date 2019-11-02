@@ -233,6 +233,7 @@ export function _handlePriceUpdate(event: PriceUpdate): void {
       calculations.sharePrice = sharePrice;
       calculations.gavPerShareNetManagementFee = gavPerShareNetManagementFee;
       calculations.totalSupply = totalSupply;
+      calculations.source = "priceUpdate";
       calculations.save();
 
       fund.gav = fundGav;
@@ -244,6 +245,8 @@ export function _handlePriceUpdate(event: PriceUpdate): void {
       fund.sharePrice = sharePrice;
       fund.gavPerShareNetManagementFee = gavPerShareNetManagementFee;
       fund.lastCalculationsUpdate = timestamp;
+      fund.previousDailySharePrice = fund.currentDailySharePrice;
+      fund.currentDailySharePrice = sharePrice;
       fund.save();
 
       // valuations for individual investments / investors

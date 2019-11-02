@@ -7,9 +7,8 @@
     "auth": "graph auth https://api.thegraph.com/deploy/",
     "deploy:prod": "graph deploy melonproject/melon --debug --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
     "deploy:dev": "graph deploy melonproject/melon-dev --debug --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
-    "deploy:test": "graph deploy iherger/melontest --debug --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
-    "deploy:kovan:ash": "graph deploy iherger/melon-ash-kovan subgraph.ash.kovan.yaml --debug --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/ ",
-    "deploy:kovan": "graph deploy iherger/melon-kovan --debug --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
+    "deploy:kovan:ash": "graph deploy melonproject/melon-ash-kovan subgraph.ash.kovan.yaml --debug --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/ ",
+    "deploy:kovan": "graph deploy melonproject/melon-kovan --debug --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
     "create:local": "graph create melonproject/melon --node http://127.0.0.1:8020",
     "deploy:local": "graph deploy melonproject/melon --debug --ipfs http://localhost:5001 --node http://127.0.0.1:8020"
   },

@@ -204,6 +204,8 @@ type Fund @entity {
   feesInShares: BigInt
   nav: BigInt
   sharePrice: BigInt
+  currentDailySharePrice: BigInt
+  previousDailySharePrice: BigInt
   gavPerShareNetManagementFee: BigInt
   allocatedFees: BigInt
   totalSupply: BigInt
@@ -242,6 +244,7 @@ type FundCalculationsHistory @entity {
   allocatedFees: BigInt
   totalSupply: BigInt
   timestamp: BigInt!
+  source: String
 }
 
 type FeeManager @entity {

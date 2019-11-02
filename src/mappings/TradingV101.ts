@@ -133,6 +133,7 @@ export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
   calculations.sharePrice = sharePrice;
   calculations.gavPerShareNetManagementFee = gavPerShareNetManagementFee;
   calculations.totalSupply = totalSupply;
+  calculations.source = "trading";
   calculations.save();
 
   // update fund entity
