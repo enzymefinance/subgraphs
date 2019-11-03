@@ -19,6 +19,7 @@ dataSources:
     source:
       address: "0x1Bfd21f7db126a5966d2C09492676807a68859Ba"
       abi: RegistryContract
+      startBlock: 7000000
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.3
@@ -69,6 +70,7 @@ dataSources:
     source:
       abi: AccountingFactoryContract
       address: "0xeA41FD17121AAC5c79717C8528ce66a8e143e0c8"
+      startBlock: 7000000
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.3
@@ -92,6 +94,7 @@ dataSources:
     source:
       abi: FeeManagerFactoryContract
       address: "0xCB9CC04622ebb6D751E3516503Bc5418d980Ef13"
+      startBlock: 7000000
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.3
@@ -112,6 +115,7 @@ dataSources:
     source:
       abi: ParticipationFactoryContract
       address: "0xA48227baEa91825c23b2A38B0A90CE2e2ae59987"
+      startBlock: 7000000
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.3
@@ -133,6 +137,7 @@ dataSources:
     source:
       abi: PolicyManagerFactoryContract
       address: "0xe06835e09Dd3eB24433252a77Ef573E022FcfB0b"
+      startBlock: 7000000
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.3
@@ -153,6 +158,7 @@ dataSources:
     source:
       abi: SharesFactoryContract
       address: "0xC563Fb444441fd73431384006e7A81955c0d4F89"
+      startBlock: 7000000
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.3
@@ -173,6 +179,7 @@ dataSources:
     source:
       abi: TradingFactoryContract
       address: "0x6E57E54Ba53495066F400c026ecA1ef7FCa9Cb44"
+      startBlock: 7000000
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.3
@@ -194,6 +201,7 @@ dataSources:
     source:
       abi: TradingFactoryContractV101
       address: "0xe2c3fe25336eE3bD71dcA3380b7423a3bDef3d8C"
+      startBlock: 7000000
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.3
@@ -214,6 +222,7 @@ dataSources:
     source:
       abi: VaultFactoryContract
       address: "0x42822b1f64249154Fc82f7F6246AE7C69254F30A"
+      startBlock: 7000000
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.3

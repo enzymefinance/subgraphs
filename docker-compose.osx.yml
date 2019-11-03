@@ -1,7 +1,7 @@
 version: "3"
 services:
   graph-node:
-    image: graphprotocol/graph-node:latest
+    image: graphprotocol/graph-node
     ports:
       - "8000:8000"
       - "8001:8001"
@@ -27,6 +27,7 @@ services:
     image: postgres
     ports:
       - "5432:5432"
+    command: ["postgres", "-cshared_preload_libraries=pg_stat_statements"]
     environment:
       POSTGRES_USER: graph-node
       POSTGRES_PASSWORD: let-me-in
