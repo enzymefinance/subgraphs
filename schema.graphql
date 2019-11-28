@@ -23,7 +23,7 @@ type State @entity {
 
 type Registry @entity {
   id: ID!
-  owner: String!
+  owner: String
   engine: Engine
   versions: [Version!]!
   assets: [Asset!]! @derivedFrom(field: "registry")
@@ -71,7 +71,7 @@ type EngineHistory @entity {
   liquidEther: BigInt!
   lastThaw: BigInt!
   thawingDelay: BigInt!
-  totalEtherConsumed: BigInt!
+  totalEtherConsumed: BigInt
   totalAmguConsumed: BigInt!
   totalMlnBurned: BigInt!
   premiumPercent: BigInt!
@@ -182,22 +182,22 @@ type ExchangeAdapter @entity {
 
 type Fund @entity {
   id: ID!
-  name: String!
-  manager: FundManager!
-  createdAt: BigInt!
-  isShutdown: Boolean!
+  name: String
+  manager: FundManager
+  createdAt: BigInt
+  isShutdown: Boolean
   shutdownAt: BigInt
-  accounting: Accounting!
-  participation: Participation!
-  feeManager: FeeManager!
-  policyManager: PolicyManager!
-  share: Share!
-  trading: Trading!
-  vault: Vault!
-  priceSource: PriceSource!
-  registry: Registry!
-  version: Version!
-  engine: Engine!
+  accounting: Accounting
+  participation: Participation
+  feeManager: FeeManager
+  policyManager: PolicyManager
+  share: Share
+  trading: Trading
+  vault: Vault
+  priceSource: PriceSource
+  registry: Registry
+  version: Version
+  engine: Engine
   gav: BigInt
   validPrice: Boolean
   feesInDenominationAsset: BigInt
@@ -225,7 +225,7 @@ type FundManager @entity {
 
 type Accounting @entity {
   id: ID!
-  fund: Fund
+  fund: Fund!
   denominationAsset: Asset!
   nativeAsset: Asset!
   ownedAssets: [Asset!]!
@@ -250,10 +250,10 @@ type FundCalculationsHistory @entity {
 type FeeManager @entity {
   id: ID!
   fund: Fund
-  feesRegistered: BigInt!
+  feesRegistered: BigInt
   managementFee: ManagementFee @derivedFrom(field: "feeManager")
   performanceFee: PerformanceFee @derivedFrom(field: "feeManager")
-  totalFeeReward: BigInt!
+  totalFeeReward: BigInt
   feeRewardHistory: [FeeRewardHistory!]! @derivedFrom(field: "feeManager")
 }
 
@@ -358,7 +358,7 @@ type Investment @entity {
   fund: Fund
   owner: Investor!
   shares: BigInt!
-  sharePrice: BigInt!
+  sharePrice: BigInt
   gav: BigInt!
   nav: BigInt!
   history: [InvestmentHistory!]! @derivedFrom(field: "investment")
@@ -403,7 +403,7 @@ type FundHoldingsHistory @entity {
   fund: Fund!
   asset: Asset!
   amount: BigInt!
-  assetGav: BigInt!
+  assetGav: BigInt
   validPrice: Boolean!
 }
 
@@ -438,7 +438,7 @@ type MelonNetworkAssetHistory @entity {
   assetGav: BigInt!
   numberOfFunds: Int!
   invalidPrices: Int!
-  fundHoldings: [FundHoldingsHistory!]!
+  fundHoldings: [FundHoldingsHistory!]
 }
 
 type ExchangeMethodCall @entity {
