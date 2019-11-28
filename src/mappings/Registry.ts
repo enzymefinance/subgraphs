@@ -38,11 +38,9 @@ export function handleLogSetOwner(event: LogSetOwner): void {
   let registry = Registry.load(event.address.toHex());
   if (!registry) {
     registry = new Registry(event.address.toHex());
-
-    registry.exchangeAdapters = [];
-    registry.assets = [];
     registry.versions = [];
   }
+
   registry.owner = event.params.owner.toHex();
   registry.save();
 
@@ -54,11 +52,6 @@ export function handleLogSetOwner(event: LogSetOwner): void {
 }
 
 export function handleVersionRegistration(event: VersionRegistration): void {
-  // ignore contracts created before go-live
-  if (event.block.number.toI32() < 7271061) {
-    return;
-  }
-
   VersionDataSource.create(event.params.version);
 
   let id = event.params.version.toHex();

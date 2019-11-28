@@ -479,9 +479,9 @@ templates:
         - name: PolicyContract
           file: ./node_modules/@melonproject/protocol/out/Policy.abi.json
         - name: AssetBlackListContract
-          file: ./node_modules/@melonproject/protocol/out/AssetBlackList.abi.json
+          file: ./node_modules/@melonproject/protocol/out/AssetBlacklist.abi.json
         - name: AssetWhiteListContract
-          file: ./node_modules/@melonproject/protocol/out/AssetWhiteList.abi.json
+          file: ./node_modules/@melonproject/protocol/out/AssetWhitelist.abi.json
         - name: MaxConcentrationContract
           file: ./node_modules/@melonproject/protocol/out/MaxConcentration.abi.json
         - name: MaxPositionsContract

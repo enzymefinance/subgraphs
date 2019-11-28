@@ -41,7 +41,27 @@ commander
       })
     );
 
-    view.meta.network = view.meta.chain === 1 ? "mainnet" : "kovan";
+    view.meta.network = (() => {
+      switch (view.meta.chain) {
+        case 1:
+          return "mainnet";
+        case 42:
+          return "kovan";
+        default:
+          return "dev";
+      }
+    })();
+
+    view.meta.block = (() => {
+      switch (view.meta.chain) {
+        case 1:
+          return 7278328;
+        case 42:
+          return 0;
+        default:
+          return 0;
+      }
+    })();
 
     const rootDir = path.join(__dirname, "..");
     const staticsTemplate = fs.readFileSync(
@@ -58,8 +78,15 @@ commander
       }
     );
 
-    const subgraphOutput = mustache.render(subgraphTemplate, view);
-    const staticsOutput = mustache.render(staticsTemplate, view);
+    const subgraphOutput = mustache.render(subgraphTemplate, view, undefined, [
+      "${{",
+      "}}"
+    ]);
+
+    const staticsOutput = mustache.render(staticsTemplate, view, undefined, [
+      "${{",
+      "}}"
+    ]);
 
     fs.writeFileSync(path.join(rootDir, "subgraph.yaml"), subgraphOutput);
     fs.writeFileSync(path.join(rootDir, "src", "statics.ts"), staticsOutput);
@@ -71,7 +98,3 @@ commander.on("command:*", () => {
 });
 
 commander.parse(process.argv);
-if (!commander.args.length) {
-  commander.help();
-  process.exit(1);
-}

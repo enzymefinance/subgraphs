@@ -9,11 +9,6 @@ import { BigInt } from "@graphprotocol/graph-ts";
 import { saveEventHistory } from "./utils/saveEventHistory";
 
 export function handleNewInstance(event: NewInstance): void {
-  // ignore contracts created before go-live
-  if (event.block.number.toI32() < 7272205) {
-    return;
-  }
-
   FeeManagerDataSource.create(event.params.instance);
 
   let feeManager = new FeeManager(event.params.instance.toHex());

@@ -5,11 +5,6 @@ import { saveContract } from "./utils/saveContract";
 import { saveEventHistory } from "./utils/saveEventHistory";
 
 export function handleNewInstance(event: NewInstance): void {
-  // ignore contracts created before go-live
-  if (event.block.number.toI32() < 7272209) {
-    return;
-  }
-
   PolicyManagerDataSource.create(event.params.instance);
 
   let policyManager = new PolicyManager(event.params.instance.toHex());

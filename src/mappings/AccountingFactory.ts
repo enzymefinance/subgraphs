@@ -6,11 +6,6 @@ import { saveEventHistoryParameters } from "./utils/saveEventHistoryParameters";
 import { saveEventHistory } from "./utils/saveEventHistory";
 
 export function handleNewInstance(event: NewInstance): void {
-  // ignore contracts created before go-live
-  if (event.block.number.toI32() < 7272194) {
-    return;
-  }
-
   AccountingDataSource.create(event.params.instance);
 
   let accounting = new Accounting(event.params.instance.toHex());

@@ -17,11 +17,6 @@ import { SharesContract } from "../types/templates/VersionDataSource/SharesContr
 import { saveEventHistory } from "./utils/saveEventHistory";
 
 export function handleNewFund(event: NewFund): void {
-  // ignore contracts created before go-live
-  if (event.block.number.toI32() < 7278341) {
-    return;
-  }
-
   HubDataSource.create(event.params.hub);
 
   let hub = event.params.hub.toHex();
