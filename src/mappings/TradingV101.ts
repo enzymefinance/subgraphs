@@ -1,16 +1,16 @@
 import {
   ExchangeMethodCall,
   TradingContractV101
-} from "../types/TradingFactoryDataSourceV101/templates/TradingDataSourceV101/TradingContractV101";
+} from "../types/templates/TradingDataSourceV101/TradingContractV101";
 import {
   ExchangeMethodCall as ExchangeMethodCallEntity,
   FundCalculationsHistory,
   FundHoldingsHistory,
   Fund
 } from "../types/schema";
-import { AccountingContract } from "../types/TradingFactoryDataSourceV101/templates/TradingDataSourceV101/AccountingContract";
-import { PriceSourceContract } from "../types/TradingFactoryDataSourceV101/templates/TradingDataSourceV101/PriceSourceContract";
-import { SharesContract } from "../types/TradingFactoryDataSourceV101/templates/TradingDataSourceV101/SharesContract";
+import { AccountingContract } from "../types/templates/TradingDataSourceV101/AccountingContract";
+import { PriceSourceContract } from "../types/templates/TradingDataSourceV101/PriceSourceContract";
+import { SharesContract } from "../types/templates/TradingDataSourceV101/SharesContract";
 import { saveEventHistory } from "./utils/saveEventHistory";
 
 export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
@@ -133,6 +133,7 @@ export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
   calculations.sharePrice = sharePrice;
   calculations.gavPerShareNetManagementFee = gavPerShareNetManagementFee;
   calculations.totalSupply = totalSupply;
+  calculations.source = "trading";
   calculations.save();
 
   // update fund entity

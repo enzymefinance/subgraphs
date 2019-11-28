@@ -1,18 +1,19 @@
-import { NewFund } from "../types/VersionDataSource/VersionContract";
-import { HubDataSource } from "../types/VersionDataSource/templates";
+import { NewFund } from "../types/templates/VersionDataSource/VersionContract";
+import { HubDataSource } from "../types/templates";
 import {
   Fund,
   FundCount,
   FundManager,
-  FundCalculationsHistory
+  FundCalculationsHistory,
+  Version
 } from "../types/schema";
 import { hexToAscii } from "./utils/hexToAscii";
-import { HubContract } from "../types/VersionDataSource/HubContract";
+import { HubContract } from "../types/templates/VersionDataSource/HubContract";
 import { BigInt, Address } from "@graphprotocol/graph-ts";
 import { currentState } from "./utils/currentState";
 import { saveContract } from "./utils/saveContract";
-import { AccountingContract } from "../types/VersionDataSource/AccountingContract";
-import { SharesContract } from "../types/VersionDataSource/SharesContract";
+import { AccountingContract } from "../types/templates/VersionDataSource/AccountingContract";
+import { SharesContract } from "../types/templates/VersionDataSource/SharesContract";
 import { saveEventHistory } from "./utils/saveEventHistory";
 
 export function handleNewFund(event: NewFund): void {
@@ -41,10 +42,16 @@ export function handleNewFund(event: NewFund): void {
   fund.share = addresses[4];
   fund.trading = addresses[5];
   fund.vault = addresses[6];
+  fund.priceSource = addresses[7];
   fund.registry = addresses[8];
   fund.version = addresses[9];
   fund.engine = addresses[10];
+  fund.investments = [];
   fund.save();
+
+  let version = Version.load(event.address.toHex()) as Version;
+  version.funds = version.funds.concat([fund.id]);
+  version.save();
 
   saveContract(hub, "Hub", fund.name, event.block.timestamp, addresses[9]);
 
@@ -107,6 +114,7 @@ export function handleNewFund(event: NewFund): void {
   calculations.sharePrice = sharePrice;
   calculations.gavPerShareNetManagementFee = gavPerShareNetManagementFee;
   calculations.totalSupply = totalSupply;
+  calculations.source = "fundCreation";
   calculations.save();
 
   fund.gav = fundGav;
@@ -117,5 +125,7 @@ export function handleNewFund(event: NewFund): void {
   fund.sharePrice = sharePrice;
   fund.gavPerShareNetManagementFee = gavPerShareNetManagementFee;
   fund.lastCalculationsUpdate = event.block.timestamp;
+  fund.currentDailySharePrice = BigInt.fromI32(0);
+  fund.previousDailySharePrice = sharePrice;
   fund.save();
 }

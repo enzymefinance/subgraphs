@@ -17,13 +17,15 @@ type State @entity {
   timestamptNumberOfInvestors: BigInt!
   lastEngineUpdate: BigInt!
   currentEngine: Engine
+  mlnToken: String!
+  registry: Registry
 }
 
 type Registry @entity {
   id: ID!
   owner: String
   engine: Engine
-  versions: [Version!]! @derivedFrom(field: "registry")
+  versions: [Version!]!
   assets: [Asset!]! @derivedFrom(field: "registry")
   exchangeAdapters: [ExchangeAdapter!]! @derivedFrom(field: "registry")
   priceSources: [PriceSource!]! @derivedFrom(field: "registry")
@@ -35,25 +37,25 @@ type Registry @entity {
 
 type Version @entity {
   id: ID!
-  registry: Registry
+  registry: Registry!
   name: String
-  funds: [Fund!]! @derivedFrom(field: "version")
+  funds: [Fund!]!
 }
 
 type Engine @entity {
   id: ID!
   registry: Registry!
-  amguPrice: BigInt
-  frozenEther: BigInt
-  liquidEther: BigInt
-  lastThaw: BigInt
-  thawingDelay: BigInt
-  totalEtherConsumed: BigInt
-  totalAmguConsumed: BigInt
-  totalMlnBurned: BigInt
-  premiumPercent: BigInt
-  mlnTotalSupply: BigInt
-  lastUpdate: BigInt
+  amguPrice: BigInt!
+  frozenEther: BigInt!
+  liquidEther: BigInt!
+  lastThaw: BigInt!
+  thawingDelay: BigInt!
+  totalEtherConsumed: BigInt!
+  totalAmguConsumed: BigInt!
+  totalMlnBurned: BigInt!
+  premiumPercent: BigInt!
+  mlnTotalSupply: BigInt!
+  lastUpdate: BigInt!
   history: [EngineHistory!]! @derivedFrom(field: "engine")
   amguPrices: [AmguPrice!]! @derivedFrom(field: "engine")
   amguPayments: [AmguPayment!]! @derivedFrom(field: "engine")
@@ -192,6 +194,7 @@ type Fund @entity {
   share: Share
   trading: Trading
   vault: Vault
+  priceSource: PriceSource
   registry: Registry
   version: Version
   engine: Engine
@@ -201,10 +204,12 @@ type Fund @entity {
   feesInShares: BigInt
   nav: BigInt
   sharePrice: BigInt
+  currentDailySharePrice: BigInt
+  previousDailySharePrice: BigInt
   gavPerShareNetManagementFee: BigInt
   allocatedFees: BigInt
   totalSupply: BigInt
-  investments: [Investment!]! @derivedFrom(field: "fund")
+  investments: [Investment!]!
   calculationsHistory: [FundCalculationsHistory!]! @derivedFrom(field: "fund")
   investmentHistory: [InvestmentHistory!]! @derivedFrom(field: "fund")
   holdingsHistory: [FundHoldingsHistory!]! @derivedFrom(field: "fund")
@@ -239,6 +244,7 @@ type FundCalculationsHistory @entity {
   allocatedFees: BigInt
   totalSupply: BigInt
   timestamp: BigInt!
+  source: String
 }
 
 type FeeManager @entity {
@@ -373,7 +379,7 @@ type InvestorValuationHistory @entity {
   id: ID!
   owner: Investor!
   gav: BigInt!
-  nav: BigInt
+  nav: BigInt!
   timestamp: BigInt!
 }
 

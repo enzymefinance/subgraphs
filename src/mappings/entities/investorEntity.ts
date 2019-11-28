@@ -1,8 +1,8 @@
 import { Address, BigInt } from "@graphprotocol/graph-ts";
 import { Investor } from "../../types/schema";
 
-export function investorEntity(address: Address, createdAt: BigInt): Investor {
-  let id = address.toHex();
+export function investorEntity(address: string, createdAt: BigInt): Investor {
+  let id = address;
   let investor = Investor.load(id);
 
   if (!investor) {

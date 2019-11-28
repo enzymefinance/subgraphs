@@ -1,4 +1,4 @@
-specVersion: 0.0.1
+specVersion: 0.0.2
 description: Melon protocol
 repository: https://github.com/melonproject/melon-subgraph
 schema:
@@ -15,11 +15,10 @@ dataSources:
   #
   - name: RegistryDataSource
     kind: ethereum/contract
-    network: "${{meta.network}}"
+    network: "kovan"
     source:
-      address: "${{melonContracts.registry}}"
+      address: "0xb8acdbe95e9980fae93716eba27709bcf1765a12"
       abi: RegistryContract
-      startBlock: ${{meta.block}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.3
@@ -66,11 +65,10 @@ dataSources:
   #
   - name: AccountingFactoryDataSource
     kind: ethereum/contract
-    network: "${{meta.network}}"
+    network: "kovan"
     source:
       abi: AccountingFactoryContract
-      address: "${{melonContracts.factories.accountingFactory}}"
-      startBlock: ${{meta.block}}
+      address: "0x7a5610726e7108b00d7aec02d3fecf002bcb3b7f"
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.3
@@ -90,11 +88,10 @@ dataSources:
 
   - name: FeeManagerFactoryDataSource
     kind: ethereum/contract
-    network: "${{meta.network}}"
+    network: "kovan"
     source:
       abi: FeeManagerFactoryContract
-      address: "${{melonContracts.factories.feeManagerFactory}}"
-      startBlock: ${{meta.block}}
+      address: "0x5c9da2aa2baf1d365463f6e3f207b7ba0fe422d1"
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.3
@@ -111,11 +108,10 @@ dataSources:
 
   - name: ParticipationFactoryDataSource
     kind: ethereum/contract
-    network: "${{meta.network}}"
+    network: "kovan"
     source:
       abi: ParticipationFactoryContract
-      address: "${{melonContracts.factories.participationFactory}}"
-      startBlock: ${{meta.block}}
+      address: "0xc858bd40511fdf6afdf1653e15477c9ba7279058"
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.3
@@ -133,11 +129,10 @@ dataSources:
 
   - name: PolicyManagerFactoryDataSource
     kind: ethereum/contract
-    network: "${{meta.network}}"
+    network: "kovan"
     source:
       abi: PolicyManagerFactoryContract
-      address: "${{melonContracts.factories.policyManagerFactory}}"
-      startBlock: ${{meta.block}}
+      address: "0x1c60cd02c5a824ce3c0c5a3dae6551fd748ebbb2"
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.3
@@ -154,11 +149,10 @@ dataSources:
 
   - name: SharesFactoryDataSource
     kind: ethereum/contract
-    network: "${{meta.network}}"
+    network: "kovan"
     source:
       abi: SharesFactoryContract
-      address: "${{melonContracts.factories.sharesFactory}}"
-      startBlock: ${{meta.block}}
+      address: "0x68b80025ec4f99788aad08b259d671c8637bbee7"
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.3
@@ -173,35 +167,33 @@ dataSources:
         - event: NewInstance(indexed address,indexed address)
           handler: handleNewInstance
 
-  - name: TradingFactoryDataSource
-    kind: ethereum/contract
-    network: "${{meta.network}}"
-    source:
-      abi: TradingFactoryContract
-      address: "${{melonContracts.factories.tradingFactory}}"
-      startBlock: ${{meta.block}}
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.3
-      language: wasm/assemblyscript
-      file: ./src/mappings/TradingFactory.ts
-      entities:
-        - Trading
-      abis:
-        - name: TradingFactoryContract
-          file: ./node_modules/@melonproject/protocol/out/TradingFactory.abi.json
-      eventHandlers:
-        - event: NewInstance(indexed address,indexed address,address[],address[],address)
-          handler: handleNewInstance
+  # - name: TradingFactoryDataSource
+  #   kind: ethereum/contract
+  #   network: "kovan"
+  #   source:
+  #     abi: TradingFactoryContract
+  #     address: "0xa9d2abf2107626cf8199a89f06a48b6b0653fc63"
+  #   mapping:
+  #     kind: ethereum/events
+  #     apiVersion: 0.0.3
+  #     language: wasm/assemblyscript
+  #     file: ./src/mappings/TradingFactory.ts
+  #     entities:
+  #       - Trading
+  #     abis:
+  #       - name: TradingFactoryContract
+  #         file: ./node_modules/@melonproject/protocol/out/TradingFactory.abi.json
+  #     eventHandlers:
+  #       - event: NewInstance(indexed address,indexed address,address[],address[],address)
+  #         handler: handleNewInstance
 
-    # old trading factory
+  # old trading factory
   - name: TradingFactoryDataSourceV101
     kind: ethereum/contract
-    network: "${{meta.network}}"
+    network: "kovan"
     source:
       abi: TradingFactoryContractV101
-      address: "0xe2c3fe25336eE3bD71dcA3380b7423a3bDef3d8C"
-      startBlock: ${{meta.block}}
+      address: "0xa9d2abf2107626cf8199a89f06a48b6b0653fc63"
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.3
@@ -218,11 +210,10 @@ dataSources:
 
   - name: VaultFactoryDataSource
     kind: ethereum/contract
-    network: "${{meta.network}}"
+    network: "kovan"
     source:
       abi: VaultFactoryContract
-      address: "${{melonContracts.factories.vaultFactory}}"
-      startBlock: ${{meta.block}}
+      address: "0xb872553b0c5d8ee3ddb7eb48dd955a9ceac3cd76"
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.3
@@ -248,7 +239,7 @@ templates:
   #
   - name: VersionDataSource
     kind: ethereum/contract
-    network: "${{meta.network}}"
+    network: "kovan"
     source:
       abi: VersionContract
     mapping:
@@ -276,7 +267,7 @@ templates:
 
   - name: EngineDataSource
     kind: ethereum/contract
-    network: "${{meta.network}}"
+    network: "kovan"
     source:
       abi: EngineContract
     mapping:
@@ -306,7 +297,7 @@ templates:
 
   - name: PriceSourceDataSource
     kind: ethereum/contract
-    network: "${{meta.network}}"
+    network: "kovan"
     source:
       abi: PriceSourceContract
     mapping:
@@ -319,12 +310,8 @@ templates:
         - Asset
         - AssetPriceUpdate
         - Fund
-        - FundHoldingsHistory
         - FundCalculationsHistory
-        - AssetPriceUpdate
-        - AssetPriceHistory
-        - MelonNetworkAssetHistory
-        - MelonNetworkHistory
+        - NetworkValue
         - Investment
         - InvestmentValuationHistory
         - Investor
@@ -355,7 +342,7 @@ templates:
   #
   - name: HubDataSource
     kind: ethereum/contract
-    network: "${{meta.network}}"
+    network: "kovan"
     source:
       abi: HubContract
     mapping:
@@ -376,7 +363,7 @@ templates:
 
   - name: AccountingDataSource
     kind: ethereum/contract
-    network: "${{meta.network}}"
+    network: "kovan"
     source:
       abi: AccountingContract
     mapping:
@@ -397,7 +384,7 @@ templates:
 
   - name: FeeManagerDataSource
     kind: ethereum/contract
-    network: "${{meta.network}}"
+    network: "kovan"
     source:
       abi: FeeManagerContract
     mapping:
@@ -429,7 +416,7 @@ templates:
 
   - name: ParticipationDataSource
     kind: ethereum/contract
-    network: "${{meta.network}}"
+    network: "kovan"
     source:
       abi: ParticipationContract
     mapping:
@@ -475,7 +462,7 @@ templates:
 
   - name: PolicyManagerDataSource
     kind: ethereum/contract
-    network: "${{meta.network}}"
+    network: "kovan"
     source:
       abi: PolicyManagerContract
     mapping:
@@ -507,7 +494,7 @@ templates:
 
   - name: SharesDataSource
     kind: ethereum/contract
-    network: "${{meta.network}}"
+    network: "kovan"
     source:
       abi: SharesContract
     mapping:
@@ -529,7 +516,7 @@ templates:
   # current trading contract
   - name: TradingDataSource
     kind: ethereum/contract
-    network: "${{meta.network}}"
+    network: "kovan"
     source:
       abi: TradingContract
     mapping:
@@ -555,7 +542,7 @@ templates:
   # old trading contract
   - name: TradingDataSourceV101
     kind: ethereum/contract
-    network: "${{meta.network}}"
+    network: "kovan"
     source:
       abi: TradingContractV101
     mapping:
@@ -580,7 +567,7 @@ templates:
 
   - name: VaultDataSource
     kind: ethereum/contract
-    network: "${{meta.network}}"
+    network: "kovan"
     source:
       abi: VaultContract
     mapping:

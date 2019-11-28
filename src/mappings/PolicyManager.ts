@@ -1,14 +1,14 @@
 import {
   Registration,
   PolicyManagerContract
-} from "../types/PolicyManagerFactoryDataSource/templates/PolicyManagerDataSource/PolicyManagerContract";
+} from "../types/templates/PolicyManagerDataSource/PolicyManagerContract";
 import { Policy } from "../types/schema";
-import { PolicyContract } from "../types/PolicyManagerFactoryDataSource/templates/PolicyManagerDataSource/PolicyContract";
-import { PriceToleranceContract } from "../types/PolicyManagerFactoryDataSource/templates/PolicyManagerDataSource/PriceToleranceContract";
-import { MaxPositionsContract } from "../types/PolicyManagerFactoryDataSource/templates/PolicyManagerDataSource/MaxPositionsContract";
-import { MaxConcentrationContract } from "../types/PolicyManagerFactoryDataSource/templates/PolicyManagerDataSource/MaxConcentrationContract";
-import { AssetWhiteListContract } from "../types/PolicyManagerFactoryDataSource/templates/PolicyManagerDataSource/AssetWhiteListContract";
-import { AssetBlackListContract } from "../types/PolicyManagerFactoryDataSource/templates/PolicyManagerDataSource/AssetBlackListContract";
+import { PolicyContract } from "../types/templates/PolicyManagerDataSource/PolicyContract";
+import { PriceToleranceContract } from "../types/templates/PolicyManagerDataSource/PriceToleranceContract";
+import { MaxPositionsContract } from "../types/templates/PolicyManagerDataSource/MaxPositionsContract";
+import { MaxConcentrationContract } from "../types/templates/PolicyManagerDataSource/MaxConcentrationContract";
+import { AssetWhiteListContract } from "../types/templates/PolicyManagerDataSource/AssetWhiteListContract";
+import { AssetBlackListContract } from "../types/templates/PolicyManagerDataSource/AssetBlackListContract";
 import { saveEventHistory } from "./utils/saveEventHistory";
 
 export function handleRegistration(event: Registration): void {
