@@ -17,6 +17,7 @@ subgraph.yaml
 # Generated build output, code and data
 build/
 data/
+subgraph.yaml
 src/types/
 src/statics.ts
  
