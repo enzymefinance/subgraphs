@@ -22,19 +22,8 @@ import { networkAssetHistoryEntity } from "./entities/networkAssetHistoryEntity"
 import { tenToThePowerOf } from "./utils/tenToThePowerOf";
 
 export function handlePriceUpdate(event: PriceUpdate): void {
-  _handlePriceUpdate(event);
-}
-
-export function _handlePriceUpdate(event: PriceUpdate): void {
-  // Only update at most once per day (roughly)
-  let timestamp = event.block.timestamp;
-
   let state = currentState();
-  let interval = BigInt.fromI32(300);
-  if (event.block.timestamp.minus(state.lastPriceUpdate).lt(interval)) {
-    return;
-  }
-
+  let timestamp = event.block.timestamp;
   let prices = event.params.price;
   let tokens = event.params.token;
 

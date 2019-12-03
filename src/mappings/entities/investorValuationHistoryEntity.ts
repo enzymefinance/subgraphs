@@ -14,6 +14,7 @@ export function investorValuationHistoryEntity(
     investorValuationHistory.gav = BigInt.fromI32(0);
     investorValuationHistory.nav = BigInt.fromI32(0);
     investorValuationHistory.owner = investorEntity(owner, createdAt).id;
+    investorValuationHistory.timestamp = createdAt;
     investorValuationHistory.save();
   }
 

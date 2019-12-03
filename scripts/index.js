@@ -7,33 +7,42 @@ const fs = require("fs");
 const inquirer = require("inquirer");
 const mustache = require("mustache");
 
+async function loadDeployment(deployment) {
+  if (typeof deployment !== "undefined") {
+    return path.resolve(deployment);
+  }
+
+  const protocol = path.dirname(
+    require.resolve("@melonproject/protocol/package.json")
+  );
+
+  const dir = path.join(protocol, "deployments");
+  const files = glob.sync("*.json", {
+    cwd: dir
+  });
+
+  const file = await (async () => {
+    if (!!deployment) {
+      return path.join(dir, deployment);
+    }
+
+    const { answer } = await inquirer.prompt([
+      {
+        type: "list",
+        name: "answer",
+        message: "Which deployment do you want to use?",
+        choices: files
+      }
+    ]);
+
+    return path.join(dir, answer);
+  })();
+}
+
 commander
   .command("generate-subgraph [<deployment>]")
   .action(async deployment => {
-    const protocol = path.dirname(
-      require.resolve("@melonproject/protocol/package.json")
-    );
-    const dir = path.join(protocol, "deployments");
-    const files = glob.sync("*.json", {
-      cwd: dir
-    });
-
-    const file = await (async () => {
-      if (!!deployment) {
-        return path.join(dir, deployment);
-      }
-
-      const { answer } = await inquirer.prompt([
-        {
-          type: "list",
-          name: "answer",
-          message: "Which deployment do you want to use?",
-          choices: files
-        }
-      ]);
-
-      return path.join(dir, answer);
-    })();
+    const file = await loadDeployment(deployment);
 
     const view = JSON.parse(
       fs.readFileSync(file, {
