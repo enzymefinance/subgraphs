@@ -13,6 +13,7 @@ export function handleNewInstance(event: NewInstance): void {
   ) {
     return;
   }
+
   TradingDataSource.create(event.params.instance);
 
   let id = event.params.instance.toHex();

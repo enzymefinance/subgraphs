@@ -9,7 +9,7 @@ import {
 } from "../types/schema";
 import { hexToAscii } from "./utils/hexToAscii";
 import { HubContract } from "../types/templates/VersionDataSource/HubContract";
-import { BigInt, Address } from "@graphprotocol/graph-ts";
+import { BigInt, Address, dataSource } from "@graphprotocol/graph-ts";
 import { currentState } from "./utils/currentState";
 import { saveContract } from "./utils/saveContract";
 import { AccountingContract } from "../types/templates/VersionDataSource/AccountingContract";
@@ -17,6 +17,14 @@ import { SharesContract } from "../types/templates/VersionDataSource/SharesContr
 import { saveEventHistory } from "./utils/saveEventHistory";
 
 export function handleNewFund(event: NewFund): void {
+  // ignore contracts created before go-live
+  if (
+    dataSource.network() == "mainnet" &&
+    event.block.number.toI32() < 7278341
+  ) {
+    return;
+  }
+
   HubDataSource.create(event.params.hub);
 
   let hub = event.params.hub.toHex();

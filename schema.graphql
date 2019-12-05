@@ -225,7 +225,7 @@ type FundManager @entity {
 
 type Accounting @entity {
   id: ID!
-  fund: Fund!
+  fund: Fund
   denominationAsset: Asset!
   nativeAsset: Asset!
   ownedAssets: [Asset!]!
@@ -283,7 +283,7 @@ type FeeRewardHistory @entity {
 
 type Participation @entity {
   id: ID!
-  fund: Fund!
+  fund: Fund
   allowedAssets: [Asset!]!
 }
 

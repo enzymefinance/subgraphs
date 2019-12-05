@@ -128,7 +128,7 @@ export function handleCancelRequest(event: CancelRequest): void {
 
 export function handleRequestExecution(event: RequestExecution): void {
   let participation = Participation.load(event.address.toHex());
-  if (!participation) {
+  if (!participation || !participation.fund) {
     return;
   }
   let fund = Fund.load(participation.fund);
