@@ -1,11 +1,19 @@
 import { NewInstance } from "../types/AccountingFactoryDataSource/AccountingFactoryContract";
 import { AccountingDataSource } from "../types/templates";
-import { Accounting, EventHistory } from "../types/schema";
+import { Accounting } from "../types/schema";
 import { saveContract } from "./utils/saveContract";
-import { saveEventHistoryParameters } from "./utils/saveEventHistoryParameters";
 import { saveEventHistory } from "./utils/saveEventHistory";
+import { dataSource } from "@graphprotocol/graph-ts";
 
 export function handleNewInstance(event: NewInstance): void {
+  // ignore contracts created before go-live
+  if (
+    dataSource.network() == "mainnet" &&
+    event.block.number.toI32() < 7272194
+  ) {
+    return;
+  }
+
   AccountingDataSource.create(event.params.instance);
 
   let accounting = new Accounting(event.params.instance.toHex());

@@ -3,8 +3,16 @@ import { ParticipationDataSource } from "../types/templates";
 import { Participation } from "../types/schema";
 import { saveContract } from "./utils/saveContract";
 import { saveEventHistory } from "./utils/saveEventHistory";
+import { dataSource } from "@graphprotocol/graph-ts";
 
 export function handleNewInstance(event: NewInstance): void {
+  // ignore contracts created before go-live
+  if (
+    dataSource.network() == "mainnet" &&
+    event.block.number.toI32() < 7272207
+  ) {
+    return;
+  }
   ParticipationDataSource.create(event.params.instance);
 
   let participation = new Participation(event.params.instance.toHex());

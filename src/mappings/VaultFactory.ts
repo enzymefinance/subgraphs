@@ -3,8 +3,17 @@ import { NewInstance } from "../types/VaultFactoryDataSource/VaultFactoryContrac
 import { Vault } from "../types/schema";
 import { saveContract } from "./utils/saveContract";
 import { saveEventHistory } from "./utils/saveEventHistory";
+import { dataSource } from "@graphprotocol/graph-ts";
 
 export function handleNewInstance(event: NewInstance): void {
+  // ignore contracts created before go-live
+  if (
+    dataSource.network() == "mainnet" &&
+    event.block.number.toI32() < 7278338
+  ) {
+    return;
+  }
+
   VaultDataSource.create(event.params.instance);
 
   let vault = new Vault(event.params.instance.toHex());

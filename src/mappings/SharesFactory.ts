@@ -2,10 +2,17 @@ import { SharesDataSource } from "../types/templates";
 import { NewInstance } from "../types/SharesFactoryDataSource/SharesFactoryContract";
 import { Share } from "../types/schema";
 import { saveContract } from "./utils/saveContract";
-import { BigInt } from "@graphprotocol/graph-ts";
+import { BigInt, dataSource } from "@graphprotocol/graph-ts";
 import { saveEventHistory } from "./utils/saveEventHistory";
 
 export function handleNewInstance(event: NewInstance): void {
+  // ignore contracts created before go-live
+  if (
+    dataSource.network() == "mainnet" &&
+    event.block.number.toI32() < 7272211
+  ) {
+    return;
+  }
   SharesDataSource.create(event.params.instance);
 
   let shares = new Share(event.params.instance.toHex());

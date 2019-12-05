@@ -5,10 +5,18 @@ import {
 } from "../types/FeeManagerFactoryDataSource/FeeManagerFactoryContract";
 import { FeeManager } from "../types/schema";
 import { saveContract } from "./utils/saveContract";
-import { BigInt } from "@graphprotocol/graph-ts";
+import { BigInt, dataSource } from "@graphprotocol/graph-ts";
 import { saveEventHistory } from "./utils/saveEventHistory";
 
 export function handleNewInstance(event: NewInstance): void {
+  // ignore contracts created before go-live
+  if (
+    dataSource.network() == "mainnet" &&
+    event.block.number.toI32() < 7272205
+  ) {
+    return;
+  }
+
   FeeManagerDataSource.create(event.params.instance);
 
   let feeManager = new FeeManager(event.params.instance.toHex());

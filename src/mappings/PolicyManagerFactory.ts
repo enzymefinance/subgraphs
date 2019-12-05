@@ -3,8 +3,16 @@ import { NewInstance } from "../types/PolicyManagerFactoryDataSource/PolicyManag
 import { PolicyManager } from "../types/schema";
 import { saveContract } from "./utils/saveContract";
 import { saveEventHistory } from "./utils/saveEventHistory";
+import { dataSource } from "@graphprotocol/graph-ts";
 
 export function handleNewInstance(event: NewInstance): void {
+  // ignore contracts created before go-live
+  if (
+    dataSource.network() == "mainnet" &&
+    event.block.number.toI32() < 7272209
+  ) {
+    return;
+  }
   PolicyManagerDataSource.create(event.params.instance);
 
   let policyManager = new PolicyManager(event.params.instance.toHex());

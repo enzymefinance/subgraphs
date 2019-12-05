@@ -3,8 +3,16 @@ import { NewInstance } from "../types/TradingFactoryDataSource/TradingFactoryCon
 import { Trading } from "../types/schema";
 import { saveContract } from "./utils/saveContract";
 import { saveEventHistory } from "./utils/saveEventHistory";
+import { dataSource } from "@graphprotocol/graph-ts";
 
 export function handleNewInstance(event: NewInstance): void {
+  // ignore contracts created before go-live
+  if (
+    dataSource.network() == "mainnet" &&
+    event.block.number.toI32() < 7278328
+  ) {
+    return;
+  }
   TradingDataSource.create(event.params.instance);
 
   let id = event.params.instance.toHex();
