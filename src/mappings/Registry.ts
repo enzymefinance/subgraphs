@@ -1,4 +1,4 @@
-import { Address } from "@graphprotocol/graph-ts";
+import { Address, dataSource, log } from "@graphprotocol/graph-ts";
 import {
   EngineDataSource,
   PriceSourceDataSource,
@@ -8,7 +8,6 @@ import {
   Registry,
   Version,
   Asset,
-  Engine,
   PriceSource,
   MlnToken,
   NativeAsset,
@@ -52,6 +51,12 @@ export function handleLogSetOwner(event: LogSetOwner): void {
 }
 
 export function handleVersionRegistration(event: VersionRegistration): void {
+  if (
+    dataSource.network() == "mainnet" &&
+    event.block.number.toI32() < 7271061
+  ) {
+    return;
+  }
   VersionDataSource.create(event.params.version);
 
   let id = event.params.version.toHex();

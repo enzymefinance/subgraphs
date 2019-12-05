@@ -187,14 +187,14 @@ type Fund @entity {
   createdAt: BigInt
   isShutdown: Boolean
   shutdownAt: BigInt
-  accounting: Accounting
-  participation: Participation
-  feeManager: FeeManager
-  policyManager: PolicyManager
-  share: Share
-  trading: Trading
-  vault: Vault
-  priceSource: PriceSource
+  accounting: Accounting!
+  participation: Participation!
+  feeManager: FeeManager!
+  policyManager: PolicyManager!
+  share: Share!
+  trading: Trading!
+  vault: Vault!
+  priceSource: PriceSource!
   registry: Registry
   version: Version
   engine: Engine
@@ -253,7 +253,7 @@ type FeeManager @entity {
   feesRegistered: BigInt
   managementFee: ManagementFee @derivedFrom(field: "feeManager")
   performanceFee: PerformanceFee @derivedFrom(field: "feeManager")
-  totalFeeReward: BigInt
+  totalFeeReward: BigInt!
   feeRewardHistory: [FeeRewardHistory!]! @derivedFrom(field: "feeManager")
 }
 

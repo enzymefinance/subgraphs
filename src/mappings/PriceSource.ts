@@ -195,7 +195,11 @@ export function handlePriceUpdate(event: PriceUpdate): void {
         continue;
       }
 
-      let calcs = accountingContract.performCalculations();
+      if (accountingContract.try_performCalculations().reverted) {
+        continue;
+      }
+      let calcs = accountingContract.try_performCalculations().value;
+
       let fundGav = calcs.value0;
       let feesInDenomiationAsset = calcs.value1;
       let feesInShares = calcs.value2;

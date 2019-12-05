@@ -64,7 +64,7 @@ commander
     view.meta.block = (() => {
       switch (view.meta.chain) {
         case 1:
-          return 7278328;
+          return 7200000;
         case 42:
           return 0;
         default:
