@@ -1,9 +1,9 @@
 {
   "private": true,
   "scripts": {
-    "graphgen": "node scripts generate-subgraph",
-    "codegen": "graph codegen --debug --output-dir src/types/",
-    "build": "graph build --debug",
+    "graphgen": "node scripts graphgen",
+    "codegen": "graph codegen --output-dir src/types/",
+    "build": "graph build",
     "auth": "graph auth https://api.thegraph.com/deploy/",
     "deploy:prod": "graph deploy melonproject/melon --debug --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
     "deploy:dev": "graph deploy melonproject/melon-dev --debug --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
@@ -17,12 +17,8 @@
     "@graphprotocol/graph-ts": "^0.16.0",
     "@melonproject/protocol": "^1.0.10",
     "@melonproject/protocol-v.1.0.1": "npm:@melonproject/protocol@1.0.1",
-    "commander": "^4.0.0",
-    "glob": "^7.1.5",
-    "inquirer": "^7.0.0",
-    "mustache": "^3.1.0"
+    "mustache": "^3.1.0",
+    "yargs": "^15.0.2"
   },
-  "dependencies": {
-    "global": "^4.4.0"
-  }
+  "dependencies": {}
 }

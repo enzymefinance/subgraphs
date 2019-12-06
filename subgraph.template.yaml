@@ -1,4 +1,4 @@
-specVersion: 0.0.1
+specVersion: 0.0.2
 description: Melon protocol
 repository: https://github.com/melonproject/melon-subgraph
 schema:
@@ -15,11 +15,11 @@ dataSources:
   #
   - name: RegistryDataSource
     kind: ethereum/contract
-    network: "${{meta.network}}"
+    network: "{{meta.network}}"
     source:
-      address: "${{melonContracts.registry}}"
+      address: "{{melonContracts.registry}}"
       abi: RegistryContract
-      startBlock: ${{meta.block}}
+      startBlock: {{meta.block}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.3
@@ -66,11 +66,11 @@ dataSources:
   #
   - name: AccountingFactoryDataSource
     kind: ethereum/contract
-    network: "${{meta.network}}"
+    network: "{{meta.network}}"
     source:
       abi: AccountingFactoryContract
-      address: "${{melonContracts.factories.accountingFactory}}"
-      startBlock: ${{meta.block}}
+      address: "{{melonContracts.factories.accountingFactory}}"
+      startBlock: {{meta.block}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.3
@@ -90,11 +90,11 @@ dataSources:
 
   - name: FeeManagerFactoryDataSource
     kind: ethereum/contract
-    network: "${{meta.network}}"
+    network: "{{meta.network}}"
     source:
       abi: FeeManagerFactoryContract
-      address: "${{melonContracts.factories.feeManagerFactory}}"
-      startBlock: ${{meta.block}}
+      address: "{{melonContracts.factories.feeManagerFactory}}"
+      startBlock: {{meta.block}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.3
@@ -111,11 +111,11 @@ dataSources:
 
   - name: ParticipationFactoryDataSource
     kind: ethereum/contract
-    network: "${{meta.network}}"
+    network: "{{meta.network}}"
     source:
       abi: ParticipationFactoryContract
-      address: "${{melonContracts.factories.participationFactory}}"
-      startBlock: ${{meta.block}}
+      address: "{{melonContracts.factories.participationFactory}}"
+      startBlock: {{meta.block}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.3
@@ -133,11 +133,11 @@ dataSources:
 
   - name: PolicyManagerFactoryDataSource
     kind: ethereum/contract
-    network: "${{meta.network}}"
+    network: "{{meta.network}}"
     source:
       abi: PolicyManagerFactoryContract
-      address: "${{melonContracts.factories.policyManagerFactory}}"
-      startBlock: ${{meta.block}}
+      address: "{{melonContracts.factories.policyManagerFactory}}"
+      startBlock: {{meta.block}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.3
@@ -154,11 +154,11 @@ dataSources:
 
   - name: SharesFactoryDataSource
     kind: ethereum/contract
-    network: "${{meta.network}}"
+    network: "{{meta.network}}"
     source:
       abi: SharesFactoryContract
-      address: "${{melonContracts.factories.sharesFactory}}"
-      startBlock: ${{meta.block}}
+      address: "{{melonContracts.factories.sharesFactory}}"
+      startBlock: {{meta.block}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.3
@@ -175,11 +175,11 @@ dataSources:
 
   - name: TradingFactoryDataSource
     kind: ethereum/contract
-    network: "${{meta.network}}"
+    network: "{{meta.network}}"
     source:
       abi: TradingFactoryContract
-      address: "${{melonContracts.factories.tradingFactory}}"
-      startBlock: ${{meta.block}}
+      address: "{{melonContracts.factories.tradingFactory}}"
+      startBlock: {{meta.block}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.3
@@ -197,11 +197,11 @@ dataSources:
     # old trading factory
   - name: TradingFactoryDataSourceV101
     kind: ethereum/contract
-    network: "${{meta.network}}"
+    network: "{{meta.network}}"
     source:
       abi: TradingFactoryContractV101
       address: "0xe2c3fe25336eE3bD71dcA3380b7423a3bDef3d8C"
-      startBlock: ${{meta.block}}
+      startBlock: {{meta.block}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.3
@@ -218,11 +218,11 @@ dataSources:
 
   - name: VaultFactoryDataSource
     kind: ethereum/contract
-    network: "${{meta.network}}"
+    network: "{{meta.network}}"
     source:
       abi: VaultFactoryContract
-      address: "${{melonContracts.factories.vaultFactory}}"
-      startBlock: ${{meta.block}}
+      address: "{{melonContracts.factories.vaultFactory}}"
+      startBlock: {{meta.block}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.3
@@ -248,7 +248,7 @@ templates:
   #
   - name: VersionDataSource
     kind: ethereum/contract
-    network: "${{meta.network}}"
+    network: "{{meta.network}}"
     source:
       abi: VersionContract
     mapping:
@@ -276,7 +276,7 @@ templates:
 
   - name: EngineDataSource
     kind: ethereum/contract
-    network: "${{meta.network}}"
+    network: "{{meta.network}}"
     source:
       abi: EngineContract
     mapping:
@@ -306,7 +306,7 @@ templates:
 
   - name: PriceSourceDataSource
     kind: ethereum/contract
-    network: "${{meta.network}}"
+    network: "{{meta.network}}"
     source:
       abi: PriceSourceContract
     mapping:
@@ -355,7 +355,7 @@ templates:
   #
   - name: HubDataSource
     kind: ethereum/contract
-    network: "${{meta.network}}"
+    network: "{{meta.network}}"
     source:
       abi: HubContract
     mapping:
@@ -376,7 +376,7 @@ templates:
 
   - name: AccountingDataSource
     kind: ethereum/contract
-    network: "${{meta.network}}"
+    network: "{{meta.network}}"
     source:
       abi: AccountingContract
     mapping:
@@ -397,7 +397,7 @@ templates:
 
   - name: FeeManagerDataSource
     kind: ethereum/contract
-    network: "${{meta.network}}"
+    network: "{{meta.network}}"
     source:
       abi: FeeManagerContract
     mapping:
@@ -429,7 +429,7 @@ templates:
 
   - name: ParticipationDataSource
     kind: ethereum/contract
-    network: "${{meta.network}}"
+    network: "{{meta.network}}"
     source:
       abi: ParticipationContract
     mapping:
@@ -475,7 +475,7 @@ templates:
 
   - name: PolicyManagerDataSource
     kind: ethereum/contract
-    network: "${{meta.network}}"
+    network: "{{meta.network}}"
     source:
       abi: PolicyManagerContract
     mapping:
@@ -507,7 +507,7 @@ templates:
 
   - name: SharesDataSource
     kind: ethereum/contract
-    network: "${{meta.network}}"
+    network: "{{meta.network}}"
     source:
       abi: SharesContract
     mapping:
@@ -529,7 +529,7 @@ templates:
   # current trading contract
   - name: TradingDataSource
     kind: ethereum/contract
-    network: "${{meta.network}}"
+    network: "{{meta.network}}"
     source:
       abi: TradingContract
     mapping:
@@ -555,7 +555,7 @@ templates:
   # old trading contract
   - name: TradingDataSourceV101
     kind: ethereum/contract
-    network: "${{meta.network}}"
+    network: "{{meta.network}}"
     source:
       abi: TradingContractV101
     mapping:
@@ -580,7 +580,7 @@ templates:
 
   - name: VaultDataSource
     kind: ethereum/contract
-    network: "${{meta.network}}"
+    network: "{{meta.network}}"
     source:
       abi: VaultContract
     mapping:
