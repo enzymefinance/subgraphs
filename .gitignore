@@ -23,3 +23,6 @@ src/statics.ts
  
 # Dependency directories
 node_modules/
+
+# Local environment
+.env
