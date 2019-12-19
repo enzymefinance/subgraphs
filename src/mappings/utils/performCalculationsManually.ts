@@ -13,17 +13,6 @@ export function performCalculationsManually(
   feeManagerAddress: Address,
   accountingContract: AccountingContract
 ): AccountingContract__performCalculationsResult {
-  let calcs = new AccountingContract__performCalculationsResult(
-    BigInt.fromI32(0),
-    BigInt.fromI32(0),
-    BigInt.fromI32(0),
-    BigInt.fromI32(0),
-    BigInt.fromI32(0),
-    BigInt.fromI32(0)
-  );
-
-  calcs.value0 = fundGavFromAssets;
-
   let feeManagerContract = FeeManagerContract.bind(feeManagerAddress);
 
   // (management fee amount can be calculated by the contract (not dependent on price))
@@ -49,7 +38,7 @@ export function performCalculationsManually(
   if (
     gavPerShare.gt(highWaterMark) &&
     !totalSupply.isZero() &&
-    !gavPerShare.isZero()
+    !fundGavFromAssets.isZero()
   ) {
     let sharePriceGain = gavPerShare.minus(highWaterMark);
     let totalGain = sharePriceGain
@@ -60,37 +49,43 @@ export function performCalculationsManually(
         .performanceFeeRate(feeManagerContract._address)
         .div(perfFeeContract.DIVISOR())
     );
-    let preDilutionFee = totalSupply.times(feeInAsset).div(gavPerShare);
+    let preDilutionFee = totalSupply.times(feeInAsset).div(fundGavFromAssets);
     perfFeeAmount = preDilutionFee
       .times(totalSupply)
       .div(totalSupply.minus(preDilutionFee));
   }
-  calcs.value2 = mgmtFeeAmount.plus(perfFeeAmount);
+  let feesInShares = mgmtFeeAmount.plus(perfFeeAmount);
 
-  if (totalSupply.isZero()) {
-    calcs.value1 = BigInt.fromI32(0);
-  } else {
-    calcs.value1 = calcs.value2
+  let feesInDenominationAsset = BigInt.fromI32(0);
+  if (!totalSupply.isZero()) {
+    feesInDenominationAsset = feesInShares
       .times(fundGavFromAssets)
-      .div(totalSupply.plus(calcs.value2));
+      .div(totalSupply.plus(feesInShares));
   }
 
-  calcs.value3 = fundGavFromAssets.minus(calcs.value1);
+  let nav = fundGavFromAssets.minus(feesInDenominationAsset);
 
-  let totalSupplyAccountingForFees = totalSupply.plus(calcs.value2);
-  if (totalSupply.isZero()) {
-    calcs.value4 = accountingContract.DEFAULT_SHARE_PRICE();
-    calcs.value5 = accountingContract.DEFAULT_SHARE_PRICE();
-  } else {
-    calcs.value4 = accountingContract.valuePerShare(
+  let totalSupplyAccountingForFees = totalSupply.plus(feesInShares);
+
+  let sharePrice = accountingContract.DEFAULT_SHARE_PRICE();
+  let gavPerShareNetManagementFee = accountingContract.DEFAULT_SHARE_PRICE();
+  if (!totalSupply.isZero()) {
+    sharePrice = accountingContract.valuePerShare(
       fundGavFromAssets,
       totalSupplyAccountingForFees
     );
-    calcs.value5 = accountingContract.valuePerShare(
+    gavPerShareNetManagementFee = accountingContract.valuePerShare(
       fundGavFromAssets,
       totalSupply.plus(mgmtFeeAmount)
     );
   }
 
-  return calcs;
+  return new AccountingContract__performCalculationsResult(
+    fundGavFromAssets,
+    feesInDenominationAsset,
+    feesInShares,
+    nav,
+    sharePrice,
+    gavPerShareNetManagementFee
+  );
 }
