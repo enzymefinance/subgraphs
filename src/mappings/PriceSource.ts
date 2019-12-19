@@ -1,4 +1,4 @@
-import { Address, BigInt, TypedMap } from "@graphprotocol/graph-ts";
+import { Address, BigInt, TypedMap, log } from "@graphprotocol/graph-ts";
 import { PriceUpdate } from "../types/templates/PriceSourceDataSource/PriceSourceContract";
 import {
   Fund,
@@ -16,13 +16,14 @@ import {
   AccountingContract,
   AccountingContract__performCalculationsResult
 } from "../types/templates/PriceSourceDataSource/AccountingContract";
-import { ParticipationContract } from "../types/templates/ParticipationDataSource/ParticipationContract";
+import { ParticipationContract } from "../types/templates/PriceSourceDataSource/ParticipationContract";
 import { SharesContract } from "../types/templates/PriceSourceDataSource/SharesContract";
 import { investmentEntity } from "./entities/investmentEntity";
 import { investorValuationHistoryEntity } from "./entities/investorValuationHistoryEntity";
 import { currentState } from "./utils/currentState";
 import { networkAssetHistoryEntity } from "./entities/networkAssetHistoryEntity";
 import { tenToThePowerOf } from "./utils/tenToThePowerOf";
+import { performCalculationsManually } from "./utils/performCalculationsManually";
 
 export function handlePriceUpdate(event: PriceUpdate): void {
   let state = currentState();
@@ -128,6 +129,7 @@ export function handlePriceUpdate(event: PriceUpdate): void {
       //
       let fundGavValid = true;
       let holdings = accountingContract.getFundHoldings();
+      let fundGavFromAssets = BigInt.fromI32(0);
 
       for (let k: i32 = 0; k < holdings.value0.length; k++) {
         let holdingAmount = holdings.value0[k];
@@ -166,6 +168,8 @@ export function handlePriceUpdate(event: PriceUpdate): void {
         fundHoldingsHistory.assetGav = assetGav;
         fundHoldingsHistory.validPrice = validPrice;
 
+        fundGavFromAssets = fundGavFromAssets.plus(assetGav);
+
         // only save non-zero values
         if (!holdingAmount.isZero()) {
           fundHoldingsHistory.save();
@@ -201,6 +205,10 @@ export function handlePriceUpdate(event: PriceUpdate): void {
         continue;
       }
 
+      let sharesAddress = Address.fromString(fund.share);
+      let sharesContract = SharesContract.bind(sharesAddress);
+      let totalSupply = sharesContract.totalSupply();
+
       let calcs = new AccountingContract__performCalculationsResult(
         BigInt.fromI32(0),
         BigInt.fromI32(0),
@@ -217,10 +225,14 @@ export function handlePriceUpdate(event: PriceUpdate): void {
         }
         calcs = accountingContract.try_performCalculations().value;
       } else {
-        // TODO: calculate manually
-        // log.warning("Implement manual calculation for performCalculation", []);
-        // calculate GAV
-        // let fundHoldings = accountingContract.getFundHoldings();
+        log.warning("Manual calculation.", []);
+        // workaround for failing pricefeed case, do performCalculations manually
+        calcs = performCalculationsManually(
+          fundGavFromAssets,
+          totalSupply,
+          Address.fromString(fund.feeManager),
+          accountingContract
+        );
       }
 
       let fundGav = calcs.value0;
@@ -231,10 +243,6 @@ export function handlePriceUpdate(event: PriceUpdate): void {
       let gavPerShareNetManagementFee = calcs.value5;
 
       melonNetworkGav = melonNetworkGav.plus(fundGav);
-
-      let sharesAddress = Address.fromString(fund.share);
-      let sharesContract = SharesContract.bind(sharesAddress);
-      let totalSupply = sharesContract.totalSupply();
 
       // save price calculation to history
       let calculationsId = fundAddress + "/" + timestamp.toString();

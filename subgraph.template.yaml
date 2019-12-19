@@ -19,6 +19,7 @@ dataSources:
     source:
       address: "{{melonContracts.registry}}"
       abi: RegistryContract
+      # prettier-ignore
       startBlock: {{meta.block}}
     mapping:
       kind: ethereum/events
@@ -70,6 +71,7 @@ dataSources:
     source:
       abi: AccountingFactoryContract
       address: "{{melonContracts.factories.accountingFactory}}"
+      # prettier-ignore
       startBlock: {{meta.block}}
     mapping:
       kind: ethereum/events
@@ -94,6 +96,7 @@ dataSources:
     source:
       abi: FeeManagerFactoryContract
       address: "{{melonContracts.factories.feeManagerFactory}}"
+      # prettier-ignore
       startBlock: {{meta.block}}
     mapping:
       kind: ethereum/events
@@ -115,6 +118,7 @@ dataSources:
     source:
       abi: ParticipationFactoryContract
       address: "{{melonContracts.factories.participationFactory}}"
+      # prettier-ignore
       startBlock: {{meta.block}}
     mapping:
       kind: ethereum/events
@@ -137,6 +141,7 @@ dataSources:
     source:
       abi: PolicyManagerFactoryContract
       address: "{{melonContracts.factories.policyManagerFactory}}"
+      # prettier-ignore
       startBlock: {{meta.block}}
     mapping:
       kind: ethereum/events
@@ -158,6 +163,7 @@ dataSources:
     source:
       abi: SharesFactoryContract
       address: "{{melonContracts.factories.sharesFactory}}"
+      # prettier-ignore
       startBlock: {{meta.block}}
     mapping:
       kind: ethereum/events
@@ -179,6 +185,7 @@ dataSources:
     source:
       abi: TradingFactoryContract
       address: "{{melonContracts.factories.tradingFactory}}"
+      # prettier-ignore
       startBlock: {{meta.block}}
     mapping:
       kind: ethereum/events
@@ -201,6 +208,7 @@ dataSources:
     source:
       abi: TradingFactoryContractV101
       address: "0xe2c3fe25336eE3bD71dcA3380b7423a3bDef3d8C"
+      # prettier-ignore
       startBlock: {{meta.block}}
     mapping:
       kind: ethereum/events
@@ -222,6 +230,7 @@ dataSources:
     source:
       abi: VaultFactoryContract
       address: "{{melonContracts.factories.vaultFactory}}"
+      # prettier-ignore
       startBlock: {{meta.block}}
     mapping:
       kind: ethereum/events
@@ -346,6 +355,10 @@ templates:
           file: ./node_modules/@melonproject/protocol/out/Participation.abi.json
         - name: FeeManagerContract
           file: ./node_modules/@melonproject/protocol/out/FeeManager.abi.json
+        - name: ManagementFeeContract
+          file: ./node_modules/@melonproject/protocol/out/ManagementFee.abi.json
+        - name: PerformanceFeeContract
+          file: ./node_modules/@melonproject/protocol/out/PerformanceFee.abi.json
       eventHandlers:
         - event: PriceUpdate(address[],uint256[])
           handler: handlePriceUpdate
