@@ -1,109 +1,84 @@
 #!/usr/bin/env node
 
-const commander = require("commander");
-const glob = require("glob");
+require("dotenv-extended").load();
+
+const yargs = require("yargs");
 const path = require("path");
 const fs = require("fs");
-const inquirer = require("inquirer");
 const mustache = require("mustache");
 
-async function loadDeployment(deployment) {
-  if (typeof deployment !== "undefined") {
-    return path.resolve(deployment);
+function networkForChainId(id) {
+  switch (id) {
+    case 1:
+      return "mainnet";
+    case 42:
+      return "kovan";
+    case 4:
+      return "dev";
   }
 
-  const protocol = path.dirname(
-    require.resolve("@melonproject/protocol/package.json")
-  );
-
-  const dir = path.join(protocol, "deployments");
-  const files = glob.sync("*.json", {
-    cwd: dir
-  });
-
-  const file = await (async () => {
-    if (!!deployment) {
-      return path.join(dir, deployment);
-    }
-
-    const { answer } = await inquirer.prompt([
-      {
-        type: "list",
-        name: "answer",
-        message: "Which deployment do you want to use?",
-        choices: files
-      }
-    ]);
-
-    return path.join(dir, answer);
-  })();
+  throw new Error("Invalid chain.");
 }
 
-commander
-  .command("generate-subgraph [<deployment>]")
-  .action(async deployment => {
-    const file = await loadDeployment(deployment);
+function startBlockForChainId(id) {
+  switch (id) {
+    case 1:
+      return 7200000;
+    case 42:
+      return 0;
+    case 4:
+      return 0;
+  }
 
-    const view = JSON.parse(
-      fs.readFileSync(file, {
-        encoding: "UTF-8"
-      })
-    );
+  throw new Error("Invalid chain.");
+}
 
-    view.meta.network = (() => {
-      switch (view.meta.chain) {
-        case 1:
-          return "mainnet";
-        case 42:
-          return "kovan";
-        default:
-          return "dev";
-      }
-    })();
+function openFile(file) {
+  if (!fs.existsSync(file)) {
+    throw new Error(`Failed to open file: ${file}`);
+  }
 
-    view.meta.block = (() => {
-      switch (view.meta.chain) {
-        case 1:
-          return 7200000;
-        case 42:
-          return 0;
-        default:
-          return 0;
-      }
-    })();
+  try {
+    return JSON.parse(fs.readFileSync(file, "utf8"));
+  } catch (e) {
+    throw new Error(`Failed to read file: ${file}`);
+  }
+}
 
-    const rootDir = path.join(__dirname, "..");
-    const staticsTemplate = fs.readFileSync(
-      path.join(rootDir, "src", "statics.template.ts"),
-      {
-        encoding: "UTF-8"
-      }
-    );
+yargs
+  .env("MELON")
+  .command({
+    command: "$0",
+    alias: "graphgen",
+    describe: "Generate the subgraph for a given deployment manifest.",
+    handler: async args => {
+      const view = args.deployment;
+      view.meta.network = networkForChainId(view.meta.chain);
+      view.meta.block = startBlockForChainId(view.meta.chain);
 
-    const subgraphTemplate = fs.readFileSync(
-      path.join(rootDir, "subgraph.template.yaml"),
-      {
-        encoding: "UTF-8"
-      }
-    );
+      const rootDir = path.join(__dirname, "..");
+      const staticsTemplate = fs.readFileSync(
+        path.join(rootDir, "src", "statics.template.ts"),
+        "utf8"
+      );
+      const subgraphTemplate = fs.readFileSync(
+        path.join(rootDir, "subgraph.template.yaml"),
+        "utf8"
+      );
 
-    const subgraphOutput = mustache.render(subgraphTemplate, view, undefined, [
-      "${{",
-      "}}"
-    ]);
+      const subgraphOutput = mustache.render(subgraphTemplate, view);
+      const staticsOutput = mustache.render(staticsTemplate, view);
 
-    const staticsOutput = mustache.render(staticsTemplate, view, undefined, [
-      "${{",
-      "}}"
-    ]);
-
-    fs.writeFileSync(path.join(rootDir, "subgraph.yaml"), subgraphOutput);
-    fs.writeFileSync(path.join(rootDir, "src", "statics.ts"), staticsOutput);
-  });
-
-commander.on("command:*", () => {
-  commander.help();
-  process.exit(1);
-});
-
-commander.parse(process.argv);
+      fs.writeFileSync(path.join(rootDir, "subgraph.yaml"), subgraphOutput);
+      fs.writeFileSync(path.join(rootDir, "src", "statics.ts"), staticsOutput);
+    },
+    builder: args =>
+      args
+        .option("deployment", {
+          type: "string",
+          coerce: openFile,
+          description: "The deployment manifest."
+        })
+        .demandOption("deployment")
+  })
+  .help().argv;
