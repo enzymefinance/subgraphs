@@ -1,4 +1,4 @@
-import { Address, BigInt, TypedMap, log } from "@graphprotocol/graph-ts";
+import { Address, BigInt, TypedMap } from "@graphprotocol/graph-ts";
 import { PriceUpdate } from "../types/templates/PriceSourceDataSource/PriceSourceContract";
 import {
   Fund,
@@ -123,10 +123,7 @@ export function handlePriceUpdate(event: PriceUpdate): void {
       let accountingContract = AccountingContract.bind(accountingAddress);
 
       // fund holdings, incl. finding out if there holdings with invalid prices
-      //
-      // this is to prevent calling calcGav and performCalculations in the Accounting contract
-      // directly, as those functions are unreliable (they fail if prices don't exist)
-      //
+
       let fundGavValid = true;
       let holdings = accountingContract.getFundHoldings();
       let fundGavFromAssets = BigInt.fromI32(0);
@@ -225,7 +222,6 @@ export function handlePriceUpdate(event: PriceUpdate): void {
         }
         calcs = accountingContract.try_performCalculations().value;
       } else {
-        log.warning("Manual calculation.", []);
         // workaround for failing pricefeed case, do performCalculations manually
         calcs = performCalculationsManually(
           fundGavFromAssets,
