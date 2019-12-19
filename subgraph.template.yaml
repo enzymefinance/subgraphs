@@ -421,6 +421,8 @@ templates:
           file: ./node_modules/@melonproject/protocol/out/PerformanceFee.abi.json
         - name: HubContract
           file: ./node_modules/@melonproject/protocol/out/Hub.abi.json
+        - name: AccountingContract
+          file: ./node_modules/@melonproject/protocol/out/Accounting.abi.json
       eventHandlers:
         - event: FeeRegistration(address)
           handler: handleFeeRegistration

@@ -25,6 +25,7 @@ type Registry @entity {
   id: ID!
   owner: String
   engine: Engine
+  priceSource: PriceSource
   versions: [Version!]!
   assets: [Asset!]! @derivedFrom(field: "registry")
   exchangeAdapters: [ExchangeAdapter!]! @derivedFrom(field: "registry")

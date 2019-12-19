@@ -308,7 +308,14 @@ export function handleRedemption(event: Redemption): void {
 
   let fundContract = HubContract.bind(hub);
   let accountingContract = AccountingContract.bind(fundContract.accounting());
-  let currentSharePrice = accountingContract.calcSharePrice();
+
+  let currentSharePrice = BigInt.fromI32(0);
+  if (accountingContract.try_calcSharePrice().reverted) {
+    // nothing to do
+  } else {
+    currentSharePrice = accountingContract.try_calcSharePrice().value;
+  }
+
   let defaultSharePrice = accountingContract.DEFAULT_SHARE_PRICE();
   let asset = accountingContract.NATIVE_ASSET();
 
@@ -354,7 +361,9 @@ export function handleRedemption(event: Redemption): void {
     state.save();
   }
 
-  let investmentHistory = new InvestmentHistory(event.transaction.hash.toHex());
+  let investmentHistory = new InvestmentHistory(
+    event.transaction.hash.toHex() + "/" + event.logIndex.toString()
+  );
   investmentHistory.timestamp = event.block.timestamp;
   investmentHistory.investment =
     event.params.redeemer.toHex() + "/" + participationContract.hub().toHex();

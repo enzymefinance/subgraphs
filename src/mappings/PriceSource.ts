@@ -12,7 +12,10 @@ import {
   Registry,
   Version
 } from "../types/schema";
-import { AccountingContract } from "../types/templates/PriceSourceDataSource/AccountingContract";
+import {
+  AccountingContract,
+  AccountingContract__performCalculationsResult
+} from "../types/templates/PriceSourceDataSource/AccountingContract";
 import { ParticipationContract } from "../types/templates/ParticipationDataSource/ParticipationContract";
 import { SharesContract } from "../types/templates/PriceSourceDataSource/SharesContract";
 import { investmentEntity } from "./entities/investmentEntity";
@@ -51,13 +54,16 @@ export function handlePriceUpdate(event: PriceUpdate): void {
     // identify invalid prices
     // (they are set to 0 by the contract event emitter)
     let priceValid = true;
+    let lastPrice = prices[i];
 
-    if (prices[i].isZero()) {
+    if (tokens[i].toHex() == "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2") {
+      lastPrice = tenToThePowerOf(BigInt.fromI32(18));
+    } else if (lastPrice.isZero()) {
       priceValid = false;
       invalidPrices = invalidPrices + 1;
     }
 
-    asset.lastPrice = prices[i];
+    asset.lastPrice = lastPrice;
     asset.lastPriceUpdate = event.block.timestamp;
     asset.lastPriceValid = priceValid;
     asset.save();
@@ -67,14 +73,14 @@ export function handlePriceUpdate(event: PriceUpdate): void {
     let assetPriceHistory = new AssetPriceHistory(id);
     assetPriceHistory.priceUpdate = event.block.timestamp.toString();
     assetPriceHistory.asset = asset.id;
-    assetPriceHistory.price = prices[i];
+    assetPriceHistory.price = lastPrice;
     assetPriceHistory.priceValid = priceValid;
     assetPriceHistory.timestamp = event.block.timestamp;
     assetPriceHistory.save();
 
     numberOfAssets = numberOfAssets + 1;
 
-    assetPriceMap.set(tokens[i].toHex(), prices[i]);
+    assetPriceMap.set(tokens[i].toHex(), lastPrice);
     assetDecimalMap.set(tokens[i].toHex(), BigInt.fromI32(asset.decimals));
   }
 
@@ -195,10 +201,27 @@ export function handlePriceUpdate(event: PriceUpdate): void {
         continue;
       }
 
-      if (accountingContract.try_performCalculations().reverted) {
-        continue;
+      let calcs = new AccountingContract__performCalculationsResult(
+        BigInt.fromI32(0),
+        BigInt.fromI32(0),
+        BigInt.fromI32(0),
+        BigInt.fromI32(0),
+        BigInt.fromI32(0),
+        BigInt.fromI32(0)
+      );
+
+      if (fund.priceSource == registryEntity.priceSource) {
+        // standard case: fund price source is current price source
+        if (accountingContract.try_performCalculations().reverted) {
+          continue;
+        }
+        calcs = accountingContract.try_performCalculations().value;
+      } else {
+        // TODO: calculate manually
+        // log.warning("Implement manual calculation for performCalculation", []);
+        // calculate GAV
+        // let fundHoldings = accountingContract.getFundHoldings();
       }
-      let calcs = accountingContract.try_performCalculations().value;
 
       let fundGav = calcs.value0;
       let feesInDenomiationAsset = calcs.value1;
@@ -242,7 +265,6 @@ export function handlePriceUpdate(event: PriceUpdate): void {
       fund.currentDailySharePrice = sharePrice;
       fund.save();
 
-      // valuations for individual investments / investors
       // valuations for individual investments / investors
       let participationAddress = Address.fromString(fund.participation);
       let participationContract = ParticipationContract.bind(

@@ -6,14 +6,16 @@ import {
   FeeManager,
   ManagementFee,
   PerformanceFee,
-  FeeRewardHistory
+  FeeRewardHistory,
+  InvestmentHistory
 } from "../types/schema";
 import { investmentEntity } from "./entities/investmentEntity";
-import { FeeManagerContract } from "../types/templates/PriceSourceDataSource/FeeManagerContract";
-import { HubContract } from "../types/templates/ParticipationDataSource/HubContract";
+import { FeeManagerContract } from "../types/templates/FeeManagerDataSource/FeeManagerContract";
+import { HubContract } from "../types/templates/FeeManagerDataSource/HubContract";
 import { BigInt } from "@graphprotocol/graph-ts";
 import { ManagementFeeContract } from "../types/templates/FeeManagerDataSource/ManagementFeeContract";
 import { PerformanceFeeContract } from "../types/templates/FeeManagerDataSource/PerformanceFeeContract";
+import { AccountingContract } from "../types/templates/FeeManagerDataSource/AccountingContract";
 import { saveEventHistory } from "./utils/saveEventHistory";
 
 export function handleFeeRegistration(event: FeeRegistration): void {
@@ -110,6 +112,7 @@ export function handleFeeReward(event: FeeReward): void {
   let hubAddress = feeManagerContract.hub();
   let hubContract = HubContract.bind(hubAddress);
   let managerAddress = hubContract.manager();
+  let accountingContract = AccountingContract.bind(hubContract.accounting());
 
   let investment = investmentEntity(
     managerAddress.toHex(),
@@ -118,6 +121,36 @@ export function handleFeeReward(event: FeeReward): void {
   );
   investment.shares = investment.shares.plus(event.params.shareQuantity);
   investment.save();
+
+  let currentSharePrice = BigInt.fromI32(0);
+  if (accountingContract.try_calcSharePrice().reverted) {
+    // nothing to do
+  } else {
+    currentSharePrice = accountingContract.try_calcSharePrice().value;
+  }
+
+  let defaultSharePrice = accountingContract.DEFAULT_SHARE_PRICE();
+  let asset = accountingContract.NATIVE_ASSET();
+
+  let amount = currentSharePrice
+    .times(event.params.shareQuantity)
+    .div(defaultSharePrice);
+
+  let investmentHistory = new InvestmentHistory(
+    event.transaction.hash.toHex() + "/" + event.logIndex.toString()
+  );
+  investmentHistory.timestamp = event.block.timestamp;
+  investmentHistory.investment =
+    managerAddress.toHex() + "/" + hubAddress.toHex();
+  investmentHistory.owner = managerAddress.toHex();
+  investmentHistory.fund = hubAddress.toHex();
+  investmentHistory.action = "Fee allocation";
+  investmentHistory.shares = event.params.shareQuantity;
+  investmentHistory.sharePrice = currentSharePrice;
+  investmentHistory.amount = amount;
+  investmentHistory.asset = asset.toHex();
+  investmentHistory.amountInDenominationAsset = amount;
+  investmentHistory.save();
 
   saveEventHistory(
     event.transaction.hash.toHex(),

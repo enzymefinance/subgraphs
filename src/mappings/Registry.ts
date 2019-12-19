@@ -300,6 +300,10 @@ export function handlePriceSourceChange(event: PriceSourceChange): void {
   priceSource.registry = event.address.toHex();
   priceSource.save();
 
+  let registry = new Registry(event.address.toHex());
+  registry.priceSource = priceSource.id;
+  registry.save();
+
   saveContract(
     priceSource.id,
     "PriceSource",
