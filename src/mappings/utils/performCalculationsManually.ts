@@ -1,4 +1,4 @@
-import { BigInt, Address } from "@graphprotocol/graph-ts";
+import { BigInt, Address, log } from "@graphprotocol/graph-ts";
 import { FeeManagerContract } from "../../types/templates/PriceSourceDataSource/FeeManagerContract";
 import { PerformanceFeeContract } from "../../types/templates/PriceSourceDataSource/PerformanceFeeContract";
 
@@ -19,20 +19,19 @@ export function performCalculationsManually(
   let mgmtFeeAmount = feeManagerContract.managementFeeAmount();
 
   // (performance fee is dependent on price, so we need to calculate manually)
-  let perfFeeAddress = feeManagerContract.fees(BigInt.fromI32(1));
-  let perfFeeContract = PerformanceFeeContract.bind(perfFeeAddress);
 
   let gavPerShare = accountingContract.DEFAULT_SHARE_PRICE();
-  if (totalSupply.gt(BigInt.fromI32(0))) {
+  if (!totalSupply.isZero()) {
     gavPerShare = accountingContract.valuePerShare(
       fundGavFromAssets,
       totalSupply
     );
   }
 
-  let highWaterMark = perfFeeContract.highWaterMark(
-    feeManagerContract._address
-  );
+  let perfFeeAddress = feeManagerContract.fees(BigInt.fromI32(1));
+  let perfFeeContract = PerformanceFeeContract.bind(perfFeeAddress);
+  let highWaterMark = perfFeeContract.highWaterMark(feeManagerAddress);
+  let perfFeeRate = perfFeeContract.performanceFeeRate(feeManagerAddress);
 
   let perfFeeAmount = BigInt.fromI32(0);
   if (
@@ -44,17 +43,19 @@ export function performCalculationsManually(
     let totalGain = sharePriceGain
       .times(totalSupply)
       .div(perfFeeContract.DIVISOR());
-    let feeInAsset = totalGain.times(
-      perfFeeContract
-        .performanceFeeRate(feeManagerContract._address)
-        .div(perfFeeContract.DIVISOR())
-    );
+    let feeInAsset = totalGain
+      .times(perfFeeRate)
+      .div(perfFeeContract.DIVISOR());
     let preDilutionFee = totalSupply.times(feeInAsset).div(fundGavFromAssets);
     perfFeeAmount = preDilutionFee
       .times(totalSupply)
       .div(totalSupply.minus(preDilutionFee));
   }
   let feesInShares = mgmtFeeAmount.plus(perfFeeAmount);
+  log.warning("Fees: mgmt {}, perf {}", [
+    mgmtFeeAmount.toString(),
+    perfFeeAmount.toString()
+  ]);
 
   let feesInDenominationAsset = BigInt.fromI32(0);
   if (!totalSupply.isZero()) {
