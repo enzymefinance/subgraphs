@@ -1,4 +1,4 @@
-import { BigInt, Address, log } from "@graphprotocol/graph-ts";
+import { BigInt, Address } from "@graphprotocol/graph-ts";
 import { FeeManagerContract } from "../../types/templates/PriceSourceDataSource/FeeManagerContract";
 import { PerformanceFeeContract } from "../../types/templates/PriceSourceDataSource/PerformanceFeeContract";
 
@@ -52,10 +52,6 @@ export function performCalculationsManually(
       .div(totalSupply.minus(preDilutionFee));
   }
   let feesInShares = mgmtFeeAmount.plus(perfFeeAmount);
-  log.warning("Fees: mgmt {}, perf {}", [
-    mgmtFeeAmount.toString(),
-    perfFeeAmount.toString()
-  ]);
 
   let feesInDenominationAsset = BigInt.fromI32(0);
   if (!totalSupply.isZero()) {
