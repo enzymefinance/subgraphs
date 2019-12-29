@@ -17,7 +17,7 @@ dataSources:
     kind: ethereum/contract
     network: "{{meta.network}}"
     source:
-      address: "{{melonContracts.registry}}"
+      address: "{{melon.addr.Registry}}"
       abi: RegistryContract
       # prettier-ignore
       startBlock: {{meta.block}}
@@ -70,8 +70,8 @@ dataSources:
     network: "{{meta.network}}"
     source:
       abi: AccountingFactoryContract
-      address: "{{melonContracts.factories.accountingFactory}}"
       # prettier-ignore
+      address: "{{melon.addr.AccountingFactory}}"
       startBlock: {{meta.block}}
     mapping:
       kind: ethereum/events
@@ -95,8 +95,8 @@ dataSources:
     network: "{{meta.network}}"
     source:
       abi: FeeManagerFactoryContract
-      address: "{{melonContracts.factories.feeManagerFactory}}"
       # prettier-ignore
+      address: "{{melon.addr.FeeManagerFactory}}"
       startBlock: {{meta.block}}
     mapping:
       kind: ethereum/events
@@ -117,8 +117,8 @@ dataSources:
     network: "{{meta.network}}"
     source:
       abi: ParticipationFactoryContract
-      address: "{{melonContracts.factories.participationFactory}}"
       # prettier-ignore
+      address: "{{melon.addr.ParticipationFactory}}"
       startBlock: {{meta.block}}
     mapping:
       kind: ethereum/events
@@ -140,8 +140,8 @@ dataSources:
     network: "{{meta.network}}"
     source:
       abi: PolicyManagerFactoryContract
-      address: "{{melonContracts.factories.policyManagerFactory}}"
       # prettier-ignore
+      address: "{{melon.addr.PolicyManagerFactory}}"
       startBlock: {{meta.block}}
     mapping:
       kind: ethereum/events
@@ -162,8 +162,8 @@ dataSources:
     network: "{{meta.network}}"
     source:
       abi: SharesFactoryContract
-      address: "{{melonContracts.factories.sharesFactory}}"
       # prettier-ignore
+      address: "{{melon.addr.SharesFactory}}"
       startBlock: {{meta.block}}
     mapping:
       kind: ethereum/events
@@ -184,8 +184,8 @@ dataSources:
     network: "{{meta.network}}"
     source:
       abi: TradingFactoryContract
-      address: "{{melonContracts.factories.tradingFactory}}"
       # prettier-ignore
+      address: "{{melon.addr.TradingFactory}}"
       startBlock: {{meta.block}}
     mapping:
       kind: ethereum/events
@@ -229,8 +229,8 @@ dataSources:
     network: "{{meta.network}}"
     source:
       abi: VaultFactoryContract
-      address: "{{melonContracts.factories.vaultFactory}}"
       # prettier-ignore
+      address: "{{melon.addr.VaultFactory}}"
       startBlock: {{meta.block}}
     mapping:
       kind: ethereum/events

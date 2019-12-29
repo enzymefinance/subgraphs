@@ -53,6 +53,12 @@ yargs
     describe: "Generate the subgraph for a given deployment manifest.",
     handler: async args => {
       const view = args.deployment;
+
+      // TODO: Make this generic again.
+      view.meta = {
+        chain: 4,
+      };
+
       view.meta.network = networkForChainId(view.meta.chain);
       view.meta.block = startBlockForChainId(view.meta.chain);
 
