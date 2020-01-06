@@ -8,12 +8,12 @@ const fs = require("fs");
 const mustache = require("mustache");
 
 function networkForChainId(id) {
-  switch (id) {
-    case 1:
+  switch (`${id}`) {
+    case '1':
       return "mainnet";
-    case 42:
+    case '42':
       return "kovan";
-    case 4:
+    case '4':
       return "dev";
   }
 
@@ -21,12 +21,12 @@ function networkForChainId(id) {
 }
 
 function startBlockForChainId(id) {
-  switch (id) {
-    case 1:
+  switch (`${id}`) {
+    case '1':
       return 7200000;
-    case 42:
-      return 0;
-    case 4:
+    case '42':
+      return 15800000;
+    case '4':
       return 0;
   }
 
@@ -53,14 +53,8 @@ yargs
     describe: "Generate the subgraph for a given deployment manifest.",
     handler: async args => {
       const view = args.deployment;
-
-      // TODO: Make this generic again.
-      view.meta = {
-        chain: 4,
-      };
-
-      view.meta.network = networkForChainId(view.meta.chain);
-      view.meta.block = startBlockForChainId(view.meta.chain);
+      view.conf.network = networkForChainId(view.conf.networkID);
+      view.conf.block = startBlockForChainId(view.conf.networkID);
 
       const rootDir = path.join(__dirname, "..");
       const staticsTemplate = fs.readFileSync(
