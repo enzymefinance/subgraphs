@@ -15,12 +15,12 @@ dataSources:
   #
   - name: RegistryDataSource
     kind: ethereum/contract
-    network: "{{meta.network}}"
+    network: "{{conf.network}}"
     source:
       address: "{{melon.addr.Registry}}"
       abi: RegistryContract
       # prettier-ignore
-      startBlock: {{meta.block}}
+      startBlock: {{conf.block}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.3
@@ -67,12 +67,12 @@ dataSources:
   #
   - name: AccountingFactoryDataSource
     kind: ethereum/contract
-    network: "{{meta.network}}"
+    network: "{{conf.network}}"
     source:
       abi: AccountingFactoryContract
       # prettier-ignore
       address: "{{melon.addr.AccountingFactory}}"
-      startBlock: {{meta.block}}
+      startBlock: {{conf.block}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.3
@@ -92,12 +92,12 @@ dataSources:
 
   - name: FeeManagerFactoryDataSource
     kind: ethereum/contract
-    network: "{{meta.network}}"
+    network: "{{conf.network}}"
     source:
       abi: FeeManagerFactoryContract
       # prettier-ignore
       address: "{{melon.addr.FeeManagerFactory}}"
-      startBlock: {{meta.block}}
+      startBlock: {{conf.block}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.3
@@ -114,12 +114,12 @@ dataSources:
 
   - name: ParticipationFactoryDataSource
     kind: ethereum/contract
-    network: "{{meta.network}}"
+    network: "{{conf.network}}"
     source:
       abi: ParticipationFactoryContract
       # prettier-ignore
       address: "{{melon.addr.ParticipationFactory}}"
-      startBlock: {{meta.block}}
+      startBlock: {{conf.block}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.3
@@ -137,12 +137,12 @@ dataSources:
 
   - name: PolicyManagerFactoryDataSource
     kind: ethereum/contract
-    network: "{{meta.network}}"
+    network: "{{conf.network}}"
     source:
       abi: PolicyManagerFactoryContract
       # prettier-ignore
       address: "{{melon.addr.PolicyManagerFactory}}"
-      startBlock: {{meta.block}}
+      startBlock: {{conf.block}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.3
@@ -159,12 +159,12 @@ dataSources:
 
   - name: SharesFactoryDataSource
     kind: ethereum/contract
-    network: "{{meta.network}}"
+    network: "{{conf.network}}"
     source:
       abi: SharesFactoryContract
       # prettier-ignore
       address: "{{melon.addr.SharesFactory}}"
-      startBlock: {{meta.block}}
+      startBlock: {{conf.block}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.3
@@ -181,12 +181,12 @@ dataSources:
 
   - name: TradingFactoryDataSource
     kind: ethereum/contract
-    network: "{{meta.network}}"
+    network: "{{conf.network}}"
     source:
       abi: TradingFactoryContract
       # prettier-ignore
       address: "{{melon.addr.TradingFactory}}"
-      startBlock: {{meta.block}}
+      startBlock: {{conf.block}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.3
@@ -204,12 +204,12 @@ dataSources:
     # old trading factory
   - name: TradingFactoryDataSourceV101
     kind: ethereum/contract
-    network: "{{meta.network}}"
+    network: "{{conf.network}}"
     source:
       abi: TradingFactoryContractV101
       address: "0xe2c3fe25336eE3bD71dcA3380b7423a3bDef3d8C"
       # prettier-ignore
-      startBlock: {{meta.block}}
+      startBlock: {{conf.block}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.3
@@ -226,12 +226,12 @@ dataSources:
 
   - name: VaultFactoryDataSource
     kind: ethereum/contract
-    network: "{{meta.network}}"
+    network: "{{conf.network}}"
     source:
       abi: VaultFactoryContract
       # prettier-ignore
       address: "{{melon.addr.VaultFactory}}"
-      startBlock: {{meta.block}}
+      startBlock: {{conf.block}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.3
@@ -257,7 +257,7 @@ templates:
   #
   - name: VersionDataSource
     kind: ethereum/contract
-    network: "{{meta.network}}"
+    network: "{{conf.network}}"
     source:
       abi: VersionContract
     mapping:
@@ -285,7 +285,7 @@ templates:
 
   - name: EngineDataSource
     kind: ethereum/contract
-    network: "{{meta.network}}"
+    network: "{{conf.network}}"
     source:
       abi: EngineContract
     mapping:
@@ -315,7 +315,7 @@ templates:
 
   - name: PriceSourceDataSource
     kind: ethereum/contract
-    network: "{{meta.network}}"
+    network: "{{conf.network}}"
     source:
       abi: PriceSourceContract
     mapping:
@@ -368,7 +368,7 @@ templates:
   #
   - name: HubDataSource
     kind: ethereum/contract
-    network: "{{meta.network}}"
+    network: "{{conf.network}}"
     source:
       abi: HubContract
     mapping:
@@ -389,7 +389,7 @@ templates:
 
   - name: AccountingDataSource
     kind: ethereum/contract
-    network: "{{meta.network}}"
+    network: "{{conf.network}}"
     source:
       abi: AccountingContract
     mapping:
@@ -410,7 +410,7 @@ templates:
 
   - name: FeeManagerDataSource
     kind: ethereum/contract
-    network: "{{meta.network}}"
+    network: "{{conf.network}}"
     source:
       abi: FeeManagerContract
     mapping:
@@ -444,7 +444,7 @@ templates:
 
   - name: ParticipationDataSource
     kind: ethereum/contract
-    network: "{{meta.network}}"
+    network: "{{conf.network}}"
     source:
       abi: ParticipationContract
     mapping:
@@ -490,7 +490,7 @@ templates:
 
   - name: PolicyManagerDataSource
     kind: ethereum/contract
-    network: "{{meta.network}}"
+    network: "{{conf.network}}"
     source:
       abi: PolicyManagerContract
     mapping:
@@ -522,7 +522,7 @@ templates:
 
   - name: SharesDataSource
     kind: ethereum/contract
-    network: "{{meta.network}}"
+    network: "{{conf.network}}"
     source:
       abi: SharesContract
     mapping:
@@ -544,7 +544,7 @@ templates:
   # current trading contract
   - name: TradingDataSource
     kind: ethereum/contract
-    network: "{{meta.network}}"
+    network: "{{conf.network}}"
     source:
       abi: TradingContract
     mapping:
@@ -570,7 +570,7 @@ templates:
   # old trading contract
   - name: TradingDataSourceV101
     kind: ethereum/contract
-    network: "{{meta.network}}"
+    network: "{{conf.network}}"
     source:
       abi: TradingContractV101
     mapping:
@@ -595,7 +595,7 @@ templates:
 
   - name: VaultDataSource
     kind: ethereum/contract
-    network: "{{meta.network}}"
+    network: "{{conf.network}}"
     source:
       abi: VaultContract
     mapping:
