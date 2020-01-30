@@ -1,5 +1,5 @@
 import { SharesDataSource } from "../types/templates";
-import { NewInstance } from "../types/SharesFactoryDataSource/SharesFactoryContract";
+import { NewInstance } from "../types/templates/SharesFactoryDataSource/SharesFactoryContract";
 import { Share } from "../types/schema";
 import { saveContract } from "./utils/saveContract";
 import { BigInt, dataSource } from "@graphprotocol/graph-ts";

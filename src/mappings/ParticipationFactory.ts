@@ -1,4 +1,4 @@
-import { NewInstance } from "../types/ParticipationFactoryDataSource/ParticipationFactoryContract";
+import { NewInstance } from "../types/templates/ParticipationFactoryDataSource/ParticipationFactoryContract";
 import { ParticipationDataSource } from "../types/templates";
 import { Participation } from "../types/schema";
 import { saveContract } from "./utils/saveContract";

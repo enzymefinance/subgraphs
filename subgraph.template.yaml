@@ -260,7 +260,7 @@ templates:
       kind: ethereum/events
       apiVersion: 0.0.3
       language: wasm/assemblyscript
-      file: ./src/mappings/AccountingFactory/AccountingFactory.v-1-0-10.ts
+      file: ./src/mappings/AccountingFactory/AccountingFactoryV1010.ts
       entities:
         - Asset
         - Accounting
@@ -357,7 +357,7 @@ templates:
       kind: ethereum/events
       apiVersion: 0.0.3
       language: wasm/assemblyscript
-      file: ./src/mappings/TradingFactory.ts
+      file: ./src/mappings/TradingFactory/TradingFactory.ts
       entities:
         - Trading
       abis:
@@ -377,7 +377,7 @@ templates:
       kind: ethereum/events
       apiVersion: 0.0.3
       language: wasm/assemblyscript
-      file: ./src/mappings/TradingFactoryV101.ts
+      file: ./src/mappings/TradingFactory/TradingFactoryV101.ts
       entities:
         - Trading
       abis:
@@ -460,7 +460,7 @@ templates:
       kind: ethereum/events
       apiVersion: 0.0.3
       language: wasm/assemblyscript
-      file: ./src/mappings/Accounting/Accounting.v-1-0-10.ts
+      file: ./src/mappings/Accounting/AccountingV1010.ts
       entities:
         - Accounting
       abis:
@@ -615,7 +615,7 @@ templates:
       kind: ethereum/events
       apiVersion: 0.0.3
       language: wasm/assemblyscript
-      file: ./src/mappings/Trading.ts
+      file: ./src/mappings/Trading/Trading.ts
       entities:
         - Trading
       abis:
@@ -641,7 +641,7 @@ templates:
       kind: ethereum/events
       apiVersion: 0.0.3
       language: wasm/assemblyscript
-      file: ./src/mappings/TradingV101.ts
+      file: ./src/mappings/Trading/TradingV101.ts
       entities:
         - Trading
       abis:

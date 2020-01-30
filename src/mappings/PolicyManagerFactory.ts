@@ -1,5 +1,5 @@
 import { PolicyManagerDataSource } from "../types/templates";
-import { NewInstance } from "../types/PolicyManagerFactoryDataSource/PolicyManagerFactoryContract";
+import { NewInstance } from "../types/templates/PolicyManagerFactoryDataSource/PolicyManagerFactoryContract";
 import { PolicyManager } from "../types/schema";
 import { saveContract } from "./utils/saveContract";
 import { saveEventHistory } from "./utils/saveEventHistory";

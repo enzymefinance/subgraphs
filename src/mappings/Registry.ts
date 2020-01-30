@@ -1,4 +1,4 @@
-import { Address, dataSource, log } from "@graphprotocol/graph-ts";
+import { Address, dataSource } from "@graphprotocol/graph-ts";
 import {
   EngineDataSource,
   PriceSourceDataSource,
