@@ -1,4 +1,4 @@
-import { NewInstance } from "../../types/templates/AccountingFactoryDataSourceV1010/AccountingFactoryContract";
+import { NewInstance } from "../../types/templates/AccountingFactoryDataSourceV1010/AccountingFactoryContractV1010";
 import { AccountingDataSource } from "../../types/templates";
 import { Accounting } from "../../types/schema";
 import { saveContract } from "../utils/saveContract";

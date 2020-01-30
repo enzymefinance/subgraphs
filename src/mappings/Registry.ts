@@ -2,7 +2,15 @@ import { Address, dataSource } from "@graphprotocol/graph-ts";
 import {
   EngineDataSource,
   PriceSourceDataSource,
-  VersionDataSource
+  VersionDataSource,
+  AccountingFactoryDataSource,
+  FeeManagerFactoryDataSource,
+  ParticipationFactoryDataSource,
+  PolicyManagerFactoryDataSource,
+  SharesFactoryDataSource,
+  TradingFactoryDataSourceV101,
+  TradingFactoryDataSource,
+  VaultFactoryDataSource
 } from "../types/templates";
 import {
   Registry,
@@ -32,6 +40,7 @@ import { saveContract } from "./utils/saveContract";
 import { PriceSourceChange } from "../types/templates/PriceSourceDataSource/RegistryContract";
 import { currentState } from "./utils/currentState";
 import { engineEntity } from "./entities/engineEntity";
+import { VersionContract } from "../types/templates/VersionDataSource/VersionContract";
 
 export function handleLogSetOwner(event: LogSetOwner): void {
   let registry = Registry.load(event.address.toHex());
@@ -83,8 +92,87 @@ export function handleVersionRegistration(event: VersionRegistration): void {
     event.block.timestamp,
     event.address.toHex()
   );
+
+  // create component contracts
+  let versionContract = VersionContract.bind(event.params.version);
+
+  // TODO: create correct accounting factory
+  let accountingFactory = versionContract.accountingFactory();
+  AccountingFactoryDataSource.create(accountingFactory);
+  saveContract(
+    id,
+    "AccountingFactory",
+    "",
+    event.block.timestamp,
+    accountingFactory.toHex()
+  );
+
+  let feeManagerFactory = versionContract.feeManagerFactory();
+  FeeManagerFactoryDataSource.create(feeManagerFactory);
+  saveContract(
+    id,
+    "FeeManagerFactory",
+    "",
+    event.block.timestamp,
+    feeManagerFactory.toHex()
+  );
+
+  let participationFactory = versionContract.participationFactory();
+  ParticipationFactoryDataSource.create(participationFactory);
+  saveContract(
+    id,
+    "ParticipationFactory",
+    "",
+    event.block.timestamp,
+    participationFactory.toHex()
+  );
+
+  let policyManagerFactory = versionContract.policyManagerFactory();
+  PolicyManagerFactoryDataSource.create(policyManagerFactory);
+  saveContract(
+    id,
+    "PolicyManagerFactory",
+    "",
+    event.block.timestamp,
+    policyManagerFactory.toHex()
+  );
+
+  let sharesFactory = versionContract.sharesFactory();
+  SharesFactoryDataSource.create(sharesFactory);
+  saveContract(
+    id,
+    "SharesFactory",
+    "",
+    event.block.timestamp,
+    sharesFactory.toHex()
+  );
+
+  let tradingFactory = versionContract.tradingFactory();
+  if (event.block.number.toI32() == 7258093) {
+    TradingFactoryDataSourceV101.create(tradingFactory);
+  } else {
+    TradingFactoryDataSource.create(tradingFactory);
+  }
+  saveContract(
+    id,
+    "TradingFactory",
+    "",
+    event.block.timestamp,
+    tradingFactory.toHex()
+  );
+
+  let vaultFactory = versionContract.vaultFactory();
+  VaultFactoryDataSource.create(vaultFactory);
+  saveContract(
+    id,
+    "VaultFactory",
+    "",
+    event.block.timestamp,
+    vaultFactory.toHex()
+  );
 }
 
+// TODO: add names of new tokens
 function assetNameFromAddress(address: Address): string {
   let name = "";
   if (address.toHex() == "0x0d8775f648430679a709e98d2b0cb6250d2887ef") {

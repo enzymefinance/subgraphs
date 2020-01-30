@@ -129,7 +129,7 @@ templates:
       kind: ethereum/events
       apiVersion: 0.0.3
       language: wasm/assemblyscript
-      file: ./src/mappings/Version.ts
+      file: ./src/mappings/Version/Version.ts
       entities:
         - Fund
         - FundCount
@@ -138,6 +138,34 @@ templates:
       abis:
         - name: VersionContract
           file: ./node_modules/@melonproject/protocol/out/Version.abi
+        - name: HubContract
+          file: ./node_modules/@melonproject/protocol/out/Hub.abi
+        - name: AccountingContract
+          file: ./node_modules/@melonproject/protocol/out/Accounting.abi
+        - name: SharesContract
+          file: ./node_modules/@melonproject/protocol/out/Shares.abi
+      eventHandlers:
+        - event: NewFund(indexed address,indexed address,address[12])
+          handler: handleNewFund
+
+  - name: VersionDataSourceV1010
+    kind: ethereum/contract
+    network: "{{conf.network}}"
+    source:
+      abi: VersionContractV1010
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.3
+      language: wasm/assemblyscript
+      file: ./src/mappings/Version/VersionV1010.ts
+      entities:
+        - Fund
+        - FundCount
+        - State
+        - FundCalculationsHistory
+      abis:
+        - name: VersionContractV1010
+          file: ./node_modules/@melonproject/protocol-v.1.0.10/out/Version.abi
         - name: HubContract
           file: ./node_modules/@melonproject/protocol/out/Hub.abi
         - name: AccountingContract
@@ -255,7 +283,7 @@ templates:
     kind: ethereum/contract
     network: "{{conf.network}}"
     source:
-      abi: AccountingFactoryContract
+      abi: AccountingFactoryContractV1010
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.3
@@ -265,7 +293,7 @@ templates:
         - Asset
         - Accounting
       abis:
-        - name: AccountingFactoryContract
+        - name: AccountingFactoryContractV1010
           file: ./node_modules/@melonproject/protocol-v.1.0.10/out/AccountingFactory.abi
       eventHandlers:
         - event: NewInstance(indexed address,indexed address,address,address,address[])
@@ -455,7 +483,7 @@ templates:
     kind: ethereum/contract
     network: "{{conf.network}}"
     source:
-      abi: AccountingContract
+      abi: AccountingContractV1010
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.3
@@ -464,7 +492,7 @@ templates:
       entities:
         - Accounting
       abis:
-        - name: AccountingContract
+        - name: AccountingContractV1010
           file: ./node_modules/@melonproject/protocol-v.1.0.10/out/Accounting.abi
       eventHandlers:
         - event: AssetAddition(indexed address)
