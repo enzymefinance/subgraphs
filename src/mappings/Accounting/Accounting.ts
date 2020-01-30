@@ -1,9 +1,9 @@
 import {
   AssetAddition,
   AssetRemoval
-} from "../types/templates/AccountingDataSource/AccountingContract";
-import { Accounting, Asset } from "../types/schema";
-import { saveEventHistory } from "./utils/saveEventHistory";
+} from "../../types/templates/AccountingDataSource/AccountingContract";
+import { Accounting, Asset } from "../../types/schema";
+import { saveEventHistory } from "../utils/saveEventHistory";
 
 export function handleAssetAddition(event: AssetAddition): void {
   let accounting = Accounting.load(event.address.toHex());

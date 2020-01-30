@@ -1,8 +1,5 @@
 import { FeeManagerDataSource } from "../types/templates";
-import {
-  NewInstance,
-  CreateInstanceCall
-} from "../types/FeeManagerFactoryDataSource/FeeManagerFactoryContract";
+import { NewInstance } from "../types/templates/FeeManagerFactoryDataSource/FeeManagerFactoryContract";
 import { FeeManager } from "../types/schema";
 import { saveContract } from "./utils/saveContract";
 import { BigInt, dataSource } from "@graphprotocol/graph-ts";
