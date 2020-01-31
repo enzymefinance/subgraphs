@@ -2,6 +2,7 @@ import { Address, dataSource } from "@graphprotocol/graph-ts";
 import {
   EngineDataSource,
   PriceSourceDataSource,
+  VersionDataSourceV1010,
   VersionDataSource,
   AccountingFactoryDataSource,
   FeeManagerFactoryDataSource,
@@ -9,8 +10,10 @@ import {
   PolicyManagerFactoryDataSource,
   SharesFactoryDataSource,
   TradingFactoryDataSourceV101,
+  TradingFactoryDataSourceV1010,
   TradingFactoryDataSource,
-  VaultFactoryDataSource
+  VaultFactoryDataSource,
+  AccountingFactoryDataSourceV1010
 } from "../types/templates";
 import {
   Registry,
@@ -67,7 +70,11 @@ export function handleVersionRegistration(event: VersionRegistration): void {
     return;
   }
 
-  VersionDataSource.create(event.params.version);
+  if (event.block.number.toI32() < 9339586) {
+    VersionDataSourceV1010.create(event.params.version);
+  } else {
+    VersionDataSource.create(event.params.version);
+  }
 
   let id = event.params.version.toHex();
 
@@ -95,11 +102,17 @@ export function handleVersionRegistration(event: VersionRegistration): void {
   );
 
   // create component contracts
+
   let versionContract = VersionContract.bind(event.params.version);
 
   // TODO: create correct accounting factory
   let accountingFactory = versionContract.accountingFactory();
-  AccountingFactoryDataSource.create(accountingFactory);
+
+  if (event.block.number.toI32() < 9339586) {
+    AccountingFactoryDataSourceV1010.create(accountingFactory);
+  } else {
+    AccountingFactoryDataSource.create(accountingFactory);
+  }
   saveContract(
     id,
     "AccountingFactory",
@@ -149,8 +162,11 @@ export function handleVersionRegistration(event: VersionRegistration): void {
   );
 
   let tradingFactory = versionContract.tradingFactory();
+
   if (event.block.number.toI32() == 7258093) {
     TradingFactoryDataSourceV101.create(tradingFactory);
+  } else if (event.block.number.toI32() < 9339586) {
+    TradingFactoryDataSourceV1010.create(tradingFactory);
   } else {
     TradingFactoryDataSource.create(tradingFactory);
   }

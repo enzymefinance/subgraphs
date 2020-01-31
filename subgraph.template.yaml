@@ -399,7 +399,26 @@ templates:
         - event: NewInstance(indexed address,indexed address,address[],address[],address)
           handler: handleNewInstance
 
-    # old trading factory
+  - name: TradingFactoryDataSourceV1010
+    kind: ethereum/contract
+    network: "{{conf.network}}"
+    source:
+      abi: TradingFactoryContractV1010
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.3
+      language: wasm/assemblyscript
+      file: ./src/mappings/TradingFactory/TradingFactoryV1010.ts
+      entities:
+        - Trading
+      abis:
+        - name: TradingFactoryContractV1010
+          file: ./src/abis/v.1.0.10/TradingFactory.abi
+      eventHandlers:
+        - event: NewInstance(indexed address,indexed address,address[],address[],address)
+          handler: handleNewInstance
+
+    # trading factory v.1.0.1
   - name: TradingFactoryDataSourceV101
     kind: ethereum/contract
     network: "{{conf.network}}"
