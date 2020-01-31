@@ -66,6 +66,7 @@ export function handleVersionRegistration(event: VersionRegistration): void {
   ) {
     return;
   }
+
   VersionDataSource.create(event.params.version);
 
   let id = event.params.version.toHex();

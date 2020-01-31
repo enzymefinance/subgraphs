@@ -37,7 +37,9 @@ dataSources:
         - NativeAsset
       abis:
         - name: RegistryContract
-          file: ./node_modules/@melonproject/protocol/out/Registry.abi
+          file: ./src/abis/Registry.abi
+        - name: VersionContract
+          file: ./src/abis/Version.abi
       eventHandlers:
         - event: VersionRegistration(indexed address)
           handler: handleVersionRegistration
@@ -86,7 +88,9 @@ dataSources:
         - NativeAsset
       abis:
         - name: RegistryContract
-          file: ./node_modules/@melonproject/protocol/out/Registry.abi
+          file: ./src/abis/Registry.abi
+        - name: VersionContract
+          file: ./src/abis/Version.abi
       eventHandlers:
         - event: VersionRegistration(indexed address)
           handler: handleVersionRegistration
@@ -137,15 +141,15 @@ templates:
         - FundCalculationsHistory
       abis:
         - name: VersionContract
-          file: ./node_modules/@melonproject/protocol/out/Version.abi
+          file: ./src/abis/Version.abi
         - name: HubContract
-          file: ./node_modules/@melonproject/protocol/out/Hub.abi
+          file: ./src/abis/Hub.abi
         - name: AccountingContract
-          file: ./node_modules/@melonproject/protocol/out/Accounting.abi
+          file: ./src/abis/Accounting.abi
         - name: SharesContract
-          file: ./node_modules/@melonproject/protocol/out/Shares.abi
+          file: ./src/abis/Shares.abi
       eventHandlers:
-        - event: NewFund(indexed address,indexed address,address[12])
+        - event: NewFund(indexed address,indexed address,address[11])
           handler: handleNewFund
 
   - name: VersionDataSourceV1010
@@ -165,13 +169,13 @@ templates:
         - FundCalculationsHistory
       abis:
         - name: VersionContractV1010
-          file: ./node_modules/@melonproject/protocol-v.1.0.10/out/Version.abi
+          file: ./src/abis/v.1.0.10/Version.abi
         - name: HubContract
-          file: ./node_modules/@melonproject/protocol/out/Hub.abi
+          file: ./src/abis/Hub.abi
         - name: AccountingContract
-          file: ./node_modules/@melonproject/protocol/out/Accounting.abi
+          file: ./src/abis/Accounting.abi
         - name: SharesContract
-          file: ./node_modules/@melonproject/protocol/out/Shares.abi
+          file: ./src/abis/Shares.abi
       eventHandlers:
         - event: NewFund(indexed address,indexed address,address[12])
           handler: handleNewFund
@@ -191,9 +195,9 @@ templates:
         - Registry
       abis:
         - name: EngineContract
-          file: ./node_modules/@melonproject/protocol/out/Engine.abi
+          file: ./src/abis/Engine.abi
         - name: MlnContract
-          file: ./node_modules/@melonproject/protocol/out/PreminedToken.abi
+          file: ./src/abis/PreminedToken.abi
       eventHandlers:
         - event: SetAmguPrice(uint256)
           handler: handleSetAmguPrice
@@ -233,25 +237,25 @@ templates:
         - InvestorValuationHistory
       abis:
         - name: PriceSourceContract
-          file: ./node_modules/@melonproject/protocol/out/KyberPriceFeed.abi
+          file: ./src/abis/KyberPriceFeed.abi
         - name: RegistryContract
-          file: ./node_modules/@melonproject/protocol/out/Registry.abi
+          file: ./src/abis/Registry.abi
         - name: VersionContract
-          file: ./node_modules/@melonproject/protocol/out/Version.abi
+          file: ./src/abis/Version.abi
         - name: HubContract
-          file: ./node_modules/@melonproject/protocol/out/Hub.abi
+          file: ./src/abis/Hub.abi
         - name: AccountingContract
-          file: ./node_modules/@melonproject/protocol/out/Accounting.abi
+          file: ./src/abis/Accounting.abi
         - name: SharesContract
-          file: ./node_modules/@melonproject/protocol/out/Shares.abi
+          file: ./src/abis/Shares.abi
         - name: ParticipationContract
-          file: ./node_modules/@melonproject/protocol/out/Participation.abi
+          file: ./src/abis/Participation.abi
         - name: FeeManagerContract
-          file: ./node_modules/@melonproject/protocol/out/FeeManager.abi
+          file: ./src/abis/FeeManager.abi
         - name: ManagementFeeContract
-          file: ./node_modules/@melonproject/protocol/out/ManagementFee.abi
+          file: ./src/abis/ManagementFee.abi
         - name: PerformanceFeeContract
-          file: ./node_modules/@melonproject/protocol/out/PerformanceFee.abi
+          file: ./src/abis/PerformanceFee.abi
       eventHandlers:
         - event: PriceUpdate(address[],uint256[])
           handler: handlePriceUpdate
@@ -274,7 +278,7 @@ templates:
         - Accounting
       abis:
         - name: AccountingFactoryContract
-          file: ./node_modules/@melonproject/protocol/out/AccountingFactory.abi
+          file: ./src/abis/AccountingFactory.abi
       eventHandlers:
         - event: NewInstance(indexed address,indexed address)
           handler: handleNewInstance
@@ -294,7 +298,7 @@ templates:
         - Accounting
       abis:
         - name: AccountingFactoryContractV1010
-          file: ./node_modules/@melonproject/protocol-v.1.0.10/out/AccountingFactory.abi
+          file: ./src/abis/v.1.0.10/AccountingFactory.abi
       eventHandlers:
         - event: NewInstance(indexed address,indexed address,address,address,address[])
           handler: handleNewInstance
@@ -313,7 +317,7 @@ templates:
         - FeeManager
       abis:
         - name: FeeManagerFactoryContract
-          file: ./node_modules/@melonproject/protocol/out/FeeManagerFactory.abi
+          file: ./src/abis/FeeManagerFactory.abi
       eventHandlers:
         - event: NewInstance(indexed address,indexed address)
           handler: handleNewInstance
@@ -333,7 +337,7 @@ templates:
         - Participation
       abis:
         - name: ParticipationFactoryContract
-          file: ./node_modules/@melonproject/protocol/out/ParticipationFactory.abi
+          file: ./src/abis/ParticipationFactory.abi
       eventHandlers:
         - event: NewInstance(indexed address,indexed address,address[],address)
           handler: handleNewInstance
@@ -352,7 +356,7 @@ templates:
         - PolicyManager
       abis:
         - name: PolicyManagerFactoryContract
-          file: ./node_modules/@melonproject/protocol/out/PolicyManagerFactory.abi
+          file: ./src/abis/PolicyManagerFactory.abi
       eventHandlers:
         - event: NewInstance(indexed address,indexed address)
           handler: handleNewInstance
@@ -371,7 +375,7 @@ templates:
         - Shares
       abis:
         - name: SharesFactoryContract
-          file: ./node_modules/@melonproject/protocol/out/SharesFactory.abi
+          file: ./src/abis/SharesFactory.abi
       eventHandlers:
         - event: NewInstance(indexed address,indexed address)
           handler: handleNewInstance
@@ -390,7 +394,7 @@ templates:
         - Trading
       abis:
         - name: TradingFactoryContract
-          file: ./node_modules/@melonproject/protocol/out/TradingFactory.abi
+          file: ./src/abis/TradingFactory.abi
       eventHandlers:
         - event: NewInstance(indexed address,indexed address,address[],address[],address)
           handler: handleNewInstance
@@ -410,7 +414,7 @@ templates:
         - Trading
       abis:
         - name: TradingFactoryContractV101
-          file: ./node_modules/@melonproject/protocol-v.1.0.1/out/TradingFactory.abi
+          file: ./src/abis/v.1.0.1/TradingFactory.abi
       eventHandlers:
         - event: NewInstance(indexed address,indexed address,address[],address[],bool[],address)
           handler: handleNewInstance
@@ -429,7 +433,7 @@ templates:
         - Vault
       abis:
         - name: VaultFactoryContract
-          file: ./node_modules/@melonproject/protocol/out/VaultFactory.abi
+          file: ./src/abis/VaultFactory.abi
       eventHandlers:
         - event: NewInstance(indexed address,indexed address)
           handler: handleNewInstance
@@ -453,7 +457,7 @@ templates:
         - State
       abis:
         - name: HubContract
-          file: ./node_modules/@melonproject/protocol/out/Hub.abi
+          file: ./src/abis/Hub.abi
       eventHandlers:
         - event: FundShutDown()
           handler: handleFundShutDown
@@ -472,7 +476,7 @@ templates:
         - Accounting
       abis:
         - name: AccountingContract
-          file: ./node_modules/@melonproject/protocol/out/Accounting.abi
+          file: ./src/abis/Accounting.abi
       eventHandlers:
         - event: AssetAddition(indexed address)
           handler: handleAssetAddition
@@ -493,7 +497,7 @@ templates:
         - Accounting
       abis:
         - name: AccountingContractV1010
-          file: ./node_modules/@melonproject/protocol-v.1.0.10/out/Accounting.abi
+          file: ./src/abis/v.1.0.10/Accounting.abi
       eventHandlers:
         - event: AssetAddition(indexed address)
           handler: handleAssetAddition
@@ -519,15 +523,15 @@ templates:
         - Investor
       abis:
         - name: FeeManagerContract
-          file: ./node_modules/@melonproject/protocol/out/FeeManager.abi
+          file: ./src/abis/FeeManager.abi
         - name: ManagementFeeContract
-          file: ./node_modules/@melonproject/protocol/out/ManagementFee.abi
+          file: ./src/abis/ManagementFee.abi
         - name: PerformanceFeeContract
-          file: ./node_modules/@melonproject/protocol/out/PerformanceFee.abi
+          file: ./src/abis/PerformanceFee.abi
         - name: HubContract
-          file: ./node_modules/@melonproject/protocol/out/Hub.abi
+          file: ./src/abis/Hub.abi
         - name: AccountingContract
-          file: ./node_modules/@melonproject/protocol/out/Accounting.abi
+          file: ./src/abis/Accounting.abi
       eventHandlers:
         - event: FeeRegistration(address)
           handler: handleFeeRegistration
@@ -557,15 +561,15 @@ templates:
         - FundHoldingsHistory
       abis:
         - name: ParticipationContract
-          file: ./node_modules/@melonproject/protocol/out/Participation.abi
+          file: ./src/abis/Participation.abi
         - name: AccountingContract
-          file: ./node_modules/@melonproject/protocol/out/Accounting.abi
+          file: ./src/abis/Accounting.abi
         - name: SharesContract
-          file: ./node_modules/@melonproject/protocol/out/Shares.abi
+          file: ./src/abis/Shares.abi
         - name: HubContract
-          file: ./node_modules/@melonproject/protocol/out/Hub.abi
+          file: ./src/abis/Hub.abi
         - name: PriceSourceContract
-          file: ./node_modules/@melonproject/protocol/out/KyberPriceFeed.abi
+          file: ./src/abis/KyberPriceFeed.abi
       eventHandlers:
         - event: InvestmentRequest(indexed address,indexed address,uint256,uint256)
           handler: handleInvestmentRequest
@@ -595,19 +599,19 @@ templates:
         - Policy
       abis:
         - name: PolicyManagerContract
-          file: ./node_modules/@melonproject/protocol/out/PolicyManager.abi
+          file: ./src/abis/PolicyManager.abi
         - name: PolicyContract
-          file: ./node_modules/@melonproject/protocol/out/Policy.abi
+          file: ./src/abis/IPolicy.abi
         - name: AssetBlackListContract
-          file: ./node_modules/@melonproject/protocol/out/AssetBlacklist.abi
+          file: ./src/abis/AssetBlacklist.abi
         - name: AssetWhiteListContract
-          file: ./node_modules/@melonproject/protocol/out/AssetWhitelist.abi
+          file: ./src/abis/AssetWhitelist.abi
         - name: MaxConcentrationContract
-          file: ./node_modules/@melonproject/protocol/out/MaxConcentration.abi
+          file: ./src/abis/MaxConcentration.abi
         - name: MaxPositionsContract
-          file: ./node_modules/@melonproject/protocol/out/MaxPositions.abi
+          file: ./src/abis/MaxPositions.abi
         - name: PriceToleranceContract
-          file: ./node_modules/@melonproject/protocol/out/PriceTolerance.abi
+          file: ./src/abis/PriceTolerance.abi
       eventHandlers:
         - event: Registration(indexed bytes4,uint8,indexed address)
           handler: handleRegistration
@@ -626,14 +630,14 @@ templates:
         - Shares
       abis:
         - name: SharesContract
-          file: ./node_modules/@melonproject/protocol/out/Shares.abi
+          file: ./src/abis/Shares.abi
       eventHandlers:
         - event: Approval(indexed address,indexed address,uint256)
           handler: handleApproval
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
 
-  # current trading contract
+  # trading contract
   - name: TradingDataSource
     kind: ethereum/contract
     network: "{{conf.network}}"
@@ -648,18 +652,44 @@ templates:
         - Trading
       abis:
         - name: TradingContract
-          file: ./node_modules/@melonproject/protocol/out/Trading.abi
+          file: ./src/abis/Trading.abi
         - name: AccountingContract
-          file: ./node_modules/@melonproject/protocol/out/Accounting.abi
+          file: ./src/abis/Accounting.abi
         - name: PriceSourceContract
-          file: ./node_modules/@melonproject/protocol/out/KyberPriceFeed.abi
+          file: ./src/abis/KyberPriceFeed.abi
         - name: SharesContract
-          file: ./node_modules/@melonproject/protocol/out/Shares.abi
+          file: ./src/abis/Shares.abi
+      eventHandlers:
+        - event: ExchangeMethodCall(indexed address,indexed string,address[8],uint256[8],bytes[4],bytes32,bytes)
+          handler: handleExchangeMethodCall
+
+  # trading contract v.1.0.10
+  - name: TradingDataSourceV1010
+    kind: ethereum/contract
+    network: "{{conf.network}}"
+    source:
+      abi: TradingContractV1010
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.3
+      language: wasm/assemblyscript
+      file: ./src/mappings/Trading/TradingV1010.ts
+      entities:
+        - Trading
+      abis:
+        - name: TradingContractV1010
+          file: ./src/abis/v.1.0.10/Trading.abi
+        - name: AccountingContract
+          file: ./src/abis/Accounting.abi
+        - name: PriceSourceContract
+          file: ./src/abis/KyberPriceFeed.abi
+        - name: SharesContract
+          file: ./src/abis/Shares.abi
       eventHandlers:
         - event: ExchangeMethodCall(indexed address,indexed string,address[6],uint256[8],bytes32,bytes,bytes,bytes)
           handler: handleExchangeMethodCall
 
-  # old trading contract
+  # trading contract v.1.0.1
   - name: TradingDataSourceV101
     kind: ethereum/contract
     network: "{{conf.network}}"
@@ -674,13 +704,13 @@ templates:
         - Trading
       abis:
         - name: TradingContractV101
-          file: ./node_modules/@melonproject/protocol-v.1.0.1/out/Trading.abi
+          file: ./src/abis/v.1.0.1/Trading.abi
         - name: AccountingContract
-          file: ./node_modules/@melonproject/protocol/out/Accounting.abi
+          file: ./src/abis/Accounting.abi
         - name: PriceSourceContract
-          file: ./node_modules/@melonproject/protocol/out/KyberPriceFeed.abi
+          file: ./src/abis/KyberPriceFeed.abi
         - name: SharesContract
-          file: ./node_modules/@melonproject/protocol/out/Shares.abi
+          file: ./src/abis/Shares.abi
       eventHandlers:
         - event: ExchangeMethodCall(indexed address,indexed string,address[6],uint256[8],bytes32,bytes,bytes,bytes)
           handler: handleExchangeMethodCall
@@ -699,4 +729,4 @@ templates:
         - Vault
       abis:
         - name: VaultContract
-          file: ./node_modules/@melonproject/protocol/out/Vault.abi
+          file: ./src/abis/Vault.abi
