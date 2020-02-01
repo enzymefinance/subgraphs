@@ -50,10 +50,10 @@ export function handleNewFund(event: NewFund): void {
   fund.share = addresses[4];
   fund.trading = addresses[5];
   fund.vault = addresses[6];
-  fund.priceSource = addresses[7];
-  fund.registry = addresses[8];
-  fund.version = addresses[9];
-  fund.engine = addresses[10];
+  fund.priceSource = contract.priceSource().toHex();
+  fund.registry = addresses[7];
+  fund.version = addresses[8];
+  fund.engine = addresses[9];
   fund.investments = [];
   fund.save();
 

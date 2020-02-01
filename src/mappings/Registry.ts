@@ -271,6 +271,8 @@ export function handleAssetRemoval(event: AssetRemoval): void {
   asset.save();
 }
 
+// TODO: add names of new exchanges
+
 function exchangeNameFromAddress(address: Address): string {
   // match names for mainnet and kovan contracts
   let name = "";

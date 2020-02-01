@@ -399,6 +399,7 @@ templates:
         - event: NewInstance(indexed address,indexed address,address[],address[],address)
           handler: handleNewInstance
 
+  # trading factory v.1.0.10
   - name: TradingFactoryDataSourceV1010
     kind: ethereum/contract
     network: "{{conf.network}}"
@@ -418,7 +419,7 @@ templates:
         - event: NewInstance(indexed address,indexed address,address[],address[],address)
           handler: handleNewInstance
 
-    # trading factory v.1.0.1
+  # trading factory v.1.0.1
   - name: TradingFactoryDataSourceV101
     kind: ethereum/contract
     network: "{{conf.network}}"
