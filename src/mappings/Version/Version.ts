@@ -61,7 +61,7 @@ export function handleNewFund(event: NewFund): void {
   version.funds = version.funds.concat([fund.id]);
   version.save();
 
-  saveContract(hub, "Hub", fund.name, event.block.timestamp, addresses[9]);
+  saveContract(hub, "Hub", fund.name, event.block.timestamp, addresses[8]);
 
   saveEventHistory(
     event.transaction.hash.toHex(),

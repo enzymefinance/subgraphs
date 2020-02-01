@@ -108,57 +108,58 @@ export function handleVersionRegistration(event: VersionRegistration): void {
   // TODO: create correct accounting factory
   let accountingFactory = versionContract.accountingFactory();
 
-  if (event.block.number.toI32() < 9339586) {
+  if (event.block.number.toI32() < 9339573) {
     AccountingFactoryDataSourceV1010.create(accountingFactory);
   } else {
     AccountingFactoryDataSource.create(accountingFactory);
   }
+
   saveContract(
-    id,
+    accountingFactory.toHex(),
     "AccountingFactory",
     "",
     event.block.timestamp,
-    accountingFactory.toHex()
+    event.params.version.toHex()
   );
 
   let feeManagerFactory = versionContract.feeManagerFactory();
   FeeManagerFactoryDataSource.create(feeManagerFactory);
   saveContract(
-    id,
+    feeManagerFactory.toHex(),
     "FeeManagerFactory",
     "",
     event.block.timestamp,
-    feeManagerFactory.toHex()
+    event.params.version.toHex()
   );
 
   let participationFactory = versionContract.participationFactory();
   ParticipationFactoryDataSource.create(participationFactory);
   saveContract(
-    id,
+    participationFactory.toHex(),
     "ParticipationFactory",
     "",
     event.block.timestamp,
-    participationFactory.toHex()
+    event.params.version.toHex()
   );
 
   let policyManagerFactory = versionContract.policyManagerFactory();
   PolicyManagerFactoryDataSource.create(policyManagerFactory);
   saveContract(
-    id,
+    policyManagerFactory.toHex(),
     "PolicyManagerFactory",
     "",
     event.block.timestamp,
-    policyManagerFactory.toHex()
+    event.params.version.toHex()
   );
 
   let sharesFactory = versionContract.sharesFactory();
   SharesFactoryDataSource.create(sharesFactory);
   saveContract(
-    id,
+    sharesFactory.toHex(),
     "SharesFactory",
     "",
     event.block.timestamp,
-    sharesFactory.toHex()
+    event.params.version.toHex()
   );
 
   let tradingFactory = versionContract.tradingFactory();
@@ -171,21 +172,21 @@ export function handleVersionRegistration(event: VersionRegistration): void {
     TradingFactoryDataSource.create(tradingFactory);
   }
   saveContract(
-    id,
+    tradingFactory.toHex(),
     "TradingFactory",
     "",
     event.block.timestamp,
-    tradingFactory.toHex()
+    event.params.version.toHex()
   );
 
   let vaultFactory = versionContract.vaultFactory();
   VaultFactoryDataSource.create(vaultFactory);
   saveContract(
-    id,
+    vaultFactory.toHex(),
     "VaultFactory",
     "",
     event.block.timestamp,
-    vaultFactory.toHex()
+    event.params.version.toHex()
   );
 }
 
