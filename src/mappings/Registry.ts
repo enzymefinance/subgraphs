@@ -14,7 +14,7 @@ import {
   TradingFactoryDataSource,
   VaultFactoryDataSource,
   AccountingFactoryDataSourceV1010
-} from "../types/templates";
+} from "../codegen/templates";
 import {
   Registry,
   Version,
@@ -25,7 +25,7 @@ import {
   ExchangeAdapter,
   MGM,
   Exchange
-} from "../types/schema";
+} from "../codegen/schema";
 import {
   VersionRegistration,
   AssetRemoval,
@@ -38,14 +38,14 @@ import {
   RegistryContract,
   MGMChange,
   LogSetOwner
-} from "../types/RegistryDataSource/RegistryContract";
-import { saveContract } from "./utils/saveContract";
-import { PriceSourceChange } from "../types/templates/PriceSourceDataSource/RegistryContract";
-import { currentState } from "./utils/currentState";
-import { engineEntity } from "./entities/engineEntity";
-import { VersionContract } from "../types/templates/VersionDataSource/VersionContract";
-import { assetNameFromAddress } from "./utils/assetNameFromAddress";
-import { exchangeNameFromAddress } from "./utils/exchangeNameFromAddress";
+} from "../codegen/RegistryDataSource/RegistryContract";
+import { saveContract } from "../utils/saveContract";
+import { PriceSourceChange } from "../codegen/templates/PriceSourceDataSource/RegistryContract";
+import { currentState } from "../utils/currentState";
+import { engineEntity } from "../entities/engineEntity";
+import { VersionContract } from "../codegen/templates/VersionDataSource/VersionContract";
+import { assetNameFromAddress } from "../utils/assetNameFromAddress";
+import { exchangeNameFromAddress } from "../utils/exchangeNameFromAddress";
 
 export function handleLogSetOwner(event: LogSetOwner): void {
   let registry = Registry.load(event.address.toHex());

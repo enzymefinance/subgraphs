@@ -1,17 +1,17 @@
 import {
   ExchangeMethodCall,
   TradingContractV1010
-} from "../../types/templates/TradingDataSourceV1010/TradingContractV1010";
+} from "../../codegen/templates/TradingDataSourceV1010/TradingContractV1010";
 import {
   ExchangeMethodCall as ExchangeMethodCallEntity,
   FundCalculationsHistory,
   FundHoldingsHistory,
   Fund
-} from "../../types/schema";
-import { AccountingContract } from "../../types/templates/TradingDataSourceV1010/AccountingContract";
-import { PriceSourceContract } from "../../types/templates/TradingDataSourceV1010/PriceSourceContract";
-import { SharesContract } from "../../types/templates/TradingDataSourceV1010/SharesContract";
-import { saveEventHistory } from "../utils/saveEventHistory";
+} from "../../codegen/schema";
+import { AccountingContract } from "../../codegen/templates/TradingDataSourceV1010/AccountingContract";
+import { PriceSourceContract } from "../../codegen/templates/TradingDataSourceV1010/PriceSourceContract";
+import { SharesContract } from "../../codegen/templates/TradingDataSourceV1010/SharesContract";
+import { saveEventHistory } from "../../utils/saveEventHistory";
 
 export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
   let id = event.transaction.hash.toHex();

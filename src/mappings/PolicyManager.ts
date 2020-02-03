@@ -1,15 +1,15 @@
 import {
   Registration,
   PolicyManagerContract
-} from "../types/templates/PolicyManagerDataSource/PolicyManagerContract";
-import { Policy } from "../types/schema";
-import { PolicyContract } from "../types/templates/PolicyManagerDataSource/PolicyContract";
-import { PriceToleranceContract } from "../types/templates/PolicyManagerDataSource/PriceToleranceContract";
-import { MaxPositionsContract } from "../types/templates/PolicyManagerDataSource/MaxPositionsContract";
-import { MaxConcentrationContract } from "../types/templates/PolicyManagerDataSource/MaxConcentrationContract";
-import { AssetWhiteListContract } from "../types/templates/PolicyManagerDataSource/AssetWhiteListContract";
-import { AssetBlackListContract } from "../types/templates/PolicyManagerDataSource/AssetBlackListContract";
-import { saveEventHistory } from "./utils/saveEventHistory";
+} from "../codegen/templates/PolicyManagerDataSource/PolicyManagerContract";
+import { Policy } from "../codegen/schema";
+import { PolicyContract } from "../codegen/templates/PolicyManagerDataSource/PolicyContract";
+import { PriceToleranceContract } from "../codegen/templates/PolicyManagerDataSource/PriceToleranceContract";
+import { MaxPositionsContract } from "../codegen/templates/PolicyManagerDataSource/MaxPositionsContract";
+import { MaxConcentrationContract } from "../codegen/templates/PolicyManagerDataSource/MaxConcentrationContract";
+import { AssetWhiteListContract } from "../codegen/templates/PolicyManagerDataSource/AssetWhiteListContract";
+import { AssetBlackListContract } from "../codegen/templates/PolicyManagerDataSource/AssetBlackListContract";
+import { saveEventHistory } from "../utils/saveEventHistory";
 
 export function handleRegistration(event: Registration): void {
   let policyAddress = event.params.policy;

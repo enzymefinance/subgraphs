@@ -1,7 +1,7 @@
 import {
   Approval,
   Transfer
-} from "../types/templates/SharesDataSource/SharesContract";
+} from "../codegen/templates/SharesDataSource/SharesContract";
 
 export function handleApproval(event: Approval): void {
   // TODO

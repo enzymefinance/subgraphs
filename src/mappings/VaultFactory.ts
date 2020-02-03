@@ -1,8 +1,8 @@
-import { VaultDataSource } from "../types/templates";
-import { NewInstance } from "../types/templates/VaultFactoryDataSource/VaultFactoryContract";
-import { Vault } from "../types/schema";
-import { saveContract } from "./utils/saveContract";
-import { saveEventHistory } from "./utils/saveEventHistory";
+import { VaultDataSource } from "../codegen/templates";
+import { NewInstance } from "../codegen/templates/VaultFactoryDataSource/VaultFactoryContract";
+import { Vault } from "../codegen/schema";
+import { saveContract } from "../utils/saveContract";
+import { saveEventHistory } from "../utils/saveEventHistory";
 import { dataSource } from "@graphprotocol/graph-ts";
 
 export function handleNewInstance(event: NewInstance): void {

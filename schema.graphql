@@ -474,11 +474,14 @@ type ExchangeMethodCall @entity {
 type EventHistory @entity {
   id: ID!
   fund: Fund
+  investor: String
   event: String!
   contract: String!
   contractAddress: String!
   params: [EventHistoryParameter!]! @derivedFrom(field: "eventHistory")
   timestamp: BigInt!
+  block: BigInt!
+  transactionHash: String!
 }
 
 type EventHistoryParameter @entity {

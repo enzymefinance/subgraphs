@@ -1,8 +1,8 @@
-import { NewInstance } from "../../types/templates/AccountingFactoryDataSource/AccountingFactoryContract";
-import { AccountingDataSource } from "../../types/templates";
-import { Accounting } from "../../types/schema";
-import { saveContract } from "../utils/saveContract";
-import { saveEventHistory } from "../utils/saveEventHistory";
+import { NewInstance } from "../../codegen/templates/AccountingFactoryDataSource/AccountingFactoryContract";
+import { AccountingDataSource } from "../../codegen/templates";
+import { Accounting } from "../../codegen/schema";
+import { saveContract } from "../../utils/saveContract";
+import { saveEventHistory } from "../../utils/saveEventHistory";
 import { dataSource } from "@graphprotocol/graph-ts";
 
 export function handleNewInstance(event: NewInstance): void {

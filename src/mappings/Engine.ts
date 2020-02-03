@@ -5,19 +5,19 @@ import {
   Thaw,
   Burn,
   EngineContract
-} from "../types/templates/EngineDataSource/EngineContract";
+} from "../codegen/templates/EngineDataSource/EngineContract";
 import {
   AmguPrice,
   AmguPayment,
   EngineEtherEvent,
   Engine,
   EngineHistory
-} from "../types/schema";
+} from "../codegen/schema";
 import { Address, BigInt, log } from "@graphprotocol/graph-ts";
-import { saveContract } from "./utils/saveContract";
-import { currentState } from "./utils/currentState";
-import { MlnContract } from "../types/templates/EngineDataSource/MlnContract";
-import { engineEntity } from "./entities/engineEntity";
+import { saveContract } from "../utils/saveContract";
+import { currentState } from "../utils/currentState";
+import { MlnContract } from "../codegen/templates/EngineDataSource/MlnContract";
+import { engineEntity } from "../entities/engineEntity";
 
 export function handleSetAmguPrice(event: SetAmguPrice): void {
   let amguPrice = new AmguPrice(event.transaction.hash.toHex());

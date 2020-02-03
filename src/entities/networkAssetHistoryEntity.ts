@@ -1,5 +1,5 @@
 import { Address, BigInt } from "@graphprotocol/graph-ts";
-import { MelonNetworkAssetHistory } from "../../types/schema";
+import { MelonNetworkAssetHistory } from "../codegen/schema";
 
 export function networkAssetHistoryEntity(
   asset: Address,

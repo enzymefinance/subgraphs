@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "graphgen": "node scripts graphgen",
-    "codegen": "graph codegen --output-dir src/types/",
+    "codegen": "graph codegen --output-dir src/codegen/",
     "build": "graph build",
     "auth": "graph auth https://api.thegraph.com/deploy/",
     "deploy:prod": "graph deploy melonproject/melon --debug --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",

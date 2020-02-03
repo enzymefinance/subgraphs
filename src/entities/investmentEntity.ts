@@ -1,5 +1,5 @@
 import { BigInt } from "@graphprotocol/graph-ts";
-import { Investment } from "../../types/schema";
+import { Investment } from "../codegen/schema";
 import { investorEntity } from "./investorEntity";
 
 export function investmentEntity(

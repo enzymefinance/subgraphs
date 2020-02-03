@@ -1,8 +1,8 @@
-import { TradingDataSource } from "../../types/templates";
-import { NewInstance } from "../../types/templates/TradingFactoryDataSource/TradingFactoryContract";
-import { Trading } from "../../types/schema";
-import { saveContract } from "../utils/saveContract";
-import { saveEventHistory } from "../utils/saveEventHistory";
+import { TradingDataSource } from "../../codegen/templates";
+import { NewInstance } from "../../codegen/templates/TradingFactoryDataSource/TradingFactoryContract";
+import { Trading } from "../../codegen/schema";
+import { saveContract } from "../../utils/saveContract";
+import { saveEventHistory } from "../../utils/saveEventHistory";
 import { dataSource } from "@graphprotocol/graph-ts";
 
 export function handleNewInstance(event: NewInstance): void {

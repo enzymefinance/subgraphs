@@ -1,5 +1,5 @@
 import { Address, BigInt, TypedMap } from "@graphprotocol/graph-ts";
-import { PriceUpdate } from "../types/templates/PriceSourceDataSource/PriceSourceContract";
+import { PriceUpdate } from "../codegen/templates/PriceSourceDataSource/PriceSourceContract";
 import {
   Fund,
   Asset,
@@ -11,19 +11,19 @@ import {
   MelonNetworkHistory,
   Registry,
   Version
-} from "../types/schema";
+} from "../codegen/schema";
 import {
   AccountingContract,
   AccountingContract__performCalculationsResult
-} from "../types/templates/PriceSourceDataSource/AccountingContract";
-import { ParticipationContract } from "../types/templates/PriceSourceDataSource/ParticipationContract";
-import { SharesContract } from "../types/templates/PriceSourceDataSource/SharesContract";
-import { investmentEntity } from "./entities/investmentEntity";
-import { investorValuationHistoryEntity } from "./entities/investorValuationHistoryEntity";
-import { currentState } from "./utils/currentState";
-import { networkAssetHistoryEntity } from "./entities/networkAssetHistoryEntity";
-import { tenToThePowerOf } from "./utils/tenToThePowerOf";
-import { performCalculationsManually } from "./utils/performCalculationsManually";
+} from "../codegen/templates/PriceSourceDataSource/AccountingContract";
+import { ParticipationContract } from "../codegen/templates/PriceSourceDataSource/ParticipationContract";
+import { SharesContract } from "../codegen/templates/PriceSourceDataSource/SharesContract";
+import { investmentEntity } from "../entities/investmentEntity";
+import { investorValuationHistoryEntity } from "../entities/investorValuationHistoryEntity";
+import { currentState } from "../utils/currentState";
+import { networkAssetHistoryEntity } from "../entities/networkAssetHistoryEntity";
+import { tenToThePowerOf } from "../utils/tenToThePowerOf";
+import { performCalculationsManually } from "../utils/performCalculationsManually";
 
 export function handlePriceUpdate(event: PriceUpdate): void {
   let state = currentState();

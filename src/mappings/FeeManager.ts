@@ -1,22 +1,22 @@
 import {
   FeeRegistration,
   FeeReward
-} from "../types/templates/FeeManagerDataSource/FeeManagerContract";
+} from "../codegen/templates/FeeManagerDataSource/FeeManagerContract";
 import {
   FeeManager,
   ManagementFee,
   PerformanceFee,
   FeeRewardHistory,
   InvestmentHistory
-} from "../types/schema";
-import { investmentEntity } from "./entities/investmentEntity";
-import { FeeManagerContract } from "../types/templates/FeeManagerDataSource/FeeManagerContract";
-import { HubContract } from "../types/templates/FeeManagerDataSource/HubContract";
+} from "../codegen/schema";
+import { investmentEntity } from "../entities/investmentEntity";
+import { FeeManagerContract } from "../codegen/templates/FeeManagerDataSource/FeeManagerContract";
+import { HubContract } from "../codegen/templates/FeeManagerDataSource/HubContract";
 import { BigInt } from "@graphprotocol/graph-ts";
-import { ManagementFeeContract } from "../types/templates/FeeManagerDataSource/ManagementFeeContract";
-import { PerformanceFeeContract } from "../types/templates/FeeManagerDataSource/PerformanceFeeContract";
-import { AccountingContract } from "../types/templates/FeeManagerDataSource/AccountingContract";
-import { saveEventHistory } from "./utils/saveEventHistory";
+import { ManagementFeeContract } from "../codegen/templates/FeeManagerDataSource/ManagementFeeContract";
+import { PerformanceFeeContract } from "../codegen/templates/FeeManagerDataSource/PerformanceFeeContract";
+import { AccountingContract } from "../codegen/templates/FeeManagerDataSource/AccountingContract";
+import { saveEventHistory } from "../utils/saveEventHistory";
 
 export function handleFeeRegistration(event: FeeRegistration): void {
   // this event only passes very limited data, so

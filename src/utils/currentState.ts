@@ -1,4 +1,4 @@
-import { State } from "../../types/schema";
+import { State } from "../codegen/schema";
 import { BigInt } from "@graphprotocol/graph-ts";
 
 export function currentState(): State {

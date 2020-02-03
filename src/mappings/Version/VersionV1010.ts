@@ -1,20 +1,20 @@
-import { NewFund } from "../../types/templates/VersionDataSourceV1010/VersionContractV1010";
-import { HubDataSource } from "../../types/templates";
+import { NewFund } from "../../codegen/templates/VersionDataSourceV1010/VersionContractV1010";
+import { HubDataSource } from "../../codegen/templates";
 import {
   Fund,
   FundCount,
   FundManager,
   FundCalculationsHistory,
   Version
-} from "../../types/schema";
-import { hexToAscii } from "../utils/hexToAscii";
-import { HubContract } from "../../types/templates/VersionDataSourceV1010/HubContract";
+} from "../../codegen/schema";
+import { hexToAscii } from "../../utils/hexToAscii";
+import { HubContract } from "../../codegen/templates/VersionDataSourceV1010/HubContract";
 import { BigInt, Address, dataSource } from "@graphprotocol/graph-ts";
-import { currentState } from "../utils/currentState";
-import { saveContract } from "../utils/saveContract";
-import { AccountingContract } from "../../types/templates/VersionDataSourceV1010/AccountingContract";
-import { SharesContract } from "../../types/templates/VersionDataSourceV1010/SharesContract";
-import { saveEventHistory } from "../utils/saveEventHistory";
+import { currentState } from "../../utils/currentState";
+import { saveContract } from "../../utils/saveContract";
+import { AccountingContract } from "../../codegen/templates/VersionDataSourceV1010/AccountingContract";
+import { SharesContract } from "../../codegen/templates/VersionDataSourceV1010/SharesContract";
+import { saveEventHistory } from "../../utils/saveEventHistory";
 
 export function handleNewFund(event: NewFund): void {
   // ignore contracts created before go-live

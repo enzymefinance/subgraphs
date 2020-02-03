@@ -1,4 +1,4 @@
-import { investmentEntity } from "./entities/investmentEntity";
+import { investmentEntity } from "../entities/investmentEntity";
 import {
   RequestExecution,
   ParticipationContract,
@@ -7,7 +7,7 @@ import {
   DisableInvestment,
   InvestmentRequest,
   CancelRequest
-} from "../types/templates/ParticipationDataSource/ParticipationContract";
+} from "../codegen/templates/ParticipationDataSource/ParticipationContract";
 import {
   Participation,
   Fund,
@@ -16,16 +16,16 @@ import {
   InvestmentRequest as InvestmentRequestEntity,
   FundCalculationsHistory,
   FundHoldingsHistory
-} from "../types/schema";
-import { HubContract } from "../types/templates/ParticipationDataSource/HubContract";
-import { AccountingContract } from "../types/templates/ParticipationDataSource/AccountingContract";
-import { SharesContract } from "../types/templates/ParticipationDataSource/SharesContract";
+} from "../codegen/schema";
+import { HubContract } from "../codegen/templates/ParticipationDataSource/HubContract";
+import { AccountingContract } from "../codegen/templates/ParticipationDataSource/AccountingContract";
+import { SharesContract } from "../codegen/templates/ParticipationDataSource/SharesContract";
 
-import { currentState } from "./utils/currentState";
+import { currentState } from "../utils/currentState";
 import { store, BigInt, Address } from "@graphprotocol/graph-ts";
-import { PriceSourceContract } from "../types/templates/ParticipationDataSource/PriceSourceContract";
-import { investorEntity } from "./entities/investorEntity";
-import { saveEventHistory } from "./utils/saveEventHistory";
+import { PriceSourceContract } from "../codegen/templates/ParticipationDataSource/PriceSourceContract";
+import { investorEntity } from "../entities/investorEntity";
+import { saveEventHistory } from "../utils/saveEventHistory";
 
 function archiveInvestmentRequest(
   owner: string,

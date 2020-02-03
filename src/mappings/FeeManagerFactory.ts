@@ -1,9 +1,9 @@
-import { FeeManagerDataSource } from "../types/templates";
-import { NewInstance } from "../types/templates/FeeManagerFactoryDataSource/FeeManagerFactoryContract";
-import { FeeManager } from "../types/schema";
-import { saveContract } from "./utils/saveContract";
+import { FeeManagerDataSource } from "../codegen/templates";
+import { NewInstance } from "../codegen/templates/FeeManagerFactoryDataSource/FeeManagerFactoryContract";
+import { FeeManager } from "../codegen/schema";
+import { saveContract } from "../utils/saveContract";
 import { BigInt, dataSource } from "@graphprotocol/graph-ts";
-import { saveEventHistory } from "./utils/saveEventHistory";
+import { saveEventHistory } from "../utils/saveEventHistory";
 
 export function handleNewInstance(event: NewInstance): void {
   // ignore contracts created before go-live

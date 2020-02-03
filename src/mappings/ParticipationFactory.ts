@@ -1,8 +1,8 @@
-import { NewInstance } from "../types/templates/ParticipationFactoryDataSource/ParticipationFactoryContract";
-import { ParticipationDataSource } from "../types/templates";
-import { Participation } from "../types/schema";
-import { saveContract } from "./utils/saveContract";
-import { saveEventHistory } from "./utils/saveEventHistory";
+import { NewInstance } from "../codegen/templates/ParticipationFactoryDataSource/ParticipationFactoryContract";
+import { ParticipationDataSource } from "../codegen/templates";
+import { Participation } from "../codegen/schema";
+import { saveContract } from "../utils/saveContract";
+import { saveEventHistory } from "../utils/saveEventHistory";
 import { dataSource } from "@graphprotocol/graph-ts";
 
 export function handleNewInstance(event: NewInstance): void {

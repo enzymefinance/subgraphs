@@ -1,11 +1,11 @@
 import { BigInt, Address } from "@graphprotocol/graph-ts";
-import { FeeManagerContract } from "../../types/templates/PriceSourceDataSource/FeeManagerContract";
-import { PerformanceFeeContract } from "../../types/templates/PriceSourceDataSource/PerformanceFeeContract";
+import { FeeManagerContract } from "../codegen/templates/PriceSourceDataSource/FeeManagerContract";
+import { PerformanceFeeContract } from "../codegen/templates/PriceSourceDataSource/PerformanceFeeContract";
 
 import {
   AccountingContract__performCalculationsResult,
   AccountingContract
-} from "../../types/templates/PriceSourceDataSource/AccountingContract";
+} from "../codegen/templates/PriceSourceDataSource/AccountingContract";
 
 export function performCalculationsManually(
   fundGavFromAssets: BigInt,

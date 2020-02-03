@@ -1,5 +1,5 @@
 import { Address, BigInt } from "@graphprotocol/graph-ts";
-import { Investor } from "../../types/schema";
+import { Investor } from "../codegen/schema";
 
 export function investorEntity(address: string, createdAt: BigInt): Investor {
   let id = address;

@@ -1,4 +1,4 @@
-import { EventHistoryParameter } from "../../types/schema";
+import { EventHistoryParameter } from "../codegen/schema";
 
 export function saveEventHistoryParameters(
   eventHistoryId: string,

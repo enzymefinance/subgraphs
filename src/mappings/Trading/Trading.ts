@@ -1,15 +1,15 @@
-import { ExchangeMethodCall } from "../../types/templates/TradingDataSource/TradingContract";
+import { ExchangeMethodCall } from "../../codegen/templates/TradingDataSource/TradingContract";
 import {
   ExchangeMethodCall as ExchangeMethodCallEntity,
   FundHoldingsHistory,
   FundCalculationsHistory,
   Fund,
   Trading
-} from "../../types/schema";
-import { AccountingContract } from "../../types/templates/TradingDataSource/AccountingContract";
-import { PriceSourceContract } from "../../types/templates/TradingDataSource/PriceSourceContract";
-import { SharesContract } from "../../types/templates/TradingDataSource/SharesContract";
-import { saveEventHistory } from "../utils/saveEventHistory";
+} from "../../codegen/schema";
+import { AccountingContract } from "../../codegen/templates/TradingDataSource/AccountingContract";
+import { PriceSourceContract } from "../../codegen/templates/TradingDataSource/PriceSourceContract";
+import { SharesContract } from "../../codegen/templates/TradingDataSource/SharesContract";
+import { saveEventHistory } from "../../utils/saveEventHistory";
 import { Address } from "@graphprotocol/graph-ts";
 
 export function handleExchangeMethodCall(event: ExchangeMethodCall): void {

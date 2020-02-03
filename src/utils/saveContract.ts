@@ -1,5 +1,5 @@
 import { BigInt } from "@graphprotocol/graph-ts";
-import { Contract } from "../../types/schema";
+import { Contract } from "../codegen/schema";
 
 export function saveContract(
   id: string,

@@ -1,12 +1,8 @@
-import {
-  FundShutDown,
-  LogSetOwner,
-  HubContract
-} from "../types/templates/HubDataSource/HubContract";
-import { Fund, FundCount } from "../types/schema";
+import { FundShutDown } from "../codegen/templates/HubDataSource/HubContract";
+import { Fund, FundCount } from "../codegen/schema";
 import { BigInt } from "@graphprotocol/graph-ts";
-import { currentState } from "./utils/currentState";
-import { saveEventHistory } from "./utils/saveEventHistory";
+import { currentState } from "../utils/currentState";
+import { saveEventHistory } from "../utils/saveEventHistory";
 
 export function handleFundShutDown(event: FundShutDown): void {
   let fund = new Fund(event.address.toHex());

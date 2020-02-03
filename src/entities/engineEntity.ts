@@ -1,6 +1,6 @@
 import { BigInt } from "@graphprotocol/graph-ts";
 
-import { Engine } from "../../types/schema";
+import { Engine } from "../codegen/schema";
 
 export function engineEntity(id: string): Engine {
   let engine = Engine.load(id);

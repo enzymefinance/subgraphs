@@ -1,9 +1,9 @@
-import { SharesDataSource } from "../types/templates";
-import { NewInstance } from "../types/templates/SharesFactoryDataSource/SharesFactoryContract";
-import { Share } from "../types/schema";
-import { saveContract } from "./utils/saveContract";
+import { SharesDataSource } from "../codegen/templates";
+import { NewInstance } from "../codegen/templates/SharesFactoryDataSource/SharesFactoryContract";
+import { Share } from "../codegen/schema";
+import { saveContract } from "../utils/saveContract";
 import { BigInt, dataSource } from "@graphprotocol/graph-ts";
-import { saveEventHistory } from "./utils/saveEventHistory";
+import { saveEventHistory } from "../utils/saveEventHistory";
 
 export function handleNewInstance(event: NewInstance): void {
   // ignore contracts created before go-live
