@@ -1,5 +1,5 @@
 import { NewInstance } from "../../types/templates/AccountingFactoryDataSourceV1010/AccountingFactoryContractV1010";
-import { AccountingDataSource } from "../../types/templates";
+import { AccountingDataSourceV1010 } from "../../types/templates";
 import { Accounting } from "../../types/schema";
 import { saveContract } from "../utils/saveContract";
 import { saveEventHistory } from "../utils/saveEventHistory";
@@ -14,7 +14,7 @@ export function handleNewInstance(event: NewInstance): void {
     return;
   }
 
-  AccountingDataSource.create(event.params.instance);
+  AccountingDataSourceV1010.create(event.params.instance);
 
   let accounting = new Accounting(event.params.instance.toHex());
   accounting.fund = event.params.hub.toHex();

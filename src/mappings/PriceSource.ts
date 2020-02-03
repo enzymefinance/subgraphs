@@ -1,5 +1,8 @@
 import { Address, BigInt, TypedMap } from "@graphprotocol/graph-ts";
-import { PriceUpdate } from "../types/templates/PriceSourceDataSource/PriceSourceContract";
+import {
+  PriceSourceContract,
+  PriceUpdate
+} from "../types/templates/PriceSourceDataSource/PriceSourceContract";
 import {
   Fund,
   Asset,
@@ -93,7 +96,10 @@ export function handlePriceUpdate(event: PriceUpdate): void {
   state.save();
 
   // update values for all funds in all deployed versions
-  let registryAddress = state.registry;
+  let priceSourceContract = PriceSourceContract.bind(event.address);
+  let registryAddress = priceSourceContract.REGISTRY().toHex();
+
+  // let registryAddress = state.registry;
   if (!registryAddress) {
     return;
   }

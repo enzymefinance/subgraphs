@@ -280,7 +280,7 @@ templates:
         - name: AccountingFactoryContract
           file: ./src/abis/AccountingFactory.abi
       eventHandlers:
-        - event: NewInstance(indexed address,indexed address)
+        - event: NewInstance(indexed address,indexed address,address,address)
           handler: handleNewInstance
 
   - name: AccountingFactoryDataSourceV1010

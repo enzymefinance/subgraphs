@@ -1,4 +1,4 @@
-import { Address, dataSource } from "@graphprotocol/graph-ts";
+import { dataSource } from "@graphprotocol/graph-ts";
 import {
   EngineDataSource,
   PriceSourceDataSource,
@@ -44,6 +44,8 @@ import { PriceSourceChange } from "../types/templates/PriceSourceDataSource/Regi
 import { currentState } from "./utils/currentState";
 import { engineEntity } from "./entities/engineEntity";
 import { VersionContract } from "../types/templates/VersionDataSource/VersionContract";
+import { assetNameFromAddress } from "./utils/assetNameFromAddress";
+import { exchangeNameFromAddress } from "./utils/exchangeNameFromAddress";
 
 export function handleLogSetOwner(event: LogSetOwner): void {
   let registry = Registry.load(event.address.toHex());
@@ -190,45 +192,6 @@ export function handleVersionRegistration(event: VersionRegistration): void {
   );
 }
 
-// TODO: add names of new tokens
-function assetNameFromAddress(address: Address): string {
-  let name = "";
-  if (address.toHex() == "0x0d8775f648430679a709e98d2b0cb6250d2887ef") {
-    name = "Basic Attention Token";
-  }
-  if (address.toHex() == "0x4f3afec4e5a3f2a6a1a411def7d7dfe50ee057bf") {
-    name = "Digix Gold Token";
-  }
-  if (address.toHex() == "0x1985365e9f78359a9b6ad760e32412f4a445e862") {
-    name = "Rep Token";
-  }
-  if (address.toHex() == "0xe41d2489571d322189246dafa5ebde1f4699f498") {
-    name = "ZeroX Protocol Token";
-  }
-  if (address.toHex() == "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2") {
-    name = "Eth Token";
-  }
-  if (address.toHex() == "0xec67005c4e498ec7f55e092bd1d35cbc47c91892") {
-    name = "Melon Token";
-  }
-  if (address.toHex() == "0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2") {
-    name = "MakerDao";
-  }
-  if (address.toHex() == "0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359") {
-    name = "Dai";
-  }
-  if (address.toHex() == "0xdd974d5c2e2928dea5f71b9825b8b646686bd200") {
-    name = "Kyber Network";
-  }
-  if (address.toHex() == "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48") {
-    name = "USD Coin";
-  }
-  if (address.toHex() == "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599") {
-    name = "Wrapped BTC";
-  }
-  return name;
-}
-
 export function handleAssetUpsert(event: AssetUpsert): void {
   let id = event.params.asset.toHex();
   let asset = new Asset(id);
@@ -270,44 +233,6 @@ export function handleAssetRemoval(event: AssetRemoval): void {
   asset.removedFromRegistry = true;
   asset.removedFromRegistryAt = event.block.timestamp;
   asset.save();
-}
-
-// TODO: add names of new exchanges
-
-function exchangeNameFromAddress(address: Address): string {
-  // match names for mainnet and kovan contracts
-  let name = "";
-  if (
-    address.toHex() == "0x39755357759ce0d7f32dc8dc45414cca409ae24e" ||
-    address.toHex() == "0xbed692938e714da2a1d5407e5d99658f7d4c8079"
-  ) {
-    name = "Oasisdex";
-  } else if (
-    address.toHex() == "0x818e6fecd516ecc3849daf6845e3ec868087b755" ||
-    address.toHex() == "0x7e6b8b9510d71bf8ef0f893902ebb9c865eef4df"
-  ) {
-    name = "Kyber Network";
-  } else if (
-    address.toHex() == "0x4f833a24e1f95d70f028921e27040ca56e09ab0b" ||
-    address.toHex() == "0x35dd2932454449b14cee11a94d3674a936d5d7b2"
-  ) {
-    name = "0x (v2.0)";
-  } else if (address.toHex() == "0x080bf510fcbf18b91105470639e9561022937712") {
-    name = "0x (v2.1)";
-  } else if (
-    address.toHex() == "0xdcdb42c9a256690bd153a7b409751adfc8dd5851" ||
-    address.toHex() == "0x77ac83faa57974cdb6f7a130df50de3fe0792673"
-  ) {
-    name = "Ethfinex";
-  } else if (
-    address.toHex() == "0x7caec96607c5c7190d63b5a650e7ce34472352f5" ||
-    address.toHex() == "0x8fe493caf7eedb3cc32ac4194ee41cba9470e984"
-  ) {
-    name = "Melon Engine";
-  } else if (address.toHex() == "0xcbb801141a1704dbe5b4a6224033cfae80c4b336") {
-    name = "Melon Engine (v1)";
-  }
-  return name;
 }
 
 export function handleExchangeAdapterUpsert(
