@@ -58,8 +58,11 @@ export function handleLogSetOwner(event: LogSetOwner): void {
   registry.save();
 
   let state = currentState();
-  state.registry = event.address.toHex();
-  state.save();
+  if (state.registry != event.address.toHex()) {
+    state.registry = event.address.toHex();
+    state.registries = state.registries.concat([event.address.toHex()]);
+    state.save();
+  }
 
   saveContract(registry.id, "Registry", "", event.block.timestamp, "");
 }

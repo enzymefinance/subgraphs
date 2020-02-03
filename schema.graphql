@@ -20,8 +20,8 @@ type State @entity {
   totalAmguConsumed: BigInt!
   totalMlnBurned: BigInt!
   mlnToken: String!
-  registry: Registry
-  funds: [Fund!]!
+  registry: Registry!
+  registries: [Registry!]!
 }
 
 type Registry @entity {

@@ -38,6 +38,8 @@ export function handleNewFund(event: NewFund): void {
   }
   manager.save();
 
+  let state = currentState();
+
   let fund = new Fund(hub);
   fund.manager = manager.id;
   fund.name = hexToAscii(contract.name());
@@ -75,7 +77,6 @@ export function handleNewFund(event: NewFund): void {
   );
 
   // update fund counts
-  let state = currentState();
 
   let fundCount = new FundCount(event.transaction.hash.toHex());
   if (fund.isShutdown) {
@@ -91,7 +92,6 @@ export function handleNewFund(event: NewFund): void {
   state.activeFunds = fundCount.active;
   state.nonActiveFunds = fundCount.nonActive;
   state.timestampFundCount = event.block.timestamp;
-  state.funds.concat([fund.id]);
   state.save();
 
   // fund calculations
