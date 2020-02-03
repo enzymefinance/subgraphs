@@ -21,6 +21,7 @@ type State @entity {
   totalMlnBurned: BigInt!
   mlnToken: String!
   registry: Registry
+  funds: [Fund!]!
 }
 
 type Registry @entity {

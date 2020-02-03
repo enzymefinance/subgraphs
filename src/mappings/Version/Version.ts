@@ -91,6 +91,7 @@ export function handleNewFund(event: NewFund): void {
   state.activeFunds = fundCount.active;
   state.nonActiveFunds = fundCount.nonActive;
   state.timestampFundCount = event.block.timestamp;
+  state.funds.concat([fund.id]);
   state.save();
 
   // fund calculations

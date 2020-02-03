@@ -15,6 +15,7 @@ export function currentState(): State {
     state.totalAmguConsumed = BigInt.fromI32(0);
     state.totalMlnBurned = BigInt.fromI32(0);
     state.mlnToken = "";
+    state.funds = [];
     state.save();
   }
 
