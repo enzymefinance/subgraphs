@@ -17,6 +17,8 @@ type State @entity {
   timestamptNumberOfInvestors: BigInt!
   lastEngineUpdate: BigInt!
   currentEngine: Engine
+  totalAmguConsumed: BigInt!
+  totalMlnBurned: BigInt!
   mlnToken: String!
   registry: Registry
 }

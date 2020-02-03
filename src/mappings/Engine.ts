@@ -55,6 +55,10 @@ export function handleAmguPaid(event: AmguPaid): void {
   // Update all engine quantities every hour
   let state = currentState();
   let interval = BigInt.fromI32(60 * 60);
+
+  state.totalAmguConsumed = state.totalAmguConsumed.plus(event.params.amount);
+  state.save();
+
   if (event.block.timestamp.minus(state.lastEngineUpdate).gt(interval)) {
     state.lastEngineUpdate = event.block.timestamp;
     state.save();
@@ -128,6 +132,10 @@ export function handleBurn(event: Burn): void {
   engine.totalMlnBurned = engineContract.totalMlnBurned();
   engine.totalEtherConsumed = engineContract.totalEtherConsumed();
   engine.save();
+
+  let state = currentState();
+  state.totalMlnBurned = state.totalMlnBurned.plus(event.params.amount);
+  state.save();
 }
 
 export function handleRegistryChange(event: RegistryChange): void {

@@ -12,6 +12,8 @@ export function currentState(): State {
     state.numberOfInvestors = BigInt.fromI32(0);
     state.timestamptNumberOfInvestors = BigInt.fromI32(0);
     state.lastEngineUpdate = BigInt.fromI32(0);
+    state.totalAmguConsumed = BigInt.fromI32(0);
+    state.totalMlnBurned = BigInt.fromI32(0);
     state.mlnToken = "";
     state.save();
   }
