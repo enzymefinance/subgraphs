@@ -92,6 +92,9 @@ export function handlePriceUpdate(event: PriceUpdate): void {
   state.lastPriceUpdate = event.block.timestamp;
   state.save();
 
+  const currentRegistry = Registry.load(state.registry);
+  const currentPriceSource = currentRegistry?.priceSource;
+
   let melonNetworkGav = BigInt.fromI32(0);
   let melonNetworkValidGav = true;
 
@@ -210,16 +213,24 @@ export function handlePriceUpdate(event: PriceUpdate): void {
           BigInt.fromI32(0)
         );
 
-        if (accountingContract.try_performCalculations().reverted) {
-          // workaround for failing pricefeed case, do performCalculations manually
+        if (fund.priceSource == currentPriceSource) {
+          if (accountingContract.try_performCalculations().reverted) {
+            calcs = performCalculationsManually(
+              fundGavFromAssets,
+              totalSupply,
+              Address.fromString(fund.feeManager),
+              accountingContract
+            );
+          } else {
+            calcs = accountingContract.try_performCalculations().value;
+          }
+        } else {
           calcs = performCalculationsManually(
             fundGavFromAssets,
             totalSupply,
             Address.fromString(fund.feeManager),
             accountingContract
           );
-        } else {
-          calcs = accountingContract.try_performCalculations().value;
         }
 
         let fundGav = calcs.value0;
