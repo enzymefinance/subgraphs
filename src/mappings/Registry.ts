@@ -47,6 +47,7 @@ import { VersionContract } from "../codegen/templates/VersionDataSource/VersionC
 import { assetNameFromAddress } from "../utils/assetNameFromAddress";
 import { exchangeNameFromAddress } from "../utils/exchangeNameFromAddress";
 import { saveEvent } from "../utils/saveEvent";
+import { hexToAscii } from "../utils/hexToAscii";
 
 export function handleLogSetOwner(event: LogSetOwner): void {
   saveEvent("LogSetOwner", event);
@@ -95,7 +96,7 @@ export function handleVersionRegistration(event: VersionRegistration): void {
 
   let version = new Version(id);
   version.registry = event.address.toHex();
-  version.name = versionInformation.value1.toHexString();
+  version.name = hexToAscii(versionInformation.value1.toHexString());
   version.funds = [];
   version.save();
 
