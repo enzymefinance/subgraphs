@@ -1,7 +1,7 @@
+import { TradingDataSourceV101 } from "../../codegen/templates";
 import { Trading } from "../../codegen/schema";
 import { saveContract } from "../../utils/saveContract";
 import { NewInstance } from "../../codegen/templates/TradingFactoryDataSourceV101/TradingFactoryContractV101";
-import { TradingDataSourceV101 } from "../../codegen/templates";
 import { dataSource } from "@graphprotocol/graph-ts";
 import { saveEvent } from "../../utils/saveEvent";
 

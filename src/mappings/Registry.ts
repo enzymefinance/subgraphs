@@ -174,7 +174,7 @@ export function handleVersionRegistration(event: VersionRegistration): void {
 
   let tradingFactory = versionContract.tradingFactory();
 
-  if (event.block.number.toI32() == 7258093) {
+  if (event.block.number.toI32() == 7271061) {
     TradingFactoryDataSourceV101.create(tradingFactory);
   } else if (event.block.number.toI32() < 9339586) {
     TradingFactoryDataSourceV1010.create(tradingFactory);
