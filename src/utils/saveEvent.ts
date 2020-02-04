@@ -24,6 +24,13 @@ function stringifyValue(parameter: EthereumValue): string {
   }
 
   if (
+    kind == EthereumValueKind.FIXED_BYTES ||
+    kind == EthereumValueKind.BYTES
+  ) {
+    out = parameter.toBytes().toHexString();
+  }
+
+  if (
     kind == EthereumValueKind.ARRAY ||
     kind == EthereumValueKind.FIXED_ARRAY
   ) {
@@ -41,6 +48,13 @@ function stringifyValue(parameter: EthereumValue): string {
         a[i].kind == EthereumValueKind.UINT
       ) {
         arrayOut = arrayOut.concat(a[i].toBigInt().toString());
+      }
+
+      if (
+        a[i].kind == EthereumValueKind.FIXED_BYTES ||
+        a[i].kind == EthereumValueKind.BYTES
+      ) {
+        arrayOut = arrayOut.concat(a[i].toBytes().toHexString());
       }
 
       if (i < a.length - 1) {
