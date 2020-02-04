@@ -218,7 +218,7 @@ type Fund @entity {
   investmentHistory: [InvestmentHistory!]! @derivedFrom(field: "fund")
   holdingsHistory: [FundHoldingsHistory!]! @derivedFrom(field: "fund")
   lastCalculationsUpdate: BigInt
-  events: [EventHistory!]! @derivedFrom(field: "fund")
+  # events: [EventHistory!]! @derivedFrom(field: "fund")
 }
 
 type FundManager @entity {
@@ -471,23 +471,23 @@ type ExchangeMethodCall @entity {
   timestamp: BigInt!
 }
 
-type EventHistory @entity {
-  id: ID!
-  fund: Fund
-  investor: String
-  event: String!
-  contract: String!
-  contractAddress: String!
-  params: [EventHistoryParameter!]! @derivedFrom(field: "eventHistory")
-  timestamp: BigInt!
-}
+# type EventHistory @entity {
+#   id: ID!
+#   fund: Fund
+#   investor: String
+#   event: String!
+#   contract: String!
+#   contractAddress: String!
+#   params: [EventHistoryParameter!]! @derivedFrom(field: "eventHistory")
+#   timestamp: BigInt!
+# }
 
-type EventHistoryParameter @entity {
-  id: ID!
-  eventHistory: EventHistory!
-  name: String!
-  value: String!
-}
+# type EventHistoryParameter @entity {
+#   id: ID!
+#   eventHistory: EventHistory!
+#   name: String!
+#   value: String!
+# }
 
 type Event @entity {
   id: ID!
@@ -495,13 +495,15 @@ type Event @entity {
   contract: Contract!
   timestamp: BigInt!
   block: BigInt!
-  hash: BigInt!
-  parameters: [EventParameter!]!
+  hash: String!
+  from: String!
+  parameters: [EventParameter!]! @derivedFrom(field: "event")
 }
 
 type EventParameter @entity {
   id: ID!
   event: Event!
   name: String!
-  value: String!
+  kind: BigInt!
+  value: String
 }

@@ -1,10 +1,4 @@
-import {
-  Address,
-  BigInt,
-  TypedMap,
-  EthereumEvent,
-  dataSource
-} from "@graphprotocol/graph-ts";
+import { Address, BigInt, TypedMap } from "@graphprotocol/graph-ts";
 import { PriceUpdate } from "../codegen/templates/PriceSourceDataSource/PriceSourceContract";
 import {
   Fund,
@@ -30,8 +24,11 @@ import { currentState } from "../utils/currentState";
 import { networkAssetHistoryEntity } from "../entities/networkAssetHistoryEntity";
 import { tenToThePowerOf } from "../utils/tenToThePowerOf";
 import { performCalculationsManually } from "../utils/performCalculationsManually";
+import { saveEvent } from "../utils/saveEvent";
 
 export function handlePriceUpdate(event: PriceUpdate): void {
+  saveEvent("PriceUpdate", event);
+
   let state = currentState();
   let timestamp = event.block.timestamp;
   let prices = event.params.price;

@@ -46,8 +46,11 @@ import { engineEntity } from "../entities/engineEntity";
 import { VersionContract } from "../codegen/templates/VersionDataSource/VersionContract";
 import { assetNameFromAddress } from "../utils/assetNameFromAddress";
 import { exchangeNameFromAddress } from "../utils/exchangeNameFromAddress";
+import { saveEvent } from "../utils/saveEvent";
 
 export function handleLogSetOwner(event: LogSetOwner): void {
+  saveEvent("LogSetOwner", event);
+
   let registry = Registry.load(event.address.toHex());
   if (!registry) {
     registry = new Registry(event.address.toHex());
@@ -68,6 +71,8 @@ export function handleLogSetOwner(event: LogSetOwner): void {
 }
 
 export function handleVersionRegistration(event: VersionRegistration): void {
+  saveEvent("VersionRegistration", event);
+
   if (
     dataSource.network() == "mainnet" &&
     event.block.number.toI32() < 7271061
@@ -196,6 +201,8 @@ export function handleVersionRegistration(event: VersionRegistration): void {
 }
 
 export function handleAssetUpsert(event: AssetUpsert): void {
+  saveEvent("AssetUpsert", event);
+
   let id = event.params.asset.toHex();
   let asset = new Asset(id);
   asset.name = assetNameFromAddress(event.params.asset);
@@ -219,6 +226,8 @@ export function handleAssetUpsert(event: AssetUpsert): void {
 }
 
 export function handleAssetRemoval(event: AssetRemoval): void {
+  saveEvent("AssetRemoval", event);
+
   let assetId = event.params.asset.toHex();
   // let registry = Registry.load(event.address.toHex()) as Registry;
   // let removed = assetId;
@@ -241,6 +250,8 @@ export function handleAssetRemoval(event: AssetRemoval): void {
 export function handleExchangeAdapterUpsert(
   event: ExchangeAdapterUpsert
 ): void {
+  saveEvent("ExchangeAdapterUpsert", event);
+
   let id = event.params.adapter.toHex();
 
   let exchange = new Exchange(event.params.exchange.toHex());
@@ -280,6 +291,8 @@ export function handleExchangeAdapterUpsert(
 export function handleExchangeAdapterRemoval(
   event: ExchangeAdapterRemoval
 ): void {
+  saveEvent("ExchangeAdapterRemoval", event);
+
   let exchangeAdapterId = event.params.exchange.toHex();
   // let registry = Registry.load(event.address.toHex()) as Registry;
   // let removed = exchangeAdapterId;
@@ -302,6 +315,8 @@ export function handleExchangeAdapterRemoval(
 }
 
 export function handleEngineChange(event: EngineChange): void {
+  saveEvent("EngineChange", event);
+
   let registry = Registry.load(event.address.toHex());
   if (!registry) {
     return;
@@ -330,6 +345,8 @@ export function handleEngineChange(event: EngineChange): void {
 }
 
 export function handlePriceSourceChange(event: PriceSourceChange): void {
+  saveEvent("PriceSourceChange", event);
+
   PriceSourceDataSource.create(event.params.priceSource);
 
   let priceSource = new PriceSource(event.params.priceSource.toHex());
@@ -350,6 +367,8 @@ export function handlePriceSourceChange(event: PriceSourceChange): void {
 }
 
 export function handleMlnTokenChange(event: MlnTokenChange): void {
+  saveEvent("MlnTokenChange", event);
+
   let mlnToken = new MlnToken(event.params.mlnToken.toHex());
   mlnToken.registry = event.address.toHex();
   mlnToken.save();
@@ -368,6 +387,8 @@ export function handleMlnTokenChange(event: MlnTokenChange): void {
 }
 
 export function handleNativeAssetChange(event: NativeAssetChange): void {
+  saveEvent("NativeAssetChange", event);
+
   let nativeAssset = new NativeAsset(event.params.nativeAsset.toHex());
   nativeAssset.registry = event.address.toHex();
   nativeAssset.save();
@@ -382,6 +403,8 @@ export function handleNativeAssetChange(event: NativeAssetChange): void {
 }
 
 export function handleMGMChange(event: MGMChange): void {
+  saveEvent("MGMChange", event);
+
   let mgm = new MGM(event.params.MGM.toHex());
   mgm.registry = event.address.toHex();
   mgm.save();

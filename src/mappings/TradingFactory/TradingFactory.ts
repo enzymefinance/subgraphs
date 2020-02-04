@@ -2,8 +2,8 @@ import { TradingDataSource } from "../../codegen/templates";
 import { NewInstance } from "../../codegen/templates/TradingFactoryDataSource/TradingFactoryContract";
 import { Trading } from "../../codegen/schema";
 import { saveContract } from "../../utils/saveContract";
-import { saveEventHistory } from "../../utils/saveEventHistory";
 import { dataSource } from "@graphprotocol/graph-ts";
+import { saveEvent } from "../../utils/saveEvent";
 
 export function handleNewInstance(event: NewInstance): void {
   // ignore contracts created before go-live
@@ -13,6 +13,8 @@ export function handleNewInstance(event: NewInstance): void {
   ) {
     return;
   }
+
+  saveEvent("NewInstance", event);
 
   TradingDataSource.create(event.params.instance);
 
@@ -29,15 +31,4 @@ export function handleNewInstance(event: NewInstance): void {
   trading.save();
 
   saveContract(id, "Trading", "", event.block.timestamp, trading.fund);
-
-  saveEventHistory(
-    event.transaction.hash.toHex(),
-    event.block.timestamp,
-    event.params.hub.toHex(),
-    "TradingFactory",
-    event.address.toHex(),
-    "NewInstance",
-    [],
-    []
-  );
 }

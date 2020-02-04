@@ -9,7 +9,12 @@ import {
 } from "../../codegen/schema";
 import { hexToAscii } from "../../utils/hexToAscii";
 import { HubContract } from "../../codegen/templates/VersionDataSourceV1010/HubContract";
-import { BigInt, Address, dataSource } from "@graphprotocol/graph-ts";
+import {
+  BigInt,
+  Address,
+  dataSource,
+  EthereumEvent
+} from "@graphprotocol/graph-ts";
 import { currentState } from "../../utils/currentState";
 import { saveContract } from "../../utils/saveContract";
 import {
@@ -17,7 +22,7 @@ import {
   AccountingContract__performCalculationsResult
 } from "../../codegen/templates/VersionDataSourceV1010/AccountingContract";
 import { SharesContract } from "../../codegen/templates/VersionDataSourceV1010/SharesContract";
-import { saveEventHistory } from "../../utils/saveEventHistory";
+import { saveEvent } from "../../utils/saveEvent";
 
 export function handleNewFund(event: NewFund): void {
   // ignore contracts created before go-live
@@ -27,6 +32,8 @@ export function handleNewFund(event: NewFund): void {
   ) {
     return;
   }
+
+  saveEvent("NewFund", event);
 
   HubDataSource.create(event.params.hub);
 
@@ -67,17 +74,6 @@ export function handleNewFund(event: NewFund): void {
   version.save();
 
   saveContract(hub, "Hub", fund.name, event.block.timestamp, addresses[9]);
-
-  saveEventHistory(
-    event.transaction.hash.toHex(),
-    event.block.timestamp,
-    event.params.hub.toHex(),
-    "Version",
-    event.address.toHex(),
-    "NewFund",
-    ["hub", "manager"],
-    [event.params.hub.toHex(), event.params.manager.toHex()]
-  );
 
   // update fund counts
 

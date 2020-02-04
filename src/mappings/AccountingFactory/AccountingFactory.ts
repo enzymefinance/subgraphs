@@ -2,8 +2,8 @@ import { NewInstance } from "../../codegen/templates/AccountingFactoryDataSource
 import { AccountingDataSource } from "../../codegen/templates";
 import { Accounting } from "../../codegen/schema";
 import { saveContract } from "../../utils/saveContract";
-import { saveEventHistory } from "../../utils/saveEventHistory";
 import { dataSource } from "@graphprotocol/graph-ts";
+import { saveEvent } from "../../utils/saveEvent";
 
 export function handleNewInstance(event: NewInstance): void {
   // ignore contracts created before go-live
@@ -13,6 +13,8 @@ export function handleNewInstance(event: NewInstance): void {
   ) {
     return;
   }
+
+  saveEvent("NewInstance", event);
 
   AccountingDataSource.create(event.params.instance);
 
@@ -29,16 +31,5 @@ export function handleNewInstance(event: NewInstance): void {
     "",
     event.block.timestamp,
     event.params.hub.toHex()
-  );
-
-  saveEventHistory(
-    event.transaction.hash.toHex(),
-    event.block.timestamp,
-    event.params.hub.toHex(),
-    "AccountingFactory",
-    event.address.toHex(),
-    "NewInstance",
-    ["denominationAsset", "nativeAsset"],
-    [event.params.denominationAsset.toHex(), event.params.nativeAsset.toHex()]
   );
 }

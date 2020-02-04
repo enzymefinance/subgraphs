@@ -3,9 +3,11 @@ import {
   AssetRemoval
 } from "../../codegen/templates/AccountingDataSource/AccountingContract";
 import { Accounting, Asset } from "../../codegen/schema";
-import { saveEventHistory } from "../../utils/saveEventHistory";
+import { saveEvent } from "../../utils/saveEvent";
 
 export function handleAssetAddition(event: AssetAddition): void {
+  saveEvent("AssetAddition", event);
+
   let accounting = Accounting.load(event.address.toHex());
   if (!accounting) {
     return;
@@ -26,19 +28,12 @@ export function handleAssetAddition(event: AssetAddition): void {
 
   // TODO: log assets over time
 
-  saveEventHistory(
-    event.transaction.hash.toHex() + "/" + event.params.asset.toHex(),
-    event.block.timestamp,
-    accounting.fund as string,
-    "Accounting",
-    event.address.toHex(),
-    "AssetAddition",
-    ["asset"],
-    [event.params.asset.toHex()]
-  );
+  saveEvent("AssetAddition", event);
 }
 
 export function handleAssetRemoval(event: AssetRemoval): void {
+  saveEvent("AssetRemoval", event);
+
   let accounting = Accounting.load(event.address.toHex());
   if (!accounting) {
     return;
@@ -72,15 +67,4 @@ export function handleAssetRemoval(event: AssetRemoval): void {
   asset.save();
 
   // TODO: log assets over time
-
-  saveEventHistory(
-    event.transaction.hash.toHex() + "/" + event.params.asset.toHex(),
-    event.block.timestamp,
-    accounting.fund as string,
-    "Accounting",
-    event.address.toHex(),
-    "AssetRemoval",
-    ["asset"],
-    [event.params.asset.toHex()]
-  );
 }

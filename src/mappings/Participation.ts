@@ -28,7 +28,7 @@ import { currentState } from "../utils/currentState";
 import { store, BigInt, Address } from "@graphprotocol/graph-ts";
 import { PriceSourceContract } from "../codegen/templates/ParticipationDataSource/PriceSourceContract";
 import { investorEntity } from "../entities/investorEntity";
-import { saveEventHistory } from "../utils/saveEventHistory";
+import { saveEvent } from "../utils/saveEvent";
 
 function archiveInvestmentRequest(
   owner: string,
@@ -57,6 +57,8 @@ function archiveInvestmentRequest(
 }
 
 export function handleInvestmentRequest(event: InvestmentRequest): void {
+  saveEvent("InvestmentRequest", event);
+
   let participationContract = ParticipationContract.bind(event.address);
   let hub = participationContract.hub();
 
@@ -88,25 +90,11 @@ export function handleInvestmentRequest(event: InvestmentRequest): void {
   investmentRequest.requestTimestamp = event.block.timestamp;
   investmentRequest.status = "PENDING";
   investmentRequest.save();
-
-  saveEventHistory(
-    event.transaction.hash.toHex(),
-    event.block.timestamp,
-    hub.toHex(),
-    "Participation",
-    event.address.toHex(),
-    "InvestmentRequest",
-    ["requestOwner", "requestedShares", "investmentAmount", "investmentAsset"],
-    [
-      requestOwner.toHex(),
-      requestedShares.toString(),
-      investmentAmount.toString(),
-      investmentAsset
-    ]
-  );
 }
 
 export function handleCancelRequest(event: CancelRequest): void {
+  saveEvent("CancelRequest", event);
+
   let participationContract = ParticipationContract.bind(event.address);
   let hub = participationContract.hub();
 
@@ -116,20 +104,11 @@ export function handleCancelRequest(event: CancelRequest): void {
     "CANCELLED",
     event.block.timestamp
   );
-
-  saveEventHistory(
-    event.transaction.hash.toHex(),
-    event.block.timestamp,
-    hub.toHex(),
-    "Participation",
-    event.address.toHex(),
-    "InvestmentRequest",
-    ["requestOwner"],
-    [event.params.requestOwner.toHex()]
-  );
 }
 
 export function handleRequestExecution(event: RequestExecution): void {
+  saveEvent("RequestExecution", event);
+
   let participation = Participation.load(event.address.toHex());
   if (!participation || !participation.fund) {
     return;
@@ -175,22 +154,6 @@ export function handleRequestExecution(event: RequestExecution): void {
     hub,
     "EXECUTED",
     event.block.timestamp
-  );
-
-  saveEventHistory(
-    event.transaction.hash.toHex(),
-    event.block.timestamp,
-    hub,
-    "Participation",
-    event.address.toHex(),
-    "RequestExecution",
-    ["requestOwner", "requestedShares", "investmentAmount", "investmentAsset"],
-    [
-      event.params.requestOwner.toHex(),
-      requestedShares.toString(),
-      investmentAmount.toString(),
-      investmentAsset.toHex()
-    ]
   );
 
   // this is currently investment-count, not investor-count (misnamed entity)
@@ -244,7 +207,7 @@ export function handleRequestExecution(event: RequestExecution): void {
     fundHoldingsHistory.asset = holdingAddress.toHex();
     fundHoldingsHistory.amount = holdingAmount;
 
-    if (!priceSourceContract.try_hasValidPrice) {
+    if (!priceSourceContract.try_hasValidPrice(holdingAddress)) {
       fundHoldingsHistory.validPrice = priceSourceContract.hasValidPrice(
         holdingAddress
       );
@@ -322,6 +285,8 @@ export function handleRequestExecution(event: RequestExecution): void {
 }
 
 export function handleRedemption(event: Redemption): void {
+  saveEvent("Redemption", event);
+
   let participationContract = ParticipationContract.bind(event.address);
   let hub = participationContract.hub();
   let routes = participationContract.routes();
@@ -353,17 +318,6 @@ export function handleRedemption(event: Redemption): void {
   );
   investment.shares = investment.shares.minus(event.params.redeemedShares);
   investment.save();
-
-  saveEventHistory(
-    event.transaction.hash.toHex(),
-    event.block.timestamp,
-    hub.toHex(),
-    "Participation",
-    event.address.toHex(),
-    "Redemption",
-    ["redeemer", "redeemedShares"],
-    [event.params.redeemer.toHex(), event.params.redeemedShares.toString()]
-  );
 
   // this is currently investment-count, not investor-count (misnamed entity)
   // TODO: have both investment-count and investor-count
@@ -419,7 +373,7 @@ export function handleRedemption(event: Redemption): void {
     fundHoldingsHistory.asset = holdingAddress.toHex();
     fundHoldingsHistory.amount = holdingAmount;
 
-    if (!priceSourceContract.try_hasValidPrice) {
+    if (!priceSourceContract.try_hasValidPrice(holdingAddress)) {
       fundHoldingsHistory.validPrice = priceSourceContract.hasValidPrice(
         holdingAddress
       );
@@ -503,6 +457,8 @@ export function handleRedemption(event: Redemption): void {
 }
 
 export function handleEnableInvestment(event: EnableInvestment): void {
+  saveEvent("EnableInvestment", event);
+
   let participation = Participation.load(
     event.address.toHex()
   ) as Participation;
@@ -512,6 +468,8 @@ export function handleEnableInvestment(event: EnableInvestment): void {
 }
 
 export function handleDisableInvestment(event: DisableInvestment): void {
+  saveEvent("DisableInvestment", event);
+
   let participation = Participation.load(
     event.address.toHex()
   ) as Participation;

@@ -17,7 +17,7 @@ import {
   AccountingContract__performCalculationsResult
 } from "../../codegen/templates/VersionDataSource/AccountingContract";
 import { SharesContract } from "../../codegen/templates/VersionDataSource/SharesContract";
-import { saveEventHistory } from "../../utils/saveEventHistory";
+import { saveEvent } from "../../utils/saveEvent";
 
 export function handleNewFund(event: NewFund): void {
   // ignore contracts created before go-live
@@ -27,6 +27,8 @@ export function handleNewFund(event: NewFund): void {
   ) {
     return;
   }
+
+  saveEvent("NewFund", event);
 
   HubDataSource.create(event.params.hub);
 
@@ -67,17 +69,6 @@ export function handleNewFund(event: NewFund): void {
   version.save();
 
   saveContract(hub, "Hub", fund.name, event.block.timestamp, addresses[8]);
-
-  saveEventHistory(
-    event.transaction.hash.toHex(),
-    event.block.timestamp,
-    event.params.hub.toHex(),
-    "Version",
-    event.address.toHex(),
-    "NewFund",
-    ["hub", "manager"],
-    [event.params.hub.toHex(), event.params.manager.toHex()]
-  );
 
   // update fund counts
 

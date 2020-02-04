@@ -12,10 +12,12 @@ import {
 } from "../../codegen/templates/TradingDataSource/AccountingContract";
 import { PriceSourceContract } from "../../codegen/templates/TradingDataSource/PriceSourceContract";
 import { SharesContract } from "../../codegen/templates/TradingDataSource/SharesContract";
-import { saveEventHistory } from "../../utils/saveEventHistory";
 import { Address, BigInt } from "@graphprotocol/graph-ts";
+import { saveEvent } from "../../utils/saveEvent";
 
 export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
+  saveEvent("ExchangeMethodCall", event);
+
   let trading = Trading.load(event.address.toHex());
   if (!trading || !trading.fund) {
     return;
@@ -55,17 +57,6 @@ export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
   emCall.signature = event.params.signature.toHexString();
   emCall.timestamp = event.block.timestamp;
   emCall.save();
-
-  saveEventHistory(
-    event.transaction.hash.toHex(),
-    event.block.timestamp,
-    fund.id,
-    "Trading",
-    event.address.toHex(),
-    "ExchangeMethodCall",
-    ["trading"],
-    [emCall.trading]
-  );
 
   // calculate fund holdings
 

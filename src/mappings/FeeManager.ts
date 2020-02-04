@@ -16,9 +16,11 @@ import { BigInt } from "@graphprotocol/graph-ts";
 import { ManagementFeeContract } from "../codegen/templates/FeeManagerDataSource/ManagementFeeContract";
 import { PerformanceFeeContract } from "../codegen/templates/FeeManagerDataSource/PerformanceFeeContract";
 import { AccountingContract } from "../codegen/templates/FeeManagerDataSource/AccountingContract";
-import { saveEventHistory } from "../utils/saveEventHistory";
+import { saveEvent } from "../utils/saveEvent";
 
 export function handleFeeRegistration(event: FeeRegistration): void {
+  saveEvent("FeeRegistration", event);
+
   // this event only passes very limited data, so
   // we have to get everything through contract calls...
   let feeManager = FeeManager.load(event.address.toHex());
@@ -44,17 +46,6 @@ export function handleFeeRegistration(event: FeeRegistration): void {
     mgmtFee.save();
     feeManager.feesRegistered = BigInt.fromI32(1);
     feeManager.save();
-
-    saveEventHistory(
-      event.transaction.hash.toHex() + "/mgmt",
-      event.block.timestamp,
-      feeManagerContract.hub().toHex(),
-      "FeeManager",
-      event.address.toHex(),
-      "FeeRegistration",
-      ["feeType", "rate"],
-      ["Management Fee", mgmtFee.managementFeeRate.toString()]
-    );
   }
   // fee[1] is the performance fee
   else {
@@ -72,25 +63,12 @@ export function handleFeeRegistration(event: FeeRegistration): void {
     perfFee.save();
     feeManager.feesRegistered = BigInt.fromI32(2);
     feeManager.save();
-
-    saveEventHistory(
-      event.transaction.hash.toHex() + "/perf",
-      event.block.timestamp,
-      feeManagerContract.hub().toHex(),
-      "FeeManager",
-      event.address.toHex(),
-      "FeeRegistration",
-      ["feeType", "rate", "period"],
-      [
-        "Performance Fee",
-        perfFee.performanceFeeRate.toString(),
-        perfFee.performanceFeePeriod.toString()
-      ]
-    );
   }
 }
 
 export function handleFeeReward(event: FeeReward): void {
+  saveEvent("FeeReward", event);
+
   let feeRewardHistory = new FeeRewardHistory(
     event.address.toHex() + "/" + event.block.timestamp.toString()
   );
@@ -151,15 +129,4 @@ export function handleFeeReward(event: FeeReward): void {
   investmentHistory.asset = asset.toHex();
   investmentHistory.amountInDenominationAsset = amount;
   investmentHistory.save();
-
-  saveEventHistory(
-    event.transaction.hash.toHex(),
-    event.block.timestamp,
-    hubAddress.toHex(),
-    "FeeManager",
-    event.address.toHex(),
-    "FeeReward",
-    ["shares"],
-    [event.params.shareQuantity.toString()]
-  );
 }

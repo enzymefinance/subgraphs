@@ -9,9 +9,11 @@ import { MaxPositionsContract } from "../codegen/templates/PolicyManagerDataSour
 import { MaxConcentrationContract } from "../codegen/templates/PolicyManagerDataSource/MaxConcentrationContract";
 import { AssetWhiteListContract } from "../codegen/templates/PolicyManagerDataSource/AssetWhiteListContract";
 import { AssetBlackListContract } from "../codegen/templates/PolicyManagerDataSource/AssetBlackListContract";
-import { saveEventHistory } from "../utils/saveEventHistory";
+import { saveEvent } from "../utils/saveEvent";
 
 export function handleRegistration(event: Registration): void {
+  saveEvent("Registration", event);
+
   let policyAddress = event.params.policy;
 
   let policyContract = PolicyContract.bind(policyAddress);
@@ -50,15 +52,4 @@ export function handleRegistration(event: Registration): void {
     policy.priceTolerance = priceToleranceContract.tolerance();
   }
   policy.save();
-
-  saveEventHistory(
-    event.transaction.hash.toHex() + "/" + event.params.sig.toHex(),
-    event.block.timestamp,
-    hub.toHex(),
-    "PolicyManager",
-    event.address.toHex(),
-    "Registration",
-    ["policy"],
-    [policyAddress.toHex()]
-  );
 }

@@ -3,9 +3,11 @@ import { NewInstance } from "../codegen/templates/FeeManagerFactoryDataSource/Fe
 import { FeeManager } from "../codegen/schema";
 import { saveContract } from "../utils/saveContract";
 import { BigInt, dataSource } from "@graphprotocol/graph-ts";
-import { saveEventHistory } from "../utils/saveEventHistory";
+import { saveEvent } from "../utils/saveEvent";
 
 export function handleNewInstance(event: NewInstance): void {
+  saveEvent("NewInstancce", event);
+
   // ignore contracts created before go-live
   if (
     dataSource.network() == "mainnet" &&
@@ -28,16 +30,5 @@ export function handleNewInstance(event: NewInstance): void {
     "",
     event.block.timestamp,
     event.params.hub.toHex()
-  );
-
-  saveEventHistory(
-    event.transaction.hash.toHex(),
-    event.block.timestamp,
-    event.params.hub.toHex(),
-    "FeeManagerFactory",
-    event.address.toHex(),
-    "NewInstance",
-    [],
-    []
   );
 }

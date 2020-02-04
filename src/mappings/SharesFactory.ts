@@ -2,8 +2,8 @@ import { SharesDataSource } from "../codegen/templates";
 import { NewInstance } from "../codegen/templates/SharesFactoryDataSource/SharesFactoryContract";
 import { Share } from "../codegen/schema";
 import { saveContract } from "../utils/saveContract";
-import { BigInt, dataSource } from "@graphprotocol/graph-ts";
-import { saveEventHistory } from "../utils/saveEventHistory";
+import { dataSource } from "@graphprotocol/graph-ts";
+import { saveEvent } from "../utils/saveEvent";
 
 export function handleNewInstance(event: NewInstance): void {
   // ignore contracts created before go-live
@@ -13,6 +13,9 @@ export function handleNewInstance(event: NewInstance): void {
   ) {
     return;
   }
+
+  saveEvent("NewInstance", event);
+
   SharesDataSource.create(event.params.instance);
 
   let shares = new Share(event.params.instance.toHex());
@@ -20,15 +23,4 @@ export function handleNewInstance(event: NewInstance): void {
   shares.save();
 
   saveContract(shares.id, "Shares", "", event.block.timestamp, shares.fund);
-
-  saveEventHistory(
-    event.transaction.hash.toHex(),
-    event.block.timestamp,
-    event.params.hub.toHex(),
-    "SharesFactory",
-    event.address.toHex(),
-    "NewInstance",
-    [],
-    []
-  );
 }
