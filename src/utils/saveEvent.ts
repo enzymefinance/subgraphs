@@ -1,8 +1,8 @@
 import {
   EthereumEvent,
-  EthereumValueKind,
   BigInt,
-  EthereumValue
+  EthereumValue,
+  EthereumValueKind as KindEnum
 } from "@graphprotocol/graph-ts";
 import { Event, EventParameter } from "../codegen/schema";
 
@@ -11,51 +11,31 @@ function stringifyValue(parameter: EthereumValue): string {
 
   let out = "";
 
-  if (kind == EthereumValueKind.STRING) {
+  if (kind == KindEnum.STRING) {
     out = parameter.toString();
   }
 
-  if (kind == EthereumValueKind.ADDRESS) {
+  if (kind == KindEnum.ADDRESS) {
     out = parameter.toAddress().toHex();
   }
 
-  if (kind == EthereumValueKind.INT || kind == EthereumValueKind.UINT) {
+  if (kind == KindEnum.INT || kind == KindEnum.UINT) {
     out = parameter.toBigInt().toString();
   }
 
-  if (
-    kind == EthereumValueKind.FIXED_BYTES ||
-    kind == EthereumValueKind.BYTES
-  ) {
+  if (kind == KindEnum.FIXED_BYTES || kind == KindEnum.BYTES) {
     out = parameter.toBytes().toHexString();
   }
 
-  if (
-    kind == EthereumValueKind.ARRAY ||
-    kind == EthereumValueKind.FIXED_ARRAY
-  ) {
+  if (kind == KindEnum.BOOL) {
+    out = parameter.toBoolean() ? "1" : "0";
+  }
+
+  if (kind == KindEnum.ARRAY || kind == KindEnum.FIXED_ARRAY) {
     let a = parameter.toArray();
     let arrayOut = "";
     for (let i: i32 = 0; i < a.length; i++) {
-      if (a[i].kind == EthereumValueKind.ADDRESS) {
-        arrayOut = arrayOut.concat(a[i].toAddress().toHex());
-      }
-      if (a[i].kind == EthereumValueKind.STRING) {
-        arrayOut = arrayOut.concat(a[i].toString());
-      }
-      if (
-        a[i].kind == EthereumValueKind.INT ||
-        a[i].kind == EthereumValueKind.UINT
-      ) {
-        arrayOut = arrayOut.concat(a[i].toBigInt().toString());
-      }
-
-      if (
-        a[i].kind == EthereumValueKind.FIXED_BYTES ||
-        a[i].kind == EthereumValueKind.BYTES
-      ) {
-        arrayOut = arrayOut.concat(a[i].toBytes().toHexString());
-      }
+      arrayOut = arrayOut.concat(stringifyValue(a[i]));
 
       if (i < a.length - 1) {
         arrayOut = arrayOut.concat(",");
@@ -65,6 +45,12 @@ function stringifyValue(parameter: EthereumValue): string {
   }
 
   return out;
+}
+
+function isArrayParameter(parameter: EthereumValue): boolean {
+  return (
+    parameter.kind == KindEnum.ARRAY || parameter.kind == KindEnum.FIXED_ARRAY
+  );
 }
 
 export function saveEvent(name: string, event: EthereumEvent): void {
@@ -86,6 +72,7 @@ export function saveEvent(name: string, event: EthereumEvent): void {
     p.name = event.parameters[i].name;
     p.kind = BigInt.fromI32(event.parameters[i].value.kind);
     p.value = stringifyValue(event.parameters[i].value);
+    p.isArray = isArrayParameter(event.parameters[i].value);
     p.save();
   }
 }

@@ -471,24 +471,6 @@ type ExchangeMethodCall @entity {
   timestamp: BigInt!
 }
 
-# type EventHistory @entity {
-#   id: ID!
-#   fund: Fund
-#   investor: String
-#   event: String!
-#   contract: String!
-#   contractAddress: String!
-#   params: [EventHistoryParameter!]! @derivedFrom(field: "eventHistory")
-#   timestamp: BigInt!
-# }
-
-# type EventHistoryParameter @entity {
-#   id: ID!
-#   eventHistory: EventHistory!
-#   name: String!
-#   value: String!
-# }
-
 type Event @entity {
   id: ID!
   name: String!
@@ -505,5 +487,6 @@ type EventParameter @entity {
   event: Event!
   name: String!
   kind: BigInt!
-  value: String
+  value: String!
+  isArray: Boolean!
 }
