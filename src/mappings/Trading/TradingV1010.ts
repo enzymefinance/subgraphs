@@ -18,7 +18,7 @@ import { BigInt } from "@graphprotocol/graph-ts";
 import { saveEvent } from "../../utils/saveEvent";
 
 export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
-  saveEvent("ExhangeMethodCall", event);
+  saveEvent("ExchangeMethodCall", event);
 
   let id = event.transaction.hash.toHex();
 
