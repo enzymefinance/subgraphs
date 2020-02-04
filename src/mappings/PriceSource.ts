@@ -2,7 +2,8 @@ import {
   Address,
   BigInt,
   TypedMap,
-  EthereumEvent
+  EthereumEvent,
+  dataSource
 } from "@graphprotocol/graph-ts";
 import { PriceUpdate } from "../codegen/templates/PriceSourceDataSource/PriceSourceContract";
 import {

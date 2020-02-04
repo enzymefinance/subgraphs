@@ -244,14 +244,19 @@ export function handleRequestExecution(event: RequestExecution): void {
     fundHoldingsHistory.asset = holdingAddress.toHex();
     fundHoldingsHistory.amount = holdingAmount;
 
-    fundHoldingsHistory.validPrice = priceSourceContract.hasValidPrice(
-      holdingAddress
-    );
-    if (fundHoldingsHistory.validPrice) {
-      fundHoldingsHistory.assetGav = accountingContract.calcAssetGAV(
+    if (!priceSourceContract.try_hasValidPrice) {
+      fundHoldingsHistory.validPrice = priceSourceContract.hasValidPrice(
         holdingAddress
       );
+      if (fundHoldingsHistory.validPrice) {
+        fundHoldingsHistory.assetGav = accountingContract.calcAssetGAV(
+          holdingAddress
+        );
+      } else {
+        fundGavValid = false;
+      }
     } else {
+      fundHoldingsHistory.validPrice = false;
       fundGavValid = false;
     }
 
@@ -414,14 +419,19 @@ export function handleRedemption(event: Redemption): void {
     fundHoldingsHistory.asset = holdingAddress.toHex();
     fundHoldingsHistory.amount = holdingAmount;
 
-    fundHoldingsHistory.validPrice = priceSourceContract.hasValidPrice(
-      holdingAddress
-    );
-    if (fundHoldingsHistory.validPrice) {
-      fundHoldingsHistory.assetGav = accountingContract.calcAssetGAV(
+    if (!priceSourceContract.try_hasValidPrice) {
+      fundHoldingsHistory.validPrice = priceSourceContract.hasValidPrice(
         holdingAddress
       );
+      if (fundHoldingsHistory.validPrice) {
+        fundHoldingsHistory.assetGav = accountingContract.calcAssetGAV(
+          holdingAddress
+        );
+      } else {
+        fundGavValid = false;
+      }
     } else {
+      fundHoldingsHistory.validPrice = false;
       fundGavValid = false;
     }
 

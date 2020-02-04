@@ -488,3 +488,20 @@ type EventHistoryParameter @entity {
   name: String!
   value: String!
 }
+
+type Event @entity {
+  id: ID!
+  name: String!
+  contract: Contract!
+  timestamp: BigInt!
+  block: BigInt!
+  hash: BigInt!
+  parameters: [EventParameter!]!
+}
+
+type EventParameter @entity {
+  id: ID!
+  event: Event!
+  name: String!
+  value: String!
+}

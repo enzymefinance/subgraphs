@@ -13,11 +13,12 @@ import {
   Engine,
   EngineHistory
 } from "../codegen/schema";
-import { Address, BigInt, log } from "@graphprotocol/graph-ts";
+import { Address, BigInt, log, EthereumEvent } from "@graphprotocol/graph-ts";
 import { saveContract } from "../utils/saveContract";
 import { currentState } from "../utils/currentState";
 import { MlnContract } from "../codegen/templates/EngineDataSource/MlnContract";
 import { engineEntity } from "../entities/engineEntity";
+import { saveEvent } from "../utils/saveEvent";
 
 export function handleSetAmguPrice(event: SetAmguPrice): void {
   let amguPrice = new AmguPrice(event.transaction.hash.toHex());
@@ -99,6 +100,8 @@ export function handleAmguPaid(event: AmguPaid): void {
     engineHistory.engine = event.address.toHex();
     engineHistory.save();
   }
+
+  saveEvent("AmguPaid", event as EthereumEvent);
 }
 
 export function handleThaw(event: Thaw): void {
