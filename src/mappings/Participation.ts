@@ -18,7 +18,10 @@ import {
   FundHoldingsHistory
 } from "../codegen/schema";
 import { HubContract } from "../codegen/templates/ParticipationDataSource/HubContract";
-import { AccountingContract } from "../codegen/templates/ParticipationDataSource/AccountingContract";
+import {
+  AccountingContract,
+  AccountingContract__performCalculationsResult
+} from "../codegen/templates/ParticipationDataSource/AccountingContract";
 import { SharesContract } from "../codegen/templates/ParticipationDataSource/SharesContract";
 
 import { currentState } from "../utils/currentState";
@@ -263,7 +266,19 @@ export function handleRequestExecution(event: RequestExecution): void {
     return;
   }
 
-  let calcs = accountingContract.performCalculations();
+  let calcs = new AccountingContract__performCalculationsResult(
+    BigInt.fromI32(0),
+    BigInt.fromI32(0),
+    BigInt.fromI32(0),
+    BigInt.fromI32(0),
+    BigInt.fromI32(0),
+    BigInt.fromI32(0)
+  );
+
+  if (!accountingContract.try_performCalculations().reverted) {
+    calcs = accountingContract.try_performCalculations().value;
+  }
+
   let fundGav = calcs.value0;
   let feesInDenomiationAsset = calcs.value1;
   let feesInShares = calcs.value2;
@@ -421,7 +436,19 @@ export function handleRedemption(event: Redemption): void {
     return;
   }
 
-  let calcs = accountingContract.performCalculations();
+  let calcs = new AccountingContract__performCalculationsResult(
+    BigInt.fromI32(0),
+    BigInt.fromI32(0),
+    BigInt.fromI32(0),
+    BigInt.fromI32(0),
+    BigInt.fromI32(0),
+    BigInt.fromI32(0)
+  );
+
+  if (!accountingContract.try_performCalculations().reverted) {
+    calcs = accountingContract.try_performCalculations().value;
+  }
+
   let fundGav = calcs.value0;
   let feesInDenomiationAsset = calcs.value1;
   let feesInShares = calcs.value2;

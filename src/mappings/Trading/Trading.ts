@@ -6,11 +6,14 @@ import {
   Fund,
   Trading
 } from "../../codegen/schema";
-import { AccountingContract } from "../../codegen/templates/TradingDataSource/AccountingContract";
+import {
+  AccountingContract,
+  AccountingContract__performCalculationsResult
+} from "../../codegen/templates/TradingDataSource/AccountingContract";
 import { PriceSourceContract } from "../../codegen/templates/TradingDataSource/PriceSourceContract";
 import { SharesContract } from "../../codegen/templates/TradingDataSource/SharesContract";
 import { saveEventHistory } from "../../utils/saveEventHistory";
-import { Address } from "@graphprotocol/graph-ts";
+import { Address, BigInt } from "@graphprotocol/graph-ts";
 
 export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
   let trading = Trading.load(event.address.toHex());
@@ -114,7 +117,19 @@ export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
     return;
   }
 
-  let calcs = accountingContract.performCalculations();
+  let calcs = new AccountingContract__performCalculationsResult(
+    BigInt.fromI32(0),
+    BigInt.fromI32(0),
+    BigInt.fromI32(0),
+    BigInt.fromI32(0),
+    BigInt.fromI32(0),
+    BigInt.fromI32(0)
+  );
+
+  if (!accountingContract.try_performCalculations().reverted) {
+    calcs = accountingContract.try_performCalculations().value;
+  }
+
   let fundGav = calcs.value0;
   let feesInDenomiationAsset = calcs.value1;
   let feesInShares = calcs.value2;

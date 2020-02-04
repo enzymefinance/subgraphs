@@ -1,4 +1,9 @@
-import { Address, BigInt, TypedMap } from "@graphprotocol/graph-ts";
+import {
+  Address,
+  BigInt,
+  TypedMap,
+  EthereumEvent
+} from "@graphprotocol/graph-ts";
 import { PriceUpdate } from "../codegen/templates/PriceSourceDataSource/PriceSourceContract";
 import {
   Fund,
@@ -92,8 +97,8 @@ export function handlePriceUpdate(event: PriceUpdate): void {
   state.lastPriceUpdate = event.block.timestamp;
   state.save();
 
-  const currentRegistry = Registry.load(state.registry);
-  const currentPriceSource = currentRegistry?.priceSource;
+  let currentRegistry = Registry.load(state.registry) as Registry;
+  let currentPriceSource = currentRegistry.priceSource;
 
   let melonNetworkGav = BigInt.fromI32(0);
   let melonNetworkValidGav = true;

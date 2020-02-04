@@ -12,7 +12,10 @@ import { HubContract } from "../../codegen/templates/VersionDataSourceV1010/HubC
 import { BigInt, Address, dataSource } from "@graphprotocol/graph-ts";
 import { currentState } from "../../utils/currentState";
 import { saveContract } from "../../utils/saveContract";
-import { AccountingContract } from "../../codegen/templates/VersionDataSourceV1010/AccountingContract";
+import {
+  AccountingContract,
+  AccountingContract__performCalculationsResult
+} from "../../codegen/templates/VersionDataSourceV1010/AccountingContract";
 import { SharesContract } from "../../codegen/templates/VersionDataSourceV1010/SharesContract";
 import { saveEventHistory } from "../../utils/saveEventHistory";
 
@@ -99,7 +102,18 @@ export function handleNewFund(event: NewFund): void {
   let accountingAddress = Address.fromString(fund.accounting);
   let accountingContract = AccountingContract.bind(accountingAddress);
 
-  let calcs = accountingContract.performCalculations();
+  let calcs = new AccountingContract__performCalculationsResult(
+    BigInt.fromI32(0),
+    BigInt.fromI32(0),
+    BigInt.fromI32(0),
+    BigInt.fromI32(0),
+    BigInt.fromI32(0),
+    BigInt.fromI32(0)
+  );
+
+  if (!accountingContract.try_performCalculations().reverted) {
+    calcs = accountingContract.try_performCalculations().value;
+  }
   let fundGav = calcs.value0;
   let feesInDenomiationAsset = calcs.value1;
   let feesInShares = calcs.value2;

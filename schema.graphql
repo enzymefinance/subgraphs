@@ -480,8 +480,6 @@ type EventHistory @entity {
   contractAddress: String!
   params: [EventHistoryParameter!]! @derivedFrom(field: "eventHistory")
   timestamp: BigInt!
-  block: BigInt!
-  transactionHash: String!
 }
 
 type EventHistoryParameter @entity {
