@@ -81,7 +81,7 @@ export function handleVersionRegistration(event: VersionRegistration): void {
     return;
   }
 
-  if (event.block.number.toI32() < 9339586) {
+  if (dataSource.network() == "mainnet" && event.block.number.toI32() < 9339586) {
     VersionDataSourceV1010.create(event.params.version);
   } else {
     VersionDataSource.create(event.params.version);
@@ -119,7 +119,7 @@ export function handleVersionRegistration(event: VersionRegistration): void {
   // TODO: create correct accounting factory
   let accountingFactory = versionContract.accountingFactory();
 
-  if (event.block.number.toI32() < 9339573) {
+  if (dataSource.network() == "mainnet" && event.block.number.toI32() < 9339573) {
     AccountingFactoryDataSourceV1010.create(accountingFactory);
   } else {
     AccountingFactoryDataSource.create(accountingFactory);
@@ -175,9 +175,9 @@ export function handleVersionRegistration(event: VersionRegistration): void {
 
   let tradingFactory = versionContract.tradingFactory();
 
-  if (event.block.number.toI32() == 7271061) {
+  if (dataSource.network() == "mainnet" && event.block.number.toI32() == 7271061) {
     TradingFactoryDataSourceV101.create(tradingFactory);
-  } else if (event.block.number.toI32() < 9339586) {
+  } else if (dataSource.network() == "mainnet" && event.block.number.toI32() < 9339586) {
     TradingFactoryDataSourceV1010.create(tradingFactory);
   } else {
     TradingFactoryDataSource.create(tradingFactory);

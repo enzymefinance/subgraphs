@@ -3,6 +3,7 @@ import { Address, dataSource } from "@graphprotocol/graph-ts";
 export function assetNameFromAddress(address: Address): string {
   let name = "";
 
+  // TODO: Fall back to using the asset name from the contract (call `.name()`);
   if (dataSource.network() == "mainnet") {
     if (address.toHex() == "0x0d8775f648430679a709e98d2b0cb6250d2887ef") {
       name = "Basic Attention Token";
