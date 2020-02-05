@@ -47,10 +47,8 @@ function stringifyValue(parameter: EthereumValue): string {
   return out;
 }
 
-function isArrayParameter(parameter: EthereumValue): boolean {
-  return (
-    parameter.kind == KindEnum.ARRAY || parameter.kind == KindEnum.FIXED_ARRAY
-  );
+function isArrayParameter(param: EthereumValue): boolean {
+  return param.kind == KindEnum.ARRAY || param.kind == KindEnum.FIXED_ARRAY;
 }
 
 export function saveEvent(name: string, event: EthereumEvent): void {
