@@ -15,7 +15,10 @@ import { HubContract } from "../codegen/templates/FeeManagerDataSource/HubContra
 import { BigInt } from "@graphprotocol/graph-ts";
 import { ManagementFeeContract } from "../codegen/templates/FeeManagerDataSource/ManagementFeeContract";
 import { PerformanceFeeContract } from "../codegen/templates/FeeManagerDataSource/PerformanceFeeContract";
-import { AccountingContract } from "../codegen/templates/FeeManagerDataSource/AccountingContract";
+import {
+  AccountingContract,
+  AccountingContract__performCalculationsResult
+} from "../codegen/templates/FeeManagerDataSource/AccountingContract";
 import { saveEvent } from "../utils/saveEvent";
 import { emptyCalcsObject } from "../utils/emptyCalcsObject";
 
@@ -101,7 +104,7 @@ export function handleFeeReward(event: FeeReward): void {
   investment.shares = investment.shares.plus(event.params.shareQuantity);
   investment.save();
 
-  let calcs = emptyCalcsObject();
+  let calcs = emptyCalcsObject() as AccountingContract__performCalculationsResult;
 
   if (!accountingContract.try_performCalculations().reverted) {
     calcs = accountingContract.try_performCalculations().value;

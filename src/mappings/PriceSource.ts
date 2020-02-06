@@ -13,7 +13,10 @@ import {
   Registry,
   Version
 } from "../codegen/schema";
-import { AccountingContract } from "../codegen/templates/PriceSourceDataSource/AccountingContract";
+import {
+  AccountingContract,
+  AccountingContract__performCalculationsResult
+} from "../codegen/templates/PriceSourceDataSource/AccountingContract";
 import { ParticipationContract } from "../codegen/templates/PriceSourceDataSource/ParticipationContract";
 import { SharesContract } from "../codegen/templates/PriceSourceDataSource/SharesContract";
 import { investmentEntity } from "../entities/investmentEntity";
@@ -209,7 +212,7 @@ export function handlePriceUpdate(event: PriceUpdate): void {
         let sharesContract = SharesContract.bind(sharesAddress);
         let totalSupply = sharesContract.totalSupply();
 
-        let calcs = emptyCalcsObject();
+        let calcs = emptyCalcsObject() as AccountingContract__performCalculationsResult;
 
         if (fund.priceSource == currentPriceSource) {
           if (accountingContract.try_performCalculations().reverted) {

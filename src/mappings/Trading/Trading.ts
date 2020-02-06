@@ -6,7 +6,10 @@ import {
   Fund,
   Trading
 } from "../../codegen/schema";
-import { AccountingContract } from "../../codegen/templates/TradingDataSource/AccountingContract";
+import {
+  AccountingContract,
+  AccountingContract__performCalculationsResult
+} from "../../codegen/templates/TradingDataSource/AccountingContract";
 import { PriceSourceContract } from "../../codegen/templates/TradingDataSource/PriceSourceContract";
 import { SharesContract } from "../../codegen/templates/TradingDataSource/SharesContract";
 import { Address, BigInt } from "@graphprotocol/graph-ts";
@@ -106,7 +109,7 @@ export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
     return;
   }
 
-  let calcs = emptyCalcsObject();
+  let calcs = emptyCalcsObject() as AccountingContract__performCalculationsResult;
 
   if (!accountingContract.try_performCalculations().reverted) {
     calcs = accountingContract.try_performCalculations().value;

@@ -18,7 +18,10 @@ import {
   FundHoldingsHistory
 } from "../codegen/schema";
 import { HubContract } from "../codegen/templates/ParticipationDataSource/HubContract";
-import { AccountingContract } from "../codegen/templates/ParticipationDataSource/AccountingContract";
+import {
+  AccountingContract,
+  AccountingContract__performCalculationsResult
+} from "../codegen/templates/ParticipationDataSource/AccountingContract";
 import { SharesContract } from "../codegen/templates/ParticipationDataSource/SharesContract";
 
 import { currentState } from "../utils/currentState";
@@ -231,7 +234,7 @@ export function handleRequestExecution(event: RequestExecution): void {
     return;
   }
 
-  let calcs = emptyCalcsObject();
+  let calcs = emptyCalcsObject() as AccountingContract__performCalculationsResult;
 
   if (!accountingContract.try_performCalculations().reverted) {
     calcs = accountingContract.try_performCalculations().value;
@@ -284,7 +287,7 @@ export function handleRedemption(event: Redemption): void {
   let fundContract = HubContract.bind(hub);
   let accountingContract = AccountingContract.bind(fundContract.accounting());
 
-  let calcs = emptyCalcsObject();
+  let calcs = emptyCalcsObject() as AccountingContract__performCalculationsResult;
 
   if (!accountingContract.try_performCalculations().reverted) {
     calcs = accountingContract.try_performCalculations().value;
