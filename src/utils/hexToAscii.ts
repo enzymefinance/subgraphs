@@ -1,4 +1,4 @@
-import { BigInt, Bytes, ByteArray, log } from "@graphprotocol/graph-ts";
+import { BigInt } from "@graphprotocol/graph-ts";
 
 export function hexToNumberString(hex: string): string {
   let hexNumber = BigInt.fromI32(0);
@@ -7,7 +7,7 @@ export function hexToNumberString(hex: string): string {
     hex = hex.slice(2);
   }
 
-  for (let i = 0; i < hex.length && i < 12; i += 1) {
+  for (let i = 0; i < hex.length; i += 1) {
     let character = hex.substr(hex.length - 1 - i, 1);
     let digit = parseInt(character, 16) as u8;
     if (digit) {

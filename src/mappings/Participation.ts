@@ -123,11 +123,10 @@ export function handleRequestExecution(event: RequestExecution): void {
   let accountingContract = AccountingContract.bind(
     Address.fromString(fund.accounting)
   );
-  let currentSharePrice = accountingContract.calcSharePrice();
-  let gav = accountingContract.calcGav();
-
   let sharesContract = SharesContract.bind(Address.fromString(fund.share));
   let totalSupply = sharesContract.totalSupply();
+  let currentSharePrice = accountingContract.calcSharePrice();
+  let gav = accountingContract.calcGav();
 
   let requestedShares = event.params.requestedShares;
   let investmentAmount = event.params.investmentAmount;
@@ -294,12 +293,20 @@ export function handleRedemption(event: Redemption): void {
   let fundContract = HubContract.bind(hub);
   let accountingContract = AccountingContract.bind(fundContract.accounting());
 
-  let currentSharePrice = BigInt.fromI32(0);
-  if (accountingContract.try_calcSharePrice().reverted) {
-    // nothing to do
-  } else {
-    currentSharePrice = accountingContract.try_calcSharePrice().value;
+  let calcs = new AccountingContract__performCalculationsResult(
+    BigInt.fromI32(0),
+    BigInt.fromI32(0),
+    BigInt.fromI32(0),
+    BigInt.fromI32(0),
+    BigInt.fromI32(0),
+    BigInt.fromI32(0)
+  );
+
+  if (!accountingContract.try_performCalculations().reverted) {
+    calcs = accountingContract.try_performCalculations().value;
   }
+
+  let currentSharePrice = calcs.value4;
 
   let defaultSharePrice = accountingContract.DEFAULT_SHARE_PRICE();
   let asset = accountingContract.NATIVE_ASSET();
@@ -398,19 +405,6 @@ export function handleRedemption(event: Redemption): void {
   // do perform calculations
   if (!fundGavValid) {
     return;
-  }
-
-  let calcs = new AccountingContract__performCalculationsResult(
-    BigInt.fromI32(0),
-    BigInt.fromI32(0),
-    BigInt.fromI32(0),
-    BigInt.fromI32(0),
-    BigInt.fromI32(0),
-    BigInt.fromI32(0)
-  );
-
-  if (!accountingContract.try_performCalculations().reverted) {
-    calcs = accountingContract.try_performCalculations().value;
   }
 
   let fundGav = calcs.value0;

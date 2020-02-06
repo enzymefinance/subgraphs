@@ -15,7 +15,10 @@ import { HubContract } from "../codegen/templates/FeeManagerDataSource/HubContra
 import { BigInt } from "@graphprotocol/graph-ts";
 import { ManagementFeeContract } from "../codegen/templates/FeeManagerDataSource/ManagementFeeContract";
 import { PerformanceFeeContract } from "../codegen/templates/FeeManagerDataSource/PerformanceFeeContract";
-import { AccountingContract } from "../codegen/templates/FeeManagerDataSource/AccountingContract";
+import {
+  AccountingContract,
+  AccountingContract__performCalculationsResult
+} from "../codegen/templates/FeeManagerDataSource/AccountingContract";
 import { saveEvent } from "../utils/saveEvent";
 
 export function handleFeeRegistration(event: FeeRegistration): void {
@@ -100,12 +103,20 @@ export function handleFeeReward(event: FeeReward): void {
   investment.shares = investment.shares.plus(event.params.shareQuantity);
   investment.save();
 
-  let currentSharePrice = BigInt.fromI32(0);
-  if (accountingContract.try_calcSharePrice().reverted) {
-    // nothing to do
-  } else {
-    currentSharePrice = accountingContract.try_calcSharePrice().value;
+  let calcs = new AccountingContract__performCalculationsResult(
+    BigInt.fromI32(0),
+    BigInt.fromI32(0),
+    BigInt.fromI32(0),
+    BigInt.fromI32(0),
+    BigInt.fromI32(0),
+    BigInt.fromI32(0)
+  );
+
+  if (!accountingContract.try_performCalculations().reverted) {
+    calcs = accountingContract.try_performCalculations().value;
   }
+
+  let currentSharePrice = calcs.value4;
 
   let defaultSharePrice = accountingContract.DEFAULT_SHARE_PRICE();
   let asset = accountingContract.NATIVE_ASSET();
