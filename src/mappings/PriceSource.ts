@@ -13,10 +13,7 @@ import {
   Registry,
   Version
 } from "../codegen/schema";
-import {
-  AccountingContract,
-  AccountingContract__performCalculationsResult
-} from "../codegen/templates/PriceSourceDataSource/AccountingContract";
+import { AccountingContract } from "../codegen/templates/PriceSourceDataSource/AccountingContract";
 import { ParticipationContract } from "../codegen/templates/PriceSourceDataSource/ParticipationContract";
 import { SharesContract } from "../codegen/templates/PriceSourceDataSource/SharesContract";
 import { investmentEntity } from "../entities/investmentEntity";
@@ -26,6 +23,7 @@ import { networkAssetHistoryEntity } from "../entities/networkAssetHistoryEntity
 import { tenToThePowerOf } from "../utils/tenToThePowerOf";
 import { performCalculationsManually } from "../utils/performCalculationsManually";
 import { saveEvent } from "../utils/saveEvent";
+import { emptyCalcsObject } from "../utils/emptyCalcsObject";
 
 export function handlePriceUpdate(event: PriceUpdate): void {
   saveEvent("PriceUpdate", event);
@@ -61,7 +59,10 @@ export function handlePriceUpdate(event: PriceUpdate): void {
     let priceValid = true;
     let lastPrice = prices[i];
 
-    if (dataSource.network() === 'mainnet' && tokens[i].toHex() == "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2") {
+    if (
+      dataSource.network() === "mainnet" &&
+      tokens[i].toHex() == "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
+    ) {
       lastPrice = tenToThePowerOf(BigInt.fromI32(18));
     } else if (lastPrice.isZero()) {
       priceValid = false;
@@ -208,14 +209,7 @@ export function handlePriceUpdate(event: PriceUpdate): void {
         let sharesContract = SharesContract.bind(sharesAddress);
         let totalSupply = sharesContract.totalSupply();
 
-        let calcs = new AccountingContract__performCalculationsResult(
-          BigInt.fromI32(0),
-          BigInt.fromI32(0),
-          BigInt.fromI32(0),
-          BigInt.fromI32(0),
-          BigInt.fromI32(0),
-          BigInt.fromI32(0)
-        );
+        let calcs = emptyCalcsObject();
 
         if (fund.priceSource == currentPriceSource) {
           if (accountingContract.try_performCalculations().reverted) {

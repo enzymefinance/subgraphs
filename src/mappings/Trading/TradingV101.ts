@@ -8,14 +8,12 @@ import {
   FundHoldingsHistory,
   Fund
 } from "../../codegen/schema";
-import {
-  AccountingContract,
-  AccountingContract__performCalculationsResult
-} from "../../codegen/templates/TradingDataSourceV101/AccountingContract";
+import { AccountingContract } from "../../codegen/templates/TradingDataSourceV101/AccountingContract";
 import { PriceSourceContract } from "../../codegen/templates/TradingDataSourceV101/PriceSourceContract";
 import { SharesContract } from "../../codegen/templates/TradingDataSourceV101/SharesContract";
 import { BigInt } from "@graphprotocol/graph-ts";
 import { saveEvent } from "../../utils/saveEvent";
+import { emptyCalcsObject } from "../../utils/emptyCalcsObject";
 
 export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
   saveEvent("ExchangeMethodCall", event);
@@ -104,14 +102,7 @@ export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
     return;
   }
 
-  let calcs = new AccountingContract__performCalculationsResult(
-    BigInt.fromI32(0),
-    BigInt.fromI32(0),
-    BigInt.fromI32(0),
-    BigInt.fromI32(0),
-    BigInt.fromI32(0),
-    BigInt.fromI32(0)
-  );
+  let calcs = emptyCalcsObject();
 
   if (!accountingContract.try_performCalculations().reverted) {
     calcs = accountingContract.try_performCalculations().value;

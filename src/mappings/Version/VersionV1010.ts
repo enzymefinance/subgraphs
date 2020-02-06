@@ -17,12 +17,10 @@ import {
 } from "@graphprotocol/graph-ts";
 import { currentState } from "../../utils/currentState";
 import { saveContract } from "../../utils/saveContract";
-import {
-  AccountingContract,
-  AccountingContract__performCalculationsResult
-} from "../../codegen/templates/VersionDataSourceV1010/AccountingContract";
+import { AccountingContract } from "../../codegen/templates/VersionDataSourceV1010/AccountingContract";
 import { SharesContract } from "../../codegen/templates/VersionDataSourceV1010/SharesContract";
 import { saveEvent } from "../../utils/saveEvent";
+import { emptyCalcsObject } from "../../utils/emptyCalcsObject";
 
 export function handleNewFund(event: NewFund): void {
   // ignore contracts created before go-live
@@ -98,14 +96,7 @@ export function handleNewFund(event: NewFund): void {
   let accountingAddress = Address.fromString(fund.accounting);
   let accountingContract = AccountingContract.bind(accountingAddress);
 
-  let calcs = new AccountingContract__performCalculationsResult(
-    BigInt.fromI32(0),
-    BigInt.fromI32(0),
-    BigInt.fromI32(0),
-    BigInt.fromI32(0),
-    BigInt.fromI32(0),
-    BigInt.fromI32(0)
-  );
+  let calcs = emptyCalcsObject();
 
   if (!accountingContract.try_performCalculations().reverted) {
     calcs = accountingContract.try_performCalculations().value;

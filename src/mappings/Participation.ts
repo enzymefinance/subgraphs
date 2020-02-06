@@ -18,10 +18,7 @@ import {
   FundHoldingsHistory
 } from "../codegen/schema";
 import { HubContract } from "../codegen/templates/ParticipationDataSource/HubContract";
-import {
-  AccountingContract,
-  AccountingContract__performCalculationsResult
-} from "../codegen/templates/ParticipationDataSource/AccountingContract";
+import { AccountingContract } from "../codegen/templates/ParticipationDataSource/AccountingContract";
 import { SharesContract } from "../codegen/templates/ParticipationDataSource/SharesContract";
 
 import { currentState } from "../utils/currentState";
@@ -29,6 +26,7 @@ import { store, BigInt, Address } from "@graphprotocol/graph-ts";
 import { PriceSourceContract } from "../codegen/templates/ParticipationDataSource/PriceSourceContract";
 import { investorEntity } from "../entities/investorEntity";
 import { saveEvent } from "../utils/saveEvent";
+import { emptyCalcsObject } from "../utils/emptyCalcsObject";
 
 function archiveInvestmentRequest(
   owner: string,
@@ -233,14 +231,7 @@ export function handleRequestExecution(event: RequestExecution): void {
     return;
   }
 
-  let calcs = new AccountingContract__performCalculationsResult(
-    BigInt.fromI32(0),
-    BigInt.fromI32(0),
-    BigInt.fromI32(0),
-    BigInt.fromI32(0),
-    BigInt.fromI32(0),
-    BigInt.fromI32(0)
-  );
+  let calcs = emptyCalcsObject();
 
   if (!accountingContract.try_performCalculations().reverted) {
     calcs = accountingContract.try_performCalculations().value;
@@ -293,14 +284,7 @@ export function handleRedemption(event: Redemption): void {
   let fundContract = HubContract.bind(hub);
   let accountingContract = AccountingContract.bind(fundContract.accounting());
 
-  let calcs = new AccountingContract__performCalculationsResult(
-    BigInt.fromI32(0),
-    BigInt.fromI32(0),
-    BigInt.fromI32(0),
-    BigInt.fromI32(0),
-    BigInt.fromI32(0),
-    BigInt.fromI32(0)
-  );
+  let calcs = emptyCalcsObject();
 
   if (!accountingContract.try_performCalculations().reverted) {
     calcs = accountingContract.try_performCalculations().value;
