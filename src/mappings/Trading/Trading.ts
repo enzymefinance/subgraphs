@@ -90,10 +90,13 @@ export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
     fundHoldingsHistory.validPrice = priceSourceContract.hasValidPrice(
       holdingAddress
     );
+
     if (fundHoldingsHistory.validPrice) {
-      fundHoldingsHistory.assetGav = accountingContract.calcAssetGAV(
-        holdingAddress
-      );
+      if (!accountingContract.try_calcAssetGAV(holdingAddress).reverted) {
+        fundHoldingsHistory.assetGav = accountingContract.try_calcAssetGAV(
+          holdingAddress
+        ).value;
+      }
     } else {
       fundGavValid = false;
     }

@@ -10,6 +10,10 @@ export function exchangeNameFromAddress(address: Address): string {
     } else if (
       address.toHex() == "0x818e6fecd516ecc3849daf6845e3ec868087b755"
     ) {
+      name = "Oasisdex";
+    } else if (
+      address.toHex() == "0x794e6e91555438afc3ccf1c5076a74f42133d08d"
+    ) {
       name = "Kyber Network";
     } else if (
       address.toHex() == "0x4f833a24e1f95d70f028921e27040ca56e09ab0b"
@@ -28,7 +32,7 @@ export function exchangeNameFromAddress(address: Address): string {
     ) {
       name = "Melon Engine (v2)";
     } else if (
-      address.toHex() == "0xcbb801141a1704dbe5b4a6224033cfae80c4b336"
+      address.toHex() == "0x342814604cd5cc4bdeed100edebd51cac3fd98c9"
     ) {
       name = "Melon Engine (v1)";
     } else if (
