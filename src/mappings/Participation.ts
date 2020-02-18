@@ -126,10 +126,28 @@ export function handleRequestExecution(event: RequestExecution): void {
   );
   let sharesContract = SharesContract.bind(Address.fromString(fund.share));
   let totalSupply = sharesContract.totalSupply();
+  // let currentSharePrice = accountingContract.calcSharePrice();
+  let gav = accountingContract.calcGav();
 
   let requestedShares = event.params.requestedShares;
   let investmentAmount = event.params.investmentAmount;
   let investmentAsset = event.params.investmentAsset;
+
+  let amountInDenomationAsset = gav
+    .times(event.params.requestedShares)
+    .div(totalSupply);
+
+  let investment = investmentEntity(
+    event.params.requestOwner.toHex(),
+    fund.id,
+    event.block.timestamp
+  );
+  investment.shares = investment.shares.plus(requestedShares);
+  // investment.sharePrice = currentSharePrice;
+  investment.save();
+
+  fund.investments = fund.investments.concat([investment.id]);
+  fund.save();
 
   archiveInvestmentRequest(
     event.params.requestOwner.toHex(),
@@ -137,6 +155,19 @@ export function handleRequestExecution(event: RequestExecution): void {
     "EXECUTED",
     event.block.timestamp
   );
+
+  let investmentHistory = new InvestmentHistory(event.transaction.hash.toHex());
+  investmentHistory.timestamp = event.block.timestamp;
+  investmentHistory.investment = event.params.requestOwner.toHex() + "/" + hub;
+  investmentHistory.owner = event.params.requestOwner.toHex();
+  investmentHistory.fund = hub;
+  investmentHistory.action = "Investment";
+  investmentHistory.shares = requestedShares;
+  // investmentHistory.sharePrice = currentSharePrice;
+  investmentHistory.amount = investmentAmount;
+  investmentHistory.asset = investmentAsset.toHex();
+  investmentHistory.amountInDenominationAsset = amountInDenomationAsset;
+  investmentHistory.save();
 
   // this is currently investment-count, not investor-count (misnamed entity)
   // TODO: have both investment-count and investor-count
@@ -216,33 +247,11 @@ export function handleRequestExecution(event: RequestExecution): void {
   let sharePrice = calcs.value4;
   let gavPerShareNetManagementFee = calcs.value5;
 
-  let investment = investmentEntity(
-    event.params.requestOwner.toHex(),
-    fund.id,
-    event.block.timestamp
-  );
-  investment.shares = investment.shares.plus(requestedShares);
+  // update share price for investment, investmentHistory
   investment.sharePrice = sharePrice;
   investment.save();
 
-  fund.investments = fund.investments.concat([investment.id]);
-  fund.save();
-
-  let amountInDenomationAsset = fundGav
-    .times(event.params.requestedShares)
-    .div(totalSupply);
-
-  let investmentHistory = new InvestmentHistory(event.transaction.hash.toHex());
-  investmentHistory.timestamp = event.block.timestamp;
-  investmentHistory.investment = event.params.requestOwner.toHex() + "/" + hub;
-  investmentHistory.owner = event.params.requestOwner.toHex();
-  investmentHistory.fund = hub;
-  investmentHistory.action = "Investment";
-  investmentHistory.shares = requestedShares;
   investmentHistory.sharePrice = sharePrice;
-  investmentHistory.amount = investmentAmount;
-  investmentHistory.asset = investmentAsset.toHex();
-  investmentHistory.amountInDenominationAsset = amountInDenomationAsset;
   investmentHistory.save();
 
   // save price calculation to history
