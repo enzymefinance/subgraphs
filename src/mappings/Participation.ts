@@ -126,7 +126,6 @@ export function handleRequestExecution(event: RequestExecution): void {
   );
   let sharesContract = SharesContract.bind(Address.fromString(fund.share));
   let totalSupply = sharesContract.totalSupply();
-  // let currentSharePrice = accountingContract.calcSharePrice();
   let gav = accountingContract.calcGav();
 
   let requestedShares = event.params.requestedShares;
@@ -143,7 +142,6 @@ export function handleRequestExecution(event: RequestExecution): void {
     event.block.timestamp
   );
   investment.shares = investment.shares.plus(requestedShares);
-  // investment.sharePrice = currentSharePrice;
   investment.save();
 
   fund.investments = fund.investments.concat([investment.id]);
@@ -163,7 +161,6 @@ export function handleRequestExecution(event: RequestExecution): void {
   investmentHistory.fund = hub;
   investmentHistory.action = "Investment";
   investmentHistory.shares = requestedShares;
-  // investmentHistory.sharePrice = currentSharePrice;
   investmentHistory.amount = investmentAmount;
   investmentHistory.asset = investmentAsset.toHex();
   investmentHistory.amountInDenominationAsset = amountInDenomationAsset;
@@ -287,38 +284,43 @@ export function handleRequestExecution(event: RequestExecution): void {
 export function handleRedemption(event: Redemption): void {
   saveEvent("Redemption", event);
 
-  let participationContract = ParticipationContract.bind(event.address);
-  let hub = participationContract.hub();
-  let routes = participationContract.routes();
-
-  let fundContract = HubContract.bind(hub);
-  let accountingContract = AccountingContract.bind(fundContract.accounting());
-
-  let calcs = emptyCalcsObject() as AccountingContract__performCalculationsResult;
-
-  if (!accountingContract.try_performCalculations().reverted) {
-    calcs = accountingContract.try_performCalculations().value;
+  let participation = Participation.load(event.address.toHex());
+  if (!participation || !participation.fund) {
+    return;
+  }
+  let fund = Fund.load(participation.fund);
+  if (!fund) {
+    return;
   }
 
-  let currentSharePrice = calcs.value4;
+  let hub = fund.id;
 
-  let defaultSharePrice = accountingContract.DEFAULT_SHARE_PRICE();
-  let asset = accountingContract.NATIVE_ASSET();
+  let accountingContract = AccountingContract.bind(
+    Address.fromString(fund.accounting)
+  );
 
-  let sharesContract = SharesContract.bind(fundContract.shares());
+  let sharesContract = SharesContract.bind(Address.fromString(fund.share));
   let totalSupply = sharesContract.totalSupply();
-
-  let amount = currentSharePrice
-    .times(event.params.redeemedShares)
-    .div(defaultSharePrice);
+  let gav = accountingContract.calcGav();
 
   let investment = investmentEntity(
     event.params.redeemer.toHex(),
-    hub.toHex(),
+    fund.id,
     event.block.timestamp
   );
   investment.shares = investment.shares.minus(event.params.redeemedShares);
   investment.save();
+
+  let investmentHistory = new InvestmentHistory(
+    event.transaction.hash.toHex() + "/" + event.logIndex.toString()
+  );
+  investmentHistory.timestamp = event.block.timestamp;
+  investmentHistory.investment = event.params.redeemer.toHex() + "/" + hub;
+  investmentHistory.owner = event.params.redeemer.toHex();
+  investmentHistory.fund = hub;
+  investmentHistory.action = "Redemption";
+  investmentHistory.shares = event.params.redeemedShares;
+  investmentHistory.save();
 
   // this is currently investment-count, not investor-count (misnamed entity)
   // TODO: have both investment-count and investor-count
@@ -336,41 +338,27 @@ export function handleRedemption(event: Redemption): void {
     state.save();
   }
 
-  let investmentHistory = new InvestmentHistory(
-    event.transaction.hash.toHex() + "/" + event.logIndex.toString()
-  );
-  investmentHistory.timestamp = event.block.timestamp;
-  investmentHistory.investment =
-    event.params.redeemer.toHex() + "/" + participationContract.hub().toHex();
-  investmentHistory.owner = event.params.redeemer.toHex();
-  investmentHistory.fund = participationContract.hub().toHex();
-  investmentHistory.action = "Redemption";
-  investmentHistory.shares = event.params.redeemedShares;
-  investmentHistory.sharePrice = currentSharePrice;
-  investmentHistory.amount = amount;
-  investmentHistory.asset = asset.toHex();
-  investmentHistory.amountInDenominationAsset = amount;
-  investmentHistory.save();
-
   // calculate fund holdings
-  let fundAddress = hub.toHex();
+
   let fundGavValid = true;
   let holdings = accountingContract.getFundHoldings();
 
-  let priceSourceContract = PriceSourceContract.bind(routes.value7);
+  let priceSourceContract = PriceSourceContract.bind(
+    Address.fromString(fund.priceSource)
+  );
   for (let k: i32 = 0; k < holdings.value0.length; k++) {
     let holdingAmount = holdings.value0[k];
     let holdingAddress = holdings.value1[k];
 
     let holdingsId =
-      fundAddress +
+      hub +
       "/" +
       event.block.timestamp.toString() +
       "/" +
       holdingAddress.toHex();
     let fundHoldingsHistory = new FundHoldingsHistory(holdingsId);
     fundHoldingsHistory.timestamp = event.block.timestamp;
-    fundHoldingsHistory.fund = fundAddress;
+    fundHoldingsHistory.fund = hub;
     fundHoldingsHistory.asset = holdingAddress.toHex();
     fundHoldingsHistory.amount = holdingAmount;
 
@@ -401,6 +389,13 @@ export function handleRedemption(event: Redemption): void {
     return;
   }
 
+  // do perform calculations
+  let calcs = emptyCalcsObject() as AccountingContract__performCalculationsResult;
+
+  if (!accountingContract.try_performCalculations().reverted) {
+    calcs = accountingContract.try_performCalculations().value;
+  }
+
   let fundGav = calcs.value0;
   let feesInDenomiationAsset = calcs.value1;
   let feesInShares = calcs.value2;
@@ -409,9 +404,9 @@ export function handleRedemption(event: Redemption): void {
   let gavPerShareNetManagementFee = calcs.value5;
 
   // save price calculation to history
-  let calculationsId = fundAddress + "/" + event.block.timestamp.toString();
+  let calculationsId = hub + "/" + event.block.timestamp.toString();
   let calculations = new FundCalculationsHistory(calculationsId);
-  calculations.fund = fundAddress;
+  calculations.fund = hub;
   calculations.timestamp = event.block.timestamp;
   calculations.gav = fundGav;
   calculations.validPrices = fundGavValid;
@@ -423,12 +418,6 @@ export function handleRedemption(event: Redemption): void {
   calculations.totalSupply = totalSupply;
   calculations.source = "redemption";
   calculations.save();
-
-  // update fund entity
-  let fund = Fund.load(fundAddress) as Fund;
-  if (!fund) {
-    return;
-  }
 
   fund.gav = fundGav;
   fund.validPrice = fundGavValid;
