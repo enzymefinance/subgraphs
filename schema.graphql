@@ -450,6 +450,7 @@ type ExchangeMethodCall @entity {
   trading: Trading
   exchange: Exchange
   methodSignature: String
+  methodName: String
   orderAddress0: String
   orderAddress1: String
   orderAddress2: Asset

@@ -17,6 +17,7 @@ import { SharesContract } from "../../codegen/templates/TradingDataSourceV1010/S
 import { BigInt } from "@graphprotocol/graph-ts";
 import { saveEvent } from "../../utils/saveEvent";
 import { emptyCalcsObject } from "../../utils/emptyCalcsObject";
+import { exchangeMethodSignatureToName } from "../../utils/exchangeMethodSignatureToName";
 
 export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
   saveEvent("ExchangeMethodCall", event);
@@ -33,6 +34,9 @@ export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
   emCall.trading = event.address.toHex();
   emCall.exchange = event.params.exchangeAddress.toHex();
   emCall.methodSignature = event.params.methodSignature.toHexString();
+  emCall.methodName = exchangeMethodSignatureToName(
+    event.params.methodSignature.toHexString()
+  );
   emCall.orderAddress0 = addresses[0];
   emCall.orderAddress1 = addresses[1]; // trading contract
   emCall.orderAddress2 = addresses[2]; // taker asset token

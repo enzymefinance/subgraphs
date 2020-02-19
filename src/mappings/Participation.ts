@@ -374,10 +374,10 @@ export function handleRedemption(event: Redemption): void {
     fundHoldingsHistory.asset = holdingAddress.toHex();
     fundHoldingsHistory.amount = holdingAmount;
 
-    if (!priceSourceContract.try_hasValidPrice(holdingAddress)) {
-      fundHoldingsHistory.validPrice = priceSourceContract.hasValidPrice(
+    if (!priceSourceContract.try_hasValidPrice(holdingAddress).reverted) {
+      fundHoldingsHistory.validPrice = priceSourceContract.try_hasValidPrice(
         holdingAddress
-      );
+      ).value;
       if (fundHoldingsHistory.validPrice) {
         fundHoldingsHistory.assetGav = accountingContract.calcAssetGAV(
           holdingAddress
