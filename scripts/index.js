@@ -11,9 +11,11 @@ function networkForChainId(id) {
   switch (`${id}`) {
     case "1":
       return "mainnet";
+    case "4":
+      return "rinkeby";
     case "42":
       return "kovan";
-    case "4":
+    case "4447":
       return "dev";
   }
 
@@ -24,9 +26,12 @@ function startBlockForChainId(id) {
   switch (`${id}`) {
     case "1":
       return 7200000;
+    case "4":
+      // TODO: Fix this.
+      return 0;
     case "42":
       return 15800000;
-    case "4":
+    case "4447":
       return 0;
   }
 
