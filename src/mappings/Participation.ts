@@ -30,6 +30,7 @@ import { PriceSourceContract } from "../codegen/templates/ParticipationDataSourc
 import { investorEntity } from "../entities/investorEntity";
 import { saveEvent } from "../utils/saveEvent";
 import { emptyCalcsObject } from "../utils/emptyCalcsObject";
+import { tenToThePowerOf } from "../utils/tenToThePowerOf";
 
 function archiveInvestmentRequest(
   owner: string,
@@ -126,7 +127,10 @@ export function handleRequestExecution(event: RequestExecution): void {
   );
   let sharesContract = SharesContract.bind(Address.fromString(fund.share));
   let totalSupply = sharesContract.totalSupply();
-  let gav = accountingContract.calcGav();
+  let gav = BigInt.fromI32(0);
+  if (!accountingContract.try_calcGav().reverted) {
+    gav = accountingContract.try_calcGav().value;
+  }
 
   let requestedShares = event.params.requestedShares;
   let investmentAmount = event.params.investmentAmount;
@@ -301,7 +305,6 @@ export function handleRedemption(event: Redemption): void {
 
   let sharesContract = SharesContract.bind(Address.fromString(fund.share));
   let totalSupply = sharesContract.totalSupply();
-  let gav = accountingContract.calcGav();
 
   let investment = investmentEntity(
     event.params.redeemer.toHex(),
@@ -319,6 +322,12 @@ export function handleRedemption(event: Redemption): void {
   investmentHistory.owner = event.params.redeemer.toHex();
   investmentHistory.fund = hub;
   investmentHistory.action = "Redemption";
+  investmentHistory.sharePrice = fund.sharePrice;
+  if (fund.sharePrice) {
+    investmentHistory.amountInDenominationAsset = fund.sharePrice
+      .times(event.params.redeemedShares)
+      .div(tenToThePowerOf(BigInt.fromI32(18)));
+  }
   investmentHistory.shares = event.params.redeemedShares;
   investmentHistory.save();
 
