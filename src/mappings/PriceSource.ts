@@ -42,6 +42,7 @@ export function handlePriceUpdate(event: PriceUpdate): void {
   priceUpdate.priceSource = event.address.toHex();
   priceUpdate.numberOfAssets = 0;
   priceUpdate.invalidPrices = 0;
+  priceUpdate.numberOfFunds = 0;
   priceUpdate.save();
 
   // save prices to prevent contract calls for individual funds
@@ -50,6 +51,7 @@ export function handlePriceUpdate(event: PriceUpdate): void {
 
   let numberOfAssets = 0;
   let invalidPrices = 0;
+  let numberOfFunds = 0;
 
   for (let i: i32 = 0; i < prices.length; i++) {
     let asset = Asset.load(tokens[i].toHex());
@@ -214,17 +216,28 @@ export function handlePriceUpdate(event: PriceUpdate): void {
 
         let calcs = emptyCalcsObject() as AccountingContract__performCalculationsResult;
 
-        if (fund.priceSource == currentPriceSource) {
-          if (accountingContract.try_performCalculations().reverted) {
-            calcs = performCalculationsManually(
-              fundGavFromAssets,
-              totalSupply,
-              Address.fromString(fund.feeManager),
-              accountingContract
-            );
-          } else {
-            calcs = accountingContract.try_performCalculations().value;
-          }
+        // if (fund.priceSource == currentPriceSource) {
+        //   if (accountingContract.try_performCalculations().reverted) {
+        //     calcs = performCalculationsManually(
+        //       fundGavFromAssets,
+        //       totalSupply,
+        //       Address.fromString(fund.feeManager),
+        //       accountingContract
+        //     );
+        //   } else {
+        //     calcs = accountingContract.try_performCalculations().value;
+        //   }
+        // } else {
+        //   calcs = performCalculationsManually(
+        //     fundGavFromAssets,
+        //     totalSupply,
+        //     Address.fromString(fund.feeManager),
+        //     accountingContract
+        //   );
+        // }
+
+        if (!accountingContract.try_performCalculations().reverted) {
+          calcs = accountingContract.try_performCalculations().value;
         } else {
           calcs = performCalculationsManually(
             fundGavFromAssets,
@@ -271,6 +284,10 @@ export function handlePriceUpdate(event: PriceUpdate): void {
         fund.previousDailySharePrice = fund.currentDailySharePrice;
         fund.currentDailySharePrice = sharePrice;
         fund.save();
+
+        numberOfFunds = numberOfFunds + 1;
+        priceUpdate.numberOfFunds = numberOfFunds;
+        priceUpdate.save();
 
         // valuations for individual investments / investors
         let participationAddress = Address.fromString(fund.participation);

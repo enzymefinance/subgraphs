@@ -152,6 +152,7 @@ type AssetPriceUpdate @entity {
   priceSource: PriceSource!
   numberOfAssets: Int!
   invalidPrices: Int!
+  numberOfFunds: Int!
   assetPrices: [AssetPriceHistory!]! @derivedFrom(field: "priceUpdate")
 }
 
