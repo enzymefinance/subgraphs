@@ -27,7 +27,7 @@ function startBlockForChainId(id) {
     case "1":
       return 7200000;
     case "4":
-      return 6000000;
+      return 5900000;
     case "42":
       return 15800000;
     case "4447":
