@@ -6,9 +6,11 @@
     "build": "graph build",
     "auth": "graph auth https://api.thegraph.com/deploy/",
     "deploy:prod": "graph deploy melonproject/melon --debug --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
+    "deploy:staging": "graph deploy melonproject/melon-staging --debug --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
     "deploy:dev": "graph deploy melonproject/melon-dev --debug --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
     "deploy:kovan:ash": "graph deploy melonproject/melon-ash-kovan subgraph.ash.kovan.yaml --debug --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/ ",
     "deploy:kovan": "graph deploy melonproject/melon-kovan --debug --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
+    "deploy:rinkeby": "graph deploy melonproject/melon-rinkeby --debug --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
     "create:local": "graph create melonproject/melon --node http://localhost:8020",
     "deploy:local": "graph deploy melonproject/melon --debug --ipfs http://localhost:5001 --node http://localhost:8020"
   },
