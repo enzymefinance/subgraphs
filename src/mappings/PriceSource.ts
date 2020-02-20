@@ -205,10 +205,10 @@ export function handlePriceUpdate(event: PriceUpdate): void {
         // have to prevent calling any function which uses calcGav
         // since this fails when any price of an asset is invalid
 
-        if (!fundGavValid) {
-          melonNetworkValidGav = false;
-          continue;
-        }
+        // if (!fundGavValid) {
+        //   melonNetworkValidGav = false;
+        //   continue;
+        // }
 
         let sharesAddress = Address.fromString(fund.share);
         let sharesContract = SharesContract.bind(sharesAddress);
