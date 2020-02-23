@@ -29,6 +29,14 @@ import { saveEvent } from "../utils/saveEvent";
 import { emptyCalcsObject } from "../utils/emptyCalcsObject";
 
 export function handlePriceUpdate(event: PriceUpdate): void {
+  // old price updates mess up new funds prices => exclude them
+  // if (
+  //   event.block.number.ge(BigInt.fromI32(1581897328)) &&
+  //   event.params.token.length <= 17
+  // ) {
+  //   return;
+  // }
+
   saveEvent("PriceUpdate", event);
 
   let state = currentState();
@@ -216,28 +224,17 @@ export function handlePriceUpdate(event: PriceUpdate): void {
 
         let calcs = emptyCalcsObject() as AccountingContract__performCalculationsResult;
 
-        // if (fund.priceSource == currentPriceSource) {
-        //   if (accountingContract.try_performCalculations().reverted) {
-        //     calcs = performCalculationsManually(
-        //       fundGavFromAssets,
-        //       totalSupply,
-        //       Address.fromString(fund.feeManager),
-        //       accountingContract
-        //     );
-        //   } else {
-        //     calcs = accountingContract.try_performCalculations().value;
-        //   }
-        // } else {
-        //   calcs = performCalculationsManually(
-        //     fundGavFromAssets,
-        //     totalSupply,
-        //     Address.fromString(fund.feeManager),
-        //     accountingContract
-        //   );
-        // }
-
-        if (!accountingContract.try_performCalculations().reverted) {
-          calcs = accountingContract.try_performCalculations().value;
+        if (fund.priceSource == currentPriceSource) {
+          if (accountingContract.try_performCalculations().reverted) {
+            calcs = performCalculationsManually(
+              fundGavFromAssets,
+              totalSupply,
+              Address.fromString(fund.feeManager),
+              accountingContract
+            );
+          } else {
+            calcs = accountingContract.try_performCalculations().value;
+          }
         } else {
           calcs = performCalculationsManually(
             fundGavFromAssets,
@@ -246,6 +243,17 @@ export function handlePriceUpdate(event: PriceUpdate): void {
             accountingContract
           );
         }
+
+        // if (!accountingContract.try_performCalculations().reverted) {
+        //   calcs = accountingContract.try_performCalculations().value;
+        // } else {
+        //   calcs = performCalculationsManually(
+        //     fundGavFromAssets,
+        //     totalSupply,
+        //     Address.fromString(fund.feeManager),
+        //     accountingContract
+        //   );
+        // }
 
         let fundGav = calcs.value0;
         let feesInDenomiationAsset = calcs.value1;
