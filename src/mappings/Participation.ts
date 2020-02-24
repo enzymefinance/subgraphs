@@ -219,8 +219,8 @@ export function handleRequestExecution(event: RequestExecution): void {
       fundHoldingsHistory.validPrice = priceSourceContract.try_hasValidPrice(
         holdingAddress
       ).value;
-      if (fundHoldingsHistory.validPrice) {
-        assetGav = accountingContract.calcAssetGAV(holdingAddress);
+      if (!accountingContract.try_calcAssetGAV(holdingAddress).reverted) {
+        assetGav = accountingContract.try_calcAssetGAV(holdingAddress).value;
         fundGavFromAssets = fundGavFromAssets.plus(assetGav);
       } else {
         fundGavValid = false;
@@ -435,8 +435,8 @@ export function handleRedemption(event: Redemption): void {
       fundHoldingsHistory.validPrice = priceSourceContract.try_hasValidPrice(
         holdingAddress
       ).value;
-      if (fundHoldingsHistory.validPrice) {
-        assetGav = accountingContract.calcAssetGAV(holdingAddress);
+      if (!accountingContract.try_calcAssetGAV(holdingAddress).reverted) {
+        assetGav = accountingContract.try_calcAssetGAV(holdingAddress).value;
         fundGavFromAssets = fundGavFromAssets.plus(assetGav);
       } else {
         fundGavValid = false;
