@@ -18,7 +18,7 @@ subgraph.yaml
 build/
 data/
 subgraph.yaml
-src/types/
+src/codegen/
 src/statics.ts
  
 # Dependency directories

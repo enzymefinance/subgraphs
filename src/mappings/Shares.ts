@@ -1,12 +1,13 @@
 import {
   Approval,
   Transfer
-} from "../types/templates/SharesDataSource/SharesContract";
+} from "../codegen/templates/SharesDataSource/SharesContract";
+import { saveEvent } from "../utils/saveEvent";
 
 export function handleApproval(event: Approval): void {
-  // TODO
+  saveEvent("Approval", event);
 }
 
 export function handleTransfer(event: Transfer): void {
-  // TODO
+  saveEvent("Transfer", event);
 }

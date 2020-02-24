@@ -9,11 +9,13 @@ const mustache = require("mustache");
 
 function networkForChainId(id) {
   switch (`${id}`) {
-    case '1':
+    case "1":
       return "mainnet";
-    case '42':
+    case "4":
+      return "rinkeby";
+    case "42":
       return "kovan";
-    case '4':
+    case "4447":
       return "dev";
   }
 
@@ -22,11 +24,13 @@ function networkForChainId(id) {
 
 function startBlockForChainId(id) {
   switch (`${id}`) {
-    case '1':
+    case "1":
       return 7200000;
-    case '42':
+    case "4":
+      return 5900000;
+    case "42":
       return 15800000;
-    case '4':
+    case "4447":
       return 0;
   }
 
@@ -57,20 +61,15 @@ yargs
       view.conf.block = startBlockForChainId(view.conf.networkID);
 
       const rootDir = path.join(__dirname, "..");
-      const staticsTemplate = fs.readFileSync(
-        path.join(rootDir, "src", "statics.template.ts"),
-        "utf8"
-      );
+
       const subgraphTemplate = fs.readFileSync(
         path.join(rootDir, "subgraph.template.yaml"),
         "utf8"
       );
 
       const subgraphOutput = mustache.render(subgraphTemplate, view);
-      const staticsOutput = mustache.render(staticsTemplate, view);
 
       fs.writeFileSync(path.join(rootDir, "subgraph.yaml"), subgraphOutput);
-      fs.writeFileSync(path.join(rootDir, "src", "statics.ts"), staticsOutput);
     },
     builder: args =>
       args

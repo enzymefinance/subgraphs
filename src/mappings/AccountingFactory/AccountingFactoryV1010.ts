@@ -1,0 +1,35 @@
+import { NewInstance } from "../../codegen/templates/AccountingFactoryDataSourceV1010/AccountingFactoryContractV1010";
+import { AccountingDataSourceV1010 } from "../../codegen/templates";
+import { Accounting } from "../../codegen/schema";
+import { saveContract } from "../../utils/saveContract";
+import { dataSource } from "@graphprotocol/graph-ts";
+import { saveEvent } from "../../utils/saveEvent";
+
+export function handleNewInstance(event: NewInstance): void {
+  // ignore contracts created before go-live
+  if (
+    dataSource.network() == "mainnet" &&
+    event.block.number.toI32() < 7272194
+  ) {
+    return;
+  }
+
+  saveEvent("NewInstance", event);
+
+  AccountingDataSourceV1010.create(event.params.instance);
+
+  let accounting = new Accounting(event.params.instance.toHex());
+  accounting.fund = event.params.hub.toHex();
+  accounting.denominationAsset = event.params.denominationAsset.toHex();
+  accounting.nativeAsset = event.params.nativeAsset.toHex();
+  accounting.ownedAssets = [];
+  accounting.save();
+
+  saveContract(
+    accounting.id,
+    "Accounting",
+    "",
+    event.block.timestamp,
+    event.params.hub.toHex()
+  );
+}

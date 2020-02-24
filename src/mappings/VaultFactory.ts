@@ -1,9 +1,9 @@
-import { VaultDataSource } from "../types/templates";
-import { NewInstance } from "../types/VaultFactoryDataSource/VaultFactoryContract";
-import { Vault } from "../types/schema";
-import { saveContract } from "./utils/saveContract";
-import { saveEventHistory } from "./utils/saveEventHistory";
+import { VaultDataSource } from "../codegen/templates";
+import { NewInstance } from "../codegen/templates/VaultFactoryDataSource/VaultFactoryContract";
+import { Vault } from "../codegen/schema";
+import { saveContract } from "../utils/saveContract";
 import { dataSource } from "@graphprotocol/graph-ts";
+import { saveEvent } from "../utils/saveEvent";
 
 export function handleNewInstance(event: NewInstance): void {
   // ignore contracts created before go-live
@@ -13,6 +13,8 @@ export function handleNewInstance(event: NewInstance): void {
   ) {
     return;
   }
+
+  saveEvent("NewInstance", event);
 
   VaultDataSource.create(event.params.instance);
 
@@ -26,16 +28,5 @@ export function handleNewInstance(event: NewInstance): void {
     "",
     event.block.timestamp,
     event.params.hub.toHex()
-  );
-
-  saveEventHistory(
-    event.transaction.hash.toHex(),
-    event.block.timestamp,
-    event.params.hub.toHex(),
-    "VaultFactory",
-    event.address.toHex(),
-    "NewInstance",
-    [],
-    []
   );
 }

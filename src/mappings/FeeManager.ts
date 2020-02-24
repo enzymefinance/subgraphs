@@ -1,24 +1,30 @@
 import {
   FeeRegistration,
   FeeReward
-} from "../types/templates/FeeManagerDataSource/FeeManagerContract";
+} from "../codegen/templates/FeeManagerDataSource/FeeManagerContract";
 import {
   FeeManager,
   ManagementFee,
   PerformanceFee,
   FeeRewardHistory,
   InvestmentHistory
-} from "../types/schema";
-import { investmentEntity } from "./entities/investmentEntity";
-import { FeeManagerContract } from "../types/templates/FeeManagerDataSource/FeeManagerContract";
-import { HubContract } from "../types/templates/FeeManagerDataSource/HubContract";
+} from "../codegen/schema";
+import { investmentEntity } from "../entities/investmentEntity";
+import { FeeManagerContract } from "../codegen/templates/FeeManagerDataSource/FeeManagerContract";
+import { HubContract } from "../codegen/templates/FeeManagerDataSource/HubContract";
 import { BigInt } from "@graphprotocol/graph-ts";
-import { ManagementFeeContract } from "../types/templates/FeeManagerDataSource/ManagementFeeContract";
-import { PerformanceFeeContract } from "../types/templates/FeeManagerDataSource/PerformanceFeeContract";
-import { AccountingContract } from "../types/templates/FeeManagerDataSource/AccountingContract";
-import { saveEventHistory } from "./utils/saveEventHistory";
+import { ManagementFeeContract } from "../codegen/templates/FeeManagerDataSource/ManagementFeeContract";
+import { PerformanceFeeContract } from "../codegen/templates/FeeManagerDataSource/PerformanceFeeContract";
+import {
+  AccountingContract,
+  AccountingContract__performCalculationsResult
+} from "../codegen/templates/FeeManagerDataSource/AccountingContract";
+import { saveEvent } from "../utils/saveEvent";
+import { emptyCalcsObject } from "../utils/emptyCalcsObject";
 
 export function handleFeeRegistration(event: FeeRegistration): void {
+  saveEvent("FeeRegistration", event);
+
   // this event only passes very limited data, so
   // we have to get everything through contract calls...
   let feeManager = FeeManager.load(event.address.toHex());
@@ -44,17 +50,6 @@ export function handleFeeRegistration(event: FeeRegistration): void {
     mgmtFee.save();
     feeManager.feesRegistered = BigInt.fromI32(1);
     feeManager.save();
-
-    saveEventHistory(
-      event.transaction.hash.toHex() + "/mgmt",
-      event.block.timestamp,
-      feeManagerContract.hub().toHex(),
-      "FeeManager",
-      event.address.toHex(),
-      "FeeRegistration",
-      ["feeType", "rate"],
-      ["Management Fee", mgmtFee.managementFeeRate.toString()]
-    );
   }
   // fee[1] is the performance fee
   else {
@@ -72,25 +67,12 @@ export function handleFeeRegistration(event: FeeRegistration): void {
     perfFee.save();
     feeManager.feesRegistered = BigInt.fromI32(2);
     feeManager.save();
-
-    saveEventHistory(
-      event.transaction.hash.toHex() + "/perf",
-      event.block.timestamp,
-      feeManagerContract.hub().toHex(),
-      "FeeManager",
-      event.address.toHex(),
-      "FeeRegistration",
-      ["feeType", "rate", "period"],
-      [
-        "Performance Fee",
-        perfFee.performanceFeeRate.toString(),
-        perfFee.performanceFeePeriod.toString()
-      ]
-    );
   }
 }
 
 export function handleFeeReward(event: FeeReward): void {
+  saveEvent("FeeReward", event);
+
   let feeRewardHistory = new FeeRewardHistory(
     event.address.toHex() + "/" + event.block.timestamp.toString()
   );
@@ -122,12 +104,13 @@ export function handleFeeReward(event: FeeReward): void {
   investment.shares = investment.shares.plus(event.params.shareQuantity);
   investment.save();
 
-  let currentSharePrice = BigInt.fromI32(0);
-  if (accountingContract.try_calcSharePrice().reverted) {
-    // nothing to do
-  } else {
-    currentSharePrice = accountingContract.try_calcSharePrice().value;
+  let calcs = emptyCalcsObject() as AccountingContract__performCalculationsResult;
+
+  if (!accountingContract.try_performCalculations().reverted) {
+    calcs = accountingContract.try_performCalculations().value;
   }
+
+  let currentSharePrice = calcs.value4;
 
   let defaultSharePrice = accountingContract.DEFAULT_SHARE_PRICE();
   let asset = accountingContract.NATIVE_ASSET();
@@ -151,15 +134,4 @@ export function handleFeeReward(event: FeeReward): void {
   investmentHistory.asset = asset.toHex();
   investmentHistory.amountInDenominationAsset = amount;
   investmentHistory.save();
-
-  saveEventHistory(
-    event.transaction.hash.toHex(),
-    event.block.timestamp,
-    hubAddress.toHex(),
-    "FeeManager",
-    event.address.toHex(),
-    "FeeReward",
-    ["shares"],
-    [event.params.shareQuantity.toString()]
-  );
 }

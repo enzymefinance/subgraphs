@@ -17,8 +17,11 @@ type State @entity {
   timestamptNumberOfInvestors: BigInt!
   lastEngineUpdate: BigInt!
   currentEngine: Engine
+  totalAmguConsumed: BigInt!
+  totalMlnBurned: BigInt!
   mlnToken: String!
-  registry: Registry
+  registry: Registry!
+  registries: [Registry!]!
 }
 
 type Registry @entity {
@@ -149,6 +152,7 @@ type AssetPriceUpdate @entity {
   priceSource: PriceSource!
   numberOfAssets: Int!
   invalidPrices: Int!
+  numberOfFunds: Int!
   assetPrices: [AssetPriceHistory!]! @derivedFrom(field: "priceUpdate")
 }
 
@@ -215,7 +219,7 @@ type Fund @entity {
   investmentHistory: [InvestmentHistory!]! @derivedFrom(field: "fund")
   holdingsHistory: [FundHoldingsHistory!]! @derivedFrom(field: "fund")
   lastCalculationsUpdate: BigInt
-  events: [EventHistory!]! @derivedFrom(field: "fund")
+  # events: [EventHistory!]! @derivedFrom(field: "fund")
 }
 
 type FundManager @entity {
@@ -447,6 +451,7 @@ type ExchangeMethodCall @entity {
   trading: Trading
   exchange: Exchange
   methodSignature: String
+  methodName: String
   orderAddress0: String
   orderAddress1: String
   orderAddress2: Asset
@@ -468,19 +473,22 @@ type ExchangeMethodCall @entity {
   timestamp: BigInt!
 }
 
-type EventHistory @entity {
+type Event @entity {
   id: ID!
-  fund: Fund
-  event: String!
-  contract: String!
-  contractAddress: String!
-  params: [EventHistoryParameter!]! @derivedFrom(field: "eventHistory")
+  name: String!
+  contract: Contract!
   timestamp: BigInt!
+  block: BigInt!
+  hash: String!
+  from: String!
+  parameters: [EventParameter!]! @derivedFrom(field: "event")
 }
 
-type EventHistoryParameter @entity {
+type EventParameter @entity {
   id: ID!
-  eventHistory: EventHistory!
+  event: Event!
   name: String!
+  kind: BigInt!
   value: String!
+  isArray: Boolean!
 }

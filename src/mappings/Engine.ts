@@ -5,21 +5,24 @@ import {
   Thaw,
   Burn,
   EngineContract
-} from "../types/templates/EngineDataSource/EngineContract";
+} from "../codegen/templates/EngineDataSource/EngineContract";
 import {
   AmguPrice,
   AmguPayment,
   EngineEtherEvent,
   Engine,
   EngineHistory
-} from "../types/schema";
-import { Address, BigInt, log } from "@graphprotocol/graph-ts";
-import { saveContract } from "./utils/saveContract";
-import { currentState } from "./utils/currentState";
-import { MlnContract } from "../types/templates/EngineDataSource/MlnContract";
-import { engineEntity } from "./entities/engineEntity";
+} from "../codegen/schema";
+import { Address, BigInt } from "@graphprotocol/graph-ts";
+import { saveContract } from "../utils/saveContract";
+import { currentState } from "../utils/currentState";
+import { MlnContract } from "../codegen/templates/EngineDataSource/MlnContract";
+import { engineEntity } from "../entities/engineEntity";
+import { saveEvent } from "../utils/saveEvent";
 
 export function handleSetAmguPrice(event: SetAmguPrice): void {
+  saveEvent("SetAmguPrice", event);
+
   let amguPrice = new AmguPrice(event.transaction.hash.toHex());
   amguPrice.price = event.params.amguPrice;
   amguPrice.engine = event.address.toHex();
@@ -34,6 +37,8 @@ export function handleSetAmguPrice(event: SetAmguPrice): void {
 }
 
 export function handleAmguPaid(event: AmguPaid): void {
+  saveEvent("AmguPaid", event);
+
   let amguPayment = new AmguPayment(event.transaction.hash.toHex());
   amguPayment.amount = event.params.amount;
   amguPayment.engine = event.address.toHex();
@@ -55,6 +60,10 @@ export function handleAmguPaid(event: AmguPaid): void {
   // Update all engine quantities every hour
   let state = currentState();
   let interval = BigInt.fromI32(60 * 60);
+
+  state.totalAmguConsumed = state.totalAmguConsumed.plus(event.params.amount);
+  state.save();
+
   if (event.block.timestamp.minus(state.lastEngineUpdate).gt(interval)) {
     state.lastEngineUpdate = event.block.timestamp;
     state.save();
@@ -98,6 +107,8 @@ export function handleAmguPaid(event: AmguPaid): void {
 }
 
 export function handleThaw(event: Thaw): void {
+  saveEvent("Thaw", event);
+
   let etherEvent = new EngineEtherEvent(event.transaction.hash.toHex());
   etherEvent.event = "Thaw";
   etherEvent.amount = event.params.amount;
@@ -115,6 +126,8 @@ export function handleThaw(event: Thaw): void {
 }
 
 export function handleBurn(event: Burn): void {
+  saveEvent("Burn", event);
+
   let etherEvent = new EngineEtherEvent(event.transaction.hash.toHex());
   etherEvent.event = "Burn";
   etherEvent.amount = event.params.amount;
@@ -128,9 +141,15 @@ export function handleBurn(event: Burn): void {
   engine.totalMlnBurned = engineContract.totalMlnBurned();
   engine.totalEtherConsumed = engineContract.totalEtherConsumed();
   engine.save();
+
+  let state = currentState();
+  state.totalMlnBurned = state.totalMlnBurned.plus(event.params.amount);
+  state.save();
 }
 
 export function handleRegistryChange(event: RegistryChange): void {
+  saveEvent("RegistryChange", event);
+
   let engine = engineEntity(event.address.toHex());
   engine.registry = event.params.registry.toHex();
   engine.save();
