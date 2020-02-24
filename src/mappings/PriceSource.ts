@@ -11,7 +11,8 @@ import {
   AssetPriceHistory,
   MelonNetworkHistory,
   Registry,
-  Version
+  Version,
+  PriceSource
 } from "../codegen/schema";
 import {
   AccountingContract,
@@ -27,6 +28,8 @@ import { tenToThePowerOf } from "../utils/tenToThePowerOf";
 import { performCalculationsManually } from "../utils/performCalculationsManually";
 import { saveEvent } from "../utils/saveEvent";
 import { emptyCalcsObject } from "../utils/emptyCalcsObject";
+import { PriceSourceContract } from "../codegen/templates/ParticipationDataSource/PriceSourceContract";
+import { RegistryContract } from "../codegen/templates/PriceSourceDataSource/RegistryContract";
 
 export function handlePriceUpdate(event: PriceUpdate): void {
   // old price updates mess up new funds prices => exclude them
@@ -138,6 +141,15 @@ export function handlePriceUpdate(event: PriceUpdate): void {
         let accountingAddress = Address.fromString(fund.accounting);
         let accountingContract = AccountingContract.bind(accountingAddress);
 
+        // rely on registry's pricesource for valid price
+        let registryContract = RegistryContract.bind(
+          Address.fromString(fund.registry!)
+        );
+        let fundPriceSource = PriceSourceContract.bind(
+          registryContract.priceSource()
+        );
+        let denominationAsset = accountingContract.DENOMINATION_ASSET();
+
         // fund holdings, incl. finding out if there holdings with invalid prices
 
         let fundGavValid = true;
@@ -163,20 +175,39 @@ export function handlePriceUpdate(event: PriceUpdate): void {
           // see if there are assets with invalid prices in the portfolio
           let assetGav = BigInt.fromI32(0);
           let validPrice = true;
-          let assetPrice =
-            assetPriceMap.get(holdingAddress.toHex()) || BigInt.fromI32(0);
-          if (!assetPrice.isZero()) {
-            let assetDecimals =
-              assetDecimalMap.get(holdingAddress.toHex()) || BigInt.fromI32(0);
-            assetGav = holdingAmount
-              .times(assetPrice as BigInt)
-              .div(tenToThePowerOf(assetDecimals as BigInt));
-          } else if (holdingAmount.isZero()) {
-            assetGav = BigInt.fromI32(0);
+          if (fundPriceSource.hasValidPrice(holdingAddress)) {
+            if (
+              !fundPriceSource.try_convertQuantity(
+                holdingAmount,
+                holdingAddress,
+                denominationAsset
+              ).reverted
+            ) {
+              assetGav = fundPriceSource.try_convertQuantity(
+                holdingAmount,
+                holdingAddress,
+                denominationAsset
+              ).value;
+            }
           } else {
             validPrice = false;
             fundGavValid = false;
           }
+          // let assetGav =
+          // // let assetPrice =
+          // //   assetPriceMap.get(holdingAddress.toHex()) || BigInt.fromI32(0);
+          // if (!assetPrice.isZero()) {
+          //   let assetDecimals =
+          //     assetDecimalMap.get(holdingAddress.toHex()) || BigInt.fromI32(0);
+          //   assetGav = holdingAmount
+          //     .times(assetPrice as BigInt)
+          //     .div(tenToThePowerOf(assetDecimals as BigInt));
+          // } else if (holdingAmount.isZero()) {
+          //   assetGav = BigInt.fromI32(0);
+          // } else {
+          //   validPrice = false;
+          //   fundGavValid = false;
+          // }
 
           fundHoldingsHistory.assetGav = assetGav;
           fundHoldingsHistory.validPrice = validPrice;
