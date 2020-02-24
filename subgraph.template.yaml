@@ -590,6 +590,8 @@ templates:
           file: ./src/abis/Hub.abi
         - name: PriceSourceContract
           file: ./src/abis/KyberPriceFeed.abi
+        - name: RegistryContract
+          file: ./src/abis/Registry.abi
       eventHandlers:
         - event: InvestmentRequest(indexed address,indexed address,uint256,uint256)
           handler: handleInvestmentRequest
@@ -675,6 +677,10 @@ templates:
           file: ./src/abis/Trading.abi
         - name: AccountingContract
           file: ./src/abis/Accounting.abi
+        - name: ParticipationContract
+          file: ./src/abis/Participation.abi
+        - name: RegistryContract
+          file: ./src/abis/Registry.abi
         - name: PriceSourceContract
           file: ./src/abis/KyberPriceFeed.abi
         - name: SharesContract
@@ -701,6 +707,10 @@ templates:
           file: ./src/abis/v.1.0.10/Trading.abi
         - name: AccountingContract
           file: ./src/abis/Accounting.abi
+        - name: ParticipationContract
+          file: ./src/abis/Participation.abi
+        - name: RegistryContract
+          file: ./src/abis/Registry.abi
         - name: PriceSourceContract
           file: ./src/abis/KyberPriceFeed.abi
         - name: SharesContract
@@ -727,6 +737,10 @@ templates:
           file: ./src/abis/v.1.0.1/Trading.abi
         - name: AccountingContract
           file: ./src/abis/Accounting.abi
+        - name: ParticipationContract
+          file: ./src/abis/Participation.abi
+        - name: RegistryContract
+          file: ./src/abis/Registry.abi
         - name: PriceSourceContract
           file: ./src/abis/KyberPriceFeed.abi
         - name: SharesContract

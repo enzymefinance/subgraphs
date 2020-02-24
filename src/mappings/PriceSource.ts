@@ -193,31 +193,17 @@ export function handlePriceUpdate(event: PriceUpdate): void {
             validPrice = false;
             fundGavValid = false;
           }
-          // let assetGav =
-          // // let assetPrice =
-          // //   assetPriceMap.get(holdingAddress.toHex()) || BigInt.fromI32(0);
-          // if (!assetPrice.isZero()) {
-          //   let assetDecimals =
-          //     assetDecimalMap.get(holdingAddress.toHex()) || BigInt.fromI32(0);
-          //   assetGav = holdingAmount
-          //     .times(assetPrice as BigInt)
-          //     .div(tenToThePowerOf(assetDecimals as BigInt));
-          // } else if (holdingAmount.isZero()) {
-          //   assetGav = BigInt.fromI32(0);
-          // } else {
-          //   validPrice = false;
-          //   fundGavValid = false;
-          // }
 
           fundHoldingsHistory.assetGav = assetGav;
           fundHoldingsHistory.validPrice = validPrice;
+          fundHoldingsHistory.save();
 
           fundGavFromAssets = fundGavFromAssets.plus(assetGav);
 
           // only save non-zero values
-          if (!holdingAmount.isZero()) {
-            fundHoldingsHistory.save();
-          }
+          // if (!holdingAmount.isZero()) {
+          //   fundHoldingsHistory.save();
+          // }
 
           // add to melonNetworkAssetHistory
           let networkAssetHistory = networkAssetHistoryEntity(
@@ -274,17 +260,6 @@ export function handlePriceUpdate(event: PriceUpdate): void {
             accountingContract
           );
         }
-
-        // if (!accountingContract.try_performCalculations().reverted) {
-        //   calcs = accountingContract.try_performCalculations().value;
-        // } else {
-        //   calcs = performCalculationsManually(
-        //     fundGavFromAssets,
-        //     totalSupply,
-        //     Address.fromString(fund.feeManager),
-        //     accountingContract
-        //   );
-        // }
 
         let fundGav = calcs.value0;
         let feesInDenomiationAsset = calcs.value1;

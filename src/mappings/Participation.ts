@@ -15,9 +15,9 @@ import {
   InvestmentHistory,
   InvestmentRequest as InvestmentRequestEntity,
   FundCalculationsHistory,
-  FundHoldingsHistory
+  FundHoldingsHistory,
+  InvestmentValuationHistory
 } from "../codegen/schema";
-import { HubContract } from "../codegen/templates/ParticipationDataSource/HubContract";
 import {
   AccountingContract,
   AccountingContract__performCalculationsResult
@@ -26,11 +26,13 @@ import { SharesContract } from "../codegen/templates/ParticipationDataSource/Sha
 
 import { currentState } from "../utils/currentState";
 import { store, BigInt, Address } from "@graphprotocol/graph-ts";
+import { RegistryContract } from "../codegen/templates/ParticipationDataSource/RegistryContract";
 import { PriceSourceContract } from "../codegen/templates/ParticipationDataSource/PriceSourceContract";
 import { investorEntity } from "../entities/investorEntity";
 import { saveEvent } from "../utils/saveEvent";
 import { emptyCalcsObject } from "../utils/emptyCalcsObject";
 import { tenToThePowerOf } from "../utils/tenToThePowerOf";
+import { investorValuationHistoryEntity } from "../entities/investorValuationHistoryEntity";
 
 function archiveInvestmentRequest(
   owner: string,
@@ -187,10 +189,15 @@ export function handleRequestExecution(event: RequestExecution): void {
   // calculate fund holdings
 
   let fundGavValid = true;
+  let assetGav = BigInt.fromI32(0);
+  let fundGavFromAssets = BigInt.fromI32(0);
   let holdings = accountingContract.getFundHoldings();
 
+  let registryContract = RegistryContract.bind(
+    Address.fromString(fund.registry!)
+  );
   let priceSourceContract = PriceSourceContract.bind(
-    Address.fromString(fund.priceSource)
+    registryContract.priceSource()
   );
   for (let k: i32 = 0; k < holdings.value0.length; k++) {
     let holdingAmount = holdings.value0[k];
@@ -213,9 +220,8 @@ export function handleRequestExecution(event: RequestExecution): void {
         holdingAddress
       ).value;
       if (fundHoldingsHistory.validPrice) {
-        fundHoldingsHistory.assetGav = accountingContract.calcAssetGAV(
-          holdingAddress
-        );
+        assetGav = accountingContract.calcAssetGAV(holdingAddress);
+        fundGavFromAssets = fundGavFromAssets.plus(assetGav);
       } else {
         fundGavValid = false;
       }
@@ -224,10 +230,13 @@ export function handleRequestExecution(event: RequestExecution): void {
       fundGavValid = false;
     }
 
+    fundHoldingsHistory.assetGav = assetGav;
+    fundHoldingsHistory.save();
+
     // only save non-zero values
-    if (!holdingAmount.isZero()) {
-      fundHoldingsHistory.save();
-    }
+    // if (!holdingAmount.isZero()) {
+    //   fundHoldingsHistory.save();
+    // }
   }
 
   if (!fundGavValid) {
@@ -283,6 +292,52 @@ export function handleRequestExecution(event: RequestExecution): void {
   fund.save();
 
   // TODO: update network gav
+
+  // valuations for individual investments / investors
+  let participationAddress = Address.fromString(fund.participation);
+  let participationContract = ParticipationContract.bind(participationAddress);
+  let historicalInvestors = participationContract.getHistoricalInvestors();
+  for (let l: i32 = 0; l < historicalInvestors.length; l++) {
+    let investor = historicalInvestors[l].toHex();
+
+    let investment = investmentEntity(investor, fund.id, event.block.timestamp);
+
+    let investmentGav = BigInt.fromI32(0);
+    let investmentNav = BigInt.fromI32(0);
+    if (!totalSupply.isZero()) {
+      investmentGav = fundGav.times(investment.shares).div(totalSupply);
+      investmentNav = nav.times(investment.shares).div(totalSupply);
+    }
+    investment.gav = investmentGav;
+    investment.nav = investmentNav;
+    investment.sharePrice = sharePrice;
+    investment.save();
+
+    // update investment valuation
+    let investmentValuationHistory = new InvestmentValuationHistory(
+      investment.id + "/" + event.block.timestamp.toString()
+    );
+    investmentValuationHistory.investment = investment.id;
+    investmentValuationHistory.gav = investmentGav;
+    investmentValuationHistory.nav = investmentNav;
+    investmentValuationHistory.sharePrice = sharePrice;
+    investmentValuationHistory.timestamp = event.block.timestamp;
+    investmentValuationHistory.save();
+
+    // update investor valuation
+    let investorValuationHistory = investorValuationHistoryEntity(
+      investor,
+      event.block.timestamp
+    );
+    investorValuationHistory.gav = investorValuationHistory.gav.plus(
+      investmentGav
+    );
+    investorValuationHistory.nav = investorValuationHistory.nav.plus(
+      investmentNav
+    );
+    investorValuationHistory.timestamp = event.block.timestamp;
+    investorValuationHistory.save();
+  }
 }
 
 export function handleRedemption(event: Redemption): void {
@@ -350,10 +405,15 @@ export function handleRedemption(event: Redemption): void {
   // calculate fund holdings
 
   let fundGavValid = true;
+  let assetGav = BigInt.fromI32(0);
+  let fundGavFromAssets = BigInt.fromI32(0);
   let holdings = accountingContract.getFundHoldings();
 
+  let registryContract = RegistryContract.bind(
+    Address.fromString(fund.registry!)
+  );
   let priceSourceContract = PriceSourceContract.bind(
-    Address.fromString(fund.priceSource)
+    registryContract.priceSource()
   );
   for (let k: i32 = 0; k < holdings.value0.length; k++) {
     let holdingAmount = holdings.value0[k];
@@ -376,9 +436,8 @@ export function handleRedemption(event: Redemption): void {
         holdingAddress
       ).value;
       if (fundHoldingsHistory.validPrice) {
-        fundHoldingsHistory.assetGav = accountingContract.calcAssetGAV(
-          holdingAddress
-        );
+        assetGav = accountingContract.calcAssetGAV(holdingAddress);
+        fundGavFromAssets = fundGavFromAssets.plus(assetGav);
       } else {
         fundGavValid = false;
       }
@@ -387,16 +446,19 @@ export function handleRedemption(event: Redemption): void {
       fundGavValid = false;
     }
 
+    fundHoldingsHistory.assetGav = assetGav;
+    fundHoldingsHistory.save();
+
     // only save non-zero values
-    if (!holdingAmount.isZero()) {
-      fundHoldingsHistory.save();
-    }
+    // if (!holdingAmount.isZero()) {
+    //   fundHoldingsHistory.save();
+    // }
   }
 
   // do perform calculations
-  if (!fundGavValid) {
-    return;
-  }
+  // if (!fundGavValid) {
+  //   return;
+  // }
 
   // do perform calculations
   let calcs = emptyCalcsObject() as AccountingContract__performCalculationsResult;
@@ -440,6 +502,52 @@ export function handleRedemption(event: Redemption): void {
   fund.save();
 
   // TODO: update network gav
+
+  // valuations for individual investments / investors
+  let participationAddress = Address.fromString(fund.participation);
+  let participationContract = ParticipationContract.bind(participationAddress);
+  let historicalInvestors = participationContract.getHistoricalInvestors();
+  for (let l: i32 = 0; l < historicalInvestors.length; l++) {
+    let investor = historicalInvestors[l].toHex();
+
+    let investment = investmentEntity(investor, fund.id, event.block.timestamp);
+
+    let investmentGav = BigInt.fromI32(0);
+    let investmentNav = BigInt.fromI32(0);
+    if (!totalSupply.isZero()) {
+      investmentGav = fundGav.times(investment.shares).div(totalSupply);
+      investmentNav = nav.times(investment.shares).div(totalSupply);
+    }
+    investment.gav = investmentGav;
+    investment.nav = investmentNav;
+    investment.sharePrice = sharePrice;
+    investment.save();
+
+    // update investment valuation
+    let investmentValuationHistory = new InvestmentValuationHistory(
+      investment.id + "/" + event.block.timestamp.toString()
+    );
+    investmentValuationHistory.investment = investment.id;
+    investmentValuationHistory.gav = investmentGav;
+    investmentValuationHistory.nav = investmentNav;
+    investmentValuationHistory.sharePrice = sharePrice;
+    investmentValuationHistory.timestamp = event.block.timestamp;
+    investmentValuationHistory.save();
+
+    // update investor valuation
+    let investorValuationHistory = investorValuationHistoryEntity(
+      investor,
+      event.block.timestamp
+    );
+    investorValuationHistory.gav = investorValuationHistory.gav.plus(
+      investmentGav
+    );
+    investorValuationHistory.nav = investorValuationHistory.nav.plus(
+      investmentNav
+    );
+    investorValuationHistory.timestamp = event.block.timestamp;
+    investorValuationHistory.save();
+  }
 }
 
 export function handleEnableInvestment(event: EnableInvestment): void {

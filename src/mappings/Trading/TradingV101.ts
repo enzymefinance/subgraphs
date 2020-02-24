@@ -6,20 +6,37 @@ import {
   ExchangeMethodCall as ExchangeMethodCallEntity,
   FundCalculationsHistory,
   FundHoldingsHistory,
-  Fund
+  Fund,
+  Trading,
+  InvestmentValuationHistory
 } from "../../codegen/schema";
 import {
   AccountingContract,
   AccountingContract__performCalculationsResult
 } from "../../codegen/templates/TradingDataSourceV101/AccountingContract";
+import { ParticipationContract } from "../../codegen/templates/TradingDataSourceV101/ParticipationContract";
+import { RegistryContract } from "../../codegen/templates/TradingDataSourceV101/RegistryContract";
 import { PriceSourceContract } from "../../codegen/templates/TradingDataSourceV101/PriceSourceContract";
 import { SharesContract } from "../../codegen/templates/TradingDataSourceV101/SharesContract";
 import { saveEvent } from "../../utils/saveEvent";
 import { emptyCalcsObject } from "../../utils/emptyCalcsObject";
 import { exchangeMethodSignatureToName } from "../../utils/exchangeMethodSignatureToName";
+import { Address, BigInt } from "@graphprotocol/graph-ts";
+import { investmentEntity } from "../../entities/investmentEntity";
+import { investorValuationHistoryEntity } from "../../entities/investorValuationHistoryEntity";
 
 export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
   saveEvent("ExchangeMethodCall", event);
+
+  let trading = Trading.load(event.address.toHex());
+  if (!trading || !trading.fund) {
+    return;
+  }
+
+  let fund = Fund.load(trading.fund);
+  if (!fund) {
+    return;
+  }
 
   let id = event.transaction.hash.toHex();
 
@@ -67,9 +84,16 @@ export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
   let accountingContract = AccountingContract.bind(routes.value0);
 
   let fundGavValid = true;
+  let assetGav = BigInt.fromI32(0);
+  let fundGavFromAssets = BigInt.fromI32(0);
   let holdings = accountingContract.getFundHoldings();
 
-  let priceSourceContract = PriceSourceContract.bind(routes.value7);
+  let registryContract = RegistryContract.bind(
+    Address.fromString(fund.registry!)
+  );
+  let priceSourceContract = PriceSourceContract.bind(
+    registryContract.priceSource()
+  );
   for (let k: i32 = 0; k < holdings.value0.length; k++) {
     let holdingAmount = holdings.value0[k];
     let holdingAddress = holdings.value1[k];
@@ -90,17 +114,21 @@ export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
       holdingAddress
     );
     if (fundHoldingsHistory.validPrice) {
-      fundHoldingsHistory.assetGav = accountingContract.calcAssetGAV(
-        holdingAddress
-      );
+      if (!accountingContract.try_calcAssetGAV(holdingAddress).reverted) {
+        assetGav = accountingContract.try_calcAssetGAV(holdingAddress).value;
+        fundGavFromAssets = fundGavFromAssets.plus(assetGav);
+      }
     } else {
       fundGavValid = false;
     }
 
+    fundHoldingsHistory.assetGav = assetGav;
+    fundHoldingsHistory.save();
+
     // only save non-zero values
-    if (!holdingAmount.isZero()) {
-      fundHoldingsHistory.save();
-    }
+    // if (!holdingAmount.isZero()) {
+    //   fundHoldingsHistory.save();
+    // }
   }
 
   // do perform calculations
@@ -140,12 +168,6 @@ export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
   calculations.source = "trading";
   calculations.save();
 
-  // update fund entity
-  let fund = Fund.load(fundAddress) as Fund;
-  if (!fund) {
-    return;
-  }
-
   fund.gav = fundGav;
   fund.validPrice = fundGavValid;
   fund.totalSupply = totalSupply;
@@ -156,4 +178,50 @@ export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
   fund.gavPerShareNetManagementFee = gavPerShareNetManagementFee;
   fund.lastCalculationsUpdate = event.block.timestamp;
   fund.save();
+
+  // valuations for individual investments / investors
+  let participationAddress = Address.fromString(fund.participation);
+  let participationContract = ParticipationContract.bind(participationAddress);
+  let historicalInvestors = participationContract.getHistoricalInvestors();
+  for (let l: i32 = 0; l < historicalInvestors.length; l++) {
+    let investor = historicalInvestors[l].toHex();
+
+    let investment = investmentEntity(investor, fund.id, event.block.timestamp);
+
+    let investmentGav = BigInt.fromI32(0);
+    let investmentNav = BigInt.fromI32(0);
+    if (!totalSupply.isZero()) {
+      investmentGav = fundGav.times(investment.shares).div(totalSupply);
+      investmentNav = nav.times(investment.shares).div(totalSupply);
+    }
+    investment.gav = investmentGav;
+    investment.nav = investmentNav;
+    investment.sharePrice = sharePrice;
+    investment.save();
+
+    // update investment valuation
+    let investmentValuationHistory = new InvestmentValuationHistory(
+      investment.id + "/" + event.block.timestamp.toString()
+    );
+    investmentValuationHistory.investment = investment.id;
+    investmentValuationHistory.gav = investmentGav;
+    investmentValuationHistory.nav = investmentNav;
+    investmentValuationHistory.sharePrice = sharePrice;
+    investmentValuationHistory.timestamp = event.block.timestamp;
+    investmentValuationHistory.save();
+
+    // update investor valuation
+    let investorValuationHistory = investorValuationHistoryEntity(
+      investor,
+      event.block.timestamp
+    );
+    investorValuationHistory.gav = investorValuationHistory.gav.plus(
+      investmentGav
+    );
+    investorValuationHistory.nav = investorValuationHistory.nav.plus(
+      investmentNav
+    );
+    investorValuationHistory.timestamp = event.block.timestamp;
+    investorValuationHistory.save();
+  }
 }
