@@ -553,11 +553,20 @@ export function handleRedemption(event: Redemption): void {
 export function handleEnableInvestment(event: EnableInvestment): void {
   saveEvent("EnableInvestment", event);
 
-  let participation = Participation.load(
-    event.address.toHex()
-  ) as Participation;
-  let enabled = event.params.asset.map<string>(value => value.toHex());
-  participation.allowedAssets = participation.allowedAssets.concat(enabled);
+  let participation = Participation.load(event.address.toHex());
+  if (!participation) {
+    participation = new Participation(event.address.toHex());
+    participation.allowedAssets = [];
+  }
+  let newAssets = event.params.asset.map<string>(value => value.toHex());
+  let newAllowed = new Array<string>();
+  for (let i: i32 = 0; i < newAssets.length; i++) {
+    if (participation.allowedAssets.indexOf(newAssets[i]) === -1) {
+      newAllowed = newAllowed.concat([newAssets[i]]);
+    }
+  }
+
+  participation.allowedAssets = participation.allowedAssets.concat(newAllowed);
   participation.save();
 }
 

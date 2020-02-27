@@ -20,7 +20,9 @@ export function handleNewInstance(event: NewInstance): void {
 
   let participation = new Participation(event.params.instance.toHex());
   participation.fund = event.params.hub.toHex();
-  participation.allowedAssets = [];
+  participation.allowedAssets = event.params.defaultAssets.map<string>(
+    address => address.toHex()
+  );
   participation.save();
 
   saveContract(
