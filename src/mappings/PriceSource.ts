@@ -115,6 +115,13 @@ export function handlePriceUpdate(event: PriceUpdate): void {
 
   let currentRegistry = Registry.load(state.registry) as Registry;
   let currentPriceSource = currentRegistry.priceSource;
+  if (!currentPriceSource) {
+    return;
+  }
+
+  let currentPriceSourceContract = PriceSourceContract.bind(
+    Address.fromString(currentPriceSource)
+  );
 
   let melonNetworkGav = BigInt.fromI32(0);
   let melonNetworkValidGav = true;
@@ -145,9 +152,9 @@ export function handlePriceUpdate(event: PriceUpdate): void {
         let registryContract = RegistryContract.bind(
           Address.fromString(fund.registry!)
         );
-        let fundPriceSource = PriceSourceContract.bind(
-          registryContract.priceSource()
-        );
+        // let fundPriceSource = PriceSourceContract.bind(
+        //   registryContract.priceSource()
+        // );
         let denominationAsset = accountingContract.DENOMINATION_ASSET();
 
         // fund holdings, incl. finding out if there holdings with invalid prices
@@ -175,15 +182,15 @@ export function handlePriceUpdate(event: PriceUpdate): void {
           // see if there are assets with invalid prices in the portfolio
           let assetGav = BigInt.fromI32(0);
           let validPrice = true;
-          if (fundPriceSource.hasValidPrice(holdingAddress)) {
+          if (currentPriceSourceContract.hasValidPrice(holdingAddress)) {
             if (
-              !fundPriceSource.try_convertQuantity(
+              !currentPriceSourceContract.try_convertQuantity(
                 holdingAmount,
                 holdingAddress,
                 denominationAsset
               ).reverted
             ) {
-              assetGav = fundPriceSource.try_convertQuantity(
+              assetGav = currentPriceSourceContract.try_convertQuantity(
                 holdingAmount,
                 holdingAddress,
                 denominationAsset
