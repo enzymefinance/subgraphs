@@ -67,6 +67,7 @@ export function handleNewFund(event: NewFund): void {
   fund.version = addresses[8];
   fund.engine = addresses[9];
   fund.investments = [];
+  fund.holdings = [];
   fund.save();
 
   generateSlug(name, hub, manager.id, version.id);

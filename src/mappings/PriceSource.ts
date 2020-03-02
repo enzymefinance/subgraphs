@@ -12,7 +12,8 @@ import {
   MelonNetworkHistory,
   Registry,
   Version,
-  PriceSource
+  PriceSource,
+  FundHolding
 } from "../codegen/schema";
 import {
   AccountingContract,
@@ -138,8 +139,8 @@ export function handlePriceUpdate(event: PriceUpdate): void {
       let version = Version.load(versions[v]) as Version;
       let funds = version.funds;
       for (let f: i32 = 0; f < funds.length; f++) {
-        let fundAddress = funds[f];
-        let fund = Fund.load(fundAddress);
+        let hub = funds[f];
+        let fund = Fund.load(hub);
 
         if (!fund) {
           continue;
@@ -168,14 +169,10 @@ export function handlePriceUpdate(event: PriceUpdate): void {
           let holdingAddress = holdings.value1[k];
 
           let holdingsId =
-            fundAddress +
-            "/" +
-            timestamp.toString() +
-            "/" +
-            holdingAddress.toHex();
+            hub + "/" + timestamp.toString() + "/" + holdingAddress.toHex();
           let fundHoldingsHistory = new FundHoldingsHistory(holdingsId);
           fundHoldingsHistory.timestamp = timestamp;
-          fundHoldingsHistory.fund = fundAddress;
+          fundHoldingsHistory.fund = hub;
           fundHoldingsHistory.asset = holdingAddress.toHex();
           fundHoldingsHistory.amount = holdingAmount;
 
@@ -204,6 +201,14 @@ export function handlePriceUpdate(event: PriceUpdate): void {
           fundHoldingsHistory.assetGav = assetGav;
           fundHoldingsHistory.validPrice = validPrice;
           fundHoldingsHistory.save();
+
+          let fundHolding = new FundHolding(hub + "/" + holdingAddress.toHex());
+          fundHolding.fund = hub;
+          fundHolding.asset = holdingAddress.toHex();
+          fundHolding.amount = holdingAmount;
+          fundHolding.assetGav = assetGav;
+          fundHolding.validPrice = validPrice;
+          fundHolding.save();
 
           fundGavFromAssets = fundGavFromAssets.plus(assetGav);
 
@@ -278,9 +283,9 @@ export function handlePriceUpdate(event: PriceUpdate): void {
         melonNetworkGav = melonNetworkGav.plus(fundGav);
 
         // save price calculation to history
-        let calculationsId = fundAddress + "/" + timestamp.toString();
+        let calculationsId = hub + "/" + timestamp.toString();
         let calculations = new FundCalculationsHistory(calculationsId);
-        calculations.fund = fundAddress;
+        calculations.fund = hub;
         calculations.timestamp = timestamp;
         calculations.gav = fundGav;
         calculations.validPrices = fundGavValid;
@@ -321,7 +326,7 @@ export function handlePriceUpdate(event: PriceUpdate): void {
 
           let investment = investmentEntity(
             investor,
-            fundAddress,
+            hub,
             event.block.timestamp
           );
 

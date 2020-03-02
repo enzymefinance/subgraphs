@@ -218,6 +218,7 @@ type Fund @entity {
   allocatedFees: BigInt
   totalSupply: BigInt
   investments: [Investment!]!
+  holdings: [FundHolding!]!
   calculationsHistory: [FundCalculationsHistory!]! @derivedFrom(field: "fund")
   investmentHistory: [InvestmentHistory!]! @derivedFrom(field: "fund")
   holdingsHistory: [FundHoldingsHistory!]! @derivedFrom(field: "fund")
@@ -417,6 +418,15 @@ type InvestmentHistory @entity {
   amountInDenominationAsset: BigInt
 }
 
+type FundHolding @entity {
+  id: ID!
+  fund: Fund!
+  asset: Asset!
+  amount: BigInt!
+  assetGav: BigInt
+  validPrice: Boolean!
+}
+
 type FundHoldingsHistory @entity {
   id: ID!
   timestamp: BigInt!
@@ -485,6 +495,14 @@ type ExchangeMethodCall @entity {
   makerAssetData: String
   takerAssetData: String
   signature: String
+  timestamp: BigInt!
+}
+
+type Trade @entity {
+  id: ID!
+  trading: Trading
+  exchange: Exchange
+  methodName: String
   timestamp: BigInt!
 }
 

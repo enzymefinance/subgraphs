@@ -16,7 +16,8 @@ import {
   InvestmentRequest as InvestmentRequestEntity,
   FundCalculationsHistory,
   FundHoldingsHistory,
-  InvestmentValuationHistory
+  InvestmentValuationHistory,
+  FundHolding
 } from "../codegen/schema";
 import {
   AccountingContract,
@@ -232,6 +233,14 @@ export function handleRequestExecution(event: RequestExecution): void {
 
     fundHoldingsHistory.assetGav = assetGav;
     fundHoldingsHistory.save();
+
+    let fundHolding = new FundHolding(hub + "/" + holdingAddress.toHex());
+    fundHolding.fund = hub;
+    fundHolding.asset = holdingAddress.toHex();
+    fundHolding.amount = holdingAmount;
+    fundHolding.assetGav = assetGav;
+    fundHolding.validPrice = fundHoldingsHistory.validPrice;
+    fundHolding.save();
 
     // only save non-zero values
     // if (!holdingAmount.isZero()) {
@@ -450,6 +459,14 @@ export function handleRedemption(event: Redemption): void {
 
     fundHoldingsHistory.assetGav = assetGav;
     fundHoldingsHistory.save();
+
+    let fundHolding = new FundHolding(hub + "/" + holdingAddress.toHex());
+    fundHolding.fund = hub;
+    fundHolding.asset = holdingAddress.toHex();
+    fundHolding.amount = holdingAmount;
+    fundHolding.assetGav = assetGav;
+    fundHolding.validPrice = fundHoldingsHistory.validPrice;
+    fundHolding.save();
 
     // only save non-zero values
     // if (!holdingAmount.isZero()) {

@@ -5,7 +5,8 @@ import {
   FundCalculationsHistory,
   Fund,
   Trading,
-  InvestmentValuationHistory
+  InvestmentValuationHistory,
+  Trade
 } from "../../codegen/schema";
 import {
   AccountingContract,
@@ -67,6 +68,15 @@ export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
   emCall.signature = event.params.signature.toHexString();
   emCall.timestamp = event.block.timestamp;
   emCall.save();
+
+  let trade = new Trade(id);
+  trade.trading = event.address.toHex();
+  trade.exchange = event.params.exchangeAddress.toHex();
+  trade.methodName = exchangeMethodSignatureToName(
+    event.params.methodSignature.toHexString()
+  );
+  trade.timestamp = event.block.timestamp;
+  trade.save();
 
   // calculate fund holdings
 
