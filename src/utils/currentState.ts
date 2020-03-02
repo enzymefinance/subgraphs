@@ -17,6 +17,7 @@ export function currentState(): State {
     state.mlnToken = "";
     state.registry = "";
     state.registries = [];
+    state.networkGav = BigInt.fromI32(0);
     state.save();
   }
 

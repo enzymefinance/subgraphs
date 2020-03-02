@@ -8,11 +8,11 @@ export function exchangeNameFromAddress(address: Address): string {
     if (address.toHex() == "0x39755357759ce0d7f32dc8dc45414cca409ae24e") {
       name = "Oasisdex";
     } else if (
-      address.toHex() == "0x818e6fecd516ecc3849daf6845e3ec868087b755"
+      address.toHex() == "0x794e6e91555438afc3ccf1c5076a74f42133d08d"
     ) {
       name = "Oasisdex";
     } else if (
-      address.toHex() == "0x794e6e91555438afc3ccf1c5076a74f42133d08d"
+      address.toHex() == "0x818e6fecd516ecc3849daf6845e3ec868087b755"
     ) {
       name = "Kyber Network";
     } else if (

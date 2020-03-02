@@ -291,7 +291,9 @@ export function handleRequestExecution(event: RequestExecution): void {
   fund.lastCalculationsUpdate = event.block.timestamp;
   fund.save();
 
-  // TODO: update network gav
+  // update network gav
+  state.networkGav = state.networkGav.plus(amountInDenomationAsset);
+  state.save();
 
   // valuations for individual investments / investors
   let participationAddress = Address.fromString(fund.participation);
@@ -501,7 +503,15 @@ export function handleRedemption(event: Redemption): void {
   fund.lastCalculationsUpdate = event.block.timestamp;
   fund.save();
 
-  // TODO: update network gav
+  // update network gav
+  if (fund.sharePrice) {
+    let state = currentState();
+    let amountInDenominationAsset = fund.sharePrice
+      .times(event.params.redeemedShares)
+      .div(tenToThePowerOf(BigInt.fromI32(18)));
+    state.networkGav = state.networkGav.minus(amountInDenominationAsset);
+    state.save();
+  }
 
   // valuations for individual investments / investors
   let participationAddress = Address.fromString(fund.participation);

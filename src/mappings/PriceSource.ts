@@ -371,4 +371,7 @@ export function handlePriceUpdate(event: PriceUpdate): void {
   networkValue.gav = melonNetworkGav;
   networkValue.validGav = melonNetworkValidGav;
   networkValue.save();
+
+  state.networkGav = melonNetworkGav;
+  state.save();
 }

@@ -6,7 +6,7 @@ import { BigInt, dataSource } from "@graphprotocol/graph-ts";
 import { saveEvent } from "../utils/saveEvent";
 
 export function handleNewInstance(event: NewInstance): void {
-  saveEvent("NewInstancce", event);
+  saveEvent("NewInstance", event);
 
   // ignore contracts created before go-live
   if (
