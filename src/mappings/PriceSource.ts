@@ -33,12 +33,12 @@ import { RegistryContract } from "../codegen/templates/PriceSourceDataSource/Reg
 
 export function handlePriceUpdate(event: PriceUpdate): void {
   // old price updates mess up new funds prices => exclude them
-  // if (
-  //   event.block.number.ge(BigInt.fromI32(1581897328)) &&
-  //   event.params.token.length <= 17
-  // ) {
-  //   return;
-  // }
+  if (
+    event.block.timestamp.ge(BigInt.fromI32(1581897328)) &&
+    event.params.token.length < 16
+  ) {
+    return;
+  }
 
   saveEvent("PriceUpdate", event);
 
