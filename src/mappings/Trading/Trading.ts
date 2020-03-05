@@ -193,8 +193,8 @@ export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
   trade.amountBought = makerTradeAmount;
   trade.timestamp = event.block.timestamp;
   trade.save();
-
   // do perform calculations
+
   if (!fundGavValid) {
     return;
   }

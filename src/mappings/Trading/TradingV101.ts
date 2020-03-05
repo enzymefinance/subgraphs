@@ -9,7 +9,9 @@ import {
   Fund,
   Trading,
   InvestmentValuationHistory,
-  Registry
+  Registry,
+  FundHolding,
+  Trade
 } from "../../codegen/schema";
 import {
   AccountingContract,
@@ -43,11 +45,9 @@ export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
   }
 
   let id = event.transaction.hash.toHex();
-
   let addresses = event.params.orderAddresses.map<string>(value =>
     value.toHex()
   );
-
   let values = event.params.orderValues;
 
   let emCall = new ExchangeMethodCallEntity(id);
@@ -77,11 +77,23 @@ export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
   emCall.timestamp = event.block.timestamp;
   emCall.save();
 
+  let takerAsset = addresses[3];
+  let makerAsset = addresses[2];
+
+  let takerAssetBeforeTrade = FundHolding.load(fund.id + "/" + takerAsset);
+  let takerAmountBeforeTrade = BigInt.fromI32(0);
+  if (takerAssetBeforeTrade) {
+    takerAmountBeforeTrade = takerAssetBeforeTrade.amount;
+  }
+
+  let makerAssetBeforeTrade = FundHolding.load(fund.id + "/" + makerAsset);
+  let makerAmountBeforeTrade = BigInt.fromI32(0);
+  if (makerAssetBeforeTrade) {
+    makerAmountBeforeTrade = makerAssetBeforeTrade.amount;
+  }
+
   let tradingContract = TradingContractV101.bind(event.address);
   let routes = tradingContract.routes();
-
-  let hub = tradingContract.hub();
-  let fundAddress = hub.toHex();
 
   // calculate fund holdings
   let state = currentState();
@@ -91,10 +103,12 @@ export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
     return;
   }
 
-  let sharesContract = SharesContract.bind(routes.value4);
+  let sharesContract = SharesContract.bind(Address.fromString(fund.share));
   let totalSupply = sharesContract.totalSupply();
 
-  let accountingContract = AccountingContract.bind(routes.value0);
+  let accountingContract = AccountingContract.bind(
+    Address.fromString(fund.accounting)
+  );
 
   let fundGavValid = true;
   let assetGav = BigInt.fromI32(0);
@@ -107,25 +121,31 @@ export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
   let priceSourceContract = PriceSourceContract.bind(
     registryContract.priceSource()
   );
+
+  // delete all current holdings
+  fund.holdings = [];
+  fund.save();
+
   for (let k: i32 = 0; k < holdings.value0.length; k++) {
     let holdingAmount = holdings.value0[k];
     let holdingAddress = holdings.value1[k];
 
     let holdingsId =
-      fundAddress +
+      fund.id +
       "/" +
       event.block.timestamp.toString() +
       "/" +
       holdingAddress.toHex();
     let fundHoldingsHistory = new FundHoldingsHistory(holdingsId);
     fundHoldingsHistory.timestamp = event.block.timestamp;
-    fundHoldingsHistory.fund = fundAddress;
+    fundHoldingsHistory.fund = fund.id;
     fundHoldingsHistory.asset = holdingAddress.toHex();
     fundHoldingsHistory.amount = holdingAmount;
 
     fundHoldingsHistory.validPrice = priceSourceContract.hasValidPrice(
       holdingAddress
     );
+
     if (fundHoldingsHistory.validPrice) {
       if (!accountingContract.try_calcAssetGAV(holdingAddress).reverted) {
         assetGav = accountingContract.try_calcAssetGAV(holdingAddress).value;
@@ -137,7 +157,48 @@ export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
 
     fundHoldingsHistory.assetGav = assetGav;
     fundHoldingsHistory.save();
+
+    if (!holdingAmount.isZero()) {
+      let fundHolding = new FundHolding(fund.id + "/" + holdingAddress.toHex());
+      fundHolding.fund = fund.id;
+      fundHolding.asset = holdingAddress.toHex();
+      fundHolding.amount = holdingAmount;
+      fundHolding.assetGav = assetGav;
+      fundHolding.validPrice = fundHoldingsHistory.validPrice;
+      fundHolding.save();
+
+      fund.holdings = fund.holdings.concat([fundHolding.id]);
+      fund.save();
+    }
   }
+
+  let takerAssetAfterTrade = FundHolding.load(fund.id + "/" + takerAsset);
+  let takerAmountAfterTrade = BigInt.fromI32(0);
+  if (takerAssetAfterTrade) {
+    takerAmountAfterTrade = takerAssetAfterTrade.amount;
+  }
+
+  let makerAssetAfterTrade = FundHolding.load(fund.id + "/" + makerAsset);
+  let makerAmountAfterTrade = BigInt.fromI32(0);
+  if (makerAssetAfterTrade) {
+    makerAmountAfterTrade = makerAssetAfterTrade.amount;
+  }
+
+  let takerTradeAmount = takerAmountBeforeTrade.minus(takerAmountAfterTrade);
+  let makerTradeAmount = makerAmountAfterTrade.minus(makerAmountBeforeTrade);
+
+  let trade = new Trade(id);
+  trade.trading = event.address.toHex();
+  trade.exchange = event.params.exchangeAddress.toHex();
+  trade.methodName = exchangeMethodSignatureToName(
+    event.params.methodSignature.toHexString()
+  );
+  trade.assetSold = takerAsset;
+  trade.assetBought = makerAsset;
+  trade.amountSold = takerTradeAmount;
+  trade.amountBought = makerTradeAmount;
+  trade.timestamp = event.block.timestamp;
+  trade.save();
 
   // do perform calculations
   if (!fundGavValid) {
@@ -174,9 +235,9 @@ export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
   let gavPerShareNetManagementFee = calcs.value5;
 
   // save price calculation to history
-  let calculationsId = fundAddress + "/" + event.block.timestamp.toString();
+  let calculationsId = fund.id + "/" + event.block.timestamp.toString();
   let calculations = new FundCalculationsHistory(calculationsId);
-  calculations.fund = fundAddress;
+  calculations.fund = fund.id;
   calculations.timestamp = event.block.timestamp;
   calculations.gav = fundGav;
   calculations.validPrices = fundGavValid;
