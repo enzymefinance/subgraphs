@@ -8,7 +8,8 @@ import {
   FundHoldingsHistory,
   Fund,
   Trading,
-  InvestmentValuationHistory
+  InvestmentValuationHistory,
+  Registry
 } from "../../codegen/schema";
 import {
   AccountingContract,
@@ -24,6 +25,9 @@ import { exchangeMethodSignatureToName } from "../../utils/exchangeMethodSignatu
 import { Address, BigInt } from "@graphprotocol/graph-ts";
 import { investmentEntity } from "../../entities/investmentEntity";
 import { investorValuationHistoryEntity } from "../../entities/investorValuationHistoryEntity";
+import { currentState } from "../../utils/currentState";
+import { performCalculationsManually } from "../../utils/performCalculationsManually";
+import { AccountingContract as CalculationsAccountingContract } from "../../codegen/templates/PriceSourceDataSource/AccountingContract";
 
 export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
   saveEvent("ExchangeMethodCall", event);
@@ -80,6 +84,15 @@ export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
   let fundAddress = hub.toHex();
 
   // calculate fund holdings
+  let state = currentState();
+  let currentRegistry = Registry.load(state.registry) as Registry;
+  let currentPriceSource = currentRegistry.priceSource;
+  if (!currentPriceSource) {
+    return;
+  }
+
+  let sharesContract = SharesContract.bind(routes.value4);
+  let totalSupply = sharesContract.totalSupply();
 
   let accountingContract = AccountingContract.bind(routes.value0);
 
@@ -124,11 +137,6 @@ export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
 
     fundHoldingsHistory.assetGav = assetGav;
     fundHoldingsHistory.save();
-
-    // only save non-zero values
-    // if (!holdingAmount.isZero()) {
-    //   fundHoldingsHistory.save();
-    // }
   }
 
   // do perform calculations
@@ -138,8 +146,24 @@ export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
 
   let calcs = emptyCalcsObject() as AccountingContract__performCalculationsResult;
 
-  if (!accountingContract.try_performCalculations().reverted) {
-    calcs = accountingContract.try_performCalculations().value;
+  if (fund.priceSource == currentPriceSource) {
+    if (accountingContract.try_performCalculations().reverted) {
+      calcs = performCalculationsManually(
+        fundGavFromAssets,
+        totalSupply,
+        Address.fromString(fund.feeManager),
+        accountingContract as CalculationsAccountingContract
+      ) as AccountingContract__performCalculationsResult;
+    } else {
+      calcs = accountingContract.try_performCalculations().value;
+    }
+  } else {
+    calcs = performCalculationsManually(
+      fundGavFromAssets,
+      totalSupply,
+      Address.fromString(fund.feeManager),
+      accountingContract as CalculationsAccountingContract
+    ) as AccountingContract__performCalculationsResult;
   }
 
   let fundGav = calcs.value0;
@@ -148,9 +172,6 @@ export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
   let nav = calcs.value3;
   let sharePrice = calcs.value4;
   let gavPerShareNetManagementFee = calcs.value5;
-
-  let sharesContract = SharesContract.bind(routes.value4);
-  let totalSupply = sharesContract.totalSupply();
 
   // save price calculation to history
   let calculationsId = fundAddress + "/" + event.block.timestamp.toString();

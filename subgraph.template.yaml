@@ -592,6 +592,12 @@ templates:
           file: ./src/abis/KyberPriceFeed.abi
         - name: RegistryContract
           file: ./src/abis/Registry.abi
+        - name: FeeManagerContract
+          file: ./src/abis/FeeManager.abi
+        - name: ManagementFeeContract
+          file: ./src/abis/ManagementFee.abi
+        - name: PerformanceFeeContract
+          file: ./src/abis/PerformanceFee.abi
       eventHandlers:
         - event: InvestmentRequest(indexed address,indexed address,uint256,uint256)
           handler: handleInvestmentRequest
@@ -685,6 +691,12 @@ templates:
           file: ./src/abis/KyberPriceFeed.abi
         - name: SharesContract
           file: ./src/abis/Shares.abi
+        - name: FeeManagerContract
+          file: ./src/abis/FeeManager.abi
+        - name: ManagementFeeContract
+          file: ./src/abis/ManagementFee.abi
+        - name: PerformanceFeeContract
+          file: ./src/abis/PerformanceFee.abi
       eventHandlers:
         - event: ExchangeMethodCall(indexed address,indexed string,address[8],uint256[8],bytes[4],bytes32,bytes)
           handler: handleExchangeMethodCall
@@ -715,6 +727,12 @@ templates:
           file: ./src/abis/KyberPriceFeed.abi
         - name: SharesContract
           file: ./src/abis/Shares.abi
+        - name: FeeManagerContract
+          file: ./src/abis/FeeManager.abi
+        - name: ManagementFeeContract
+          file: ./src/abis/ManagementFee.abi
+        - name: PerformanceFeeContract
+          file: ./src/abis/PerformanceFee.abi
       eventHandlers:
         - event: ExchangeMethodCall(indexed address,indexed string,address[6],uint256[8],bytes32,bytes,bytes,bytes)
           handler: handleExchangeMethodCall
@@ -745,6 +763,12 @@ templates:
           file: ./src/abis/KyberPriceFeed.abi
         - name: SharesContract
           file: ./src/abis/Shares.abi
+        - name: FeeManagerContract
+          file: ./src/abis/FeeManager.abi
+        - name: ManagementFeeContract
+          file: ./src/abis/ManagementFee.abi
+        - name: PerformanceFeeContract
+          file: ./src/abis/PerformanceFee.abi
       eventHandlers:
         - event: ExchangeMethodCall(indexed address,indexed string,address[6],uint256[8],bytes32,bytes,bytes,bytes)
           handler: handleExchangeMethodCall

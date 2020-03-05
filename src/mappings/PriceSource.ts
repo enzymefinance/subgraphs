@@ -12,7 +12,6 @@ import {
   MelonNetworkHistory,
   Registry,
   Version,
-  PriceSource,
   FundHolding
 } from "../codegen/schema";
 import {
@@ -149,13 +148,6 @@ export function handlePriceUpdate(event: PriceUpdate): void {
         let accountingAddress = Address.fromString(fund.accounting);
         let accountingContract = AccountingContract.bind(accountingAddress);
 
-        // rely on registry's pricesource for valid price
-        let registryContract = RegistryContract.bind(
-          Address.fromString(fund.registry!)
-        );
-        // let fundPriceSource = PriceSourceContract.bind(
-        //   registryContract.priceSource()
-        // );
         let denominationAsset = accountingContract.DENOMINATION_ASSET();
 
         // fund holdings, incl. finding out if there holdings with invalid prices
@@ -163,6 +155,10 @@ export function handlePriceUpdate(event: PriceUpdate): void {
         let fundGavValid = true;
         let holdings = accountingContract.getFundHoldings();
         let fundGavFromAssets = BigInt.fromI32(0);
+
+        // delete all current holdings
+        fund.holdings = [];
+        fund.save();
 
         for (let k: i32 = 0; k < holdings.value0.length; k++) {
           let holdingAmount = holdings.value0[k];
@@ -202,20 +198,22 @@ export function handlePriceUpdate(event: PriceUpdate): void {
           fundHoldingsHistory.validPrice = validPrice;
           fundHoldingsHistory.save();
 
-          let fundHolding = new FundHolding(hub + "/" + holdingAddress.toHex());
-          fundHolding.fund = hub;
-          fundHolding.asset = holdingAddress.toHex();
-          fundHolding.amount = holdingAmount;
-          fundHolding.assetGav = assetGav;
-          fundHolding.validPrice = validPrice;
-          fundHolding.save();
+          if (!holdingAmount.isZero()) {
+            let fundHolding = new FundHolding(
+              hub + "/" + holdingAddress.toHex()
+            );
+            fundHolding.fund = hub;
+            fundHolding.asset = holdingAddress.toHex();
+            fundHolding.amount = holdingAmount;
+            fundHolding.assetGav = assetGav;
+            fundHolding.validPrice = validPrice;
+            fundHolding.save();
+
+            fund.holdings = fund.holdings.concat([fundHolding.id]);
+            fund.save();
+          }
 
           fundGavFromAssets = fundGavFromAssets.plus(assetGav);
-
-          // only save non-zero values
-          // if (!holdingAmount.isZero()) {
-          //   fundHoldingsHistory.save();
-          // }
 
           // add to melonNetworkAssetHistory
           let networkAssetHistory = networkAssetHistoryEntity(
@@ -241,11 +239,6 @@ export function handlePriceUpdate(event: PriceUpdate): void {
 
         // have to prevent calling any function which uses calcGav
         // since this fails when any price of an asset is invalid
-
-        // if (!fundGavValid) {
-        //   melonNetworkValidGav = false;
-        //   continue;
-        // }
 
         let sharesAddress = Address.fromString(fund.share);
         let sharesContract = SharesContract.bind(sharesAddress);

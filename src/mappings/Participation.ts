@@ -17,7 +17,8 @@ import {
   FundCalculationsHistory,
   FundHoldingsHistory,
   InvestmentValuationHistory,
-  FundHolding
+  FundHolding,
+  Registry
 } from "../codegen/schema";
 import {
   AccountingContract,
@@ -34,6 +35,8 @@ import { saveEvent } from "../utils/saveEvent";
 import { emptyCalcsObject } from "../utils/emptyCalcsObject";
 import { tenToThePowerOf } from "../utils/tenToThePowerOf";
 import { investorValuationHistoryEntity } from "../entities/investorValuationHistoryEntity";
+import { performCalculationsManually } from "../utils/performCalculationsManually";
+import { AccountingContract as CalculationsAccountingContract } from "../codegen/templates/PriceSourceDataSource/AccountingContract";
 
 function archiveInvestmentRequest(
   owner: string,
@@ -188,6 +191,11 @@ export function handleRequestExecution(event: RequestExecution): void {
   state.save();
 
   // calculate fund holdings
+  let currentRegistry = Registry.load(state.registry) as Registry;
+  let currentPriceSource = currentRegistry.priceSource;
+  if (!currentPriceSource) {
+    return;
+  }
 
   let fundGavValid = true;
   let assetGav = BigInt.fromI32(0);
@@ -200,6 +208,11 @@ export function handleRequestExecution(event: RequestExecution): void {
   let priceSourceContract = PriceSourceContract.bind(
     registryContract.priceSource()
   );
+
+  // delete all current holdings
+  fund.holdings = [];
+  fund.save();
+
   for (let k: i32 = 0; k < holdings.value0.length; k++) {
     let holdingAmount = holdings.value0[k];
     let holdingAddress = holdings.value1[k];
@@ -234,18 +247,18 @@ export function handleRequestExecution(event: RequestExecution): void {
     fundHoldingsHistory.assetGav = assetGav;
     fundHoldingsHistory.save();
 
-    let fundHolding = new FundHolding(hub + "/" + holdingAddress.toHex());
-    fundHolding.fund = hub;
-    fundHolding.asset = holdingAddress.toHex();
-    fundHolding.amount = holdingAmount;
-    fundHolding.assetGav = assetGav;
-    fundHolding.validPrice = fundHoldingsHistory.validPrice;
-    fundHolding.save();
+    if (!holdingAmount.isZero()) {
+      let fundHolding = new FundHolding(hub + "/" + holdingAddress.toHex());
+      fundHolding.fund = hub;
+      fundHolding.asset = holdingAddress.toHex();
+      fundHolding.amount = holdingAmount;
+      fundHolding.assetGav = assetGav;
+      fundHolding.validPrice = fundHoldingsHistory.validPrice;
+      fundHolding.save();
 
-    // only save non-zero values
-    // if (!holdingAmount.isZero()) {
-    //   fundHoldingsHistory.save();
-    // }
+      fund.holdings = fund.holdings.concat([fundHolding.id]);
+      fund.save();
+    }
   }
 
   if (!fundGavValid) {
@@ -255,8 +268,24 @@ export function handleRequestExecution(event: RequestExecution): void {
   // do perform calculations
   let calcs = emptyCalcsObject() as AccountingContract__performCalculationsResult;
 
-  if (!accountingContract.try_performCalculations().reverted) {
-    calcs = accountingContract.try_performCalculations().value;
+  if (fund.priceSource == currentPriceSource) {
+    if (accountingContract.try_performCalculations().reverted) {
+      calcs = performCalculationsManually(
+        fundGavFromAssets,
+        totalSupply,
+        Address.fromString(fund.feeManager),
+        accountingContract as CalculationsAccountingContract
+      ) as AccountingContract__performCalculationsResult;
+    } else {
+      calcs = accountingContract.try_performCalculations().value;
+    }
+  } else {
+    calcs = performCalculationsManually(
+      fundGavFromAssets,
+      totalSupply,
+      Address.fromString(fund.feeManager),
+      accountingContract as CalculationsAccountingContract
+    ) as AccountingContract__performCalculationsResult;
   }
 
   let fundGav = calcs.value0;
@@ -399,8 +428,8 @@ export function handleRedemption(event: Redemption): void {
 
   // this is currently investment-count, not investor-count (misnamed entity)
   // TODO: have both investment-count and investor-count
-  if (investment.shares.gt(BigInt.fromI32(0))) {
-    let state = currentState();
+  let state = currentState();
+  if (!investment.shares.isZero()) {
     let investorCount = new InvestorCount(event.transaction.hash.toHex());
     investorCount.numberOfInvestors = state.numberOfInvestors.minus(
       BigInt.fromI32(1)
@@ -414,6 +443,11 @@ export function handleRedemption(event: Redemption): void {
   }
 
   // calculate fund holdings
+  let currentRegistry = Registry.load(state.registry) as Registry;
+  let currentPriceSource = currentRegistry.priceSource;
+  if (!currentPriceSource) {
+    return;
+  }
 
   let fundGavValid = true;
   let assetGav = BigInt.fromI32(0);
@@ -426,6 +460,11 @@ export function handleRedemption(event: Redemption): void {
   let priceSourceContract = PriceSourceContract.bind(
     registryContract.priceSource()
   );
+
+  // delete all current holdings
+  fund.holdings = [];
+  fund.save();
+
   for (let k: i32 = 0; k < holdings.value0.length; k++) {
     let holdingAmount = holdings.value0[k];
     let holdingAddress = holdings.value1[k];
@@ -460,30 +499,41 @@ export function handleRedemption(event: Redemption): void {
     fundHoldingsHistory.assetGav = assetGav;
     fundHoldingsHistory.save();
 
-    let fundHolding = new FundHolding(hub + "/" + holdingAddress.toHex());
-    fundHolding.fund = hub;
-    fundHolding.asset = holdingAddress.toHex();
-    fundHolding.amount = holdingAmount;
-    fundHolding.assetGav = assetGav;
-    fundHolding.validPrice = fundHoldingsHistory.validPrice;
-    fundHolding.save();
+    if (!holdingAmount.isZero()) {
+      let fundHolding = new FundHolding(hub + "/" + holdingAddress.toHex());
+      fundHolding.fund = hub;
+      fundHolding.asset = holdingAddress.toHex();
+      fundHolding.amount = holdingAmount;
+      fundHolding.assetGav = assetGav;
+      fundHolding.validPrice = fundHoldingsHistory.validPrice;
+      fundHolding.save();
 
-    // only save non-zero values
-    // if (!holdingAmount.isZero()) {
-    //   fundHoldingsHistory.save();
-    // }
+      fund.holdings = fund.holdings.concat([fundHolding.id]);
+      fund.save();
+    }
   }
-
-  // do perform calculations
-  // if (!fundGavValid) {
-  //   return;
-  // }
 
   // do perform calculations
   let calcs = emptyCalcsObject() as AccountingContract__performCalculationsResult;
 
-  if (!accountingContract.try_performCalculations().reverted) {
-    calcs = accountingContract.try_performCalculations().value;
+  if (fund.priceSource == currentPriceSource) {
+    if (accountingContract.try_performCalculations().reverted) {
+      calcs = performCalculationsManually(
+        fundGavFromAssets,
+        totalSupply,
+        Address.fromString(fund.feeManager),
+        accountingContract as CalculationsAccountingContract
+      ) as AccountingContract__performCalculationsResult;
+    } else {
+      calcs = accountingContract.try_performCalculations().value;
+    }
+  } else {
+    calcs = performCalculationsManually(
+      fundGavFromAssets,
+      totalSupply,
+      Address.fromString(fund.feeManager),
+      accountingContract as CalculationsAccountingContract
+    ) as AccountingContract__performCalculationsResult;
   }
 
   let fundGav = calcs.value0;

@@ -344,6 +344,7 @@ type Trading @entity {
   exchanges: [Exchange!]!
   adapters: [ExchangeAdapter!]!
   calls: [ExchangeMethodCall!]! @derivedFrom(field: "trading")
+  trades: [Trade!]! @derivedFrom(field: "trading")
 }
 
 type Vault @entity {
@@ -500,9 +501,13 @@ type ExchangeMethodCall @entity {
 
 type Trade @entity {
   id: ID!
-  trading: Trading
-  exchange: Exchange
-  methodName: String
+  trading: Trading!
+  exchange: Exchange!
+  methodName: String!
+  assetSold: Asset!
+  assetBought: Asset!
+  amountSold: BigInt!
+  amountBought: BigInt!
   timestamp: BigInt!
 }
 
