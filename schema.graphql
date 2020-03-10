@@ -504,10 +504,10 @@ type Trade @entity {
   trading: Trading!
   exchange: Exchange!
   methodName: String!
-  assetSold: Asset!
-  assetBought: Asset!
-  amountSold: BigInt!
-  amountBought: BigInt!
+  assetSold: Asset
+  assetBought: Asset
+  amountSold: BigInt
+  amountBought: BigInt
   timestamp: BigInt!
 }
 
