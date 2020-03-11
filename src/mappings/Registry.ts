@@ -55,6 +55,7 @@ export function handleLogSetOwner(event: LogSetOwner): void {
   let registry = Registry.load(event.address.toHex());
   if (!registry) {
     registry = new Registry(event.address.toHex());
+    registry.timestamp = event.block.timestamp;
     registry.versions = [];
   }
 
@@ -63,12 +64,15 @@ export function handleLogSetOwner(event: LogSetOwner): void {
 
   let state = currentState();
   if (state.registry != event.address.toHex()) {
-    state.registry = event.address.toHex();
-    state.registries = state.registries.concat([event.address.toHex()]);
-    state.save();
-  }
+    let activeRegistry = Registry.load(state.registry);
+    if (!activeRegistry || activeRegistry.timestamp.lt(registry.timestamp)) {
+      state.registry = event.address.toHex();
+      state.registries = state.registries.concat([event.address.toHex()]);
+      state.save();
 
-  saveContract(registry.id, "Registry", "", event.block.timestamp, "");
+      saveContract(registry.id, "Registry", "", event.block.timestamp, "");
+    }
+  }
 }
 
 export function handleVersionRegistration(event: VersionRegistration): void {
@@ -279,8 +283,7 @@ export function handleExchangeAdapterUpsert(
   exchangeAdapter.exchange = event.params.exchange.toHex();
   exchangeAdapter.createdAt = event.block.timestamp;
   exchangeAdapter.takesCustody = event.params.takesCustody;
-  exchangeAdapter.sigs =
-    sigs[0] + "-" + sigs[1] + "-" + sigs[2] + "-" + sigs[3];
+  exchangeAdapter.sigs = sigs.join("-");
   exchangeAdapter.registry = event.address.toHex();
   exchangeAdapter.removedFromRegistry = false;
   exchangeAdapter.save();
