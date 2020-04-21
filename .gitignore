@@ -11,15 +11,8 @@ pids
 *.seed
 *.pid.lock
 
-# The generated subgraph.yml
-subgraph.yaml
-
 # Generated build output, code and data
-build/
-data/
-subgraph.yaml
-src/codegen/
-src/statics.ts
+generated/
  
 # Dependency directories
 node_modules/
