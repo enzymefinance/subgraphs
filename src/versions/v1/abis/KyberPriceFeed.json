@@ -1,0 +1,762 @@
+{
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "ofRegistry",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "ofKyberNetworkProxy",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "ofMaxSpread",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "ofQuoteAsset",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "initialUpdater",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "authority",
+          "type": "address"
+        }
+      ],
+      "name": "LogSetAuthority",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        }
+      ],
+      "name": "LogSetOwner",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address[]",
+          "name": "token",
+          "type": "address[]"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256[]",
+          "name": "price",
+          "type": "uint256[]"
+        }
+      ],
+      "name": "PriceUpdate",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "KYBER_ETH_TOKEN",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "KYBER_NETWORK_PROXY",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "KYBER_PRECISION",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "MAX_SPREAD",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "QUOTE_ASSET",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "REGISTRY",
+      "outputs": [
+        {
+          "internalType": "contract Registry",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "UPDATER",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "VALIDITY_INTERVAL",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "authority",
+      "outputs": [
+        {
+          "internalType": "contract DSAuthority",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "fromAssetQuantity",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "fromAsset",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "toAsset",
+          "type": "address"
+        }
+      ],
+      "name": "convertQuantity",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "sellAsset",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "buyAsset",
+          "type": "address"
+        }
+      ],
+      "name": "existsPriceOnAssetPair",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_asset",
+          "type": "address"
+        }
+      ],
+      "name": "getInvertedPriceInfo",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "invertedPrice",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "assetDecimals",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_asset",
+          "type": "address"
+        }
+      ],
+      "name": "getKyberMaskAsset",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_baseAsset",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_quoteAsset",
+          "type": "address"
+        }
+      ],
+      "name": "getKyberPrice",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getLastUpdate",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "sellAsset",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "sellQuantity",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "buyQuantity",
+          "type": "uint256"
+        }
+      ],
+      "name": "getOrderPriceInfo",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "orderPrice",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_asset",
+          "type": "address"
+        }
+      ],
+      "name": "getPrice",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "price",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "timestamp",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_asset",
+          "type": "address"
+        }
+      ],
+      "name": "getPriceInfo",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "price",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "assetDecimals",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address[]",
+          "name": "_assets",
+          "type": "address[]"
+        }
+      ],
+      "name": "getPrices",
+      "outputs": [
+        {
+          "internalType": "uint256[]",
+          "name": "",
+          "type": "uint256[]"
+        },
+        {
+          "internalType": "uint256[]",
+          "name": "",
+          "type": "uint256[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getQuoteAsset",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_baseAsset",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_quoteAsset",
+          "type": "address"
+        }
+      ],
+      "name": "getRawReferencePriceInfo",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "isValid",
+          "type": "bool"
+        },
+        {
+          "internalType": "uint256",
+          "name": "referencePrice",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "decimals",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_baseAsset",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_quoteAsset",
+          "type": "address"
+        }
+      ],
+      "name": "getReferencePriceInfo",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "referencePrice",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "decimals",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_asset",
+          "type": "address"
+        }
+      ],
+      "name": "hasValidPrice",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address[]",
+          "name": "_assets",
+          "type": "address[]"
+        }
+      ],
+      "name": "hasValidPrices",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "lastUpdate",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "prices",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract DSAuthority",
+          "name": "authority_",
+          "type": "address"
+        }
+      ],
+      "name": "setAuthority",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_maxSpread",
+          "type": "uint256"
+        }
+      ],
+      "name": "setMaxSpread",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "owner_",
+          "type": "address"
+        }
+      ],
+      "name": "setOwner",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_newRegistry",
+          "type": "address"
+        }
+      ],
+      "name": "setRegistry",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_updater",
+          "type": "address"
+        }
+      ],
+      "name": "setUpdater",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "setUpdaterToRegistryOwner",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "update",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "devdoc": {
+    "author": "Melonport AG <team@melonport.com>",
+    "methods": {
+      "constructor": {
+        "details": "Define and register a quote asset against which all prices are measured/based against"
+      },
+      "existsPriceOnAssetPair(address,address)": {
+        "details": "Prices are only upated against QUOTE_ASSET",
+        "params": {
+          "buyAsset": "Asset for which check to be done if data exists",
+          "sellAsset": "Asset for which check to be done if data exists"
+        }
+      },
+      "getInvertedPriceInfo(address)": {
+        "details": "Asset has been initialised and its price is non-zero",
+        "params": {
+          "_asset": "Asset for which inverted price should be return"
+        },
+        "returns": {
+          "assetDecimals": "Decimal places for this asset }",
+          "invertedPrice": "Price based (instead of quoted) against QUOTE_ASSET"
+        }
+      },
+      "getKyberMaskAsset(address)": {
+        "details": "Get Kyber representation of ETH if necessary"
+      },
+      "getOrderPriceInfo(address,uint256,uint256)": {
+        "params": {
+          "buyQuantity": "Quantity in base units being bought of buyAsset",
+          "sellAsset": "Address of the asset to be sold",
+          "sellQuantity": "Quantity in base units being sold of sellAsset"
+        },
+        "returns": {
+          "orderPrice": "Price as determined by an order"
+        }
+      },
+      "getPrice(address)": {
+        "details": "Asset has been registered",
+        "params": {
+          "_asset": "Asset for which price should be returned"
+        },
+        "returns": {
+          "price": "Price formatting: mul(exchangePrice, 10 ** decimal), to avoid floating numbers",
+          "timestamp": "When the asset's price was updated }"
+        }
+      },
+      "getReferencePriceInfo(address,address)": {
+        "params": {
+          "_baseAsset": "Address of base asset",
+          "_quoteAsset": "Address of quote asset"
+        },
+        "returns": {
+          "decimals": "Decimal places for quoteAsset }",
+          "referencePrice": "Quantity of quoteAsset per whole baseAsset"
+        }
+      },
+      "update()": {
+        "details": "Stores zero as a convention for invalid price"
+      }
+    },
+    "title": "Price Feed Template"
+  },
+  "userdoc": {
+    "methods": {
+      "convertQuantity(uint256,address,address)": {
+        "notice": "Get quantity of toAsset equal in value to given quantity of fromAsset"
+      },
+      "existsPriceOnAssetPair(address,address)": {
+        "notice": "Checks whether data exists for a given asset pair"
+      },
+      "getInvertedPriceInfo(address)": {
+        "notice": "Gets inverted price of an asset"
+      },
+      "getKyberPrice(address,address)": {
+        "notice": "Returns validity and price from Kyber"
+      },
+      "getOrderPriceInfo(address,uint256,uint256)": {
+        "notice": "Gets price of Order"
+      },
+      "getPrice(address)": {
+        "notice": "Gets price of an asset multiplied by ten to the power of assetDecimals"
+      },
+      "setMaxSpread(uint256)": {
+        "notice": "_maxSpread becomes a percentage when divided by 10^18(e.g. 10^17 becomes 10%)"
+      }
+    },
+    "notice": "Routes external data to smart contractsWhere external data includes sharePrice of Melon fundsPriceFeed operator could be staked and sharePrice input validated on chain"
+  }
+}

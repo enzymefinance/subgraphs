@@ -11,7 +11,7 @@
     "v2:precodegen": "rimraf src/versions/v2/generated",
     "v2:codegen": "graph codegen src/versions/v2/subgraph.yaml --output-dir src/versions/v2/generated",
     "v2:create:local": "graph create melonproject/melon-v2 --node http://localhost:8020",
-    "v2:deploy:local": "graph deploy melonproject/melon-v2 src/versions/v1/subgraph.yaml --output-dir=build/v2 --ipfs http://localhost:5001 --node http://localhost:8020",
+    "v2:deploy:local": "graph deploy melonproject/melon-v2 src/versions/v2/subgraph.yaml --output-dir=build/v2 --ipfs http://localhost:5001 --node http://localhost:8020",
     "all": "yarn codegen && yarn create:local || true && yarn deploy:local",
     "precodegen": "rimraf src/generated",
     "codegen": "yarn v1:codegen && yarn v2:codegen",

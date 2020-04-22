@@ -1,15 +1,3 @@
-enum EventParameterType {
-  BIGINT
-  STRING
-}
-
-type EventParameter @entity {
-  id: ID!
-  name: String!
-  value: String!
-  type: EventParameterType!
-}
-
 type Event @entity {
   id: ID!
   version: Version!
@@ -20,19 +8,25 @@ type Event @entity {
   from: String!
   timestamp: BigInt!
   block: BigInt!
-  parameters: [EventParameter!]
 }
 
 type Version @entity {
   id: ID!
   funds: [Fund!]! @derivedFrom(field: "version")
   events: [Event!]! @derivedFrom(field: "version")
-  engineAddress: ID!
-  registryAddress: ID!
+  assets: [Asset!]!
 }
 
 type Fund @entity {
   id: ID!
   version: Version!
+  active: Boolean!
   events: [Event!]! @derivedFrom(field: "fund")
+}
+
+type Asset @entity {
+  id: ID!
+  name: String!
+  symbol: String!
+  decimals: Int!
 }

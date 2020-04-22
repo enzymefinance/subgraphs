@@ -1,43 +1,38 @@
-import { ethereum, Address, log } from '@graphprotocol/graph-ts';
+import { ethereum, Address } from '@graphprotocol/graph-ts';
 import { Event } from '../generated/schema';
+import { HubContract } from '../generated/templates/v1/HubContract/HubContract';
 
-export function eventId(event: ethereum.Event, version: Address | null = null): string {
-  let id = event.transaction.hash.toHex() + '/' + event.logIndex.toString();
-  if (version) {
-    id = version.toHex() + '/' + id;
-  }
-
-  return id;
-}
-
-export function createRegistryEvent<TEvent extends ethereum.Event = ethereum.Event>(
+export function trackFundEvent<TEvent extends ethereum.Event = ethereum.Event>(
   name: string,
   event: TEvent,
-  version: Address,
-  fund: Address | null = null,
+  fundAddress: Address,
 ): Event {
-  return makeEvent(eventId(event, version), name, event, version, fund);
+  let hubContract = HubContract.bind(fundAddress);
+  let versionAddress = hubContract.version();
+  return makeEvent(eventId(event, fundAddress), name, event, versionAddress, fundAddress);
 }
 
-export function createEvent<TEvent extends ethereum.Event = ethereum.Event>(
+export function trackVersionEvent<TEvent extends ethereum.Event = ethereum.Event>(
   name: string,
   event: TEvent,
-  version: Address,
-  fund: Address | null = null,
+  versionAddress: Address,
 ): Event {
-  return makeEvent(eventId(event), name, event, version, fund);
+  return makeEvent(eventId(event, versionAddress), name, event, versionAddress);
+}
+
+function eventId(event: ethereum.Event, scope: Address): string {
+  return scope.toHex() + '/' + event.transaction.hash.toHex() + '/' + event.logIndex.toString();
 }
 
 function makeEvent<TEvent extends ethereum.Event = ethereum.Event>(
   id: string,
   name: string,
   event: TEvent,
-  version: Address,
-  fund: Address | null = null,
+  versionAddress: Address,
+  fundAddress: Address | null = null,
 ): Event {
   if (Event.load(id)) {
-    log.warning('Duplicate event', []);
-    // throw new Error('Duplicate event registration.');
+    throw new Error('Duplicate event registration.');
   }
 
   let entity = new Event(id);
@@ -47,9 +42,8 @@ function makeEvent<TEvent extends ethereum.Event = ethereum.Event>(
   entity.from = event.transaction.from.toHex();
   entity.block = event.block.number;
   entity.timestamp = event.block.timestamp;
-  entity.version = version.toHex();
-  entity.fund = fund ? fund.toHex() : null;
-
+  entity.version = versionAddress.toHex();
+  entity.fund = fundAddress ? fundAddress.toHex() : null;
   entity.save();
 
   return entity;
