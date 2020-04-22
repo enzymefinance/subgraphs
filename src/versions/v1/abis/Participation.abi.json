@@ -1,0 +1,329 @@
+[
+  {
+    "inputs": [
+      { "internalType": "address", "name": "_hub", "type": "address" },
+      { "internalType": "address[]", "name": "_defaultAssets", "type": "address[]" },
+      { "internalType": "address", "name": "_registry", "type": "address" }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "payer", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "totalAmguPaidInEth", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "amguChargableGas", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "incentivePaid", "type": "uint256" }
+    ],
+    "name": "AmguPaid",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [{ "indexed": true, "internalType": "address", "name": "requestOwner", "type": "address" }],
+    "name": "CancelRequest",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [{ "indexed": false, "internalType": "address[]", "name": "assets", "type": "address[]" }],
+    "name": "DisableInvestment",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [{ "indexed": false, "internalType": "address[]", "name": "asset", "type": "address[]" }],
+    "name": "EnableInvestment",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "requestOwner", "type": "address" },
+      { "indexed": true, "internalType": "address", "name": "investmentAsset", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "requestedShares", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "investmentAmount", "type": "uint256" }
+    ],
+    "name": "InvestmentRequest",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [{ "indexed": true, "internalType": "address", "name": "authority", "type": "address" }],
+    "name": "LogSetAuthority",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [{ "indexed": true, "internalType": "address", "name": "owner", "type": "address" }],
+    "name": "LogSetOwner",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "redeemer", "type": "address" },
+      { "indexed": false, "internalType": "address[]", "name": "assets", "type": "address[]" },
+      { "indexed": false, "internalType": "uint256[]", "name": "assetQuantities", "type": "uint256[]" },
+      { "indexed": false, "internalType": "uint256", "name": "redeemedShares", "type": "uint256" }
+    ],
+    "name": "Redemption",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "requestOwner", "type": "address" },
+      { "indexed": true, "internalType": "address", "name": "executor", "type": "address" },
+      { "indexed": true, "internalType": "address", "name": "investmentAsset", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "investmentAmount", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "requestedShares", "type": "uint256" }
+    ],
+    "name": "RequestExecution",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "REQUEST_LIFESPAN",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "SHARES_DECIMALS",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "authority",
+    "outputs": [{ "internalType": "contract DSAuthority", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  { "inputs": [], "name": "cancelRequest", "outputs": [], "stateMutability": "payable", "type": "function" },
+  {
+    "inputs": [{ "internalType": "address", "name": "requestOwner", "type": "address" }],
+    "name": "cancelRequestFor",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address[]", "name": "_assets", "type": "address[]" }],
+    "name": "disableInvestment",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address[]", "name": "_assets", "type": "address[]" }],
+    "name": "enableInvestment",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "engine",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "requestOwner", "type": "address" }],
+    "name": "executeRequestFor",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getHistoricalInvestors",
+    "outputs": [{ "internalType": "address[]", "name": "", "type": "address[]" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "shareQuantity", "type": "uint256" }],
+    "name": "getOwedPerformanceFees",
+    "outputs": [{ "internalType": "uint256", "name": "remainingShareQuantity", "type": "uint256" }],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "_who", "type": "address" }],
+    "name": "hasExpiredRequest",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "name": "hasInvested",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "_who", "type": "address" }],
+    "name": "hasRequest",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "_who", "type": "address" }],
+    "name": "hasValidRequest",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "name": "historicalInvestors",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "hub",
+    "outputs": [{ "internalType": "contract Hub", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address[11]", "name": "_spokes", "type": "address[11]" }],
+    "name": "initialize",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "initialized",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "name": "investAllowed",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "mlnToken",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "priceSource",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  { "inputs": [], "name": "redeem", "outputs": [], "stateMutability": "nonpayable", "type": "function" },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "shareQuantity", "type": "uint256" }],
+    "name": "redeemQuantity",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "shareQuantity", "type": "uint256" },
+      { "internalType": "address[]", "name": "requestedAssets", "type": "address[]" }
+    ],
+    "name": "redeemWithConstraints",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "registry",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "requestedShares", "type": "uint256" },
+      { "internalType": "uint256", "name": "investmentAmount", "type": "uint256" },
+      { "internalType": "address", "name": "investmentAsset", "type": "address" }
+    ],
+    "name": "requestInvestment",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "name": "requests",
+    "outputs": [
+      { "internalType": "address", "name": "investmentAsset", "type": "address" },
+      { "internalType": "uint256", "name": "investmentAmount", "type": "uint256" },
+      { "internalType": "uint256", "name": "requestedShares", "type": "uint256" },
+      { "internalType": "uint256", "name": "timestamp", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "routes",
+    "outputs": [
+      { "internalType": "address", "name": "accounting", "type": "address" },
+      { "internalType": "address", "name": "feeManager", "type": "address" },
+      { "internalType": "address", "name": "participation", "type": "address" },
+      { "internalType": "address", "name": "policyManager", "type": "address" },
+      { "internalType": "address", "name": "shares", "type": "address" },
+      { "internalType": "address", "name": "trading", "type": "address" },
+      { "internalType": "address", "name": "vault", "type": "address" },
+      { "internalType": "address", "name": "registry", "type": "address" },
+      { "internalType": "address", "name": "version", "type": "address" },
+      { "internalType": "address", "name": "engine", "type": "address" },
+      { "internalType": "address", "name": "mlnToken", "type": "address" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "contract DSAuthority", "name": "authority_", "type": "address" }],
+    "name": "setAuthority",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "owner_", "type": "address" }],
+    "name": "setOwner",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "version",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

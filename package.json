@@ -18,10 +18,10 @@
     "create:local": "graph create melonproject/melon --node http://localhost:8020",
     "deploy:local": "graph deploy melonproject/melon subgraph.yaml --ipfs http://localhost:5001 --node http://localhost:8020",
     "auth": "graph auth https://api.thegraph.com/deploy/",
-    "format": "prettier --write {src,scripts}/{*,**/*}.ts",
-    "lint": "yarn prettier --list-different {src,scripts}/{*,**/*}.ts",
+    "format": "prettier --write {src,scripts}/{*,**/*}.{ts,json,yaml}",
+    "lint": "yarn prettier --list-different {src,scripts}/{*,**/*}.{ts,json,yaml}",
     "local": "yarn codegen && yarn create:local || true && yarn deploy:local"
-    },
+  },
   "devDependencies": {
     "@graphprotocol/graph-cli": "^0.18.0",
     "@graphprotocol/graph-ts": "^0.18.1",

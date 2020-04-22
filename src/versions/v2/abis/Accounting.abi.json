@@ -1,0 +1,330 @@
+[
+  {
+    "inputs": [
+      { "internalType": "address", "name": "_hub", "type": "address" },
+      { "internalType": "address", "name": "_denominationAsset", "type": "address" },
+      { "internalType": "address", "name": "_nativeAsset", "type": "address" }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "payer", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "totalAmguPaidInEth", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "amguChargableGas", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "incentivePaid", "type": "uint256" }
+    ],
+    "name": "AmguPaid",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [{ "indexed": true, "internalType": "address", "name": "asset", "type": "address" }],
+    "name": "AssetAddition",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [{ "indexed": true, "internalType": "address", "name": "asset", "type": "address" }],
+    "name": "AssetRemoval",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [{ "indexed": true, "internalType": "address", "name": "authority", "type": "address" }],
+    "name": "LogSetAuthority",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [{ "indexed": true, "internalType": "address", "name": "owner", "type": "address" }],
+    "name": "LogSetOwner",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "DEFAULT_SHARE_PRICE",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "DENOMINATION_ASSET",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "DENOMINATION_ASSET_DECIMALS",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "MAX_OWNED_ASSETS",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "NATIVE_ASSET",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "SHARES_DECIMALS",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "_asset", "type": "address" }],
+    "name": "addAssetToOwnedAssets",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "_asset", "type": "address" }],
+    "name": "assetHoldings",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "atLastAllocation",
+    "outputs": [
+      { "internalType": "uint256", "name": "gav", "type": "uint256" },
+      { "internalType": "uint256", "name": "nav", "type": "uint256" },
+      { "internalType": "uint256", "name": "allocatedFees", "type": "uint256" },
+      { "internalType": "uint256", "name": "totalSupply", "type": "uint256" },
+      { "internalType": "uint256", "name": "timestamp", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "authority",
+    "outputs": [{ "internalType": "contract DSAuthority", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "_queryAsset", "type": "address" }],
+    "name": "calcAssetGAV",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "calcGav",
+    "outputs": [{ "internalType": "uint256", "name": "gav", "type": "uint256" }],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "calcGavPerShareNetManagementFee",
+    "outputs": [{ "internalType": "uint256", "name": "gavPerShareNetManagementFee", "type": "uint256" }],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "gav", "type": "uint256" },
+      { "internalType": "uint256", "name": "unclaimedFeesInDenominationAsset", "type": "uint256" }
+    ],
+    "name": "calcNav",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "engine",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getFundHoldings",
+    "outputs": [
+      { "internalType": "uint256[]", "name": "", "type": "uint256[]" },
+      { "internalType": "address[]", "name": "", "type": "address[]" }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getOwnedAssets",
+    "outputs": [{ "internalType": "address[]", "name": "", "type": "address[]" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getOwnedAssetsLength",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "_numShares", "type": "uint256" },
+      { "internalType": "address", "name": "_altAsset", "type": "address" }
+    ],
+    "name": "getShareCostInAsset",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "hub",
+    "outputs": [{ "internalType": "contract Hub", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address[11]", "name": "_spokes", "type": "address[11]" }],
+    "name": "initialize",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "initialized",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "name": "isInAssetList",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "mlnToken",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "name": "ownedAssets",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "performCalculations",
+    "outputs": [
+      { "internalType": "uint256", "name": "gav", "type": "uint256" },
+      { "internalType": "uint256", "name": "feesInDenominationAsset", "type": "uint256" },
+      { "internalType": "uint256", "name": "feesInShares", "type": "uint256" },
+      { "internalType": "uint256", "name": "nav", "type": "uint256" },
+      { "internalType": "uint256", "name": "sharePrice", "type": "uint256" },
+      { "internalType": "uint256", "name": "gavPerShareNetManagementFee", "type": "uint256" }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "priceSource",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "registry",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "_asset", "type": "address" }],
+    "name": "removeFromOwnedAssets",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "routes",
+    "outputs": [
+      { "internalType": "address", "name": "accounting", "type": "address" },
+      { "internalType": "address", "name": "feeManager", "type": "address" },
+      { "internalType": "address", "name": "participation", "type": "address" },
+      { "internalType": "address", "name": "policyManager", "type": "address" },
+      { "internalType": "address", "name": "shares", "type": "address" },
+      { "internalType": "address", "name": "trading", "type": "address" },
+      { "internalType": "address", "name": "vault", "type": "address" },
+      { "internalType": "address", "name": "registry", "type": "address" },
+      { "internalType": "address", "name": "version", "type": "address" },
+      { "internalType": "address", "name": "engine", "type": "address" },
+      { "internalType": "address", "name": "mlnToken", "type": "address" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "contract DSAuthority", "name": "authority_", "type": "address" }],
+    "name": "setAuthority",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "owner_", "type": "address" }],
+    "name": "setOwner",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  { "inputs": [], "name": "triggerRewardAllFees", "outputs": [], "stateMutability": "payable", "type": "function" },
+  { "inputs": [], "name": "updateOwnedAssets", "outputs": [], "stateMutability": "nonpayable", "type": "function" },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "totalValue", "type": "uint256" },
+      { "internalType": "uint256", "name": "numShares", "type": "uint256" }
+    ],
+    "name": "valuePerShare",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "version",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

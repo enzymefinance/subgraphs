@@ -19,11 +19,11 @@ dataSources:
       entities: []
       abis:
         - name: VersionContract
-          file: ./abis/Version.json
+          file: ./abis/Version.abi.json
         - name: RegistryContract
-          file: ./abis/Registry.json
+          file: ./abis/Registry.abi.json
         - name: HubContract
-          file: ./abis/Hub.json
+          file: ./abis/Hub.abi.json
       eventHandlers:
         - event: AmguPaid(indexed address,uint256,uint256,uint256)
           handler: handleAmguPaid
@@ -48,7 +48,7 @@ templates:
       entities: []
       abis:
         - name: RegistryContract
-          file: ./abis/Registry.json
+          file: ./abis/Registry.abi.json
       eventHandlers:
         - event: AssetRemoval(indexed address)
           handler: handleAssetRemoval
@@ -90,7 +90,7 @@ templates:
       entities: []
       abis:
         - name: HubContract
-          file: ./abis/Hub.json
+          file: ./abis/Hub.abi.json
       eventHandlers:
         - event: FundShutDown()
           handler: handleFundShutDown
@@ -116,9 +116,9 @@ templates:
       entities: []
       abis:
         - name: AccountingContract
-          file: ./abis/Accounting.json
+          file: ./abis/Accounting.abi.json
         - name: HubContract
-          file: ./abis/Hub.json
+          file: ./abis/Hub.abi.json
       eventHandlers:
         - event: AmguPaid(indexed address,uint256,uint256,uint256)
           handler: handleFundShutDown
@@ -144,9 +144,9 @@ templates:
       entities: []
       abis:
         - name: FeeManagerContract
-          file: ./abis/FeeManager.json
+          file: ./abis/FeeManager.abi.json
         - name: HubContract
-          file: ./abis/Hub.json
+          file: ./abis/Hub.abi.json
       eventHandlers:
         - event: FeeRegistration(address)
           handler: handleFundShutDown
@@ -157,41 +157,41 @@ templates:
         - event: LogSetOwner(indexed address)
           handler: handleLogSetOwner
 
-  # - name: v2/ParticipationContract
-  #   kind: ethereum/contract
-  #   network: dev
-  #   source:
-  #     abi: ParticipationContract
-  #   mapping:
-  #     kind: ethereum/events
-  #     apiVersion: 0.0.4
-  #     language: wasm/assemblyscript
-  #     file: ./mappings/Participation/mappings.ts
-  #     entities: []
-  #     abis:
-  #       - name: ParticipationContract
-  #         file: ./abis/Participation.json
-  #       - name: HubContract
-  #         file: ./abis/Hub.json
-  #     eventHandlers:
-  #       - event: AmguPaid(indexed address,uint256,uint256,uint256)
-  #         handler: handleAmguPaid
-  #       - event: CancelRequest(indexed address)
-  #         handler: handleCancelRequest
-  #       - event: DisableInvestment(address[])
-  #         handler: handleDisableInvestment
-  #       - event: EnableInvestment(address[])
-  #         handler: handleEnableInvestment
-  #       - event: InvestmentRequest(indexed address,indexed address,uint256,uint256)
-  #         handler: handleInvestmentRequest
-  #       - event: LogSetAuthority(indexed address)
-  #         handler: handleLogSetAuthority
-  #       - event: LogSetOwner(indexed address)
-  #         handler: handleLogSetOwner
-  #       - event: Redemption(indexed address,address[],uint256[],uint256)
-  #         handler: handleLogSetOwner
-  #       - event: RequestExecution(indexed address,indexed address,indexed address,uint256,uint256)
-  #         handler: handleRequestExecution
+  - name: v2/ParticipationContract
+    kind: ethereum/contract
+    network: dev
+    source:
+      abi: ParticipationContract
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./mappings/Participation/mappings.ts
+      entities: []
+      abis:
+        - name: ParticipationContract
+          file: ./abis/Participation.abi.json
+        - name: HubContract
+          file: ./abis/Hub.abi.json
+      eventHandlers:
+        - event: AmguPaid(indexed address,uint256,uint256,uint256)
+          handler: handleAmguPaid
+        - event: CancelRequest(indexed address)
+          handler: handleCancelRequest
+        - event: DisableInvestment(address[])
+          handler: handleDisableInvestment
+        - event: EnableInvestment(address[])
+          handler: handleEnableInvestment
+        - event: InvestmentRequest(indexed address,indexed address,uint256,uint256)
+          handler: handleInvestmentRequest
+        - event: LogSetAuthority(indexed address)
+          handler: handleLogSetAuthority
+        - event: LogSetOwner(indexed address)
+          handler: handleLogSetOwner
+        - event: Redemption(indexed address,address[],uint256[],uint256)
+          handler: handleLogSetOwner
+        - event: RequestExecution(indexed address,indexed address,indexed address,uint256,uint256)
+          handler: handleRequestExecution
 
   - name: v2/PolicyManagerContract
     kind: ethereum/contract
@@ -206,9 +206,9 @@ templates:
       entities: []
       abis:
         - name: PolicyManagerContract
-          file: ./abis/PolicyManager.json
+          file: ./abis/PolicyManager.abi.json
         - name: HubContract
-          file: ./abis/Hub.json
+          file: ./abis/Hub.abi.json
       eventHandlers:
         - event: LogSetAuthority(indexed address)
           handler: handleLogSetAuthority
@@ -230,9 +230,9 @@ templates:
       entities: []
       abis:
         - name: SharesContract
-          file: ./abis/Shares.json
+          file: ./abis/Shares.abi.json
         - name: HubContract
-          file: ./abis/Hub.json
+          file: ./abis/Hub.abi.json
       eventHandlers:
         - event: Approval(indexed address,indexed address,uint256)
           handler: handleApproval
@@ -243,29 +243,29 @@ templates:
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
 
-  # - name: v2/TradingContract
-  #   kind: ethereum/contract
-  #   network: dev
-  #   source:
-  #     abi: TradingContract
-  #   mapping:
-  #     kind: ethereum/events
-  #     apiVersion: 0.0.4
-  #     language: wasm/assemblyscript
-  #     file: ./mappings/Trading/mappings.ts
-  #     entities: []
-  #     abis:
-  #       - name: TradingContract
-  #         file: ./abis/Trading.json
-  #       - name: HubContract
-  #         file: ./abis/Hub.json
-  #     eventHandlers:
-  #       - event: ExchangeMethodCall(indexed address,indexed string,address[8],uint256[8],bytes[4],bytes32,bytes)
-  #         handler: handleExchangeMethodCall
-  #       - event: LogSetAuthority(indexed address)
-  #         handler: handleLogSetAuthority
-  #       - event: LogSetOwner(indexed address)
-  #         handler: handleLogSetOwner
+  - name: v2/TradingContract
+    kind: ethereum/contract
+    network: dev
+    source:
+      abi: TradingContract
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./mappings/Trading/mappings.ts
+      entities: []
+      abis:
+        - name: TradingContract
+          file: ./abis/Trading.abi.json
+        - name: HubContract
+          file: ./abis/Hub.abi.json
+      eventHandlers:
+        - event: ExchangeMethodCall(indexed address,indexed string,address[8],uint256[8],bytes[4],bytes32,bytes)
+          handler: handleExchangeMethodCall
+        - event: LogSetAuthority(indexed address)
+          handler: handleLogSetAuthority
+        - event: LogSetOwner(indexed address)
+          handler: handleLogSetOwner
 
   - name: v2/VaultContract
     kind: ethereum/contract
@@ -280,9 +280,9 @@ templates:
       entities: []
       abis:
         - name: VaultContract
-          file: ./abis/Vault.json
+          file: ./abis/Vault.abi.json
         - name: HubContract
-          file: ./abis/Hub.json
+          file: ./abis/Hub.abi.json
       eventHandlers:
         - event: LogSetAuthority(indexed address)
           handler: handleLogSetAuthority

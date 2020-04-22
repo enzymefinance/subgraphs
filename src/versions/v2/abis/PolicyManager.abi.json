@@ -1,0 +1,186 @@
+[
+  {
+    "inputs": [{ "internalType": "address", "name": "_hub", "type": "address" }],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [{ "indexed": true, "internalType": "address", "name": "authority", "type": "address" }],
+    "name": "LogSetAuthority",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [{ "indexed": true, "internalType": "address", "name": "owner", "type": "address" }],
+    "name": "LogSetOwner",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "bytes4", "name": "sig", "type": "bytes4" },
+      { "indexed": false, "internalType": "enum IPolicy.Applied", "name": "position", "type": "uint8" },
+      { "indexed": true, "internalType": "address", "name": "policy", "type": "address" }
+    ],
+    "name": "Registration",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "authority",
+    "outputs": [{ "internalType": "contract DSAuthority", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes4[]", "name": "sig", "type": "bytes4[]" },
+      { "internalType": "address[]", "name": "_policies", "type": "address[]" }
+    ],
+    "name": "batchRegister",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "engine",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "bytes4", "name": "sig", "type": "bytes4" }],
+    "name": "getPoliciesBySig",
+    "outputs": [
+      { "internalType": "address[]", "name": "", "type": "address[]" },
+      { "internalType": "address[]", "name": "", "type": "address[]" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "hub",
+    "outputs": [{ "internalType": "contract Hub", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address[11]", "name": "_spokes", "type": "address[11]" }],
+    "name": "initialize",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "initialized",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "mlnToken",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes4", "name": "sig", "type": "bytes4" },
+      { "internalType": "address[5]", "name": "addresses", "type": "address[5]" },
+      { "internalType": "uint256[3]", "name": "values", "type": "uint256[3]" },
+      { "internalType": "bytes32", "name": "identifier", "type": "bytes32" }
+    ],
+    "name": "postValidate",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes4", "name": "sig", "type": "bytes4" },
+      { "internalType": "address[5]", "name": "addresses", "type": "address[5]" },
+      { "internalType": "uint256[3]", "name": "values", "type": "uint256[3]" },
+      { "internalType": "bytes32", "name": "identifier", "type": "bytes32" }
+    ],
+    "name": "preValidate",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "priceSource",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes4", "name": "sig", "type": "bytes4" },
+      { "internalType": "address", "name": "_policy", "type": "address" }
+    ],
+    "name": "register",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "registry",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "routes",
+    "outputs": [
+      { "internalType": "address", "name": "accounting", "type": "address" },
+      { "internalType": "address", "name": "feeManager", "type": "address" },
+      { "internalType": "address", "name": "participation", "type": "address" },
+      { "internalType": "address", "name": "policyManager", "type": "address" },
+      { "internalType": "address", "name": "shares", "type": "address" },
+      { "internalType": "address", "name": "trading", "type": "address" },
+      { "internalType": "address", "name": "vault", "type": "address" },
+      { "internalType": "address", "name": "registry", "type": "address" },
+      { "internalType": "address", "name": "version", "type": "address" },
+      { "internalType": "address", "name": "engine", "type": "address" },
+      { "internalType": "address", "name": "mlnToken", "type": "address" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "contract DSAuthority", "name": "authority_", "type": "address" }],
+    "name": "setAuthority",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "owner_", "type": "address" }],
+    "name": "setOwner",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "version",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]
