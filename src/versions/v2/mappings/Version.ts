@@ -10,12 +10,12 @@ export function handleAmguPaid(event: AmguPaid): void {
 }
 
 export function handleLogSetAuthority(event: LogSetAuthority): void {
-  trackVersionEvent('LogSetAuthority', event, event.address);
+  // trackVersionEvent('LogSetAuthority', event, event.address);
   let version = ensureVersion(event.address);
 }
 
 export function handleLogSetOwner(event: LogSetOwner): void {
-  trackVersionEvent('LogSetOwner', event, event.address);
+  // trackVersionEvent('LogSetOwner', event, event.address);
   let version = ensureVersion(event.address);
 }
 

@@ -48,11 +48,11 @@ export function handleIncentiveChange(event: IncentiveChange): void {
 }
 
 export function handleLogSetAuthority(event: LogSetAuthority): void {
-  trackVersionEvent('LogSetAuthority', event, version);
+  // trackVersionEvent('LogSetAuthority', event, version);
 }
 
 export function handleLogSetOwner(event: LogSetOwner): void {
-  trackVersionEvent('LogSetOwner', event, version);
+  // trackVersionEvent('LogSetOwner', event, version);
 }
 
 export function handleMGMChange(event: MGMChange): void {

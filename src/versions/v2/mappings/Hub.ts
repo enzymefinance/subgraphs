@@ -17,21 +17,21 @@ export function handleFundShutDown(event: FundShutDown): void {
 }
 
 export function handleLogForbid(event: LogForbid): void {
-  trackFundEvent('LogForbid', event, event.address);
+  // trackFundEvent('LogForbid', event, event.address);
   let fund = ensureFund(event.address);
 }
 
 export function handleLogPermit(event: LogPermit): void {
-  trackFundEvent('LogPermit', event, event.address);
+  // trackFundEvent('LogPermit', event, event.address);
   let fund = ensureFund(event.address);
 }
 
 export function handleLogSetAuthority(event: LogSetAuthority): void {
-  trackFundEvent('LogSetAuthority', event, event.address);
+  // trackFundEvent('LogSetAuthority', event, event.address);
   let fund = ensureFund(event.address);
 }
 
 export function handleLogSetOwner(event: LogSetOwner): void {
-  trackFundEvent('LogSetOwner', event, event.address);
+  // trackFundEvent('LogSetOwner', event, event.address);
   let fund = ensureFund(event.address);
 }

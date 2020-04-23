@@ -11,14 +11,14 @@ import {
 export function handleLogSetAuthority(event: LogSetAuthority): void {
   let participationContract = PolicyManagerContract.bind(event.address);
   let hubAddress = participationContract.hub();
-  trackFundEvent('LogSetAuthority', event, hubAddress);
+  // trackFundEvent('LogSetAuthority', event, hubAddress);
   let fund = ensureFund(hubAddress);
 }
 
 export function handleLogSetOwner(event: LogSetOwner): void {
   let participationContract = PolicyManagerContract.bind(event.address);
   let hubAddress = participationContract.hub();
-  trackFundEvent('LogSetOwner', event, hubAddress);
+  // trackFundEvent('LogSetOwner', event, hubAddress);
   let fund = ensureFund(hubAddress);
 }
 

@@ -6,12 +6,12 @@ import { LogSetAuthority, LogSetOwner, VaultContract } from '../generated/templa
 export function handleLogSetAuthority(event: LogSetAuthority): void {
   let participationContract = VaultContract.bind(event.address);
   let hubAddress = participationContract.hub();
-  trackFundEvent('LogSetAuthority', event, hubAddress);
+  // trackFundEvent('LogSetAuthority', event, hubAddress);
 }
 
 export function handleLogSetOwner(event: LogSetOwner): void {
   let participationContract = VaultContract.bind(event.address);
   let hubAddress = participationContract.hub();
-  trackFundEvent('LogSetOwner', event, hubAddress);
+  // trackFundEvent('LogSetOwner', event, hubAddress);
   let fund = ensureFund(hubAddress);
 }
