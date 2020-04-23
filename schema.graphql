@@ -24,31 +24,49 @@ type Fund @entity {
   active: Boolean!
   manager: Account!
   events: [Event!]! @derivedFrom(field: "fund")
-  participations: [Participation!]! @derivedFrom(field: "fund")
+  investments: [Investment!]! @derivedFrom(field: "fund")
 }
 
-type InvestmentRequest @entity {
+interface InvestmentChange {
   id: ID!
+  fund: Fund!
+  investor: Account!
+  investment: Investment!
 }
 
-type InvestmentExecution @entity {
+type InvestmentAddition implements InvestmentChange @entity {
   id: ID!
+  fund: Fund!
+  investor: Account!
+  investment: Investment!
+  shares: BigInt!
+  asset: Asset!
+  amount: BigInt!
+  requestTimestamp: BigInt!
+  requestTransaction: String!
+  executionTimestamp: BigInt
+  executionTransaction: String
+  cancallationTimestamp: BigInt
+  cancellationTransaction: String
+}
+
+type InvestmentRedemption implements InvestmentChange @entity {
+  id: ID!
+  fund: Fund!
+  investor: Account!
+  investment: Investment!
+  shares: BigInt!
+  assets: [Asset!]!
+  amounts: [BigInt!]!
+  timestamp: BigInt!
+  transaction: String!
 }
 
 type Investment @entity {
   id: ID!
   fund: Fund!
   investor: Account!
-  request: InvestmentRequest!
-  execution: InvestmentExecution
-  participation: Participation!
-}
-
-type Participation @entity {
-  id: ID!
-  fund: Fund!
-  investor: Account!
-  investments: [Investment!]! @derivedFrom(field: "participation")
+  changes: [InvestmentChange!]! @derivedFrom(field: "investment")
   shares: BigInt!
 }
 
@@ -56,8 +74,8 @@ type Account @entity {
   id: ID!
   manager: Boolean!
   managements: [Fund!]! @derivedFrom(field: "manager")
-  participator: Boolean!
-  participations: [Participation!]! @derivedFrom(field: "investor")
+  investor: Boolean!
+  investments: [Investment!]! @derivedFrom(field: "investor")
 }
 
 type Asset @entity {

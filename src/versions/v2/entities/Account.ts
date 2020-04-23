@@ -17,7 +17,7 @@ function ensureAccount(accountAddress: Address): Account {
 
   account = new Account(accountAddress.toHex());
   account.manager = false;
-  account.participator = false;
+  account.investor = false;
   account.save();
 
   return account;

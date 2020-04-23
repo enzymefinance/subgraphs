@@ -13,7 +13,7 @@ import {
   RequestExecution,
   ParticipationContract,
 } from '../generated/templates/v2/ParticipationContract/ParticipationContract';
-import { ensureParticipation } from '../entities/Participation';
+import { ensureInvestment } from '../entities/Investment';
 
 export function handleAmguPaid(event: AmguPaid): void {
   let participationContract = ParticipationContract.bind(event.address);
@@ -27,7 +27,7 @@ export function handleCancelRequest(event: CancelRequest): void {
   let hubAddress = participationContract.hub();
   trackFundEvent('CancelRequest', event, event.address);
   let fund = ensureFund(hubAddress);
-  let participation = ensureParticipation(event.params.requestOwner, hubAddress);
+  let investment = ensureInvestment(event.params.requestOwner, hubAddress);
 }
 
 export function handleDisableInvestment(event: DisableInvestment): void {
@@ -49,7 +49,7 @@ export function handleInvestmentRequest(event: InvestmentRequest): void {
   let hubAddress = participationContract.hub();
   trackFundEvent('InvestmentRequest', event, hubAddress);
   let fund = ensureFund(hubAddress);
-  let participation = ensureParticipation(event.params.requestOwner, hubAddress);
+  let investment = ensureInvestment(event.params.requestOwner, hubAddress);
 }
 
 export function handleLogSetAuthority(event: LogSetAuthority): void {
@@ -78,5 +78,5 @@ export function handleRequestExecution(event: RequestExecution): void {
   let hubAddress = participationContract.hub();
   trackFundEvent('RequestExecution', event, hubAddress);
   let fund = ensureFund(hubAddress);
-  let participation = ensureParticipation(event.params.requestOwner, hubAddress);
+  let investment = ensureInvestment(event.params.requestOwner, hubAddress);
 }
