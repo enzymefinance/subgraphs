@@ -1,12 +1,12 @@
 import { Address } from '@graphprotocol/graph-ts';
-import { ensureFund } from '../../utils/entities/fund';
-import { trackFundEvent } from '../../utils/entities/event';
+import { ensureFund } from '../entities/Fund';
+import { trackFundEvent } from '../entities/Event';
 import {
   Registration,
   LogSetAuthority,
   LogSetOwner,
   PolicyManagerContract,
-} from '../../generated/templates/v2/PolicyManagerContract/PolicyManagerContract';
+} from '../generated/templates/v2/PolicyManagerContract/PolicyManagerContract';
 
 export function handleLogSetAuthority(event: LogSetAuthority): void {
   let participationContract = PolicyManagerContract.bind(event.address);

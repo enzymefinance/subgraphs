@@ -1,6 +1,6 @@
 import { Address } from '@graphprotocol/graph-ts';
-import { ensureFund } from '../../utils/entities/fund';
-import { trackFundEvent } from '../../utils/entities/event';
+import { ensureFund } from '../entities/Fund';
+import { trackFundEvent } from '../entities/Event';
 import {
   AmguPaid,
   AssetAddition,
@@ -8,7 +8,7 @@ import {
   LogSetAuthority,
   LogSetOwner,
   AccountingContract,
-} from '../../generated/templates/v2/AccountingContract/AccountingContract';
+} from '../generated/templates/v2/AccountingContract/AccountingContract';
 
 export function handleAmguPaid(event: AmguPaid): void {
   let participationContract = AccountingContract.bind(event.address);

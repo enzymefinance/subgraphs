@@ -1,8 +1,8 @@
-import { Address, DataSourceTemplate, log } from '@graphprotocol/graph-ts';
-import { Fund } from '../../generated/schema';
-import { HubContract } from '../../generated/templates/v2/HubContract/HubContract';
-import { hexToAscii } from '../hexToAscii';
-import { ensureManager } from './account';
+import { Address, DataSourceTemplate } from '@graphprotocol/graph-ts';
+import { Fund } from '../generated/schema';
+import { HubContract } from '../generated/templates/v2/HubContract/HubContract';
+import { hexToAscii } from '../utils/hexToAscii';
+import { ensureManager } from './Account';
 
 export function ensureFund(hubAddress: Address): Fund {
   let fund = Fund.load(hubAddress.toHex()) as Fund;

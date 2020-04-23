@@ -1,13 +1,13 @@
 import { Address } from '@graphprotocol/graph-ts';
-import { ensureFund } from '../../utils/entities/fund';
-import { trackFundEvent } from '../../utils/entities/event';
+import { ensureFund } from '../entities/Fund';
+import { trackFundEvent } from '../entities/Event';
 import {
   FundShutDown,
   LogForbid,
   LogPermit,
   LogSetAuthority,
   LogSetOwner,
-} from '../../generated/templates/v2/HubContract/HubContract';
+} from '../generated/templates/v2/HubContract/HubContract';
 
 export function handleFundShutDown(event: FundShutDown): void {
   trackFundEvent('FundShutDown', event, event.address);

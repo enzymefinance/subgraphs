@@ -1,13 +1,13 @@
 import { Address } from '@graphprotocol/graph-ts';
-import { ensureFund } from '../../utils/entities/fund';
-import { trackFundEvent } from '../../utils/entities/event';
+import { ensureFund } from '../entities/Fund';
+import { trackFundEvent } from '../entities/Event';
 import {
   Transfer,
   Approval,
   LogSetAuthority,
   LogSetOwner,
   SharesContract,
-} from '../../generated/templates/v2/SharesContract/SharesContract';
+} from '../generated/templates/v2/SharesContract/SharesContract';
 
 export function handleApproval(event: Approval): void {
   let participationContract = SharesContract.bind(event.address);

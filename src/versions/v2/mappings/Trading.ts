@@ -1,12 +1,12 @@
 import { Address } from '@graphprotocol/graph-ts';
-import { ensureFund } from '../../utils/entities/fund';
-import { trackFundEvent } from '../../utils/entities/event';
+import { ensureFund } from '../entities/Fund';
+import { trackFundEvent } from '../entities/Event';
 import {
   ExchangeMethodCall,
   LogSetAuthority,
   LogSetOwner,
   TradingContract,
-} from '../../generated/templates/v2/TradingContract/TradingContract';
+} from '../generated/templates/v2/TradingContract/TradingContract';
 
 export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
   let participationContract = TradingContract.bind(event.address);

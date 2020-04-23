@@ -1,5 +1,5 @@
 import { Address, BigInt } from '@graphprotocol/graph-ts';
-import { Participation } from '../../generated/schema';
+import { Participation } from '../generated/schema';
 
 function participationId(accountAddress: Address, hubAddress: Address): string {
   return accountAddress.toHex() + '/' + hubAddress.toHex();

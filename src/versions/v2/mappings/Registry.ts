@@ -1,5 +1,5 @@
 import { dataSource, Address, Value } from '@graphprotocol/graph-ts';
-import { trackVersionEvent } from '../../utils/entities/event';
+import { trackVersionEvent } from '../entities/Event';
 import {
   AssetRemoval,
   AssetUpsert,
@@ -14,7 +14,7 @@ import {
   MlnTokenChange,
   NativeAssetChange,
   PriceSourceChange,
-} from '../../generated/templates/v2/RegistryContract/RegistryContract';
+} from '../generated/templates/v2/RegistryContract/RegistryContract';
 
 let context = dataSource.context();
 let version = Address.fromString((context.get('version') as Value).toString());

@@ -1,13 +1,13 @@
 import { Address } from '@graphprotocol/graph-ts';
-import { ensureFund } from '../../utils/entities/fund';
-import { trackFundEvent } from '../../utils/entities/event';
+import { ensureFund } from '../entities/Fund';
+import { trackFundEvent } from '../entities/Event';
 import {
   FeeRegistration,
   FeeReward,
   LogSetAuthority,
   LogSetOwner,
   FeeManagerContract,
-} from '../../generated/templates/v2/FeeManagerContract/FeeManagerContract';
+} from '../generated/templates/v2/FeeManagerContract/FeeManagerContract';
 
 export function handleFeeRegistration(event: FeeRegistration): void {
   let participationContract = FeeManagerContract.bind(event.address);

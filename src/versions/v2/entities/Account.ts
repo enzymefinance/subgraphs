@@ -1,5 +1,5 @@
 import { Address } from '@graphprotocol/graph-ts';
-import { Account } from '../../generated/schema';
+import { Account } from '../generated/schema';
 
 export function ensureManager(managerAddress: Address): Account {
   let account = ensureAccount(managerAddress);

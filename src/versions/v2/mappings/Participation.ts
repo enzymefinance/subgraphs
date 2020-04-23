@@ -1,6 +1,6 @@
 import { Address } from '@graphprotocol/graph-ts';
-import { ensureFund } from '../../utils/entities/fund';
-import { trackFundEvent } from '../../utils/entities/event';
+import { ensureFund } from '../entities/Fund';
+import { trackFundEvent } from '../entities/Event';
 import {
   EnableInvestment,
   AmguPaid,
@@ -12,8 +12,8 @@ import {
   Redemption,
   RequestExecution,
   ParticipationContract,
-} from '../../generated/templates/v2/ParticipationContract/ParticipationContract';
-import { ensureParticipation } from '../../utils/entities/participation';
+} from '../generated/templates/v2/ParticipationContract/ParticipationContract';
+import { ensureParticipation } from '../entities/Participation';
 
 export function handleAmguPaid(event: AmguPaid): void {
   let participationContract = ParticipationContract.bind(event.address);

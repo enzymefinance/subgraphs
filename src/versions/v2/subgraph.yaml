@@ -15,7 +15,7 @@ dataSources:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
-      file: ./mappings/Version/mappings.ts
+      file: ./mappings/Version.ts
       entities: []
       abis:
         - name: VersionContract
@@ -44,7 +44,7 @@ templates:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
-      file: ./mappings/Registry/mappings.ts
+      file: ./mappings/Registry.ts
       entities: []
       abis:
         - name: RegistryContract
@@ -86,7 +86,7 @@ templates:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
-      file: ./mappings/Hub/mappings.ts
+      file: ./mappings/Hub.ts
       entities: []
       abis:
         - name: HubContract
@@ -112,7 +112,7 @@ templates:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
-      file: ./mappings/Accounting/mappings.ts
+      file: ./mappings/Accounting.ts
       entities: []
       abis:
         - name: AccountingContract
@@ -140,7 +140,7 @@ templates:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
-      file: ./mappings/FeeManager/mappings.ts
+      file: ./mappings/FeeManager.ts
       entities: []
       abis:
         - name: FeeManagerContract
@@ -166,7 +166,7 @@ templates:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
-      file: ./mappings/Participation/mappings.ts
+      file: ./mappings/Participation.ts
       entities: []
       abis:
         - name: ParticipationContract
@@ -202,7 +202,7 @@ templates:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
-      file: ./mappings/PolicyManager/mappings.ts
+      file: ./mappings/PolicyManager.ts
       entities: []
       abis:
         - name: PolicyManagerContract
@@ -226,7 +226,7 @@ templates:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
-      file: ./mappings/Shares/mappings.ts
+      file: ./mappings/Shares.ts
       entities: []
       abis:
         - name: SharesContract
@@ -252,7 +252,7 @@ templates:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
-      file: ./mappings/Trading/mappings.ts
+      file: ./mappings/Trading.ts
       entities: []
       abis:
         - name: TradingContract
@@ -276,7 +276,7 @@ templates:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
-      file: ./mappings/Vault/mappings.ts
+      file: ./mappings/Vault.ts
       entities: []
       abis:
         - name: VaultContract
