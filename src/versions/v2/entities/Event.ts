@@ -1,4 +1,4 @@
-import { ethereum, Address } from '@graphprotocol/graph-ts';
+import { ethereum, Address, log } from '@graphprotocol/graph-ts';
 import { Event, Fund, Version } from '../generated/schema';
 import { ensureVersion } from './Version';
 
@@ -31,7 +31,11 @@ function makeEvent<TEvent extends ethereum.Event = ethereum.Event>(
   fund: Fund | null = null,
 ): Event {
   if (Event.load(id)) {
-    throw new Error('Duplicate event registration.');
+    throw log.critical('Duplicate event registration "{}" on contract {} in transaction {}.', [
+      name,
+      event.address.toHex(),
+      event.transaction.hash.toHex(),
+    ]);
   }
 
   let entity = new Event(id);
