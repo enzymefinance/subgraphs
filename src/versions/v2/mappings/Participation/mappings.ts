@@ -1,59 +1,82 @@
 import { Address } from '@graphprotocol/graph-ts';
-// import { ensureFund } from '../../utils/fund';
-// import { trackFundEvent } from '../../utils/event';
-// import {
-//   EnableInvestment,
-//   AmguPaid,
-//   CancelRequest,
-//   DisableInvestment,
-//   InvestmentRequest,
-//   LogSetAuthority,
-//   LogSetOwner,
-//   Redemption,
-//   RequestExecution,
-// } from '../../generated/templates/v2/ParticipationContract/ParticipationContract';
+import { ensureFund } from '../../utils/entities/fund';
+import { trackFundEvent } from '../../utils/entities/event';
+import {
+  EnableInvestment,
+  AmguPaid,
+  CancelRequest,
+  DisableInvestment,
+  InvestmentRequest,
+  LogSetAuthority,
+  LogSetOwner,
+  Redemption,
+  RequestExecution,
+  ParticipationContract,
+} from '../../generated/templates/v2/ParticipationContract/ParticipationContract';
+import { ensureParticipation } from '../../utils/entities/participation';
 
-// export function handleAmguPaid(event: AmguPaid): void {
-//   trackFundEvent('AmguPaid', event, event.address);
-//   let fund = ensureFund(event.address);
-// }
+export function handleAmguPaid(event: AmguPaid): void {
+  let participationContract = ParticipationContract.bind(event.address);
+  let hubAddress = participationContract.hub();
+  trackFundEvent('AmguPaid', event, hubAddress);
+  let fund = ensureFund(hubAddress);
+}
 
-// export function handleCancelRequest(event: CancelRequest): void {
-//   trackFundEvent('CancelRequest', event, event.address);
-//   let fund = ensureFund(event.address);
-// }
+export function handleCancelRequest(event: CancelRequest): void {
+  let participationContract = ParticipationContract.bind(event.address);
+  let hubAddress = participationContract.hub();
+  trackFundEvent('CancelRequest', event, event.address);
+  let fund = ensureFund(hubAddress);
+  let participation = ensureParticipation(event.params.requestOwner, hubAddress);
+}
 
-// export function handleDisableInvestment(event: DisableInvestment): void {
-//   trackFundEvent('DisableInvestment', event, event.address);
-//   let fund = ensureFund(event.address);
-// }
+export function handleDisableInvestment(event: DisableInvestment): void {
+  let participationContract = ParticipationContract.bind(event.address);
+  let hubAddress = participationContract.hub();
+  trackFundEvent('DisableInvestment', event, hubAddress);
+  let fund = ensureFund(hubAddress);
+}
 
-// export function handleEnableInvestment(event: EnableInvestment): void {
-//   trackFundEvent('EnableInvestment', event, event.address);
-//   let fund = ensureFund(event.address);
-// }
+export function handleEnableInvestment(event: EnableInvestment): void {
+  let participationContract = ParticipationContract.bind(event.address);
+  let hubAddress = participationContract.hub();
+  trackFundEvent('EnableInvestment', event, hubAddress);
+  let fund = ensureFund(hubAddress);
+}
 
-// export function handleInvestmentRequest(event: InvestmentRequest): void {
-//   trackFundEvent('InvestmentRequest', event, event.address);
-//   let fund = ensureFund(event.address);
-// }
+export function handleInvestmentRequest(event: InvestmentRequest): void {
+  let participationContract = ParticipationContract.bind(event.address);
+  let hubAddress = participationContract.hub();
+  trackFundEvent('InvestmentRequest', event, hubAddress);
+  let fund = ensureFund(hubAddress);
+  let participation = ensureParticipation(event.params.requestOwner, hubAddress);
+}
 
-// export function handleLogSetAuthority(event: LogSetAuthority): void {
-//   trackFundEvent('LogSetAuthority', event, event.address);
-//   let fund = ensureFund(event.address);
-// }
+export function handleLogSetAuthority(event: LogSetAuthority): void {
+  let participationContract = ParticipationContract.bind(event.address);
+  let hubAddress = participationContract.hub();
+  trackFundEvent('LogSetAuthority', event, hubAddress);
+  let fund = ensureFund(hubAddress);
+}
 
-// export function handleLogSetOwner(event: LogSetOwner): void {
-//   trackFundEvent('LogSetOwner', event, event.address);
-//   let fund = ensureFund(event.address);
-// }
+export function handleLogSetOwner(event: LogSetOwner): void {
+  let participationContract = ParticipationContract.bind(event.address);
+  let hubAddress = participationContract.hub();
+  trackFundEvent('LogSetOwner', event, hubAddress);
+  let fund = ensureFund(hubAddress);
+}
 
-// export function handleRedemption(event: Redemption): void {
-//   trackFundEvent('Redemption', event, event.address);
-//   let fund = ensureFund(event.address);
-// }
+export function handleRedemption(event: Redemption): void {
+  let participationContract = ParticipationContract.bind(event.address);
+  let hubAddress = participationContract.hub();
+  trackFundEvent('Redemption', event, hubAddress);
+  let fund = ensureFund(hubAddress);
+}
 
-// export function handleRequestExecution(event: RequestExecution): void {
-//   trackFundEvent('RequestExecution', event, event.address);
-//   let fund = ensureFund(event.address);
-// }
+export function handleRequestExecution(event: RequestExecution): void {
+  let participationContract = ParticipationContract.bind(event.address);
+  let hubAddress = participationContract.hub();
+  trackFundEvent('RequestExecution', event, hubAddress);
+  let fund = ensureFund(hubAddress);
+  let participation = ensureParticipation(event.params.requestOwner, hubAddress);
+}

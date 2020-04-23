@@ -1,7 +1,7 @@
 import { Address, DataSourceContext, DataSourceTemplate } from '@graphprotocol/graph-ts';
-import { RegistryContract } from '../generated/v2/VersionContract/RegistryContract';
-import { VersionContract } from '../generated/v2/VersionContract/VersionContract';
-import { Version, Asset } from '../generated/schema';
+import { RegistryContract } from '../../generated/v2/VersionContract/RegistryContract';
+import { VersionContract } from '../../generated/v2/VersionContract/VersionContract';
+import { Version, Asset } from '../../generated/schema';
 import { ensureAsset } from './asset';
 
 export function ensureVersion(versionAddress: Address): Version {

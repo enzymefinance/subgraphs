@@ -19,9 +19,45 @@ type Version @entity {
 
 type Fund @entity {
   id: ID!
+  name: String!
   version: Version!
   active: Boolean!
+  manager: Account!
   events: [Event!]! @derivedFrom(field: "fund")
+  participations: [Participation!]! @derivedFrom(field: "fund")
+}
+
+type InvestmentRequest @entity {
+  id: ID!
+}
+
+type InvestmentExecution @entity {
+  id: ID!
+}
+
+type Investment @entity {
+  id: ID!
+  fund: Fund!
+  investor: Account!
+  request: InvestmentRequest!
+  execution: InvestmentExecution
+  participation: Participation!
+}
+
+type Participation @entity {
+  id: ID!
+  fund: Fund!
+  investor: Account!
+  investments: [Investment!]! @derivedFrom(field: "participation")
+  shares: BigInt!
+}
+
+type Account @entity {
+  id: ID!
+  manager: Boolean!
+  managements: [Fund!]! @derivedFrom(field: "manager")
+  participator: Boolean!
+  participations: [Participation!]! @derivedFrom(field: "investor")
 }
 
 type Asset @entity {

@@ -1,5 +1,5 @@
 import { dataSource, Address, Value } from '@graphprotocol/graph-ts';
-import { trackVersionEvent } from '../../utils/event';
+import { trackVersionEvent } from '../../utils/entities/event';
 import {
   AssetRemoval,
   AssetUpsert,

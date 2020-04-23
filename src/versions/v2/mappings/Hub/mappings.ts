@@ -1,6 +1,6 @@
 import { Address } from '@graphprotocol/graph-ts';
-import { ensureFund } from '../../utils/fund';
-import { trackFundEvent } from '../../utils/event';
+import { ensureFund } from '../../utils/entities/fund';
+import { trackFundEvent } from '../../utils/entities/event';
 import {
   FundShutDown,
   LogForbid,

@@ -1,7 +1,7 @@
 import { Address } from '@graphprotocol/graph-ts';
-import { Asset } from '../generated/schema';
-import { RegistryContract } from '../generated/v2/VersionContract/RegistryContract';
-import { VersionContract } from '../generated/v2/VersionContract/VersionContract';
+import { Asset } from '../../generated/schema';
+import { RegistryContract } from '../../generated/v2/VersionContract/RegistryContract';
+import { VersionContract } from '../../generated/v2/VersionContract/VersionContract';
 
 export function ensureAsset(assetAddress: Address, versionAddress: Address): Asset {
   let asset = Asset.load(assetAddress.toHex()) as Asset;

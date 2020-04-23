@@ -1,29 +1,38 @@
 import { Address } from '@graphprotocol/graph-ts';
-import { ensureFund } from '../../utils/fund';
-import { trackFundEvent } from '../../utils/event';
+import { ensureFund } from '../../utils/entities/fund';
+import { trackFundEvent } from '../../utils/entities/event';
 import {
   FeeRegistration,
   FeeReward,
   LogSetAuthority,
   LogSetOwner,
+  FeeManagerContract,
 } from '../../generated/templates/v2/FeeManagerContract/FeeManagerContract';
 
 export function handleFeeRegistration(event: FeeRegistration): void {
-  trackFundEvent('FeeRegistration', event, event.address);
-  let fund = ensureFund(event.address);
+  let participationContract = FeeManagerContract.bind(event.address);
+  let hubAddress = participationContract.hub();
+  trackFundEvent('FeeRegistration', event, hubAddress);
+  let fund = ensureFund(hubAddress);
 }
 
 export function handleFeeReward(event: FeeReward): void {
-  trackFundEvent('FeeReward', event, event.address);
-  let fund = ensureFund(event.address);
+  let participationContract = FeeManagerContract.bind(event.address);
+  let hubAddress = participationContract.hub();
+  trackFundEvent('FeeReward', event, hubAddress);
+  let fund = ensureFund(hubAddress);
 }
 
 export function handleLogSetAuthority(event: LogSetAuthority): void {
-  trackFundEvent('LogSetAuthority', event, event.address);
-  let fund = ensureFund(event.address);
+  let participationContract = FeeManagerContract.bind(event.address);
+  let hubAddress = participationContract.hub();
+  trackFundEvent('LogSetAuthority', event, hubAddress);
+  let fund = ensureFund(hubAddress);
 }
 
 export function handleLogSetOwner(event: LogSetOwner): void {
-  trackFundEvent('LogSetOwner', event, event.address);
-  let fund = ensureFund(event.address);
+  let participationContract = FeeManagerContract.bind(event.address);
+  let hubAddress = participationContract.hub();
+  trackFundEvent('LogSetOwner', event, hubAddress);
+  let fund = ensureFund(hubAddress);
 }

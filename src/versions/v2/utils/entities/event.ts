@@ -1,6 +1,6 @@
 import { ethereum, Address } from '@graphprotocol/graph-ts';
-import { Event } from '../generated/schema';
-import { HubContract } from '../generated/templates/v2/HubContract/HubContract';
+import { Event } from '../../generated/schema';
+import { HubContract } from '../../generated/templates/v2/HubContract/HubContract';
 
 export function trackFundEvent<TEvent extends ethereum.Event = ethereum.Event>(
   name: string,

@@ -1,23 +1,30 @@
 import { Address } from '@graphprotocol/graph-ts';
-import { ensureFund } from '../../utils/fund';
-import { trackFundEvent } from '../../utils/event';
+import { ensureFund } from '../../utils/entities/fund';
+import { trackFundEvent } from '../../utils/entities/event';
 import {
   Registration,
   LogSetAuthority,
   LogSetOwner,
+  PolicyManagerContract,
 } from '../../generated/templates/v2/PolicyManagerContract/PolicyManagerContract';
 
 export function handleLogSetAuthority(event: LogSetAuthority): void {
-  trackFundEvent('LogSetAuthority', event, event.address);
-  let fund = ensureFund(event.address);
+  let participationContract = PolicyManagerContract.bind(event.address);
+  let hubAddress = participationContract.hub();
+  trackFundEvent('LogSetAuthority', event, hubAddress);
+  let fund = ensureFund(hubAddress);
 }
 
 export function handleLogSetOwner(event: LogSetOwner): void {
-  trackFundEvent('LogSetOwner', event, event.address);
-  let fund = ensureFund(event.address);
+  let participationContract = PolicyManagerContract.bind(event.address);
+  let hubAddress = participationContract.hub();
+  trackFundEvent('LogSetOwner', event, hubAddress);
+  let fund = ensureFund(hubAddress);
 }
 
 export function handleRegistration(event: Registration): void {
-  trackFundEvent('Registration', event, event.address);
-  let fund = ensureFund(event.address);
+  let participationContract = PolicyManagerContract.bind(event.address);
+  let hubAddress = participationContract.hub();
+  trackFundEvent('Registration', event, hubAddress);
+  let fund = ensureFund(hubAddress);
 }
