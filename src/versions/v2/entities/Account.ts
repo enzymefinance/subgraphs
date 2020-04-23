@@ -3,8 +3,22 @@ import { Account } from '../generated/schema';
 
 export function ensureManager(managerAddress: Address): Account {
   let account = ensureAccount(managerAddress);
-  account.manager = true;
-  account.save();
+
+  if (!account.manager) {
+    account.manager = true;
+    account.save();
+  }
+
+  return account;
+}
+
+export function ensureInvestor(investorAddress: Address): Account {
+  let account = ensureAccount(investorAddress);
+
+  if (!account.investor) {
+    account.investor = true;
+    account.save();
+  }
 
   return account;
 }

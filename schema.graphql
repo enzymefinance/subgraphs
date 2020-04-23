@@ -32,6 +32,7 @@ interface InvestmentChange {
   fund: Fund!
   investor: Account!
   investment: Investment!
+  shares: BigInt!
 }
 
 type InvestmentAddition implements InvestmentChange @entity {
@@ -41,13 +42,9 @@ type InvestmentAddition implements InvestmentChange @entity {
   investment: Investment!
   shares: BigInt!
   asset: Asset!
-  amount: BigInt!
-  requestTimestamp: BigInt!
-  requestTransaction: String!
-  executionTimestamp: BigInt
-  executionTransaction: String
-  cancallationTimestamp: BigInt
-  cancellationTransaction: String
+  quantity: BigInt!
+  timestamp: BigInt!
+  transaction: String!
 }
 
 type InvestmentRedemption implements InvestmentChange @entity {
@@ -57,7 +54,18 @@ type InvestmentRedemption implements InvestmentChange @entity {
   investment: Investment!
   shares: BigInt!
   assets: [Asset!]!
-  amounts: [BigInt!]!
+  quantities: [BigInt!]!
+  timestamp: BigInt!
+  transaction: String!
+}
+
+type InvestmentRequest @entity {
+  id: ID!
+  fund: Fund!
+  investor: Account!
+  investment: Investment!
+  asset: Asset!
+  quantity: BigInt!
   timestamp: BigInt!
   transaction: String!
 }
@@ -67,6 +75,7 @@ type Investment @entity {
   fund: Fund!
   investor: Account!
   changes: [InvestmentChange!]! @derivedFrom(field: "investment")
+  requests: [InvestmentRequest!]! @derivedFrom(field: "investment")
   shares: BigInt!
 }
 

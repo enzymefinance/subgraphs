@@ -189,7 +189,7 @@ templates:
         - event: LogSetOwner(indexed address)
           handler: handleLogSetOwner
         - event: Redemption(indexed address,address[],uint256[],uint256)
-          handler: handleLogSetOwner
+          handler: handleRedemption
         - event: RequestExecution(indexed address,indexed address,indexed address,uint256,uint256)
           handler: handleRequestExecution
 
