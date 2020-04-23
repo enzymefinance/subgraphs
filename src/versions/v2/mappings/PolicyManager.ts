@@ -3,11 +3,11 @@ import { Event, Fund, Version } from '../generated/schema';
 import { ensureFund } from '../entities/Fund';
 import { trackFundEvent } from '../entities/Event';
 import {
-  Registration,
+  PolicyManagerContract,
   LogSetAuthority,
   LogSetOwner,
-  PolicyManagerContract,
-} from '../generated/templates/v2/PolicyManagerContract/PolicyManagerContract';
+  Registration,
+} from '../generated/v2/VersionContract/PolicyManagerContract';
 
 export function handleLogSetAuthority(event: LogSetAuthority): void {
   let policyManagerContract = PolicyManagerContract.bind(event.address);

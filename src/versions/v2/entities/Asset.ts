@@ -1,16 +1,21 @@
 import { Address, log } from '@graphprotocol/graph-ts';
 import { Asset, Version } from '../generated/schema';
-import { RegistryContract } from '../generated/v2/VersionContract/RegistryContract';
 import { VersionContract } from '../generated/v2/VersionContract/VersionContract';
+import { RegistryContract } from '../generated/templates/v2/RegistryContract/RegistryContract';
 
-export function ensureAsset(assetAddress: Address, version: Version | null = null): Asset {
+export function ensureAssets(assetAddresses: Address[], version: Version): Asset[] {
+  let assets: Asset[] = [];
+  for (let i: i32 = 0; i < assetAddresses.length; i++) {
+    assets.push(ensureAsset(assetAddresses[i], version));
+  }
+
+  return assets;
+}
+
+export function ensureAsset(assetAddress: Address, version: Version): Asset {
   let asset = Asset.load(assetAddress.toHex()) as Asset;
   if (asset) {
     return asset;
-  }
-
-  if (!version) {
-    log.critical('Missing expected asset {}.', [assetAddress.toHex()]);
   }
 
   let versionAddress = Address.fromString((version as Version).id);

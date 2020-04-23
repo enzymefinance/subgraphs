@@ -24,6 +24,24 @@ dataSources:
           file: ./abis/Registry.abi.json
         - name: HubContract
           file: ./abis/Hub.abi.json
+        - name: AccountingContract
+          file: ./abis/Accounting.abi.json
+        - name: FeeManagerContract
+          file: ./abis/FeeManager.abi.json
+        - name: ParticipationContract
+          file: ./abis/Participation.abi.json
+        - name: PolicyManagerContract
+          file: ./abis/PolicyManager.abi.json
+        - name: SharesContract
+          file: ./abis/Shares.abi.json
+        - name: TradingContract
+          file: ./abis/Trading.abi.json
+        - name: VaultContract
+          file: ./abis/Vault.abi.json
+        - name: PerformanceFeeContract
+          file: ./abis/PerformanceFee.abi.json
+        - name: ManagementFeeContract
+          file: ./abis/ManagementFee.abi.json
       eventHandlers:
         - event: AmguPaid(indexed address,uint256,uint256,uint256)
           handler: handleAmguPaid
@@ -117,8 +135,6 @@ templates:
       abis:
         - name: AccountingContract
           file: ./abis/Accounting.abi.json
-        - name: HubContract
-          file: ./abis/Hub.abi.json
       eventHandlers:
         - event: AmguPaid(indexed address,uint256,uint256,uint256)
           handler: handleFundShutDown
@@ -145,8 +161,6 @@ templates:
       abis:
         - name: FeeManagerContract
           file: ./abis/FeeManager.abi.json
-        - name: HubContract
-          file: ./abis/Hub.abi.json
       eventHandlers:
         - event: FeeRegistration(address)
           handler: handleFundShutDown
@@ -171,8 +185,6 @@ templates:
       abis:
         - name: ParticipationContract
           file: ./abis/Participation.abi.json
-        - name: HubContract
-          file: ./abis/Hub.abi.json
       eventHandlers:
         - event: AmguPaid(indexed address,uint256,uint256,uint256)
           handler: handleAmguPaid
@@ -207,8 +219,6 @@ templates:
       abis:
         - name: PolicyManagerContract
           file: ./abis/PolicyManager.abi.json
-        - name: HubContract
-          file: ./abis/Hub.abi.json
       eventHandlers:
         - event: LogSetAuthority(indexed address)
           handler: handleLogSetAuthority
@@ -231,8 +241,6 @@ templates:
       abis:
         - name: SharesContract
           file: ./abis/Shares.abi.json
-        - name: HubContract
-          file: ./abis/Hub.abi.json
       eventHandlers:
         - event: Approval(indexed address,indexed address,uint256)
           handler: handleApproval
@@ -257,8 +265,6 @@ templates:
       abis:
         - name: TradingContract
           file: ./abis/Trading.abi.json
-        - name: HubContract
-          file: ./abis/Hub.abi.json
       eventHandlers:
         - event: ExchangeMethodCall(indexed address,indexed string,address[8],uint256[8],bytes[4],bytes32,bytes)
           handler: handleExchangeMethodCall
@@ -281,8 +287,6 @@ templates:
       abis:
         - name: VaultContract
           file: ./abis/Vault.abi.json
-        - name: HubContract
-          file: ./abis/Hub.abi.json
       eventHandlers:
         - event: LogSetAuthority(indexed address)
           handler: handleLogSetAuthority

@@ -49,6 +49,9 @@ export function ensureInvestmentAddition(
     return addition;
   }
 
+  fund.shares = fund.shares.plus(shares);
+  fund.save();
+
   let investment = ensureInvestment(fund, investor);
   investment.shares = investment.shares.plus(shares);
   investment.save();
@@ -63,6 +66,8 @@ export function ensureInvestmentAddition(
   addition.timestamp = event.block.timestamp;
   addition.transaction = event.transaction.hash.toHex();
   addition.save();
+
+  deleteInvestmentRequest(fund, investor);
 
   return addition;
 }
@@ -80,6 +85,9 @@ export function ensureInvestmentRedemption(
   if (redemption) {
     return redemption;
   }
+
+  fund.shares = fund.shares.minus(shares);
+  fund.save();
 
   let investment = ensureInvestment(fund, investor);
   investment.shares = investment.shares.minus(shares);

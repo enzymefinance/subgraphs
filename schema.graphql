@@ -23,6 +23,12 @@ type Fund @entity {
   version: Version!
   active: Boolean!
   manager: Account!
+  inception: BigInt!
+  shares: BigInt!
+  managementFee: BigDecimal!
+  performanceFee: BigDecimal!
+  performanceFeePeriod: BigInt!
+  investableAssets: [Asset!]!
   events: [Event!]! @derivedFrom(field: "fund")
   investments: [Investment!]! @derivedFrom(field: "fund")
 }

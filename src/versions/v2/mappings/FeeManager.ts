@@ -3,12 +3,12 @@ import { Event, Fund, Version } from '../generated/schema';
 import { ensureFund } from '../entities/Fund';
 import { trackFundEvent } from '../entities/Event';
 import {
+  FeeManagerContract,
   FeeRegistration,
   FeeReward,
   LogSetAuthority,
   LogSetOwner,
-  FeeManagerContract,
-} from '../generated/templates/v2/FeeManagerContract/FeeManagerContract';
+} from '../generated/v2/VersionContract/FeeManagerContract';
 
 export function handleFeeRegistration(event: FeeRegistration): void {
   let feeManagerContract = FeeManagerContract.bind(event.address);
@@ -37,7 +37,6 @@ export function handleLogSetAuthority(event: LogSetAuthority): void {
 export function handleLogSetOwner(event: LogSetOwner): void {
   let feeManagerContract = FeeManagerContract.bind(event.address);
   let hubAddress = feeManagerContract.hub();
-
   let fund = ensureFund(hubAddress);
   trackFundEvent('LogSetOwner', event, fund);
 }

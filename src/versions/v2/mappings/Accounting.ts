@@ -3,13 +3,14 @@ import { Event, Fund, Version } from '../generated/schema';
 import { ensureFund } from '../entities/Fund';
 import { trackFundEvent } from '../entities/Event';
 import {
+  AccountingContract,
   AmguPaid,
   AssetAddition,
   AssetRemoval,
   LogSetAuthority,
   LogSetOwner,
-  AccountingContract,
-} from '../generated/templates/v2/AccountingContract/AccountingContract';
+} from '../generated/v2/VersionContract/AccountingContract';
+
 export function handleAmguPaid(event: AmguPaid): void {
   let accountingContract = AccountingContract.bind(event.address);
   let hubAddress = accountingContract.hub();
@@ -45,7 +46,6 @@ export function handleLogSetAuthority(event: LogSetAuthority): void {
 export function handleLogSetOwner(event: LogSetOwner): void {
   let accountingContract = AccountingContract.bind(event.address);
   let hubAddress = accountingContract.hub();
-
   let fund = ensureFund(hubAddress);
   trackFundEvent('LogSetOwner', event, fund);
 }

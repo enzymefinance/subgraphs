@@ -3,12 +3,12 @@ import { Event, Fund, Version } from '../generated/schema';
 import { ensureFund } from '../entities/Fund';
 import { trackFundEvent } from '../entities/Event';
 import {
-  Transfer,
+  SharesContract,
   Approval,
   LogSetAuthority,
   LogSetOwner,
-  SharesContract,
-} from '../generated/templates/v2/SharesContract/SharesContract';
+  Transfer,
+} from '../generated/v2/VersionContract/SharesContract';
 
 export function handleApproval(event: Approval): void {
   let sharesContract = SharesContract.bind(event.address);

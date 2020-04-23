@@ -1,8 +1,8 @@
 import { Address, DataSourceContext, DataSourceTemplate } from '@graphprotocol/graph-ts';
-import { RegistryContract } from '../generated/v2/VersionContract/RegistryContract';
 import { VersionContract } from '../generated/v2/VersionContract/VersionContract';
+import { RegistryContract } from '../generated/templates/v2/RegistryContract/RegistryContract';
 import { Version, Asset } from '../generated/schema';
-import { ensureAsset } from './Asset';
+import { ensureAssets } from './Asset';
 
 export function ensureVersion(versionAddress: Address): Version {
   let version = Version.load(versionAddress.toHex()) as Version;
@@ -26,12 +26,7 @@ export function versionAssets(version: Version): Asset[] {
   let registryContract = RegistryContract.bind(registryAddress);
   let registeredAssets = registryContract.getRegisteredAssets();
 
-  let assets: Asset[] = [];
-  for (let i: i32 = 0; i < registeredAssets.length; i++) {
-    assets.push(ensureAsset(registeredAssets[i], version));
-  }
-
-  return assets;
+  return ensureAssets(registeredAssets, version);
 }
 
 function createRegistryDataSource(version: Version): void {

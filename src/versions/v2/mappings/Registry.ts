@@ -16,7 +16,7 @@ import {
   MlnTokenChange,
   NativeAssetChange,
   PriceSourceChange,
-} from '../generated/templates/v2/RegistryContract/RegistryContract';
+} from '../generated/v2/VersionContract/RegistryContract';
 
 let context = dataSource.context();
 let version = ensureVersion(Address.fromString((context.get('version') as Value).toString()));

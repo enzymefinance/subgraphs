@@ -3,11 +3,11 @@ import { Event, Fund, Version } from '../generated/schema';
 import { ensureFund } from '../entities/Fund';
 import { trackFundEvent } from '../entities/Event';
 import {
+  TradingContract,
   ExchangeMethodCall,
   LogSetAuthority,
   LogSetOwner,
-  TradingContract,
-} from '../generated/templates/v2/TradingContract/TradingContract';
+} from '../generated/v2/VersionContract/TradingContract';
 
 export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
   let tradingContract = TradingContract.bind(event.address);
