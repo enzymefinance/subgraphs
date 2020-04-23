@@ -1,5 +1,7 @@
 import { dataSource, Address, Value } from '@graphprotocol/graph-ts';
+import { Event, Fund, Version } from '../generated/schema';
 import { trackVersionEvent } from '../entities/Event';
+import { ensureVersion } from '../entities/Version';
 import {
   AssetRemoval,
   AssetUpsert,
@@ -17,7 +19,7 @@ import {
 } from '../generated/templates/v2/RegistryContract/RegistryContract';
 
 let context = dataSource.context();
-let version = Address.fromString((context.get('version') as Value).toString());
+let version = ensureVersion(Address.fromString((context.get('version') as Value).toString()));
 
 export function handleAssetRemoval(event: AssetRemoval): void {
   trackVersionEvent('AssetRemoval', event, version);
@@ -48,11 +50,11 @@ export function handleIncentiveChange(event: IncentiveChange): void {
 }
 
 export function handleLogSetAuthority(event: LogSetAuthority): void {
-  // trackVersionEvent('LogSetAuthority', event, version);
+  trackVersionEvent('LogSetAuthority', event, version);
 }
 
 export function handleLogSetOwner(event: LogSetOwner): void {
-  // trackVersionEvent('LogSetOwner', event, version);
+  trackVersionEvent('LogSetOwner', event, version);
 }
 
 export function handleMGMChange(event: MGMChange): void {

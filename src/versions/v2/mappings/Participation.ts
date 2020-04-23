@@ -1,4 +1,5 @@
 import { Address } from '@graphprotocol/graph-ts';
+import { Event, Fund, Version } from '../generated/schema';
 import {
   EnableInvestment,
   AmguPaid,
@@ -26,39 +27,38 @@ import { Asset } from '../generated/schema';
 export function handleAmguPaid(event: AmguPaid): void {
   let participationContract = ParticipationContract.bind(event.address);
   let hubAddress = participationContract.hub();
-  trackFundEvent('AmguPaid', event, hubAddress);
   let fund = ensureFund(hubAddress);
+  trackFundEvent('AmguPaid', event, fund);
 }
 
 export function handleCancelRequest(event: CancelRequest): void {
   let participationContract = ParticipationContract.bind(event.address);
   let hubAddress = participationContract.hub();
-  trackFundEvent('CancelRequest', event, event.address);
 
   let fund = ensureFund(hubAddress);
   let account = ensureInvestor(event.params.requestOwner);
 
   deleteInvestmentRequest(fund, account);
+  trackFundEvent('CancelRequest', event, fund);
 }
 
 export function handleDisableInvestment(event: DisableInvestment): void {
   let participationContract = ParticipationContract.bind(event.address);
   let hubAddress = participationContract.hub();
-  trackFundEvent('DisableInvestment', event, hubAddress);
   let fund = ensureFund(hubAddress);
+  trackFundEvent('DisableInvestment', event, fund);
 }
 
 export function handleEnableInvestment(event: EnableInvestment): void {
   let participationContract = ParticipationContract.bind(event.address);
   let hubAddress = participationContract.hub();
-  trackFundEvent('EnableInvestment', event, hubAddress);
   let fund = ensureFund(hubAddress);
+  trackFundEvent('EnableInvestment', event, fund);
 }
 
 export function handleInvestmentRequest(event: InvestmentRequest): void {
   let participationContract = ParticipationContract.bind(event.address);
   let hubAddress = participationContract.hub();
-  trackFundEvent('InvestmentRequest', event, hubAddress);
 
   let fund = ensureFund(hubAddress);
   let account = ensureInvestor(event.params.requestOwner);
@@ -66,26 +66,26 @@ export function handleInvestmentRequest(event: InvestmentRequest): void {
   let quantity = event.params.investmentAmount;
 
   ensureInvestmentRequest(event, fund, account, asset, quantity);
+  trackFundEvent('InvestmentRequest', event, fund);
 }
 
 export function handleLogSetAuthority(event: LogSetAuthority): void {
   let participationContract = ParticipationContract.bind(event.address);
   let hubAddress = participationContract.hub();
-  // trackFundEvent('LogSetAuthority', event, hubAddress);
   let fund = ensureFund(hubAddress);
+  trackFundEvent('LogSetAuthority', event, fund);
 }
 
 export function handleLogSetOwner(event: LogSetOwner): void {
   let participationContract = ParticipationContract.bind(event.address);
   let hubAddress = participationContract.hub();
-  // trackFundEvent('LogSetOwner', event, hubAddress);
   let fund = ensureFund(hubAddress);
+  trackFundEvent('LogSetOwner', event, fund);
 }
 
 export function handleRedemption(event: Redemption): void {
   let participationContract = ParticipationContract.bind(event.address);
   let hubAddress = participationContract.hub();
-  trackFundEvent('Redemption', event, hubAddress);
 
   let fund = ensureFund(hubAddress);
   let account = ensureInvestor(event.params.redeemer);
@@ -94,12 +94,12 @@ export function handleRedemption(event: Redemption): void {
   let quantities = event.params.assetQuantities;
 
   ensureInvestmentRedemption(event, fund, account, assets, quantities, shares);
+  trackFundEvent('Redemption', event, fund);
 }
 
 export function handleRequestExecution(event: RequestExecution): void {
   let participationContract = ParticipationContract.bind(event.address);
   let hubAddress = participationContract.hub();
-  trackFundEvent('RequestExecution', event, hubAddress);
 
   let fund = ensureFund(hubAddress);
   let account = ensureInvestor(event.params.requestOwner);
@@ -109,4 +109,5 @@ export function handleRequestExecution(event: RequestExecution): void {
 
   deleteInvestmentRequest(fund, account);
   ensureInvestmentAddition(event, fund, account, asset, quantity, shares);
+  trackFundEvent('RequestExecution', event, fund);
 }

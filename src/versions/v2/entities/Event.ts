@@ -1,35 +1,34 @@
 import { ethereum, Address } from '@graphprotocol/graph-ts';
-import { Event } from '../generated/schema';
-import { HubContract } from '../generated/templates/v2/HubContract/HubContract';
+import { Event, Fund, Version } from '../generated/schema';
+import { ensureVersion } from './Version';
 
 export function trackFundEvent<TEvent extends ethereum.Event = ethereum.Event>(
   name: string,
   event: TEvent,
-  fundAddress: Address,
+  fund: Fund,
 ): Event {
-  let hubContract = HubContract.bind(fundAddress);
-  let versionAddress = hubContract.version();
-  return makeEvent(eventId(event, fundAddress), name, event, versionAddress, fundAddress);
+  let version = ensureVersion(Address.fromString(fund.version));
+  return makeEvent(eventId(event, version), name, event, version, fund);
 }
 
 export function trackVersionEvent<TEvent extends ethereum.Event = ethereum.Event>(
   name: string,
   event: TEvent,
-  versionAddress: Address,
+  version: Version,
 ): Event {
-  return makeEvent(eventId(event, versionAddress), name, event, versionAddress);
+  return makeEvent(eventId(event, version), name, event, version);
 }
 
-function eventId(event: ethereum.Event, scope: Address): string {
-  return scope.toHex() + '/' + event.transaction.hash.toHex() + '/' + event.logIndex.toString();
+function eventId(event: ethereum.Event, scope: Version): string {
+  return scope.getString('id') + '/' + event.transaction.hash.toHex() + '/' + event.logIndex.toString();
 }
 
 function makeEvent<TEvent extends ethereum.Event = ethereum.Event>(
   id: string,
   name: string,
   event: TEvent,
-  versionAddress: Address,
-  fundAddress: Address | null = null,
+  version: Version,
+  fund: Fund | null = null,
 ): Event {
   if (Event.load(id)) {
     throw new Error('Duplicate event registration.');
@@ -42,8 +41,8 @@ function makeEvent<TEvent extends ethereum.Event = ethereum.Event>(
   entity.from = event.transaction.from.toHex();
   entity.block = event.block.number;
   entity.timestamp = event.block.timestamp;
-  entity.version = versionAddress.toHex();
-  entity.fund = fundAddress ? fundAddress.toHex() : null;
+  entity.version = version.id;
+  entity.fund = fund ? fund.id : null;
   entity.save();
 
   return entity;

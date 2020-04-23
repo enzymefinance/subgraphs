@@ -1,4 +1,5 @@
 import { Address } from '@graphprotocol/graph-ts';
+import { Event, Fund, Version } from '../generated/schema';
 import { ensureFund } from '../entities/Fund';
 import { trackFundEvent } from '../entities/Event';
 import {
@@ -10,10 +11,11 @@ import {
 } from '../generated/templates/v2/HubContract/HubContract';
 
 export function handleFundShutDown(event: FundShutDown): void {
-  trackFundEvent('FundShutDown', event, event.address);
   let fund = ensureFund(event.address);
   fund.active = false;
   fund.save();
+
+  trackFundEvent('FundShutDown', event, fund);
 }
 
 export function handleLogForbid(event: LogForbid): void {

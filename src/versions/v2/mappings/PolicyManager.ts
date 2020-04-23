@@ -1,4 +1,5 @@
 import { Address } from '@graphprotocol/graph-ts';
+import { Event, Fund, Version } from '../generated/schema';
 import { ensureFund } from '../entities/Fund';
 import { trackFundEvent } from '../entities/Event';
 import {
@@ -11,20 +12,20 @@ import {
 export function handleLogSetAuthority(event: LogSetAuthority): void {
   let policyManagerContract = PolicyManagerContract.bind(event.address);
   let hubAddress = policyManagerContract.hub();
-  // trackFundEvent('LogSetAuthority', event, hubAddress);
   let fund = ensureFund(hubAddress);
+  trackFundEvent('LogSetAuthority', event, fund);
 }
 
 export function handleLogSetOwner(event: LogSetOwner): void {
   let policyManagerContract = PolicyManagerContract.bind(event.address);
   let hubAddress = policyManagerContract.hub();
-  // trackFundEvent('LogSetOwner', event, hubAddress);
   let fund = ensureFund(hubAddress);
+  trackFundEvent('LogSetOwner', event, fund);
 }
 
 export function handleRegistration(event: Registration): void {
   let policyManagerContract = PolicyManagerContract.bind(event.address);
   let hubAddress = policyManagerContract.hub();
-  trackFundEvent('Registration', event, hubAddress);
   let fund = ensureFund(hubAddress);
+  trackFundEvent('Registration', event, fund);
 }

@@ -3,6 +3,7 @@ import { Fund } from '../generated/schema';
 import { HubContract } from '../generated/templates/v2/HubContract/HubContract';
 import { hexToAscii } from '../utils/hexToAscii';
 import { ensureManager } from './Account';
+import { ensureVersion } from './Version';
 
 export function ensureFund(hubAddress: Address): Fund {
   let fund = Fund.load(hubAddress.toHex()) as Fund;
@@ -16,7 +17,7 @@ export function ensureFund(hubAddress: Address): Fund {
   let hubContract = HubContract.bind(hubAddress);
 
   fund = new Fund(hubAddress.toHex());
-  fund.version = hubContract.version().toHex();
+  fund.version = ensureVersion(hubContract.version()).id;
   fund.name = hexToAscii(hubContract.name());
   fund.active = !hubContract.isShutDown();
   fund.manager = ensureManager(hubContract.manager()).id;

@@ -10,34 +10,36 @@ export function ensureVersion(versionAddress: Address): Version {
     return version;
   }
 
-  let versionContract = VersionContract.bind(versionAddress);
-  let registryAddress = versionContract.registry();
+  version = new Version(versionAddress.toHex());
+  version.assets = versionAssets(version).map<string>((item) => item.id);
+  version.save();
 
   // Start observing the registry on behalf of this version.
-  createRegistryDataSource(versionAddress, registryAddress);
-
-  version = new Version(versionAddress.toHex());
-  version.assets = versionAssets(versionAddress, registryAddress).map<string>((item) => item.id);
-  version.save();
+  createRegistryDataSource(version);
 
   return version;
 }
 
-export function versionAssets(versionAddress: Address, registryAddress: Address): Asset[] {
-  let assets: Asset[] = [];
+export function versionAssets(version: Version): Asset[] {
+  let versionContract = VersionContract.bind(Address.fromString(version.id));
+  let registryAddress = versionContract.registry();
   let registryContract = RegistryContract.bind(registryAddress);
   let registeredAssets = registryContract.getRegisteredAssets();
 
+  let assets: Asset[] = [];
   for (let i: i32 = 0; i < registeredAssets.length; i++) {
-    assets.push(ensureAsset(registeredAssets[i], versionAddress));
+    assets.push(ensureAsset(registeredAssets[i], version));
   }
 
   return assets;
 }
 
-function createRegistryDataSource(versionAddress: Address, registryAddress: Address): void {
+function createRegistryDataSource(version: Version): void {
+  let versionContract = VersionContract.bind(Address.fromString(version.id));
+  let registryAddress = versionContract.registry();
+
   let registryContext = new DataSourceContext();
-  registryContext.setString('version', versionAddress.toHex());
+  registryContext.setString('version', version.id);
 
   DataSourceTemplate.createWithContext('v2/RegistryContract', [registryAddress.toHex()], registryContext);
 }

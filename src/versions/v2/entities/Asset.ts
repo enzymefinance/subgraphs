@@ -1,24 +1,26 @@
 import { Address, log } from '@graphprotocol/graph-ts';
-import { Asset } from '../generated/schema';
+import { Asset, Version } from '../generated/schema';
 import { RegistryContract } from '../generated/v2/VersionContract/RegistryContract';
 import { VersionContract } from '../generated/v2/VersionContract/VersionContract';
 
-export function ensureAsset(assetAddress: Address, versionAddress: Address | null = null): Asset {
+export function ensureAsset(assetAddress: Address, version: Version | null = null): Asset {
   let asset = Asset.load(assetAddress.toHex()) as Asset;
   if (asset) {
     return asset;
   }
 
-  if (!versionAddress) {
+  if (!version) {
     log.critical('Missing expected asset {}.', [assetAddress.toHex()]);
   }
 
-  let versionContract = VersionContract.bind(versionAddress as Address);
+  let versionAddress = Address.fromString((version as Version).id);
+  let versionContract = VersionContract.bind(versionAddress);
   let registryContract = RegistryContract.bind(versionContract.registry());
+
   if (!registryContract.assetIsRegistered(assetAddress)) {
     log.critical('Tried to initialize asset {} that is not currently registered for version {}.', [
       assetAddress.toHex(),
-      (versionAddress as Address).toHex(),
+      versionAddress.toHex(),
     ]);
   }
 
