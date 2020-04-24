@@ -8,6 +8,11 @@ enum PolicyIdentifierEnum {
   ASSET_WHITELIST
 }
 
+enum InvestmentChangeTypeEnum {
+  ADDITION
+  REDEMPTION
+}
+
 type Event @entity {
   id: ID!
   version: Version!
@@ -102,6 +107,7 @@ type AssetWhitelistPolicy implements Policy @entity {
 
 interface InvestmentChange {
   id: ID!
+  type: InvestmentChangeTypeEnum!
   fund: Fund!
   investor: Account!
   investment: Investment!
@@ -110,6 +116,7 @@ interface InvestmentChange {
 
 type InvestmentAddition implements InvestmentChange @entity {
   id: ID!
+  type: InvestmentChangeTypeEnum!
   fund: Fund!
   investor: Account!
   investment: Investment!
@@ -122,6 +129,7 @@ type InvestmentAddition implements InvestmentChange @entity {
 
 type InvestmentRedemption implements InvestmentChange @entity {
   id: ID!
+  type: InvestmentChangeTypeEnum!
   fund: Fund!
   investor: Account!
   investment: Investment!

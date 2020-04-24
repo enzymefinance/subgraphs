@@ -57,6 +57,7 @@ export function ensureInvestmentAddition(
   investment.save();
 
   addition = new InvestmentAddition(id);
+  addition.type = 'ADDITION';
   addition.investor = investor.id;
   addition.fund = fund.id;
   addition.investment = investment.id;
@@ -94,6 +95,7 @@ export function ensureInvestmentRedemption(
   investment.save();
 
   redemption = new InvestmentRedemption(id);
+  redemption.type = 'REDEMPTION';
   redemption.investor = investor.id;
   redemption.fund = fund.id;
   redemption.investment = investment.id;
