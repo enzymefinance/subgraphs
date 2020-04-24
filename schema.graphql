@@ -1,3 +1,13 @@
+enum PolicyIdentifierEnum {
+  CUSTOM
+  MAX_CONCENTRATION
+  MAX_POSITIONS
+  PRICE_TOLERANCE
+  USER_WHITELIST
+  ASSET_BLACKLIST
+  ASSET_WHITELIST
+}
+
 type Event @entity {
   id: ID!
   version: Version!
@@ -31,6 +41,63 @@ type Fund @entity {
   investableAssets: [Asset!]!
   events: [Event!]! @derivedFrom(field: "fund")
   investments: [Investment!]! @derivedFrom(field: "fund")
+  policies: [Policy!]! @derivedFrom(field: "fund")
+}
+
+interface Policy {
+  id: ID!
+  fund: Fund!
+  timestamp: BigInt!
+  identifier: PolicyIdentifierEnum!
+}
+
+type CustomPolicy implements Policy @entity {
+  id: ID!
+  fund: Fund!
+  timestamp: BigInt!
+  identifier: PolicyIdentifierEnum!
+}
+
+type UserWhitelistPolicy implements Policy @entity {
+  id: ID!
+  fund: Fund!
+  timestamp: BigInt!
+  identifier: PolicyIdentifierEnum!
+}
+
+type PriceTolerancePolicy implements Policy @entity {
+  id: ID!
+  fund: Fund!
+  timestamp: BigInt!
+  identifier: PolicyIdentifierEnum!
+}
+
+type MaxPositionsPolicy implements Policy @entity {
+  id: ID!
+  fund: Fund!
+  timestamp: BigInt!
+  identifier: PolicyIdentifierEnum!
+}
+
+type MaxConcentrationPolicy implements Policy @entity {
+  id: ID!
+  fund: Fund!
+  timestamp: BigInt!
+  identifier: PolicyIdentifierEnum!
+}
+
+type AssetBlacklistPolicy implements Policy @entity {
+  id: ID!
+  fund: Fund!
+  timestamp: BigInt!
+  identifier: PolicyIdentifierEnum!
+}
+
+type AssetWhitelistPolicy implements Policy @entity {
+  id: ID!
+  fund: Fund!
+  timestamp: BigInt!
+  identifier: PolicyIdentifierEnum!
 }
 
 interface InvestmentChange {

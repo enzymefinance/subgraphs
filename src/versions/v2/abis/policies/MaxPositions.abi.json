@@ -1,0 +1,54 @@
+[
+  {
+    "inputs": [{ "internalType": "uint256", "name": "_maxPositions", "type": "uint256" }],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "inputs": [],
+    "name": "MAKE_ORDER",
+    "outputs": [{ "internalType": "bytes4", "name": "", "type": "bytes4" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "TAKE_ORDER",
+    "outputs": [{ "internalType": "bytes4", "name": "", "type": "bytes4" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "identifier",
+    "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "maxPositions",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "position",
+    "outputs": [{ "internalType": "enum MaxPositions.Applied", "name": "", "type": "uint8" }],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes4", "name": "sig", "type": "bytes4" },
+      { "internalType": "address[5]", "name": "addresses", "type": "address[5]" },
+      { "internalType": "uint256[3]", "name": "values", "type": "uint256[3]" },
+      { "internalType": "bytes32", "name": "identifier", "type": "bytes32" }
+    ],
+    "name": "rule",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

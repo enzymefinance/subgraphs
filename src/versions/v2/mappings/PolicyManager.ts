@@ -2,6 +2,7 @@ import { Address } from '@graphprotocol/graph-ts';
 import { Event, Fund, Version } from '../generated/schema';
 import { ensureFund } from '../entities/Fund';
 import { trackFundEvent } from '../entities/Event';
+import { ensurePolicy } from '../entities/Policy';
 import {
   PolicyManagerContract,
   LogSetAuthority,
@@ -28,4 +29,6 @@ export function handleRegistration(event: Registration): void {
   let hubAddress = policyManagerContract.hub();
   let fund = ensureFund(hubAddress);
   trackFundEvent('Registration', event, fund);
+
+  let policy = ensurePolicy(event, event.params.policy, fund);
 }
