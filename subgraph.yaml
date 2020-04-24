@@ -7,10 +7,11 @@ schema:
 dataSources:
   - name: v2/VersionContract
     kind: ethereum/contract
-    network: dev
+    network: mainnet
     source:
       abi: VersionContract
-      address: '0x7580B19264C4Fcb4b77649438Cb596BECE1Eb5d2'
+      address: '0x5f9AE054C7F0489888B1ea46824b4B9618f8A711'
+      startBlock: 9497260
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -61,7 +62,7 @@ dataSources:
 templates:
   - name: v2/RegistryContract
     kind: ethereum/contract
-    network: dev
+    network: mainnet
     source:
       abi: RegistryContract
     mapping:
@@ -121,7 +122,7 @@ templates:
 
   - name: v2/HubContract
     kind: ethereum/contract
-    network: dev
+    network: mainnet
     source:
       abi: HubContract
     mapping:
@@ -173,7 +174,7 @@ templates:
 
   - name: v2/AccountingContract
     kind: ethereum/contract
-    network: dev
+    network: mainnet
     source:
       abi: AccountingContract
     mapping:
@@ -227,7 +228,7 @@ templates:
 
   - name: v2/FeeManagerContract
     kind: ethereum/contract
-    network: dev
+    network: mainnet
     source:
       abi: FeeManagerContract
     mapping:
@@ -281,7 +282,7 @@ templates:
 
   - name: v2/ParticipationContract
     kind: ethereum/contract
-    network: dev
+    network: mainnet
     source:
       abi: ParticipationContract
     mapping:
@@ -343,7 +344,7 @@ templates:
 
   - name: v2/PolicyManagerContract
     kind: ethereum/contract
-    network: dev
+    network: mainnet
     source:
       abi: PolicyManagerContract
     mapping:
@@ -395,7 +396,7 @@ templates:
 
   - name: v2/SharesContract
     kind: ethereum/contract
-    network: dev
+    network: mainnet
     source:
       abi: SharesContract
     mapping:
@@ -447,7 +448,7 @@ templates:
 
   - name: v2/TradingContract
     kind: ethereum/contract
-    network: dev
+    network: mainnet
     source:
       abi: TradingContract
     mapping:
@@ -499,7 +500,7 @@ templates:
 
   - name: v2/UserWhitelistPolicyContract
     kind: ethereum/contract
-    network: dev
+    network: mainnet
     source:
       abi: UserWhitelistPolicyContract
     mapping:
