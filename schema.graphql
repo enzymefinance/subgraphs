@@ -8,6 +8,12 @@ enum PolicyIdentifierEnum {
   ASSET_WHITELIST
 }
 
+enum FeeIdentifierEnum {
+  CUSTOM
+  MANAGEMENT
+  PERFORMANCE
+}
+
 enum InvestmentChangeTypeEnum {
   ADDITION
   REDEMPTION
@@ -32,6 +38,22 @@ type Version @entity {
   assets: [Asset!]!
 }
 
+type FundMetrics @entity {
+  id: ID!
+  fund: Fund!
+  timestamp: BigInt!
+  shares: BigInt!
+  holdings: [FundHolding!]!
+}
+
+type FundHolding @entity {
+  id: ID!
+  fund: Fund!
+  timestamp: BigInt!
+  asset: Asset!
+  quantity: BigInt!
+}
+
 type Fund @entity {
   id: ID!
   name: String!
@@ -40,13 +62,39 @@ type Fund @entity {
   manager: Account!
   inception: BigInt!
   shares: BigInt!
-  managementFee: BigDecimal!
-  performanceFee: BigDecimal!
-  performanceFeePeriod: BigInt!
+  holdings: [FundHolding!]!
   investableAssets: [Asset!]!
   events: [Event!]! @derivedFrom(field: "fund")
   investments: [Investment!]! @derivedFrom(field: "fund")
   policies: [Policy!]! @derivedFrom(field: "fund")
+  fees: [Fee!]! @derivedFrom(field: "fund")
+}
+
+interface Fee {
+  id: ID!
+  fund: Fund!
+  identifier: FeeIdentifierEnum!
+}
+
+type CustomFee implements Fee @entity {
+  id: ID!
+  fund: Fund!
+  identifier: FeeIdentifierEnum!
+}
+
+type PerformanceFee implements Fee @entity {
+  id: ID!
+  fund: Fund!
+  identifier: FeeIdentifierEnum!
+  rate: BigDecimal!
+  period: BigInt!
+}
+
+type ManagementFee implements Fee @entity {
+  id: ID!
+  fund: Fund!
+  identifier: FeeIdentifierEnum!
+  rate: BigDecimal!
 }
 
 interface Policy {
