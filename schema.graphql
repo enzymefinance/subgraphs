@@ -160,6 +160,8 @@ interface InvestmentChange {
   investor: Account!
   investment: Investment!
   shares: BigInt!
+  timestamp: BigInt!
+  transaction: String!
 }
 
 type InvestmentAddition implements InvestmentChange @entity {

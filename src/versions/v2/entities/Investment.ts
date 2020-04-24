@@ -8,6 +8,8 @@ import {
   Account,
   Asset,
 } from '../generated/schema';
+import { HubContract } from '../generated/v2/VersionContract/HubContract';
+import { SharesContract } from '../generated/v2/VersionContract/SharesContract';
 
 function investmentId(fund: Fund, investor: Account): string {
   return fund.id + '/' + investor.id;
@@ -23,13 +25,22 @@ function ensureInvestment(fund: Fund, investor: Account): Investment {
   let id = investmentId(fund, investor);
   let investment = Investment.load(id) as Investment;
   if (investment) {
-    return investment;
+    return ensureInvestmentShares(investment);
   }
 
   investment = new Investment(id);
   investment.fund = fund.id;
   investment.investor = investor.id;
   investment.shares = BigInt.fromI32(0);
+
+  return ensureInvestmentShares(investment);
+}
+
+function ensureInvestmentShares(investment: Investment): Investment {
+  let hubContract = HubContract.bind(Address.fromString(investment.fund));
+  let sharesContract = SharesContract.bind(hubContract.shares());
+
+  investment.shares = sharesContract.balanceOf(Address.fromString(investment.investor));
   investment.save();
 
   return investment;
@@ -49,13 +60,7 @@ export function ensureInvestmentAddition(
     return addition;
   }
 
-  fund.shares = fund.shares.plus(shares);
-  fund.save();
-
   let investment = ensureInvestment(fund, investor);
-  investment.shares = investment.shares.plus(shares);
-  investment.save();
-
   addition = new InvestmentAddition(id);
   addition.type = 'ADDITION';
   addition.investor = investor.id;
@@ -87,13 +92,7 @@ export function ensureInvestmentRedemption(
     return redemption;
   }
 
-  fund.shares = fund.shares.minus(shares);
-  fund.save();
-
   let investment = ensureInvestment(fund, investor);
-  investment.shares = investment.shares.minus(shares);
-  investment.save();
-
   redemption = new InvestmentRedemption(id);
   redemption.type = 'REDEMPTION';
   redemption.investor = investor.id;

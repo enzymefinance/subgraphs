@@ -15,18 +15,46 @@ dataSources:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
-      file: ./src/versions/v2/mappings/Version/mappings.ts
+      file: ./src/versions/v2/mappings/Version.ts
       entities: []
       abis:
         - name: VersionContract
-          file: ./src/versions/v2/abis/Version.json
+          file: ./src/versions/v2/abis/Version.abi.json
+        - name: RegistryContract
+          file: ./src/versions/v2/abis/Registry.abi.json
+        - name: HubContract
+          file: ./src/versions/v2/abis/Hub.abi.json
+        - name: AccountingContract
+          file: ./src/versions/v2/abis/spokes/Accounting.abi.json
+        - name: FeeManagerContract
+          file: ./src/versions/v2/abis/spokes/FeeManager.abi.json
+        - name: ParticipationContract
+          file: ./src/versions/v2/abis/spokes/Participation.abi.json
+        - name: PolicyManagerContract
+          file: ./src/versions/v2/abis/spokes/PolicyManager.abi.json
+        - name: SharesContract
+          file: ./src/versions/v2/abis/spokes/Shares.abi.json
+        - name: TradingContract
+          file: ./src/versions/v2/abis/spokes/Trading.abi.json
+        - name: PerformanceFeeContract
+          file: ./src/versions/v2/abis/fees/PerformanceFee.abi.json
+        - name: ManagementFeeContract
+          file: ./src/versions/v2/abis/fees/ManagementFee.abi.json
+        - name: PolicyContractInterface
+          file: ./src/versions/v2/abis/policies/IPolicy.abi.json
+        - name: AssetBlacklistPolicyContract
+          file: ./src/versions/v2/abis/policies/AssetBlacklist.abi.json
+        - name: AssetWhitelistPolicyContract
+          file: ./src/versions/v2/abis/policies/AssetWhitelist.abi.json
+        - name: UserWhitelistPolicyContract
+          file: ./src/versions/v2/abis/policies/UserWhitelist.abi.json
+        - name: MaxConcentrationPolicyContract
+          file: ./src/versions/v2/abis/policies/MaxConcentration.abi.json
+        - name: MaxPositionsPolicyContract
+          file: ./src/versions/v2/abis/policies/MaxPositions.abi.json
+        - name: PriceTolerancePolicyContract
+          file: ./src/versions/v2/abis/policies/PriceTolerance.abi.json
       eventHandlers:
-        - event: AmguPaid(indexed address,uint256,uint256,uint256)
-          handler: handleAmguPaid
-        - event: LogSetAuthority(indexed address)
-          handler: handleLogSetAuthority
-        - event: LogSetOwner(indexed address)
-          handler: handleLogSetOwner
         - event: NewFund(indexed address,indexed address,address[11])
           handler: handleNewFund
 
@@ -40,38 +68,56 @@ templates:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
-      file: ./src/versions/v2/mappings/Registry/mappings.ts
+      file: ./src/versions/v2/mappings/Registry.ts
       entities: []
       abis:
+        - name: VersionContract
+          file: ./src/versions/v2/abis/Version.abi.json
         - name: RegistryContract
-          file: ./src/versions/v2/abis/Registry.json
+          file: ./src/versions/v2/abis/Registry.abi.json
+        - name: HubContract
+          file: ./src/versions/v2/abis/Hub.abi.json
+        - name: AccountingContract
+          file: ./src/versions/v2/abis/spokes/Accounting.abi.json
+        - name: FeeManagerContract
+          file: ./src/versions/v2/abis/spokes/FeeManager.abi.json
+        - name: ParticipationContract
+          file: ./src/versions/v2/abis/spokes/Participation.abi.json
+        - name: PolicyManagerContract
+          file: ./src/versions/v2/abis/spokes/PolicyManager.abi.json
+        - name: SharesContract
+          file: ./src/versions/v2/abis/spokes/Shares.abi.json
+        - name: TradingContract
+          file: ./src/versions/v2/abis/spokes/Trading.abi.json
+        - name: PerformanceFeeContract
+          file: ./src/versions/v2/abis/fees/PerformanceFee.abi.json
+        - name: ManagementFeeContract
+          file: ./src/versions/v2/abis/fees/ManagementFee.abi.json
+        - name: PolicyContractInterface
+          file: ./src/versions/v2/abis/policies/IPolicy.abi.json
+        - name: AssetBlacklistPolicyContract
+          file: ./src/versions/v2/abis/policies/AssetBlacklist.abi.json
+        - name: AssetWhitelistPolicyContract
+          file: ./src/versions/v2/abis/policies/AssetWhitelist.abi.json
+        - name: UserWhitelistPolicyContract
+          file: ./src/versions/v2/abis/policies/UserWhitelist.abi.json
+        - name: MaxConcentrationPolicyContract
+          file: ./src/versions/v2/abis/policies/MaxConcentration.abi.json
+        - name: MaxPositionsPolicyContract
+          file: ./src/versions/v2/abis/policies/MaxPositions.abi.json
+        - name: PriceTolerancePolicyContract
+          file: ./src/versions/v2/abis/policies/PriceTolerance.abi.json
       eventHandlers:
         - event: AssetRemoval(indexed address)
           handler: handleAssetRemoval
         - event: AssetUpsert(indexed address,string,string,uint256,string,uint256,uint256[],bytes4[])
           handler: handleAssetUpsert
-        - event: EfxWrapperRegistryChange(indexed address)
-          handler: handleEfxWrapperRegistryChange
         - event: EngineChange(indexed address)
           handler: handleEngineChange
         - event: ExchangeAdapterRemoval(indexed address)
           handler: handleExchangeAdapterRemoval
         - event: ExchangeAdapterUpsert(indexed address,indexed address,bool,bytes4[])
           handler: handleExchangeAdapterUpsert
-        - event: IncentiveChange(uint256)
-          handler: handleIncentiveChange
-        - event: LogSetAuthority(indexed address)
-          handler: handleLogSetAuthority
-        - event: LogSetOwner(indexed address)
-          handler: handleLogSetOwner
-        - event: MGMChange(indexed address)
-          handler: handleMGMChange
-        - event: MlnTokenChange(indexed address)
-          handler: handleMlnTokenChange
-        - event: NativeAssetChange(indexed address)
-          handler: handleNativeAssetChange
-        - event: PriceSourceChange(indexed address)
-          handler: handlePriceSourceChange
 
   - name: v2/HubContract
     kind: ethereum/contract
@@ -82,22 +128,48 @@ templates:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
-      file: ./src/versions/v2/mappings/Hub/mappings.ts
+      file: ./src/versions/v2/mappings/Hub.ts
       entities: []
       abis:
+        - name: VersionContract
+          file: ./src/versions/v2/abis/Version.abi.json
+        - name: RegistryContract
+          file: ./src/versions/v2/abis/Registry.abi.json
         - name: HubContract
-          file: ./src/versions/v2/abis/Hub.json
+          file: ./src/versions/v2/abis/Hub.abi.json
+        - name: AccountingContract
+          file: ./src/versions/v2/abis/spokes/Accounting.abi.json
+        - name: FeeManagerContract
+          file: ./src/versions/v2/abis/spokes/FeeManager.abi.json
+        - name: ParticipationContract
+          file: ./src/versions/v2/abis/spokes/Participation.abi.json
+        - name: PolicyManagerContract
+          file: ./src/versions/v2/abis/spokes/PolicyManager.abi.json
+        - name: SharesContract
+          file: ./src/versions/v2/abis/spokes/Shares.abi.json
+        - name: TradingContract
+          file: ./src/versions/v2/abis/spokes/Trading.abi.json
+        - name: PerformanceFeeContract
+          file: ./src/versions/v2/abis/fees/PerformanceFee.abi.json
+        - name: ManagementFeeContract
+          file: ./src/versions/v2/abis/fees/ManagementFee.abi.json
+        - name: PolicyContractInterface
+          file: ./src/versions/v2/abis/policies/IPolicy.abi.json
+        - name: AssetBlacklistPolicyContract
+          file: ./src/versions/v2/abis/policies/AssetBlacklist.abi.json
+        - name: AssetWhitelistPolicyContract
+          file: ./src/versions/v2/abis/policies/AssetWhitelist.abi.json
+        - name: UserWhitelistPolicyContract
+          file: ./src/versions/v2/abis/policies/UserWhitelist.abi.json
+        - name: MaxConcentrationPolicyContract
+          file: ./src/versions/v2/abis/policies/MaxConcentration.abi.json
+        - name: MaxPositionsPolicyContract
+          file: ./src/versions/v2/abis/policies/MaxPositions.abi.json
+        - name: PriceTolerancePolicyContract
+          file: ./src/versions/v2/abis/policies/PriceTolerance.abi.json
       eventHandlers:
         - event: FundShutDown()
           handler: handleFundShutDown
-        - event: LogForbid(indexed bytes32,indexed bytes32,indexed bytes32)
-          handler: handleLogForbid
-        - event: LogPermit(indexed bytes32,indexed bytes32,indexed bytes32)
-          handler: handleLogPermit
-        - event: LogSetAuthority(indexed address)
-          handler: handleLogSetAuthority
-        - event: LogSetOwner(indexed address)
-          handler: handleLogSetOwner
 
   - name: v2/AccountingContract
     kind: ethereum/contract
@@ -108,22 +180,50 @@ templates:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
-      file: ./src/versions/v2/mappings/Accounting/mappings.ts
+      file: ./src/versions/v2/mappings/Accounting.ts
       entities: []
       abis:
+        - name: VersionContract
+          file: ./src/versions/v2/abis/Version.abi.json
+        - name: RegistryContract
+          file: ./src/versions/v2/abis/Registry.abi.json
+        - name: HubContract
+          file: ./src/versions/v2/abis/Hub.abi.json
         - name: AccountingContract
-          file: ./src/versions/v2/abis/Accounting.json
+          file: ./src/versions/v2/abis/spokes/Accounting.abi.json
+        - name: FeeManagerContract
+          file: ./src/versions/v2/abis/spokes/FeeManager.abi.json
+        - name: ParticipationContract
+          file: ./src/versions/v2/abis/spokes/Participation.abi.json
+        - name: PolicyManagerContract
+          file: ./src/versions/v2/abis/spokes/PolicyManager.abi.json
+        - name: SharesContract
+          file: ./src/versions/v2/abis/spokes/Shares.abi.json
+        - name: TradingContract
+          file: ./src/versions/v2/abis/spokes/Trading.abi.json
+        - name: PerformanceFeeContract
+          file: ./src/versions/v2/abis/fees/PerformanceFee.abi.json
+        - name: ManagementFeeContract
+          file: ./src/versions/v2/abis/fees/ManagementFee.abi.json
+        - name: PolicyContractInterface
+          file: ./src/versions/v2/abis/policies/IPolicy.abi.json
+        - name: AssetBlacklistPolicyContract
+          file: ./src/versions/v2/abis/policies/AssetBlacklist.abi.json
+        - name: AssetWhitelistPolicyContract
+          file: ./src/versions/v2/abis/policies/AssetWhitelist.abi.json
+        - name: UserWhitelistPolicyContract
+          file: ./src/versions/v2/abis/policies/UserWhitelist.abi.json
+        - name: MaxConcentrationPolicyContract
+          file: ./src/versions/v2/abis/policies/MaxConcentration.abi.json
+        - name: MaxPositionsPolicyContract
+          file: ./src/versions/v2/abis/policies/MaxPositions.abi.json
+        - name: PriceTolerancePolicyContract
+          file: ./src/versions/v2/abis/policies/PriceTolerance.abi.json
       eventHandlers:
-        - event: AmguPaid(indexed address,uint256,uint256,uint256)
-          handler: handleFundShutDown
         - event: AssetAddition(indexed address)
           handler: handleAssetAddition
         - event: AssetRemoval(indexed address)
           handler: handleAssetRemoval
-        - event: LogSetAuthority(indexed address)
-          handler: handleLogSetAuthority
-        - event: LogSetOwner(indexed address)
-          handler: handleLogSetOwner
 
   - name: v2/FeeManagerContract
     kind: ethereum/contract
@@ -134,20 +234,50 @@ templates:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
-      file: ./src/versions/v2/mappings/FeeManager/mappings.ts
+      file: ./src/versions/v2/mappings/FeeManager.ts
       entities: []
       abis:
+        - name: VersionContract
+          file: ./src/versions/v2/abis/Version.abi.json
+        - name: RegistryContract
+          file: ./src/versions/v2/abis/Registry.abi.json
+        - name: HubContract
+          file: ./src/versions/v2/abis/Hub.abi.json
+        - name: AccountingContract
+          file: ./src/versions/v2/abis/spokes/Accounting.abi.json
         - name: FeeManagerContract
-          file: ./src/versions/v2/abis/FeeManager.json
+          file: ./src/versions/v2/abis/spokes/FeeManager.abi.json
+        - name: ParticipationContract
+          file: ./src/versions/v2/abis/spokes/Participation.abi.json
+        - name: PolicyManagerContract
+          file: ./src/versions/v2/abis/spokes/PolicyManager.abi.json
+        - name: SharesContract
+          file: ./src/versions/v2/abis/spokes/Shares.abi.json
+        - name: TradingContract
+          file: ./src/versions/v2/abis/spokes/Trading.abi.json
+        - name: PerformanceFeeContract
+          file: ./src/versions/v2/abis/fees/PerformanceFee.abi.json
+        - name: ManagementFeeContract
+          file: ./src/versions/v2/abis/fees/ManagementFee.abi.json
+        - name: PolicyContractInterface
+          file: ./src/versions/v2/abis/policies/IPolicy.abi.json
+        - name: AssetBlacklistPolicyContract
+          file: ./src/versions/v2/abis/policies/AssetBlacklist.abi.json
+        - name: AssetWhitelistPolicyContract
+          file: ./src/versions/v2/abis/policies/AssetWhitelist.abi.json
+        - name: UserWhitelistPolicyContract
+          file: ./src/versions/v2/abis/policies/UserWhitelist.abi.json
+        - name: MaxConcentrationPolicyContract
+          file: ./src/versions/v2/abis/policies/MaxConcentration.abi.json
+        - name: MaxPositionsPolicyContract
+          file: ./src/versions/v2/abis/policies/MaxPositions.abi.json
+        - name: PriceTolerancePolicyContract
+          file: ./src/versions/v2/abis/policies/PriceTolerance.abi.json
       eventHandlers:
         - event: FeeRegistration(address)
           handler: handleFundShutDown
         - event: FeeReward(uint256)
           handler: handleFeeReward
-        - event: LogSetAuthority(indexed address)
-          handler: handleLogSetAuthority
-        - event: LogSetOwner(indexed address)
-          handler: handleLogSetOwner
 
   - name: v2/ParticipationContract
     kind: ethereum/contract
@@ -158,16 +288,46 @@ templates:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
-        - name: PolicyManagerContract
-          file: ./src/versions/v2/abis/PolicyManager.json
-      file: ./src/versions/v2/mappings/Participation/mappings.ts
+      file: ./src/versions/v2/mappings/Participation.ts
       entities: []
       abis:
+        - name: VersionContract
+          file: ./src/versions/v2/abis/Version.abi.json
+        - name: RegistryContract
+          file: ./src/versions/v2/abis/Registry.abi.json
+        - name: HubContract
+          file: ./src/versions/v2/abis/Hub.abi.json
+        - name: AccountingContract
+          file: ./src/versions/v2/abis/spokes/Accounting.abi.json
+        - name: FeeManagerContract
+          file: ./src/versions/v2/abis/spokes/FeeManager.abi.json
         - name: ParticipationContract
-          file: ./src/versions/v2/abis/Participation.json
+          file: ./src/versions/v2/abis/spokes/Participation.abi.json
+        - name: PolicyManagerContract
+          file: ./src/versions/v2/abis/spokes/PolicyManager.abi.json
+        - name: SharesContract
+          file: ./src/versions/v2/abis/spokes/Shares.abi.json
+        - name: TradingContract
+          file: ./src/versions/v2/abis/spokes/Trading.abi.json
+        - name: PerformanceFeeContract
+          file: ./src/versions/v2/abis/fees/PerformanceFee.abi.json
+        - name: ManagementFeeContract
+          file: ./src/versions/v2/abis/fees/ManagementFee.abi.json
+        - name: PolicyContractInterface
+          file: ./src/versions/v2/abis/policies/IPolicy.abi.json
+        - name: AssetBlacklistPolicyContract
+          file: ./src/versions/v2/abis/policies/AssetBlacklist.abi.json
+        - name: AssetWhitelistPolicyContract
+          file: ./src/versions/v2/abis/policies/AssetWhitelist.abi.json
+        - name: UserWhitelistPolicyContract
+          file: ./src/versions/v2/abis/policies/UserWhitelist.abi.json
+        - name: MaxConcentrationPolicyContract
+          file: ./src/versions/v2/abis/policies/MaxConcentration.abi.json
+        - name: MaxPositionsPolicyContract
+          file: ./src/versions/v2/abis/policies/MaxPositions.abi.json
+        - name: PriceTolerancePolicyContract
+          file: ./src/versions/v2/abis/policies/PriceTolerance.abi.json
       eventHandlers:
-        - event: AmguPaid(indexed address,uint256,uint256,uint256)
-          handler: handleAmguPaid
         - event: CancelRequest(indexed address)
           handler: handleCancelRequest
         - event: DisableInvestment(address[])
@@ -176,12 +336,8 @@ templates:
           handler: handleEnableInvestment
         - event: InvestmentRequest(indexed address,indexed address,uint256,uint256)
           handler: handleInvestmentRequest
-        - event: LogSetAuthority(indexed address)
-          handler: handleLogSetAuthority
-        - event: LogSetOwner(indexed address)
-          handler: handleLogSetOwner
         - event: Redemption(indexed address,address[],uint256[],uint256)
-          handler: handleLogSetOwner
+          handler: handleRedemption
         - event: RequestExecution(indexed address,indexed address,indexed address,uint256,uint256)
           handler: handleRequestExecution
 
@@ -194,16 +350,46 @@ templates:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
-      file: ./src/versions/v2/mappings/PolicyManager/mappings.ts
+      file: ./src/versions/v2/mappings/PolicyManager.ts
       entities: []
       abis:
+        - name: VersionContract
+          file: ./src/versions/v2/abis/Version.abi.json
+        - name: RegistryContract
+          file: ./src/versions/v2/abis/Registry.abi.json
+        - name: HubContract
+          file: ./src/versions/v2/abis/Hub.abi.json
+        - name: AccountingContract
+          file: ./src/versions/v2/abis/spokes/Accounting.abi.json
+        - name: FeeManagerContract
+          file: ./src/versions/v2/abis/spokes/FeeManager.abi.json
+        - name: ParticipationContract
+          file: ./src/versions/v2/abis/spokes/Participation.abi.json
         - name: PolicyManagerContract
-          file: ./src/versions/v2/abis/PolicyManager.json
+          file: ./src/versions/v2/abis/spokes/PolicyManager.abi.json
+        - name: SharesContract
+          file: ./src/versions/v2/abis/spokes/Shares.abi.json
+        - name: TradingContract
+          file: ./src/versions/v2/abis/spokes/Trading.abi.json
+        - name: PerformanceFeeContract
+          file: ./src/versions/v2/abis/fees/PerformanceFee.abi.json
+        - name: ManagementFeeContract
+          file: ./src/versions/v2/abis/fees/ManagementFee.abi.json
+        - name: PolicyContractInterface
+          file: ./src/versions/v2/abis/policies/IPolicy.abi.json
+        - name: AssetBlacklistPolicyContract
+          file: ./src/versions/v2/abis/policies/AssetBlacklist.abi.json
+        - name: AssetWhitelistPolicyContract
+          file: ./src/versions/v2/abis/policies/AssetWhitelist.abi.json
+        - name: UserWhitelistPolicyContract
+          file: ./src/versions/v2/abis/policies/UserWhitelist.abi.json
+        - name: MaxConcentrationPolicyContract
+          file: ./src/versions/v2/abis/policies/MaxConcentration.abi.json
+        - name: MaxPositionsPolicyContract
+          file: ./src/versions/v2/abis/policies/MaxPositions.abi.json
+        - name: PriceTolerancePolicyContract
+          file: ./src/versions/v2/abis/policies/PriceTolerance.abi.json
       eventHandlers:
-        - event: LogSetAuthority(indexed address)
-          handler: handleLogSetAuthority
-        - event: LogSetOwner(indexed address)
-          handler: handleLogSetOwner
         - event: Registration(indexed bytes4,uint8,indexed address)
           handler: handleRegistration
 
@@ -216,18 +402,46 @@ templates:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
-      file: ./src/versions/v2/mappings/Shares/mappings.ts
+      file: ./src/versions/v2/mappings/Shares.ts
       entities: []
       abis:
+        - name: VersionContract
+          file: ./src/versions/v2/abis/Version.abi.json
+        - name: RegistryContract
+          file: ./src/versions/v2/abis/Registry.abi.json
+        - name: HubContract
+          file: ./src/versions/v2/abis/Hub.abi.json
+        - name: AccountingContract
+          file: ./src/versions/v2/abis/spokes/Accounting.abi.json
+        - name: FeeManagerContract
+          file: ./src/versions/v2/abis/spokes/FeeManager.abi.json
+        - name: ParticipationContract
+          file: ./src/versions/v2/abis/spokes/Participation.abi.json
+        - name: PolicyManagerContract
+          file: ./src/versions/v2/abis/spokes/PolicyManager.abi.json
         - name: SharesContract
-          file: ./src/versions/v2/abis/Shares.json
+          file: ./src/versions/v2/abis/spokes/Shares.abi.json
+        - name: TradingContract
+          file: ./src/versions/v2/abis/spokes/Trading.abi.json
+        - name: PerformanceFeeContract
+          file: ./src/versions/v2/abis/fees/PerformanceFee.abi.json
+        - name: ManagementFeeContract
+          file: ./src/versions/v2/abis/fees/ManagementFee.abi.json
+        - name: PolicyContractInterface
+          file: ./src/versions/v2/abis/policies/IPolicy.abi.json
+        - name: AssetBlacklistPolicyContract
+          file: ./src/versions/v2/abis/policies/AssetBlacklist.abi.json
+        - name: AssetWhitelistPolicyContract
+          file: ./src/versions/v2/abis/policies/AssetWhitelist.abi.json
+        - name: UserWhitelistPolicyContract
+          file: ./src/versions/v2/abis/policies/UserWhitelist.abi.json
+        - name: MaxConcentrationPolicyContract
+          file: ./src/versions/v2/abis/policies/MaxConcentration.abi.json
+        - name: MaxPositionsPolicyContract
+          file: ./src/versions/v2/abis/policies/MaxPositions.abi.json
+        - name: PriceTolerancePolicyContract
+          file: ./src/versions/v2/abis/policies/PriceTolerance.abi.json
       eventHandlers:
-        - event: Approval(indexed address,indexed address,uint256)
-          handler: handleApproval
-        - event: LogSetAuthority(indexed address)
-          handler: handleLogSetAuthority
-        - event: LogSetOwner(indexed address)
-          handler: handleLogSetOwner
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
 
@@ -240,35 +454,99 @@ templates:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
-      file: ./src/versions/v2/mappings/Trading/mappings.ts
+      file: ./src/versions/v2/mappings/Trading.ts
       entities: []
       abis:
+        - name: VersionContract
+          file: ./src/versions/v2/abis/Version.abi.json
+        - name: RegistryContract
+          file: ./src/versions/v2/abis/Registry.abi.json
+        - name: HubContract
+          file: ./src/versions/v2/abis/Hub.abi.json
+        - name: AccountingContract
+          file: ./src/versions/v2/abis/spokes/Accounting.abi.json
+        - name: FeeManagerContract
+          file: ./src/versions/v2/abis/spokes/FeeManager.abi.json
+        - name: ParticipationContract
+          file: ./src/versions/v2/abis/spokes/Participation.abi.json
+        - name: PolicyManagerContract
+          file: ./src/versions/v2/abis/spokes/PolicyManager.abi.json
+        - name: SharesContract
+          file: ./src/versions/v2/abis/spokes/Shares.abi.json
         - name: TradingContract
-          file: ./src/versions/v2/abis/Trading.json
+          file: ./src/versions/v2/abis/spokes/Trading.abi.json
+        - name: PerformanceFeeContract
+          file: ./src/versions/v2/abis/fees/PerformanceFee.abi.json
+        - name: ManagementFeeContract
+          file: ./src/versions/v2/abis/fees/ManagementFee.abi.json
+        - name: PolicyContractInterface
+          file: ./src/versions/v2/abis/policies/IPolicy.abi.json
+        - name: AssetBlacklistPolicyContract
+          file: ./src/versions/v2/abis/policies/AssetBlacklist.abi.json
+        - name: AssetWhitelistPolicyContract
+          file: ./src/versions/v2/abis/policies/AssetWhitelist.abi.json
+        - name: UserWhitelistPolicyContract
+          file: ./src/versions/v2/abis/policies/UserWhitelist.abi.json
+        - name: MaxConcentrationPolicyContract
+          file: ./src/versions/v2/abis/policies/MaxConcentration.abi.json
+        - name: MaxPositionsPolicyContract
+          file: ./src/versions/v2/abis/policies/MaxPositions.abi.json
+        - name: PriceTolerancePolicyContract
+          file: ./src/versions/v2/abis/policies/PriceTolerance.abi.json
       eventHandlers:
         - event: ExchangeMethodCall(indexed address,indexed string,address[8],uint256[8],bytes[4],bytes32,bytes)
           handler: handleExchangeMethodCall
-        - event: LogSetAuthority(indexed address)
-          handler: handleLogSetAuthority
-        - event: LogSetOwner(indexed address)
-          handler: handleLogSetOwner
 
-  - name: v2/VaultContract
+  - name: v2/UserWhitelistPolicyContract
     kind: ethereum/contract
     network: dev
     source:
-      abi: VaultContract
+      abi: UserWhitelistPolicyContract
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
-      file: ./src/versions/v2/mappings/Vault/mappings.ts
+      file: ./src/versions/v2/mappings/UserWhitelistPolicy.ts
       entities: []
       abis:
-        - name: VaultContract
-          file: ./src/versions/v2/abis/Vault.json
+        - name: VersionContract
+          file: ./src/versions/v2/abis/Version.abi.json
+        - name: RegistryContract
+          file: ./src/versions/v2/abis/Registry.abi.json
+        - name: HubContract
+          file: ./src/versions/v2/abis/Hub.abi.json
+        - name: AccountingContract
+          file: ./src/versions/v2/abis/spokes/Accounting.abi.json
+        - name: FeeManagerContract
+          file: ./src/versions/v2/abis/spokes/FeeManager.abi.json
+        - name: ParticipationContract
+          file: ./src/versions/v2/abis/spokes/Participation.abi.json
+        - name: PolicyManagerContract
+          file: ./src/versions/v2/abis/spokes/PolicyManager.abi.json
+        - name: SharesContract
+          file: ./src/versions/v2/abis/spokes/Shares.abi.json
+        - name: TradingContract
+          file: ./src/versions/v2/abis/spokes/Trading.abi.json
+        - name: PerformanceFeeContract
+          file: ./src/versions/v2/abis/fees/PerformanceFee.abi.json
+        - name: ManagementFeeContract
+          file: ./src/versions/v2/abis/fees/ManagementFee.abi.json
+        - name: PolicyContractInterface
+          file: ./src/versions/v2/abis/policies/IPolicy.abi.json
+        - name: AssetBlacklistPolicyContract
+          file: ./src/versions/v2/abis/policies/AssetBlacklist.abi.json
+        - name: AssetWhitelistPolicyContract
+          file: ./src/versions/v2/abis/policies/AssetWhitelist.abi.json
+        - name: UserWhitelistPolicyContract
+          file: ./src/versions/v2/abis/policies/UserWhitelist.abi.json
+        - name: MaxConcentrationPolicyContract
+          file: ./src/versions/v2/abis/policies/MaxConcentration.abi.json
+        - name: MaxPositionsPolicyContract
+          file: ./src/versions/v2/abis/policies/MaxPositions.abi.json
+        - name: PriceTolerancePolicyContract
+          file: ./src/versions/v2/abis/policies/PriceTolerance.abi.json
       eventHandlers:
-        - event: LogSetAuthority(indexed address)
-          handler: handleLogSetAuthority
-        - event: LogSetOwner(indexed address)
-          handler: handleLogSetOwner
+        - event: ListAddition(indexed address)
+          handler: handleListAddition
+        - event: ListRemoval(indexed address)
+          handler: handleListRemoval

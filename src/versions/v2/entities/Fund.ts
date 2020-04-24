@@ -1,8 +1,8 @@
 import { Address, DataSourceTemplate } from '@graphprotocol/graph-ts';
-import { Fund } from '../generated/schema';
+import { Fund, Version } from '../generated/schema';
 import { hexToAscii } from '../utils/hexToAscii';
 import { ensureManager } from './Account';
-import { ensureVersion, versionAssets } from './Version';
+import { ensureVersion } from './Version';
 import { HubContract } from '../generated/v2/VersionContract/HubContract';
 import { SharesContract } from '../generated/templates/v2/SharesContract/SharesContract';
 import { ParticipationContract } from '../generated/templates/v2/ParticipationContract/ParticipationContract';
@@ -16,48 +16,51 @@ export function ensureFund(hubAddress: Address): Fund {
     return fund;
   }
 
-  let hubContract = HubContract.bind(hubAddress);
-  let hubRoutes = hubContract.routes();
-
-  let participationAddress = hubRoutes.value2;
-  let sharesAddress = hubRoutes.value4;
-
-  let sharesContract = SharesContract.bind(sharesAddress);
-  let participationContract = ParticipationContract.bind(participationAddress);
-
   fund = new Fund(hubAddress.toHex());
-
-  let manager = ensureManager(hubContract.manager());
-  let version = ensureVersion(hubContract.version());
 
   ensureFees(fund);
 
+  let hubContract = HubContract.bind(Address.fromString(fund.id));
   fund.name = hexToAscii(hubContract.name());
-  fund.active = !hubContract.isShutDown();
-  fund.version = version.id;
-  fund.manager = manager.id;
   fund.inception = hubContract.creationTime();
-  fund.shares = sharesContract.totalSupply();
-
-  let assets = versionAssets(version).map<string>((item) => item.id);
-  let allowed: string[] = [];
-  for (let i: i32 = 0; i < assets.length; i++) {
-    if (participationContract.investAllowed(Address.fromString(assets[i]))) {
-      allowed.push(assets[i]);
-    }
-  }
-
-  fund.investableAssets = arrayUnique<string>(allowed);
-
-  let holdings = ensureFundHoldings(fund);
-  fund.holdings = holdings.map<string>((holding) => holding.id);
-
-  fund.save();
 
   // Start observing the hub contract.
   createFundDataSources(fund);
 
+  return updateFund(fund);
+}
+
+export function updateFund(fund: Fund): Fund {
+  let hubContract = HubContract.bind(Address.fromString(fund.id));
+  let sharesContract = SharesContract.bind(hubContract.shares());
+
+  let manager = ensureManager(hubContract.manager());
+  let version = ensureVersion(hubContract.version());
+
+  fund.holdings = ensureFundHoldings(fund).map<string>((holding) => holding.id);
+  fund.investableAssets = investableAssets(fund, version);
+  fund.version = version.id;
+  fund.manager = manager.id;
+  fund.active = !hubContract.isShutDown();
+  fund.shares = sharesContract.totalSupply();
+  fund.save();
+
   return fund;
+}
+
+function investableAssets(fund: Fund, version: Version): string[] {
+  let hubContract = HubContract.bind(Address.fromString(fund.id));
+  let participationContract = ParticipationContract.bind(hubContract.participation());
+
+  let assets = version.assets as string[];
+  let investable: string[] = [];
+  for (let i: i32 = 0; i < assets.length; i++) {
+    if (participationContract.investAllowed(Address.fromString(assets[i]))) {
+      investable.push(assets[i]);
+    }
+  }
+
+  return arrayUnique<string>(investable);
 }
 
 function createFundDataSources(fund: Fund): void {
@@ -71,5 +74,4 @@ function createFundDataSources(fund: Fund): void {
   DataSourceTemplate.create('v2/PolicyManagerContract', [routes.value3.toHex()]);
   DataSourceTemplate.create('v2/SharesContract', [routes.value4.toHex()]);
   DataSourceTemplate.create('v2/TradingContract', [routes.value5.toHex()]);
-  DataSourceTemplate.create('v2/VaultContract', [routes.value6.toHex()]);
 }

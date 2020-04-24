@@ -6,32 +6,20 @@ import {
   ensureInvestmentRequest,
   ensureInvestmentRedemption,
 } from '../entities/Investment';
-import { ensureFund } from '../entities/Fund';
+import { ensureFund, updateFund } from '../entities/Fund';
 import { trackFundEvent } from '../entities/Event';
 import { ensureInvestor } from '../entities/Account';
 import { ensureAsset, ensureAssets } from '../entities/Asset';
 import { ensureVersion } from '../entities/Version';
-import { arrayDiff } from '../utils/arrayDiff';
-import { arrayUnique } from '../utils/arrayUnique';
 import {
   ParticipationContract,
-  AmguPaid,
   CancelRequest,
   DisableInvestment,
   EnableInvestment,
-  LogSetAuthority,
-  LogSetOwner,
   Redemption,
   RequestExecution,
   InvestmentRequest,
 } from '../generated/v2/VersionContract/ParticipationContract';
-
-export function handleAmguPaid(event: AmguPaid): void {
-  let participationContract = ParticipationContract.bind(event.address);
-  let hubAddress = participationContract.hub();
-  let fund = ensureFund(hubAddress);
-  trackFundEvent('AmguPaid', event, fund);
-}
 
 export function handleCancelRequest(event: CancelRequest): void {
   let participationContract = ParticipationContract.bind(event.address);
@@ -48,11 +36,7 @@ export function handleDisableInvestment(event: DisableInvestment): void {
   let participationContract = ParticipationContract.bind(event.address);
   let hubAddress = participationContract.hub();
 
-  let fund = ensureFund(hubAddress);
-  let disabledAssets = event.params.assets.map<string>((item) => item.toHex());
-  fund.investableAssets = arrayDiff<string>(fund.investableAssets, disabledAssets);
-  fund.save();
-
+  let fund = updateFund(ensureFund(hubAddress));
   trackFundEvent('DisableInvestment', event, fund);
 }
 
@@ -60,11 +44,7 @@ export function handleEnableInvestment(event: EnableInvestment): void {
   let participationContract = ParticipationContract.bind(event.address);
   let hubAddress = participationContract.hub();
 
-  let fund = ensureFund(hubAddress);
-  let enabledAssets = event.params.asset.map<string>((item) => item.toHex());
-  fund.investableAssets = arrayUnique<string>(fund.investableAssets.concat(enabledAssets));
-  fund.save();
-
+  let fund = updateFund(ensureFund(hubAddress));
   trackFundEvent('EnableInvestment', event, fund);
 }
 
@@ -80,20 +60,6 @@ export function handleInvestmentRequest(event: InvestmentRequest): void {
 
   ensureInvestmentRequest(event, fund, account, asset, quantity);
   trackFundEvent('InvestmentRequest', event, fund);
-}
-
-export function handleLogSetAuthority(event: LogSetAuthority): void {
-  let participationContract = ParticipationContract.bind(event.address);
-  let hubAddress = participationContract.hub();
-  let fund = ensureFund(hubAddress);
-  trackFundEvent('LogSetAuthority', event, fund);
-}
-
-export function handleLogSetOwner(event: LogSetOwner): void {
-  let participationContract = ParticipationContract.bind(event.address);
-  let hubAddress = participationContract.hub();
-  let fund = ensureFund(hubAddress);
-  trackFundEvent('LogSetOwner', event, fund);
 }
 
 export function handleRedemption(event: Redemption): void {

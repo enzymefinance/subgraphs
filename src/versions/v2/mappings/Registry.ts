@@ -1,36 +1,26 @@
 import { dataSource, Address, Value } from '@graphprotocol/graph-ts';
 import { Event, Fund, Version } from '../generated/schema';
 import { trackVersionEvent } from '../entities/Event';
-import { ensureVersion } from '../entities/Version';
+import { updateVersion, ensureVersion } from '../entities/Version';
 import {
   AssetRemoval,
   AssetUpsert,
-  EfxWrapperRegistryChange,
   EngineChange,
   ExchangeAdapterRemoval,
   ExchangeAdapterUpsert,
-  IncentiveChange,
-  LogSetAuthority,
-  LogSetOwner,
-  MGMChange,
-  MlnTokenChange,
-  NativeAssetChange,
-  PriceSourceChange,
 } from '../generated/v2/VersionContract/RegistryContract';
 
 let context = dataSource.context();
 let version = ensureVersion(Address.fromString((context.get('version') as Value).toString()));
 
 export function handleAssetRemoval(event: AssetRemoval): void {
+  updateVersion(version);
   trackVersionEvent('AssetRemoval', event, version);
 }
 
 export function handleAssetUpsert(event: AssetUpsert): void {
+  updateVersion(version);
   trackVersionEvent('AssetUpsert', event, version);
-}
-
-export function handleEfxWrapperRegistryChange(event: EfxWrapperRegistryChange): void {
-  trackVersionEvent('EfxWrapperRegistryChange', event, version);
 }
 
 export function handleEngineChange(event: EngineChange): void {
@@ -38,37 +28,11 @@ export function handleEngineChange(event: EngineChange): void {
 }
 
 export function handleExchangeAdapterRemoval(event: ExchangeAdapterRemoval): void {
+  updateVersion(version);
   trackVersionEvent('ExchangeAdapterRemoval', event, version);
 }
 
 export function handleExchangeAdapterUpsert(event: ExchangeAdapterUpsert): void {
+  updateVersion(version);
   trackVersionEvent('ExchangeAdapterUpsert', event, version);
-}
-
-export function handleIncentiveChange(event: IncentiveChange): void {
-  trackVersionEvent('IncentiveChange', event, version);
-}
-
-export function handleLogSetAuthority(event: LogSetAuthority): void {
-  trackVersionEvent('LogSetAuthority', event, version);
-}
-
-export function handleLogSetOwner(event: LogSetOwner): void {
-  trackVersionEvent('LogSetOwner', event, version);
-}
-
-export function handleMGMChange(event: MGMChange): void {
-  trackVersionEvent('MGMChange', event, version);
-}
-
-export function handleMlnTokenChange(event: MlnTokenChange): void {
-  trackVersionEvent('MlnTokenChange', event, version);
-}
-
-export function handleNativeAssetChange(event: NativeAssetChange): void {
-  trackVersionEvent('NativeAssetChange', event, version);
-}
-
-export function handlePriceSourceChange(event: PriceSourceChange): void {
-  trackVersionEvent('PriceSourceChange', event, version);
 }

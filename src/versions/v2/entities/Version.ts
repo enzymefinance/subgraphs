@@ -4,6 +4,11 @@ import { RegistryContract } from '../generated/templates/v2/RegistryContract/Reg
 import { Version, Asset } from '../generated/schema';
 import { ensureAssets } from './Asset';
 
+export function updateVersion(version: Version): Version {
+  // TODO
+  return version;
+}
+
 export function ensureVersion(versionAddress: Address): Version {
   let version = Version.load(versionAddress.toHex()) as Version;
   if (version) {
@@ -20,7 +25,7 @@ export function ensureVersion(versionAddress: Address): Version {
   return version;
 }
 
-export function versionAssets(version: Version): Asset[] {
+function versionAssets(version: Version): Asset[] {
   let versionContract = VersionContract.bind(Address.fromString(version.id));
   let registryAddress = versionContract.registry();
   let registryContract = RegistryContract.bind(registryAddress);
