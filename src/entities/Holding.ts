@@ -1,5 +1,4 @@
 import { Entity, Value, BigInt } from '@graphprotocol/graph-ts';
-import { Fund, FundHolding } from '../generated/schema';
 
 export class Holding extends Entity {
   get id(): string {
@@ -37,8 +36,4 @@ export class Holding extends Entity {
   set identifier(value: string) {
     this.set('identifier', Value.fromString(value));
   }
-}
-
-export function ensureFundHoldings(fund: Fund): FundHolding[] {
-  return [] as FundHolding[];
 }

@@ -5,12 +5,121 @@ schema:
   file: ./schema.graphql
 
 dataSources:
-  - name: GenesisC
+  # - name: Genesis/A
+  #   kind: ethereum/contract
+  #   network: mainnet
+  #   source:
+  #     abi: VersionContract
+  #     address: '0xcb6c6bdf0aa4cf0188518783b871931efb64248f'
+  #     startBlock: 7271059
+  #   mapping:
+  #     kind: ethereum/events
+  #     apiVersion: 0.0.4
+  #     language: wasm/assemblyscript
+  #     file: ./src/mappings/Genesis/A.ts
+  #     entities: []
+  #     abis:
+  #       - name: VersionContract
+  #         file: ./src/abis/Version.abi.json
+  #       - name: RegistryContract
+  #         file: ./src/abis/Registry.abi.json
+  #       - name: HubContract
+  #         file: ./src/abis/Hub.abi.json
+  #       - name: AccountingContract
+  #         file: ./src/abis/spokes/Accounting.abi.json
+  #       - name: FeeManagerContract
+  #         file: ./src/abis/spokes/FeeManager.abi.json
+  #       - name: ParticipationContract
+  #         file: ./src/abis/spokes/Participation.abi.json
+  #       - name: PolicyManagerContract
+  #         file: ./src/abis/spokes/PolicyManager.abi.json
+  #       - name: SharesContract
+  #         file: ./src/abis/spokes/Shares.abi.json
+  #       - name: TradingContract
+  #         file: ./src/abis/spokes/Trading.abi.json
+  #       - name: PerformanceFeeContract
+  #         file: ./src/abis/fees/PerformanceFee.abi.json
+  #       - name: ManagementFeeContract
+  #         file: ./src/abis/fees/ManagementFee.abi.json
+  #       - name: PolicyContractInterface
+  #         file: ./src/abis/policies/IPolicy.abi.json
+  #       - name: AssetBlacklistPolicyContract
+  #         file: ./src/abis/policies/AssetBlacklist.abi.json
+  #       - name: AssetWhitelistPolicyContract
+  #         file: ./src/abis/policies/AssetWhitelist.abi.json
+  #       - name: UserWhitelistPolicyContract
+  #         file: ./src/abis/policies/UserWhitelist.abi.json
+  #       - name: MaxConcentrationPolicyContract
+  #         file: ./src/abis/policies/MaxConcentration.abi.json
+  #       - name: MaxPositionsPolicyContract
+  #         file: ./src/abis/policies/MaxPositions.abi.json
+  #       - name: PriceTolerancePolicyContract
+  #         file: ./src/abis/policies/PriceTolerance.abi.json
+  #     eventHandlers:
+  #       - event: LogSetOwner(indexed address)
+  #         handler: handleSetOwner
+
+  # - name: Genesis/B
+  #   kind: ethereum/contract
+  #   network: mainnet
+  #   source:
+  #     abi: VersionContract
+  #     address: '0x01bde0b02740d6311e4a87ca112deeeddb057efb'
+  #     startBlock: 7375920
+  #   mapping:
+  #     kind: ethereum/events
+  #     apiVersion: 0.0.4
+  #     language: wasm/assemblyscript
+  #     file: ./src/mappings/Genesis/B.ts
+  #     entities: []
+  #     abis:
+  #       - name: VersionContract
+  #         file: ./src/abis/Version.abi.json
+  #       - name: RegistryContract
+  #         file: ./src/abis/Registry.abi.json
+  #       - name: HubContract
+  #         file: ./src/abis/Hub.abi.json
+  #       - name: AccountingContract
+  #         file: ./src/abis/spokes/Accounting.abi.json
+  #       - name: FeeManagerContract
+  #         file: ./src/abis/spokes/FeeManager.abi.json
+  #       - name: ParticipationContract
+  #         file: ./src/abis/spokes/Participation.abi.json
+  #       - name: PolicyManagerContract
+  #         file: ./src/abis/spokes/PolicyManager.abi.json
+  #       - name: SharesContract
+  #         file: ./src/abis/spokes/Shares.abi.json
+  #       - name: TradingContract
+  #         file: ./src/abis/spokes/Trading.abi.json
+  #       - name: PerformanceFeeContract
+  #         file: ./src/abis/fees/PerformanceFee.abi.json
+  #       - name: ManagementFeeContract
+  #         file: ./src/abis/fees/ManagementFee.abi.json
+  #       - name: PolicyContractInterface
+  #         file: ./src/abis/policies/IPolicy.abi.json
+  #       - name: AssetBlacklistPolicyContract
+  #         file: ./src/abis/policies/AssetBlacklist.abi.json
+  #       - name: AssetWhitelistPolicyContract
+  #         file: ./src/abis/policies/AssetWhitelist.abi.json
+  #       - name: UserWhitelistPolicyContract
+  #         file: ./src/abis/policies/UserWhitelist.abi.json
+  #       - name: MaxConcentrationPolicyContract
+  #         file: ./src/abis/policies/MaxConcentration.abi.json
+  #       - name: MaxPositionsPolicyContract
+  #         file: ./src/abis/policies/MaxPositions.abi.json
+  #       - name: PriceTolerancePolicyContract
+  #         file: ./src/abis/policies/PriceTolerance.abi.json
+  #     eventHandlers:
+  #       - event: LogSetOwner(indexed address)
+  #         handler: handleSetOwner
+
+  - name: Genesis/C
     kind: ethereum/contract
-    network: dev
+    network: mainnet
     source:
       abi: VersionContract
-      address: '0x7580B19264C4Fcb4b77649438Cb596BECE1Eb5d2'
+      address: '0x5f9ae054c7f0489888b1ea46824b4b9618f8a711'
+      startBlock: 9497260
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -61,7 +170,7 @@ dataSources:
 templates:
   - name: VersionContract
     kind: ethereum/contract
-    network: dev
+    network: mainnet
     source:
       abi: VersionContract
     mapping:
@@ -110,10 +219,12 @@ templates:
       eventHandlers:
         - event: NewFund(indexed address,indexed address,address[11])
           handler: handleNewFund
+        - event: NewFund(indexed address,indexed address,address[12])
+          handler: handleNewFund
 
   - name: RegistryContract
     kind: ethereum/contract
-    network: dev
+    network: mainnet
     source:
       abi: RegistryContract
     mapping:
@@ -173,7 +284,7 @@ templates:
 
   - name: HubContract
     kind: ethereum/contract
-    network: dev
+    network: mainnet
     source:
       abi: HubContract
     mapping:
@@ -225,7 +336,7 @@ templates:
 
   - name: AccountingContract
     kind: ethereum/contract
-    network: dev
+    network: mainnet
     source:
       abi: AccountingContract
     mapping:
@@ -279,7 +390,7 @@ templates:
 
   - name: FeeManagerContract
     kind: ethereum/contract
-    network: dev
+    network: mainnet
     source:
       abi: FeeManagerContract
     mapping:
@@ -326,12 +437,14 @@ templates:
         - name: PriceTolerancePolicyContract
           file: ./src/abis/policies/PriceTolerance.abi.json
       eventHandlers:
+        - event: FeeRegistration(address)
+          handler: handleFundShutDown
         - event: FeeReward(uint256)
           handler: handleFeeReward
 
   - name: ParticipationContract
     kind: ethereum/contract
-    network: dev
+    network: mainnet
     source:
       abi: ParticipationContract
     mapping:
@@ -393,7 +506,7 @@ templates:
 
   - name: PolicyManagerContract
     kind: ethereum/contract
-    network: dev
+    network: mainnet
     source:
       abi: PolicyManagerContract
     mapping:
@@ -445,7 +558,7 @@ templates:
 
   - name: SharesContract
     kind: ethereum/contract
-    network: dev
+    network: mainnet
     source:
       abi: SharesContract
     mapping:
@@ -497,7 +610,7 @@ templates:
 
   - name: TradingContract
     kind: ethereum/contract
-    network: dev
+    network: mainnet
     source:
       abi: TradingContract
     mapping:
@@ -549,7 +662,7 @@ templates:
 
   - name: UserWhitelistPolicyContract
     kind: ethereum/contract
-    network: dev
+    network: mainnet
     source:
       abi: UserWhitelistPolicyContract
     mapping:

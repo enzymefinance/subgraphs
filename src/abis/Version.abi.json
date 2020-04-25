@@ -50,6 +50,16 @@
   {
     "anonymous": false,
     "inputs": [
+      { "indexed": true, "internalType": "address", "name": "manager", "type": "address" },
+      { "indexed": true, "internalType": "address", "name": "hub", "type": "address" },
+      { "indexed": false, "internalType": "address[12]", "name": "routes", "type": "address[12]" }
+    ],
+    "name": "NewFund",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
       { "indexed": true, "internalType": "address", "name": "hub", "type": "address" },
       { "indexed": true, "internalType": "address", "name": "instance", "type": "address" }
     ],

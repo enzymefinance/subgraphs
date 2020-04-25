@@ -1,6 +1,5 @@
-import { Address, Entity, BigInt, store, ethereum, log, Value } from '@graphprotocol/graph-ts';
+import { Address, Entity, BigInt, store, ethereum, Value } from '@graphprotocol/graph-ts';
 import {
-  Account,
   CustomPolicy,
   MaxPositionsPolicy,
   MaxConcentrationPolicy,
@@ -10,7 +9,7 @@ import {
   PriceTolerancePolicy,
   Fund,
 } from '../generated/schema';
-import { PolicyContractInterface } from '../generated/v2/VersionContract/PolicyContractInterface';
+import { PolicyContractInterface } from '../generated/PolicyContractInterface';
 
 function loadPolicy(policyAddress: Address): Policy | null {
   let candidates: string[] = [

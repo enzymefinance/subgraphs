@@ -63,7 +63,7 @@ type Fund @entity {
   inception: BigInt!
   shares: BigInt!
   holdings: [FundHolding!]!
-  investableAssets: [Asset!]!
+  investable: [Asset!]!
   events: [Event!]! @derivedFrom(field: "fund")
   investments: [Investment!]! @derivedFrom(field: "fund")
   policies: [Policy!]! @derivedFrom(field: "fund")

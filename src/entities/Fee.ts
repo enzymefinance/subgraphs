@@ -1,9 +1,9 @@
 import { Entity, Value, Address, BigInt } from '@graphprotocol/graph-ts';
 import { Fund, ManagementFee, PerformanceFee } from '../generated/schema';
-import { HubContract } from '../generated/v2/VersionContract/HubContract';
-import { FeeManagerContract } from '../generated/v2/VersionContract/FeeManagerContract';
-import { ManagementFeeContract } from '../generated/v2/VersionContract/ManagementFeeContract';
-import { PerformanceFeeContract } from '../generated/v2/VersionContract/PerformanceFeeContract';
+import { HubContract } from '../generated/HubContract';
+import { FeeManagerContract } from '../generated/FeeManagerContract';
+import { ManagementFeeContract } from '../generated/ManagementFeeContract';
+import { PerformanceFeeContract } from '../generated/PerformanceFeeContract';
 
 export class Fee extends Entity {
   get id(): string {

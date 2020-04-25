@@ -1,25 +1,26 @@
-import { ethereum, Address, log } from '@graphprotocol/graph-ts';
+import { Entity, ethereum, log } from '@graphprotocol/graph-ts';
 import { Event, Fund, Version } from '../generated/schema';
-import { ensureVersion } from './Version';
+import { Context } from '../context';
 
-export function trackFundEvent<TEvent extends ethereum.Event = ethereum.Event>(
+export function createFundEvent<TEvent extends ethereum.Event = ethereum.Event>(
   name: string,
   event: TEvent,
-  fund: Fund,
+  context: Context,
 ): Event {
-  let version = ensureVersion(Address.fromString(fund.version));
-  return makeEvent(eventId(event, version), name, event, version, fund);
+  let fund = context.entities.fund;
+  return makeEvent(eventId(event, fund), name, event, context.entities.version, fund);
 }
 
-export function trackVersionEvent<TEvent extends ethereum.Event = ethereum.Event>(
+export function createEvent<TEvent extends ethereum.Event = ethereum.Event>(
   name: string,
   event: TEvent,
-  version: Version,
+  context: Context,
 ): Event {
+  let version = context.entities.version;
   return makeEvent(eventId(event, version), name, event, version);
 }
 
-function eventId(event: ethereum.Event, scope: Version): string {
+function eventId(event: ethereum.Event, scope: Entity): string {
   return scope.getString('id') + '/' + event.transaction.hash.toHex() + '/' + event.logIndex.toString();
 }
 
@@ -31,7 +32,7 @@ function makeEvent<TEvent extends ethereum.Event = ethereum.Event>(
   fund: Fund | null = null,
 ): Event {
   if (Event.load(id)) {
-    throw log.critical('Duplicate event registration "{}" on contract {} in transaction {}.', [
+    log.critical('Duplicate event registration "{}" on contract {} in transaction {}.', [
       name,
       event.address.toHex(),
       event.transaction.hash.toHex(),

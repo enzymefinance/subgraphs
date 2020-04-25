@@ -1,4 +1,4 @@
-import { Address } from '@graphprotocol/graph-ts';
+import { Address, log } from '@graphprotocol/graph-ts';
 import { Account } from '../generated/schema';
 
 export function ensureManager(managerAddress: Address): Account {
@@ -21,6 +21,15 @@ export function ensureInvestor(investorAddress: Address): Account {
   }
 
   return account;
+}
+
+export function useAccount(id: string): Account {
+  let account = Account.load(id);
+  if (account == null) {
+    log.critical('Failed to load account {}.', [id]);
+  }
+
+  return account as Account;
 }
 
 function ensureAccount(accountAddress: Address): Account {

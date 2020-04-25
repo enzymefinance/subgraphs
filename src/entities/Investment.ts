@@ -8,8 +8,8 @@ import {
   Account,
   Asset,
 } from '../generated/schema';
-import { HubContract } from '../generated/v2/VersionContract/HubContract';
-import { SharesContract } from '../generated/v2/VersionContract/SharesContract';
+import { HubContract } from '../generated/HubContract';
+import { SharesContract } from '../generated/SharesContract';
 
 function investmentId(fund: Fund, investor: Account): string {
   return fund.id + '/' + investor.id;
