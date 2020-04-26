@@ -53,15 +53,15 @@ export function handleInvestmentRequest(event: InvestmentRequest): void {
   createFundEvent('InvestmentRequest', event, context);
 }
 
+// TODO: Somethign is wrong here with the redemption handler on GenesisA.
 export function handleRedemption(event: Redemption): void {
-  let addresses = event.params.assets.map<string>((item) => item.toHex());
-  let assets = useAssets(addresses);
-  let account = ensureInvestor(event.params.redeemer);
-  let shares = event.params.redeemedShares;
-  let quantities = event.params.assetQuantities;
-
-  ensureInvestmentRedemption(event, context.entities.fund, account, assets, quantities, shares);
-  createFundEvent('Redemption', event, context);
+  // let addresses = event.params.assets.map<string>((item) => item.toHex());
+  // let assets = useAssets(addresses);
+  // let account = ensureInvestor(event.params.redeemer);
+  // let shares = event.params.redeemedShares;
+  // let quantities = event.params.assetQuantities;
+  // ensureInvestmentRedemption(event, context.entities.fund, account, assets, quantities, shares);
+  // createFundEvent('Redemption', event, context);
 }
 
 export function handleRequestExecution(event: RequestExecution): void {

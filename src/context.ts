@@ -84,11 +84,11 @@ export class ContextEntities {
   }
 
   get fund(): Fund {
-    if (this._fund != null) {
-      return this._fund as Fund;
+    if (this._fund == null) {
+      this._fund = useFund(this.context.fund);
     }
 
-    return useFund(this.context.fund);
+    return this._fund as Fund;
   }
 
   set manager(value: Account) {
@@ -97,11 +97,11 @@ export class ContextEntities {
   }
 
   get manager(): Account {
-    if (this._manager != null) {
-      return this._manager as Account;
+    if (this._manager == null) {
+      this._manager = useAccount(this.context.manager);
     }
 
-    return useAccount(this.context.manager);
+    return this._manager as Account;
   }
 
   set version(value: Version) {
@@ -110,11 +110,11 @@ export class ContextEntities {
   }
 
   get version(): Version {
-    if (this._version != null) {
-      return this._version as Version;
+    if (this._version == null) {
+      this._version = useVersion(this.context.version);
     }
 
-    return useVersion(this.context.version);
+    return this._version as Version;
   }
 }
 
