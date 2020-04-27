@@ -1,5 +1,5 @@
 import { Address } from '@graphprotocol/graph-ts';
-import { Event, Fund, Version } from '../generated/schema';
+import { Event, Fund, Version, FundMetrics } from '../generated/schema';
 import { Context, context } from '../context';
 import { createFundEvent } from '../entities/Event';
 import { ensureInvestor } from '../entities/Account';
@@ -22,6 +22,7 @@ import {
   InvestmentRequest,
 } from '../generated/ParticipationContract';
 import { updateFundHoldings } from '../entities/Fund';
+import { trackFundMetrics } from '../entities/Metrics';
 
 export function handleCancelRequest(event: CancelRequest): void {
   let account = ensureInvestor(event.params.requestOwner);
@@ -62,9 +63,11 @@ export function handleRedemption(event: Redemption): void {
   let shares = event.params.redeemedShares;
   let quantities = event.params.assetQuantities;
 
-  createInvestmentRedemption(event, investment, assets, quantities, shares);
-  updateFundHoldings(event, context);
-  // createFundEvent('Redemption', event, context);
+  let redemption = createInvestmentRedemption(event, investment, assets, quantities, shares);
+  let fund = updateFundHoldings(event, context);
+  trackFundMetrics(event, fund, redemption);
+  // TODO: Figure out what the fuck is going on here.
+  createFundEvent('Redemption', event, context);
 }
 
 export function handleRequestExecution(event: RequestExecution): void {
@@ -74,8 +77,9 @@ export function handleRequestExecution(event: RequestExecution): void {
   let quantity = event.params.investmentAmount;
   let shares = event.params.requestedShares;
 
-  deleteInvestmentRequest(context.entities.fund, account);
-  createInvestmentAddition(event, investment, asset, quantity, shares);
-  updateFundHoldings(event, context);
+  let addition = createInvestmentAddition(event, investment, asset, quantity, shares);
+  let fund = updateFundHoldings(event, context);
+  deleteInvestmentRequest(fund, account);
+  trackFundMetrics(event, fund, addition);
   createFundEvent('RequestExecution', event, context);
 }

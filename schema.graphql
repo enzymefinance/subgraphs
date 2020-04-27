@@ -14,7 +14,7 @@ enum FeeIdentifierEnum {
   PERFORMANCE
 }
 
-enum InvestmentChangeTypeEnum {
+enum InvestmentChangeEventTypeEnum {
   ADDITION
   REDEMPTION
   REWARD
@@ -39,12 +39,36 @@ type Version @entity {
   assets: [Asset!]!
 }
 
+type NetworkMetrics @entity {
+  id: ID!
+  holdings: [NetworkHolding!]!
+  timestamp: BigInt!
+  event: MetricsChangeEvent!
+
+  # TODO: Implement historical counters
+  allInvestments: Int!
+  activeInvestment: Int!
+  inactiveInvestments: Int!
+  activeFunds: Int!
+  inactiveFunds: Int!
+  activeInvestors: Int!
+  inactiveInvestors: Int!
+}
+
 type FundMetrics @entity {
   id: ID!
   fund: Fund!
   timestamp: BigInt!
   shares: BigInt!
   holdings: [FundHolding!]!
+  event: MetricsChangeEvent!
+}
+
+type NetworkHolding @entity {
+  id: ID!
+  timestamp: BigInt!
+  asset: Asset!
+  quantity: BigInt!
 }
 
 type FundHolding @entity {
@@ -69,6 +93,9 @@ type Fund @entity {
   investments: [Investment!]! @derivedFrom(field: "fund")
   policies: [Policy!]! @derivedFrom(field: "fund")
   fees: [Fee!]! @derivedFrom(field: "fund")
+  metrics: [FundMetrics!]! @derivedFrom(field: "fund")
+
+  # TODO: Implement historical counters
 }
 
 interface Fee {
@@ -154,10 +181,18 @@ type AssetWhitelistPolicy implements Policy @entity {
   identifier: PolicyIdentifierEnum!
 }
 
-interface InvestmentChange {
+interface MetricsChangeEvent {
   id: ID!
-  type: InvestmentChangeTypeEnum!
   fund: Fund!
+  timestamp: BigInt!
+  transaction: String!
+}
+
+# interface InvestmentChangeEvent extends MetricsChangeEvent
+interface InvestmentChangeEvent {
+  id: ID!
+  fund: Fund!
+  type: InvestmentChangeEventTypeEnum!
   investor: Account!
   investment: Investment!
   shares: BigInt!
@@ -165,9 +200,9 @@ interface InvestmentChange {
   transaction: String!
 }
 
-type InvestmentAddition implements InvestmentChange @entity {
+type InvestmentAddition implements MetricsChangeEvent & InvestmentChangeEvent @entity {
   id: ID!
-  type: InvestmentChangeTypeEnum!
+  type: InvestmentChangeEventTypeEnum!
   fund: Fund!
   investor: Account!
   investment: Investment!
@@ -178,9 +213,9 @@ type InvestmentAddition implements InvestmentChange @entity {
   transaction: String!
 }
 
-type InvestmentRedemption implements InvestmentChange @entity {
+type InvestmentRedemption implements MetricsChangeEvent & InvestmentChangeEvent @entity {
   id: ID!
-  type: InvestmentChangeTypeEnum!
+  type: InvestmentChangeEventTypeEnum!
   fund: Fund!
   investor: Account!
   investment: Investment!
@@ -191,9 +226,9 @@ type InvestmentRedemption implements InvestmentChange @entity {
   transaction: String!
 }
 
-type InvestmentReward implements InvestmentChange @entity {
+type InvestmentReward implements MetricsChangeEvent & InvestmentChangeEvent @entity {
   id: ID!
-  type: InvestmentChangeTypeEnum!
+  type: InvestmentChangeEventTypeEnum!
   fund: Fund!
   investor: Account!
   investment: Investment!
@@ -216,7 +251,7 @@ type Investment @entity {
   id: ID!
   fund: Fund!
   investor: Account!
-  changes: [InvestmentChange!]! @derivedFrom(field: "investment")
+  changes: [InvestmentChangeEvent!]! @derivedFrom(field: "investment")
   shares: BigInt!
 }
 

@@ -66,8 +66,6 @@ export function currentFundHoldings(event: ethereum.Event, context: Context): Fu
   let quantities = result.value0;
   let addresses = result.value1;
 
-  log.debug('holdings length ' + BigInt.fromI32(addresses.length).toString(), []);
-
   let holdings: FundHolding[] = [];
   for (let i: i32 = 0; i < addresses.length; i++) {
     if (quantities[i].isZero()) {
@@ -85,8 +83,6 @@ export function updateFundHoldings(event: ethereum.Event, context: Context): Fun
   let fund = context.entities.fund;
   fund.holdings = currentFundHoldings(event, context).map<string>((item) => item.id);
   fund.save();
-
-  // TODO: Write historical fund metrics.
 
   return fund;
 }
