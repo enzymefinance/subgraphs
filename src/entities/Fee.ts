@@ -1,9 +1,8 @@
 import { Entity, Value, Address, BigInt } from '@graphprotocol/graph-ts';
 import { Fund, ManagementFee, PerformanceFee } from '../generated/schema';
-import { HubContract } from '../generated/HubContract';
-import { FeeManagerContract } from '../generated/FeeManagerContract';
 import { ManagementFeeContract } from '../generated/ManagementFeeContract';
 import { PerformanceFeeContract } from '../generated/PerformanceFeeContract';
+import { Context } from '../context';
 
 export class Fee extends Entity {
   get id(): string {
@@ -34,42 +33,41 @@ export class Fee extends Entity {
   }
 }
 
-function feeId(feeManagerAddress: Address, feeAddress: Address): string {
-  return feeManagerAddress.toHex() + '/' + feeAddress.toHex();
+function feeId(fund: Fund, address: Address): string {
+  return fund.id + '/' + address.toHex();
 }
 
-export function ensureFees(fund: Fund): Fee[] {
-  let hubContract = HubContract.bind(Address.fromString(fund.id));
-  let hubRoutes = hubContract.routes();
-  let feeManagerAddress = hubRoutes.value1;
-  let feeManagerContract = FeeManagerContract.bind(feeManagerAddress);
-
+export function createFees(context: Context): Fee[] {
+  let fund = context.entities.fund;
+  let contract = context.contracts.fees;
+  let address = Address.fromString(context.fees);
   let fees: Fee[] = [];
 
-  let managementFeeAddress = feeManagerContract.fees(BigInt.fromI32(0));
-  if (managementFeeAddress) {
-    let feeContract = ManagementFeeContract.bind(managementFeeAddress);
-    let managementFeeRate = feeContract.managementFeeRate(feeManagerContract._address);
+  let managementFee = contract.fees(BigInt.fromI32(0));
+  if (managementFee) {
+    let contract = ManagementFeeContract.bind(managementFee);
+    let rate = contract.managementFeeRate(address);
 
-    let fee = new ManagementFee(feeId(feeManagerAddress, managementFeeAddress));
+    let fee = new ManagementFee(feeId(fund, managementFee));
     fee.identifier = 'MANAGEMENT';
     fee.fund = fund.id;
-    fee.rate = managementFeeRate.divDecimal(BigInt.fromI32(10).pow(18).toBigDecimal());
+    fee.rate = rate.divDecimal(BigInt.fromI32(10).pow(18).toBigDecimal());
     fee.save();
 
     fees.push(fee as Fee);
   }
 
-  let performanceFeeAddress = feeManagerContract.fees(BigInt.fromI32(1));
-  if (performanceFeeAddress) {
-    let feeContract = PerformanceFeeContract.bind(performanceFeeAddress);
-    let performanceFeeRate = feeContract.performanceFeeRate(feeManagerContract._address);
+  let performanceFee = contract.fees(BigInt.fromI32(1));
+  if (performanceFee) {
+    let feeContract = PerformanceFeeContract.bind(performanceFee);
+    let period = feeContract.performanceFeePeriod(address);
+    let rate = feeContract.performanceFeeRate(address);
 
-    let fee = new PerformanceFee(feeId(feeManagerAddress, performanceFeeAddress));
+    let fee = new PerformanceFee(feeId(fund, performanceFee));
     fee.identifier = 'PERFORMANCE';
     fee.fund = fund.id;
-    fee.rate = performanceFeeRate.divDecimal(BigInt.fromI32(10).pow(18).toBigDecimal());
-    fee.period = feeContract.performanceFeePeriod(feeManagerContract._address);
+    fee.period = period;
+    fee.rate = rate.divDecimal(BigInt.fromI32(10).pow(18).toBigDecimal());
     fee.save();
 
     fees.push(fee as Fee);

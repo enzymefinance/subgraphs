@@ -4,6 +4,7 @@ import { Fund, FundHolding, Asset } from '../generated/schema';
 import { Context } from '../context';
 import { createFundHolding } from './Holding';
 import { useAsset } from './Asset';
+import { createFees } from './Fee';
 
 export function useFund(id: string): Fund {
   let fund = Fund.load(id);
@@ -32,7 +33,7 @@ export function createFund(event: ethereum.Event, address: Address, context: Con
   fund.holdings = currentFundHoldings(event, context).map<string>((item) => item.id);
   fund.save();
 
-  // createFees(fund);
+  createFees(context);
 
   DataSourceTemplate.createWithContext('HubContract', [context.hub], context.context);
   DataSourceTemplate.createWithContext('AccountingContract', [context.accounting], context.context);
