@@ -3,14 +3,15 @@ import { Event, Fund, Version } from '../generated/schema';
 import { Context, context } from '../context';
 import { createFundEvent } from '../entities/Event';
 import { ensureInvestor } from '../entities/Account';
-import { useAsset, useAssets } from '../entities/Asset';
+import { useAsset } from '../entities/Asset';
 import { arrayDiff } from '../utils/arrayDiff';
 import { arrayUnique } from '../utils/arrayUnique';
 import {
-  ensureInvestmentAddition,
+  ensureInvestment,
   deleteInvestmentRequest,
-  ensureInvestmentRequest,
-  ensureInvestmentRedemption,
+  createInvestmentRequest,
+  createInvestmentAddition,
+  createInvestmentRedemption,
 } from '../entities/Investment';
 import {
   CancelRequest,
@@ -49,27 +50,29 @@ export function handleInvestmentRequest(event: InvestmentRequest): void {
   let asset = useAsset(event.params.investmentAsset.toHex());
   let quantity = event.params.investmentAmount;
 
-  ensureInvestmentRequest(event, context.entities.fund, account, asset, quantity);
+  createInvestmentRequest(event, context.entities.fund, account, asset, quantity);
   createFundEvent('InvestmentRequest', event, context);
 }
 
-// TODO: Somethign is wrong here with the redemption handler on GenesisA.
 export function handleRedemption(event: Redemption): void {
-  // let addresses = event.params.assets.map<string>((item) => item.toHex());
-  // let assets = useAssets(addresses);
-  // let account = ensureInvestor(event.params.redeemer);
-  // let shares = event.params.redeemedShares;
-  // let quantities = event.params.assetQuantities;
-  // ensureInvestmentRedemption(event, context.entities.fund, account, assets, quantities, shares);
+  let account = ensureInvestor(event.params.redeemer);
+  let investment = ensureInvestment(context.entities.fund, account);
+  let assets = event.params.assets.map<string>((item) => item.toHex());
+  let shares = event.params.redeemedShares;
+  let quantities = event.params.assetQuantities;
+
+  createInvestmentRedemption(event, investment, assets, quantities, shares);
   // createFundEvent('Redemption', event, context);
 }
 
 export function handleRequestExecution(event: RequestExecution): void {
   let account = ensureInvestor(event.params.requestOwner);
+  let investment = ensureInvestment(context.entities.fund, account);
   let asset = useAsset(event.params.investmentAsset.toHex());
   let quantity = event.params.investmentAmount;
   let shares = event.params.requestedShares;
 
-  ensureInvestmentAddition(event, context.entities.fund, account, asset, quantity, shares);
+  deleteInvestmentRequest(context.entities.fund, account);
+  createInvestmentAddition(event, investment, asset, quantity, shares);
   createFundEvent('RequestExecution', event, context);
 }

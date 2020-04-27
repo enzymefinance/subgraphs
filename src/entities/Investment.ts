@@ -7,19 +7,19 @@ import {
   Fund,
   Account,
   Asset,
+  InvestmentReward,
 } from '../generated/schema';
 
 function investmentId(fund: Fund, investor: Account): string {
   return fund.id + '/' + investor.id;
 }
 
-function changeId(event: ethereum.Event, fund: Fund, investor: Account): string {
-  let scope = fund.id + '/' + investor.id;
+function changeId(event: ethereum.Event, investment: Investment): string {
   let suffix = event.transaction.hash.toHex() + '/' + event.logIndex.toString();
-  return scope + '/' + suffix;
+  return investment.id + '/' + suffix;
 }
 
-function ensureInvestment(fund: Fund, investor: Account): Investment {
+export function ensureInvestment(fund: Fund, investor: Account): Investment {
   let id = investmentId(fund, investor);
   let investment = Investment.load(id) as Investment;
   if (investment) {
@@ -35,28 +35,17 @@ function ensureInvestment(fund: Fund, investor: Account): Investment {
   return investment;
 }
 
-export function ensureInvestmentAddition(
+export function createInvestmentAddition(
   event: ethereum.Event,
-  fund: Fund,
-  investor: Account,
+  investment: Investment,
   asset: Asset,
   quantity: BigInt,
   shares: BigInt,
 ): InvestmentAddition {
-  let id = changeId(event, fund, investor);
-  let addition = InvestmentAddition.load(id) as InvestmentAddition;
-  if (addition) {
-    return addition;
-  }
-
-  let investment = ensureInvestment(fund, investor);
-  investment.shares = investment.shares.plus(shares);
-  investment.save();
-
-  addition = new InvestmentAddition(id);
+  let addition = new InvestmentAddition(changeId(event, investment));
   addition.type = 'ADDITION';
-  addition.investor = investor.id;
-  addition.fund = fund.id;
+  addition.investor = investment.investor;
+  addition.fund = investment.fund;
   addition.investment = investment.id;
   addition.asset = asset.id;
   addition.quantity = quantity;
@@ -65,61 +54,68 @@ export function ensureInvestmentAddition(
   addition.transaction = event.transaction.hash.toHex();
   addition.save();
 
-  deleteInvestmentRequest(fund, investor);
+  investment.shares = investment.shares.plus(shares);
+  investment.save();
 
   return addition;
 }
 
-export function ensureInvestmentRedemption(
+export function createInvestmentRedemption(
   event: ethereum.Event,
-  fund: Fund,
-  investor: Account,
-  assets: Asset[],
+  investment: Investment,
+  assets: string[],
   quantities: BigInt[],
   shares: BigInt,
 ): InvestmentRedemption {
-  let id = changeId(event, fund, investor);
-  let redemption = InvestmentRedemption.load(id) as InvestmentRedemption;
-  if (redemption) {
-    return redemption;
-  }
-
-  let investment = ensureInvestment(fund, investor);
-  investment.shares = investment.shares.minus(shares);
-  investment.save();
-
-  redemption = new InvestmentRedemption(id);
+  let redemption = new InvestmentRedemption(changeId(event, investment));
   redemption.type = 'REDEMPTION';
-  redemption.investor = investor.id;
-  redemption.fund = fund.id;
+  redemption.investor = investment.investor;
+  redemption.fund = investment.fund;
   redemption.investment = investment.id;
-  redemption.assets = assets.map<string>((asset) => asset.id);
+  redemption.assets = assets;
   redemption.quantities = quantities;
   redemption.shares = shares;
   redemption.timestamp = event.block.timestamp;
   redemption.transaction = event.transaction.hash.toHex();
   redemption.save();
 
+  investment.shares = investment.shares.minus(shares);
+  investment.save();
+
   return redemption;
 }
 
-export function ensureInvestmentRequest(
+export function createInvestmentReward(
+  event: ethereum.Event,
+  investment: Investment,
+  shares: BigInt,
+): InvestmentReward {
+  let reward = new InvestmentReward(changeId(event, investment));
+  reward.type = 'REWARD';
+  reward.investor = investment.investor;
+  reward.fund = investment.fund;
+  reward.investment = investment.id;
+  reward.shares = shares;
+  reward.timestamp = event.block.timestamp;
+  reward.transaction = event.transaction.hash.toHex();
+  reward.save();
+
+  investment.shares = investment.shares.plus(shares);
+  investment.save();
+
+  return reward;
+}
+
+export function createInvestmentRequest(
   event: ethereum.Event,
   fund: Fund,
   investor: Account,
   asset: Asset,
   quantity: BigInt,
 ): InvestmentRequest {
-  let investment = ensureInvestment(fund, investor);
-  let request = InvestmentRequest.load(investment.id) as InvestmentRequest;
-  if (request) {
-    return request;
-  }
-
-  request = new InvestmentRequest(investment.id);
+  let request = new InvestmentRequest(investmentId(fund, investor));
   request.investor = investor.id;
   request.fund = fund.id;
-  request.investment = investment.id;
   request.asset = asset.id;
   request.quantity = quantity;
   request.timestamp = event.block.timestamp;
@@ -130,9 +126,8 @@ export function ensureInvestmentRequest(
 }
 
 export function deleteInvestmentRequest(fund: Fund, investor: Account): void {
-  let investment = ensureInvestment(fund, investor);
-
-  if (InvestmentRequest.load(investment.id)) {
-    store.remove('InvestmentRequest', investment.id);
+  let id = investmentId(fund, investor);
+  if (InvestmentRequest.load(id)) {
+    store.remove('InvestmentRequest', id);
   }
 }

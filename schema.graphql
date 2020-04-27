@@ -206,7 +206,6 @@ type InvestmentRequest @entity {
   id: ID!
   fund: Fund!
   investor: Account!
-  investment: Investment!
   asset: Asset!
   quantity: BigInt!
   timestamp: BigInt!
@@ -218,7 +217,6 @@ type Investment @entity {
   fund: Fund!
   investor: Account!
   changes: [InvestmentChange!]! @derivedFrom(field: "investment")
-  requests: [InvestmentRequest!]! @derivedFrom(field: "investment")
   shares: BigInt!
 }
 
@@ -228,6 +226,7 @@ type Account @entity {
   managements: [Fund!]! @derivedFrom(field: "manager")
   investor: Boolean!
   investments: [Investment!]! @derivedFrom(field: "investor")
+  requests: [Investment!]! @derivedFrom(field: "investor")
 }
 
 type Asset @entity {

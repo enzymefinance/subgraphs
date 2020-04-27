@@ -3,9 +3,13 @@ import { Event, Fund, Version } from '../generated/schema';
 import { Context, context } from '../context';
 import { createFundEvent } from '../entities/Event';
 import { FeeReward } from '../generated/FeeManagerContract';
+import { ensureInvestment, createInvestmentReward } from '../entities/Investment';
 
 export function handleFeeReward(event: FeeReward): void {
-  // TODO: Add "REWARD" type to investment changes and allocate the rewarded fees
-  // to the 'shares' quantity for the fund manager.
+  if (!event.params.shareQuantity.isZero()) {
+    let investment = ensureInvestment(context.entities.fund, context.entities.manager);
+    createInvestmentReward(event, investment, event.params.shareQuantity);
+  }
+
   createFundEvent('FeeReward', event, context);
 }
