@@ -17,6 +17,7 @@ enum FeeIdentifierEnum {
 enum InvestmentChangeTypeEnum {
   ADDITION
   REDEMPTION
+  REWARD
 }
 
 type Event @entity {
@@ -186,6 +187,17 @@ type InvestmentRedemption implements InvestmentChange @entity {
   shares: BigInt!
   assets: [Asset!]!
   quantities: [BigInt!]!
+  timestamp: BigInt!
+  transaction: String!
+}
+
+type InvestmentReward implements InvestmentChange @entity {
+  id: ID!
+  type: InvestmentChangeTypeEnum!
+  fund: Fund!
+  investor: Account!
+  investment: Investment!
+  shares: BigInt!
   timestamp: BigInt!
   transaction: String!
 }
