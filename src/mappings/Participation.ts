@@ -21,6 +21,7 @@ import {
   RequestExecution,
   InvestmentRequest,
 } from '../generated/ParticipationContract';
+import { updateFundHoldings } from '../entities/Fund';
 
 export function handleCancelRequest(event: CancelRequest): void {
   let account = ensureInvestor(event.params.requestOwner);
@@ -62,6 +63,7 @@ export function handleRedemption(event: Redemption): void {
   let quantities = event.params.assetQuantities;
 
   createInvestmentRedemption(event, investment, assets, quantities, shares);
+  updateFundHoldings(event, context);
   // createFundEvent('Redemption', event, context);
 }
 
@@ -74,5 +76,6 @@ export function handleRequestExecution(event: RequestExecution): void {
 
   deleteInvestmentRequest(context.entities.fund, account);
   createInvestmentAddition(event, investment, asset, quantity, shares);
+  updateFundHoldings(event, context);
   createFundEvent('RequestExecution', event, context);
 }

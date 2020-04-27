@@ -1,39 +1,33 @@
-import { Entity, Value, BigInt } from '@graphprotocol/graph-ts';
+import { Entity, Value, BigInt, log, ethereum } from '@graphprotocol/graph-ts';
+import { FundHolding, Fund, Asset } from '../generated/schema';
+import { Context } from '../context';
 
-export class Holding extends Entity {
-  get id(): string {
-    let value = this.get('id');
-    return value.toString();
+function fundHoldingId(event: ethereum.Event, fund: Fund, asset: Asset): string {
+  return fund.id + '/' + asset.id + '/' + event.transaction.hash.toHex() + '/' + event.logIndex.toString();
+}
+
+export function useFundHolding(id: string): FundHolding {
+  let holding = FundHolding.load(id);
+  if (holding == null) {
+    log.critical('Failed to load fund FundHolding {}.', [id]);
   }
 
-  set id(value: string) {
-    this.set('id', Value.fromString(value));
-  }
+  return holding as FundHolding;
+}
 
-  get fund(): string {
-    let value = this.get('fund');
-    return value.toString();
-  }
+export function createFundHolding(
+  event: ethereum.Event,
+  asset: Asset,
+  quantity: BigInt,
+  context: Context,
+): FundHolding {
+  let fund = context.entities.fund;
+  let holding = new FundHolding(fundHoldingId(event, fund, asset));
+  holding.fund = fund.id;
+  holding.asset = asset.id;
+  holding.quantity = quantity;
+  holding.timestamp = event.block.timestamp;
+  holding.save();
 
-  set fund(value: string) {
-    this.set('fund', Value.fromString(value));
-  }
-
-  get timestamp(): BigInt {
-    let value = this.get('timestamp');
-    return value.toBigInt();
-  }
-
-  set timestamp(value: BigInt) {
-    this.set('timestamp', Value.fromBigInt(value));
-  }
-
-  get identifier(): string {
-    let value = this.get('identifier');
-    return value.toString();
-  }
-
-  set identifier(value: string) {
-    this.set('identifier', Value.fromString(value));
-  }
+  return holding;
 }
