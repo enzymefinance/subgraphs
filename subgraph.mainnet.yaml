@@ -10,7 +10,7 @@ dataSources:
     network: mainnet
     source:
       abi: VersionContract
-      address: '0xcb6c6bdf0aa4cf0188518783b871931efb64248f'
+      address: "0xcb6c6bdf0aa4cf0188518783b871931efb64248f"
       startBlock: 7271059
     mapping:
       kind: ethereum/events
@@ -64,7 +64,7 @@ dataSources:
     network: mainnet
     source:
       abi: VersionContract
-      address: '0x01bde0b02740d6311e4a87ca112deeeddb057efb'
+      address: "0x01bde0b02740d6311e4a87ca112deeeddb057efb"
       startBlock: 7375920
     mapping:
       kind: ethereum/events
@@ -118,7 +118,7 @@ dataSources:
     network: mainnet
     source:
       abi: VersionContract
-      address: '0x5f9ae054c7f0489888b1ea46824b4b9618f8a711'
+      address: "0x5f9ae054c7f0489888b1ea46824b4b9618f8a711"
       startBlock: 9497260
     mapping:
       kind: ethereum/events
@@ -656,9 +656,9 @@ templates:
           file: ./src/abis/policies/MaxPositions.abi.json
         - name: PriceTolerancePolicyContract
           file: ./src/abis/policies/PriceTolerance.abi.json
-      # eventHandlers:
-      # - event: ExchangeMethodCall(indexed address,indexed string,address[8],uint256[8],bytes[4],bytes32,bytes)
-      #   handler: handleExchangeMethodCall
+      eventHandlers:
+        - event: ExchangeMethodCall(indexed address,indexed string,address[6],uint256[8],bytes32,bytes,bytes,bytes)
+          handler: handleExchangeMethodCall
 
   - name: UserWhitelistPolicyContract
     kind: ethereum/contract

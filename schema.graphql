@@ -93,6 +93,7 @@ type Fund @entity {
   investments: [Investment!]! @derivedFrom(field: "fund")
   policies: [Policy!]! @derivedFrom(field: "fund")
   fees: [Fee!]! @derivedFrom(field: "fund")
+  trades: [Trade!]! @derivedFrom(field: "fund")
   metrics: [FundMetrics!]! @derivedFrom(field: "fund")
 
   # TODO: Implement historical counters
@@ -269,4 +270,20 @@ type Asset @entity {
   name: String!
   symbol: String!
   decimals: Int!
+}
+
+type Trade @entity {
+  id: ID!
+  fund: Fund!
+  exchange: Exchange!
+  timestamp: BigInt!
+  methodName: String!
+  assetSold: Asset
+  assetBought: Asset
+  amountSold: BigInt
+  amountBought: BigInt
+}
+
+type Exchange @entity {
+  id: ID!
 }
