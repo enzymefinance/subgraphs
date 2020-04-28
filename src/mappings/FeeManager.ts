@@ -15,7 +15,7 @@ export function handleFeeReward(event: FeeReward): void {
     fund = updateFundInvestments(event, context);
 
     trackFundShares(event, fund, reward);
-    trackFundInvestments(event, fund, reward);
+    // trackFundInvestments(event, fund, reward);
   }
 
   createFundEvent('FeeReward', event, context);
