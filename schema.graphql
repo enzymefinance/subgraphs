@@ -85,6 +85,16 @@ type FundHoldingsMetric implements FundMetric @entity {
   event: MetricChangeEvent!
 }
 
+type FundInvestmentsMetric implements FundMetric @entity {
+  id: ID!
+  fund: Fund!
+  timestamp: BigInt!
+  activeInvestors: Int!
+  inactiveInvestors: Int!
+  investments: [Investment!]!
+  event: MetricChangeEvent!
+}
+
 type FundHolding @entity {
   id: ID!
   fund: Fund!
@@ -104,12 +114,13 @@ type Fund @entity {
   holdings: [FundHolding!]!
   investable: [Asset!]!
   events: [Event!]! @derivedFrom(field: "fund")
-  investments: [Investment!]! @derivedFrom(field: "fund")
+  investments: [Investment!]!
   policies: [Policy!]! @derivedFrom(field: "fund")
   fees: [Fee!]! @derivedFrom(field: "fund")
   trades: [Trade!]! @derivedFrom(field: "fund")
   sharesMetrics: [FundSharesMetric!]! @derivedFrom(field: "fund")
   holdingsMetrics: [FundHoldingsMetric!]! @derivedFrom(field: "fund")
+  investmentsMetrics: [FundInvestmentsMetric!]! @derivedFrom(field: "fund")
 }
 
 interface Fee {

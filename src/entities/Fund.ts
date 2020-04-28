@@ -1,10 +1,12 @@
 import { Address, DataSourceTemplate, BigInt, log, ethereum } from '@graphprotocol/graph-ts';
 import { hexToAscii } from '../utils/hexToAscii';
-import { Fund, FundHolding, Asset } from '../generated/schema';
+import { Fund, FundHolding, Asset, Investment } from '../generated/schema';
 import { Context } from '../context';
 import { createFundHolding } from './Holding';
 import { useAsset } from './Asset';
 import { createFees } from './Fee';
+import { ensureInvestor } from './Account';
+import { useInvestment } from './Investment';
 
 export function useFund(id: string): Fund {
   let fund = Fund.load(id);
@@ -31,6 +33,7 @@ export function createFund(event: ethereum.Event, address: Address, context: Con
   fund.shares = BigInt.fromI32(0);
   fund.investable = investableAssets(context).map<string>((item) => item.id);
   fund.holdings = currentFundHoldings(event, context).map<string>((item) => item.id);
+  fund.investments = currentInvestments(event, context).map<string>((item) => item.id);
   fund.save();
 
   createFees(context);
@@ -82,6 +85,28 @@ export function currentFundHoldings(event: ethereum.Event, context: Context): Fu
 export function updateFundHoldings(event: ethereum.Event, context: Context): Fund {
   let fund = context.entities.fund;
   fund.holdings = currentFundHoldings(event, context).map<string>((item) => item.id);
+  fund.save();
+
+  return fund;
+}
+
+export function currentInvestments(event: ethereum.Event, context: Context): Investment[] {
+  let fund = context.entities.fund;
+  let investors = context.contracts.participation.getHistoricalInvestors();
+
+  let investments: Investment[] = [];
+  for (let i: i32 = 0; i < investors.length; i++) {
+    let investor = ensureInvestor(investors[i]);
+    let investment = useInvestment(fund, investor);
+    investments.push(investment);
+  }
+
+  return investments;
+}
+
+export function updateFundInvestments(event: ethereum.Event, context: Context): Fund {
+  let fund = context.entities.fund;
+  fund.investments = currentInvestments(event, context).map<string>((item) => item.id);
   fund.save();
 
   return fund;

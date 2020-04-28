@@ -1,4 +1,4 @@
-import { Address, BigInt, ethereum, store } from '@graphprotocol/graph-ts';
+import { Address, BigInt, ethereum, store, log } from '@graphprotocol/graph-ts';
 import {
   Investment,
   InvestmentAddition,
@@ -33,6 +33,26 @@ export function ensureInvestment(fund: Fund, investor: Account): Investment {
   investment.save();
 
   return investment;
+}
+
+export function useInvestment(fund: Fund, investor: Account): Investment {
+  let id = investmentId(fund, investor);
+
+  let investment = Investment.load(id);
+  if (investment == null) {
+    log.critical('Failed to load investment {}.', [id]);
+  }
+
+  return investment as Investment;
+}
+
+export function useInvestmentWithId(id: string): Investment {
+  let investment = Investment.load(id);
+  if (investment == null) {
+    log.critical('Failed to load investment {}.', [id]);
+  }
+
+  return investment as Investment;
 }
 
 export function createInvestmentAddition(

@@ -4,11 +4,18 @@ import { Context, context } from '../context';
 import { createFundEvent } from '../entities/Event';
 import { FeeReward } from '../generated/FeeManagerContract';
 import { ensureInvestment, createInvestmentReward } from '../entities/Investment';
+import { trackFundInvestments, trackFundShares } from '../entities/FundMetrics';
+import { updateFundInvestments } from '../entities/Fund';
 
 export function handleFeeReward(event: FeeReward): void {
   if (!event.params.shareQuantity.isZero()) {
+    let fund = context.entities.fund;
     let investment = ensureInvestment(context.entities.fund, context.entities.manager);
-    createInvestmentReward(event, investment, event.params.shareQuantity);
+    let reward = createInvestmentReward(event, investment, event.params.shareQuantity);
+    fund = updateFundInvestments(event, context);
+
+    trackFundShares(event, fund, reward);
+    trackFundInvestments(event, fund, reward);
   }
 
   createFundEvent('FeeReward', event, context);

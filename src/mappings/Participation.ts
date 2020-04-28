@@ -21,8 +21,8 @@ import {
   RequestExecution,
   InvestmentRequest,
 } from '../generated/ParticipationContract';
-import { updateFundHoldings } from '../entities/Fund';
-import { trackFundHoldings, trackFundShares } from '../entities/FundMetrics';
+import { updateFundHoldings, updateFundInvestments } from '../entities/Fund';
+import { trackFundHoldings, trackFundShares, trackFundInvestments } from '../entities/FundMetrics';
 
 export function handleCancelRequest(event: CancelRequest): void {
   let account = ensureInvestor(event.params.requestOwner);
@@ -56,22 +56,6 @@ export function handleInvestmentRequest(event: InvestmentRequest): void {
   createFundEvent('InvestmentRequest', event, context);
 }
 
-export function handleRedemption(event: Redemption): void {
-  let account = ensureInvestor(event.params.redeemer);
-  let investment = ensureInvestment(context.entities.fund, account);
-  let assets = event.params.assets.map<string>((item) => item.toHex());
-  let shares = event.params.redeemedShares;
-  let quantities = event.params.assetQuantities;
-
-  let redemption = createInvestmentRedemption(event, investment, assets, quantities, shares);
-  let fund = updateFundHoldings(event, context);
-
-  trackFundHoldings(event, fund, redemption);
-  trackFundShares(event, fund, redemption);
-
-  createFundEvent('Redemption', event, context);
-}
-
 export function handleRequestExecution(event: RequestExecution): void {
   let account = ensureInvestor(event.params.requestOwner);
   let investment = ensureInvestment(context.entities.fund, account);
@@ -81,10 +65,31 @@ export function handleRequestExecution(event: RequestExecution): void {
 
   let addition = createInvestmentAddition(event, investment, asset, quantity, shares);
   let fund = updateFundHoldings(event, context);
+  fund = updateFundInvestments(event, context);
+
   deleteInvestmentRequest(fund, account);
 
   trackFundHoldings(event, fund, addition);
   trackFundShares(event, fund, addition);
+  trackFundInvestments(event, fund, addition);
 
   createFundEvent('RequestExecution', event, context);
+}
+
+export function handleRedemption(event: Redemption): void {
+  let account = ensureInvestor(event.params.redeemer);
+  let investment = ensureInvestment(context.entities.fund, account);
+  let assets = event.params.assets.map<string>((item) => item.toHex());
+  let shares = event.params.redeemedShares;
+  let quantities = event.params.assetQuantities;
+
+  let redemption = createInvestmentRedemption(event, investment, assets, quantities, shares);
+  let fund = updateFundHoldings(event, context);
+  fund = updateFundInvestments(event, context);
+
+  trackFundHoldings(event, fund, redemption);
+  trackFundShares(event, fund, redemption);
+  trackFundInvestments(event, fund, redemption);
+
+  createFundEvent('Redemption', event, context);
 }
