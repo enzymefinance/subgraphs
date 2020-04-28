@@ -72,6 +72,7 @@ export function createTrade(
   trade.amountSold = assetSoldQuantityPreTrade.minus(assetSoldQuantityPostTrade);
   trade.amountBought = assetBoughtQuantityPostTrade.minus(assetBoughtQuantityPreTrade);
   trade.timestamp = event.block.timestamp;
+  trade.transaction = event.transaction.hash.toHex();
   trade.save();
 
   return trade;
