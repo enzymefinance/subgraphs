@@ -272,7 +272,14 @@ type Asset @entity {
   decimals: Int!
 }
 
-type Trade @entity {
+interface Order {
+  id: ID!
+  fund: Fund!
+  exchange: Exchange!
+  timestamp: BigInt!
+}
+
+type Trade implements Order @entity {
   id: ID!
   fund: Fund!
   exchange: Exchange!
@@ -282,6 +289,13 @@ type Trade @entity {
   assetBought: Asset
   amountSold: BigInt
   amountBought: BigInt
+}
+
+type CancelOrder implements Order @entity {
+  id: ID!
+  fund: Fund!
+  exchange: Exchange!
+  timestamp: BigInt!
 }
 
 type Exchange @entity {

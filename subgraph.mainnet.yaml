@@ -659,6 +659,8 @@ templates:
       eventHandlers:
         - event: ExchangeMethodCall(indexed address,indexed string,address[6],uint256[8],bytes32,bytes,bytes,bytes)
           handler: handleExchangeMethodCall
+        - event: ExchangeMethodCall(indexed address,indexed string,address[8],uint256[8],bytes[4],bytes32,bytes)
+          handler: handleExchangeMethodCall1
 
   - name: UserWhitelistPolicyContract
     kind: ethereum/contract

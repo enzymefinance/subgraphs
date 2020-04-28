@@ -1,26 +1,34 @@
 import { ethereum, BigInt } from '@graphprotocol/graph-ts';
-import { FundHolding, Trade, Asset, Fund } from '../generated/schema';
+import { FundHolding, Trade, Asset, CancelOrder, Exchange } from '../generated/schema';
 import { context } from '../context';
 import { ExchangeMethodCall } from '../generated/TradingContract';
-import { useAsset } from './Asset';
 import { useFundHolding } from './Holding';
-import { exchangeMethodSignatureToName } from '../utils/exchangeMethodSignature';
+import { updateFundHoldings } from './Fund';
 
-export function tradeId(event: ethereum.Event, fundId: string, assetSold: Asset, assetBought: Asset): string {
-  return event.block.timestamp.toString() + '/' + fundId + '/' + assetSold.id + '/' + assetBought.id;
+export function tradeId(event: ethereum.Event, fundId: string): string {
+  return (
+    fundId +
+    '/' +
+    event.block.timestamp.toString() +
+    '/' +
+    event.transaction.hash.toHex() +
+    '/' +
+    event.logIndex.toString()
+  );
 }
 
 export function createTrade(
-  event: ExchangeMethodCall,
-  holdingsPreTrade: string[],
-  holdingsPostTrade: FundHolding[],
+  event: ethereum.Event,
+  method: string,
+  exchange: Exchange,
+  assetSold: Asset,
+  assetBought: Asset,
 ): Trade {
   let fund = context.entities.fund;
 
-  let addresses = event.params.orderAddresses.map<string>((value) => value.toHex());
-  let assetSold = useAsset(addresses[3]);
-  let assetBought = useAsset(addresses[2]);
+  let holdingsPreTrade = context.entities.fund.holdings;
 
+  // pre trade quantities
   let assetSoldQuantityPreTrade = BigInt.fromI32(0);
   let assetBoughtQuantityPreTrade = BigInt.fromI32(0);
 
@@ -34,11 +42,16 @@ export function createTrade(
     }
   }
 
+  updateFundHoldings(event, context);
+
+  // post trade quantites
+  let holdingsPostTrade = context.entities.fund.holdings;
+
   let assetSoldQuantityPostTrade = BigInt.fromI32(0);
   let assetBoughtQuantityPostTrade = BigInt.fromI32(0);
 
   for (let i: i32 = 0; i < holdingsPostTrade.length; i++) {
-    let holding = holdingsPostTrade[i] as FundHolding;
+    let holding = useFundHolding(holdingsPostTrade[i]) as FundHolding;
     if (holding.asset == assetSold.id) {
       assetSoldQuantityPostTrade = holding.quantity;
     }
@@ -47,12 +60,12 @@ export function createTrade(
     }
   }
 
-  let trade = new Trade(tradeId(event, fund.id, assetSold, assetBought));
+  let trade = new Trade(tradeId(event, fund.id));
 
   trade.fund = fund.id;
 
-  trade.exchange = event.params.exchangeAddress.toHex();
-  trade.methodName = exchangeMethodSignatureToName(event.params.methodSignature.toHexString());
+  trade.exchange = exchange.id;
+  trade.methodName = method;
 
   trade.assetSold = assetSold.id;
   trade.assetBought = assetBought.id;
@@ -62,4 +75,14 @@ export function createTrade(
   trade.save();
 
   return trade;
+}
+
+export function cancelOrder(event: ethereum.Event, exchange: Exchange): void {
+  let fund = context.entities.fund;
+
+  let cancelOrder = new CancelOrder(tradeId(event, fund.id));
+  cancelOrder.fund = fund.id;
+  cancelOrder.exchange = exchange.id;
+  cancelOrder.timestamp = event.block.timestamp;
+  cancelOrder.save();
 }

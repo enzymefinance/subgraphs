@@ -12,20 +12,6 @@
   {
     "anonymous": false,
     "inputs": [
-      { "indexed": true, "internalType": "address", "name": "exchangeAddress", "type": "address" },
-      { "indexed": true, "internalType": "string", "name": "methodSignature", "type": "string" },
-      { "indexed": false, "internalType": "address[8]", "name": "orderAddresses", "type": "address[8]" },
-      { "indexed": false, "internalType": "uint256[8]", "name": "orderValues", "type": "uint256[8]" },
-      { "indexed": false, "internalType": "bytes[4]", "name": "orderData", "type": "bytes[4]" },
-      { "indexed": false, "internalType": "bytes32", "name": "identifier", "type": "bytes32" },
-      { "indexed": false, "internalType": "bytes", "name": "signature", "type": "bytes" }
-    ],
-    "name": "ExchangeMethodCall",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
       { "indexed": true, "name": "exchangeAddress", "type": "address" },
       { "indexed": true, "name": "methodSignature", "type": "string" },
       { "indexed": false, "name": "orderAddresses", "type": "address[6]" },
@@ -34,6 +20,20 @@
       { "indexed": false, "name": "makerAssetData", "type": "bytes" },
       { "indexed": false, "name": "takerAssetData", "type": "bytes" },
       { "indexed": false, "name": "signature", "type": "bytes" }
+    ],
+    "name": "ExchangeMethodCall",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "exchangeAddress", "type": "address" },
+      { "indexed": true, "internalType": "string", "name": "methodSignature", "type": "string" },
+      { "indexed": false, "internalType": "address[8]", "name": "orderAddresses", "type": "address[8]" },
+      { "indexed": false, "internalType": "uint256[8]", "name": "orderValues", "type": "uint256[8]" },
+      { "indexed": false, "internalType": "bytes[4]", "name": "orderData", "type": "bytes[4]" },
+      { "indexed": false, "internalType": "bytes32", "name": "identifier", "type": "bytes32" },
+      { "indexed": false, "internalType": "bytes", "name": "signature", "type": "bytes" }
     ],
     "name": "ExchangeMethodCall",
     "type": "event"

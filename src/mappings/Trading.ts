@@ -1,18 +1,41 @@
-import { Address } from '@graphprotocol/graph-ts';
-import { Event, Fund, Version } from '../generated/schema';
-import { Context, context } from '../context';
+import { context, Context } from '../context';
 import { createFundEvent } from '../entities/Event';
-import { ExchangeMethodCall } from '../generated/TradingContract';
-import { updateFundHoldings, currentFundHoldings } from '../entities/Fund';
-import { createTrade } from '../entities/Trade';
+import { ExchangeMethodCall, ExchangeMethodCall1 } from '../generated/TradingContract';
+import { createTrade, cancelOrder } from '../entities/Trade';
 import { useAsset } from '../entities/Asset';
+import { exchangeMethodSignatureToName } from '../utils/exchangeMethodSignature';
+import { ensureExchange } from '../entities/Exchange';
 
 export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
-  let holdingsPreTrade = context.entities.fund.holdings;
-  updateFundHoldings(event, context);
-  let holdingsPostTrade = currentFundHoldings(event, context);
+  let method = exchangeMethodSignatureToName(event.params.methodSignature.toHexString());
+  let exchange = ensureExchange(event.params.exchangeAddress, context);
 
-  createTrade(event, holdingsPreTrade, holdingsPostTrade);
+  if (method == 'cancelOrder') {
+    cancelOrder(event, exchange);
+    return;
+  }
 
-  createFundEvent('ExchangeMethodCall', event, context);
+  let addresses = event.params.orderAddresses.map<string>((value) => value.toHex());
+  let assetSold = useAsset(addresses[3]);
+  let assetBought = useAsset(addresses[2]);
+
+  createTrade(event, method, exchange, assetSold, assetBought);
+  createFundEvent('Trade', event, context);
+}
+
+export function handleExchangeMethodCall1(event: ExchangeMethodCall1): void {
+  let method = exchangeMethodSignatureToName(event.params.methodSignature.toHexString());
+  let exchange = ensureExchange(event.params.exchangeAddress, context);
+
+  if (method == 'cancelOrder') {
+    cancelOrder(event, exchange);
+    return;
+  }
+
+  let addresses = event.params.orderAddresses.map<string>((value) => value.toHex());
+  let assetSold = useAsset(addresses[3]);
+  let assetBought = useAsset(addresses[2]);
+
+  createTrade(event, method, exchange, assetSold, assetBought);
+  createFundEvent('Trade', event, context);
 }
