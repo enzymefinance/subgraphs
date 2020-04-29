@@ -1,4 +1,3 @@
-import { Address } from '@graphprotocol/graph-ts';
 import { Context } from './context';
 
 export class AbstractionLayer {

@@ -1,4 +1,3 @@
-import { ethereum } from '@graphprotocol/graph-ts';
 import { CancelOrder, Exchange } from '../generated/schema';
 import { Context } from '../context';
 

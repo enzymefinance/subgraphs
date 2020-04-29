@@ -1,5 +1,4 @@
-import { Address, dataSource } from '@graphprotocol/graph-ts';
-import { Event, Fund, Version } from '../generated/schema';
+import { dataSource } from '@graphprotocol/graph-ts';
 import { Context } from '../context';
 import { createFundEvent } from '../entities/Event';
 import { FeeReward } from '../generated/FeeManagerContract';

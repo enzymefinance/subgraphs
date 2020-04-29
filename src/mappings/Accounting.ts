@@ -1,5 +1,4 @@
 import { AssetAddition, AssetRemoval } from '../generated/AccountingContract';
-import { Context } from '../context';
 
 export function handleAssetAddition(event: AssetAddition): void {
   // createFundEvent('AssetAddition', context);

@@ -1,4 +1,4 @@
-import { log, Entity, BigInt, Address } from '@graphprotocol/graph-ts';
+import { log, Entity, BigInt } from '@graphprotocol/graph-ts';
 import {
   FundHoldingsMetric,
   FundSharesMetric,

@@ -1,7 +1,5 @@
 import { DataSourceContext, Address, Entity, log, ethereum } from '@graphprotocol/graph-ts';
-import { useFund } from './entities/Fund';
-import { useVersion } from './entities/Version';
-import { useAccount } from './entities/Account';
+import { Fund, Version, Account, FundAggregatedMetric } from './generated/schema';
 import { HubContract } from './generated/HubContract';
 import { AccountingContract } from './generated/AccountingContract';
 import { ParticipationContract } from './generated/ParticipationContract';
@@ -11,9 +9,11 @@ import { PolicyManagerContract } from './generated/PolicyManagerContract';
 import { FeeManagerContract } from './generated/FeeManagerContract';
 import { VersionContract } from './generated/VersionContract';
 import { RegistryContract } from './generated/RegistryContract';
-import { Fund, Version, Account, FundAggregatedMetric } from './generated/schema';
-import { AbstractionLayer } from './api';
 import { ensureAggregatedMetric } from './entities/FundMetrics';
+import { useFund } from './entities/Fund';
+import { useVersion } from './entities/Version';
+import { useAccount } from './entities/Account';
+import { AbstractionLayer } from './api';
 
 export class ContextContracts {
   context: Context;

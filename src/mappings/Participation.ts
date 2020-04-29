@@ -1,5 +1,5 @@
-import { Address, dataSource } from '@graphprotocol/graph-ts';
-import { Event, Fund, Version, FundHoldingsMetric, Asset } from '../generated/schema';
+import { dataSource } from '@graphprotocol/graph-ts';
+import { Asset } from '../generated/schema';
 import { Context } from '../context';
 import { createFundEvent } from '../entities/Event';
 import { ensureInvestor } from '../entities/Account';
