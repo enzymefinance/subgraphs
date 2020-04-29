@@ -1,12 +1,13 @@
-import { ethereum, BigInt } from '@graphprotocol/graph-ts';
-import { Trade, Asset, CancelOrder, Exchange } from '../generated/schema';
-import { context } from '../context';
-import { ExchangeMethodCall } from '../generated/TradingContract';
-import { updateFundHoldings } from './Fund';
+import { ethereum } from '@graphprotocol/graph-ts';
+import { CancelOrder, Exchange } from '../generated/schema';
+import { Context } from '../context';
 
-export function tradeId(event: ethereum.Event, fundId: string): string {
+export function tradeId(context: Context): string {
+  let event = context.event;
+  let fund = context.entities.fund;
+
   return (
-    fundId +
+    fund.id +
     '/' +
     event.block.timestamp.toString() +
     '/' +
@@ -65,10 +66,10 @@ export function tradeId(event: ethereum.Event, fundId: string): string {
 // return trade;
 // }
 
-export function cancelOrder(event: ethereum.Event, exchange: Exchange): void {
+export function cancelOrder(exchange: Exchange, context: Context): void {
+  let event = context.event;
   let fund = context.entities.fund;
-
-  let cancelOrder = new CancelOrder(tradeId(event, fund.id));
+  let cancelOrder = new CancelOrder(tradeId(context));
   cancelOrder.fund = fund.id;
   cancelOrder.exchange = exchange.id;
   cancelOrder.timestamp = event.block.timestamp;

@@ -1,4 +1,4 @@
-import { Address, Entity, BigInt, store, ethereum, Value } from '@graphprotocol/graph-ts';
+import { Address, Entity, BigInt, store, Value } from '@graphprotocol/graph-ts';
 import {
   CustomPolicy,
   MaxPositionsPolicy,
@@ -7,9 +7,9 @@ import {
   AssetWhitelistPolicy,
   AssetBlacklistPolicy,
   PriceTolerancePolicy,
-  Fund,
 } from '../generated/schema';
 import { PolicyContractInterface } from '../generated/PolicyContractInterface';
+import { Context } from '../context';
 
 function loadPolicy(policyAddress: Address): Policy | null {
   let candidates: string[] = [
@@ -33,17 +33,20 @@ function loadPolicy(policyAddress: Address): Policy | null {
   return null;
 }
 
-export function ensurePolicy(event: ethereum.Event, policyAddress: Address, fund: Fund): Policy {
-  let loaded = loadPolicy(policyAddress);
+export function ensurePolicy(address: Address, context: Context): Policy {
+  let loaded = loadPolicy(address);
   if (loaded) {
     return loaded as Policy;
   }
 
-  let policyContract = PolicyContractInterface.bind(policyAddress);
-  let identifier = policyContract.try_identifier();
+  let fund = context.entities.fund;
+  let event = context.event;
+
+  let contract = PolicyContractInterface.bind(address);
+  let identifier = contract.try_identifier();
 
   if (identifier.value == 'UserWhitelist') {
-    let policy = new UserWhitelistPolicy(policyAddress.toHex());
+    let policy = new UserWhitelistPolicy(address.toHex());
     policy.identifier = 'USER_WHITELIST';
     policy.fund = fund.id;
     policy.timestamp = event.block.timestamp;
@@ -56,7 +59,7 @@ export function ensurePolicy(event: ethereum.Event, policyAddress: Address, fund
   }
 
   if (identifier.value == 'AssetWhitelist') {
-    let policy = new AssetWhitelistPolicy(policyAddress.toHex());
+    let policy = new AssetWhitelistPolicy(address.toHex());
     policy.identifier = 'ASSET_WHITELIST';
     policy.fund = fund.id;
     policy.timestamp = event.block.timestamp;
@@ -66,7 +69,7 @@ export function ensurePolicy(event: ethereum.Event, policyAddress: Address, fund
   }
 
   if (identifier.value == 'AssetBlacklist') {
-    let policy = new AssetBlacklistPolicy(policyAddress.toHex());
+    let policy = new AssetBlacklistPolicy(address.toHex());
     policy.identifier = 'ASSET_BLACKLIST';
     policy.fund = fund.id;
     policy.timestamp = event.block.timestamp;
@@ -76,7 +79,7 @@ export function ensurePolicy(event: ethereum.Event, policyAddress: Address, fund
   }
 
   if (identifier.value == 'MaxPositions') {
-    let policy = new MaxPositionsPolicy(policyAddress.toHex());
+    let policy = new MaxPositionsPolicy(address.toHex());
     policy.identifier = 'MAX_POSITIONS';
     policy.fund = fund.id;
     policy.timestamp = event.block.timestamp;
@@ -86,7 +89,7 @@ export function ensurePolicy(event: ethereum.Event, policyAddress: Address, fund
   }
 
   if (identifier.value == 'MaxConcentration') {
-    let policy = new MaxConcentrationPolicy(policyAddress.toHex());
+    let policy = new MaxConcentrationPolicy(address.toHex());
     policy.identifier = 'MAX_CONCENTRATION';
     policy.fund = fund.id;
     policy.timestamp = event.block.timestamp;
@@ -96,7 +99,7 @@ export function ensurePolicy(event: ethereum.Event, policyAddress: Address, fund
   }
 
   if (identifier.value == 'PriceTolerance') {
-    let policy = new PriceTolerancePolicy(policyAddress.toHex());
+    let policy = new PriceTolerancePolicy(address.toHex());
     policy.identifier = 'PRICE_TOLERANCE';
     policy.fund = fund.id;
     policy.timestamp = event.block.timestamp;
@@ -105,7 +108,7 @@ export function ensurePolicy(event: ethereum.Event, policyAddress: Address, fund
     return policy as Policy;
   }
 
-  let policy = new CustomPolicy(policyAddress.toHex());
+  let policy = new CustomPolicy(address.toHex());
   policy.identifier = 'CUSTOM';
   policy.fund = fund.id;
   policy.timestamp = event.block.timestamp;

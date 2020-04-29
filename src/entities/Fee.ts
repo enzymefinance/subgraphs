@@ -1,5 +1,5 @@
 import { Entity, Value, Address, BigInt } from '@graphprotocol/graph-ts';
-import { Fund, ManagementFee, PerformanceFee } from '../generated/schema';
+import { ManagementFee, PerformanceFee } from '../generated/schema';
 import { ManagementFeeContract } from '../generated/ManagementFeeContract';
 import { PerformanceFeeContract } from '../generated/PerformanceFeeContract';
 import { Context } from '../context';
@@ -33,7 +33,8 @@ export class Fee extends Entity {
   }
 }
 
-function feeId(fund: Fund, address: Address): string {
+function feeId(address: Address, context: Context): string {
+  let fund = context.entities.fund;
   return fund.id + '/' + address.toHex();
 }
 
@@ -48,7 +49,7 @@ export function createFees(context: Context): Fee[] {
     let contract = ManagementFeeContract.bind(managementFee);
     let rate = contract.managementFeeRate(address);
 
-    let fee = new ManagementFee(feeId(fund, managementFee));
+    let fee = new ManagementFee(feeId(managementFee, context));
     fee.identifier = 'MANAGEMENT';
     fee.fund = fund.id;
     fee.rate = rate.divDecimal(BigInt.fromI32(10).pow(18).toBigDecimal());
@@ -63,7 +64,7 @@ export function createFees(context: Context): Fee[] {
     let period = feeContract.performanceFeePeriod(address);
     let rate = feeContract.performanceFeeRate(address);
 
-    let fee = new PerformanceFee(feeId(fund, performanceFee));
+    let fee = new PerformanceFee(feeId(performanceFee, context));
     fee.identifier = 'PERFORMANCE';
     fee.fund = fund.id;
     fee.period = period;

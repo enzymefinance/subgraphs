@@ -10,7 +10,7 @@ dataSources:
     network: dev
     source:
       abi: VersionContract
-      address: "0x7eb74deb80254010F460b179c181F94e70d4D9e3"
+      address: '0x7eb74deb80254010F460b179c181F94e70d4D9e3'
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -442,58 +442,6 @@ templates:
       eventHandlers:
         - event: Registration(indexed bytes4,uint8,indexed address)
           handler: handleRegistration
-
-  - name: SharesContract
-    kind: ethereum/contract
-    network: dev
-    source:
-      abi: SharesContract
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.4
-      language: wasm/assemblyscript
-      file: ./src/mappings/Shares.ts
-      entities: []
-      abis:
-        - name: VersionContract
-          file: ./src/abis/Version.abi.json
-        - name: RegistryContract
-          file: ./src/abis/Registry.abi.json
-        - name: HubContract
-          file: ./src/abis/Hub.abi.json
-        - name: AccountingContract
-          file: ./src/abis/spokes/Accounting.abi.json
-        - name: FeeManagerContract
-          file: ./src/abis/spokes/FeeManager.abi.json
-        - name: ParticipationContract
-          file: ./src/abis/spokes/Participation.abi.json
-        - name: PolicyManagerContract
-          file: ./src/abis/spokes/PolicyManager.abi.json
-        - name: SharesContract
-          file: ./src/abis/spokes/Shares.abi.json
-        - name: TradingContract
-          file: ./src/abis/spokes/Trading.abi.json
-        - name: PerformanceFeeContract
-          file: ./src/abis/fees/PerformanceFee.abi.json
-        - name: ManagementFeeContract
-          file: ./src/abis/fees/ManagementFee.abi.json
-        - name: PolicyContractInterface
-          file: ./src/abis/policies/IPolicy.abi.json
-        - name: AssetBlacklistPolicyContract
-          file: ./src/abis/policies/AssetBlacklist.abi.json
-        - name: AssetWhitelistPolicyContract
-          file: ./src/abis/policies/AssetWhitelist.abi.json
-        - name: UserWhitelistPolicyContract
-          file: ./src/abis/policies/UserWhitelist.abi.json
-        - name: MaxConcentrationPolicyContract
-          file: ./src/abis/policies/MaxConcentration.abi.json
-        - name: MaxPositionsPolicyContract
-          file: ./src/abis/policies/MaxPositions.abi.json
-        - name: PriceTolerancePolicyContract
-          file: ./src/abis/policies/PriceTolerance.abi.json
-      eventHandlers:
-        - event: Transfer(indexed address,indexed address,uint256)
-          handler: handleTransfer
 
   - name: TradingContract
     kind: ethereum/contract

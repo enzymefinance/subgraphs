@@ -1,36 +1,24 @@
-import { Entity, ethereum, log } from '@graphprotocol/graph-ts';
-import { Event, Fund, Version } from '../generated/schema';
+import { log } from '@graphprotocol/graph-ts';
+import { Event, Fund } from '../generated/schema';
 import { Context } from '../context';
 
-export function createFundEvent<TEvent extends ethereum.Event = ethereum.Event>(
-  name: string,
-  event: TEvent,
-  context: Context,
-): Event {
+export function createFundEvent(name: string, context: Context): Event {
+  let event = context.event;
   let fund = context.entities.fund;
-  return makeEvent(eventId(event, fund), name, event, context.entities.version, fund);
+  let id = fund.id + '/' + event.transaction.hash.toHex() + '/' + event.logIndex.toString();
+  return makeEvent(id, name, context, fund);
 }
 
-export function createEvent<TEvent extends ethereum.Event = ethereum.Event>(
-  name: string,
-  event: TEvent,
-  context: Context,
-): Event {
+export function createEvent(name: string, context: Context): Event {
+  let event = context.event;
   let version = context.entities.version;
-  return makeEvent(eventId(event, version), name, event, version);
+  let id = version.id + '/' + event.transaction.hash.toHex() + '/' + event.logIndex.toString();
+  return makeEvent(id, name, context);
 }
 
-function eventId(event: ethereum.Event, scope: Entity): string {
-  return scope.getString('id') + '/' + event.transaction.hash.toHex() + '/' + event.logIndex.toString();
-}
+function makeEvent(id: string, name: string, context: Context, fund: Fund | null = null): Event {
+  let event = context.event;
 
-function makeEvent<TEvent extends ethereum.Event = ethereum.Event>(
-  id: string,
-  name: string,
-  event: TEvent,
-  version: Version,
-  fund: Fund | null = null,
-): Event {
   if (Event.load(id)) {
     log.critical('Duplicate event registration "{}" on contract {} in transaction {}.', [
       name,
@@ -39,6 +27,7 @@ function makeEvent<TEvent extends ethereum.Event = ethereum.Event>(
     ]);
   }
 
+  let version = context.entities.version;
   let entity = new Event(id);
   entity.name = name;
   entity.contract = event.address.toHex();

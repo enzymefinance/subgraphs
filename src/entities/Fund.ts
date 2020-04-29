@@ -1,13 +1,10 @@
-import { Address, DataSourceTemplate, BigInt, log, ethereum } from '@graphprotocol/graph-ts';
+import { Address, DataSourceTemplate, log, BigInt } from '@graphprotocol/graph-ts';
 import { hexToAscii } from '../utils/hexToAscii';
-import { Fund, Asset, Investment } from '../generated/schema';
+import { Fund, Asset } from '../generated/schema';
 import { Context } from '../context';
-// import { createFundHolding } from './Holding';
 import { useAsset } from './Asset';
 import { createFees } from './Fee';
-import { ensureInvestor } from './Account';
-import { ensureInvestment } from './Investment';
-import { createFundAggregatedMetrics } from './FundMetrics';
+import { createFundAggregatedMetric, createFundSharesMetric, createFundHoldingsMetric } from './FundMetrics';
 
 export function useFund(id: string): Fund {
   let fund = Fund.load(id);
@@ -22,17 +19,22 @@ export function maybeFund(id: string): Fund | null {
   return Fund.load(id);
 }
 
-export function createFund(event: ethereum.Event, address: Address, context: Context): Fund {
+export function createFund(address: Address, context: Context): Fund {
   let fund = new Fund(address.toHex());
   context.entities.fund = fund;
 
+  let shares = createFundSharesMetric(BigInt.fromI32(0), null, context);
+  let holdings = createFundHoldingsMetric([], null, context);
+  let metrics = createFundAggregatedMetric(shares, holdings, context);
+  context.entities.metrics = metrics;
+
   fund.name = hexToAscii(context.contracts.hub.name());
-  fund.inception = event.block.timestamp;
+  fund.inception = context.event.block.timestamp;
   fund.version = context.version;
   fund.manager = context.manager;
+  fund.metrics = metrics.id;
   fund.active = true;
   fund.investable = investableAssets(context).map<string>((item) => item.id);
-  fund.metrics = createFundAggregatedMetrics(event, fund).id;
   fund.save();
 
   createFees(context);
@@ -42,7 +44,6 @@ export function createFund(event: ethereum.Event, address: Address, context: Con
   DataSourceTemplate.createWithContext('FeeManagerContract', [context.fees], context.context);
   DataSourceTemplate.createWithContext('ParticipationContract', [context.participation], context.context);
   DataSourceTemplate.createWithContext('PolicyManagerContract', [context.policies], context.context);
-  DataSourceTemplate.createWithContext('SharesContract', [context.shares], context.context);
   DataSourceTemplate.createWithContext('TradingContract', [context.trading], context.context);
 
   return fund;
@@ -61,52 +62,4 @@ function investableAssets(context: Context): Asset[] {
   }
 
   return investable;
-}
-
-// export function currentFundHoldings(event: ethereum.Event, context: Context): FundHolding[] {
-//   let result = context.contracts.accounting.getFundHoldings();
-//   let quantities = result.value0;
-//   let addresses = result.value1;
-
-//   // let holdings: FundHolding[] = [];
-//   // for (let i: i32 = 0; i < addresses.length; i++) {
-//   //   if (quantities[i].isZero()) {
-//   //     continue;
-//   //   }
-
-//   //   let asset = useAsset(addresses[i].toHex());
-//   //   holdings.push(createFundHolding(event, asset, quantities[i], context));
-//   // }
-
-//   return holdings;
-// }
-
-export function updateFundHoldings(event: ethereum.Event, context: Context): Fund {
-  let fund = context.entities.fund;
-  // fund.holdings = currentFundHoldings(event, context).map<string>((item) => item.id);
-  fund.save();
-
-  return fund;
-}
-
-export function currentInvestments(event: ethereum.Event, context: Context): Investment[] {
-  let fund = context.entities.fund;
-  let investors = context.contracts.participation.getHistoricalInvestors();
-
-  let investments: Investment[] = [];
-  for (let i: i32 = 0; i < investors.length; i++) {
-    let investor = ensureInvestor(investors[i]);
-    let investment = ensureInvestment(fund, investor);
-    investments.push(investment);
-  }
-
-  return investments;
-}
-
-export function updateFundInvestments(event: ethereum.Event, context: Context): Fund {
-  let fund = context.entities.fund;
-  // fund.investments = currentInvestments(event, context).map<string>((item) => item.id);
-  fund.save();
-
-  return fund;
 }

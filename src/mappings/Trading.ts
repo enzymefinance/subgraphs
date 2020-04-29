@@ -1,4 +1,5 @@
-import { context, Context } from '../context';
+import { dataSource } from '@graphprotocol/graph-ts';
+import { Context } from '../context';
 import { createFundEvent } from '../entities/Event';
 import { ExchangeMethodCall, ExchangeMethodCall1 } from '../generated/TradingContract';
 import { cancelOrder } from '../entities/Trade';
@@ -7,13 +8,12 @@ import { exchangeMethodSignatureToName } from '../utils/exchangeMethodSignature'
 import { ensureExchange } from '../entities/Exchange';
 
 export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
-  let fund = context.entities.fund;
-
+  let context = new Context(dataSource.context(), event);
   let method = exchangeMethodSignatureToName(event.params.methodSignature.toHexString());
   let exchange = ensureExchange(event.params.exchangeAddress, context);
 
   if (method == 'cancelOrder') {
-    cancelOrder(event, exchange);
+    cancelOrder(exchange, context);
     return;
   }
 
@@ -22,19 +22,18 @@ export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
   let assetBought = useAsset(addresses[2]);
 
   // let trade = createTrade(event, method, exchange, assetSold, assetBought);
-
   // trackFundHoldings(event, fund, trade);
 
-  createFundEvent('Trade', event, context);
+  createFundEvent('Trade', context);
 }
 
 export function handleExchangeMethodCall1(event: ExchangeMethodCall1): void {
-  let fund = context.entities.fund;
+  let context = new Context(dataSource.context(), event);
   let method = exchangeMethodSignatureToName(event.params.methodSignature.toHexString());
   let exchange = ensureExchange(event.params.exchangeAddress, context);
 
   if (method == 'cancelOrder') {
-    cancelOrder(event, exchange);
+    cancelOrder(exchange, context);
     return;
   }
 
@@ -43,8 +42,7 @@ export function handleExchangeMethodCall1(event: ExchangeMethodCall1): void {
   let assetBought = useAsset(addresses[2]);
 
   // let trade = createTrade(event, method, exchange, assetSold, assetBought);
-
   // trackFundHoldings(event, fund, trade);
 
-  createFundEvent('Trade', event, context);
+  createFundEvent('Trade', context);
 }

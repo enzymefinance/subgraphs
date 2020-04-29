@@ -1,4 +1,4 @@
-import { dataSource, DataSourceContext, Address, Entity, log } from '@graphprotocol/graph-ts';
+import { DataSourceContext, Address, Entity, log, ethereum } from '@graphprotocol/graph-ts';
 import { useFund } from './entities/Fund';
 import { useVersion } from './entities/Version';
 import { useAccount } from './entities/Account';
@@ -11,8 +11,9 @@ import { PolicyManagerContract } from './generated/PolicyManagerContract';
 import { FeeManagerContract } from './generated/FeeManagerContract';
 import { VersionContract } from './generated/VersionContract';
 import { RegistryContract } from './generated/RegistryContract';
-import { Fund, Version, Account } from './generated/schema';
+import { Fund, Version, Account, FundAggregatedMetric } from './generated/schema';
 import { AbstractionLayer } from './api';
+import { ensureAggregatedMetric } from './entities/FundMetrics';
 
 export class ContextContracts {
   context: Context;
@@ -73,6 +74,7 @@ export class ContextEntities {
   private _version: Version | null;
   private _fund: Fund | null;
   private _manager: Account | null;
+  private _metrics: FundAggregatedMetric | null;
 
   constructor(context: Context) {
     this.context = context;
@@ -116,16 +118,32 @@ export class ContextEntities {
 
     return this._version as Version;
   }
+
+  get metrics(): FundAggregatedMetric {
+    if (this._metrics == null) {
+      // If this getter is used in our code, we can assume that
+      // whatever is happening, we want to track a metrics
+      // update in the current mapping context.
+      this._metrics = ensureAggregatedMetric(this.context);
+    }
+
+    return this._metrics as FundAggregatedMetric;
+  }
+
+  set metrics(value: FundAggregatedMetric) {
+    this._metrics = value;
+  }
 }
 
 export class Context extends Entity {
+  event: ethereum.Event;
   contracts: ContextContracts;
   entities: ContextEntities;
   api: AbstractionLayer;
 
-  static fromContext(ctx: Context, branch: string | null = null): Context {
+  static forBranch(ctx: Context, event: ethereum.Event, branch: string | null = null): Context {
     let context = new DataSourceContext();
-    let output = new Context(context.merge([ctx]) as DataSourceContext);
+    let output = new Context(context.merge([ctx]) as DataSourceContext, event);
 
     if (branch != null) {
       output.branch = branch;
@@ -134,9 +152,10 @@ export class Context extends Entity {
     return output;
   }
 
-  constructor(ctx: DataSourceContext) {
+  constructor(ctx: DataSourceContext, event: ethereum.Event) {
     super();
 
+    this.event = event;
     this.entries = ctx.entries;
     this.contracts = new ContextContracts(this);
     this.entities = new ContextEntities(this);
@@ -280,5 +299,3 @@ export class Context extends Entity {
     return ctx.merge([this]) as DataSourceContext;
   }
 }
-
-export let context = new Context(dataSource.context());
