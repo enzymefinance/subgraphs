@@ -71,7 +71,7 @@ export function handleRequestExecution(event: RequestExecution): void {
 
   trackFundHoldings(event, fund, addition);
   trackFundShares(event, fund, addition);
-  // trackFundInvestments(event, fund, addition);
+  trackFundInvestments(event, fund, addition);
 
   createFundEvent('RequestExecution', event, context);
 }
@@ -89,7 +89,7 @@ export function handleRedemption(event: Redemption): void {
 
   trackFundHoldings(event, fund, redemption);
   trackFundShares(event, fund, redemption);
-  // trackFundInvestments(event, fund, redemption);
+  trackFundInvestments(event, fund, redemption);
 
   createFundEvent('Redemption', event, context);
 }

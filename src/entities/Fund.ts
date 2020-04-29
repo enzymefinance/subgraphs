@@ -6,7 +6,7 @@ import { createFundHolding } from './Holding';
 import { useAsset } from './Asset';
 import { createFees } from './Fee';
 import { ensureInvestor } from './Account';
-import { useInvestment } from './Investment';
+import { ensureInvestment } from './Investment';
 
 export function useFund(id: string): Fund {
   let fund = Fund.load(id);
@@ -97,7 +97,7 @@ export function currentInvestments(event: ethereum.Event, context: Context): Inv
   let investments: Investment[] = [];
   for (let i: i32 = 0; i < investors.length; i++) {
     let investor = ensureInvestor(investors[i]);
-    let investment = useInvestment(fund, investor);
+    let investment = ensureInvestment(fund, investor);
     investments.push(investment);
   }
 
