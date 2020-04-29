@@ -137,7 +137,8 @@ type Fund @entity {
   fees: [Fee!]! @derivedFrom(field: "fund")
   trades: [Trade!]! @derivedFrom(field: "fund")
   metrics: FundAggregatedMetric!
-  sharesMetrics: [FundSharesMetric!]! @derivedFrom(field: "fund")
+  metricsHistory: [FundAggregatedMetric!]! @derivedFrom(field: "fund")
+  sharesHistory: [FundSharesMetric!]! @derivedFrom(field: "fund")
   # holdingsMetrics: [FundHoldingsMetric!]! @derivedFrom(field: "fund")
   # investmentsMetrics: [FundInvestmentsMetric!]! @derivedFrom(field: "fund")
 }

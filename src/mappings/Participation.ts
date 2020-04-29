@@ -22,7 +22,7 @@ import {
   InvestmentRequest,
 } from '../generated/ParticipationContract';
 import { updateFundHoldings, updateFundInvestments } from '../entities/Fund';
-import { trackFundShares } from '../entities/FundMetrics';
+import { trackFundShares, trackFundHoldings } from '../entities/FundMetrics';
 
 export function handleCancelRequest(event: CancelRequest): void {
   let account = ensureInvestor(event.params.requestOwner);
@@ -69,7 +69,7 @@ export function handleRequestExecution(event: RequestExecution): void {
 
   deleteInvestmentRequest(fund, account);
 
-  // trackFundHoldings(event, fund, addition);
+  trackFundHoldings(event, fund, [asset], addition, context);
   trackFundShares(event, fund, addition, context);
   // trackFundInvestments(event, fund, addition);
 
@@ -87,7 +87,7 @@ export function handleRedemption(event: Redemption): void {
   let fund = updateFundHoldings(event, context);
   fund = updateFundInvestments(event, context);
 
-  // trackFundHoldings(event, fund, redemption);
+  // trackFundHoldings(event, fund, [], redemption, context);
   trackFundShares(event, fund, redemption, context);
   // trackFundInvestments(event, fund, redemption);
 
