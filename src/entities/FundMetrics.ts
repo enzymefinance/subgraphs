@@ -87,7 +87,8 @@ export function ensureFundSharesMetric(cause: Entity, context: Context): FundSha
     let previous = useFundSharesMetric(aggregate.shares);
     metric = createFundSharesMetric(previous.shares, cause, context);
   } else {
-    metric.events = arrayUnique<string>(metric.events.concat([cause.getString('id')]));
+    let events = metric.events;
+    metric.events = arrayUnique<string>(events.concat([cause.getString('id')]));
     metric.save();
   }
 
@@ -131,11 +132,12 @@ export function ensureFundHoldingsMetric(cause: Entity, context: Context): FundH
 
   if (!metric) {
     let aggregate = context.entities.metrics;
-    let previous = useFundHoldingsMetric(aggregate.holdings);
-    let records = previous.holdings.map<FundHoldingMetric>((id) => useFundHoldingMetric(id));
+    let previous = useFundHoldingsMetric(aggregate.holdings).holdings;
+    let records = previous.map<FundHoldingMetric>((id) => useFundHoldingMetric(id));
     metric = createFundHoldingsMetric(records, cause, context);
   } else {
-    metric.events = arrayUnique<string>(metric.events.concat([cause.getString('id')]));
+    let events = metric.events;
+    metric.events = arrayUnique<string>(events.concat([cause.getString('id')]));
     metric.save();
   }
 
@@ -192,10 +194,11 @@ export function trackFundHoldings(assets: Asset[], cause: Entity, context: Conte
   let track: FundHoldingMetric[] = [];
   for (let k: i32 = 0; k < previous.length; k++) {
     let prev = previous[k];
+
+    // Don't carry over holdings with a quantity of '0' to  the next metrics entry.
+    // We only track these once when they become 0 initially (e.g. full redemption)
+    // but we don't want to keep them in the holdings metrics forever.
     if (prev.quantity.isZero() && prev.timestamp < timestamp) {
-      // Don't carry over holdings with a quantity of '0' to  the next metrics entry.
-      // We only track these once when they become 0 initially (e.g. full redemption)
-      // but we don't want to keep them in the holdings metrics forever.
       continue;
     }
 
@@ -222,6 +225,9 @@ export function trackFundHoldings(assets: Asset[], cause: Entity, context: Conte
     }
 
     // Add the fund holding entry for the current asset.
+    //
+    // TODO: Should we add a check so that 0s don't get added if the value was
+    // previously already untracked or 0? This should not happen, but who knows ...
     track.push(createFundHoldingMetric(asset, quantity, cause, context));
   }
 
@@ -229,7 +235,8 @@ export function trackFundHoldings(assets: Asset[], cause: Entity, context: Conte
   metric.save();
 
   let aggregated = context.entities.metrics;
-  aggregated.events = arrayUnique<string>(aggregated.events.concat(metric.events));
+  let events = aggregated.events;
+  aggregated.events = arrayUnique<string>(events.concat(metric.events));
   aggregated.holdings = metric.id;
   aggregated.save();
 
@@ -242,7 +249,8 @@ export function trackFundShares(cause: Entity, context: Context): FundSharesMetr
   shares.save();
 
   let aggregated = context.entities.metrics;
-  aggregated.events = arrayUnique<string>(aggregated.events.concat(shares.events));
+  let events = aggregated.events;
+  aggregated.events = arrayUnique<string>(events.concat(shares.events));
   aggregated.shares = shares.id;
   aggregated.save();
 

@@ -33,18 +33,21 @@ export function handleCancelRequest(event: CancelRequest): void {
 
 export function handleDisableInvestment(event: DisableInvestment): void {
   let context = new Context(dataSource.context(), event);
+  let fund = context.entities.fund;
   let removed = event.params.assets.map<string>((item) => item.toHex());
-  context.entities.fund.investable = arrayDiff<string>(context.entities.fund.investable, removed);
-  context.entities.fund.save();
+  fund.investable = arrayDiff<string>(fund.investable, removed);
+  fund.save();
 
   createFundEvent('DisableInvestment', context);
 }
 
 export function handleEnableInvestment(event: EnableInvestment): void {
   let context = new Context(dataSource.context(), event);
+  let fund = context.entities.fund;
   let added = event.params.asset.map<string>((item) => item.toHex());
-  context.entities.fund.investable = arrayUnique<string>(context.entities.fund.investable.concat(added));
-  context.entities.fund.save();
+  let previous = fund.investable;
+  fund.investable = arrayUnique<string>(previous.concat(added));
+  fund.save();
 
   createFundEvent('EnableInvestment', context);
 }
@@ -89,5 +92,5 @@ export function handleRedemption(event: Redemption): void {
   trackFundShares(redemption, context);
   // trackFundInvestments(event, fund, redemption);
 
-  // createFundEvent('Redemption', context);
+  createFundEvent('Redemption', context);
 }

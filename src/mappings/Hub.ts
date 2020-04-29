@@ -5,8 +5,9 @@ import { FundShutDown } from '../generated/HubContract';
 
 export function handleFundShutDown(event: FundShutDown): void {
   let context = new Context(dataSource.context(), event);
-  context.entities.fund.active = false;
-  context.entities.fund.save();
+  let fund = context.entities.fund;
+  fund.active = false;
+  fund.save();
 
   createFundEvent('FundShutDown', context);
 }
