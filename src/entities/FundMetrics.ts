@@ -182,35 +182,48 @@ function useFundHoldingMetric(id: string): FundHoldingMetric {
 
 export function trackFundHoldings(assets: Asset[], cause: Entity, context: Context): FundHoldingsMetric {
   let metric = ensureFundHoldingsMetric(cause, context);
-  let holdings: FundHoldingMetric[] = metric.holdings.map<FundHoldingMetric>((id) => useFundHoldingMetric(id));
-  let result = context.contracts.accounting.getFundHoldings();
+  let event = context.event;
 
-  for (let i: i32 = 0; i < assets.length; i++) {
-    let asset = assets[i];
-    let quantity = BigInt.fromI32(0);
+  let ids = assets.map<string>((item) => item.id);
+  let next: FundHoldingMetric[] = [];
+  let previous: FundHoldingMetric[] = metric.holdings.map<FundHoldingMetric>((id) => useFundHoldingMetric(id));
 
-    // Remove the previous record for this asset from the list.
-    for (let k: i32 = 0; k < holdings.length; k++) {
-      if (holdings[k].asset == asset.id) {
-        holdings = holdings.splice(k, 1);
-        break;
-      }
+  // Create a list of all the previous fund holdings without the assets that we are
+  // currently tracking for changes.
+  for (let k: i32 = 0; k < previous.length; k++) {
+    if (previous[k].quantity.isZero() && previous[k].timestamp < context.event.block.timestamp) {
+      // Don't carry over holdings with a quantity of '0' to  the next metrics entry.
+      // We only track these once when they become 0 initially (e.g. full redemption)
+      // but we don't want to keep them in the holdings metrics forever.
+      continue;
     }
 
-    // Get the quantities for the selected assets from the contract call result.
-    for (let j: i32 = 0; j < result.value0.length; j++) {
-      if (result.value1[j].toHex() == asset.id) {
-        quantity = result.value0[j];
-        break;
-      }
+    if (ids.indexOf(previous[k].asset) == -1) {
+      next.push(previous[k]);
     }
-
-    // Create the fund holding entry for the current asset.
-    let current = createFundHoldingMetric(asset, quantity, cause, context);
-    holdings = holdings.concat([current]);
   }
 
-  metric.holdings = holdings.map<string>((item) => item.id);
+  let holdings = context.contracts.accounting.getFundHoldings();
+  for (let i: i32 = 0; i < assets.length; i++) {
+    // By default, we set the value to 0. This is necessary to track records for
+    // assets that have been removed from the holdings at least once when they
+    // become 0. We will remove these on the next iteration.
+    let quantity = BigInt.fromI32(0);
+    let asset = assets[i];
+
+    // Get the quantities for the selected assets from the contract call results.
+    for (let j: i32 = 0; j < holdings.value0.length; j++) {
+      if (holdings.value1[j].toHex() == asset.id) {
+        quantity = holdings.value0[j];
+        break;
+      }
+    }
+
+    // Add the fund holding entry for the current asset.
+    next.push(createFundHoldingMetric(asset, quantity, cause, context));
+  }
+
+  metric.holdings = next.map<string>((item) => item.id);
   metric.save();
 
   let aggregated = context.entities.metrics;

@@ -68,12 +68,11 @@ export function handleRequestExecution(event: RequestExecution): void {
   let shares = event.params.requestedShares;
   let addition = createInvestmentAddition(investment, asset, quantity, shares, context);
 
-  deleteInvestmentRequest(account, context);
-
   trackFundHoldings([asset], addition, context);
   trackFundShares(addition, context);
   // trackFundInvestments(event, fund, addition);
 
+  deleteInvestmentRequest(account, context);
   createFundEvent('RequestExecution', context);
 }
 
@@ -81,15 +80,14 @@ export function handleRedemption(event: Redemption): void {
   let context = new Context(dataSource.context(), event);
   let account = ensureInvestor(event.params.redeemer);
   let investment = ensureInvestment(account, context);
-  let assets = event.params.assets.map<Asset>((item) => useAsset(item.toHex()));
+  let assets = event.params.assets.map<Asset>((id) => useAsset(id.toHex()));
   let shares = event.params.redeemedShares;
   let quantities = event.params.assetQuantities;
-
   let redemption = createInvestmentRedemption(investment, assets, quantities, shares, context);
 
   trackFundHoldings(assets, redemption, context);
   trackFundShares(redemption, context);
   // trackFundInvestments(event, fund, redemption);
 
-  createFundEvent('Redemption', context);
+  // createFundEvent('Redemption', context);
 }
