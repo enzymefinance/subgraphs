@@ -39,68 +39,88 @@ type Version @entity {
   assets: [Asset!]!
 }
 
-type NetworkMetric @entity {
-  id: ID!
-  holdings: [NetworkHolding!]!
-  timestamp: BigInt!
-  event: MetricChangeEvent!
+# type NetworkMetric @entity {
+#   id: ID!
+#   holdings: [NetworkHolding!]!
+#   timestamp: BigInt!
+#   event: MetricChangeEvent!
 
-  # TODO: Implement historical counters
-  allInvestments: Int!
-  activeInvestment: Int!
-  inactiveInvestments: Int!
-  activeFunds: Int!
-  inactiveFunds: Int!
-  activeInvestors: Int!
-  inactiveInvestors: Int!
-}
+#   # TODO: Implement historical counters
+#   allInvestments: Int!
+#   activeInvestment: Int!
+#   inactiveInvestments: Int!
+#   activeFunds: Int!
+#   inactiveFunds: Int!
+#   activeInvestors: Int!
+#   inactiveInvestors: Int!
+# }
 
-type NetworkHolding @entity {
-  id: ID!
-  timestamp: BigInt!
-  asset: Asset!
-  quantity: BigInt!
-}
+# type NetworkHolding @entity {
+#   id: ID!
+#   timestamp: BigInt!
+#   asset: Asset!
+#   quantity: BigInt!
+# }
 
 interface FundMetric {
   id: ID!
   fund: Fund!
   timestamp: BigInt!
-  event: MetricChangeEvent!
+  events: [MetricChangeEvent!]!
 }
 
 type FundSharesMetric implements FundMetric @entity {
-  id: ID!
+  id: ID! # fund address + timestamp + 'shares'
   fund: Fund!
   timestamp: BigInt!
   shares: BigInt!
-  event: MetricChangeEvent!
+  events: [MetricChangeEvent!]!
 }
 
-type FundHoldingsMetric implements FundMetric @entity {
-  id: ID!
-  fund: Fund!
-  timestamp: BigInt!
-  holdings: [FundHolding!]!
-  event: MetricChangeEvent!
-}
-
-type FundInvestmentsMetric implements FundMetric @entity {
-  id: ID!
-  fund: Fund!
-  timestamp: BigInt!
-  activeInvestors: Int!
-  inactiveInvestors: Int!
-  investments: [Investment!]!
-  event: MetricChangeEvent!
-}
-
-type FundHolding @entity {
-  id: ID!
+type FundHoldingMetric implements FundMetric @entity {
+  id: ID! # fund address + asset address + timestamp
   fund: Fund!
   timestamp: BigInt!
   asset: Asset!
   quantity: BigInt!
+  events: [MetricChangeEvent!]!
+}
+
+type FundHoldingsMetric implements FundMetric @entity {
+  id: ID! # fund address + timestamp + 'holdings'
+  fund: Fund!
+  timestamp: BigInt!
+  holdings: [FundHoldingMetric!]!
+  events: [MetricChangeEvent!]!
+}
+
+# type FundInvestmentsMetric implements FundMetric @entity {
+#   id: ID!  # fund address + timestamp + 'investments'
+#   fund: Fund!
+#   timestamp: BigInt!
+#   activeInvestments: Int!
+#   inactiveInvestments: Int!
+#   events: [Event!]!
+# }
+
+# type FundInvestorsMetric implements FundMetric @entity {
+#   id: ID!  # fund address + timestamp + 'investors'
+#   fund: Fund!
+#   timestamp: BigInt!
+#   activeInvestors: Int!
+#   inactiveInvestors: Int!
+#   events: [Event!]!
+# }
+
+type FundAggregatedMetric implements FundMetric @entity {
+  id: ID! # fund address + timestamp
+  fund: Fund!
+  timestamp: BigInt!
+  # investors: FundInvestorsMetric!
+  # investments: FundInvestmentsMetric!
+  shares: FundSharesMetric!
+  holdings: FundHoldingsMetric!
+  events: [MetricChangeEvent!]!
 }
 
 type Fund @entity {
@@ -110,17 +130,16 @@ type Fund @entity {
   active: Boolean!
   manager: Account!
   inception: BigInt!
-  shares: BigInt!
-  holdings: [FundHolding!]!
   investable: [Asset!]!
   events: [Event!]! @derivedFrom(field: "fund")
-  investments: [Investment!]!
+  # investments: [Investment!]!
   policies: [Policy!]! @derivedFrom(field: "fund")
   fees: [Fee!]! @derivedFrom(field: "fund")
   trades: [Trade!]! @derivedFrom(field: "fund")
+  metrics: FundAggregatedMetric!
   sharesMetrics: [FundSharesMetric!]! @derivedFrom(field: "fund")
-  holdingsMetrics: [FundHoldingsMetric!]! @derivedFrom(field: "fund")
-  investmentsMetrics: [FundInvestmentsMetric!]! @derivedFrom(field: "fund")
+  # holdingsMetrics: [FundHoldingsMetric!]! @derivedFrom(field: "fund")
+  # investmentsMetrics: [FundInvestmentsMetric!]! @derivedFrom(field: "fund")
 }
 
 interface Fee {

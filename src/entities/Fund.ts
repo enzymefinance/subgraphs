@@ -1,12 +1,13 @@
 import { Address, DataSourceTemplate, BigInt, log, ethereum } from '@graphprotocol/graph-ts';
 import { hexToAscii } from '../utils/hexToAscii';
-import { Fund, FundHolding, Asset, Investment } from '../generated/schema';
+import { Fund, Asset, Investment } from '../generated/schema';
 import { Context } from '../context';
-import { createFundHolding } from './Holding';
+// import { createFundHolding } from './Holding';
 import { useAsset } from './Asset';
 import { createFees } from './Fee';
 import { ensureInvestor } from './Account';
 import { ensureInvestment } from './Investment';
+import { createFundAggregatedMetrics } from './FundMetrics';
 
 export function useFund(id: string): Fund {
   let fund = Fund.load(id);
@@ -30,10 +31,8 @@ export function createFund(event: ethereum.Event, address: Address, context: Con
   fund.version = context.version;
   fund.manager = context.manager;
   fund.active = true;
-  fund.shares = BigInt.fromI32(0);
   fund.investable = investableAssets(context).map<string>((item) => item.id);
-  fund.holdings = currentFundHoldings(event, context).map<string>((item) => item.id);
-  fund.investments = currentInvestments(event, context).map<string>((item) => item.id);
+  fund.metrics = createFundAggregatedMetrics(event, fund).id;
   fund.save();
 
   createFees(context);
@@ -64,27 +63,27 @@ function investableAssets(context: Context): Asset[] {
   return investable;
 }
 
-export function currentFundHoldings(event: ethereum.Event, context: Context): FundHolding[] {
-  let result = context.contracts.accounting.getFundHoldings();
-  let quantities = result.value0;
-  let addresses = result.value1;
+// export function currentFundHoldings(event: ethereum.Event, context: Context): FundHolding[] {
+//   let result = context.contracts.accounting.getFundHoldings();
+//   let quantities = result.value0;
+//   let addresses = result.value1;
 
-  let holdings: FundHolding[] = [];
-  for (let i: i32 = 0; i < addresses.length; i++) {
-    if (quantities[i].isZero()) {
-      continue;
-    }
+//   // let holdings: FundHolding[] = [];
+//   // for (let i: i32 = 0; i < addresses.length; i++) {
+//   //   if (quantities[i].isZero()) {
+//   //     continue;
+//   //   }
 
-    let asset = useAsset(addresses[i].toHex());
-    holdings.push(createFundHolding(event, asset, quantities[i], context));
-  }
+//   //   let asset = useAsset(addresses[i].toHex());
+//   //   holdings.push(createFundHolding(event, asset, quantities[i], context));
+//   // }
 
-  return holdings;
-}
+//   return holdings;
+// }
 
 export function updateFundHoldings(event: ethereum.Event, context: Context): Fund {
   let fund = context.entities.fund;
-  fund.holdings = currentFundHoldings(event, context).map<string>((item) => item.id);
+  // fund.holdings = currentFundHoldings(event, context).map<string>((item) => item.id);
   fund.save();
 
   return fund;
@@ -106,7 +105,7 @@ export function currentInvestments(event: ethereum.Event, context: Context): Inv
 
 export function updateFundInvestments(event: ethereum.Event, context: Context): Fund {
   let fund = context.entities.fund;
-  fund.investments = currentInvestments(event, context).map<string>((item) => item.id);
+  // fund.investments = currentInvestments(event, context).map<string>((item) => item.id);
   fund.save();
 
   return fund;
