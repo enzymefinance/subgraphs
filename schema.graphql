@@ -132,15 +132,15 @@ type Fund @entity {
   inception: BigInt!
   investable: [Asset!]!
   events: [Event!]! @derivedFrom(field: "fund")
-  # investments: [Investment!]!
+  investments: [Investment!]! @derivedFrom(field: "fund")
   policies: [Policy!]! @derivedFrom(field: "fund")
   fees: [Fee!]! @derivedFrom(field: "fund")
   trades: [Trade!]! @derivedFrom(field: "fund")
   metrics: FundAggregatedMetric!
-  metricsHistory: [FundAggregatedMetric!]! @derivedFrom(field: "fund")
-  sharesHistory: [FundSharesMetric!]! @derivedFrom(field: "fund")
-  # holdingsMetrics: [FundHoldingsMetric!]! @derivedFrom(field: "fund")
-  # investmentsMetrics: [FundInvestmentsMetric!]! @derivedFrom(field: "fund")
+  historicalMetrics: [FundAggregatedMetric!]! @derivedFrom(field: "fund")
+  historicalShares: [FundSharesMetric!]! @derivedFrom(field: "fund")
+  historicalHoldings: [FundHoldingsMetric!]! @derivedFrom(field: "fund")
+  # historicalInvestments: [FundInvestmentsMetric!]! @derivedFrom(field: "fund")
 }
 
 interface Fee {
