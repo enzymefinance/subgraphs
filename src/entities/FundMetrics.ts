@@ -182,24 +182,25 @@ function useFundHoldingMetric(id: string): FundHoldingMetric {
 
 export function trackFundHoldings(assets: Asset[], cause: Entity, context: Context): FundHoldingsMetric {
   let metric = ensureFundHoldingsMetric(cause, context);
-  let event = context.event;
+  let timestamp = context.event.block.timestamp;
 
-  let ids = assets.map<string>((item) => item.id);
-  let next: FundHoldingMetric[] = [];
   let previous: FundHoldingMetric[] = metric.holdings.map<FundHoldingMetric>((id) => useFundHoldingMetric(id));
+  let ids = assets.map<string>((item) => item.id);
 
   // Create a list of all the previous fund holdings without the assets that we are
   // currently tracking for changes.
+  let track: FundHoldingMetric[] = [];
   for (let k: i32 = 0; k < previous.length; k++) {
-    if (previous[k].quantity.isZero() && previous[k].timestamp < context.event.block.timestamp) {
+    let prev = previous[k];
+    if (prev.quantity.isZero() && prev.timestamp < timestamp) {
       // Don't carry over holdings with a quantity of '0' to  the next metrics entry.
       // We only track these once when they become 0 initially (e.g. full redemption)
       // but we don't want to keep them in the holdings metrics forever.
       continue;
     }
 
-    if (ids.indexOf(previous[k].asset) == -1) {
-      next.push(previous[k]);
+    if (ids.indexOf(prev.asset) == -1) {
+      track.push(prev);
     }
   }
 
@@ -207,7 +208,8 @@ export function trackFundHoldings(assets: Asset[], cause: Entity, context: Conte
   for (let i: i32 = 0; i < assets.length; i++) {
     // By default, we set the value to 0. This is necessary to track records for
     // assets that have been removed from the holdings at least once when they
-    // become 0. We will remove these on the next iteration.
+    // become 0. We will remove these when we track the fund holdings the next
+    // time.
     let quantity = BigInt.fromI32(0);
     let asset = assets[i];
 
@@ -220,10 +222,10 @@ export function trackFundHoldings(assets: Asset[], cause: Entity, context: Conte
     }
 
     // Add the fund holding entry for the current asset.
-    next.push(createFundHoldingMetric(asset, quantity, cause, context));
+    track.push(createFundHoldingMetric(asset, quantity, cause, context));
   }
 
-  metric.holdings = next.map<string>((item) => item.id);
+  metric.holdings = track.map<string>((item) => item.id);
   metric.save();
 
   let aggregated = context.entities.metrics;
