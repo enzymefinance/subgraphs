@@ -9,7 +9,7 @@ import { PolicyManagerContract } from './generated/PolicyManagerContract';
 import { FeeManagerContract } from './generated/FeeManagerContract';
 import { VersionContract } from './generated/VersionContract';
 import { RegistryContract } from './generated/RegistryContract';
-import { ensureAggregatedMetric } from './entities/FundMetrics';
+import { ensureState } from './entities/Tracking';
 import { useFund } from './entities/Fund';
 import { useVersion } from './entities/Version';
 import { useAccount } from './entities/Account';
@@ -74,7 +74,7 @@ export class ContextEntities {
   private _version: Version | null;
   private _fund: Fund | null;
   private _manager: Account | null;
-  private _metrics: State | null;
+  private _state: State | null;
 
   constructor(context: Context) {
     this.context = context;
@@ -119,19 +119,19 @@ export class ContextEntities {
     return this._version as Version;
   }
 
-  get metrics(): State {
-    if (this._metrics == null) {
+  get state(): State {
+    if (this._state == null) {
       // If this getter is used in our code, we can assume that
-      // whatever is happening, we want to track a metrics
+      // whatever is happening, we want to track a state
       // update in the current mapping context.
-      this._metrics = ensureAggregatedMetric(this.context);
+      this._state = ensureState(this.context);
     }
 
-    return this._metrics as State;
+    return this._state as State;
   }
 
-  set metrics(value: State) {
-    this._metrics = value;
+  set state(value: State) {
+    this._state = value;
   }
 }
 

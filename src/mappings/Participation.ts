@@ -21,7 +21,7 @@ import {
   RequestExecution,
   InvestmentRequest,
 } from '../generated/ParticipationContract';
-import { trackFundShares, trackFundPortfolio } from '../entities/FundMetrics';
+import { trackFundShares, trackFundPortfolio } from '../entities/Tracking';
 
 export function handleCancelRequest(event: CancelRequest): void {
   let context = new Context(dataSource.context(), event);

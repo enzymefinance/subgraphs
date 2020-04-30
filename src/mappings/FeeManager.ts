@@ -3,7 +3,7 @@ import { Context } from '../context';
 import { createContractEvent } from '../entities/Event';
 import { FeeReward } from '../generated/FeeManagerContract';
 import { ensureInvestment, createInvestmentReward } from '../entities/Investment';
-import { trackFundShares } from '../entities/FundMetrics';
+import { trackFundShares } from '../entities/Tracking';
 
 export function handleFeeReward(event: FeeReward): void {
   let context = new Context(dataSource.context(), event);

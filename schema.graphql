@@ -50,29 +50,6 @@ type Version @entity {
   exchanges: [Exchange!]!
 }
 
-# type NetworkMetric @entity {
-#   id: ID!
-#   holdings: [NetworkHolding!]!
-#   timestamp: BigInt!
-#   event: Event!
-
-#   # TODO: Implement historical counters
-#   allInvestments: Int!
-#   activeInvestment: Int!
-#   inactiveInvestments: Int!
-#   activeFunds: Int!
-#   inactiveFunds: Int!
-#   activeInvestors: Int!
-#   inactiveInvestors: Int!
-# }
-
-# type NetworkHolding @entity {
-#   id: ID!
-#   timestamp: BigInt!
-#   asset: Asset!
-#   quantity: BigInt!
-# }
-
 interface Metric {
   id: ID!
   fund: Fund!
@@ -81,7 +58,7 @@ interface Metric {
 }
 
 type Share implements Metric @entity {
-  id: ID! # fund address + timestamp + 'shares'
+  id: ID!
   fund: Fund!
   timestamp: BigInt!
   shares: BigInt!
@@ -89,7 +66,7 @@ type Share implements Metric @entity {
 }
 
 type Holding implements Metric @entity {
-  id: ID! # fund address + asset address + timestamp
+  id: ID!
   fund: Fund!
   timestamp: BigInt!
   asset: Asset!
@@ -98,37 +75,17 @@ type Holding implements Metric @entity {
 }
 
 type Portfolio implements Metric @entity {
-  id: ID! # fund address + timestamp + 'holdings'
+  id: ID!
   fund: Fund!
   timestamp: BigInt!
   holdings: [Holding!]!
   events: [Event!]!
 }
 
-# type FundInvestmentsMetric implements Metric @entity {
-#   id: ID!  # fund address + timestamp + 'investments'
-#   fund: Fund!
-#   timestamp: BigInt!
-#   activeInvestments: Int!
-#   inactiveInvestments: Int!
-#   events: [Event!]!
-# }
-
-# type FundInvestorsMetric implements Metric @entity {
-#   id: ID!  # fund address + timestamp + 'investors'
-#   fund: Fund!
-#   timestamp: BigInt!
-#   activeInvestors: Int!
-#   inactiveInvestors: Int!
-#   events: [Event!]!
-# }
-
 type State implements Metric @entity {
-  id: ID! # fund address + timestamp
+  id: ID!
   fund: Fund!
   timestamp: BigInt!
-  # investors: FundInvestorsMetric!
-  # investments: FundInvestmentsMetric!
   shares: Share!
   portfolio: Portfolio!
   events: [Event!]!
@@ -148,12 +105,11 @@ type Fund @entity {
   fees: [Fee!]! @derivedFrom(field: "fund")
   trades: [Trade!]! @derivedFrom(field: "fund")
   shares: Share!
-  holdings: Portfolio!
-  metrics: State!
-  historicalStates: [State!]! @derivedFrom(field: "fund")
-  historicalShares: [Share!]! @derivedFrom(field: "fund")
-  historicalPortfolio: [Portfolio!]! @derivedFrom(field: "fund")
-  # historicalInvestments: [FundInvestmentsMetric!]! @derivedFrom(field: "fund")
+  sharesHistory: [Share!]! @derivedFrom(field: "fund")
+  portfolio: Portfolio!
+  portfolioHistory: [Portfolio!]! @derivedFrom(field: "fund")
+  state: State!
+  stateHistory: [State!]! @derivedFrom(field: "fund")
 }
 
 interface Fee {

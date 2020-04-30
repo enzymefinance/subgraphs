@@ -4,7 +4,7 @@ import { Fund, Asset } from '../generated/schema';
 import { Context } from '../context';
 import { useAsset } from './Asset';
 import { createFees } from './Fee';
-import { createState, createShares, createPortfolio } from './FundMetrics';
+import { createState, createShares, createPortfolio } from './Tracking';
 import { logCritical } from '../utils/logCritical';
 
 export function useFund(id: string): Fund {
@@ -25,17 +25,17 @@ export function createFund(address: Address, context: Context): Fund {
   context.entities.fund = fund;
 
   let shares = createShares(BigInt.fromI32(0), null, context);
-  let holdings = createPortfolio([], null, context);
-  let metrics = createState(shares, holdings, context);
-  context.entities.metrics = metrics;
+  let portfolio = createPortfolio([], null, context);
+  let state = createState(shares, portfolio, context);
+  context.entities.state = state;
 
   fund.name = hexToAscii(context.contracts.hub.name());
   fund.inception = context.event.block.timestamp;
   fund.version = context.version;
   fund.manager = context.manager;
   fund.shares = shares.id;
-  fund.holdings = holdings.id;
-  fund.metrics = metrics.id;
+  fund.portfolio = portfolio.id;
+  fund.state = state.id;
   fund.active = true;
   fund.investable = investableAssets(context).map<string>((item) => item.id);
   fund.save();

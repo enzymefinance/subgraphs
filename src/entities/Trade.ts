@@ -1,6 +1,6 @@
 import { Exchange, Asset, Trade, Holding } from '../generated/schema';
 import { Context } from '../context';
-import { trackFundPortfolio, useHolding, usePortfolio } from './FundMetrics';
+import { trackFundPortfolio, useHolding, usePortfolio } from './Tracking';
 import { BigInt } from '@graphprotocol/graph-ts';
 import { contractEventId } from './Event';
 
@@ -20,7 +20,7 @@ export function tradeId(context: Context): string {
 }
 
 function getAssetQuantities(assets: Asset[], context: Context): BigInt[] {
-  let holdings = usePortfolio(context.entities.fund.holdings).holdings.map<Holding>((holding) => useHolding(holding));
+  let holdings = usePortfolio(context.entities.fund.state).holdings.map<Holding>((holding) => useHolding(holding));
 
   let quantities: BigInt[] = [];
   for (let i: i32 = 0; i < assets.length; i++) {
@@ -50,9 +50,9 @@ export function createTrade(
   let fund = context.entities.fund;
   let trade = new Trade(tradeId(context));
 
-  let preTradeQuantities = getAssetQuantities([assetSold, assetBought], context);
+  let before = getAssetQuantities([assetSold, assetBought], context);
   trackFundPortfolio([assetSold, assetBought], trade, context);
-  let postTradeQuantities = getAssetQuantities([assetSold, assetBought], context);
+  let after = getAssetQuantities([assetSold, assetBought], context);
 
   trade.kind = 'TRADE';
   trade.fund = fund.id;
@@ -61,8 +61,8 @@ export function createTrade(
   trade.methodName = method;
   trade.assetSold = assetSold.id;
   trade.assetBought = assetBought.id;
-  trade.amountSold = preTradeQuantities[0].minus(postTradeQuantities[0]);
-  trade.amountBought = postTradeQuantities[0].minus(preTradeQuantities[1]);
+  trade.amountSold = before[0].minus(after[0]);
+  trade.amountBought = after[1].minus(before[1]);
   trade.timestamp = event.block.timestamp;
   trade.transaction = event.transaction.hash.toHex();
   trade.trigger = contractEventId(context);
