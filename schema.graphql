@@ -14,6 +14,7 @@ enum FeeIdentifierEnum {
   PERFORMANCE
 }
 
+# TODO: Add a INCEPTION fund event.
 enum EventKindEnum {
   INVESTMENT
   REDEMPTION
