@@ -1,4 +1,4 @@
-import { Address, DataSourceTemplate, log, BigInt } from '@graphprotocol/graph-ts';
+import { Address, DataSourceTemplate, BigInt } from '@graphprotocol/graph-ts';
 import { hexToAscii } from '../utils/hexToAscii';
 import { Fund, Asset } from '../generated/schema';
 import { Context } from '../context';

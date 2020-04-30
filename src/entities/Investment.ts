@@ -1,4 +1,4 @@
-import { BigInt, store, log } from '@graphprotocol/graph-ts';
+import { BigInt, store } from '@graphprotocol/graph-ts';
 import {
   Investment,
   InvestmentAddition,

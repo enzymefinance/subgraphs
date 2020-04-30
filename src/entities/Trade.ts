@@ -23,7 +23,6 @@ function getAssetQuantities(assets: Asset[], context: Context): BigInt[] {
   let holdings = usePortfolio(context.entities.fund.holdings).holdings.map<Holding>((holding) => useHolding(holding));
 
   let quantities: BigInt[] = [];
-
   for (let i: i32 = 0; i < assets.length; i++) {
     let quantity = BigInt.fromI32(0);
 
@@ -33,6 +32,7 @@ function getAssetQuantities(assets: Asset[], context: Context): BigInt[] {
         break;
       }
     }
+
     quantities.push(quantity);
   }
 
@@ -67,6 +67,7 @@ export function createTrade(
   trade.transaction = event.transaction.hash.toHex();
   trade.trigger = contractEventId(context);
   trade.save();
+
   return trade;
 }
 

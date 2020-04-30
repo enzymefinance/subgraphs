@@ -1,4 +1,4 @@
-import { log, Entity, BigInt } from '@graphprotocol/graph-ts';
+import { Entity, BigInt } from '@graphprotocol/graph-ts';
 import { Portfolio, Share, State, Holding, Asset } from '../generated/schema';
 import { Context } from '../context';
 import { arrayUnique } from '../utils/arrayUnique';
@@ -37,7 +37,6 @@ export function ensureAggregatedMetric(context: Context): State {
   let metrics = createState(shares, holdings, context);
 
   fund.metrics = metrics.id;
-
   fund.save();
 
   return metrics;
@@ -177,8 +176,7 @@ export function trackFundPortfolio(assets: Asset[], cause: Entity, context: Cont
   let previous: Holding[] = metric.holdings.map<Holding>((id) => useHolding(id));
   let ids = assets.map<string>((item) => item.id);
 
-  // Create a list of all the previous fund holdings without the assets that we are
-  // currently tracking for changes.
+  // Continue tracking all the previous fund holdings.
   let track: Holding[] = [];
   for (let k: i32 = 0; k < previous.length; k++) {
     let prev = previous[k];
@@ -190,6 +188,8 @@ export function trackFundPortfolio(assets: Asset[], cause: Entity, context: Cont
       continue;
     }
 
+    // Do not add this record from the previous holdings if it's among the updated
+    // assets so we don't have to filter again later to ensure uniqueness.
     if (ids.indexOf(prev.asset) == -1) {
       track.push(prev);
     }
@@ -212,20 +212,14 @@ export function trackFundPortfolio(assets: Asset[], cause: Entity, context: Cont
       }
     }
 
-    // Add the fund holding entry for the current asset.
-    //
-    // TODO: Should we add a check so that 0s don't get added if the value was
-    // previously already untracked or 0? This should not happen, but who knows ...
-
-    // (quantity = 0 && previous quantity not existant or zero) => don't add
-    // loop over pre
-
+    // Skip the current asset if it is currently 0 and was already 0 or non-existant
+    // in the previous record.
     let match = findHolding(previous, asset) as Holding;
-
     if (quantity.isZero() && (!match || (match.quantity.isZero() && match.timestamp < timestamp))) {
       continue;
     }
 
+    // Add the fund holding entry for the current asset.
     track.push(createHolding(asset, quantity, cause, context));
   }
 

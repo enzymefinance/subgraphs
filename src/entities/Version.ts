@@ -1,4 +1,4 @@
-import { Address, DataSourceTemplate, log } from '@graphprotocol/graph-ts';
+import { Address, DataSourceTemplate } from '@graphprotocol/graph-ts';
 import { Version } from '../generated/schema';
 import { Context } from '../context';
 import { ensureAssets } from './Asset';
@@ -23,9 +23,7 @@ export function createVersion(address: Address, context: Context): Version {
   context.registry = context.contracts.version.registry().toHex();
 
   let registry = context.contracts.registry;
-
   let adapters = registry.getRegisteredExchangeAdapters();
-
   let exchanges: Address[] = [];
   for (let i: i32 = 0; i < adapters.length; i++) {
     let exchange = registry.getExchangeInformation(adapters[i]).value0;

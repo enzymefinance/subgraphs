@@ -8,10 +8,10 @@ export function ensureExchange(address: Address, context: Context): Exchange {
     return exchange;
   }
 
-  //   let contract = context.contracts.registry;
-  //   if (!contract.assetIsRegistered(address)) {
-  //     logCritical('Tried to initialize asset {} that is not currently registered.', [address.toHex()]);
-  //   }
+  // let contract = context.contracts.registry;
+  // if (!contract.assetIsRegistered(address)) {
+  //   logCritical('Tried to initialize asset {} that is not currently registered.', [address.toHex()]);
+  // }
 
   exchange = new Exchange(address.toHex());
   exchange.save();

@@ -1,4 +1,4 @@
-import { Address, log } from '@graphprotocol/graph-ts';
+import { Address } from '@graphprotocol/graph-ts';
 import { Asset } from '../generated/schema';
 import { Context } from '../context';
 import { logCritical } from '../utils/logCritical';
