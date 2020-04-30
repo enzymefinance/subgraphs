@@ -16,10 +16,6 @@ export function useFund(id: string): Fund {
   return fund as Fund;
 }
 
-export function maybeFund(id: string): Fund | null {
-  return Fund.load(id);
-}
-
 export function createFund(address: Address, context: Context): Fund {
   let fund = new Fund(address.toHex());
   context.entities.fund = fund;

@@ -5,12 +5,12 @@ import { ExchangeMethodCall, ExchangeMethodCall1 } from '../generated/TradingCon
 import { cancelOrder, createTrade } from '../entities/Trade';
 import { useAsset } from '../entities/Asset';
 import { exchangeMethodSignatureToName } from '../utils/exchangeMethodSignature';
-import { ensureExchange } from '../entities/Exchange';
+import { useExchange } from '../entities/Exchange';
 
 export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
   let context = new Context(dataSource.context(), event);
   let method = exchangeMethodSignatureToName(event.params.methodSignature.toHexString());
-  let exchange = ensureExchange(event.params.exchangeAddress, context);
+  let exchange = useExchange(event.params.exchangeAddress.toHex());
 
   if (method == 'cancelOrder') {
     cancelOrder(exchange, context);
@@ -29,7 +29,7 @@ export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
 export function handleExchangeMethodCall1(event: ExchangeMethodCall1): void {
   let context = new Context(dataSource.context(), event);
   let method = exchangeMethodSignatureToName(event.params.methodSignature.toHexString());
-  let exchange = ensureExchange(event.params.exchangeAddress, context);
+  let exchange = useExchange(event.params.exchangeAddress.toHex());
 
   if (method == 'cancelOrder') {
     cancelOrder(exchange, context);

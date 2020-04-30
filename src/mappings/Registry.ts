@@ -11,6 +11,7 @@ import {
 import { ensureAsset } from '../entities/Asset';
 import { arrayDiff } from '../utils/arrayDiff';
 import { arrayUnique } from '../utils/arrayUnique';
+import { ensureExchange } from '../entities/Exchange';
 
 export function handleAssetRemoval(event: AssetRemoval): void {
   let context = new Context(dataSource.context(), event);
@@ -41,11 +42,13 @@ export function handleEngineChange(event: EngineChange): void {
 export function handleExchangeAdapterRemoval(event: ExchangeAdapterRemoval): void {
   let context = new Context(dataSource.context(), event);
   // TODO: Remove exchange adapter.
+  // TODO: Should we track adapters or exchanges in the subgraph?
   createContractEvent('ExchangeAdapterRemoval', context);
 }
 
 export function handleExchangeAdapterUpsert(event: ExchangeAdapterUpsert): void {
   let context = new Context(dataSource.context(), event);
-  // TODO: Add exchange adapter.
+  // TODO: Should we track adapters or exchanges in the subgraph?
+  ensureExchange(event.params.exchange, context);
   createContractEvent('ExchangeAdapterUpsert', context);
 }
