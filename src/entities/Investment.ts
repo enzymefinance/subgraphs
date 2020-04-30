@@ -10,6 +10,7 @@ import {
 } from '../generated/schema';
 import { Context } from '../context';
 import { logCritical } from '../utils/logCritical';
+import { contractEventId } from './Event';
 
 function investmentId(investor: Account, context: Context): string {
   let fund = context.entities.fund;
@@ -66,8 +67,9 @@ export function createInvestmentAddition(
   context: Context,
 ): InvestmentAddition {
   let event = context.event;
+
   let addition = new InvestmentAddition(changeId(investment, context));
-  addition.type = 'ADDITION';
+  addition.kind = 'INVESTMENT';
   addition.investor = investment.investor;
   addition.fund = investment.fund;
   addition.investment = investment.id;
@@ -76,6 +78,7 @@ export function createInvestmentAddition(
   addition.shares = shares;
   addition.timestamp = event.block.timestamp;
   addition.transaction = event.transaction.hash.toHex();
+  addition.trigger = contractEventId(context);
   addition.save();
 
   investment.shares = investment.shares.plus(shares);
@@ -91,15 +94,10 @@ export function createInvestmentRedemption(
   shares: BigInt,
   context: Context,
 ): InvestmentRedemption {
-  for (let i: i32 = 0; i < quantities.length; i++) {
-    log.warning('asset {} quantity {}', [assets[i].symbol, quantities[i].toString()]);
-  }
-
-  log.warning('change id {}', [changeId(investment, context)]);
-
   let event = context.event;
+
   let redemption = new InvestmentRedemption(changeId(investment, context));
-  redemption.type = 'REDEMPTION';
+  redemption.kind = 'REDEMPTION';
   redemption.investor = investment.investor;
   redemption.fund = investment.fund;
   redemption.investment = investment.id;
@@ -108,6 +106,7 @@ export function createInvestmentRedemption(
   redemption.quantities = quantities;
   redemption.timestamp = event.block.timestamp;
   redemption.transaction = event.transaction.hash.toHex();
+  redemption.trigger = contractEventId(context);
   redemption.save();
 
   investment.shares = investment.shares.minus(shares);
@@ -118,14 +117,16 @@ export function createInvestmentRedemption(
 
 export function createInvestmentReward(investment: Investment, shares: BigInt, context: Context): InvestmentReward {
   let event = context.event;
+
   let reward = new InvestmentReward(changeId(investment, context));
-  reward.type = 'REWARD';
+  reward.kind = 'REWARD';
   reward.investor = investment.investor;
   reward.fund = investment.fund;
   reward.investment = investment.id;
   reward.shares = shares;
   reward.timestamp = event.block.timestamp;
   reward.transaction = event.transaction.hash.toHex();
+  reward.trigger = contractEventId(context);
   reward.save();
 
   investment.shares = investment.shares.plus(shares);
@@ -142,6 +143,7 @@ export function createInvestmentRequest(
 ): InvestmentRequest {
   let event = context.event;
   let fund = context.entities.fund;
+
   let request = new InvestmentRequest(investmentId(investor, context));
   request.investor = investor.id;
   request.fund = fund.id;

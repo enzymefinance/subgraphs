@@ -1,6 +1,6 @@
 import { dataSource } from '@graphprotocol/graph-ts';
 import { Context } from '../context';
-import { createEvent } from '../entities/Event';
+import { createContractEvent } from '../entities/Event';
 import {
   AssetRemoval,
   AssetUpsert,
@@ -19,7 +19,7 @@ export function handleAssetRemoval(event: AssetRemoval): void {
   version.assets = arrayDiff<string>(version.assets, [asset.id]);
   version.save();
 
-  createEvent('AssetRemoval', context);
+  createContractEvent('AssetRemoval', context);
 }
 
 export function handleAssetUpsert(event: AssetUpsert): void {
@@ -29,23 +29,23 @@ export function handleAssetUpsert(event: AssetUpsert): void {
   version.assets = arrayUnique<string>(version.assets.concat([asset.id]));
   version.save();
 
-  createEvent('AssetUpsert', context);
+  createContractEvent('AssetUpsert', context);
 }
 
 export function handleEngineChange(event: EngineChange): void {
   let context = new Context(dataSource.context(), event);
   // TODO: Whatever we need to do here.
-  createEvent('EngineChange', context);
+  createContractEvent('EngineChange', context);
 }
 
 export function handleExchangeAdapterRemoval(event: ExchangeAdapterRemoval): void {
   let context = new Context(dataSource.context(), event);
   // TODO: Remove exchange adapter.
-  createEvent('ExchangeAdapterRemoval', context);
+  createContractEvent('ExchangeAdapterRemoval', context);
 }
 
 export function handleExchangeAdapterUpsert(event: ExchangeAdapterUpsert): void {
   let context = new Context(dataSource.context(), event);
   // TODO: Add exchange adapter.
-  createEvent('ExchangeAdapterUpsert', context);
+  createContractEvent('ExchangeAdapterUpsert', context);
 }

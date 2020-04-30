@@ -1,50 +1,40 @@
 import { log, Entity, BigInt } from '@graphprotocol/graph-ts';
-import {
-  FundHoldingsMetric,
-  FundSharesMetric,
-  FundAggregatedMetric,
-  FundHoldingMetric,
-  Asset,
-} from '../generated/schema';
+import { Portfolio, Share, State, Holding, Asset } from '../generated/schema';
 import { Context } from '../context';
 import { arrayUnique } from '../utils/arrayUnique';
 import { logCritical } from '../utils/logCritical';
 
-export function fundAggregatedMetricId(context: Context): string {
+export function StateId(context: Context): string {
   let event = context.event;
   let fund = context.entities.fund;
   return fund.id + event.block.timestamp.toString();
 }
 
-export function createFundAggregatedMetric(
-  shares: FundSharesMetric,
-  holdings: FundHoldingsMetric,
-  context: Context,
-): FundAggregatedMetric {
+export function createState(shares: Share, holdings: Portfolio, context: Context): State {
   let event = context.event;
   let fund = context.entities.fund;
-  let metrics = new FundAggregatedMetric(fundAggregatedMetricId(context));
+  let metrics = new State(StateId(context));
   metrics.timestamp = event.block.timestamp;
   metrics.fund = fund.id;
   metrics.shares = shares.id;
-  metrics.holdings = holdings.id;
+  metrics.portfolio = holdings.id;
   metrics.events = [];
   metrics.save();
 
   return metrics;
 }
 
-export function ensureAggregatedMetric(context: Context): FundAggregatedMetric {
+export function ensureAggregatedMetric(context: Context): State {
   let fund = context.entities.fund;
-  let current = FundAggregatedMetric.load(fundAggregatedMetricId(context)) as FundAggregatedMetric;
+  let current = State.load(StateId(context)) as State;
   if (current) {
     return current;
   }
 
-  let previous = useFundAggregatedMetric(fund.metrics);
-  let shares = useFundSharesMetric(previous.shares);
-  let holdings = useFundHoldingsMetric(previous.holdings);
-  let metrics = createFundAggregatedMetric(shares, holdings, context);
+  let previous = useState(fund.metrics);
+  let shares = useShares(previous.shares);
+  let holdings = usePortfolio(previous.portfolio);
+  let metrics = createState(shares, holdings, context);
 
   fund.metrics = metrics.id;
 
@@ -53,25 +43,25 @@ export function ensureAggregatedMetric(context: Context): FundAggregatedMetric {
   return metrics;
 }
 
-export function useFundAggregatedMetric(id: string): FundAggregatedMetric {
-  let metrics = FundAggregatedMetric.load(id);
+export function useState(id: string): State {
+  let metrics = State.load(id);
   if (metrics == null) {
     logCritical('Failed to load fund aggregated metrics {}.', [id]);
   }
 
-  return metrics as FundAggregatedMetric;
+  return metrics as State;
 }
 
-export function fundSharesMetricId(context: Context): string {
+export function shareId(context: Context): string {
   let event = context.event;
   let fund = context.entities.fund;
   return fund.id + '/' + event.block.timestamp.toString() + '/shares';
 }
 
-export function createFundSharesMetric(shares: BigInt, cause: Entity | null, context: Context): FundSharesMetric {
+export function createShares(shares: BigInt, cause: Entity | null, context: Context): Share {
   let event = context.event;
   let fund = context.entities.fund;
-  let metric = new FundSharesMetric(fundSharesMetricId(context));
+  let metric = new Share(shareId(context));
   metric.timestamp = event.block.timestamp;
   metric.fund = fund.id;
   metric.shares = shares;
@@ -81,13 +71,13 @@ export function createFundSharesMetric(shares: BigInt, cause: Entity | null, con
   return metric;
 }
 
-export function ensureFundSharesMetric(cause: Entity, context: Context): FundSharesMetric {
-  let metric = FundSharesMetric.load(fundSharesMetricId(context)) as FundSharesMetric;
+export function ensureShares(cause: Entity, context: Context): Share {
+  let metric = Share.load(shareId(context)) as Share;
 
   if (!metric) {
     let aggregate = context.entities.metrics;
-    let previous = useFundSharesMetric(aggregate.shares);
-    metric = createFundSharesMetric(previous.shares, cause, context);
+    let previous = useShares(aggregate.shares);
+    metric = createShares(previous.shares, cause, context);
   } else {
     let events = metric.events;
     metric.events = arrayUnique<string>(events.concat([cause.getString('id')]));
@@ -97,29 +87,25 @@ export function ensureFundSharesMetric(cause: Entity, context: Context): FundSha
   return metric;
 }
 
-export function useFundSharesMetric(id: string): FundSharesMetric {
-  let metric = FundSharesMetric.load(id);
+export function useShares(id: string): Share {
+  let metric = Share.load(id);
   if (metric == null) {
     logCritical('Failed to load fund shares {}.', [id]);
   }
 
-  return metric as FundSharesMetric;
+  return metric as Share;
 }
 
-export function fundHoldingsMetricId(context: Context): string {
+export function PortfolioId(context: Context): string {
   let event = context.event;
   let fund = context.entities.fund;
   return fund.id + '/' + event.block.timestamp.toString() + '/holdings';
 }
 
-export function createFundHoldingsMetric(
-  holdings: FundHoldingMetric[],
-  cause: Entity | null,
-  context: Context,
-): FundHoldingsMetric {
+export function createPortfolio(holdings: Holding[], cause: Entity | null, context: Context): Portfolio {
   let event = context.event;
   let fund = context.entities.fund;
-  let metric = new FundHoldingsMetric(fundHoldingsMetricId(context));
+  let metric = new Portfolio(PortfolioId(context));
   metric.timestamp = event.block.timestamp;
   metric.fund = fund.id;
   metric.holdings = holdings.map<string>((item) => item.id);
@@ -129,14 +115,14 @@ export function createFundHoldingsMetric(
   return metric;
 }
 
-export function ensureFundHoldingsMetric(cause: Entity, context: Context): FundHoldingsMetric {
-  let metric = FundHoldingsMetric.load(fundHoldingsMetricId(context)) as FundHoldingsMetric;
+export function ensurePortfolio(cause: Entity, context: Context): Portfolio {
+  let metric = Portfolio.load(PortfolioId(context)) as Portfolio;
 
   if (!metric) {
     let aggregate = context.entities.metrics;
-    let previous = useFundHoldingsMetric(aggregate.holdings).holdings;
-    let records = previous.map<FundHoldingMetric>((id) => useFundHoldingMetric(id));
-    metric = createFundHoldingsMetric(records, cause, context);
+    let previous = usePortfolio(aggregate.portfolio).holdings;
+    let records = previous.map<Holding>((id) => useHolding(id));
+    metric = createPortfolio(records, cause, context);
   } else {
     let events = metric.events;
     metric.events = arrayUnique<string>(events.concat([cause.getString('id')]));
@@ -146,25 +132,25 @@ export function ensureFundHoldingsMetric(cause: Entity, context: Context): FundH
   return metric;
 }
 
-export function useFundHoldingsMetric(id: string): FundHoldingsMetric {
-  let holdings = FundHoldingsMetric.load(id);
+export function usePortfolio(id: string): Portfolio {
+  let holdings = Portfolio.load(id);
   if (holdings == null) {
     logCritical('Failed to load fund holdings {}.', [id]);
   }
 
-  return holdings as FundHoldingsMetric;
+  return holdings as Portfolio;
 }
 
-function fundHoldingMetricId(asset: Asset, context: Context): string {
+function fundHoldingId(asset: Asset, context: Context): string {
   let event = context.event;
   let fund = context.entities.fund;
   return fund.id + '/' + asset.id + '/' + event.block.timestamp.toString() + '/holding';
 }
 
-function createFundHoldingMetric(asset: Asset, quantity: BigInt, cause: Entity, context: Context): FundHoldingMetric {
+function createHolding(asset: Asset, quantity: BigInt, cause: Entity, context: Context): Holding {
   let event = context.event;
   let fund = context.entities.fund;
-  let metric = new FundHoldingMetric(fundHoldingMetricId(asset, context));
+  let metric = new Holding(fundHoldingId(asset, context));
   metric.timestamp = event.block.timestamp;
   metric.fund = fund.id;
   metric.asset = asset.id;
@@ -175,25 +161,25 @@ function createFundHoldingMetric(asset: Asset, quantity: BigInt, cause: Entity, 
   return metric;
 }
 
-export function useFundHoldingMetric(id: string): FundHoldingMetric {
-  let holdings = FundHoldingMetric.load(id);
+export function useHolding(id: string): Holding {
+  let holdings = Holding.load(id);
   if (holdings == null) {
     logCritical('Failed to load fund holdings {}.', [id]);
   }
 
-  return holdings as FundHoldingMetric;
+  return holdings as Holding;
 }
 
-export function trackFundHoldings(assets: Asset[], cause: Entity, context: Context): FundHoldingsMetric {
-  let metric = ensureFundHoldingsMetric(cause, context);
+export function trackFundPortfolio(assets: Asset[], cause: Entity, context: Context): Portfolio {
+  let metric = ensurePortfolio(cause, context);
   let timestamp = context.event.block.timestamp;
 
-  let previous: FundHoldingMetric[] = metric.holdings.map<FundHoldingMetric>((id) => useFundHoldingMetric(id));
+  let previous: Holding[] = metric.holdings.map<Holding>((id) => useHolding(id));
   let ids = assets.map<string>((item) => item.id);
 
   // Create a list of all the previous fund holdings without the assets that we are
   // currently tracking for changes.
-  let track: FundHoldingMetric[] = [];
+  let track: Holding[] = [];
   for (let k: i32 = 0; k < previous.length; k++) {
     let prev = previous[k];
 
@@ -234,13 +220,13 @@ export function trackFundHoldings(assets: Asset[], cause: Entity, context: Conte
     // (quantity = 0 && previous quantity not existant or zero) => don't add
     // loop over pre
 
-    let match = findHolding(previous, asset) as FundHoldingMetric;
+    let match = findHolding(previous, asset) as Holding;
 
     if (quantity.isZero() && (!match || (match.quantity.isZero() && match.timestamp < timestamp))) {
       continue;
     }
 
-    track.push(createFundHoldingMetric(asset, quantity, cause, context));
+    track.push(createHolding(asset, quantity, cause, context));
   }
 
   metric.holdings = track.map<string>((item) => item.id);
@@ -249,7 +235,7 @@ export function trackFundHoldings(assets: Asset[], cause: Entity, context: Conte
   let aggregated = context.entities.metrics;
   let events = aggregated.events;
   aggregated.events = arrayUnique<string>(events.concat(metric.events));
-  aggregated.holdings = metric.id;
+  aggregated.portfolio = metric.id;
   aggregated.save();
 
   let fund = context.entities.fund;
@@ -259,8 +245,8 @@ export function trackFundHoldings(assets: Asset[], cause: Entity, context: Conte
   return metric;
 }
 
-export function trackFundShares(cause: Entity, context: Context): FundSharesMetric {
-  let shares = ensureFundSharesMetric(cause, context);
+export function trackFundShares(cause: Entity, context: Context): Share {
+  let shares = ensureShares(cause, context);
   shares.shares = context.contracts.shares.totalSupply();
   shares.save();
 
@@ -277,7 +263,7 @@ export function trackFundShares(cause: Entity, context: Context): FundSharesMetr
   return shares;
 }
 
-function findHolding(holdings: FundHoldingMetric[], asset: Asset): FundHoldingMetric | null {
+function findHolding(holdings: Holding[], asset: Asset): Holding | null {
   for (let i: i32 = 0; i < holdings.length; i++) {
     if (holdings[i].asset == asset.id) {
       return holdings[i];

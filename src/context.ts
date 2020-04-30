@@ -1,5 +1,5 @@
 import { DataSourceContext, Address, Entity, log, ethereum } from '@graphprotocol/graph-ts';
-import { Fund, Version, Account, FundAggregatedMetric } from './generated/schema';
+import { Fund, Version, Account, State } from './generated/schema';
 import { HubContract } from './generated/HubContract';
 import { AccountingContract } from './generated/AccountingContract';
 import { ParticipationContract } from './generated/ParticipationContract';
@@ -74,7 +74,7 @@ export class ContextEntities {
   private _version: Version | null;
   private _fund: Fund | null;
   private _manager: Account | null;
-  private _metrics: FundAggregatedMetric | null;
+  private _metrics: State | null;
 
   constructor(context: Context) {
     this.context = context;
@@ -119,7 +119,7 @@ export class ContextEntities {
     return this._version as Version;
   }
 
-  get metrics(): FundAggregatedMetric {
+  get metrics(): State {
     if (this._metrics == null) {
       // If this getter is used in our code, we can assume that
       // whatever is happening, we want to track a metrics
@@ -127,10 +127,10 @@ export class ContextEntities {
       this._metrics = ensureAggregatedMetric(this.context);
     }
 
-    return this._metrics as FundAggregatedMetric;
+    return this._metrics as State;
   }
 
-  set metrics(value: FundAggregatedMetric) {
+  set metrics(value: State) {
     this._metrics = value;
   }
 }

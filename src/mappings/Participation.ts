@@ -1,7 +1,7 @@
 import { dataSource } from '@graphprotocol/graph-ts';
 import { Asset } from '../generated/schema';
 import { Context } from '../context';
-import { createFundEvent } from '../entities/Event';
+import { createContractEvent } from '../entities/Event';
 import { ensureInvestor } from '../entities/Account';
 import { useAsset } from '../entities/Asset';
 import { arrayDiff } from '../utils/arrayDiff';
@@ -21,14 +21,14 @@ import {
   RequestExecution,
   InvestmentRequest,
 } from '../generated/ParticipationContract';
-import { trackFundShares, trackFundHoldings } from '../entities/FundMetrics';
+import { trackFundShares, trackFundPortfolio } from '../entities/FundMetrics';
 
 export function handleCancelRequest(event: CancelRequest): void {
   let context = new Context(dataSource.context(), event);
   let account = ensureInvestor(event.params.requestOwner);
 
   deleteInvestmentRequest(account, context);
-  createFundEvent('CancelRequest', context);
+  createContractEvent('CancelRequest', context);
 }
 
 export function handleDisableInvestment(event: DisableInvestment): void {
@@ -38,7 +38,7 @@ export function handleDisableInvestment(event: DisableInvestment): void {
   fund.investable = arrayDiff<string>(fund.investable, removed);
   fund.save();
 
-  createFundEvent('DisableInvestment', context);
+  createContractEvent('DisableInvestment', context);
 }
 
 export function handleEnableInvestment(event: EnableInvestment): void {
@@ -49,7 +49,7 @@ export function handleEnableInvestment(event: EnableInvestment): void {
   fund.investable = arrayUnique<string>(previous.concat(added));
   fund.save();
 
-  createFundEvent('EnableInvestment', context);
+  createContractEvent('EnableInvestment', context);
 }
 
 export function handleInvestmentRequest(event: InvestmentRequest): void {
@@ -59,7 +59,7 @@ export function handleInvestmentRequest(event: InvestmentRequest): void {
   let quantity = event.params.investmentAmount;
 
   createInvestmentRequest(account, asset, quantity, context);
-  createFundEvent('InvestmentRequest', context);
+  createContractEvent('InvestmentRequest', context);
 }
 
 export function handleRequestExecution(event: RequestExecution): void {
@@ -71,12 +71,12 @@ export function handleRequestExecution(event: RequestExecution): void {
   let shares = event.params.requestedShares;
   let addition = createInvestmentAddition(investment, asset, quantity, shares, context);
 
-  trackFundHoldings([asset], addition, context);
+  trackFundPortfolio([asset], addition, context);
   trackFundShares(addition, context);
   // trackFundInvestments(event, fund, addition);
 
   deleteInvestmentRequest(account, context);
-  createFundEvent('RequestExecution', context);
+  createContractEvent('RequestExecution', context);
 }
 
 export function handleRedemption(event: Redemption): void {
@@ -88,9 +88,9 @@ export function handleRedemption(event: Redemption): void {
   let quantities = event.params.assetQuantities;
   let redemption = createInvestmentRedemption(investment, assets, quantities, shares, context);
 
-  trackFundHoldings(assets, redemption, context);
+  trackFundPortfolio(assets, redemption, context);
   trackFundShares(redemption, context);
   // trackFundInvestments(event, fund, redemption);
 
-  createFundEvent('Redemption', context);
+  createContractEvent('Redemption', context);
 }

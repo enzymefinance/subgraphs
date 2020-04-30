@@ -1,6 +1,6 @@
 import { dataSource } from '@graphprotocol/graph-ts';
 import { Context } from '../context';
-import { createFundEvent } from '../entities/Event';
+import { createContractEvent } from '../entities/Event';
 import { FundShutDown } from '../generated/HubContract';
 
 export function handleFundShutDown(event: FundShutDown): void {
@@ -9,5 +9,5 @@ export function handleFundShutDown(event: FundShutDown): void {
   fund.active = false;
   fund.save();
 
-  createFundEvent('FundShutDown', context);
+  createContractEvent('FundShutDown', context);
 }

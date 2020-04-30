@@ -4,7 +4,7 @@ import { Fund, Asset } from '../generated/schema';
 import { Context } from '../context';
 import { useAsset } from './Asset';
 import { createFees } from './Fee';
-import { createFundAggregatedMetric, createFundSharesMetric, createFundHoldingsMetric } from './FundMetrics';
+import { createState, createShares, createPortfolio } from './FundMetrics';
 import { logCritical } from '../utils/logCritical';
 
 export function useFund(id: string): Fund {
@@ -24,9 +24,9 @@ export function createFund(address: Address, context: Context): Fund {
   let fund = new Fund(address.toHex());
   context.entities.fund = fund;
 
-  let shares = createFundSharesMetric(BigInt.fromI32(0), null, context);
-  let holdings = createFundHoldingsMetric([], null, context);
-  let metrics = createFundAggregatedMetric(shares, holdings, context);
+  let shares = createShares(BigInt.fromI32(0), null, context);
+  let holdings = createPortfolio([], null, context);
+  let metrics = createState(shares, holdings, context);
   context.entities.metrics = metrics;
 
   fund.name = hexToAscii(context.contracts.hub.name());

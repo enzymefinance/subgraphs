@@ -14,28 +14,37 @@ enum FeeIdentifierEnum {
   PERFORMANCE
 }
 
-enum InvestmentChangeEventTypeEnum {
-  ADDITION
+enum EventKindEnum {
+  INVESTMENT
   REDEMPTION
   REWARD
+  TRADE
 }
 
-type Event @entity {
+type ContractEvent @entity {
   id: ID!
   version: Version!
   fund: Fund
   name: String!
   contract: String!
-  hash: String!
+  transaction: String!
   from: String!
   timestamp: BigInt!
   block: BigInt!
 }
 
+interface Event {
+  id: ID!
+  kind: EventKindEnum!
+  fund: Fund!
+  timestamp: BigInt!
+  trigger: ContractEvent!
+}
+
 type Version @entity {
   id: ID!
   funds: [Fund!]! @derivedFrom(field: "version")
-  events: [Event!]! @derivedFrom(field: "version")
+  events: [ContractEvent!]! @derivedFrom(field: "version")
   assets: [Asset!]!
   exchanges: [Exchange!]!
 }
@@ -44,7 +53,7 @@ type Version @entity {
 #   id: ID!
 #   holdings: [NetworkHolding!]!
 #   timestamp: BigInt!
-#   event: MetricChangeEvent!
+#   event: Event!
 
 #   # TODO: Implement historical counters
 #   allInvestments: Int!
@@ -63,39 +72,39 @@ type Version @entity {
 #   quantity: BigInt!
 # }
 
-interface FundMetric {
+interface Metric {
   id: ID!
   fund: Fund!
   timestamp: BigInt!
-  events: [MetricChangeEvent!]!
+  events: [Event!]!
 }
 
-type FundSharesMetric implements FundMetric @entity {
+type Share implements Metric @entity {
   id: ID! # fund address + timestamp + 'shares'
   fund: Fund!
   timestamp: BigInt!
   shares: BigInt!
-  events: [MetricChangeEvent!]!
+  events: [Event!]!
 }
 
-type FundHoldingMetric implements FundMetric @entity {
+type Holding implements Metric @entity {
   id: ID! # fund address + asset address + timestamp
   fund: Fund!
   timestamp: BigInt!
   asset: Asset!
   quantity: BigInt!
-  events: [MetricChangeEvent!]!
+  events: [Event!]!
 }
 
-type FundHoldingsMetric implements FundMetric @entity {
+type Portfolio implements Metric @entity {
   id: ID! # fund address + timestamp + 'holdings'
   fund: Fund!
   timestamp: BigInt!
-  holdings: [FundHoldingMetric!]!
-  events: [MetricChangeEvent!]!
+  holdings: [Holding!]!
+  events: [Event!]!
 }
 
-# type FundInvestmentsMetric implements FundMetric @entity {
+# type FundInvestmentsMetric implements Metric @entity {
 #   id: ID!  # fund address + timestamp + 'investments'
 #   fund: Fund!
 #   timestamp: BigInt!
@@ -104,7 +113,7 @@ type FundHoldingsMetric implements FundMetric @entity {
 #   events: [Event!]!
 # }
 
-# type FundInvestorsMetric implements FundMetric @entity {
+# type FundInvestorsMetric implements Metric @entity {
 #   id: ID!  # fund address + timestamp + 'investors'
 #   fund: Fund!
 #   timestamp: BigInt!
@@ -113,15 +122,15 @@ type FundHoldingsMetric implements FundMetric @entity {
 #   events: [Event!]!
 # }
 
-type FundAggregatedMetric implements FundMetric @entity {
+type State implements Metric @entity {
   id: ID! # fund address + timestamp
   fund: Fund!
   timestamp: BigInt!
   # investors: FundInvestorsMetric!
   # investments: FundInvestmentsMetric!
-  shares: FundSharesMetric!
-  holdings: FundHoldingsMetric!
-  events: [MetricChangeEvent!]!
+  shares: Share!
+  portfolio: Portfolio!
+  events: [Event!]!
 }
 
 type Fund @entity {
@@ -137,12 +146,12 @@ type Fund @entity {
   policies: [Policy!]! @derivedFrom(field: "fund")
   fees: [Fee!]! @derivedFrom(field: "fund")
   trades: [Trade!]! @derivedFrom(field: "fund")
-  shares: FundSharesMetric!
-  holdings: FundHoldingsMetric!
-  metrics: FundAggregatedMetric!
-  historicalMetrics: [FundAggregatedMetric!]! @derivedFrom(field: "fund")
-  historicalShares: [FundSharesMetric!]! @derivedFrom(field: "fund")
-  historicalHoldings: [FundHoldingsMetric!]! @derivedFrom(field: "fund")
+  shares: Share!
+  holdings: Portfolio!
+  metrics: State!
+  historicalStates: [State!]! @derivedFrom(field: "fund")
+  historicalShares: [Share!]! @derivedFrom(field: "fund")
+  historicalPortfolio: [Portfolio!]! @derivedFrom(field: "fund")
   # historicalInvestments: [FundInvestmentsMetric!]! @derivedFrom(field: "fund")
 }
 
@@ -229,28 +238,19 @@ type AssetWhitelistPolicy implements Policy @entity {
   identifier: PolicyIdentifierEnum!
 }
 
-interface MetricChangeEvent {
+interface InvestmentEvent {
   id: ID!
+  kind: EventKindEnum!
   fund: Fund!
   timestamp: BigInt!
   transaction: String!
-}
-
-# interface InvestmentChangeEvent extends MetricChangeEvent
-interface InvestmentChangeEvent {
-  id: ID!
-  fund: Fund!
-  type: InvestmentChangeEventTypeEnum!
-  investor: Account!
+  trigger: ContractEvent!
   investment: Investment!
-  shares: BigInt!
-  timestamp: BigInt!
-  transaction: String!
 }
 
-type InvestmentAddition implements MetricChangeEvent & InvestmentChangeEvent @entity {
+type InvestmentAddition implements Event & InvestmentEvent @entity {
   id: ID!
-  type: InvestmentChangeEventTypeEnum!
+  kind: EventKindEnum!
   fund: Fund!
   investor: Account!
   investment: Investment!
@@ -259,11 +259,12 @@ type InvestmentAddition implements MetricChangeEvent & InvestmentChangeEvent @en
   quantity: BigInt!
   timestamp: BigInt!
   transaction: String!
+  trigger: ContractEvent!
 }
 
-type InvestmentRedemption implements MetricChangeEvent & InvestmentChangeEvent @entity {
+type InvestmentRedemption implements Event & InvestmentEvent @entity {
   id: ID!
-  type: InvestmentChangeEventTypeEnum!
+  kind: EventKindEnum!
   fund: Fund!
   investor: Account!
   investment: Investment!
@@ -272,17 +273,19 @@ type InvestmentRedemption implements MetricChangeEvent & InvestmentChangeEvent @
   quantities: [BigInt!]!
   timestamp: BigInt!
   transaction: String!
+  trigger: ContractEvent!
 }
 
-type InvestmentReward implements MetricChangeEvent & InvestmentChangeEvent @entity {
+type InvestmentReward implements Event & InvestmentEvent @entity {
   id: ID!
-  type: InvestmentChangeEventTypeEnum!
+  kind: EventKindEnum!
   fund: Fund!
   investor: Account!
   investment: Investment!
   shares: BigInt!
   timestamp: BigInt!
   transaction: String!
+  trigger: ContractEvent!
 }
 
 type InvestmentRequest @entity {
@@ -299,7 +302,7 @@ type Investment @entity {
   id: ID!
   fund: Fund!
   investor: Account!
-  changes: [InvestmentChangeEvent!]! @derivedFrom(field: "investment")
+  changes: [InvestmentEvent!]! @derivedFrom(field: "investment")
   shares: BigInt!
 }
 
@@ -326,8 +329,9 @@ type Asset @entity {
 #   timestamp: BigInt!
 # }
 
-type Trade implements MetricChangeEvent @entity {
+type Trade implements Event @entity {
   id: ID!
+  kind: EventKindEnum!
   fund: Fund!
   exchange: Exchange!
   timestamp: BigInt!
@@ -337,6 +341,7 @@ type Trade implements MetricChangeEvent @entity {
   amountSold: BigInt
   amountBought: BigInt
   transaction: String!
+  trigger: ContractEvent!
 }
 
 # type CancelOrder implements Order @entity {

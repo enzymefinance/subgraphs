@@ -1,6 +1,6 @@
 import { Address, dataSource } from '@graphprotocol/graph-ts';
 import { Context } from '../context';
-import { createFundEvent } from '../entities/Event';
+import { createContractEvent } from '../entities/Event';
 import { createFund } from '../entities/Fund';
 import { ensureManager } from '../entities/Account';
 import { NewFund } from '../generated/VersionContract';
@@ -21,5 +21,5 @@ export function handleNewFund(event: NewFund): void {
   context.entities.manager = manager;
 
   createFund(event.params.hub, context);
-  createFundEvent('NewFund', context);
+  createContractEvent('NewFund', context);
 }

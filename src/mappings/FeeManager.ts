@@ -1,6 +1,6 @@
 import { dataSource } from '@graphprotocol/graph-ts';
 import { Context } from '../context';
-import { createFundEvent } from '../entities/Event';
+import { createContractEvent } from '../entities/Event';
 import { FeeReward } from '../generated/FeeManagerContract';
 import { ensureInvestment, createInvestmentReward } from '../entities/Investment';
 import { trackFundShares } from '../entities/FundMetrics';
@@ -16,5 +16,5 @@ export function handleFeeReward(event: FeeReward): void {
     // trackFundInvestments(event, fund, reward);
   }
 
-  createFundEvent('FeeReward', context);
+  createContractEvent('FeeReward', context);
 }

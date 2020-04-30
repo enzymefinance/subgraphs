@@ -1,12 +1,12 @@
 import { dataSource } from '@graphprotocol/graph-ts';
 import { Context } from '../context';
-import { createFundEvent } from '../entities/Event';
+import { createContractEvent } from '../entities/Event';
 import { ExchangeMethodCall, ExchangeMethodCall1 } from '../generated/TradingContract';
 import { cancelOrder, createTrade } from '../entities/Trade';
 import { useAsset } from '../entities/Asset';
 import { exchangeMethodSignatureToName } from '../utils/exchangeMethodSignature';
 import { ensureExchange } from '../entities/Exchange';
-import { trackFundHoldings } from '../entities/FundMetrics';
+import { trackFundPortfolio } from '../entities/FundMetrics';
 
 export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
   let context = new Context(dataSource.context(), event);
@@ -24,7 +24,7 @@ export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
 
   createTrade(method, exchange, assetSold, assetBought, context);
 
-  createFundEvent('Trade', context);
+  createContractEvent('Trade', context);
 }
 
 export function handleExchangeMethodCall1(event: ExchangeMethodCall1): void {
@@ -42,7 +42,7 @@ export function handleExchangeMethodCall1(event: ExchangeMethodCall1): void {
   let assetBought = useAsset(addresses[2]);
 
   // let trade = createTrade(event, method, exchange, assetSold, assetBought);
-  // trackFundHoldings(event, fund, trade);
+  // trackFundPortfolio(event, fund, trade);
 
-  createFundEvent('Trade', context);
+  createContractEvent('Trade', context);
 }
