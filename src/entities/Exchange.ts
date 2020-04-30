@@ -8,11 +8,7 @@ export function ensureExchange(address: Address, context: Context): Exchange {
     return exchange;
   }
 
-  // let contract = context.contracts.registry;
-  // if (!contract.assetIsRegistered(address)) {
-  //   logCritical('Tried to initialize asset {} that is not currently registered.', [address.toHex()]);
-  // }
-
+  // TODO: Add exchange names.
   exchange = new Exchange(address.toHex());
   exchange.save();
 

@@ -25,6 +25,7 @@ export function handleExchangeMethodCall(event: ExchangeMethodCall): void {
   createContractEvent('Trade', context);
 }
 
+// TODO: This mapping looks exactly identical to the previous one. Can they be merged?
 export function handleExchangeMethodCall1(event: ExchangeMethodCall1): void {
   let context = new Context(dataSource.context(), event);
   let method = exchangeMethodSignatureToName(event.params.methodSignature.toHexString());
