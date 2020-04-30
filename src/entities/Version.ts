@@ -22,8 +22,19 @@ export function createVersion(address: Address, context: Context): Version {
   context.entities.version = version;
   context.registry = context.contracts.version.registry().toHex();
 
-  let assets = context.contracts.registry.getRegisteredAssets();
+  let registry = context.contracts.registry;
+
+  let adapters = registry.getRegisteredExchangeAdapters();
+
+  let exchanges: Address[] = [];
+  for (let i: i32 = 0; i < adapters.length; i++) {
+    let exchange = registry.getExchangeInformation(adapters[i]).value0;
+    exchanges.push(exchange);
+  }
+
+  let assets = registry.getRegisteredAssets();
   version.assets = ensureAssets(assets, context).map<string>((item) => item.id);
+  version.exchanges = exchanges.map<string>((exchange) => exchange.toHex());
   version.save();
 
   DataSourceTemplate.createWithContext('VersionContract', [context.version], context.context);

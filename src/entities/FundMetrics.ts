@@ -47,6 +47,7 @@ export function ensureAggregatedMetric(context: Context): FundAggregatedMetric {
   let metrics = createFundAggregatedMetric(shares, holdings, context);
 
   fund.metrics = metrics.id;
+
   fund.save();
 
   return metrics;
@@ -174,7 +175,7 @@ function createFundHoldingMetric(asset: Asset, quantity: BigInt, cause: Entity, 
   return metric;
 }
 
-function useFundHoldingMetric(id: string): FundHoldingMetric {
+export function useFundHoldingMetric(id: string): FundHoldingMetric {
   let holdings = FundHoldingMetric.load(id);
   if (holdings == null) {
     logCritical('Failed to load fund holdings {}.', [id]);
@@ -229,6 +230,26 @@ export function trackFundHoldings(assets: Asset[], cause: Entity, context: Conte
     //
     // TODO: Should we add a check so that 0s don't get added if the value was
     // previously already untracked or 0? This should not happen, but who knows ...
+
+    // (quantity = 0 && previous quantity not existant or zero) => don't add
+    // loop over pre
+
+    let addTrack = true;
+
+    if (quantity.isZero()) {
+      addTrack = false;
+      for (let k: i32 = 0; k < previous.length; k++) {
+        if (previous[k].asset == asset.id && !previous[k].quantity.isZero()) {
+          addTrack = true;
+          break;
+        }
+      }
+    }
+
+    if (!addTrack) {
+      continue;
+    }
+
     track.push(createFundHoldingMetric(asset, quantity, cause, context));
   }
 
@@ -240,6 +261,10 @@ export function trackFundHoldings(assets: Asset[], cause: Entity, context: Conte
   aggregated.events = arrayUnique<string>(events.concat(metric.events));
   aggregated.holdings = metric.id;
   aggregated.save();
+
+  let fund = context.entities.fund;
+  fund.holdings = metric.id;
+  fund.save();
 
   return metric;
 }
@@ -254,6 +279,10 @@ export function trackFundShares(cause: Entity, context: Context): FundSharesMetr
   aggregated.events = arrayUnique<string>(events.concat(shares.events));
   aggregated.shares = shares.id;
   aggregated.save();
+
+  let fund = context.entities.fund;
+  fund.shares = shares.id;
+  fund.save();
 
   return shares;
 }

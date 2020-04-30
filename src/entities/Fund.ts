@@ -33,6 +33,8 @@ export function createFund(address: Address, context: Context): Fund {
   fund.inception = context.event.block.timestamp;
   fund.version = context.version;
   fund.manager = context.manager;
+  fund.shares = shares.id;
+  fund.holdings = holdings.id;
   fund.metrics = metrics.id;
   fund.active = true;
   fund.investable = investableAssets(context).map<string>((item) => item.id);

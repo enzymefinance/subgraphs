@@ -37,6 +37,7 @@ type Version @entity {
   funds: [Fund!]! @derivedFrom(field: "version")
   events: [Event!]! @derivedFrom(field: "version")
   assets: [Asset!]!
+  exchanges: [Exchange!]!
 }
 
 # type NetworkMetric @entity {
@@ -136,6 +137,8 @@ type Fund @entity {
   policies: [Policy!]! @derivedFrom(field: "fund")
   fees: [Fee!]! @derivedFrom(field: "fund")
   trades: [Trade!]! @derivedFrom(field: "fund")
+  shares: FundSharesMetric!
+  holdings: FundHoldingsMetric!
   metrics: FundAggregatedMetric!
   historicalMetrics: [FundAggregatedMetric!]! @derivedFrom(field: "fund")
   historicalShares: [FundSharesMetric!]! @derivedFrom(field: "fund")
@@ -316,14 +319,14 @@ type Asset @entity {
   decimals: Int!
 }
 
-interface Order {
-  id: ID!
-  fund: Fund!
-  exchange: Exchange!
-  timestamp: BigInt!
-}
+# interface Order {
+#   id: ID!
+#   fund: Fund!
+#   exchange: Exchange!
+#   timestamp: BigInt!
+# }
 
-type Trade implements MetricChangeEvent & Order @entity {
+type Trade implements MetricChangeEvent @entity {
   id: ID!
   fund: Fund!
   exchange: Exchange!
@@ -336,13 +339,14 @@ type Trade implements MetricChangeEvent & Order @entity {
   transaction: String!
 }
 
-type CancelOrder implements Order @entity {
-  id: ID!
-  fund: Fund!
-  exchange: Exchange!
-  timestamp: BigInt!
-}
+# type CancelOrder implements Order @entity {
+#   id: ID!
+#   fund: Fund!
+#   exchange: Exchange!
+#   timestamp: BigInt!
+# }
 
 type Exchange @entity {
   id: ID!
+  name: String
 }
