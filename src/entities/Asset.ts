@@ -1,11 +1,12 @@
 import { Address, log } from '@graphprotocol/graph-ts';
 import { Asset } from '../generated/schema';
 import { Context } from '../context';
+import { logCritical } from '../utils/logCritical';
 
 export function useAsset(id: string): Asset {
   let asset = Asset.load(id);
   if (asset == null) {
-    log.critical('Failed to load asset {}.', [id]);
+    logCritical('Failed to load asset {}.', [id]);
   }
 
   return asset as Asset;
@@ -32,7 +33,7 @@ export function ensureAsset(address: Address, context: Context): Asset {
 
   let contract = context.contracts.registry;
   if (!contract.assetIsRegistered(address)) {
-    log.critical('Tried to initialize asset {} that is not currently registered.', [address.toHex()]);
+    logCritical('Tried to initialize asset {} that is not currently registered.', [address.toHex()]);
   }
 
   let information = contract.assetInformation(address);

@@ -5,11 +5,12 @@ import { Context } from '../context';
 import { useAsset } from './Asset';
 import { createFees } from './Fee';
 import { createFundAggregatedMetric, createFundSharesMetric, createFundHoldingsMetric } from './FundMetrics';
+import { logCritical } from '../utils/logCritical';
 
 export function useFund(id: string): Fund {
   let fund = Fund.load(id);
   if (fund == null) {
-    log.critical('Failed to load fund {}.', [id]);
+    logCritical('Failed to load fund {}.', [id]);
   }
 
   return fund as Fund;

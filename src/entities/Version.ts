@@ -2,11 +2,12 @@ import { Address, DataSourceTemplate, log } from '@graphprotocol/graph-ts';
 import { Version } from '../generated/schema';
 import { Context } from '../context';
 import { ensureAssets } from './Asset';
+import { logCritical } from '../utils/logCritical';
 
 export function useVersion(id: string): Version {
   let version = Version.load(id);
   if (version == null) {
-    log.critical('Failed to load version {}.', [id]);
+    logCritical('Failed to load version {}.', [id]);
   }
 
   return version as Version;

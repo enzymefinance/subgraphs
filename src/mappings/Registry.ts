@@ -8,16 +8,27 @@ import {
   ExchangeAdapterRemoval,
   ExchangeAdapterUpsert,
 } from '../generated/RegistryContract';
+import { ensureAsset } from '../entities/Asset';
+import { arrayDiff } from '../utils/arrayDiff';
+import { arrayUnique } from '../utils/arrayUnique';
 
 export function handleAssetRemoval(event: AssetRemoval): void {
   let context = new Context(dataSource.context(), event);
-  // TODO: Remove asset from version.
+  let asset = ensureAsset(event.params.asset, context);
+  let version = context.entities.version;
+  version.assets = arrayDiff<string>(version.assets, [asset.id]);
+  version.save();
+
   createEvent('AssetRemoval', context);
 }
 
 export function handleAssetUpsert(event: AssetUpsert): void {
   let context = new Context(dataSource.context(), event);
-  // TODO: Add asset to version.
+  let asset = ensureAsset(event.params.asset, context);
+  let version = context.entities.version;
+  version.assets = arrayUnique<string>(version.assets.concat([asset.id]));
+  version.save();
+
   createEvent('AssetUpsert', context);
 }
 

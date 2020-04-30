@@ -1,5 +1,6 @@
 import { Address, log } from '@graphprotocol/graph-ts';
 import { Account } from '../generated/schema';
+import { logCritical } from '../utils/logCritical';
 
 export function ensureManager(managerAddress: Address): Account {
   let account = ensureAccount(managerAddress);
@@ -26,7 +27,7 @@ export function ensureInvestor(investorAddress: Address): Account {
 export function useAccount(id: string): Account {
   let account = Account.load(id);
   if (account == null) {
-    log.critical('Failed to load account {}.', [id]);
+    logCritical('Failed to load account {}.', [id]);
   }
 
   return account as Account;

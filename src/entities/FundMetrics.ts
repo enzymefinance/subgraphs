@@ -8,6 +8,7 @@ import {
 } from '../generated/schema';
 import { Context } from '../context';
 import { arrayUnique } from '../utils/arrayUnique';
+import { logCritical } from '../utils/logCritical';
 
 export function fundAggregatedMetricId(context: Context): string {
   let event = context.event;
@@ -54,7 +55,7 @@ export function ensureAggregatedMetric(context: Context): FundAggregatedMetric {
 export function useFundAggregatedMetric(id: string): FundAggregatedMetric {
   let metrics = FundAggregatedMetric.load(id);
   if (metrics == null) {
-    log.critical('Failed to load fund aggregated metrics {}.', [id]);
+    logCritical('Failed to load fund aggregated metrics {}.', [id]);
   }
 
   return metrics as FundAggregatedMetric;
@@ -98,7 +99,7 @@ export function ensureFundSharesMetric(cause: Entity, context: Context): FundSha
 export function useFundSharesMetric(id: string): FundSharesMetric {
   let metric = FundSharesMetric.load(id);
   if (metric == null) {
-    log.critical('Failed to load fund shares {}.', [id]);
+    logCritical('Failed to load fund shares {}.', [id]);
   }
 
   return metric as FundSharesMetric;
@@ -147,7 +148,7 @@ export function ensureFundHoldingsMetric(cause: Entity, context: Context): FundH
 export function useFundHoldingsMetric(id: string): FundHoldingsMetric {
   let holdings = FundHoldingsMetric.load(id);
   if (holdings == null) {
-    log.critical('Failed to load fund holdings {}.', [id]);
+    logCritical('Failed to load fund holdings {}.', [id]);
   }
 
   return holdings as FundHoldingsMetric;
@@ -176,7 +177,7 @@ function createFundHoldingMetric(asset: Asset, quantity: BigInt, cause: Entity, 
 function useFundHoldingMetric(id: string): FundHoldingMetric {
   let holdings = FundHoldingMetric.load(id);
   if (holdings == null) {
-    log.critical('Failed to load fund holdings {}.', [id]);
+    logCritical('Failed to load fund holdings {}.', [id]);
   }
 
   return holdings as FundHoldingMetric;

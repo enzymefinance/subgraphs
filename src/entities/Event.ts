@@ -1,6 +1,7 @@
 import { log } from '@graphprotocol/graph-ts';
 import { Event, Fund } from '../generated/schema';
 import { Context } from '../context';
+import { logCritical } from '../utils/logCritical';
 
 export function createFundEvent(name: string, context: Context): Event {
   let event = context.event;
@@ -20,7 +21,7 @@ function makeEvent(id: string, name: string, context: Context, fund: Fund | null
   let event = context.event;
 
   if (Event.load(id)) {
-    log.critical('Duplicate event registration "{}" on contract {} in transaction {}.', [
+    logCritical('Duplicate event registration "{}" on contract {} in transaction {}.', [
       name,
       event.address.toHex(),
       event.transaction.hash.toHex(),

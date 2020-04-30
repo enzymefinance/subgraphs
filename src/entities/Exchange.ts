@@ -10,7 +10,7 @@ export function ensureExchange(address: Address, context: Context): Exchange {
 
   //   let contract = context.contracts.registry;
   //   if (!contract.assetIsRegistered(address)) {
-  //     log.critical('Tried to initialize asset {} that is not currently registered.', [address.toHex()]);
+  //     logCritical('Tried to initialize asset {} that is not currently registered.', [address.toHex()]);
   //   }
 
   exchange = new Exchange(address.toHex());

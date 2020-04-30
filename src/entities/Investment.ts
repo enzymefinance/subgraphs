@@ -9,6 +9,7 @@ import {
   InvestmentReward,
 } from '../generated/schema';
 import { Context } from '../context';
+import { logCritical } from '../utils/logCritical';
 
 function investmentId(investor: Account, context: Context): string {
   let fund = context.entities.fund;
@@ -42,7 +43,7 @@ export function useInvestment(investor: Account, context: Context): Investment {
   let id = investmentId(investor, context);
   let investment = Investment.load(id);
   if (investment == null) {
-    log.critical('Failed to load investment {}.', [id]);
+    logCritical('Failed to load investment {}.', [id]);
   }
 
   return investment as Investment;
@@ -51,7 +52,7 @@ export function useInvestment(investor: Account, context: Context): Investment {
 export function useInvestmentWithId(id: string): Investment {
   let investment = Investment.load(id);
   if (investment == null) {
-    log.critical('Failed to load investment {}.', [id]);
+    logCritical('Failed to load investment {}.', [id]);
   }
 
   return investment as Investment;
@@ -90,15 +91,21 @@ export function createInvestmentRedemption(
   shares: BigInt,
   context: Context,
 ): InvestmentRedemption {
+  for (let i: i32 = 0; i < quantities.length; i++) {
+    log.warning('asset {} quantity {}', [assets[i].symbol, quantities[i].toString()]);
+  }
+
+  log.warning('change id {}', [changeId(investment, context)]);
+
   let event = context.event;
   let redemption = new InvestmentRedemption(changeId(investment, context));
   redemption.type = 'REDEMPTION';
   redemption.investor = investment.investor;
   redemption.fund = investment.fund;
   redemption.investment = investment.id;
+  redemption.shares = shares;
   redemption.assets = assets.map<string>((item) => item.id);
   redemption.quantities = quantities;
-  redemption.shares = shares;
   redemption.timestamp = event.block.timestamp;
   redemption.transaction = event.transaction.hash.toHex();
   redemption.save();
