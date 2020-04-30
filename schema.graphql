@@ -37,6 +37,7 @@ interface Event {
   id: ID!
   kind: EventKindEnum!
   fund: Fund!
+  version: Version!
   timestamp: BigInt!
   trigger: ContractEvent!
 }
@@ -44,7 +45,7 @@ interface Event {
 type Version @entity {
   id: ID!
   funds: [Fund!]! @derivedFrom(field: "version")
-  events: [ContractEvent!]! @derivedFrom(field: "version")
+  events: [Event!]! @derivedFrom(field: "version")
   assets: [Asset!]!
   exchanges: [Exchange!]!
 }
@@ -242,6 +243,7 @@ interface InvestmentEvent {
   id: ID!
   kind: EventKindEnum!
   fund: Fund!
+  version: Version!
   timestamp: BigInt!
   transaction: String!
   trigger: ContractEvent!
@@ -252,6 +254,7 @@ type InvestmentAddition implements Event & InvestmentEvent @entity {
   id: ID!
   kind: EventKindEnum!
   fund: Fund!
+  version: Version!
   investor: Account!
   investment: Investment!
   shares: BigInt!
@@ -266,6 +269,7 @@ type InvestmentRedemption implements Event & InvestmentEvent @entity {
   id: ID!
   kind: EventKindEnum!
   fund: Fund!
+  version: Version!
   investor: Account!
   investment: Investment!
   shares: BigInt!
@@ -280,6 +284,7 @@ type InvestmentReward implements Event & InvestmentEvent @entity {
   id: ID!
   kind: EventKindEnum!
   fund: Fund!
+  version: Version!
   investor: Account!
   investment: Investment!
   shares: BigInt!
@@ -333,6 +338,7 @@ type Trade implements Event @entity {
   id: ID!
   kind: EventKindEnum!
   fund: Fund!
+  version: Version!
   exchange: Exchange!
   timestamp: BigInt!
   methodName: String!

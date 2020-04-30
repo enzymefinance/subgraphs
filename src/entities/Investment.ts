@@ -72,6 +72,7 @@ export function createInvestmentAddition(
   addition.kind = 'INVESTMENT';
   addition.investor = investment.investor;
   addition.fund = investment.fund;
+  addition.version = context.entities.version.id;
   addition.investment = investment.id;
   addition.asset = asset.id;
   addition.quantity = quantity;
@@ -100,6 +101,7 @@ export function createInvestmentRedemption(
   redemption.kind = 'REDEMPTION';
   redemption.investor = investment.investor;
   redemption.fund = investment.fund;
+  redemption.version = context.entities.version.id;
   redemption.investment = investment.id;
   redemption.shares = shares;
   redemption.assets = assets.map<string>((item) => item.id);
@@ -122,6 +124,7 @@ export function createInvestmentReward(investment: Investment, shares: BigInt, c
   reward.kind = 'REWARD';
   reward.investor = investment.investor;
   reward.fund = investment.fund;
+  reward.version = context.entities.version.id;
   reward.investment = investment.id;
   reward.shares = shares;
   reward.timestamp = event.block.timestamp;

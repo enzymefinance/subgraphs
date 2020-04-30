@@ -56,6 +56,7 @@ export function createTrade(
 
   trade.kind = 'TRADE';
   trade.fund = fund.id;
+  trade.version = context.entities.version.id;
   trade.exchange = exchange.id;
   trade.methodName = method;
   trade.assetSold = assetSold.id;
