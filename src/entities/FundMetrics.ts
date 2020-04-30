@@ -234,20 +234,11 @@ export function trackFundHoldings(assets: Asset[], cause: Entity, context: Conte
     // (quantity = 0 && previous quantity not existant or zero) => don't add
     // loop over pre
 
-    let addTrack = true;
-
     if (quantity.isZero()) {
-      addTrack = false;
-      for (let k: i32 = 0; k < previous.length; k++) {
-        if (previous[k].asset == asset.id && !previous[k].quantity.isZero()) {
-          addTrack = true;
-          break;
-        }
+      let match = findHolding(previous, asset);
+      if (!match || (match.quantity.isZero() && match.timestamp < timestamp)) {
+        continue;
       }
-    }
-
-    if (!addTrack) {
-      continue;
     }
 
     track.push(createFundHoldingMetric(asset, quantity, cause, context));
@@ -285,4 +276,14 @@ export function trackFundShares(cause: Entity, context: Context): FundSharesMetr
   fund.save();
 
   return shares;
+}
+
+function findHolding(holdings: FundHoldingMetric[], asset: Asset): FundHoldingMetric | null {
+  for (let i: i32 = 0; i < holdings.length; i++) {
+    if (holdings[i].asset == asset.id) {
+      return holdings[i];
+    }
+  }
+
+  return null;
 }
