@@ -234,11 +234,10 @@ export function trackFundHoldings(assets: Asset[], cause: Entity, context: Conte
     // (quantity = 0 && previous quantity not existant or zero) => don't add
     // loop over pre
 
-    if (quantity.isZero()) {
-      let match = findHolding(previous, asset);
-      if (!match || (match.quantity.isZero() && match.timestamp < timestamp)) {
-        continue;
-      }
+    let match = findHolding(previous, asset) as FundHoldingMetric;
+
+    if (quantity.isZero() && (!match || (match.quantity.isZero() && match.timestamp < timestamp))) {
+      continue;
     }
 
     track.push(createFundHoldingMetric(asset, quantity, cause, context));
