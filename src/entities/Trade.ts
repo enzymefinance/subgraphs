@@ -20,7 +20,7 @@ export function tradeId(context: Context): string {
 }
 
 function getAssetQuantities(assets: Asset[], context: Context): BigInt[] {
-  let holdings = usePortfolio(context.entities.fund.state).holdings.map<Holding>((holding) => useHolding(holding));
+  let holdings = usePortfolio(context.entities.state.portfolio).holdings.map<Holding>((holding) => useHolding(holding));
 
   let quantities: BigInt[] = [];
   for (let i: i32 = 0; i < assets.length; i++) {
