@@ -27,8 +27,7 @@ export function createVersion(address: Address, context: Context): Version {
   let adapters = registry.getRegisteredExchangeAdapters();
   let exchanges: Address[] = [];
   for (let i: i32 = 0; i < adapters.length; i++) {
-    let exchange = registry.getExchangeInformation(adapters[i]).value0;
-    exchanges.push(exchange);
+    exchanges.push(registry.exchangeForAdapter(adapters[i]));
   }
 
   let assets = registry.getRegisteredAssets();

@@ -299,10 +299,10 @@ type Trade implements Event @entity {
   exchange: Exchange!
   timestamp: BigInt!
   methodName: String!
-  assetSold: String
-  assetBought: String
-  amountSold: BigDecimal
-  amountBought: BigDecimal
+  assetSold: Asset!
+  assetBought: Asset!
+  amountSold: BigDecimal!
+  amountBought: BigDecimal!
   transaction: String!
   trigger: ContractEvent!
 }
