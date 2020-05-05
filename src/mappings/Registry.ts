@@ -41,14 +41,24 @@ export function handleEngineChange(event: EngineChange): void {
 
 export function handleExchangeAdapterRemoval(event: ExchangeAdapterRemoval): void {
   let context = new Context(dataSource.context(), event);
-  // TODO: Remove exchange adapter.
+
   // TODO: Should we track adapters or exchanges in the subgraph?
+  let exchange = ensureExchange(event.params.exchange, context);
+  let version = context.entities.version;
+  version.exchanges = arrayDiff<string>(version.exchanges, [exchange.id]);
+  version.save();
+
   createContractEvent('ExchangeAdapterRemoval', context);
 }
 
 export function handleExchangeAdapterUpsert(event: ExchangeAdapterUpsert): void {
   let context = new Context(dataSource.context(), event);
+
   // TODO: Should we track adapters or exchanges in the subgraph?
-  ensureExchange(event.params.exchange, context);
+  let exchange = ensureExchange(event.params.exchange, context);
+  let version = context.entities.version;
+  version.exchanges = arrayUnique<string>(version.exchanges.concat([exchange.id]));
+  version.save();
+
   createContractEvent('ExchangeAdapterUpsert', context);
 }

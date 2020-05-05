@@ -166,10 +166,10 @@ templates:
           handler: handleAssetUpsert
         # - event: EngineChange(indexed address)
         #   handler: handleEngineChange
-        # - event: ExchangeAdapterRemoval(indexed address)
-        #   handler: handleExchangeAdapterRemoval
-        # - event: ExchangeAdapterUpsert(indexed address,indexed address,bool,bytes4[])
-        #   handler: handleExchangeAdapterUpsert
+        - event: ExchangeAdapterRemoval(indexed address)
+          handler: handleExchangeAdapterRemoval
+        - event: ExchangeAdapterUpsert(indexed address,indexed address,bool,bytes4[])
+          handler: handleExchangeAdapterUpsert
 
   - name: HubContract
     kind: ethereum/contract
