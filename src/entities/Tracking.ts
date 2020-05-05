@@ -1,8 +1,9 @@
-import { Entity, BigInt } from '@graphprotocol/graph-ts';
+import { Entity, BigInt, BigDecimal } from '@graphprotocol/graph-ts';
 import { Portfolio, Share, State, Holding, Asset } from '../generated/schema';
 import { Context } from '../context';
 import { arrayUnique } from '../utils/arrayUnique';
 import { logCritical } from '../utils/logCritical';
+import { toBigDecimal } from '../utils/tokenValue';
 
 export function stateId(context: Context): string {
   let event = context.event;
@@ -57,7 +58,7 @@ export function shareId(context: Context): string {
   return fund.id + '/' + event.block.timestamp.toString() + '/shares';
 }
 
-export function createShares(shares: BigInt, cause: Entity | null, context: Context): Share {
+export function createShares(shares: BigDecimal, cause: Entity | null, context: Context): Share {
   let event = context.event;
   let fund = context.entities.fund;
   let entity = new Share(shareId(context));
@@ -146,7 +147,7 @@ function holdingId(asset: Asset, context: Context): string {
   return fund.id + '/' + asset.id + '/' + event.block.timestamp.toString() + '/holding';
 }
 
-function createHolding(asset: Asset, quantity: BigInt, cause: Entity, context: Context): Holding {
+function createHolding(asset: Asset, quantity: BigDecimal, cause: Entity, context: Context): Holding {
   let event = context.event;
   let fund = context.entities.fund;
   let holding = new Holding(holdingId(asset, context));
@@ -184,7 +185,7 @@ export function trackFundPortfolio(assets: Asset[], cause: Entity, context: Cont
     // Don't carry over holdings with a quantity of '0' to the next portfolio entry.
     // We only track these once when they become 0 initially (e.g. full redemption)
     // but we don't want to keep them in the portfolio forever.
-    if (prev.quantity.isZero() && prev.timestamp < timestamp) {
+    if (prev.quantity.digits.isZero() && prev.timestamp < timestamp) {
       continue;
     }
 
@@ -201,13 +202,13 @@ export function trackFundPortfolio(assets: Asset[], cause: Entity, context: Cont
     // assets that have been removed from the holdings at least once when they
     // become 0. We will remove these when we track the fund holdings the next
     // time.
-    let quantity = BigInt.fromI32(0);
+    let quantity = BigDecimal.fromString('0');
     let asset = assets[i];
 
     // Get the quantities for the selected assets from the contract call results.
     for (let j: i32 = 0; j < holdings.value0.length; j++) {
       if (holdings.value1[j].toHex() == asset.id) {
-        quantity = holdings.value0[j];
+        quantity = toBigDecimal(holdings.value0[j], asset.decimals);
         break;
       }
     }
@@ -215,7 +216,7 @@ export function trackFundPortfolio(assets: Asset[], cause: Entity, context: Cont
     // Skip the current asset if it is currently 0 and was already 0 or non-existant
     // in the previous record.
     let match = findHolding(previous, asset) as Holding;
-    if (quantity.isZero() && (!match || (match.quantity.isZero() && match.timestamp < timestamp))) {
+    if (quantity.digits.isZero() && (!match || (match.quantity.digits.isZero() && match.timestamp < timestamp))) {
       continue;
     }
 
@@ -241,7 +242,7 @@ export function trackFundPortfolio(assets: Asset[], cause: Entity, context: Cont
 
 export function trackFundShares(cause: Entity, context: Context): Share {
   let shares = ensureShares(cause, context);
-  shares.shares = context.contracts.shares.totalSupply();
+  shares.shares = toBigDecimal(context.contracts.shares.totalSupply());
   shares.save();
 
   let state = context.entities.state;

@@ -1,11 +1,11 @@
-import { Address, DataSourceTemplate, BigInt } from '@graphprotocol/graph-ts';
+import { Address, DataSourceTemplate, BigDecimal } from '@graphprotocol/graph-ts';
 import { hexToAscii } from '../utils/hexToAscii';
+import { logCritical } from '../utils/logCritical';
 import { Fund, Asset } from '../generated/schema';
 import { Context } from '../context';
 import { useAsset } from './Asset';
 import { createFees } from './Fee';
 import { createState, createShares, createPortfolio } from './Tracking';
-import { logCritical } from '../utils/logCritical';
 
 export function useFund(id: string): Fund {
   let fund = Fund.load(id);
@@ -20,7 +20,7 @@ export function createFund(address: Address, context: Context): Fund {
   let fund = new Fund(address.toHex());
   context.entities.fund = fund;
 
-  let shares = createShares(BigInt.fromI32(0), null, context);
+  let shares = createShares(BigDecimal.fromString('0'), null, context);
   let portfolio = createPortfolio([], null, context);
   let state = createState(shares, portfolio, context);
   context.entities.state = state;

@@ -1,4 +1,4 @@
-import { dataSource } from '@graphprotocol/graph-ts';
+import { dataSource, BigDecimal } from '@graphprotocol/graph-ts';
 import { Asset } from '../generated/schema';
 import { Context } from '../context';
 import { createContractEvent } from '../entities/Event';
@@ -6,6 +6,7 @@ import { ensureInvestor } from '../entities/Account';
 import { useAsset } from '../entities/Asset';
 import { arrayDiff } from '../utils/arrayDiff';
 import { arrayUnique } from '../utils/arrayUnique';
+import { toBigDecimal } from '../utils/tokenValue';
 import {
   ensureInvestment,
   deleteInvestmentRequest,
@@ -21,7 +22,6 @@ import {
   RequestExecution,
   InvestmentRequest,
 } from '../generated/ParticipationContract';
-import { trackFundShares, trackFundPortfolio } from '../entities/Tracking';
 
 export function handleCancelRequest(event: CancelRequest): void {
   let context = new Context(dataSource.context(), event);
@@ -56,7 +56,7 @@ export function handleInvestmentRequest(event: InvestmentRequest): void {
   let context = new Context(dataSource.context(), event);
   let account = ensureInvestor(event.params.requestOwner);
   let asset = useAsset(event.params.investmentAsset.toHex());
-  let quantity = event.params.investmentAmount;
+  let quantity = toBigDecimal(event.params.investmentAmount, asset.decimals);
 
   createInvestmentRequest(account, asset, quantity, context);
   createContractEvent('InvestmentRequest', context);
@@ -67,15 +67,11 @@ export function handleRequestExecution(event: RequestExecution): void {
   let account = ensureInvestor(event.params.requestOwner);
   let investment = ensureInvestment(account, context);
   let asset = useAsset(event.params.investmentAsset.toHex());
-  let quantity = event.params.investmentAmount;
-  let shares = event.params.requestedShares;
-  let addition = createInvestmentAddition(investment, asset, quantity, shares, context);
-
-  trackFundPortfolio([asset], addition, context);
-  trackFundShares(addition, context);
-  // trackFundInvestments(event, fund, addition);
+  let quantity = toBigDecimal(event.params.investmentAmount, asset.decimals);
+  let shares = toBigDecimal(event.params.requestedShares);
 
   deleteInvestmentRequest(account, context);
+  createInvestmentAddition(investment, asset, quantity, shares, context);
   createContractEvent('RequestExecution', context);
 }
 
@@ -83,14 +79,15 @@ export function handleRedemption(event: Redemption): void {
   let context = new Context(dataSource.context(), event);
   let account = ensureInvestor(event.params.redeemer);
   let investment = ensureInvestment(account, context);
+  let shares = toBigDecimal(event.params.redeemedShares);
   let assets = event.params.assets.map<Asset>((id) => useAsset(id.toHex()));
-  let shares = event.params.redeemedShares;
-  let quantities = event.params.assetQuantities;
-  let redemption = createInvestmentRedemption(investment, assets, quantities, shares, context);
+  let qtys = event.params.assetQuantities;
 
-  trackFundPortfolio(assets, redemption, context);
-  trackFundShares(redemption, context);
-  // trackFundInvestments(event, fund, redemption);
+  let quantities: BigDecimal[] = [];
+  for (let i: i32 = 0; i < assets.length; i++) {
+    quantities.push(toBigDecimal(qtys[i], assets[i].decimals));
+  }
 
+  createInvestmentRedemption(investment, assets, quantities, shares, context);
   createContractEvent('Redemption', context);
 }

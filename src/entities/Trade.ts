@@ -1,7 +1,7 @@
+import { BigDecimal } from '@graphprotocol/graph-ts';
 import { Exchange, Asset, Trade, Holding } from '../generated/schema';
 import { Context } from '../context';
 import { trackFundPortfolio, useHolding, usePortfolio } from './Tracking';
-import { BigInt } from '@graphprotocol/graph-ts';
 import { contractEventId } from './Event';
 
 export function tradeId(context: Context): string {
@@ -19,12 +19,12 @@ export function tradeId(context: Context): string {
   );
 }
 
-function getAssetQuantities(assets: Asset[], context: Context): BigInt[] {
+function getAssetQuantities(assets: Asset[], context: Context): BigDecimal[] {
   let holdings = usePortfolio(context.entities.state.portfolio).holdings.map<Holding>((holding) => useHolding(holding));
 
-  let quantities: BigInt[] = [];
+  let quantities: BigDecimal[] = [];
   for (let i: i32 = 0; i < assets.length; i++) {
-    let quantity = BigInt.fromI32(0);
+    let quantity = BigDecimal.fromString('0');
 
     for (let j: i32 = 0; j < holdings.length; j++) {
       if (holdings[j].asset == assets[i].id) {
@@ -50,6 +50,11 @@ export function createTrade(
   let fund = context.entities.fund;
   let trade = new Trade(tradeId(context));
 
+  // TODO: This tracking is not guaranteed to yield the correct numbers
+  // but it's the best we can do currently. Whenever the current block
+  // is "polluted" with multiple events that cause fund portfolio
+  // tracking, the values in "before" might already include the traded
+  // values.
   let before = getAssetQuantities([assetSold, assetBought], context);
   trackFundPortfolio([assetSold, assetBought], trade, context);
   let after = getAssetQuantities([assetSold, assetBought], context);

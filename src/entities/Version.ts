@@ -1,8 +1,8 @@
 import { Address, DataSourceTemplate } from '@graphprotocol/graph-ts';
 import { Version } from '../generated/schema';
 import { Context } from '../context';
-import { ensureAssets } from './Asset';
 import { logCritical } from '../utils/logCritical';
+import { ensureAssets } from './Asset';
 
 export function useVersion(id: string): Version {
   let version = Version.load(id);

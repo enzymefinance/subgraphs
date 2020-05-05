@@ -62,7 +62,7 @@ type Share implements Metric @entity {
   id: ID!
   fund: Fund!
   timestamp: BigInt!
-  shares: BigInt!
+  shares: BigDecimal!
   events: [Event!]!
 }
 
@@ -71,7 +71,7 @@ type Holding implements Metric @entity {
   fund: Fund!
   timestamp: BigInt!
   asset: Asset!
-  quantity: BigInt!
+  quantity: BigDecimal!
   events: [Event!]!
 }
 
@@ -214,9 +214,9 @@ type InvestmentAddition implements Event & InvestmentEvent @entity {
   version: Version!
   investor: Account!
   investment: Investment!
-  shares: BigInt!
+  shares: BigDecimal!
   asset: Asset!
-  quantity: BigInt!
+  quantity: BigDecimal!
   timestamp: BigInt!
   transaction: String!
   trigger: ContractEvent!
@@ -229,9 +229,9 @@ type InvestmentRedemption implements Event & InvestmentEvent @entity {
   version: Version!
   investor: Account!
   investment: Investment!
-  shares: BigInt!
+  shares: BigDecimal!
   assets: [Asset!]!
-  quantities: [BigInt!]!
+  quantities: [BigDecimal!]!
   timestamp: BigInt!
   transaction: String!
   trigger: ContractEvent!
@@ -244,7 +244,7 @@ type InvestmentReward implements Event & InvestmentEvent @entity {
   version: Version!
   investor: Account!
   investment: Investment!
-  shares: BigInt!
+  shares: BigDecimal!
   timestamp: BigInt!
   transaction: String!
   trigger: ContractEvent!
@@ -255,7 +255,7 @@ type InvestmentRequest @entity {
   fund: Fund!
   investor: Account!
   asset: Asset!
-  quantity: BigInt!
+  quantity: BigDecimal!
   timestamp: BigInt!
   transaction: String!
 }
@@ -265,7 +265,7 @@ type Investment @entity {
   fund: Fund!
   investor: Account!
   changes: [InvestmentEvent!]! @derivedFrom(field: "investment")
-  shares: BigInt!
+  shares: BigDecimal!
 }
 
 type Account @entity {
@@ -299,10 +299,10 @@ type Trade implements Event @entity {
   exchange: Exchange!
   timestamp: BigInt!
   methodName: String!
-  assetSold: Asset
-  assetBought: Asset
-  amountSold: BigInt
-  amountBought: BigInt
+  assetSold: String
+  assetBought: String
+  amountSold: BigDecimal
+  amountBought: BigDecimal
   transaction: String!
   trigger: ContractEvent!
 }
