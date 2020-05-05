@@ -3,6 +3,7 @@ import { Version } from '../generated/schema';
 import { Context } from '../context';
 import { logCritical } from '../utils/logCritical';
 import { ensureAssets } from './Asset';
+import { ensureExchanges } from './Exchange';
 
 export function useVersion(id: string): Version {
   let version = Version.load(id);
@@ -32,7 +33,7 @@ export function createVersion(address: Address, context: Context): Version {
 
   let assets = registry.getRegisteredAssets();
   version.assets = ensureAssets(assets, context).map<string>((item) => item.id);
-  version.exchanges = exchanges.map<string>((exchange) => exchange.toHex());
+  version.exchanges = ensureExchanges(exchanges, context).map<string>((exchange) => exchange.id);
   version.save();
 
   DataSourceTemplate.createWithContext('VersionContract', [context.version], context.context);

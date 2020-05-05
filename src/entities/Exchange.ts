@@ -24,3 +24,12 @@ export function ensureExchange(address: Address, context: Context): Exchange {
 
   return exchange;
 }
+
+export function ensureExchanges(addresses: Address[], context: Context): Exchange[] {
+  let exchanges: Exchange[] = [];
+  for (let i: i32 = 0; i < addresses.length; i++) {
+    exchanges.push(ensureExchange(addresses[i], context));
+  }
+
+  return exchanges;
+}
