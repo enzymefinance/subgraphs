@@ -172,30 +172,9 @@ export function useHolding(id: string): Holding {
 
 export function trackFundPortfolio(assets: Asset[], cause: Entity, context: Context): Portfolio {
   let portfolio = ensurePortfolio(cause, context);
-  let timestamp = context.event.block.timestamp;
-
   let previous: Holding[] = portfolio.holdings.map<Holding>((id) => useHolding(id));
-  let ids = assets.map<string>((item) => item.id);
 
-  // Continue tracking all the previous fund portfolio.
   let track: Holding[] = [];
-  for (let k: i32 = 0; k < previous.length; k++) {
-    let prev = previous[k];
-
-    // Don't carry over holdings with a quantity of '0' to the next portfolio entry.
-    // We only track these once when they become 0 initially (e.g. full redemption)
-    // but we don't want to keep them in the portfolio forever.
-    if (prev.quantity.digits.isZero() && prev.timestamp < timestamp) {
-      continue;
-    }
-
-    // Do not add this record from the previous portfolio if it's among the updated
-    // assets so we don't have to filter again later to ensure uniqueness.
-    if (ids.indexOf(prev.asset) == -1) {
-      track.push(prev);
-    }
-  }
-
   let holdings = context.contracts.accounting.getFundHoldings();
   for (let i: i32 = 0; i < assets.length; i++) {
     // By default, we set the value to 0. This is necessary to track records for
@@ -213,15 +192,17 @@ export function trackFundPortfolio(assets: Asset[], cause: Entity, context: Cont
       }
     }
 
-    // Skip the current asset if it is currently 0 and was already 0 or non-existant
-    // in the previous record.
-    let match = findHolding(previous, asset) as Holding;
-    if (quantity.digits.isZero() && (!match || (match.quantity.digits.isZero() && match.timestamp < timestamp))) {
-      continue;
-    }
+    // Add the fund holding entry for the current asset unless it's 0.
+    if (!quantity.digits.isZero()) {
+      let match = findHolding(previous, asset) as Holding;
 
-    // Add the fund holding entry for the current asset.
-    track.push(createHolding(asset, quantity, cause, context));
+      // Re-use the previous holding entry unless it has changed.
+      if (match != null && match.quantity == quantity) {
+        track.push(match);
+      } else {
+        track.push(createHolding(asset, quantity, cause, context));
+      }
+    }
   }
 
   portfolio.holdings = track.map<string>((item) => item.id);
