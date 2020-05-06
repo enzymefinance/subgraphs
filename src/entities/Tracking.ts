@@ -204,7 +204,7 @@ export function trackFundPortfolio(assets: Asset[], cause: Entity, context: Cont
   }
 
   // Eliminate old holdings from the array by only keeping the first copy for each asset.
-  portfolio.holdings = arrayUniqueBy<Holding>(holdings, (item) => item.asset).map<string>((item) => item.id);
+  portfolio.holdings = uniqueHoldings(holdings).map<string>((item) => item.id);
   portfolio.save();
 
   let state = context.entities.state;
@@ -246,4 +246,16 @@ function findHolding(holdings: Holding[], asset: Asset): Holding | null {
   }
 
   return null;
+}
+
+function uniqueHoldings(holdings: Holding[]): Holding[] {
+  let references = holdings.map<string>((item) => item.asset);
+  let unique: Holding[] = [];
+  for (let i: i32 = 0; i < references.length; i++) {
+    if (references.indexOf(references[i]) == i) {
+      unique.push(holdings[i]);
+    }
+  }
+
+  return unique;
 }
