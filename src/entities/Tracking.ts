@@ -4,7 +4,7 @@ import { Context } from '../context';
 import { arrayUnique } from '../utils/arrayUnique';
 import { logCritical } from '../utils/logCritical';
 import { toBigDecimal } from '../utils/tokenValue';
-import { Fee, feeId, ensureManagementFee, ensurePerformanceFee } from './Fee';
+import { Fee, ensureManagementFee, ensurePerformanceFee } from './Fee';
 import { PerformanceFeeContract } from '../generated/PerformanceFeeContract';
 
 export function stateId(context: Context): string {
@@ -178,31 +178,9 @@ export function useHolding(id: string): Holding {
 
 export function trackFundPortfolio(assets: Asset[], cause: Entity, context: Context): Portfolio {
   let portfolio = ensurePortfolio(cause, context);
-  let timestamp = context.event.block.timestamp;
+  let holdings: Holding[] = portfolio.holdings.map<Holding>((id) => useHolding(id));
+  let updates = context.contracts.accounting.getFundHoldings();
 
-  let previous: Holding[] = portfolio.holdings.map<Holding>((id) => useHolding(id));
-  let ids = assets.map<string>((item) => item.id);
-
-  // Continue tracking all the previous fund portfolio.
-  let track: Holding[] = [];
-  for (let k: i32 = 0; k < previous.length; k++) {
-    let prev = previous[k];
-
-    // Don't carry over holdings with a quantity of '0' to the next portfolio entry.
-    // We only track these once when they become 0 initially (e.g. full redemption)
-    // but we don't want to keep them in the portfolio forever.
-    if (prev.quantity.digits.isZero() && prev.timestamp < timestamp) {
-      continue;
-    }
-
-    // Do not add this record from the previous portfolio if it's among the updated
-    // assets so we don't have to filter again later to ensure uniqueness.
-    if (ids.indexOf(prev.asset) == -1) {
-      track.push(prev);
-    }
-  }
-
-  let holdings = context.contracts.accounting.getFundHoldings();
   for (let i: i32 = 0; i < assets.length; i++) {
     // By default, we set the value to 0. This is necessary to track records for
     // assets that have been removed from the holdings at least once when they
@@ -212,25 +190,27 @@ export function trackFundPortfolio(assets: Asset[], cause: Entity, context: Cont
     let asset = assets[i];
 
     // Get the quantities for the selected assets from the contract call results.
-    for (let j: i32 = 0; j < holdings.value0.length; j++) {
-      if (holdings.value1[j].toHex() == asset.id) {
-        quantity = toBigDecimal(holdings.value0[j], asset.decimals);
+    for (let j: i32 = 0; j < updates.value0.length; j++) {
+      if (updates.value1[j].toHex() == asset.id) {
+        quantity = toBigDecimal(updates.value0[j], asset.decimals);
         break;
       }
     }
 
-    // Skip the current asset if it is currently 0 and was already 0 or non-existant
-    // in the previous record.
-    let match = findHolding(previous, asset) as Holding;
-    if (quantity.digits.isZero() && (!match || (match.quantity.digits.isZero() && match.timestamp < timestamp))) {
-      continue;
-    }
+    // Add the fund holding entry for the current asset unless it's 0.
+    if (!quantity.digits.isZero()) {
+      let match = findHolding(holdings, asset) as Holding;
 
-    // Add the fund holding entry for the current asset.
-    track.push(createHolding(asset, quantity, cause, context));
+      // Re-use the previous holding entry unless it has changed.
+      if (!(match != null && match.quantity == quantity)) {
+        // Prepend updated items to the array.
+        holdings.unshift(createHolding(asset, quantity, cause, context));
+      }
+    }
   }
 
-  portfolio.holdings = track.map<string>((item) => item.id);
+  // Eliminate old holdings from the array by only keeping the first copy for each asset.
+  portfolio.holdings = uniqueHoldings(holdings).map<string>((item) => item.id);
   portfolio.save();
 
   let state = context.entities.state;
@@ -415,4 +395,16 @@ export function trackPayout(shares: BigDecimal, cause: Entity, context: Context)
   fund.save();
 
   return payout;
+}
+
+function uniqueHoldings(holdings: Holding[]): Holding[] {
+  let references = holdings.map<string>((item) => item.asset);
+  let unique: Holding[] = [];
+  for (let i: i32 = 0; i < references.length; i++) {
+    if (references.indexOf(references[i]) == i) {
+      unique.push(holdings[i]);
+    }
+  }
+
+  return unique;
 }
