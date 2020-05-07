@@ -1,17 +1,17 @@
 import { store, BigDecimal } from '@graphprotocol/graph-ts';
 import {
   Investment,
-  InvestmentAddition,
-  InvestmentRedemption,
   InvestmentRequest,
   Account,
   Asset,
-  InvestmentReward,
+  SharesAddition,
+  SharesRedemption,
+  SharesReward,
 } from '../generated/schema';
 import { Context } from '../context';
 import { logCritical } from '../utils/logCritical';
 import { contractEventId } from './Event';
-import { trackFundPortfolio, trackFundShares } from './Tracking';
+import { trackFundPortfolio, trackFundShares, trackPayout } from './Tracking';
 
 function investmentId(investor: Account, context: Context): string {
   let fund = context.entities.fund;
@@ -66,10 +66,10 @@ export function createInvestmentAddition(
   quantity: BigDecimal,
   shares: BigDecimal,
   context: Context,
-): InvestmentAddition {
+): SharesAddition {
   let event = context.event;
 
-  let addition = new InvestmentAddition(changeId(investment, context));
+  let addition = new SharesAddition(changeId(investment, context));
   addition.kind = 'INVESTMENT';
   addition.investor = investment.investor;
   addition.fund = investment.fund;
@@ -99,10 +99,10 @@ export function createInvestmentRedemption(
   quantities: BigDecimal[],
   shares: BigDecimal,
   context: Context,
-): InvestmentRedemption {
+): SharesRedemption {
   let event = context.event;
 
-  let redemption = new InvestmentRedemption(changeId(investment, context));
+  let redemption = new SharesRedemption(changeId(investment, context));
   redemption.kind = 'REDEMPTION';
   redemption.investor = investment.investor;
   redemption.fund = investment.fund;
@@ -126,10 +126,10 @@ export function createInvestmentRedemption(
   return redemption;
 }
 
-export function createInvestmentReward(investment: Investment, shares: BigDecimal, context: Context): InvestmentReward {
+export function createInvestmentReward(investment: Investment, shares: BigDecimal, context: Context): SharesReward {
   let event = context.event;
 
-  let reward = new InvestmentReward(changeId(investment, context));
+  let reward = new SharesReward(changeId(investment, context));
   reward.kind = 'REWARD';
   reward.investor = investment.investor;
   reward.fund = investment.fund;
@@ -145,6 +145,7 @@ export function createInvestmentReward(investment: Investment, shares: BigDecima
   investment.save();
 
   trackFundShares(reward, context);
+  trackPayout(shares, reward, context);
   // trackFundInvestments(event, fund, reward);
 
   return reward;

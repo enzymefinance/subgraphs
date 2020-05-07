@@ -83,12 +83,33 @@ type Portfolio implements Metric @entity {
   events: [Event!]!
 }
 
+type Payout implements Metric @entity {
+  id: ID!
+  fund: Fund!
+  timestamp: BigInt!
+  shares: BigDecimal!
+  feePayouts: [FeePayout!]!
+  events: [Event!]!
+}
+
+type FeePayout implements Metric @entity {
+  id: ID!
+  kind: FeeIdentifierEnum!
+  fund: Fund!
+  timestamp: BigInt!
+  fee: Fee!
+  shares: BigDecimal!
+  highWaterMark: BigDecimal
+  events: [Event!]!
+}
+
 type State implements Metric @entity {
   id: ID!
   fund: Fund!
   timestamp: BigInt!
   shares: Share!
   portfolio: Portfolio!
+  payouts: Payout!
   events: [Event!]!
 }
 
@@ -99,16 +120,19 @@ type Fund @entity {
   active: Boolean!
   manager: Account!
   inception: BigInt!
+  denominationAsset: Asset!
   investable: [Asset!]!
   events: [Event!]! @derivedFrom(field: "fund")
   investments: [Investment!]! @derivedFrom(field: "fund")
   policies: [Policy!]! @derivedFrom(field: "fund")
-  fees: [Fee!]! @derivedFrom(field: "fund")
+  fees: [Fee!]!
   trades: [Trade!]! @derivedFrom(field: "fund")
   shares: Share!
   sharesHistory: [Share!]! @derivedFrom(field: "fund")
   portfolio: Portfolio!
   portfolioHistory: [Portfolio!]! @derivedFrom(field: "fund")
+  payouts: Payout!
+  payoutsHistory: [Payout!]! @derivedFrom(field: "fund")
   state: State!
   stateHistory: [State!]! @derivedFrom(field: "fund")
 }
@@ -131,6 +155,7 @@ type PerformanceFee implements Fee @entity {
   identifier: FeeIdentifierEnum!
   rate: BigDecimal!
   period: BigInt!
+  initializeTime: BigInt!
 }
 
 type ManagementFee implements Fee @entity {
@@ -196,7 +221,7 @@ type AssetWhitelistPolicy implements Policy @entity {
   identifier: PolicyIdentifierEnum!
 }
 
-interface InvestmentEvent {
+interface SharesChange {
   id: ID!
   kind: EventKindEnum!
   fund: Fund!
@@ -207,7 +232,7 @@ interface InvestmentEvent {
   investment: Investment!
 }
 
-type InvestmentAddition implements Event & InvestmentEvent @entity {
+type SharesAddition implements Event & SharesChange @entity {
   id: ID!
   kind: EventKindEnum!
   fund: Fund!
@@ -222,7 +247,7 @@ type InvestmentAddition implements Event & InvestmentEvent @entity {
   trigger: ContractEvent!
 }
 
-type InvestmentRedemption implements Event & InvestmentEvent @entity {
+type SharesRedemption implements Event & SharesChange @entity {
   id: ID!
   kind: EventKindEnum!
   fund: Fund!
@@ -237,7 +262,7 @@ type InvestmentRedemption implements Event & InvestmentEvent @entity {
   trigger: ContractEvent!
 }
 
-type InvestmentReward implements Event & InvestmentEvent @entity {
+type SharesReward implements Event & SharesChange @entity {
   id: ID!
   kind: EventKindEnum!
   fund: Fund!
@@ -264,7 +289,7 @@ type Investment @entity {
   id: ID!
   fund: Fund!
   investor: Account!
-  changes: [InvestmentEvent!]! @derivedFrom(field: "investment")
+  changes: [SharesChange!]! @derivedFrom(field: "investment")
   shares: BigDecimal!
 }
 

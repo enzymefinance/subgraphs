@@ -1,9 +1,11 @@
-import { Entity, BigInt, BigDecimal } from '@graphprotocol/graph-ts';
-import { Portfolio, Share, State, Holding, Asset } from '../generated/schema';
+import { Entity, BigInt, BigDecimal, Address, log } from '@graphprotocol/graph-ts';
+import { Portfolio, Share, State, Holding, Asset, Payout, FeePayout } from '../generated/schema';
 import { Context } from '../context';
 import { arrayUnique } from '../utils/arrayUnique';
 import { logCritical } from '../utils/logCritical';
 import { toBigDecimal } from '../utils/tokenValue';
+import { Fee, feeId, ensureManagementFee, ensurePerformanceFee } from './Fee';
+import { PerformanceFeeContract } from '../generated/PerformanceFeeContract';
 
 export function stateId(context: Context): string {
   let event = context.event;
@@ -11,7 +13,7 @@ export function stateId(context: Context): string {
   return fund.id + event.block.timestamp.toString();
 }
 
-export function createState(shares: Share, holdings: Portfolio, context: Context): State {
+export function createState(shares: Share, holdings: Portfolio, payouts: Payout, context: Context): State {
   let event = context.event;
   let fund = context.entities.fund;
   let state = new State(stateId(context));
@@ -19,8 +21,11 @@ export function createState(shares: Share, holdings: Portfolio, context: Context
   state.fund = fund.id;
   state.shares = shares.id;
   state.portfolio = holdings.id;
+  state.payouts = payouts.id;
   state.events = [];
   state.save();
+
+  // load additional infos
 
   return state;
 }
@@ -35,7 +40,8 @@ export function ensureState(context: Context): State {
   let previous = useState(fund.state);
   let shares = useShares(previous.shares);
   let holdings = usePortfolio(previous.portfolio);
-  let state = createState(shares, holdings, context);
+  let payouts = usePayout(previous.payouts);
+  let state = createState(shares, holdings, payouts, context);
 
   fund.state = state.id;
   fund.save();
@@ -266,4 +272,147 @@ function findHolding(holdings: Holding[], asset: Asset): Holding | null {
   }
 
   return null;
+}
+
+export function payoutId(context: Context): string {
+  let event = context.event;
+  let fund = context.entities.fund;
+  return fund.id + '/' + event.block.timestamp.toString() + '/payout';
+}
+
+export function createPayout(feePayouts: FeePayout[], cause: Entity | null, context: Context): Payout {
+  let event = context.event;
+  let fund = context.entities.fund;
+  let payout = new Payout(payoutId(context));
+  payout.timestamp = event.block.timestamp;
+  payout.fund = fund.id;
+  payout.shares = BigDecimal.fromString('0');
+  payout.feePayouts = feePayouts.map<string>((item) => item.id);
+  payout.events = cause ? [cause.getString('id')] : [];
+  payout.save();
+
+  return payout;
+}
+
+export function ensurePayout(cause: Entity, context: Context): Payout {
+  let payout = Payout.load(payoutId(context)) as Payout;
+
+  if (!payout) {
+    let state = context.entities.state;
+    let previous = usePayout(state.payouts).feePayouts;
+    let records = previous.map<FeePayout>((id) => useFeePayout(id));
+    payout = createPayout(records, cause, context);
+  } else {
+    let events = payout.events;
+    payout.events = arrayUnique<string>(events.concat([cause.getString('id')]));
+    payout.save();
+  }
+
+  return payout;
+}
+
+export function usePayout(id: string): Payout {
+  let payout = Payout.load(id);
+  if (payout == null) {
+    logCritical('Failed to load payout entity {}.', [id]);
+  }
+
+  return payout as Payout;
+}
+
+function feePayoutId(fee: Fee, context: Context): string {
+  let event = context.event;
+  let fund = context.entities.fund;
+  return fund.id + '/' + event.block.timestamp.toString() + '/fee/' + fee.identifier;
+}
+
+function createFeePayout(fee: Fee, shares: BigDecimal, cause: Entity, context: Context): FeePayout {
+  let event = context.event;
+  let fund = context.entities.fund;
+  let feePayout = new FeePayout(feePayoutId(fee, context));
+  feePayout.timestamp = event.block.timestamp;
+  feePayout.fund = fund.id;
+  feePayout.fee = fee.id;
+  feePayout.kind = fee.identifier;
+  feePayout.shares = shares;
+  feePayout.events = [cause.getString('id')];
+  feePayout.save();
+
+  return feePayout;
+}
+
+export function ensureFeePayout(fee: Fee, shares: BigDecimal, cause: Entity, context: Context): FeePayout {
+  let feePayout = FeePayout.load(feePayoutId(fee, context)) as FeePayout;
+
+  if (!feePayout) {
+    feePayout = createFeePayout(fee, shares, cause, context);
+  } else {
+    let events = feePayout.events;
+    feePayout.events = arrayUnique<string>(events.concat([cause.getString('id')]));
+    feePayout.save();
+  }
+
+  return feePayout;
+}
+
+export function useFeePayout(id: string): FeePayout {
+  let feePayout = FeePayout.load(id);
+  if (feePayout == null) {
+    logCritical('Failed to load fee payout {}.', [id]);
+  }
+
+  return feePayout as FeePayout;
+}
+
+export function trackPayout(shares: BigDecimal, cause: Entity, context: Context): Payout {
+  let fund = context.entities.fund;
+  // let sharesSet = cause.isSet('shares');
+  // log.warning('sharesSet {}', [sharesSet ? 'true' : 'false']);
+  // let shares = cause.get('shares');
+  // if (shares) {
+  //   logCritical('shares {}', [shares.toString()]);
+  // }
+  // let shares = BigDecimal.fromString(cause.isSet('shares') ? cause.getString('shares') : '');
+
+  let feeAddresses = fund.fees;
+  let mgmtFee = ensureManagementFee(feeAddresses[0], context);
+
+  let mgmtFeePayoutId = feePayoutId(mgmtFee as Fee, context);
+  let feePayout = FeePayout.load(mgmtFeePayoutId);
+
+  if (!feePayout) {
+    // first fee payout event in a block is always management fee (shares can be zero or not)
+    feePayout = createFeePayout(mgmtFee as Fee, shares, cause, context);
+  } else if (shares.gt(BigDecimal.fromString('0'))) {
+    // any subsequent event with non-zero shares is performance fee payout
+    let perfFee = ensurePerformanceFee(feeAddresses[1], context);
+
+    let perfFeePayoutId = feePayoutId(perfFee as Fee, context);
+    feePayout = FeePayout.load(perfFeePayoutId);
+
+    if (!feePayout) {
+      let feeManagerAddress = Address.fromString(context.fees);
+      feePayout = createFeePayout(perfFee as Fee, shares, cause, context);
+
+      let perfFeeContract = PerformanceFeeContract.bind(Address.fromString(feeAddresses[1]));
+      feePayout.highWaterMark = perfFeeContract.highWaterMark(feeManagerAddress).toBigDecimal();
+      feePayout.save();
+    }
+  }
+
+  let payout = ensurePayout(cause, context);
+  payout.shares = payout.shares.plus(shares);
+  payout.feePayouts = payout.feePayouts.concat([feePayout.id]);
+  payout.save();
+
+  let state = context.entities.state;
+  let events = state.events;
+  state.events = arrayUnique<string>(events.concat(payout.events));
+  state.payouts = payout.id;
+  state.save();
+
+  fund.payouts = payout.id;
+  fund.save();
+
+  return payout;
 }

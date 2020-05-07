@@ -11,8 +11,8 @@ import {
   ensureInvestment,
   deleteInvestmentRequest,
   createInvestmentRequest,
-  createInvestmentAddition,
-  createInvestmentRedemption,
+  createInvestmentAddition as createSharesAddition,
+  createInvestmentRedemption as createSharesRedemption,
 } from '../entities/Investment';
 import {
   CancelRequest,
@@ -71,7 +71,7 @@ export function handleRequestExecution(event: RequestExecution): void {
   let shares = toBigDecimal(event.params.requestedShares);
 
   deleteInvestmentRequest(account, context);
-  createInvestmentAddition(investment, asset, quantity, shares, context);
+  createSharesAddition(investment, asset, quantity, shares, context);
   createContractEvent('RequestExecution', context);
 }
 
@@ -88,6 +88,6 @@ export function handleRedemption(event: Redemption): void {
     quantities.push(toBigDecimal(qtys[i], assets[i].decimals));
   }
 
-  createInvestmentRedemption(investment, assets, quantities, shares, context);
+  createSharesRedemption(investment, assets, quantities, shares, context);
   createContractEvent('Redemption', context);
 }

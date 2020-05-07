@@ -4,49 +4,103 @@ import { ManagementFeeContract } from '../generated/ManagementFeeContract';
 import { PerformanceFeeContract } from '../generated/PerformanceFeeContract';
 import { toBigDecimal } from '../utils/tokenValue';
 import { Context } from '../context';
+import { logCritical } from '../utils/logCritical';
 
-function feeId(address: Address, context: Context): string {
+export function feeId(address: Address, context: Context): string {
   let fund = context.entities.fund;
   return fund.id + '/' + address.toHex();
 }
 
 export function createFees(context: Context): Fee[] {
-  let fund = context.entities.fund;
   let contract = context.contracts.fees;
-  let address = Address.fromString(context.fees);
   let fees: Fee[] = [];
 
   let managementFee = contract.fees(BigInt.fromI32(0));
   if (managementFee) {
-    let contract = ManagementFeeContract.bind(managementFee);
-    let rate = contract.managementFeeRate(address);
-
-    let fee = new ManagementFee(feeId(managementFee, context));
-    fee.identifier = 'MANAGEMENT';
-    fee.fund = fund.id;
-    fee.rate = toBigDecimal(rate);
-    fee.save();
-
+    let fee = createManagementFee(managementFee, context);
     fees.push(fee as Fee);
-  }
 
-  let performanceFee = contract.fees(BigInt.fromI32(1));
-  if (performanceFee) {
-    let feeContract = PerformanceFeeContract.bind(performanceFee);
-    let period = feeContract.performanceFeePeriod(address);
-    let rate = feeContract.performanceFeeRate(address);
-
-    let fee = new PerformanceFee(feeId(performanceFee, context));
-    fee.identifier = 'PERFORMANCE';
-    fee.fund = fund.id;
-    fee.period = period;
-    fee.rate = toBigDecimal(rate);
-    fee.save();
-
-    fees.push(fee as Fee);
+    let performanceFee = contract.fees(BigInt.fromI32(1));
+    if (performanceFee) {
+      let fee = createPerformanceFee(performanceFee, context);
+      fees.push(fee as Fee);
+    }
   }
 
   return fees;
+}
+
+export function createManagementFee(managementFee: Address, context: Context): ManagementFee {
+  let fund = context.entities.fund;
+  let feeManagerAddress = Address.fromString(context.fees);
+
+  let contract = ManagementFeeContract.bind(managementFee);
+  let rate = contract.managementFeeRate(feeManagerAddress);
+  let id = feeId(managementFee, context);
+
+  if (ManagementFee.load(id)) {
+    logCritical('Duplicate management fee "{}" for fund {}.', [id, fund.name]);
+  }
+
+  let fee = new ManagementFee(id);
+  fee.identifier = 'MANAGEMENT';
+  fee.fund = fund.id;
+  fee.rate = toBigDecimal(rate);
+  fee.save();
+
+  return fee;
+}
+
+export function createPerformanceFee(performanceFee: Address, context: Context): PerformanceFee {
+  let fund = context.entities.fund;
+  let feeManagerAddress = Address.fromString(context.fees);
+
+  let contract = PerformanceFeeContract.bind(performanceFee);
+  let id = feeId(performanceFee, context);
+
+  if (PerformanceFee.load(id)) {
+    logCritical('Duplicate performance fee "{}" for fund {}.', [id, fund.name]);
+  }
+
+  let period = contract.performanceFeePeriod(feeManagerAddress);
+  let rate = contract.performanceFeeRate(feeManagerAddress);
+  let initializeTime = contract.initializeTime(feeManagerAddress);
+
+  let fee = new PerformanceFee(id);
+  fee.identifier = 'PERFORMANCE';
+  fee.fund = fund.id;
+  fee.period = period;
+  fee.rate = toBigDecimal(rate);
+  fee.initializeTime = initializeTime;
+  fee.save();
+
+  return fee;
+}
+
+export function ensureManagementFee(id: string, context: Context): ManagementFee {
+  let fee = ManagementFee.load(id) as ManagementFee;
+  if (fee) {
+    return fee;
+  }
+
+  let contract = context.contracts.fees;
+  let managementFee = contract.fees(BigInt.fromI32(0));
+  fee = createManagementFee(managementFee, context);
+
+  return fee;
+}
+
+export function ensurePerformanceFee(id: string, context: Context): PerformanceFee {
+  let fee = PerformanceFee.load(id) as PerformanceFee;
+  if (fee) {
+    return fee;
+  }
+
+  let contract = context.contracts.fees;
+  let performanceFee = contract.fees(BigInt.fromI32(1));
+  fee = createPerformanceFee(performanceFee, context);
+
+  return fee;
 }
 
 export class Fee extends Entity {

@@ -5,7 +5,7 @@ import { Fund, Asset } from '../generated/schema';
 import { Context } from '../context';
 import { useAsset } from './Asset';
 import { createFees } from './Fee';
-import { createState, createShares, createPortfolio } from './Tracking';
+import { createState, createShares, createPortfolio, createPayout } from './Tracking';
 
 export function useFund(id: string): Fund {
   let fund = Fund.load(id);
@@ -22,8 +22,11 @@ export function createFund(address: Address, context: Context): Fund {
 
   let shares = createShares(BigDecimal.fromString('0'), null, context);
   let portfolio = createPortfolio([], null, context);
-  let state = createState(shares, portfolio, context);
+  let payout = createPayout([], null, context);
+  let state = createState(shares, portfolio, payout, context);
   context.entities.state = state;
+
+  let fees = createFees(context);
 
   fund.name = hexToAscii(context.contracts.hub.name());
   fund.inception = context.event.block.timestamp;
@@ -33,10 +36,11 @@ export function createFund(address: Address, context: Context): Fund {
   fund.portfolio = portfolio.id;
   fund.state = state.id;
   fund.active = true;
+  fund.denominationAsset = denominationAsset(context).id;
   fund.investable = investableAssets(context).map<string>((item) => item.id);
+  fund.payouts = payout.id;
+  fund.fees = fees.map<string>((fee) => fee.id);
   fund.save();
-
-  createFees(context);
 
   DataSourceTemplate.createWithContext('HubContract', [context.hub], context.context);
   DataSourceTemplate.createWithContext('AccountingContract', [context.accounting], context.context);
@@ -46,6 +50,12 @@ export function createFund(address: Address, context: Context): Fund {
   DataSourceTemplate.createWithContext('TradingContract', [context.trading], context.context);
 
   return fund;
+}
+
+function denominationAsset(context: Context): Asset {
+  let accounting = context.contracts.accounting;
+  let denominationAsset = accounting.DENOMINATION_ASSET();
+  return useAsset(denominationAsset.toHex());
 }
 
 function investableAssets(context: Context): Asset[] {
