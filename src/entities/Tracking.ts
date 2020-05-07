@@ -1,11 +1,27 @@
 import { Entity, BigInt, BigDecimal, Address, log } from '@graphprotocol/graph-ts';
-import { Portfolio, Share, State, Holding, Asset, Payout, FeePayout } from '../generated/schema';
+import {
+  Portfolio,
+  Share,
+  State,
+  Holding,
+  Asset,
+  Payout,
+  ManagementFeePayout,
+  PerformanceFeePayout,
+} from '../generated/schema';
 import { Context } from '../context';
 import { arrayUnique } from '../utils/arrayUnique';
 import { logCritical } from '../utils/logCritical';
 import { toBigDecimal } from '../utils/tokenValue';
 import { Fee, ensureManagementFee, ensurePerformanceFee } from './Fee';
 import { PerformanceFeeContract } from '../generated/PerformanceFeeContract';
+import {
+  IndividualPayout,
+  useManagementFeePayout,
+  usePerformanceFeePayout,
+  ensureManagementFeePayout,
+  ensurePerformanceFeePayout,
+} from './IndividualPayout';
 
 export function stateId(context: Context): string {
   let event = context.event;
@@ -260,14 +276,14 @@ export function payoutId(context: Context): string {
   return fund.id + '/' + event.block.timestamp.toString() + '/payout';
 }
 
-export function createPayout(feePayouts: FeePayout[], cause: Entity | null, context: Context): Payout {
+export function createPayout(feePayouts: IndividualPayout[], cause: Entity | null, context: Context): Payout {
   let event = context.event;
   let fund = context.entities.fund;
   let payout = new Payout(payoutId(context));
   payout.timestamp = event.block.timestamp;
   payout.fund = fund.id;
   payout.shares = BigDecimal.fromString('0');
-  payout.feePayouts = feePayouts.map<string>((item) => item.id);
+  payout.payouts = feePayouts.map<string>((item) => item.id);
   payout.events = cause ? [cause.getString('id')] : [];
   payout.save();
 
@@ -279,8 +295,19 @@ export function ensurePayout(cause: Entity, context: Context): Payout {
 
   if (!payout) {
     let state = context.entities.state;
-    let previous = usePayout(state.payouts).feePayouts;
-    let records = previous.map<FeePayout>((id) => useFeePayout(id));
+    let previous = usePayout(state.payouts).payouts;
+    let records = previous.map<IndividualPayout>((id, index) => {
+      if (index != 0 && index != 1) {
+        logCritical('Unknown fee index');
+      }
+
+      if (index == 0) {
+        return useManagementFeePayout(id) as IndividualPayout;
+      }
+
+      return usePerformanceFeePayout(id) as IndividualPayout;
+    });
+
     payout = createPayout(records, cause, context);
   } else {
     let events = payout.events;
@@ -300,89 +327,44 @@ export function usePayout(id: string): Payout {
   return payout as Payout;
 }
 
-function feePayoutId(fee: Fee, context: Context): string {
-  let event = context.event;
-  let fund = context.entities.fund;
-  return fund.id + '/' + event.block.timestamp.toString() + '/fee/' + fee.identifier;
-}
-
-function createFeePayout(fee: Fee, shares: BigDecimal, cause: Entity, context: Context): FeePayout {
-  let event = context.event;
-  let fund = context.entities.fund;
-  let feePayout = new FeePayout(feePayoutId(fee, context));
-  feePayout.timestamp = event.block.timestamp;
-  feePayout.fund = fund.id;
-  feePayout.fee = fee.id;
-  feePayout.kind = fee.identifier;
-  feePayout.shares = shares;
-  feePayout.events = [cause.getString('id')];
-  feePayout.save();
-
-  return feePayout;
-}
-
-export function ensureFeePayout(fee: Fee, shares: BigDecimal, cause: Entity, context: Context): FeePayout {
-  let feePayout = FeePayout.load(feePayoutId(fee, context)) as FeePayout;
-
-  if (!feePayout) {
-    feePayout = createFeePayout(fee, shares, cause, context);
-  } else {
-    let events = feePayout.events;
-    feePayout.events = arrayUnique<string>(events.concat([cause.getString('id')]));
-    feePayout.save();
-  }
-
-  return feePayout;
-}
-
-export function useFeePayout(id: string): FeePayout {
-  let feePayout = FeePayout.load(id);
-  if (feePayout == null) {
-    logCritical('Failed to load fee payout {}.', [id]);
-  }
-
-  return feePayout as FeePayout;
-}
-
 export function trackPayout(shares: BigDecimal, cause: Entity, context: Context): Payout {
   let fund = context.entities.fund;
-  // let sharesSet = cause.isSet('shares');
-  // log.warning('sharesSet {}', [sharesSet ? 'true' : 'false']);
-  // let shares = cause.get('shares');
-  // if (shares) {
-  //   logCritical('shares {}', [shares.toString()]);
-  // }
-  // let shares = BigDecimal.fromString(cause.isSet('shares') ? cause.getString('shares') : '');
-
-  let feeAddresses = fund.fees;
-  let mgmtFee = ensureManagementFee(feeAddresses[0], context);
-
-  let mgmtFeePayoutId = feePayoutId(mgmtFee as Fee, context);
-  let feePayout = FeePayout.load(mgmtFeePayoutId);
-
-  if (!feePayout) {
-    // first fee payout event in a block is always management fee (shares can be zero or not)
-    feePayout = createFeePayout(mgmtFee as Fee, shares, cause, context);
-  } else if (shares.gt(BigDecimal.fromString('0'))) {
-    // any subsequent event with non-zero shares is performance fee payout
-    let perfFee = ensurePerformanceFee(feeAddresses[1], context);
-
-    let perfFeePayoutId = feePayoutId(perfFee as Fee, context);
-    feePayout = FeePayout.load(perfFeePayoutId);
-
-    if (!feePayout) {
-      let feeManagerAddress = Address.fromString(context.fees);
-      feePayout = createFeePayout(perfFee as Fee, shares, cause, context);
-
-      let perfFeeContract = PerformanceFeeContract.bind(Address.fromString(feeAddresses[1]));
-      feePayout.highWaterMark = perfFeeContract.highWaterMark(feeManagerAddress).toBigDecimal();
-      feePayout.save();
-    }
-  }
 
   let payout = ensurePayout(cause, context);
   payout.shares = payout.shares.plus(shares);
-  payout.feePayouts = payout.feePayouts.concat([feePayout.id]);
+
+  // first fee payout event in a block is always management fee (shares can be zero or not)
+  // more...
+  // any subsequent event with non-zero shares is performance fee payout
+
+  let previous = payout.payouts;
+  let timestamps = previous.map<BigInt>((id, index) => {
+    if (index != 0 && index != 1) {
+      logCritical('Unknown fee index');
+    }
+
+    if (index == 0) {
+      return useManagementFeePayout(id).timestamp;
+    }
+
+    return usePerformanceFeePayout(id).timestamp;
+  });
+
+  // There can be several fee payments in the same block.
+  // We know that the first fee that is paid out is always the management fee.
+  // Any subsequent fee can be either management fee or performance fee.
+  // Since management fee has already been paid out as the first fee,
+  // any subsequent management fee payment has to be zero (no further management fee within a block).
+  // So the first non zero fee after the management fee is necessarily the performance fee.
+  // ;)
+  if (!timestamps.length) {
+    previous[0] = trackManagementFee(shares, cause, context).id;
+  } else if (timestamps[0].lt(context.event.block.timestamp)) {
+    previous[0] = trackManagementFee(shares, cause, context).id;
+  } else if (!shares.digits.isZero()) {
+    previous[1] = trackPerformanceFee(shares, cause, context).id;
+  }
+  payout.payouts = previous;
   payout.save();
 
   let state = context.entities.state;
@@ -407,4 +389,23 @@ function uniqueHoldings(holdings: Holding[]): Holding[] {
   }
 
   return unique;
+}
+
+function trackManagementFee(shares: BigDecimal, cause: Entity, context: Context): ManagementFeePayout {
+  let fund = context.entities.fund;
+  let feeAddresses = fund.fees;
+  let mgmtFee = ensureManagementFee(feeAddresses[0], context);
+
+  return ensureManagementFeePayout(mgmtFee as Fee, shares, cause, context);
+}
+
+function trackPerformanceFee(shares: BigDecimal, cause: Entity, context: Context): PerformanceFeePayout {
+  let fund = context.entities.fund;
+  let feeAddresses = fund.fees;
+
+  let perfFee = ensurePerformanceFee(feeAddresses[1], context);
+
+  let individualPayout = ensurePerformanceFeePayout(perfFee as Fee, shares, cause, context);
+
+  return individualPayout;
 }

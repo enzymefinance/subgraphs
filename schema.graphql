@@ -88,16 +88,32 @@ type Payout implements Metric @entity {
   fund: Fund!
   timestamp: BigInt!
   shares: BigDecimal!
-  feePayouts: [FeePayout!]!
+  payouts: [IndividualPayout!]!
   events: [Event!]!
 }
 
-type FeePayout implements Metric @entity {
+interface IndividualPayout {
   id: ID!
-  kind: FeeIdentifierEnum!
   fund: Fund!
   timestamp: BigInt!
-  fee: Fee!
+  shares: BigDecimal!
+  events: [Event!]!
+}
+
+type ManagementFeePayout implements IndividualPayout & Metric @entity {
+  id: ID!
+  fund: Fund!
+  timestamp: BigInt!
+  fee: ManagementFee!
+  shares: BigDecimal!
+  events: [Event!]!
+}
+
+type PerformanceFeePayout implements IndividualPayout & Metric @entity {
+  id: ID!
+  fund: Fund!
+  timestamp: BigInt!
+  fee: PerformanceFee!
   shares: BigDecimal!
   highWaterMark: BigDecimal
   events: [Event!]!
