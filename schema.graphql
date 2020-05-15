@@ -172,7 +172,7 @@ type PerformanceFee implements Fee @entity {
   identifier: FeeIdentifierEnum!
   rate: BigDecimal!
   period: BigInt!
-  initializeTime: BigInt!
+  initialization: BigInt!
 }
 
 type ManagementFee implements Fee @entity {

@@ -64,14 +64,14 @@ export function createPerformanceFee(performanceFee: Address, context: Context):
 
   let period = contract.performanceFeePeriod(feeManagerAddress);
   let rate = contract.performanceFeeRate(feeManagerAddress);
-  let initializeTime = contract.initializeTime(feeManagerAddress);
+  let initialization = contract.initialization(feeManagerAddress);
 
   let fee = new PerformanceFee(id);
   fee.identifier = 'PERFORMANCE';
   fee.fund = fund.id;
   fee.period = period;
   fee.rate = toBigDecimal(rate);
-  fee.initializeTime = initializeTime;
+  fee.initialization = initialization;
   fee.save();
 
   return fee;
