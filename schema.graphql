@@ -45,6 +45,7 @@ interface Event {
 
 type Version @entity {
   id: ID!
+  name: String!
   funds: [Fund!]! @derivedFrom(field: "version")
   events: [Event!]! @derivedFrom(field: "version")
   assets: [Asset!]!

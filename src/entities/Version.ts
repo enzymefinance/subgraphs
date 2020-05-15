@@ -4,6 +4,7 @@ import { Context } from '../context';
 import { logCritical } from '../utils/logCritical';
 import { ensureAssets } from './Asset';
 import { ensureExchanges } from './Exchange';
+import { hexToAscii } from '../utils/hexToAscii';
 
 export function useVersion(id: string): Version {
   let version = Version.load(id);
@@ -30,7 +31,9 @@ export function createVersion(address: Address, context: Context): Version {
     exchanges.push(registry.exchangeForAdapter(adapters[i]));
   }
 
+  const information = context.contracts.registry.versionInformation(address);
   let assets = registry.getRegisteredAssets();
+  version.name = hexToAscii(information.value1.toHexString());
   version.assets = ensureAssets(assets, context).map<string>((item) => item.id);
   version.exchanges = ensureExchanges(exchanges, context).map<string>((exchange) => exchange.id);
   version.save();
