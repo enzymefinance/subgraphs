@@ -31,7 +31,7 @@ export function createVersion(address: Address, context: Context): Version {
     exchanges.push(registry.exchangeForAdapter(adapters[i]));
   }
 
-  const information = context.contracts.registry.versionInformation(address);
+  let information = context.contracts.registry.versionInformation(address);
   let assets = registry.getRegisteredAssets();
   version.name = hexToAscii(information.value1.toHexString());
   version.assets = ensureAssets(assets, context).map<string>((item) => item.id);
