@@ -56,7 +56,7 @@ export function createTrade(
   // tracking, the values in "before" might already include the traded
   // values.
   let before = getAssetQuantities([assetSold, assetBought], context);
-  trackFundPortfolio([assetSold, assetBought], trade, context);
+  trackFundPortfolio(trade, context);
   let after = getAssetQuantities([assetSold, assetBought], context);
 
   trade.kind = 'TRADE';

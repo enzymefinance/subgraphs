@@ -22,6 +22,7 @@ import {
   ensureManagementFeePayout,
   ensurePerformanceFeePayout,
 } from './IndividualPayout';
+import { useAsset } from './Asset';
 
 export function stateId(context: Context): string {
   let event = context.event;
@@ -192,41 +193,31 @@ export function useHolding(id: string): Holding {
   return holdings as Holding;
 }
 
-export function trackFundPortfolio(assets: Asset[], cause: Entity, context: Context): Portfolio {
+export function trackFundPortfolio(cause: Entity, context: Context): Portfolio {
   let portfolio = ensurePortfolio(cause, context);
-  let holdings: Holding[] = portfolio.holdings.map<Holding>((id) => useHolding(id));
+  let previousHoldings: Holding[] = portfolio.holdings.map<Holding>((id) => useHolding(id));
+  let nextHoldings: Holding[] = [];
   let updates = context.contracts.accounting.getFundHoldings();
 
-  for (let i: i32 = 0; i < assets.length; i++) {
-    // By default, we set the value to 0. This is necessary to track records for
-    // assets that have been removed from the holdings at least once when they
-    // become 0. We will remove these when we track the fund holdings the next
-    // time.
-    let quantity = BigDecimal.fromString('0');
-    let asset = assets[i];
-
-    // Get the quantities for the selected assets from the contract call results.
-    for (let j: i32 = 0; j < updates.value0.length; j++) {
-      if (updates.value1[j].toHex() == asset.id) {
-        quantity = toBigDecimal(updates.value0[j], asset.decimals);
-        break;
-      }
-    }
+  for (let i: i32 = 0; i < updates.value0.length; i++) {
+    let asset = useAsset(updates.value1[i].toHex());
+    let quantity = toBigDecimal(updates.value0[i], asset.decimals);
 
     // Add the fund holding entry for the current asset unless it's 0.
     if (!quantity.digits.isZero()) {
-      let match = findHolding(holdings, asset) as Holding;
+      let match = findHolding(previousHoldings, asset) as Holding;
 
       // Re-use the previous holding entry unless it has changed.
-      if (!(match != null && match.quantity == quantity)) {
-        // Prepend updated items to the array.
-        holdings.unshift(createHolding(asset, quantity, cause, context));
+      if (match != null && match.quantity == quantity) {
+        nextHoldings.push(match);
+      } else {
+        nextHoldings.push(createHolding(asset, quantity, cause, context));
       }
     }
   }
 
   // Eliminate old holdings from the array by only keeping the first copy for each asset.
-  portfolio.holdings = uniqueHoldings(holdings).map<string>((item) => item.id);
+  portfolio.holdings = uniqueHoldings(previousHoldings).map<string>((item) => item.id);
   portfolio.save();
 
   let state = context.entities.state;

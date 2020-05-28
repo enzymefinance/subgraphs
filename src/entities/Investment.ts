@@ -86,7 +86,7 @@ export function createInvestmentAddition(
   investment.shares = investment.shares.plus(shares);
   investment.save();
 
-  trackFundPortfolio([asset], addition, context);
+  trackFundPortfolio(addition, context);
   trackFundShares(addition, context);
   // trackFundInvestments(event, fund, addition);
 
@@ -119,7 +119,7 @@ export function createInvestmentRedemption(
   investment.shares = investment.shares.minus(shares);
   investment.save();
 
-  trackFundPortfolio(assets, redemption, context);
+  trackFundPortfolio(redemption, context);
   trackFundShares(redemption, context);
   // trackFundInvestments(event, fund, redemption);
 
