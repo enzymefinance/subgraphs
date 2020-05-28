@@ -50,6 +50,7 @@ type Version @entity {
   events: [Event!]! @derivedFrom(field: "version")
   assets: [Asset!]!
   exchanges: [Exchange!]!
+  priceSource: PriceSource!
 }
 
 interface Metric {
@@ -359,4 +360,21 @@ type Trade implements Event @entity {
 type Exchange @entity {
   id: ID!
   name: String
+}
+
+type PriceSource @entity {
+  id: ID!
+}
+
+type PriceUpdate @entity {
+  id: ID!
+  timestamp: BigInt!
+  assetPrices: [AssetPrice!]!
+}
+
+type AssetPrice @entity {
+  id: ID!
+  timestamp: BigInt!
+  asset: Asset!
+  price: BigDecimal
 }

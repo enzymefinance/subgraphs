@@ -10,7 +10,7 @@ dataSources:
     network: mainnet
     source:
       abi: VersionContract
-      address: '0xcb6c6bdf0aa4cf0188518783b871931efb64248f'
+      address: "0xcb6c6bdf0aa4cf0188518783b871931efb64248f"
       startBlock: 7271059
     mapping:
       kind: ethereum/events
@@ -23,6 +23,8 @@ dataSources:
           file: ./src/abis/Version.abi.json
         - name: RegistryContract
           file: ./src/abis/Registry.abi.json
+        - name: PriceSourceContract
+          file: ./src/abis/PriceSource.abi.json
         - name: HubContract
           file: ./src/abis/Hub.abi.json
         - name: AccountingContract
@@ -64,7 +66,7 @@ dataSources:
     network: mainnet
     source:
       abi: VersionContract
-      address: '0x01bde0b02740d6311e4a87ca112deeeddb057efb'
+      address: "0x01bde0b02740d6311e4a87ca112deeeddb057efb"
       startBlock: 7375920
     mapping:
       kind: ethereum/events
@@ -77,6 +79,8 @@ dataSources:
           file: ./src/abis/Version.abi.json
         - name: RegistryContract
           file: ./src/abis/Registry.abi.json
+        - name: PriceSourceContract
+          file: ./src/abis/PriceSource.abi.json
         - name: HubContract
           file: ./src/abis/Hub.abi.json
         - name: AccountingContract
@@ -118,7 +122,7 @@ dataSources:
     network: mainnet
     source:
       abi: VersionContract
-      address: '0x5f9ae054c7f0489888b1ea46824b4b9618f8a711'
+      address: "0x5f9ae054c7f0489888b1ea46824b4b9618f8a711"
       startBlock: 9497260
     mapping:
       kind: ethereum/events
@@ -131,6 +135,8 @@ dataSources:
           file: ./src/abis/Version.abi.json
         - name: RegistryContract
           file: ./src/abis/Registry.abi.json
+        - name: PriceSourceContract
+          file: ./src/abis/PriceSource.abi.json
         - name: HubContract
           file: ./src/abis/Hub.abi.json
         - name: AccountingContract
@@ -184,6 +190,8 @@ templates:
           file: ./src/abis/Version.abi.json
         - name: RegistryContract
           file: ./src/abis/Registry.abi.json
+        - name: PriceSourceContract
+          file: ./src/abis/PriceSource.abi.json
         - name: HubContract
           file: ./src/abis/Hub.abi.json
         - name: AccountingContract
@@ -238,6 +246,8 @@ templates:
           file: ./src/abis/Version.abi.json
         - name: RegistryContract
           file: ./src/abis/Registry.abi.json
+        - name: PriceSourceContract
+          file: ./src/abis/PriceSource.abi.json
         - name: HubContract
           file: ./src/abis/Hub.abi.json
         - name: AccountingContract
@@ -281,6 +291,62 @@ templates:
           handler: handleExchangeAdapterRemoval
         - event: ExchangeAdapterUpsert(indexed address,indexed address,bool,bytes4[])
           handler: handleExchangeAdapterUpsert
+        - event: PriceSourceChange(indexed address)
+          handler: handlePriceSourceChange
+
+  - name: PriceSourceContract
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      abi: PriceSourceContract
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/PriceSource.ts
+      entities: []
+      abis:
+        - name: VersionContract
+          file: ./src/abis/Version.abi.json
+        - name: RegistryContract
+          file: ./src/abis/Registry.abi.json
+        - name: PriceSourceContract
+          file: ./src/abis/PriceSource.abi.json
+        - name: HubContract
+          file: ./src/abis/Hub.abi.json
+        - name: AccountingContract
+          file: ./src/abis/spokes/Accounting.abi.json
+        - name: FeeManagerContract
+          file: ./src/abis/spokes/FeeManager.abi.json
+        - name: ParticipationContract
+          file: ./src/abis/spokes/Participation.abi.json
+        - name: PolicyManagerContract
+          file: ./src/abis/spokes/PolicyManager.abi.json
+        - name: SharesContract
+          file: ./src/abis/spokes/Shares.abi.json
+        - name: TradingContract
+          file: ./src/abis/spokes/Trading.abi.json
+        - name: PerformanceFeeContract
+          file: ./src/abis/fees/PerformanceFee.abi.json
+        - name: ManagementFeeContract
+          file: ./src/abis/fees/ManagementFee.abi.json
+        - name: PolicyContractInterface
+          file: ./src/abis/policies/IPolicy.abi.json
+        - name: AssetBlacklistPolicyContract
+          file: ./src/abis/policies/AssetBlacklist.abi.json
+        - name: AssetWhitelistPolicyContract
+          file: ./src/abis/policies/AssetWhitelist.abi.json
+        - name: UserWhitelistPolicyContract
+          file: ./src/abis/policies/UserWhitelist.abi.json
+        - name: MaxConcentrationPolicyContract
+          file: ./src/abis/policies/MaxConcentration.abi.json
+        - name: MaxPositionsPolicyContract
+          file: ./src/abis/policies/MaxPositions.abi.json
+        - name: PriceTolerancePolicyContract
+          file: ./src/abis/policies/PriceTolerance.abi.json
+      eventHandlers:
+        - event: PriceUpdate(address[],uint256[])
+          handler: handlePriceUpdate
 
   - name: HubContract
     kind: ethereum/contract
@@ -298,6 +364,8 @@ templates:
           file: ./src/abis/Version.abi.json
         - name: RegistryContract
           file: ./src/abis/Registry.abi.json
+        - name: PriceSourceContract
+          file: ./src/abis/PriceSource.abi.json
         - name: HubContract
           file: ./src/abis/Hub.abi.json
         - name: AccountingContract
@@ -350,6 +418,8 @@ templates:
           file: ./src/abis/Version.abi.json
         - name: RegistryContract
           file: ./src/abis/Registry.abi.json
+        - name: PriceSourceContract
+          file: ./src/abis/PriceSource.abi.json
         - name: HubContract
           file: ./src/abis/Hub.abi.json
         - name: AccountingContract
@@ -404,6 +474,8 @@ templates:
           file: ./src/abis/Version.abi.json
         - name: RegistryContract
           file: ./src/abis/Registry.abi.json
+        - name: PriceSourceContract
+          file: ./src/abis/PriceSource.abi.json
         - name: HubContract
           file: ./src/abis/Hub.abi.json
         - name: AccountingContract
@@ -458,6 +530,8 @@ templates:
           file: ./src/abis/Version.abi.json
         - name: RegistryContract
           file: ./src/abis/Registry.abi.json
+        - name: PriceSourceContract
+          file: ./src/abis/PriceSource.abi.json
         - name: HubContract
           file: ./src/abis/Hub.abi.json
         - name: AccountingContract
@@ -520,6 +594,8 @@ templates:
           file: ./src/abis/Version.abi.json
         - name: RegistryContract
           file: ./src/abis/Registry.abi.json
+        - name: PriceSourceContract
+          file: ./src/abis/PriceSource.abi.json
         - name: HubContract
           file: ./src/abis/Hub.abi.json
         - name: AccountingContract
@@ -572,6 +648,8 @@ templates:
           file: ./src/abis/Version.abi.json
         - name: RegistryContract
           file: ./src/abis/Registry.abi.json
+        - name: PriceSourceContract
+          file: ./src/abis/PriceSource.abi.json
         - name: HubContract
           file: ./src/abis/Hub.abi.json
         - name: AccountingContract
@@ -626,6 +704,8 @@ templates:
           file: ./src/abis/Version.abi.json
         - name: RegistryContract
           file: ./src/abis/Registry.abi.json
+        - name: PriceSourceContract
+          file: ./src/abis/PriceSource.abi.json
         - name: HubContract
           file: ./src/abis/Hub.abi.json
         - name: AccountingContract

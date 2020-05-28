@@ -1,4 +1,4 @@
-import { dataSource } from '@graphprotocol/graph-ts';
+import { dataSource, DataSourceTemplate, Address } from '@graphprotocol/graph-ts';
 import { Context } from '../context';
 import { createContractEvent } from '../entities/Event';
 import {
@@ -7,11 +7,13 @@ import {
   EngineChange,
   ExchangeAdapterRemoval,
   ExchangeAdapterUpsert,
+  PriceSourceChange,
 } from '../generated/RegistryContract';
 import { ensureAsset } from '../entities/Asset';
 import { arrayDiff } from '../utils/arrayDiff';
 import { arrayUnique } from '../utils/arrayUnique';
 import { ensureExchange } from '../entities/Exchange';
+import { ensurePriceSource } from '../entities/PriceUpdate';
 
 export function handleAssetRemoval(event: AssetRemoval): void {
   let context = new Context(dataSource.context(), event);
@@ -61,4 +63,12 @@ export function handleExchangeAdapterUpsert(event: ExchangeAdapterUpsert): void 
   version.save();
 
   createContractEvent('ExchangeAdapterUpsert', context);
+}
+
+export function handlePriceSourceChange(event: PriceSourceChange): void {
+  let context = new Context(dataSource.context(), event);
+
+  let priceSource = ensurePriceSource(event.params.priceSource, context);
+
+  DataSourceTemplate.createWithContext('PriceSourceContract', [priceSource.id], context.context);
 }

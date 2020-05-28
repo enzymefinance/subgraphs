@@ -4,6 +4,7 @@ import { Context } from '../context';
 import { logCritical } from '../utils/logCritical';
 import { ensureAssets } from './Asset';
 import { ensureExchanges } from './Exchange';
+import { ensurePriceSource } from './PriceUpdate';
 
 export function useVersion(id: string): Version {
   let version = Version.load(id);
@@ -34,10 +35,16 @@ export function createVersion(address: Address, name: string, context: Context):
   version.name = name;
   version.assets = ensureAssets(assets, context).map<string>((item) => item.id);
   version.exchanges = ensureExchanges(exchanges, context).map<string>((exchange) => exchange.id);
+  version.priceSource = ensurePriceSource(context.contracts.registry.priceSource(), context).id;
   version.save();
 
   DataSourceTemplate.createWithContext('VersionContract', [context.version], context.context);
   DataSourceTemplate.createWithContext('RegistryContract', [context.registry], context.context);
+  DataSourceTemplate.createWithContext(
+    'PriceSourceContract',
+    [context.contracts.registry.priceSource().toHex()],
+    context.context,
+  );
 
   return version;
 }
