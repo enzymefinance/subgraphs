@@ -248,6 +248,7 @@ interface SharesChange {
   transaction: String!
   trigger: ContractEvent!
   investment: Investment!
+  shares: BigDecimal!
 }
 
 type SharesAddition implements Event & SharesChange @entity {

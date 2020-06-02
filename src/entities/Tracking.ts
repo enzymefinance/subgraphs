@@ -217,7 +217,7 @@ export function trackFundPortfolio(cause: Entity, context: Context): Portfolio {
   }
 
   // Eliminate old holdings from the array by only keeping the first copy for each asset.
-  portfolio.holdings = uniqueHoldings(previousHoldings).map<string>((item) => item.id);
+  portfolio.holdings = uniqueHoldings(nextHoldings).map<string>((item) => item.id);
   portfolio.save();
 
   let state = context.entities.state;
