@@ -37,9 +37,16 @@ export function ensureAsset(address: Address, context: Context): Asset {
   }
 
   let information = contract.assetInformation(address);
+  let name = information.value1;
+  let symbol = information.value2;
+  if (address.toHex() == '0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359') {
+    name = 'SAI Stable Coin';
+    symbol = 'SAI';
+  }
+
   asset = new Asset(address.toHex());
-  asset.name = information.value1;
-  asset.symbol = information.value2;
+  asset.name = name;
+  asset.symbol = symbol;
   asset.decimals = information.value3.toI32();
   asset.save();
 
