@@ -33,7 +33,7 @@ function getAssetQuantities(assets: Asset[], context: Context): BigDecimal[] {
       }
     }
 
-    quantities.push(quantity);
+    quantities = quantities.concat([quantity]);
   }
 
   return quantities;

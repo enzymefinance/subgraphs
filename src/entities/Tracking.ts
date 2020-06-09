@@ -1,4 +1,4 @@
-import { Entity, BigInt, BigDecimal, Address, log } from '@graphprotocol/graph-ts';
+import { Entity, BigInt, BigDecimal } from '@graphprotocol/graph-ts';
 import {
   Portfolio,
   Share,
@@ -14,7 +14,6 @@ import { arrayUnique } from '../utils/arrayUnique';
 import { logCritical } from '../utils/logCritical';
 import { toBigDecimal } from '../utils/tokenValue';
 import { Fee, ensureManagementFee, ensurePerformanceFee } from './Fee';
-import { PerformanceFeeContract } from '../generated/PerformanceFeeContract';
 import {
   IndividualPayout,
   useManagementFeePayout,
@@ -122,7 +121,7 @@ export function useShares(id: string): Share {
 export function portfolioId(context: Context): string {
   let event = context.event;
   let fund = context.entities.fund;
-  return fund.id + '/' + event.block.timestamp.toString() + '/holdings';
+  return fund.id + '/' + event.block.timestamp.toString() + '/portfolio';
 }
 
 export function createPortfolio(holdings: Holding[], cause: Entity | null, context: Context): Portfolio {
@@ -216,8 +215,7 @@ export function trackFundPortfolio(cause: Entity, context: Context): Portfolio {
     }
   }
 
-  // Eliminate old holdings from the array by only keeping the first copy for each asset.
-  portfolio.holdings = uniqueHoldings(nextHoldings).map<string>((item) => item.id);
+  portfolio.holdings = nextHoldings.map<string>((item) => item.id);
   portfolio.save();
 
   let state = context.entities.state;
