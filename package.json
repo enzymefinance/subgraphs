@@ -1,39 +1,33 @@
 {
   "private": true,
   "scripts": {
-    "script": "ts-node --project scripts/tsconfig.json --require dotenv-extended/config scripts",
+    "script": "ts-node --project scripts/tsconfig.json scripts",
     "precodegen": "rimraf src/generated",
     "codegen": "graph codegen subgraph.yaml --output-dir src/generated",
     "postcodegen": "yarn script flatten",
-    "create:local": "graph create melonproject/melon-dev --node http://localhost:8020",
-    "predeploy:local": "yarn create:local || true",
-    "deploy:local": "graph deploy melonproject/melon-dev subgraph.yaml --ipfs http://localhost:5001 --node http://localhost:8020",
-    "deploy": "graph deploy melonproject/melon-dev subgraph.mainnet.yaml --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
-    "auth": "graph auth https://api.thegraph.com/deploy/",
+    "create": "graph create melonproject/melon --node http://localhost:8020",
+    "predeploy": "yarn create || true",
+    "deploy": "graph deploy melonproject/melon subgraph.yaml --ipfs http://localhost:5001 --node http://localhost:8020",
     "format": "prettier --write {src,scripts}/{*,**/*}.{ts,json,yaml}",
     "lint": "yarn prettier --list-different {src,scripts}/{*,**/*}.{ts,json,yaml}"
   },
   "devDependencies": {
     "@graphprotocol/graph-cli": "^0.18.0",
     "@graphprotocol/graph-ts": "^0.18.1",
+    "@melonproject/protocol": "^2.0.0-dev.77179589",
     "@types/mustache": "^4.0.1",
-    "@types/node": "^13.13.5",
-    "@types/prettier": "^2.0.0",
+    "@types/node": "^14.0.27",
+    "@types/prettier": "^2.0.2",
     "@types/rimraf": "^3.0.0",
-    "@types/yargs": "^15.0.4",
-    "assemblyscript": "^0.9.4",
-    "dotenv-extended": "^2.5.0",
-    "ethers": "^5.0.0-beta.180",
+    "@types/yargs": "^15.0.5",
+    "assemblyscript": "^0.14.8",
     "glob": "^7.1.6",
-    "handlebars": "^4.7.6",
+    "jest": "^26.3.0",
     "prettier": "^2.0.5",
     "rimraf": "^3.0.2",
-    "ts-node": "^8.10.1",
-    "typescript": "^3.8.3",
-    "yaml": "^1.8.3",
-    "yargs": "^15.3.1"
-  },
-  "abigen": {
-    "input": "../melon-protocol/out"
+    "ts-jest": "^26.2.0",
+    "ts-node": "^8.10.2",
+    "typescript": "^4.0.0-beta",
+    "yargs": "^15.4.1"
   }
 }

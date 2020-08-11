@@ -1,22 +1,16 @@
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Runtime data
-pids
-*.pid
-*.seed
-*.pid.lock
-
-# Generated build output, code and data
-generated/
-build/
- 
-# Dependency directories
+# Node dependencies.
 node_modules/
 
-# Local environment
-.env
+# Ignore all generated files.
+generated/
+build/
+
+# Ignore all dot files.
+.*
+
+# Ignore all log files.
+*.log
+
+# Allowed dot files
+!.gitignore
+!.prettierrc
