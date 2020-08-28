@@ -1,48 +1,41 @@
 version: '3.7'
 
 services:
-  ethereum:
-    image: trufflesuite/ganache-cli
-    command:
-      - ganache-cli
-      - --gasLimit=0x989680
-      - --networkId=4447
-      - --defaultBalanceEther=10000000000000
-      - --mnemonic="boost upgrade garment fever fence sleep indoor have fever off beauty finger"
-      - --hostname=0.0.0.0
-      - --accounts=10
-    ports:
-      - '8545:8545'
-
   thegraph:
-    image: 'graphprotocol/graph-node'
-    command: /bin/bash -c "
-      wait-for-it.sh postgres:5432 --timeout=60 &&
-      wait-for-it.sh ipfs:5001 --timeout=60 &&
-      sleep 5 &&
-      graph-node
-      --ethereum-rpc=dev:http://ethereum:8545
-      --postgres-url=postgresql://graph-node:let-me-in@postgres:5432/graph-node
-      --ipfs=ipfs:5001
-      --debug"
+    image: graphprotocol/graph-node
     ports:
       - '8000:8000'
       - '8001:8001'
       - '8020:8020'
+      - '8030:8030'
+      - '8040:8040'
+    depends_on:
+      - ipfs
+      - postgres
     environment:
+      postgres_host: postgres:5432
+      postgres_user: graph-node
+      postgres_pass: let-me-in
+      postgres_db: graph-node
+      ipfs: 'ipfs:5001'
+      ethereum: 'mainnet:http://${DOCKER_HOST_IP:-docker.host.internal}:8545'
       RUST_LOG: info
 
   ipfs:
     image: ipfs/go-ipfs:v0.4.23
-    ports:
-      - '5001:5001'
+    volumes:
+      - ipfs:/data/ipfs
 
   postgres:
     image: postgres
-    command: ['postgres', '-cshared_preload_libraries=pg_stat_statements']
-    ports:
-      - '5432:5432'
+    command: ["postgres", "-cshared_preload_libraries=pg_stat_statements"]
     environment:
       POSTGRES_USER: graph-node
       POSTGRES_PASSWORD: let-me-in
       POSTGRES_DB: graph-node
+    volumes:
+      - postgres:/var/lib/postgresql/data
+
+volumes:
+  ipfs:
+  postgres:
