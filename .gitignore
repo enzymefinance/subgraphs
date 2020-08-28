@@ -14,3 +14,4 @@ build/
 # Allowed dot files
 !.gitignore
 !.prettierrc
+!.npmrc
