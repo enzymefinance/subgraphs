@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "script": "ts-node --project scripts/tsconfig.json scripts",
-    "precodegen": "rimraf src/generated",
+    "precodegen": "rimraf src/generated && yarn script template",
     "codegen": "graph codegen subgraph.yaml --output-dir src/generated",
     "postcodegen": "yarn script flatten",
     "premake": "yarn script template",
