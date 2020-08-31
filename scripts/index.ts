@@ -2,6 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import glob from 'glob';
 import yargs from 'yargs';
+import axios from 'axios';
+import handlebars from 'handlebars';
 
 yargs
   .command('flatten', 'Flatten the generated code.', () => {
@@ -27,4 +29,28 @@ yargs
       fs.rmdirSync(path.join(generated, item), { recursive: true });
     });
   })
+  .command(
+    'template',
+    'Create the subgraph manifest from the template.',
+    (yargs) => {
+      return yargs.option('deployment', {
+        type: 'string',
+        default: 'http://localhost:4000/deployment',
+      });
+    },
+    async (args) => {
+      const deploymentJson = await axios
+        .get(args.deployment)
+        .then((result) => result.data);
+
+      const templateFile = path.join(__dirname, '..', 'subgraph.template.yml');
+      const subgraphFile = path.join(__dirname, '..', 'subgraph.yaml');
+      const templateContent = fs.readFileSync(templateFile, 'utf8');
+
+      const compile = handlebars.compile(templateContent);
+      const replaced = compile(deploymentJson);
+
+      fs.writeFileSync(subgraphFile, replaced);
+    },
+  )
   .help().argv;

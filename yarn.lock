@@ -503,34 +503,25 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@melonproject/persistent@^2.0.1-dev.0+ac9b035":
+"@melonproject/persistent@^2.0.1-dev.0+72c0173", "@melonproject/persistent@^2.0.1-dev.0+e7e8654":
   version "2.0.1-dev.0"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_1dk9Hs/%40melonproject%2Fpersistent-2.0.1-dev.0.tgz#a7d032405418cdac96768f6ac3f19f72a17cb9b3"
-  integrity sha1-p9AyQFQYzayWdo9qw/GfcqF8ubM=
+  resolved "https://npm.fury.io/melonproject/~/up/ver_1Hhg2p/%40melonproject%2Fpersistent-2.0.1-dev.0.tgz#5086542bec6d17f9408b85ab98de32dacf813b6c"
+  integrity sha1-UIZUK+xtF/lAi4WrmN4y2s+BO2w=
   dependencies:
-    "@melonproject/utils" "^2.0.1-dev.0+ac9b035"
-    "@openzeppelin/contracts" "^3.1.0"
+    "@melonproject/utils" "^2.0.1-dev.0+e7e8654"
 
-"@melonproject/release@^2.0.1-dev.0+ac9b035":
+"@melonproject/release@^2.0.1-dev.0+72c0173":
   version "2.0.1-dev.0"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_1N1ffv/%40melonproject%2Frelease-2.0.1-dev.0.tgz#f9b43a2ad36423805e38dc0ec2dee4c7e7fee664"
-  integrity sha1-+bQ6KtNkI4BeONwOwt7kx+f+5mQ=
+  resolved "https://npm.fury.io/melonproject/~/up/ver_2eIXVe/%40melonproject%2Frelease-2.0.1-dev.0.tgz#eb0f116d96a7d6eab0a0ef9d913b892f605d0975"
+  integrity sha1-6w8RbZan1uqwoO+dkTuJL2BdCXU=
   dependencies:
-    "@melonproject/persistent" "^2.0.1-dev.0+ac9b035"
-    "@melonproject/utils" "^2.0.1-dev.0+ac9b035"
-    "@openzeppelin/contracts" "^3.1.0"
+    "@melonproject/persistent" "^2.0.1-dev.0+e7e8654"
+    "@melonproject/utils" "^2.0.1-dev.0+e7e8654"
 
-"@melonproject/utils@^2.0.1-dev.0+ac9b035":
+"@melonproject/utils@^2.0.1-dev.0+e7e8654":
   version "2.0.1-dev.0"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_FTyNh/%40melonproject%2Futils-2.0.1-dev.0.tgz#79eaeef6d0c851afcc119fc8f2ece8211679488b"
-  integrity sha1-eeru9tDIUa/MEZ/I8uzoIRZ5SIs=
-  dependencies:
-    "@openzeppelin/contracts" "^3.1.0"
-
-"@openzeppelin/contracts@^3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-3.1.0.tgz#bcea457ef89069fbe5a617f50b25b6a8272895d5"
-  integrity sha512-dVXDnUKxrAKLzPdCRkz+N8qsVkK1XxJ6kk3zuI6zaQmcKxN7CkizoDP7lXxcs/Mi2I0mxceTRjJBqlzFffLJrQ==
+  resolved "https://npm.fury.io/melonproject/~/up/ver_19hJVE/%40melonproject%2Futils-2.0.1-dev.0.tgz#a45058ac07d13794876e84edcdd543c1031d72a8"
+  integrity sha1-pFBYrAfRN5SHboTtzdVDwQMdcqg=
 
 "@protobufjs/utf8@^1.1.0":
   version "1.1.0"
@@ -986,6 +977,13 @@ axios@^0.19.0:
   integrity sha512-fjgm5MvRHLhx+osE2xoekY70AhARk3a6hkN+3Io1jc00jtquGvxYlKlsFUhmUET0V5te6CcZI7lcv2Ym61mjHA==
   dependencies:
     follow-redirects "1.5.10"
+
+axios@^0.20.0:
+  version "0.20.0"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-0.20.0.tgz#057ba30f04884694993a8cd07fa394cff11c50bd"
+  integrity sha512-ANA4rr2BDcmmAQLOKft2fufrtuvlqR+cXNNinUmvfeSNCOF98PZL+7M/v1zIdGo7OLjEA9J2gXJL+j4zGsl0bA==
+  dependencies:
+    follow-redirects "^1.10.0"
 
 babel-jest@^26.3.0:
   version "26.3.0"
@@ -2168,6 +2166,11 @@ follow-redirects@1.5.10:
   dependencies:
     debug "=3.1.0"
 
+follow-redirects@^1.10.0:
+  version "1.13.0"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.13.0.tgz#b42e8d93a2a7eea5ed88633676d6597bc8e384db"
+  integrity sha512-aq6gF1BEKje4a9i9+5jimNFIpq4Q1WiwBToeRK5NvZBd/TRsmW8BsJfOEGkr76TbOyPVD3OVDN910EcUNtRYEA==
+
 for-in@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/for-in/-/for-in-1.0.2.tgz#81068d295a8142ec0ac726c6e2200c30fb6d5e80"
@@ -2363,6 +2366,18 @@ growly@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/growly/-/growly-1.3.0.tgz#f10748cbe76af964b7c96c93c6bcc28af120c081"
   integrity sha1-8QdIy+dq+WS3yWyTxrzCivEgwIE=
+
+handlebars@^4.7.6:
+  version "4.7.6"
+  resolved "https://registry.yarnpkg.com/handlebars/-/handlebars-4.7.6.tgz#d4c05c1baf90e9945f77aa68a7a219aa4a7df74e"
+  integrity sha512-1f2BACcBfiwAfStCKZNrUCgqNZkGsAT7UM3kkYtXuLo0KnaVfjKOyf7PRzB6++aK9STyT1Pd2ZCPe3EGOXleXA==
+  dependencies:
+    minimist "^1.2.5"
+    neo-async "^2.6.0"
+    source-map "^0.6.1"
+    wordwrap "^1.0.0"
+  optionalDependencies:
+    uglify-js "^3.1.4"
 
 har-schema@^2.0.0:
   version "2.0.0"
@@ -4106,6 +4121,11 @@ natural-compare@^1.4.0:
     split2 "^3.1.0"
     through2 "^3.0.0"
 
+neo-async@^2.6.0:
+  version "2.6.2"
+  resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
+  integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
+
 nice-try@^1.0.4:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/nice-try/-/nice-try-1.0.5.tgz#a3378a7696ce7d223e88fc9b764bd7ef1089e366"
@@ -5564,6 +5584,11 @@ typescript@^4.0.2:
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.0.2.tgz#7ea7c88777c723c681e33bf7988be5d008d05ac2"
   integrity sha512-e4ERvRV2wb+rRZ/IQeb3jm2VxBsirQLpQhdxplZ2MEzGvDkkMmPglecnNDfSUBivMjP93vRbngYYDQqQ/78bcQ==
 
+uglify-js@^3.1.4:
+  version "3.10.3"
+  resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.10.3.tgz#f0d2f99736c14de46d2d24649ba328be3e71c3bf"
+  integrity sha512-Lh00i69Uf6G74mvYpHCI9KVVXLcHW/xu79YTvH7Mkc9zyKUeSPz0owW0dguj0Scavns3ZOh3wY63J0Zb97Za2g==
+
 union-value@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/union-value/-/union-value-1.0.1.tgz#0b6fe7b835aecda61c6ea4d4f02c14221e109847"
@@ -5757,6 +5782,11 @@ word-wrap@~1.2.3:
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/word-wrap/-/word-wrap-1.2.3.tgz#610636f6b1f703891bd34771ccb17fb93b47079c"
   integrity sha512-Hz/mrNwitNRh/HUAtM/VT/5VH+ygD6DV7mYKZAtHOrbs8U7lvPS6xf7EJKMF0uW1KJCl0H701g3ZGus+muE5vQ==
+
+wordwrap@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/wordwrap/-/wordwrap-1.0.0.tgz#27584810891456a4171c8d0226441ade90cbcaeb"
+  integrity sha1-J1hIEIkUVqQXHI0CJkQa3pDLyus=
 
 wordwrap@~0.0.2:
   version "0.0.3"

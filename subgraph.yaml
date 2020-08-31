@@ -1,5 +1,0 @@
-specVersion: 0.0.2
-description: Melon protocol
-repository: https://github.com/melonproject/subgraph
-schema:
-  file: ./schema.graphql

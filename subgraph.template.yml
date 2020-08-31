@@ -1,0 +1,26 @@
+specVersion: 0.0.2
+description: Melon protocol
+repository: https://github.com/melonproject/subgraph
+schema:
+  file: ./schema.graphql
+
+dataSources:
+  - name: FundDeployerDataSource
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      address: '{{fundDeployerAddress}}'
+      abi: FundDeployerContract
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/FundDeployer.ts
+      entities: []
+      abis:
+        - name: FundDeployerContract
+          file: ./node_modules/@melonproject/release/artifacts/FundDeployer.json
+      eventHandlers:
+        - event: NewFundDeployed(address,address,indexed address,string,indexed address,bytes,bytes)
+          handler: handleNewFundDeployed

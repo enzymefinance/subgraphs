@@ -23,19 +23,13 @@ services:
 
   ipfs:
     image: ipfs/go-ipfs:v0.4.23
-    volumes:
-      - ipfs:/data/ipfs
+    ports:
+      - 5001:5001
 
   postgres:
     image: postgres
-    command: ["postgres", "-cshared_preload_libraries=pg_stat_statements"]
+    command: ['postgres', '-cshared_preload_libraries=pg_stat_statements']
     environment:
       POSTGRES_USER: graph-node
       POSTGRES_PASSWORD: let-me-in
       POSTGRES_DB: graph-node
-    volumes:
-      - postgres:/var/lib/postgresql/data
-
-volumes:
-  ipfs:
-  postgres:
