@@ -1,14 +1,14 @@
-version: '3.7'
+version: "3.7"
 
 services:
   thegraph:
     image: graphprotocol/graph-node
     ports:
-      - '8000:8000'
-      - '8001:8001'
-      - '8020:8020'
-      - '8030:8030'
-      - '8040:8040'
+      - "8000:8000"
+      - "8001:8001"
+      - "8020:8020"
+      - "8030:8030"
+      - "8040:8040"
     depends_on:
       - ipfs
       - postgres
@@ -17,8 +17,8 @@ services:
       postgres_user: graph-node
       postgres_pass: let-me-in
       postgres_db: graph-node
-      ipfs: 'ipfs:5001'
-      ethereum: 'mainnet:http://${DOCKER_HOST_IP:-docker.host.internal}:8545'
+      ipfs: "ipfs:5001"
+      ethereum: "mainnet:http://${DOCKER_HOST_IP:-host.docker.internal}:8545"
       RUST_LOG: info
 
   ipfs:
@@ -28,7 +28,7 @@ services:
 
   postgres:
     image: postgres
-    command: ['postgres', '-cshared_preload_libraries=pg_stat_statements']
+    command: ["postgres", "-cshared_preload_libraries=pg_stat_statements"]
     environment:
       POSTGRES_USER: graph-node
       POSTGRES_PASSWORD: let-me-in
