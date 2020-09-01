@@ -2,3 +2,7 @@ type Fund @entity {
   id: ID!
   name: String!
 }
+
+type Asset @entity {
+  id: ID!
+}
