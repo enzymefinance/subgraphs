@@ -503,25 +503,25 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@melonproject/persistent@^2.0.1-dev.0+72c0173", "@melonproject/persistent@^2.0.1-dev.0+e7e8654":
-  version "2.0.1-dev.0"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_1Hhg2p/%40melonproject%2Fpersistent-2.0.1-dev.0.tgz#5086542bec6d17f9408b85ab98de32dacf813b6c"
-  integrity sha1-UIZUK+xtF/lAi4WrmN4y2s+BO2w=
+"@melonproject/persistent@^2.0.1-dev", "@melonproject/persistent@^2.0.1-dev.4973+dc8189b5":
+  version "2.0.1-dev.4973"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_10vGO4/%40melonproject%2Fpersistent-2.0.1-dev.4973.tgz#5bb8f976e6a7d74832bbbc8a8559c2efa215fd49"
+  integrity sha1-W7j5duan10gyu7yKhVnC76IV/Uk=
   dependencies:
-    "@melonproject/utils" "^2.0.1-dev.0+e7e8654"
+    "@melonproject/utils" "^2.0.1-dev.4973+dc8189b5"
 
-"@melonproject/release@^2.0.1-dev.0+72c0173":
-  version "2.0.1-dev.0"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_2eIXVe/%40melonproject%2Frelease-2.0.1-dev.0.tgz#eb0f116d96a7d6eab0a0ef9d913b892f605d0975"
-  integrity sha1-6w8RbZan1uqwoO+dkTuJL2BdCXU=
+"@melonproject/release@^2.0.1-dev":
+  version "2.0.1-dev.4973"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_1wepRV/%40melonproject%2Frelease-2.0.1-dev.4973.tgz#e4f4689e22b39419e7a7f3ddde8a63d794d141e2"
+  integrity sha1-5PRoniKzlBnnp/Pd3opj15TRQeI=
   dependencies:
-    "@melonproject/persistent" "^2.0.1-dev.0+e7e8654"
-    "@melonproject/utils" "^2.0.1-dev.0+e7e8654"
+    "@melonproject/persistent" "^2.0.1-dev.4973+dc8189b5"
+    "@melonproject/utils" "^2.0.1-dev.4973+dc8189b5"
 
-"@melonproject/utils@^2.0.1-dev.0+e7e8654":
-  version "2.0.1-dev.0"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_19hJVE/%40melonproject%2Futils-2.0.1-dev.0.tgz#a45058ac07d13794876e84edcdd543c1031d72a8"
-  integrity sha1-pFBYrAfRN5SHboTtzdVDwQMdcqg=
+"@melonproject/utils@^2.0.1-dev.4973+dc8189b5":
+  version "2.0.1-dev.4973"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_t3ZYh/%40melonproject%2Futils-2.0.1-dev.4973.tgz#06712605455d2594bbf6d527acb89d006e479ae1"
+  integrity sha1-BnEmBUVdJZS79tUnrLidAG5HmuE=
 
 "@protobufjs/utf8@^1.1.0":
   version "1.1.0"
