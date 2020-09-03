@@ -26,7 +26,7 @@ export function createFund(event: NewFundDeployed): Fund {
   let shares = createShares(BigDecimal.fromString('0'), fund, event, null);
   let portfolio = createPortfolio([], fund, event, null);
   // let payout = createPayout([], null, context);
-  let state = createState(shares, fund, event);
+  let state = createState(shares, portfolio, fund, event);
 
   // let fees = createFees(context);
 

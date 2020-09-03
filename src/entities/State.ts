@@ -6,17 +6,18 @@ import { toBigDecimal } from '../utils/tokenValue';
 
 import { useAsset } from './Asset';
 import { useShares } from './Shares';
+import { usePortfolio } from './Portfolio';
 
 export function stateId(fund: Fund, event: ethereum.Event): string {
   return fund.id + event.block.timestamp.toString();
 }
 
-export function createState(shares: Share, fund: Fund, event: ethereum.Event): State {
+export function createState(shares: Share, holdings: Portfolio, fund: Fund, event: ethereum.Event): State {
   let state = new State(stateId(fund, event));
   state.timestamp = event.block.timestamp;
   state.fund = fund.id;
   state.shares = shares.id;
-  //   state.portfolio = holdings.id;
+  state.portfolio = holdings.id;
   //   state.payouts = payouts.id;
   state.events = [];
   state.save();
@@ -34,9 +35,9 @@ export function ensureState(fund: Fund, event: ethereum.Event): State {
 
   let previous = useState(fund.state);
   let shares = useShares(previous.shares);
-  //   let holdings = usePortfolio(previous.portfolio);
+  let holdings = usePortfolio(previous.portfolio);
   //   let payouts = usePayout(previous.payouts);
-  let state = createState(shares, fund, event);
+  let state = createState(shares, holdings, fund, event);
 
   fund.state = state.id;
   fund.save();

@@ -21,6 +21,8 @@ dataSources:
       abis:
         - name: FundDeployerContract
           file: ./node_modules/@melonproject/release/artifacts/FundDeployer.json
+        - name: VaultLibContract
+          file: ./node_modules/@melonproject/release/artifacts/VaultLib.json
         - name: StandardERC20Contract
           file: ./node_modules/@melonproject/release/artifacts/StandardERC20.json
       eventHandlers:
@@ -40,6 +42,8 @@ templates:
       file: ./src/mappings/VaultLib.ts
       entities: []
       abis:
+        - name: ComptrollerLibContract
+          file: ./node_modules/@melonproject/release/artifacts/ComptrollerLib.json
         - name: VaultLibContract
           file: ./node_modules/@melonproject/release/artifacts/VaultLib.json
         - name: StandardERC20Contract
@@ -78,6 +82,8 @@ templates:
       abis:
         - name: ComptrollerLibContract
           file: ./node_modules/@melonproject/release/artifacts/ComptrollerLib.json
+        - name: VaultLibContract
+          file: ./node_modules/@melonproject/release/artifacts/VaultLib.json
         - name: StandardERC20Contract
           file: ./node_modules/@melonproject/release/artifacts/StandardERC20.json
       eventHandlers:
