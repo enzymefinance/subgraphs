@@ -9,7 +9,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: "{{fundDeployerAddress}}"
+      address: '{{fundDeployerAddress}}'
       abi: FundDeployerContract
       startBlock: 0
     mapping:
@@ -21,6 +21,8 @@ dataSources:
       abis:
         - name: FundDeployerContract
           file: ./node_modules/@melonproject/release/artifacts/FundDeployer.json
+        - name: StandardERC20Contract
+          file: ./node_modules/@melonproject/release/artifacts/StandardERC20.json
       eventHandlers:
         - event: NewFundDeployed(address,address,indexed address,string,indexed address,bytes,bytes)
           handler: handleNewFundDeployed
@@ -28,7 +30,7 @@ dataSources:
 templates:
   - name: VaultLibDataSource
     kind: ethereum/contract
-    network: "mainnet"
+    network: 'mainnet'
     source:
       abi: VaultLibContract
     mapping:
@@ -62,7 +64,7 @@ templates:
 
   - name: ComptrollerLibDataSource
     kind: ethereum/contract
-    network: "mainnet"
+    network: 'mainnet'
     source:
       abi: ComptrollerLibContract
     mapping:

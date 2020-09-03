@@ -1,8 +1,157 @@
+type FundDeployer @entity {
+  id: ID!
+}
+
 type Fund @entity {
   id: ID!
   name: String!
+  inception: BigInt!
+  manager: Account!
+  denominationAsset: Asset!
+  shares: Share!
+  state: State!
+}
+
+type Account @entity {
+  id: ID!
+  manager: Boolean!
+  managements: [Fund!]! @derivedFrom(field: "manager")
+  investor: Boolean!
+  investments: [Investment!]! @derivedFrom(field: "investor")
+}
+
+type Investment @entity {
+  id: ID!
+  fund: Fund!
+  investor: Account!
+  # changes: [SharesChange!]! @derivedFrom(field: "investment")
+  shares: BigDecimal!
+}
+
+type ContractEvent @entity {
+  id: ID!
+  fund: Fund
+  name: String!
+  contract: String!
+  transaction: String!
+  from: String!
+  timestamp: BigInt!
+  block: BigInt!
 }
 
 type Asset @entity {
   id: ID!
+  name: String!
+  symbol: String!
+  decimals: Int!
+}
+
+interface Event {
+  id: ID!
+  kind: EventKindEnum!
+  fund: Fund!
+  timestamp: BigInt!
+  trigger: ContractEvent!
+}
+
+interface Metric {
+  id: ID!
+  fund: Fund!
+  timestamp: BigInt!
+  events: [Event!]!
+}
+
+type Share implements Metric @entity {
+  id: ID!
+  fund: Fund!
+  timestamp: BigInt!
+  shares: BigDecimal!
+  events: [Event!]!
+}
+
+type Holding implements Metric @entity {
+  id: ID!
+  fund: Fund!
+  timestamp: BigInt!
+  asset: Asset!
+  quantity: BigDecimal!
+  events: [Event!]!
+}
+
+type Portfolio implements Metric @entity {
+  id: ID!
+  fund: Fund!
+  timestamp: BigInt!
+  holdings: [Holding!]!
+  events: [Event!]!
+}
+
+type State implements Metric @entity {
+  id: ID!
+  fund: Fund!
+  timestamp: BigInt!
+  shares: Share!
+  # portfolio: Portfolio!
+  # payouts: Payout!
+  events: [Event!]!
+}
+
+interface SharesChange {
+  id: ID!
+  kind: EventKindEnum!
+  fund: Fund!
+  timestamp: BigInt!
+  transaction: String!
+  trigger: ContractEvent!
+  investment: Investment!
+  shares: BigDecimal!
+}
+
+type SharesAddition implements Event & SharesChange @entity {
+  id: ID!
+  kind: EventKindEnum!
+  fund: Fund!
+  investor: Account!
+  investment: Investment!
+  shares: BigDecimal!
+  asset: Asset!
+  quantity: BigDecimal!
+  timestamp: BigInt!
+  transaction: String!
+  trigger: ContractEvent!
+}
+
+type SharesRedemption implements Event & SharesChange @entity {
+  id: ID!
+  kind: EventKindEnum!
+  fund: Fund!
+  investor: Account!
+  investment: Investment!
+  shares: BigDecimal!
+  assets: [Asset!]!
+  quantities: [BigDecimal!]!
+  timestamp: BigInt!
+  transaction: String!
+  trigger: ContractEvent!
+}
+
+type SharesReward implements Event & SharesChange @entity {
+  id: ID!
+  kind: EventKindEnum!
+  fund: Fund!
+  investor: Account!
+  investment: Investment!
+  shares: BigDecimal!
+  timestamp: BigInt!
+  transaction: String!
+  trigger: ContractEvent!
+}
+
+# TODO: Add a INCEPTION fund event.
+enum EventKindEnum {
+  INCEPTION
+  INVESTMENT
+  REDEMPTION
+  REWARD
+  TRADE
 }
