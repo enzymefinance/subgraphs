@@ -2,8 +2,54 @@ import fs from 'fs';
 import path from 'path';
 import glob from 'glob';
 import yargs from 'yargs';
-import axios from 'axios';
 import handlebars from 'handlebars';
+import request, { gql } from 'graphql-request';
+
+const query = gql`
+  {
+    deployment {
+      chaiPriceSource
+      chaiIntegratee
+      kyberIntegratee
+      dispatcher
+      vaultLib
+      fundDeployer
+      valueInterpreter
+      engine
+      comptrollerLib
+      feeManager
+      integrationManager
+      policyManager
+      chainlinkPriceFeed
+      chaiPriceFeed
+      aggregatedDerivativePriceFeed
+      chaiAdapter
+      kyberAdapter
+    }
+  }
+`;
+
+interface Result {
+  deployment: {
+    chaiPriceSource: string;
+    chaiIntegratee: string;
+    kyberIntegratee: string;
+    dispatcher: string;
+    vaultLib: string;
+    fundDeployer: string;
+    valueInterpreter: string;
+    engine: string;
+    comptrollerLib: string;
+    feeManager: string;
+    integrationManager: string;
+    policyManager: string;
+    chainlinkPriceFeed: string;
+    chaiPriceFeed: string;
+    aggregatedDerivativePriceFeed: string;
+    chaiAdapter: string;
+    kyberAdapter: string;
+  };
+}
 
 yargs
   .command('flatten', 'Flatten the generated code.', () => {
@@ -35,13 +81,11 @@ yargs
     (yargs) => {
       return yargs.option('deployment', {
         type: 'string',
-        default: 'http://localhost:4000/deployment',
+        default: 'http://localhost:4000/graphql',
       });
     },
     async (args) => {
-      const deploymentJson = await axios
-        .get(args.deployment)
-        .then((result) => result.data);
+      const deploymentJson = await (await request<Result>(args.deployment, query)).deployment;
 
       const templateFile = path.join(__dirname, '..', 'subgraph.template.yml');
       const subgraphFile = path.join(__dirname, '..', 'subgraph.yaml');
