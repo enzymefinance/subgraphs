@@ -42,6 +42,8 @@ templates:
       abis:
         - name: VaultLibContract
           file: ./node_modules/@melonproject/release/artifacts/VaultLib.json
+        - name: StandardERC20Contract
+          file: ./node_modules/@melonproject/release/artifacts/StandardERC20.json
       eventHandlers:
         - event: AccessorSet(address,address)
           handler: handleAccessorSet
@@ -76,6 +78,8 @@ templates:
       abis:
         - name: ComptrollerLibContract
           file: ./node_modules/@melonproject/release/artifacts/ComptrollerLib.json
+        - name: StandardERC20Contract
+          file: ./node_modules/@melonproject/release/artifacts/StandardERC20.json
       eventHandlers:
         - event: AmguPaid(indexed address,uint256,uint256)
           handler: handleAmguPaid

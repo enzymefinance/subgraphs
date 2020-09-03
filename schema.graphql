@@ -8,8 +8,14 @@ type Fund @entity {
   inception: BigInt!
   manager: Account!
   denominationAsset: Asset!
+  comptroller: Comptroller!
   shares: Share!
+  sharesHistory: [Share!]! @derivedFrom(field: "fund")
+  portfolio: Portfolio!
+  portfolioHistory: [Portfolio!]! @derivedFrom(field: "fund")
   state: State!
+  stateHistory: [State!]! @derivedFrom(field: "fund")
+  events: [Event!]! @derivedFrom(field: "fund")
 }
 
 type Account @entity {
@@ -18,6 +24,10 @@ type Account @entity {
   managements: [Fund!]! @derivedFrom(field: "manager")
   investor: Boolean!
   investments: [Investment!]! @derivedFrom(field: "investor")
+}
+
+type Comptroller @entity {
+  id: ID!
 }
 
 type Investment @entity {
@@ -91,7 +101,7 @@ type State implements Metric @entity {
   fund: Fund!
   timestamp: BigInt!
   shares: Share!
-  # portfolio: Portfolio!
+  portfolio: Portfolio!
   # payouts: Payout!
   events: [Event!]!
 }

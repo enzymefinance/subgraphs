@@ -4,6 +4,7 @@ import { logCritical } from '../utils/logCritical';
 import { contractEventId } from './Event';
 import { trackFundShares } from './Shares';
 import { useFund } from './Fund';
+import { trackFundPortfolio } from './Portfolio';
 
 function investmentId(investor: Account, fund: Fund): string {
   return fund.id + '/' + investor.id;
@@ -72,8 +73,10 @@ export function createInvestmentAddition(
   investment.shares = investment.shares.plus(shares);
   investment.save();
 
-  // trackFundPortfolio(addition, context);
-  trackFundShares(useFund(investment.fund), event, addition);
+  let fund = useFund(investment.fund);
+
+  trackFundPortfolio(fund, event, addition);
+  trackFundShares(fund, event, addition);
   // trackFundInvestments(event, fund, addition);
 
   return addition;
@@ -102,8 +105,10 @@ export function createInvestmentRedemption(
   investment.shares = investment.shares.minus(shares);
   investment.save();
 
-  // trackFundPortfolio(redemption, context);
-  trackFundShares(useFund(investment.fund), event, redemption);
+  let fund = useFund(investment.fund);
+
+  trackFundPortfolio(fund, event, redemption);
+  trackFundShares(fund, event, redemption);
   // trackFundInvestments(event, fund, redemption);
 
   return redemption;

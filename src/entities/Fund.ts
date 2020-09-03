@@ -8,6 +8,8 @@ import { ensureAsset } from './Asset';
 import { createShares } from './Shares';
 import { BigDecimal } from '@graphprotocol/graph-ts';
 import { createState } from './State';
+import { createPortfolio } from './Portfolio';
+import { ensureComptroller } from './Comptroller';
 
 export function useFund(id: string): Fund {
   let fund = Fund.load(id);
@@ -22,17 +24,18 @@ export function createFund(event: NewFundDeployed): Fund {
   let fund = new Fund(event.params.vaultProxy.toHex());
 
   let shares = createShares(BigDecimal.fromString('0'), fund, event, null);
-  // let portfolio = createPortfolio([], null, context);
+  let portfolio = createPortfolio([], fund, event, null);
   // let payout = createPayout([], null, context);
   let state = createState(shares, fund, event);
 
   // let fees = createFees(context);
 
-  fund.name = hexToAscii(event.params.fundName);
+  fund.name = event.params.fundName;
   fund.inception = event.block.timestamp;
+  fund.comptroller = ensureComptroller(event.params.comptrollerProxy).id;
   fund.manager = ensureManager(event.params.fundOwner).id;
   fund.shares = shares.id;
-  // fund.portfolio = portfolio.id;
+  fund.portfolio = portfolio.id;
   fund.state = state.id;
   // fund.active = true;
   fund.denominationAsset = ensureAsset(event.params.denominationAsset).id;

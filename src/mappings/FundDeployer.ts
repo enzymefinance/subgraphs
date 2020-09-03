@@ -1,10 +1,8 @@
 import { DataSourceContext } from '@graphprotocol/graph-ts';
-import { ensureManager } from '../entities/Account';
 import { createContractEvent } from '../entities/Event';
-import { NewFundDeployed } from '../generated/FundDeployerContract';
-import { Fund } from '../generated/schema';
-import { ComptrollerLibDataSource, VaultLibDataSource } from '../generated/templates';
 import { createFund } from '../entities/Fund';
+import { NewFundDeployed } from '../generated/FundDeployerContract';
+import { ComptrollerLibDataSource, VaultLibDataSource } from '../generated/templates';
 
 export function handleNewFundDeployed(event: NewFundDeployed): void {
   createFund(event);

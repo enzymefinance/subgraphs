@@ -1,19 +1,19 @@
+import { BigDecimal, dataSource } from '@graphprotocol/graph-ts';
+import { ensureInvestor } from '../entities/Account';
+import { useAsset } from '../entities/Asset';
 import { createContractEvent } from '../entities/Event';
+import { useFund } from '../entities/Fund';
+import { createInvestmentAddition, createInvestmentRedemption, ensureInvestment } from '../entities/Investment';
 import {
   AmguPaid,
   CallOnIntegrationExecuted,
+  ComptrollerLibContract,
   FundStatusUpdated,
   SharesBought,
   SharesRedeemed,
-  ComptrollerLibContract,
 } from '../generated/ComptrollerLibContract';
-import { ensureInvestor } from '../entities/Account';
-import { useAsset } from '../entities/Asset';
-import { dataSource, BigDecimal } from '@graphprotocol/graph-ts';
-import { toBigDecimal } from '../utils/tokenValue';
-import { createInvestmentAddition, ensureInvestment, createInvestmentRedemption } from '../entities/Investment';
-import { useFund } from '../entities/Fund';
 import { Asset } from '../generated/schema';
+import { toBigDecimal } from '../utils/tokenValue';
 
 export function handleAmguPaid(event: AmguPaid): void {
   createContractEvent('AmguPaid', event);
