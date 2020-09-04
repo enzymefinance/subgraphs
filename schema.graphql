@@ -16,6 +16,7 @@ type Fund @entity {
   state: State!
   stateHistory: [State!]! @derivedFrom(field: "fund")
   events: [Event!]! @derivedFrom(field: "fund")
+  trackedAssets: [Asset!]!
 }
 
 type Account @entity {
@@ -156,6 +157,30 @@ type SharesReward implements Event & SharesChange @entity {
   transaction: String!
   trigger: ContractEvent!
 }
+
+type AmguPayment @entity {
+  id: ID!
+  timestamp: BigInt!
+  payer: Account!
+  amount: BigDecimal!
+  gas: Int!
+}
+
+
+type TrackedAssetAddition @entity {
+  id: ID!
+  fund: Fund!
+  asset: Asset!
+  timestamp: BigInt!
+}
+
+type TrackedAssetRemoval @entity {
+  id: ID!
+  fund: Fund!
+  asset: Asset!
+  timestamp: BigInt!
+}
+
 
 # TODO: Add a INCEPTION fund event.
 enum EventKindEnum {
