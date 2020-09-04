@@ -2,7 +2,7 @@ import { Fund, Share } from '../generated/schema';
 import { ethereum, BigDecimal, Entity, Address } from '@graphprotocol/graph-ts';
 import { logCritical } from '../utils/logCritical';
 import { arrayUnique } from '../utils/arrayUnique';
-import { useState } from './State';
+import { useState, ensureState } from './State';
 import { toBigDecimal } from '../utils/tokenValue';
 import { StandardERC20Contract } from '../generated/StandardERC20Contract';
 
@@ -53,7 +53,7 @@ export function trackFundShares(fund: Fund, event: ethereum.Event, cause: Entity
   shares.shares = toBigDecimal(totalSupply);
   shares.save();
 
-  let state = useState(fund.state);
+  let state = ensureState(fund, event);
   let events = state.events;
   state.events = arrayUnique<string>(events.concat(shares.events));
   state.shares = shares.id;

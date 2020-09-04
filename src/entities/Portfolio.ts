@@ -130,7 +130,6 @@ export function trackFundPortfolio(fund: Fund, event: ethereum.Event, cause: Ent
   portfolio.holdings = nextHoldings.map<string>((item) => item.id);
   portfolio.save();
 
-  // createState()
   let state = ensureState(fund, event);
   let events = state.events;
   state.events = arrayUnique<string>(events.concat(portfolio.events));
