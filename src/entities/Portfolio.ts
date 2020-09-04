@@ -13,7 +13,7 @@ import { logCritical } from '../utils/logCritical';
 import { contractEventId } from './Event';
 import { trackFundShares } from './Shares';
 import { useFund } from './Fund';
-import { useState } from './State';
+import { useState, ensureState } from './State';
 import { arrayUnique } from '../utils/arrayUnique';
 import { useAsset } from './Asset';
 import { toBigDecimal } from '../utils/tokenValue';
@@ -130,7 +130,8 @@ export function trackFundPortfolio(fund: Fund, event: ethereum.Event, cause: Ent
   portfolio.holdings = nextHoldings.map<string>((item) => item.id);
   portfolio.save();
 
-  let state = useState(fund.state);
+  // createState()
+  let state = ensureState(fund, event);
   let events = state.events;
   state.events = arrayUnique<string>(events.concat(portfolio.events));
   state.portfolio = portfolio.id;
