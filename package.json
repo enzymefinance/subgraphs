@@ -15,6 +15,7 @@
   "devDependencies": {
     "@graphprotocol/graph-cli": "^0.18.0",
     "@graphprotocol/graph-ts": "^0.18.1",
+    "@melonproject/melonjs": "^2.0.1-dev.479+4d22cf98",
     "@melonproject/persistent": "^2.0.1-dev.4895+4d325572",
     "@melonproject/release": "^2.0.1-dev.4895+4d325572",
     "@melonproject/utils": "^2.0.1-dev.4895+4d325572",
