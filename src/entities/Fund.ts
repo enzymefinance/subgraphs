@@ -34,6 +34,7 @@ export function createFund(event: NewFundDeployed): Fund {
   fund.inception = event.block.timestamp;
   fund.comptroller = ensureComptroller(event.params.comptrollerProxy).id;
   fund.manager = ensureManager(event.params.fundOwner).id;
+  fund.trackedAssets = [];
   fund.shares = shares.id;
   fund.portfolio = portfolio.id;
   fund.state = state.id;

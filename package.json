@@ -10,24 +10,26 @@
     "predeploy": "yarn make || true",
     "deploy": "graph deploy melonproject/melon subgraph.yaml --ipfs http://localhost:5001 --node http://localhost:8020",
     "format": "prettier --write {src,scripts}/{*,**/*}.{ts,json,yaml}",
+    "test": "jest --passWithNoTests",
     "lint": "yarn prettier --list-different {src,scripts}/{*,**/*}.{ts,json,yaml}"
   },
   "devDependencies": {
     "@graphprotocol/graph-cli": "^0.18.0",
     "@graphprotocol/graph-ts": "^0.18.1",
-    "@melonproject/melonjs": "^2.0.1-dev.479+4d22cf98",
-    "@melonproject/persistent": "^2.0.1-dev.4895+4d325572",
-    "@melonproject/release": "^2.0.1-dev.4895+4d325572",
-    "@melonproject/utils": "^2.0.1-dev.4895+4d325572",
+    "@melonproject/melonjs": "^2.0.1-dev.480+423f4ca8",
+    "@melonproject/persistent": "^2.0.1-dev.4899+390d4ca6",
+    "@melonproject/release": "^2.0.1-dev.4899+390d4ca6",
+    "@melonproject/utils": "^2.0.1-dev.4899+390d4ca6",
+    "@types/jest": "^26.0.13",
     "@types/mustache": "^4.0.1",
-    "@types/node": "^14.0.27",
+    "@types/node": "^14.6.4",
     "@types/prettier": "^2.0.2",
     "@types/rimraf": "^3.0.0",
     "@types/yargs": "^15.0.5",
-    "assemblyscript": "^0.14.8",
+    "assemblyscript": "^0.14.10",
     "axios": "^0.20.0",
     "glob": "^7.1.6",
-    "graphql-request": "^3.0.0",
+    "graphql-request": "^3.1.0",
     "handlebars": "^4.7.6",
     "jest": "^26.3.0",
     "prettier": "^2.0.5",
@@ -36,5 +38,10 @@
     "ts-node": "^9.0.0",
     "typescript": "^4.0.2",
     "yargs": "^15.4.1"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testTimeout": 30000,
+    "testEnvironment": "node"
   }
 }
