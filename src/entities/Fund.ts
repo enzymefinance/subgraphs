@@ -10,6 +10,7 @@ import { BigDecimal } from '@graphprotocol/graph-ts';
 import { createState } from './State';
 import { createPortfolio } from './Portfolio';
 import { ensureComptroller } from './Comptroller';
+import { ensureFundDeployer } from './FundDeployer';
 
 export function useFund(id: string): Fund {
   let fund = Fund.load(id);
@@ -32,6 +33,7 @@ export function createFund(event: NewFundDeployed): Fund {
 
   fund.name = event.params.fundName;
   fund.inception = event.block.timestamp;
+  fund.deployer = ensureFundDeployer(event.address).id;
   fund.comptroller = ensureComptroller(event.params.comptrollerProxy).id;
   fund.manager = ensureManager(event.params.fundOwner).id;
   fund.trackedAssets = [];

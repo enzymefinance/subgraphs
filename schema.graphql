@@ -1,11 +1,16 @@
 type FundDeployer @entity {
   id: ID!
+  current: Boolean!
+  currentStart: BigInt!
+  currentEnd: BigInt
+  funds: [Fund!]! @derivedFrom(field: "deployer")
 }
 
 type Fund @entity {
   id: ID!
   name: String!
   inception: BigInt!
+  deployer: FundDeployer!
   status: FundStatusEnum!
   manager: Account!
   denominationAsset: Asset!
