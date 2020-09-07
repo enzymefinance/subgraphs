@@ -5,11 +5,51 @@ schema:
   file: ./schema.graphql
 
 dataSources:
+  - name: DispatcherDataSource
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      address: '{{dispatcher}}'
+      abi: DispatcherContract
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/Dispatcher.ts
+      entities: []
+      abis:
+        - name: DispatcherContract
+          file: ./node_modules/@melonproject/persistent/artifacts/Dispatcher.json
+      eventHandlers:
+        - event: CurrentFundDeployerSet(address,address)
+          handler: handleCurrentFundDeployerSet
+        - event: MigrationCancelled(indexed address,indexed address,indexed address,address,address,uint256)
+          handler: handleMigrationCancelled
+        - event: MigrationExecuted(indexed address,indexed address,indexed address,address,address,uint256)
+          handler: handleMigrationExecuted
+        - event: MigrationSignaled(indexed address,indexed address,indexed address,address,address)
+          handler: handleMigrationSignaled
+        - event: PostCancelMigrationOriginHookFailed(bytes,indexed address,indexed address,indexed address,address,address,uint256)
+          handler: handlePostCancelMigrationOriginHookFailed
+        - event: PostCancelMigrationTargetHookFailed(bytes,indexed address,indexed address,indexed address,address,address,uint256)
+          handler: handlePostCancelMigrationTargetHookFailed
+        - event: PostMigrateOriginHookFailed(bytes,indexed address,indexed address,indexed address,address,address,uint256)
+          handler: handlePostMigrateOriginHookFailed
+        - event: PostSignalMigrationOriginHookFailed(bytes,indexed address,indexed address,indexed address,address,address)
+          handler: handlePostSignalMigrationOriginHookFailed
+        - event: PreMigrateOriginHookFailed(bytes,indexed address,indexed address,indexed address,address,address,uint256)
+          handler: handlePreMigrateOriginHookFailed
+        - event: PreSignalMigrationOriginHookFailed(bytes,indexed address,indexed address,indexed address,address,address)
+          handler: handlePreSignalMigrationOriginHookFailed
+        - event: VaultProxyDeployed(indexed address,indexed address,address,address,address,string)
+          handler: handleVaultProxyDeployed
+
   - name: FundDeployerDataSource
     kind: ethereum/contract
     network: mainnet
     source:
-      address: "{{fundDeployer}}"
+      address: '{{fundDeployer}}'
       abi: FundDeployerContract
       startBlock: 0
     mapping:
@@ -32,7 +72,7 @@ dataSources:
 templates:
   - name: VaultLibDataSource
     kind: ethereum/contract
-    network: "mainnet"
+    network: 'mainnet'
     source:
       abi: VaultLibContract
     mapping:
@@ -70,7 +110,7 @@ templates:
 
   - name: ComptrollerLibDataSource
     kind: ethereum/contract
-    network: "mainnet"
+    network: 'mainnet'
     source:
       abi: ComptrollerLibContract
     mapping:

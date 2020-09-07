@@ -15,13 +15,10 @@ import { TrackedAssetAddition, TrackedAssetRemoval } from '../generated/schema';
 import { createContractEvent } from '../entities/Event';
 import { arrayUnique } from '../utils/arrayUnique';
 import { arrayDiff } from '../utils/arrayDiff';
-import { log } from '@graphprotocol/graph-ts';
 
 export function handleAccessorSet(event: AccessorSet): void {}
 export function handleApproval(event: Approval): void {}
-export function handleAssetWithdrawn(event: AssetWithdrawn): void {
-  log.warning('XXXXX Asset Withdrawn', []);
-}
+export function handleAssetWithdrawn(event: AssetWithdrawn): void {}
 export function handleMigratorSet(event: MigratorSet): void {}
 export function handleOwnerSet(event: OwnerSet): void {}
 
