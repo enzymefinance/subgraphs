@@ -33,7 +33,7 @@ export function useAccount(id: string): Account {
   return account as Account;
 }
 
-function ensureAccount(accountAddress: Address): Account {
+export function ensureAccount(accountAddress: Address): Account {
   let account = Account.load(accountAddress.toHex()) as Account;
   if (account) {
     return account;

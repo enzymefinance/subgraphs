@@ -9,7 +9,7 @@ import { useShares } from './Shares';
 import { usePortfolio } from './Portfolio';
 
 export function stateId(fund: Fund, event: ethereum.Event): string {
-  return fund.id + event.block.timestamp.toString();
+  return fund.id + '/' + event.block.timestamp.toString();
 }
 
 export function createState(shares: Share, holdings: Portfolio, fund: Fund, event: ethereum.Event): State {

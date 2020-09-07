@@ -1,5 +1,5 @@
 import { BigDecimal, dataSource } from '@graphprotocol/graph-ts';
-import { ensureInvestor } from '../entities/Account';
+import { ensureInvestor, ensureAccount } from '../entities/Account';
 import { useAsset } from '../entities/Asset';
 import { createContractEvent } from '../entities/Event';
 import { useFund } from '../entities/Fund';
@@ -13,10 +13,16 @@ import {
   SharesRedeemed,
   FundConfigSet,
 } from '../generated/ComptrollerLibContract';
-import { Asset } from '../generated/schema';
+import { Asset, AmguPayment } from '../generated/schema';
 import { toBigDecimal } from '../utils/tokenValue';
 
 export function handleAmguPaid(event: AmguPaid): void {
+  let id = event.transaction.hash.toHex() + '-' + event.logIndex.toString();
+  let amguPaid = new AmguPayment(id);
+  amguPaid.amount = toBigDecimal(event.params.ethPaid);
+  amguPaid.payer = ensureAccount(event.params.payer).id;
+  amguPaid.gas = event.params.gasUsed.toI32();
+  amguPaid.save();
   createContractEvent('AmguPaid', event);
 }
 export function handleCallOnIntegrationExecuted(event: CallOnIntegrationExecuted): void {
