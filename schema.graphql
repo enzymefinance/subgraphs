@@ -186,6 +186,12 @@ type TrackedAssetRemoval @entity {
   timestamp: BigInt!
 }
 
+type AmguPrice @entity {
+  id: ID!
+  price: BigDecimal!
+  timestamp: BigInt!
+}
+
 # TODO: Add a INCEPTION fund event.
 enum EventKindEnum {
   INCEPTION
