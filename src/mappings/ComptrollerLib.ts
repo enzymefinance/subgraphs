@@ -23,6 +23,7 @@ export function handleAmguPaid(event: AmguPaid): void {
   amguPaid.payer = ensureAccount(event.params.payer).id;
   amguPaid.gas = event.params.gasUsed.toI32();
   amguPaid.save();
+
   createContractEvent('AmguPaid', event);
 }
 export function handleCallOnIntegrationExecuted(event: CallOnIntegrationExecuted): void {

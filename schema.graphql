@@ -10,6 +10,7 @@ type Fund @entity {
   manager: Account!
   denominationAsset: Asset!
   comptroller: Comptroller!
+  trackedAssets: [Asset!]!
   shares: Share!
   sharesHistory: [Share!]! @derivedFrom(field: "fund")
   portfolio: Portfolio!
@@ -17,7 +18,6 @@ type Fund @entity {
   state: State!
   stateHistory: [State!]! @derivedFrom(field: "fund")
   events: [Event!]! @derivedFrom(field: "fund")
-  trackedAssets: [Asset!]!
 }
 
 type Account @entity {
@@ -167,7 +167,6 @@ type AmguPayment @entity {
   gas: Int!
 }
 
-
 type TrackedAssetAddition @entity {
   id: ID!
   fund: Fund!
@@ -181,7 +180,6 @@ type TrackedAssetRemoval @entity {
   asset: Asset!
   timestamp: BigInt!
 }
-
 
 # TODO: Add a INCEPTION fund event.
 enum EventKindEnum {

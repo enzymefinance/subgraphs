@@ -9,37 +9,53 @@ import {
   Transfer,
   VaultLibSet,
 } from '../generated/VaultLibContract';
-import { dataSource } from '@graphprotocol/graph-ts';
 import { useFund } from '../entities/Fund';
 import { ensureAsset } from '../entities/Asset';
 import { TrackedAssetAddition, TrackedAssetRemoval } from '../generated/schema';
 import { createContractEvent } from '../entities/Event';
+import { arrayUnique } from '../utils/arrayUnique';
+import { arrayDiff } from '../utils/arrayDiff';
+import { log } from '@graphprotocol/graph-ts';
 
 export function handleAccessorSet(event: AccessorSet): void {}
 export function handleApproval(event: Approval): void {}
-export function handleAssetWithdrawn(event: AssetWithdrawn): void {}
+export function handleAssetWithdrawn(event: AssetWithdrawn): void {
+  log.warning('XXXXX Asset Withdrawn', []);
+}
 export function handleMigratorSet(event: MigratorSet): void {}
 export function handleOwnerSet(event: OwnerSet): void {}
 
 export function handleTrackedAssetAdded(event: TrackedAssetAdded): void {
+  let asset = ensureAsset(event.params.asset);
+  let fund = useFund(event.address.toHex());
+
   let id = event.transaction.hash.toHex() + '-' + event.logIndex.toString();
   let trackedAssetAddition = new TrackedAssetAddition(id);
-  let fund = useFund(dataSource.context().getString('vaultProxy'));
-  trackedAssetAddition.asset = ensureAsset(event.params.asset).id;
+  trackedAssetAddition.asset = asset.id;
   trackedAssetAddition.fund = fund.id;
   trackedAssetAddition.timestamp = event.block.timestamp;
   trackedAssetAddition.save();
+
+  fund.trackedAssets = arrayUnique<string>(fund.trackedAssets.concat([asset.id]));
+  fund.save();
+
   createContractEvent('TrackedAssetAdded', event);
 }
 
 export function handleTrackedAssetRemoved(event: TrackedAssetRemoved): void {
+  let asset = ensureAsset(event.params.asset);
+  let fund = useFund(event.address.toHex());
+
   let id = event.transaction.hash.toHex() + '-' + event.logIndex.toString();
   let trackedAssetRemoval = new TrackedAssetRemoval(id);
-  let fund = useFund(dataSource.context().getString('vaultProxy'));
-  trackedAssetRemoval.asset = ensureAsset(event.params.asset).id;
+  trackedAssetRemoval.asset = asset.id;
   trackedAssetRemoval.fund = fund.id;
   trackedAssetRemoval.timestamp = event.block.timestamp;
   trackedAssetRemoval.save();
+
+  fund.trackedAssets = arrayDiff<string>(fund.trackedAssets, [asset.id]);
+  fund.save();
+
   createContractEvent('TrackedAssetRemoved', event);
 }
 
