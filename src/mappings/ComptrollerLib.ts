@@ -11,6 +11,7 @@ import {
   FundStatusUpdated,
   SharesBought,
   SharesRedeemed,
+  FundConfigSet,
 } from '../generated/ComptrollerLibContract';
 import { Asset } from '../generated/schema';
 import { toBigDecimal } from '../utils/tokenValue';
@@ -21,7 +22,17 @@ export function handleAmguPaid(event: AmguPaid): void {
 export function handleCallOnIntegrationExecuted(event: CallOnIntegrationExecuted): void {
   createContractEvent('CallOnIntegrationExecuted', event);
 }
+
+export function handleFundConfigSet(event: FundConfigSet): void {
+  createContractEvent('FundConfigSet', event);
+}
+
 export function handleFundStatusUpdated(event: FundStatusUpdated): void {
+  let fund = useFund(dataSource.context().getString('vaultProxy'));
+
+  fund.status = event.params.nextStatus == 0 ? 'None' : event.params.nextStatus == 1 ? 'Active' : 'Inactive';
+  fund.save();
+
   createContractEvent('FundStatusUpdated', event);
 }
 

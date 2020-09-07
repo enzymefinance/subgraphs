@@ -12,19 +12,6 @@ export function useAsset(id: string): Asset {
   return asset as Asset;
 }
 
-export function useAssets(ids: string[]): Asset[] {
-  return ids.map<Asset>((id) => useAsset(id));
-}
-
-export function ensureAssets(addresses: Address[]): Asset[] {
-  let assets: Asset[] = [];
-  for (let i: i32 = 0; i < addresses.length; i++) {
-    assets.push(ensureAsset(addresses[i]));
-  }
-
-  return assets;
-}
-
 export function ensureAsset(address: Address): Asset {
   let asset = Asset.load(address.toHex()) as Asset;
   if (asset) {
@@ -44,4 +31,17 @@ export function ensureAsset(address: Address): Asset {
   asset.save();
 
   return asset;
+}
+
+export function useAssets(ids: string[]): Asset[] {
+  return ids.map<Asset>((id) => useAsset(id));
+}
+
+export function ensureAssets(addresses: Address[]): Asset[] {
+  let assets: Asset[] = [];
+  for (let i: i32 = 0; i < addresses.length; i++) {
+    assets.push(ensureAsset(addresses[i]));
+  }
+
+  return assets;
 }

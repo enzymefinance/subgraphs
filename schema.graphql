@@ -6,6 +6,7 @@ type Fund @entity {
   id: ID!
   name: String!
   inception: BigInt!
+  status: FundStatusEnum!
   manager: Account!
   denominationAsset: Asset!
   comptroller: Comptroller!
@@ -164,4 +165,10 @@ enum EventKindEnum {
   REDEMPTION
   REWARD
   TRADE
+}
+
+enum FundStatusEnum {
+  None
+  Active
+  Inactive
 }

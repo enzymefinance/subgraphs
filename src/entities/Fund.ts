@@ -37,7 +37,7 @@ export function createFund(event: NewFundDeployed): Fund {
   fund.shares = shares.id;
   fund.portfolio = portfolio.id;
   fund.state = state.id;
-  // fund.active = true;
+  fund.status = 'None';
   fund.denominationAsset = ensureAsset(event.params.denominationAsset).id;
   // fund.payouts = payout.id;
   // fund.fees = fees.map<string>((fee) => fee.id);
