@@ -9,7 +9,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: '{{dispatcher}}'
+      address: "{{dispatcher}}"
       abi: DispatcherContract
       startBlock: 0
     mapping:
@@ -45,11 +45,45 @@ dataSources:
         - event: VaultProxyDeployed(indexed address,indexed address,address,address,address,string)
           handler: handleVaultProxyDeployed
 
+  - name: EngineSource
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      address: "{{engine}}"
+      abi: EngineContract
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/Engine.ts
+      entities: []
+      abis:
+        - name: EngineContract
+          file: ./node_modules/@melonproject/release/artifacts/Engine.json
+        - name: VaultLibContract
+          file: ./node_modules/@melonproject/release/artifacts/VaultLib.json
+        - name: StandardERC20Contract
+          file: ./node_modules/@melonproject/release/artifacts/StandardERC20.json
+      eventHandlers:
+        - event: AmguPaidInEther(uint256)
+          handler: handleAmguPaidInEther
+        - event: AmguPriceSet(uint256,uint256)
+          handler: handleAmguPriceSet
+        - event: EtherTakerAdded(address)
+          handler: handleEtherTakerAdded
+        - event: EtherTakerRemoved(address)
+          handler: handleEtherTakerRemoved
+        - event: FrozenEtherThawed(uint256)
+          handler: handleFrozenEtherThawed
+        - event: MlnTokensBurned(uint256)
+          handler: handleMlnTokensBurned
+
   - name: FundDeployerDataSource
     kind: ethereum/contract
     network: mainnet
     source:
-      address: '{{fundDeployer}}'
+      address: "{{fundDeployer}}"
       abi: FundDeployerContract
       startBlock: 0
     mapping:
@@ -68,11 +102,17 @@ dataSources:
       eventHandlers:
         - event: NewFundDeployed(address,address,indexed address,string,indexed address,bytes,bytes)
           handler: handleNewFundDeployed
+        - event: AmguPaid(indexed address,uint256,uint256)
+          handler: handleAmguPaid
+        - event: ComptrollerProxyDeployed(address,indexed address)
+          handler: handleComptrollerProxyDeployed
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
 
 templates:
   - name: VaultLibDataSource
     kind: ethereum/contract
-    network: 'mainnet'
+    network: "mainnet"
     source:
       abi: VaultLibContract
     mapping:
@@ -110,7 +150,7 @@ templates:
 
   - name: ComptrollerLibDataSource
     kind: ethereum/contract
-    network: 'mainnet'
+    network: "mainnet"
     source:
       abi: ComptrollerLibContract
     mapping:

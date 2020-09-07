@@ -1,23 +1,11 @@
-import { BigDecimal, ethereum, Entity, Address } from '@graphprotocol/graph-ts';
-import {
-  Investment,
-  Account,
-  Asset,
-  Fund,
-  SharesAddition,
-  SharesRedemption,
-  Holding,
-  Portfolio,
-} from '../generated/schema';
-import { logCritical } from '../utils/logCritical';
-import { contractEventId } from './Event';
-import { trackFundShares } from './Shares';
-import { useFund } from './Fund';
-import { useState, ensureState } from './State';
-import { arrayUnique } from '../utils/arrayUnique';
-import { useAsset } from './Asset';
-import { toBigDecimal } from '../utils/tokenValue';
+import { Address, BigDecimal, Entity, ethereum } from '@graphprotocol/graph-ts';
+import { Asset, Fund, Holding, Portfolio } from '../generated/schema';
 import { VaultLibContract } from '../generated/VaultLibContract';
+import { arrayUnique } from '../utils/arrayUnique';
+import { logCritical } from '../utils/logCritical';
+import { toBigDecimal } from '../utils/tokenValue';
+import { useAsset } from './Asset';
+import { ensureState, useState } from './State';
 
 export function portfolioId(fund: Fund, event: ethereum.Event): string {
   return fund.id + '/' + event.block.timestamp.toString() + '/portfolio';

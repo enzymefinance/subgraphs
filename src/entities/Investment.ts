@@ -1,7 +1,7 @@
 import { BigDecimal, ethereum } from '@graphprotocol/graph-ts';
 import { Investment, Account, Asset, Fund, SharesAddition, SharesRedemption } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
-import { contractEventId } from './Event';
+import { contractEventId } from './ContractEvent';
 import { trackFundShares } from './Shares';
 import { useFund } from './Fund';
 import { trackFundPortfolio } from './Portfolio';
