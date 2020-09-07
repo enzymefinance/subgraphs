@@ -10,7 +10,7 @@
     "predeploy": "yarn make || true",
     "deploy": "graph deploy melonproject/melon subgraph.yaml --ipfs http://localhost:5001 --node http://localhost:8020",
     "format": "prettier --write {src,scripts}/{*,**/*}.{ts,json,yaml}",
-    "test": "jest --passWithNoTests",
+    "test": "jest",
     "lint": "yarn prettier --list-different {src,scripts}/{*,**/*}.{ts,json,yaml}"
   },
   "devDependencies": {
