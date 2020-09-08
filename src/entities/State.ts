@@ -1,12 +1,8 @@
-import { Entity, BigInt, BigDecimal, ethereum } from '@graphprotocol/graph-ts';
-import { Portfolio, Share, Fund, State } from '../generated/schema';
-import { arrayUnique } from '../utils/arrayUnique';
+import { ethereum } from '@graphprotocol/graph-ts';
+import { Fund, Portfolio, Share, State } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
-import { toBigDecimal } from '../utils/tokenValue';
-
-import { useAsset } from './Asset';
-import { useShares } from './Shares';
 import { usePortfolio } from './Portfolio';
+import { useShares } from './Shares';
 
 export function stateId(fund: Fund, event: ethereum.Event): string {
   return fund.id + '/' + event.block.timestamp.toString();

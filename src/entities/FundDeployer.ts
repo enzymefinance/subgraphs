@@ -1,7 +1,6 @@
 import { Address, BigInt } from '@graphprotocol/graph-ts';
-import { Asset, FundDeployer } from '../generated/schema';
+import { FundDeployer } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
-import { StandardERC20Contract } from '../generated/StandardERC20Contract';
 
 export function useFundDeployer(id: string): FundDeployer {
   let fundDeployer = FundDeployer.load(id);

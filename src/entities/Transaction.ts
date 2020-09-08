@@ -1,7 +1,6 @@
-import { logCritical } from '../utils/logCritical';
 import { ethereum } from '@graphprotocol/graph-ts';
-import { genericId } from '../utils/genericId';
 import { Transaction } from '../generated/schema';
+import { logCritical } from '../utils/logCritical';
 import { toBigDecimal } from '../utils/tokenValue';
 
 export function transactionId(tx: ethereum.Transaction): string {

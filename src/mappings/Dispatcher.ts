@@ -16,6 +16,7 @@ import { zeroAddress } from '../constants';
 import { FundDeployerSet } from '../generated/schema';
 import { genericId } from '../utils/genericId';
 import { ensureTransaction } from '../entities/Transaction';
+import { ensureContract } from '../entities/Contract';
 
 export function handleCurrentFundDeployerSet(event: CurrentFundDeployerSet): void {
   let fundDeployerSet = new FundDeployerSet(genericId(event));
@@ -34,7 +35,7 @@ export function handleCurrentFundDeployerSet(event: CurrentFundDeployerSet): voi
   nextFundDeployer.currentStart = event.block.timestamp;
   nextFundDeployer.save();
 
-  fundDeployerSet.contract = event.address.toHex();
+  fundDeployerSet.contract = ensureContract(event.address, 'Dispatcher', event.block.timestamp).id;
   fundDeployerSet.timestamp = event.block.timestamp;
   fundDeployerSet.nextFundDeployer = nextFundDeployer.id;
   fundDeployerSet.transaction = ensureTransaction(event).id;

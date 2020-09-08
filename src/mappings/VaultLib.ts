@@ -18,6 +18,7 @@ import { genericId } from '../utils/genericId';
 import { ensureTransaction, transactionId } from '../entities/Transaction';
 import { ensureAccount } from '../entities/Account';
 import { Address } from '@graphprotocol/graph-ts';
+import { ensureContract } from '../entities/Contract';
 
 export function handleAccessorSet(event: AccessorSet): void {}
 export function handleApproval(event: Approval): void {}
@@ -34,7 +35,7 @@ export function handleTrackedAssetAdded(event: TrackedAssetAdded): void {
   trackedAssetAddition.asset = asset.id;
   trackedAssetAddition.fund = fund.id;
   trackedAssetAddition.account = ensureAccount(Address.fromString(fund.manager)).id;
-  trackedAssetAddition.contract = event.address.toHex();
+  trackedAssetAddition.contract = ensureContract(event.address, 'VaultLib', event.block.timestamp).id;
   trackedAssetAddition.timestamp = event.block.timestamp;
   trackedAssetAddition.transaction = ensureTransaction(event).id;
   trackedAssetAddition.save();
@@ -53,7 +54,7 @@ export function handleTrackedAssetRemoved(event: TrackedAssetRemoved): void {
   trackedAssetRemoval.fund = fund.id;
   trackedAssetRemoval.timestamp = event.block.timestamp;
   trackedAssetRemoval.account = ensureAccount(Address.fromString(fund.manager)).id;
-  trackedAssetRemoval.contract = event.address.toHex();
+  trackedAssetRemoval.contract = ensureContract(event.address, 'VaultLib', event.block.timestamp).id;
   trackedAssetRemoval.transaction = ensureTransaction(event).id;
   trackedAssetRemoval.save();
 

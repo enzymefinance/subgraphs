@@ -5,6 +5,7 @@ import { useFund } from './Fund';
 import { trackFundPortfolio } from './Portfolio';
 import { trackFundShares } from './Shares';
 import { ensureTransaction } from './Transaction';
+import { ensureContract } from './Contract';
 
 function investmentId(investor: Account, fund: Fund): string {
   return fund.id + '/' + investor.id;
@@ -61,7 +62,7 @@ export function createInvestmentAddition(
   addition.account = investment.investor;
   addition.investor = investment.investor;
   addition.fund = investment.fund;
-  addition.contract = event.address.toHex();
+  addition.contract = ensureContract(event.address, 'ComptrollerLib', event.block.timestamp).id;
   addition.investment = investment.id;
   addition.asset = asset.id;
   addition.quantity = quantity;
@@ -93,7 +94,7 @@ export function createInvestmentRedemption(
   redemption.account = investment.investor;
   redemption.investor = investment.investor;
   redemption.fund = investment.fund;
-  redemption.contract = event.address.toHex();
+  redemption.contract = ensureContract(event.address, 'ComptrollerLib', event.block.timestamp).id;
   redemption.investment = investment.id;
   redemption.shares = shares;
   redemption.assets = assets.map<string>((item) => item.id);

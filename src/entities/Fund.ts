@@ -1,17 +1,15 @@
-import { hexToAscii } from '../utils/hexToAscii';
-import { logCritical } from '../utils/logCritical';
-import { Fund, FundCreation } from '../generated/schema';
-
+import { BigDecimal } from '@graphprotocol/graph-ts';
 import { NewFundDeployed } from '../generated/FundDeployerContract';
+import { Fund, FundCreation } from '../generated/schema';
+import { logCritical } from '../utils/logCritical';
 import { ensureManager } from './Account';
 import { ensureAsset } from './Asset';
-import { createShares } from './Shares';
-import { BigDecimal } from '@graphprotocol/graph-ts';
-import { createState } from './State';
-import { createPortfolio } from './Portfolio';
 import { ensureComptroller } from './Comptroller';
+import { ensureContract } from './Contract';
 import { ensureFundDeployer } from './FundDeployer';
-import { genericId } from '../utils/genericId';
+import { createPortfolio } from './Portfolio';
+import { createShares } from './Shares';
+import { createState } from './State';
 import { ensureTransaction } from './Transaction';
 
 export function useFund(id: string): Fund {
@@ -52,7 +50,7 @@ export function createFund(event: NewFundDeployed): Fund {
   fundCreation.timestamp = fund.inception;
   fundCreation.fund = fund.id;
   fundCreation.account = fund.manager;
-  fundCreation.contract = event.address.toHex();
+  fundCreation.contract = ensureContract(event.address, 'FundDeployer', event.block.timestamp).id;
   fundCreation.transaction = ensureTransaction(event).id;
   fundCreation.save();
 
