@@ -126,6 +126,44 @@ type TrackedAssetRemoval implements Event & FundEvent @entity {
   transaction: Transaction!
 }
 
+type CallOnIntegrationExecution implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  adapter: String!
+  incomingAssets: [Asset!]!
+  incomingAssetAmounts: [BigInt!]!
+  outgoingAssets: [Asset!]!
+  outgoingAssetAmounts: [BigInt!]!
+  timestamp: BigInt!
+  transaction: Transaction!
+}
+
+type FundStatusUpdate implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  prevStatus: Int!
+  nextStatus: Int!
+  timestamp: BigInt!
+  transaction: Transaction!
+}
+
+type FundConfigSetting implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  denominationAsset: Asset!
+  vaultProxy: Fund!
+  feeManagerConfig: String!
+  policyManagerConfig: String!
+  timestamp: BigInt!
+  transaction: Transaction!
+}
+
 #################################################
 # Low-level network event entities
 #################################################

@@ -1,6 +1,7 @@
 import { BigDecimal, dataSource } from '@graphprotocol/graph-ts';
-import { ensureAccount, ensureInvestor } from '../entities/Account';
-import { useAsset } from '../entities/Asset';
+import { ensureAccount, ensureInvestor, useAccount } from '../entities/Account';
+import { useAsset, ensureAsset } from '../entities/Asset';
+import { ensureContract } from '../entities/Contract';
 import { useFund } from '../entities/Fund';
 import { createInvestmentAddition, createInvestmentRedemption, ensureInvestment } from '../entities/Investment';
 import { ensureTransaction } from '../entities/Transaction';
@@ -13,7 +14,13 @@ import {
   SharesBought,
   SharesRedeemed,
 } from '../generated/ComptrollerLibContract';
-import { AmguPayment, Asset } from '../generated/schema';
+import {
+  AmguPayment,
+  Asset,
+  CallOnIntegrationExecution,
+  FundConfigSetting,
+  FundStatusUpdate,
+} from '../generated/schema';
 import { genericId } from '../utils/genericId';
 import { toBigDecimal } from '../utils/tokenValue';
 
@@ -27,12 +34,56 @@ export function handleAmguPaid(event: AmguPaid): void {
   amguPaid.transaction = ensureTransaction(event).id;
   amguPaid.save();
 }
-export function handleCallOnIntegrationExecuted(event: CallOnIntegrationExecuted): void {}
 
-export function handleFundConfigSet(event: FundConfigSet): void {}
+export function handleCallOnIntegrationExecuted(event: CallOnIntegrationExecuted): void {
+  let id = genericId(event);
+  let fund = useFund(dataSource.context().getString('vaultProxy'));
+  let incomingAssets = event.params.incomingAssets.map<Asset>((id) => useAsset(id.toHex()));
+  let outgoingAssets = event.params.outgoingAssets.map<Asset>((id) => useAsset(id.toHex()));
+
+  let callOnIntegration = new CallOnIntegrationExecution(id);
+  callOnIntegration.contract = ensureContract(event.address, 'ComptrollerLib', event.block.timestamp).id;
+  callOnIntegration.fund = fund.id;
+  callOnIntegration.account = useAccount(event.transaction.from.toHex()).id;
+  callOnIntegration.adapter = event.params.adapter.toHex();
+  callOnIntegration.incomingAssets = incomingAssets.map<string>((asset) => asset.id);
+  callOnIntegration.incomingAssetAmounts = event.params.incomingAssetAmounts;
+  callOnIntegration.outgoingAssets = outgoingAssets.map<string>((asset) => asset.id);
+  callOnIntegration.outgoingAssetAmounts = event.params.outgoingAssetAmounts;
+  callOnIntegration.transaction = ensureTransaction(event).id;
+  callOnIntegration.save();
+}
+
+export function handleFundConfigSet(event: FundConfigSet): void {
+  let fund = useFund(dataSource.context().getString('vaultProxy'));
+
+  let id = genericId(event);
+  let fundConfig = new FundConfigSetting(id);
+  fundConfig.timestamp = event.block.timestamp;
+  fundConfig.contract = ensureContract(event.address, 'ComptrollerLib', event.block.timestamp).id;
+  fundConfig.fund = fund.id;
+  fundConfig.account = useAccount(event.transaction.from.toHex()).id;
+  fundConfig.denominationAsset = ensureAsset(event.params.denominationAsset).id;
+  fundConfig.vaultProxy = fund.id;
+  fundConfig.feeManagerConfig = event.params.feeManagerConfig.toHex();
+  fundConfig.policyManagerConfig = event.params.policyManagerConfig.toHex();
+  fundConfig.transaction = ensureTransaction(event).id;
+  fundConfig.save();
+}
 
 export function handleFundStatusUpdated(event: FundStatusUpdated): void {
   let fund = useFund(dataSource.context().getString('vaultProxy'));
+
+  let id = genericId(event);
+  let fundStatusUpdate = new FundStatusUpdate(id);
+  fundStatusUpdate.timestamp = event.block.timestamp;
+  fundStatusUpdate.contract = ensureContract(event.address, 'ComptrollerLib', event.block.timestamp).id;
+  fundStatusUpdate.fund = fund.id;
+  fundStatusUpdate.account = useAccount(event.transaction.from.toHex()).id;
+  fundStatusUpdate.prevStatus = event.params.prevStatus;
+  fundStatusUpdate.nextStatus = event.params.nextStatus;
+  fundStatusUpdate.transaction = ensureTransaction(event).id;
+  fundStatusUpdate.save();
 
   fund.status = event.params.nextStatus == 0 ? 'None' : event.params.nextStatus == 1 ? 'Active' : 'Inactive';
   fund.save();
