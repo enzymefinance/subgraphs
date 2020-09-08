@@ -12,10 +12,12 @@ import {
 import { useFund } from '../entities/Fund';
 import { ensureAsset } from '../entities/Asset';
 import { TrackedAssetAddition, TrackedAssetRemoval } from '../generated/schema';
-import { createContractEvent } from '../entities/ContractEvent';
 import { arrayUnique } from '../utils/arrayUnique';
 import { arrayDiff } from '../utils/arrayDiff';
 import { genericId } from '../utils/genericId';
+import { ensureTransaction, transactionId } from '../entities/Transaction';
+import { ensureAccount } from '../entities/Account';
+import { Address } from '@graphprotocol/graph-ts';
 
 export function handleAccessorSet(event: AccessorSet): void {}
 export function handleApproval(event: Approval): void {}
@@ -31,13 +33,14 @@ export function handleTrackedAssetAdded(event: TrackedAssetAdded): void {
   let trackedAssetAddition = new TrackedAssetAddition(id);
   trackedAssetAddition.asset = asset.id;
   trackedAssetAddition.fund = fund.id;
+  trackedAssetAddition.account = ensureAccount(Address.fromString(fund.manager)).id;
+  trackedAssetAddition.contract = event.address.toHex();
   trackedAssetAddition.timestamp = event.block.timestamp;
+  trackedAssetAddition.transaction = ensureTransaction(event).id;
   trackedAssetAddition.save();
 
   fund.trackedAssets = arrayUnique<string>(fund.trackedAssets.concat([asset.id]));
   fund.save();
-
-  createContractEvent('TrackedAssetAdded', event);
 }
 
 export function handleTrackedAssetRemoved(event: TrackedAssetRemoved): void {
@@ -49,12 +52,13 @@ export function handleTrackedAssetRemoved(event: TrackedAssetRemoved): void {
   trackedAssetRemoval.asset = asset.id;
   trackedAssetRemoval.fund = fund.id;
   trackedAssetRemoval.timestamp = event.block.timestamp;
+  trackedAssetRemoval.account = ensureAccount(Address.fromString(fund.manager)).id;
+  trackedAssetRemoval.contract = event.address.toHex();
+  trackedAssetRemoval.transaction = ensureTransaction(event).id;
   trackedAssetRemoval.save();
 
   fund.trackedAssets = arrayDiff<string>(fund.trackedAssets, [asset.id]);
   fund.save();
-
-  createContractEvent('TrackedAssetRemoved', event);
 }
 
 export function handleTransfer(event: Transfer): void {}

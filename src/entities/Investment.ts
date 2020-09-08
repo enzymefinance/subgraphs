@@ -1,10 +1,10 @@
 import { BigDecimal, ethereum } from '@graphprotocol/graph-ts';
-import { Investment, Account, Asset, Fund, SharesAddition, SharesRedemption } from '../generated/schema';
+import { Account, Asset, Fund, Investment, SharesAddition, SharesRedemption } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
-import { contractEventId } from './ContractEvent';
-import { trackFundShares } from './Shares';
 import { useFund } from './Fund';
 import { trackFundPortfolio } from './Portfolio';
+import { trackFundShares } from './Shares';
+import { ensureTransaction } from './Transaction';
 
 function investmentId(investor: Account, fund: Fund): string {
   return fund.id + '/' + investor.id;
@@ -58,16 +58,16 @@ export function createInvestmentAddition(
   event: ethereum.Event,
 ): SharesAddition {
   let addition = new SharesAddition(changeId(investment, event));
-  addition.kind = 'INVESTMENT';
+  addition.account = investment.investor;
   addition.investor = investment.investor;
   addition.fund = investment.fund;
+  addition.contract = event.address.toHex();
   addition.investment = investment.id;
   addition.asset = asset.id;
   addition.quantity = quantity;
   addition.shares = shares;
   addition.timestamp = event.block.timestamp;
-  addition.transaction = event.transaction.hash.toHex();
-  addition.trigger = contractEventId(event);
+  addition.transaction = ensureTransaction(event).id;
   addition.save();
 
   investment.shares = investment.shares.plus(shares);
@@ -90,16 +90,16 @@ export function createInvestmentRedemption(
   event: ethereum.Event,
 ): SharesRedemption {
   let redemption = new SharesRedemption(changeId(investment, event));
-  redemption.kind = 'REDEMPTION';
+  redemption.account = investment.investor;
   redemption.investor = investment.investor;
   redemption.fund = investment.fund;
+  redemption.contract = event.address.toHex();
   redemption.investment = investment.id;
   redemption.shares = shares;
   redemption.assets = assets.map<string>((item) => item.id);
   redemption.quantities = quantities;
   redemption.timestamp = event.block.timestamp;
-  redemption.transaction = event.transaction.hash.toHex();
-  redemption.trigger = contractEventId(event);
+  redemption.transaction = ensureTransaction(event).id;
   redemption.save();
 
   investment.shares = investment.shares.minus(shares);

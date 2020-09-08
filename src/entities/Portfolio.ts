@@ -54,7 +54,7 @@ export function usePortfolio(id: string): Portfolio {
 }
 
 function holdingId(asset: Asset, fund: Fund, event: ethereum.Event): string {
-  return fund.id + '/' + asset.id + '/' + event.block.timestamp.toString() + '/holding';
+  return fund.id + '/' + event.block.timestamp.toString() + '/holding/' + asset.id;
 }
 
 function createHolding(asset: Asset, quantity: BigDecimal, fund: Fund, event: ethereum.Event, cause: Entity): Holding {

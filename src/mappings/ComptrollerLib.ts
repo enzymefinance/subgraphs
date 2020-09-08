@@ -1,7 +1,6 @@
 import { BigDecimal, dataSource } from '@graphprotocol/graph-ts';
 import { ensureInvestor, ensureAccount } from '../entities/Account';
 import { useAsset } from '../entities/Asset';
-import { createContractEvent } from '../entities/ContractEvent';
 import { useFund } from '../entities/Fund';
 import { createInvestmentAddition, createInvestmentRedemption, ensureInvestment } from '../entities/Investment';
 import {
@@ -16,6 +15,7 @@ import {
 import { Asset, AmguPayment } from '../generated/schema';
 import { toBigDecimal } from '../utils/tokenValue';
 import { genericId } from '../utils/genericId';
+import { ensureTransaction } from '../entities/Transaction';
 
 export function handleAmguPaid(event: AmguPaid): void {
   let id = genericId(event);
@@ -23,25 +23,19 @@ export function handleAmguPaid(event: AmguPaid): void {
   amguPaid.amount = toBigDecimal(event.params.ethPaid);
   amguPaid.payer = ensureAccount(event.params.payer).id;
   amguPaid.gas = event.params.gasUsed.toI32();
+  amguPaid.timestamp = event.block.timestamp;
+  amguPaid.transaction = ensureTransaction(event).id;
   amguPaid.save();
+}
+export function handleCallOnIntegrationExecuted(event: CallOnIntegrationExecuted): void {}
 
-  createContractEvent('AmguPaid', event);
-}
-export function handleCallOnIntegrationExecuted(event: CallOnIntegrationExecuted): void {
-  createContractEvent('CallOnIntegrationExecuted', event);
-}
-
-export function handleFundConfigSet(event: FundConfigSet): void {
-  createContractEvent('FundConfigSet', event);
-}
+export function handleFundConfigSet(event: FundConfigSet): void {}
 
 export function handleFundStatusUpdated(event: FundStatusUpdated): void {
   let fund = useFund(dataSource.context().getString('vaultProxy'));
 
   fund.status = event.params.nextStatus == 0 ? 'None' : event.params.nextStatus == 1 ? 'Active' : 'Inactive';
   fund.save();
-
-  createContractEvent('FundStatusUpdated', event);
 }
 
 export function handleSharesBought(event: SharesBought): void {
@@ -57,7 +51,6 @@ export function handleSharesBought(event: SharesBought): void {
   let shares = toBigDecimal(event.params.sharesReceived);
 
   createInvestmentAddition(investment, asset, quantity, shares, event);
-  createContractEvent('SharesBought', event);
 }
 
 export function handleSharesRedeemed(event: SharesRedeemed): void {
@@ -75,5 +68,4 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
   }
 
   createInvestmentRedemption(investment, assets, quantities, shares, event);
-  createContractEvent('SharesRedeemed', event);
 }

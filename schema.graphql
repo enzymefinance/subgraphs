@@ -6,6 +6,10 @@ type FundDeployer @entity {
   funds: [Fund!]! @derivedFrom(field: "deployer")
 }
 
+type Comptroller @entity {
+  id: ID!
+}
+
 type Fund @entity {
   id: ID!
   name: String!
@@ -31,10 +35,7 @@ type Account @entity {
   managements: [Fund!]! @derivedFrom(field: "manager")
   investor: Boolean!
   investments: [Investment!]! @derivedFrom(field: "investor")
-}
-
-type Comptroller @entity {
-  id: ID!
+  events: [Event!]! @derivedFrom(field: "account")
 }
 
 type Investment @entity {
@@ -45,16 +46,41 @@ type Investment @entity {
   shares: BigDecimal!
 }
 
-type ContractEvent @entity {
+type Transaction @entity {
   id: ID!
-  fund: Fund
-  name: String!
-  contract: String!
-  transaction: String!
   from: String!
+  value: BigDecimal!
   timestamp: BigInt!
   block: BigInt!
+  gasUsed: Int!
+  gasPrice: BigDecimal!
+  events: [Event!]! @derivedFrom(field: "transaction")
 }
+
+interface Event {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: String!
+  timestamp: BigInt!
+  transaction: Transaction!
+}
+
+interface NetworkEvent {
+  id: ID!
+  contract: String!
+  timestamp: BigInt!
+  transaction: Transaction!
+}
+
+# type ContractEvent @entity {
+#   id: ID!
+#   fund: Fund!
+#   name: String!
+#   contract: String!
+#   timestamp: BigInt!
+#   transaction: Transaction!
+# }
 
 type Asset @entity {
   id: ID!
@@ -63,12 +89,13 @@ type Asset @entity {
   decimals: Int!
 }
 
-interface Event {
+type FundCreation implements Event @entity {
   id: ID!
-  kind: EventKindEnum!
   fund: Fund!
+  account: Account!
+  contract: String!
   timestamp: BigInt!
-  trigger: ContractEvent!
+  transaction: Transaction!
 }
 
 interface Metric {
@@ -115,90 +142,91 @@ type State implements Metric @entity {
 
 interface SharesChange {
   id: ID!
-  kind: EventKindEnum!
   fund: Fund!
   timestamp: BigInt!
-  transaction: String!
-  trigger: ContractEvent!
   investment: Investment!
   shares: BigDecimal!
+  transaction: Transaction!
 }
 
 type SharesAddition implements Event & SharesChange @entity {
   id: ID!
-  kind: EventKindEnum!
   fund: Fund!
+  account: Account!
+  contract: String!
   investor: Account!
   investment: Investment!
   shares: BigDecimal!
   asset: Asset!
   quantity: BigDecimal!
   timestamp: BigInt!
-  transaction: String!
-  trigger: ContractEvent!
+  transaction: Transaction!
 }
 
 type SharesRedemption implements Event & SharesChange @entity {
   id: ID!
-  kind: EventKindEnum!
   fund: Fund!
+  account: Account!
+  contract: String!
   investor: Account!
   investment: Investment!
   shares: BigDecimal!
   assets: [Asset!]!
   quantities: [BigDecimal!]!
   timestamp: BigInt!
-  transaction: String!
-  trigger: ContractEvent!
+  transaction: Transaction!
 }
 
 type SharesReward implements Event & SharesChange @entity {
   id: ID!
-  kind: EventKindEnum!
   fund: Fund!
+  account: Account!
+  contract: String!
   investor: Account!
   investment: Investment!
   shares: BigDecimal!
   timestamp: BigInt!
-  transaction: String!
-  trigger: ContractEvent!
+  transaction: Transaction!
 }
 
-type AmguPayment @entity {
+type AmguPayment implements Event @entity {
   id: ID!
+  fund: Fund!
+  account: Account!
+  contract: String!
   timestamp: BigInt!
   payer: Account!
   amount: BigDecimal!
   gas: Int!
+  transaction: Transaction!
 }
 
-type TrackedAssetAddition @entity {
+type TrackedAssetAddition implements Event @entity {
   id: ID!
   fund: Fund!
+  account: Account!
+  contract: String!
   asset: Asset!
   timestamp: BigInt!
+  transaction: Transaction!
 }
 
-type TrackedAssetRemoval @entity {
+type TrackedAssetRemoval implements Event @entity {
   id: ID!
   fund: Fund!
+  account: Account!
+  contract: String!
   asset: Asset!
   timestamp: BigInt!
+  transaction: Transaction!
 }
 
-type AmguPrice @entity {
+type AmguPriceChange implements NetworkEvent @entity {
   id: ID!
+  contract: String!
   price: BigDecimal!
   timestamp: BigInt!
-}
-
-# TODO: Add a INCEPTION fund event.
-enum EventKindEnum {
-  INCEPTION
-  INVESTMENT
-  REDEMPTION
-  REWARD
-  TRADE
+  transaction: Transaction!
 }
 
 enum FundStatusEnum {

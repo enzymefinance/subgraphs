@@ -3,18 +3,20 @@ import { Fund } from './fetchFund';
 
 export interface Redemption {
   id: string;
-  transaction: string;
+  transaction: {
+    id: string;
+  };
   shares: number;
-  kind: string;
 }
 
 const redemptionQuery = gql`
   query Redemption($transaction: String!, $block: Int!) {
     sharesRedemptions(where: { transaction: $transaction }, block: { number: $block }) {
       id
-      transaction
+      transaction {
+        id
+      }
       shares
-      kind
     }
   }
 `;

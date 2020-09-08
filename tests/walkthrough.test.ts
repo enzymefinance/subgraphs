@@ -31,7 +31,7 @@ describe('Walkthrough', () => {
   });
 
   it("should walkthrough a fund's lifecycle", async () => {
-    const fundDeployer = await getCurrentFundDeployer(provider, deployment.dispatcher);
+    const fundDeployer = await getCurrentFundDeployer({ provider, dispatcherAddress: deployment.dispatcher });
 
     // create fund
     const newFundArgs = {
@@ -68,7 +68,7 @@ describe('Walkthrough', () => {
     // value: BigNumber { _hex: '0x0de0b6b3a7640000', _isBigNumber: true },
     expect(approved.owner).toBe(await resolveAddress(signer));
     expect(approved.spender).toBe(await resolveAddress(approveArgs.comptrollerProxy));
-    expect(BigNumber.from(approved.value).toString()).toBe(approveArgs.investmentAmount.toString());
+    expect(BigNumber.from(approved.value)).toEqual(approveArgs.investmentAmount);
 
     // buy shares
     const sharesToBuy = 2;
@@ -105,7 +105,6 @@ describe('Walkthrough', () => {
 
     const transactionHash = redeemed.__receipt.transactionHash;
     const subgraphRedemption = await fetchRedemption(subgraphApi, transactionHash, redeemed.__receipt.blockNumber);
-    expect(subgraphRedemption.transaction).toEqual(transactionHash);
-    expect(subgraphRedemption.kind).toEqual('REDEMPTION');
+    expect(subgraphRedemption.transaction.id).toEqual(transactionHash);
   });
 });

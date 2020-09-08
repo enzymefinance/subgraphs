@@ -1,6 +1,6 @@
 import { hexToAscii } from '../utils/hexToAscii';
 import { logCritical } from '../utils/logCritical';
-import { Fund } from '../generated/schema';
+import { Fund, FundCreation } from '../generated/schema';
 
 import { NewFundDeployed } from '../generated/FundDeployerContract';
 import { ensureManager } from './Account';
@@ -11,6 +11,8 @@ import { createState } from './State';
 import { createPortfolio } from './Portfolio';
 import { ensureComptroller } from './Comptroller';
 import { ensureFundDeployer } from './FundDeployer';
+import { genericId } from '../utils/genericId';
+import { ensureTransaction } from './Transaction';
 
 export function useFund(id: string): Fund {
   let fund = Fund.load(id);
@@ -45,6 +47,14 @@ export function createFund(event: NewFundDeployed): Fund {
   // fund.payouts = payout.id;
   // fund.fees = fees.map<string>((fee) => fee.id);
   fund.save();
+
+  let fundCreation = new FundCreation(fund.id);
+  fundCreation.timestamp = fund.inception;
+  fundCreation.fund = fund.id;
+  fundCreation.account = fund.manager;
+  fundCreation.contract = event.address.toHex();
+  fundCreation.transaction = ensureTransaction(event).id;
+  fundCreation.save();
 
   return fund;
 }
