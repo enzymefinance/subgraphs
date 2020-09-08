@@ -27,7 +27,7 @@ You are now ready to start development. Documentation is available [here](https:
 In order to deploy the subgraph locally, all you need to do is.
 
 ```bash
-yarn create && yarn deploy
+yarn make && yarn deploy
 ```
 
 ## Contributing
