@@ -205,6 +205,58 @@ dataSources:
         - event: CallOnIntegrationExecuted(indexed address,indexed address,address,indexed address,address[],uint256[],address[],uint256[])
           handler: handleCallOnIntegrationExecuted
 
+  - name: ChainlinkPriceFeedDataSource
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      address: "{{chainlinkPriceFeed}}"
+      abi: ChainlinkPriceFeedContract
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/ChainlinkPriceFeed.ts
+      entities: []
+      abis:
+        - name: ChainlinkPriceFeedContract
+          file: ./node_modules/@melonproject/release/artifacts/ChainlinkPriceFeed.json
+        - name: VaultLibContract
+          file: ./node_modules/@melonproject/release/artifacts/VaultLib.json
+        - name: ComptrollerLibContract
+          file: ./node_modules/@melonproject/release/artifacts/ComptrollerLib.json
+        - name: StandardERC20Contract
+          file: ./node_modules/@melonproject/release/artifacts/StandardERC20.json
+      eventHandlers:
+        - event: AggregatorSet(indexed address,address,address)
+          handler: handleAggregatorSet
+
+  - name: AggregatedDerivativePriceFeedDataSource
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      address: "{{aggregatedDerivativePriceFeed}}"
+      abi: AggregatedDerivativePriceFeedContract
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/AggregatedDerivativePriceFeed.ts
+      entities: []
+      abis:
+        - name: AggregatedDerivativePriceFeedContract
+          file: ./node_modules/@melonproject/release/artifacts/AggregatedDerivativePriceFeed.json
+        - name: VaultLibContract
+          file: ./node_modules/@melonproject/release/artifacts/VaultLib.json
+        - name: ComptrollerLibContract
+          file: ./node_modules/@melonproject/release/artifacts/ComptrollerLib.json
+        - name: StandardERC20Contract
+          file: ./node_modules/@melonproject/release/artifacts/StandardERC20.json
+      eventHandlers:
+        - event: PriceFeedSet(indexed address,address,address)
+          handler: handlePriceFeedSet
+
 templates:
   - name: VaultLibDataSource
     kind: ethereum/contract
