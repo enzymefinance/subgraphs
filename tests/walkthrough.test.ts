@@ -31,7 +31,10 @@ describe('Walkthrough', () => {
   });
 
   it("should walkthrough a fund's lifecycle", async () => {
-    const fundDeployer = await getCurrentFundDeployer(provider, deployment.dispatcher);
+    const fundDeployer = await getCurrentFundDeployer({
+      provider,
+      dispatcherAddress: deployment.dispatcher,
+    });
 
     // create fund
     const newFundArgs = {
