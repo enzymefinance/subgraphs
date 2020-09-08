@@ -97,6 +97,8 @@ dataSources:
           file: ./node_modules/@melonproject/release/artifacts/FundDeployer.json
         - name: VaultLibContract
           file: ./node_modules/@melonproject/release/artifacts/VaultLib.json
+        - name: ComptrollerLibContract
+          file: ./node_modules/@melonproject/release/artifacts/ComptrollerLib.json
         - name: StandardERC20Contract
           file: ./node_modules/@melonproject/release/artifacts/StandardERC20.json
       eventHandlers:
@@ -177,3 +179,5 @@ templates:
           handler: handleSharesBought
         - event: SharesRedeemed(indexed address,uint256,address[],uint256[])
           handler: handleSharesRedeemed
+        - event: FundConfigSet(indexed address,indexed address,bytes,bytes)
+          handler: handleFundConfigSet

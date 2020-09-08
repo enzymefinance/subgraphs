@@ -1,4 +1,4 @@
-import { BigDecimal, dataSource } from '@graphprotocol/graph-ts';
+import { BigDecimal, dataSource, log } from '@graphprotocol/graph-ts';
 import { ensureAccount, ensureInvestor, useAccount } from '../entities/Account';
 import { useAsset, ensureAsset } from '../entities/Asset';
 import { ensureContract } from '../entities/Contract';
@@ -55,16 +55,16 @@ export function handleCallOnIntegrationExecuted(event: CallOnIntegrationExecuted
 }
 
 export function handleFundConfigSet(event: FundConfigSet): void {
-  let fund = useFund(dataSource.context().getString('vaultProxy'));
+  let fundId = dataSource.context().getString('vaultProxy');
 
   let id = genericId(event);
   let fundConfig = new FundConfigSetting(id);
   fundConfig.timestamp = event.block.timestamp;
   fundConfig.contract = ensureContract(event.address, 'ComptrollerLib', event.block.timestamp).id;
-  fundConfig.fund = fund.id;
+  fundConfig.fund = fundId;
   fundConfig.account = useAccount(event.transaction.from.toHex()).id;
   fundConfig.denominationAsset = ensureAsset(event.params.denominationAsset).id;
-  fundConfig.vaultProxy = fund.id;
+  fundConfig.vaultProxy = fundId;
   fundConfig.feeManagerConfig = event.params.feeManagerConfig.toHex();
   fundConfig.policyManagerConfig = event.params.policyManagerConfig.toHex();
   fundConfig.transaction = ensureTransaction(event).id;

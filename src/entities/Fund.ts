@@ -1,6 +1,6 @@
 import { BigDecimal } from '@graphprotocol/graph-ts';
 import { NewFundDeployed } from '../generated/FundDeployerContract';
-import { Fund, FundCreation } from '../generated/schema';
+import { Fund, FundDeployment } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
 import { ensureManager } from './Account';
 import { ensureAsset } from './Asset';
@@ -22,8 +22,24 @@ export function useFund(id: string): Fund {
 }
 
 export function createFund(event: NewFundDeployed): Fund {
-  let fund = new Fund(event.params.vaultProxy.toHex());
+  let id = event.params.vaultProxy.toHex();
 
+  let fundDeployment = new FundDeployment(id);
+  fundDeployment.timestamp = event.block.timestamp;
+  fundDeployment.fund = id;
+  fundDeployment.account = ensureManager(event.params.fundOwner).id;
+  fundDeployment.contract = ensureContract(event.address, 'FundDeployer', event.block.timestamp).id;
+  fundDeployment.comptrollerProxy = ensureComptroller(event.params.comptrollerProxy).id;
+  fundDeployment.vaultProxy = event.params.vaultProxy.toHex();
+  fundDeployment.fundOwner = ensureManager(event.params.fundOwner).id;
+  fundDeployment.fundName = event.params.fundName;
+  fundDeployment.denominationAsset = ensureAsset(event.params.denominationAsset).id;
+  fundDeployment.feeManagerConfig = event.params.feeManagerConfig.toHex();
+  fundDeployment.policyManagerConfig = event.params.policyManagerConfig.toHex();
+  fundDeployment.transaction = ensureTransaction(event).id;
+  fundDeployment.save();
+
+  let fund = new Fund(id);
   let shares = createShares(BigDecimal.fromString('0'), fund, event, null);
   let portfolio = createPortfolio([], fund, event, null);
   // let payout = createPayout([], null, context);
@@ -46,28 +62,5 @@ export function createFund(event: NewFundDeployed): Fund {
   // fund.fees = fees.map<string>((fee) => fee.id);
   fund.save();
 
-  let fundCreation = new FundCreation(fund.id);
-  fundCreation.timestamp = fund.inception;
-  fundCreation.fund = fund.id;
-  fundCreation.account = fund.manager;
-  fundCreation.contract = ensureContract(event.address, 'FundDeployer', event.block.timestamp).id;
-  fundCreation.transaction = ensureTransaction(event).id;
-  fundCreation.save();
-
   return fund;
 }
-
-// function investableAssets(context: Context): Asset[] {
-//   let participation = context.contracts.participation;
-//   let assets = context.entities.version.assets;
-//   let investable: Asset[] = [];
-//   for (let i: i32 = 0; i < assets.length; i++) {
-//     if (!participation.investAllowed(Address.fromString(assets[i]))) {
-//       continue;
-//     }
-
-//     investable.push(useAsset(assets[i]));
-//   }
-
-//   return investable;
-// }

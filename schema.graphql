@@ -45,11 +45,53 @@ interface Metric {
 # Low-level fund event entities
 #################################################
 
-type FundCreation implements Event & FundEvent @entity {
+type FundDeployment implements Event & FundEvent @entity {
   id: ID!
   fund: Fund!
   account: Account!
   contract: Contract!
+  timestamp: BigInt!
+  comptrollerProxy: Comptroller!
+  vaultProxy: Fund!
+  fundOwner: Account!
+  fundName: String!
+  denominationAsset: Asset!
+  feeManagerConfig: String!
+  policyManagerConfig: String!
+  transaction: Transaction!
+}
+
+type ComptrollerProxyDeployment implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  comptrollerProxy: Comptroller!
+  fundOwner: Account!
+  transaction: Transaction!
+}
+
+type FundStatusUpdate implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  prevStatus: Int!
+  nextStatus: Int!
+  timestamp: BigInt!
+  transaction: Transaction!
+}
+
+type FundConfigSetting implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  denominationAsset: Asset!
+  vaultProxy: Fund!
+  feeManagerConfig: String!
+  policyManagerConfig: String!
   timestamp: BigInt!
   transaction: Transaction!
 }
@@ -140,30 +182,6 @@ type CallOnIntegrationExecution implements Event & FundEvent @entity {
   transaction: Transaction!
 }
 
-type FundStatusUpdate implements Event & FundEvent @entity {
-  id: ID!
-  fund: Fund!
-  account: Account!
-  contract: Contract!
-  prevStatus: Int!
-  nextStatus: Int!
-  timestamp: BigInt!
-  transaction: Transaction!
-}
-
-type FundConfigSetting implements Event & FundEvent @entity {
-  id: ID!
-  fund: Fund!
-  account: Account!
-  contract: Contract!
-  denominationAsset: Asset!
-  vaultProxy: Fund!
-  feeManagerConfig: String!
-  policyManagerConfig: String!
-  timestamp: BigInt!
-  transaction: Transaction!
-}
-
 #################################################
 # Low-level network event entities
 #################################################
@@ -222,6 +240,15 @@ type EtherTakerRemoval implements Event & NetworkEvent @entity {
   contract: Contract!
   timestamp: BigInt!
   etherTaker: String!
+  transaction: Transaction!
+}
+
+type FundDeployerOwnershipTransfer implements Event & NetworkEvent @entity {
+  id: ID!
+  contract: Contract!
+  previousOwner: String!
+  newOwner: String!
+  timestamp: BigInt!
   transaction: Transaction!
 }
 
