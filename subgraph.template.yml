@@ -111,6 +111,100 @@ dataSources:
         - event: OwnershipTransferred(indexed address,indexed address)
           handler: handleOwnershipTransferred
 
+  - name: FeeManagerDataSource
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      address: "{{feeManager}}"
+      abi: FeeManagerContract
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/FeeManager.ts
+      entities: []
+      abis:
+        - name: FeeManagerContract
+          file: ./node_modules/@melonproject/release/artifacts/FeeManager.json
+        - name: VaultLibContract
+          file: ./node_modules/@melonproject/release/artifacts/VaultLib.json
+        - name: ComptrollerLibContract
+          file: ./node_modules/@melonproject/release/artifacts/ComptrollerLib.json
+        - name: StandardERC20Contract
+          file: ./node_modules/@melonproject/release/artifacts/StandardERC20.json
+      eventHandlers:
+        - event: FeeDeregistered(indexed address,indexed string)
+          handler: handleFeeDeregistered
+        - event: FeeEnabledForFund(indexed address,indexed address,bytes)
+          handler: handleFeeEnabledForFund
+        - event: FeeRegistered(indexed address,indexed string)
+          handler: handleFeeRegistered
+        - event: FeeSettledForFund(indexed address,indexed address,address,address,uint256)
+          handler: handleFeeSettledForFund
+        - event: FeeSharesOutstandingPaidForFund(indexed address,indexed address,address,address,uint256)
+          handler: handleFeeSharesOutstandingPaidForFund
+
+  - name: PolicyManagerDataSource
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      address: "{{policyManager}}"
+      abi: PolicyManagerContract
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/PolicyManager.ts
+      entities: []
+      abis:
+        - name: PolicyManagerContract
+          file: ./node_modules/@melonproject/release/artifacts/PolicyManager.json
+        - name: VaultLibContract
+          file: ./node_modules/@melonproject/release/artifacts/VaultLib.json
+        - name: ComptrollerLibContract
+          file: ./node_modules/@melonproject/release/artifacts/ComptrollerLib.json
+        - name: StandardERC20Contract
+          file: ./node_modules/@melonproject/release/artifacts/StandardERC20.json
+      eventHandlers:
+        - event: PolicyDeregistered(indexed address,indexed string)
+          handler: handlePolicyDeregistered
+        - event: PolicyEnabledForFund(indexed address,indexed address,bytes)
+          handler: handlePolicyEnabledForFund
+        - event: PolicyRegistered(indexed address,indexed string)
+          handler: handlePolicyRegistered
+
+  - name: IntegrationManagerDataSource
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      address: "{{integrationManager}}"
+      abi: IntegrationManagerContract
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/IntegrationManager.ts
+      entities: []
+      abis:
+        - name: IntegrationManagerContract
+          file: ./node_modules/@melonproject/release/artifacts/IntegrationManager.json
+        - name: VaultLibContract
+          file: ./node_modules/@melonproject/release/artifacts/VaultLib.json
+        - name: ComptrollerLibContract
+          file: ./node_modules/@melonproject/release/artifacts/ComptrollerLib.json
+        - name: StandardERC20Contract
+          file: ./node_modules/@melonproject/release/artifacts/StandardERC20.json
+      eventHandlers:
+        - event: AdapterDeregistered(indexed address,indexed string)
+          handler: handleAdapterDeregistered
+        - event: AdapterRegistered(indexed address,indexed string)
+          handler: handleAdapterRegistered
+        - event: CallOnIntegrationExecuted(indexed address,indexed address,address,indexed address,address[],uint256[],address[],uint256[])
+          handler: handleCallOnIntegrationExecuted
+
 templates:
   - name: VaultLibDataSource
     kind: ethereum/contract
