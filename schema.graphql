@@ -1,61 +1,6 @@
-type FundDeployer @entity {
-  id: ID!
-  current: Boolean!
-  currentStart: BigInt!
-  currentEnd: BigInt
-  funds: [Fund!]! @derivedFrom(field: "deployer")
-}
-
-type Comptroller @entity {
-  id: ID!
-}
-
-type Fund @entity {
-  id: ID!
-  name: String!
-  inception: BigInt!
-  deployer: FundDeployer!
-  status: FundStatusEnum!
-  manager: Account!
-  denominationAsset: Asset!
-  comptroller: Comptroller!
-  trackedAssets: [Asset!]!
-  shares: Share!
-  sharesHistory: [Share!]! @derivedFrom(field: "fund")
-  portfolio: Portfolio!
-  portfolioHistory: [Portfolio!]! @derivedFrom(field: "fund")
-  state: State!
-  stateHistory: [State!]! @derivedFrom(field: "fund")
-  events: [Event!]! @derivedFrom(field: "fund")
-}
-
-type Account @entity {
-  id: ID!
-  manager: Boolean!
-  managements: [Fund!]! @derivedFrom(field: "manager")
-  investor: Boolean!
-  investments: [Investment!]! @derivedFrom(field: "investor")
-  events: [Event!]! @derivedFrom(field: "account")
-}
-
-type Investment @entity {
-  id: ID!
-  fund: Fund!
-  investor: Account!
-  # changes: [SharesChange!]! @derivedFrom(field: "investment")
-  shares: BigDecimal!
-}
-
-type Transaction @entity {
-  id: ID!
-  from: String!
-  value: BigDecimal!
-  timestamp: BigInt!
-  block: BigInt!
-  gasUsed: Int!
-  gasPrice: BigDecimal!
-  events: [Event!]! @derivedFrom(field: "transaction")
-}
+#################################################
+# Interfaces
+#################################################
 
 interface Event {
   id: ID!
@@ -73,28 +18,12 @@ interface NetworkEvent {
   transaction: Transaction!
 }
 
-# type ContractEvent @entity {
-#   id: ID!
-#   fund: Fund!
-#   name: String!
-#   contract: String!
-#   timestamp: BigInt!
-#   transaction: Transaction!
-# }
-
-type Asset @entity {
-  id: ID!
-  name: String!
-  symbol: String!
-  decimals: Int!
-}
-
-type FundCreation implements Event @entity {
+interface SharesChange {
   id: ID!
   fund: Fund!
-  account: Account!
-  contract: String!
   timestamp: BigInt!
+  investment: Investment!
+  shares: BigDecimal!
   transaction: Transaction!
 }
 
@@ -105,47 +34,16 @@ interface Metric {
   events: [Event!]!
 }
 
-type Share implements Metric @entity {
-  id: ID!
-  fund: Fund!
-  timestamp: BigInt!
-  shares: BigDecimal!
-  events: [Event!]!
-}
+#################################################
+# Low-level fund event entities
+#################################################
 
-type Holding implements Metric @entity {
+type FundCreation implements Event @entity {
   id: ID!
   fund: Fund!
+  account: Account!
+  contract: String!
   timestamp: BigInt!
-  asset: Asset!
-  quantity: BigDecimal!
-  events: [Event!]!
-}
-
-type Portfolio implements Metric @entity {
-  id: ID!
-  fund: Fund!
-  timestamp: BigInt!
-  holdings: [Holding!]!
-  events: [Event!]!
-}
-
-type State implements Metric @entity {
-  id: ID!
-  fund: Fund!
-  timestamp: BigInt!
-  shares: Share!
-  portfolio: Portfolio!
-  # payouts: Payout!
-  events: [Event!]!
-}
-
-interface SharesChange {
-  id: ID!
-  fund: Fund!
-  timestamp: BigInt!
-  investment: Investment!
-  shares: BigDecimal!
   transaction: Transaction!
 }
 
@@ -221,6 +119,19 @@ type TrackedAssetRemoval implements Event @entity {
   transaction: Transaction!
 }
 
+#################################################
+# Low-level network event entities
+#################################################
+
+type FundDeployerSet implements NetworkEvent @entity {
+  id: ID!
+  contract: String!
+  timestamp: BigInt!
+  nextFundDeployer: FundDeployer!
+  prevFundDeployer: FundDeployer
+  transaction: Transaction!
+}
+
 type AmguPriceChange implements NetworkEvent @entity {
   id: ID!
   contract: String!
@@ -229,8 +140,107 @@ type AmguPriceChange implements NetworkEvent @entity {
   transaction: Transaction!
 }
 
-enum FundStatusEnum {
-  None
-  Active
-  Inactive
+#################################################
+# High-level entities
+#################################################
+
+type Transaction @entity {
+  id: ID!
+  from: String!
+  value: BigDecimal!
+  timestamp: BigInt!
+  block: BigInt!
+  gasUsed: Int!
+  gasPrice: BigDecimal!
+  events: [Event!]! @derivedFrom(field: "transaction")
+}
+
+type FundDeployer @entity {
+  id: ID!
+  current: Boolean!
+  currentStart: BigInt!
+  currentEnd: BigInt
+  funds: [Fund!]! @derivedFrom(field: "deployer")
+}
+
+type Comptroller @entity {
+  id: ID!
+}
+
+type Fund @entity {
+  id: ID!
+  name: String!
+  inception: BigInt!
+  deployer: FundDeployer!
+  status: String!
+  manager: Account!
+  denominationAsset: Asset!
+  comptroller: Comptroller!
+  trackedAssets: [Asset!]!
+  shares: Share!
+  sharesHistory: [Share!]! @derivedFrom(field: "fund")
+  portfolio: Portfolio!
+  portfolioHistory: [Portfolio!]! @derivedFrom(field: "fund")
+  state: State!
+  stateHistory: [State!]! @derivedFrom(field: "fund")
+  events: [Event!]! @derivedFrom(field: "fund")
+}
+
+type Account @entity {
+  id: ID!
+  manager: Boolean!
+  managements: [Fund!]! @derivedFrom(field: "manager")
+  investor: Boolean!
+  investments: [Investment!]! @derivedFrom(field: "investor")
+  events: [Event!]! @derivedFrom(field: "account")
+}
+
+type Investment @entity {
+  id: ID!
+  fund: Fund!
+  investor: Account!
+  # changes: [SharesChange!]! @derivedFrom(field: "investment")
+  shares: BigDecimal!
+}
+
+type Asset @entity {
+  id: ID!
+  name: String!
+  symbol: String!
+  decimals: Int!
+}
+
+type Share implements Metric @entity {
+  id: ID!
+  fund: Fund!
+  timestamp: BigInt!
+  shares: BigDecimal!
+  events: [Event!]!
+}
+
+type Holding implements Metric @entity {
+  id: ID!
+  fund: Fund!
+  timestamp: BigInt!
+  asset: Asset!
+  quantity: BigDecimal!
+  events: [Event!]!
+}
+
+type Portfolio implements Metric @entity {
+  id: ID!
+  fund: Fund!
+  timestamp: BigInt!
+  holdings: [Holding!]!
+  events: [Event!]!
+}
+
+type State implements Metric @entity {
+  id: ID!
+  fund: Fund!
+  timestamp: BigInt!
+  shares: Share!
+  portfolio: Portfolio!
+  # payouts: Payout!
+  events: [Event!]!
 }
