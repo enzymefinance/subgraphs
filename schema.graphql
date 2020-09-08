@@ -135,8 +135,16 @@ type FundDeployerSet implements NetworkEvent @entity {
 type AmguPriceChange implements NetworkEvent @entity {
   id: ID!
   contract: String!
-  price: BigDecimal!
   timestamp: BigInt!
+  price: BigDecimal!
+  transaction: Transaction!
+}
+
+type MlnTokensBurn implements NetworkEvent @entity {
+  id: ID!
+  contract: String!
+  timestamp: BigInt!
+  amount: BigDecimal!
   transaction: Transaction!
 }
 
@@ -152,7 +160,8 @@ type Transaction @entity {
   block: BigInt!
   gasUsed: Int!
   gasPrice: BigDecimal!
-  events: [Event!]! @derivedFrom(field: "transaction")
+  fundEvents: [Event!]! @derivedFrom(field: "transaction")
+  networkEvents: [NetworkEvent!]! @derivedFrom(field: "transaction")
 }
 
 type FundDeployer @entity {
