@@ -155,6 +155,38 @@ type MlnTokensBurn implements Event & NetworkEvent @entity {
   transaction: Transaction!
 }
 
+type FrozenEtherThaw implements Event & NetworkEvent @entity {
+  id: ID!
+  contract: Contract!
+  timestamp: BigInt!
+  amount: BigDecimal!
+  transaction: Transaction!
+}
+
+type AmguPaymentInEther implements Event & NetworkEvent @entity {
+  id: ID!
+  contract: Contract!
+  timestamp: BigInt!
+  amount: BigDecimal!
+  transaction: Transaction!
+}
+
+type EtherTakerAddition implements Event & NetworkEvent @entity {
+  id: ID!
+  contract: Contract!
+  timestamp: BigInt!
+  etherTaker: String!
+  transaction: Transaction!
+}
+
+type EtherTakerRemoval implements Event & NetworkEvent @entity {
+  id: ID!
+  contract: Contract!
+  timestamp: BigInt!
+  etherTaker: String!
+  transaction: Transaction!
+}
+
 #################################################
 # High-level entities
 #################################################
