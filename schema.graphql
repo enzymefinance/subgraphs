@@ -261,6 +261,7 @@ type FundDeployerOwnershipTransfer implements Event & NetworkEvent @entity {
 type Transaction @entity {
   id: ID!
   from: String!
+  to: Contract
   value: BigDecimal!
   timestamp: BigInt!
   block: BigInt!

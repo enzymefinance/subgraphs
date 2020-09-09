@@ -23,10 +23,9 @@ export function ensureTransaction(event: ethereum.Event): Transaction {
     return transaction;
   }
 
-  event.transaction.input;
-
   transaction = new Transaction(id);
   transaction.from = event.transaction.from.toHex();
+  transaction.to = event.transaction.to ? event.transaction.to.toHex() : null;
   transaction.value = toBigDecimal(event.transaction.value);
   transaction.block = event.block.number;
   transaction.timestamp = event.block.timestamp;
