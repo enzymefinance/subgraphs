@@ -190,8 +190,10 @@ type FundDeployerSet implements Event & NetworkEvent @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
+
   nextFundDeployer: FundDeployer!
   prevFundDeployer: FundDeployer
+
   transaction: Transaction!
 }
 

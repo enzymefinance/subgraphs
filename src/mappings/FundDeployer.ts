@@ -52,6 +52,7 @@ export function handleComptrollerProxyDeployed(event: ComptrollerProxyDeployed):
   comptrollerProxyDeployment.transaction = ensureTransaction(event).id;
   comptrollerProxyDeployment.save();
 }
+
 export function handleOwnershipTransferred(event: OwnershipTransferred): void {
   let id = genericId(event);
 

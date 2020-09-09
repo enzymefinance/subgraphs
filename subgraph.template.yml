@@ -317,8 +317,6 @@ templates:
       eventHandlers:
         - event: AmguPaid(indexed address,uint256,uint256)
           handler: handleAmguPaid
-        - event: CallOnIntegrationExecuted(address,address[],uint256[],address[],uint256[])
-          handler: handleCallOnIntegrationExecuted
         - event: FundStatusUpdated(indexed uint8,indexed uint8)
           handler: handleFundStatusUpdated
         - event: SharesBought(indexed address,indexed address,uint256,uint256,uint256)
