@@ -254,6 +254,17 @@ type FundDeployerOwnershipTransfer implements Event & NetworkEvent @entity {
   transaction: Transaction!
 }
 
+type DerivativePriceFeedSet implements Event & NetworkEvent @entity {
+  id: ID!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+
+  derivative: Asset!
+  nextPriceFeed: PriceFeed!
+  prevPriceFeed: PriceFeed
+}
+
 #################################################
 # High-level entities
 #################################################
@@ -329,6 +340,17 @@ type Asset @entity {
   name: String!
   symbol: String!
   decimals: Int!
+  # The following might not be a good idea, since Assets could be derivatives and primitives?
+  # Or maybe the latter wasn't a good idea!?
+  #priceFeedHistory: [PriceFeed!] @derivedFrom(field: "")
+}
+
+type PriceFeed @entity {
+  id: ID!
+  asset: Asset!
+  current: Boolean!
+  currentStart: BigInt
+  currentEnd: BigInt
 }
 
 type Share implements Metric @entity {
