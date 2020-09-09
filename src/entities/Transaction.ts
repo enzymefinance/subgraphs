@@ -1,4 +1,4 @@
-import { ethereum } from '@graphprotocol/graph-ts';
+import { ethereum, crypto } from '@graphprotocol/graph-ts';
 import { Transaction } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
 import { toBigDecimal } from '../utils/tokenValue';
@@ -23,6 +23,8 @@ export function ensureTransaction(event: ethereum.Event): Transaction {
     return transaction;
   }
 
+  event.transaction.input;
+
   transaction = new Transaction(id);
   transaction.from = event.transaction.from.toHex();
   transaction.value = toBigDecimal(event.transaction.value);
@@ -30,6 +32,7 @@ export function ensureTransaction(event: ethereum.Event): Transaction {
   transaction.timestamp = event.block.timestamp;
   transaction.gasUsed = event.transaction.gasUsed.toI32();
   transaction.gasPrice = toBigDecimal(event.transaction.gasPrice);
+  transaction.input = event.transaction.input.toHex();
   transaction.save();
 
   return transaction;

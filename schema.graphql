@@ -266,6 +266,7 @@ type Transaction @entity {
   block: BigInt!
   gasUsed: Int!
   gasPrice: BigDecimal!
+  input: String!
   events: [Event!]! @derivedFrom(field: "transaction")
 }
 

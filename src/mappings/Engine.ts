@@ -40,6 +40,7 @@ export function handleAmguPriceSet(event: AmguPriceSet): void {
   amguPrice.transaction = ensureTransaction(event).id;
   amguPrice.save();
 }
+
 export function handleEtherTakerAdded(event: EtherTakerAdded): void {
   let id = genericId(event);
 
@@ -50,6 +51,7 @@ export function handleEtherTakerAdded(event: EtherTakerAdded): void {
   etherTaker.transaction = ensureTransaction(event).id;
   etherTaker.save();
 }
+
 export function handleEtherTakerRemoved(event: EtherTakerRemoved): void {
   let id = genericId(event);
 
