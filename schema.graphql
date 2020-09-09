@@ -182,18 +182,43 @@ type CallOnIntegrationExecution implements Event & FundEvent @entity {
   transaction: Transaction!
 }
 
+type PolicyEnabled implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  policy: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+ 
+}
+
+
 #################################################
 # Low-level network event entities
 #################################################
+
+type PolicyRegistration implements Event  @entity {
+  id: ID!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  policy: String!
+}
+
+type PolicyDeregistration implements Event  @entity {
+  id: ID!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  policy: String!
+}
 
 type FundDeployerSet implements Event & NetworkEvent @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
-
   nextFundDeployer: FundDeployer!
   prevFundDeployer: FundDeployer
-
   transaction: Transaction!
 }
 
@@ -329,6 +354,13 @@ type Asset @entity {
   name: String!
   symbol: String!
   decimals: Int!
+}
+
+type Policy @entity {
+  id: ID!
+  timestamp: BigInt!
+  idenifier: String!
+  funds: [Fund!]!
 }
 
 type Share implements Metric @entity {
