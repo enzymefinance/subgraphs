@@ -184,12 +184,12 @@ type CallOnIntegrationExecution implements Event & FundEvent @entity {
 
 type PolicyEnabled implements Event & FundEvent @entity {
   id: ID!
+  contract: Contract!
   fund: Fund!
   account: Account!
-  policy: Contract!
+  policy: Policy!
   timestamp: BigInt!
   transaction: Transaction!
- 
 }
 
 
@@ -199,18 +199,20 @@ type PolicyEnabled implements Event & FundEvent @entity {
 
 type PolicyRegistration implements Event  @entity {
   id: ID!
+  identifier: String!
   contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  policy: String!
+  policy: Policy!
 }
 
 type PolicyDeregistration implements Event  @entity {
   id: ID!
+  identifier: String!
   contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  policy: String!
+  policy: Policy!
 }
 
 type FundDeployerSet implements Event & NetworkEvent @entity {
@@ -330,6 +332,7 @@ type Fund @entity {
   state: State!
   stateHistory: [State!]! @derivedFrom(field: "fund")
   events: [FundEvent!]! @derivedFrom(field: "fund")
+  policies: [Policy!]! 
 }
 
 type Account @entity {
@@ -355,11 +358,11 @@ type Asset @entity {
   symbol: String!
   decimals: Int!
 }
-
+# 
 type Policy @entity {
   id: ID!
   timestamp: BigInt!
-  idenifier: String!
+  identifier: String!
   funds: [Fund!]!
 }
 
