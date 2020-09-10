@@ -342,14 +342,14 @@ type Asset @entity {
   decimals: Int!
   isDerivative: Boolean!
   derivedFrom: [Asset!]
+  # If at some point we have multiple priceFeed contracts that fund owners can choose from, then currentPriceFeed relationship wouldn't be 1-to-1.
+  currentPriceFeed: PriceFeed
   # Not sure about the priceFeedHistory, since Assets could be derivatives and primitives?
   #priceFeedHistory: [PriceFeed!] @derivedFrom(field: "")
 }
 
 type PriceFeed @entity {
   id: ID!
-  # TODO: set the following as an array, as we might have pricefeeds that provide price for multiple assets
-  # However, we then have a situation where the priceFeed is current for one of the Assets, but not for another one?
   asset: [Asset!]!
 }
 
