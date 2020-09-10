@@ -313,11 +313,14 @@ type Adapter @entity {
 type Transaction @entity {
   id: ID!
   from: String!
+  to: String
+  contract: Contract
   value: BigDecimal!
   timestamp: BigInt!
   block: BigInt!
   gasUsed: Int!
   gasPrice: BigDecimal!
+  input: String!
   events: [Event!]! @derivedFrom(field: "transaction")
 }
 
