@@ -340,13 +340,16 @@ type Asset @entity {
   name: String!
   symbol: String!
   decimals: Int!
-  # The following might not be a good idea, since Assets could be derivatives and primitives?
-  # Or maybe the latter wasn't a good idea!?
+  isDerivative: Boolean!
+  derivedFrom: [Asset!]
+  # Not sure about the priceFeedHistory, since Assets could be derivatives and primitives?
   #priceFeedHistory: [PriceFeed!] @derivedFrom(field: "")
 }
 
 type PriceFeed @entity {
   id: ID!
+  # TODO: set the following as an array, as we might have pricefeeds that provide price for multiple assets
+  # However, we might then have a situation where the priceFeed is current for one of the Assets, but not for another one?
   asset: Asset!
   current: Boolean!
   currentStart: BigInt
