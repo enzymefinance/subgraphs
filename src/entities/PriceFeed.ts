@@ -1,5 +1,5 @@
 import { Address } from '@graphprotocol/graph-ts';
-import { Asset, PriceFeed } from '../generated/schema';
+import { PriceFeed } from '../generated/schema';
 
 export function ensurePriceFeed(priceFeedAddress: Address): PriceFeed {
   let priceFeed = PriceFeed.load(priceFeedAddress.toHex()) as PriceFeed;
