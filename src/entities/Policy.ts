@@ -1,7 +1,7 @@
-import { Policy, Asset } from "../generated/schema";
+import { Policy } from "../generated/schema";
 import { logCritical } from "../utils/logCritical";
 import { Address } from "@graphprotocol/graph-ts";
-import { StandardERC20Contract } from "../generated/StandardERC20Contract";
+
 
 
 

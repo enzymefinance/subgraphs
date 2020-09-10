@@ -193,9 +193,28 @@ type PolicyEnabled implements Event & FundEvent @entity {
 }
 
 
+
 #################################################
 # Low-level network event entities
 #################################################
+
+type IntegrationRegistration implements Event  @entity {
+  id: ID!
+  identifier: String!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  adapter: Adapter!
+}
+
+type IntegrationDeregistration implements Event  @entity {
+  id: ID!
+  identifier: String!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  adapter: Adapter!
+}
 
 type PolicyRegistration implements Event  @entity {
   id: ID!
@@ -285,6 +304,12 @@ type FundDeployerOwnershipTransfer implements Event & NetworkEvent @entity {
 # High-level entities
 #################################################
 
+type Adapter @entity {
+  id: ID!
+  identifier: String!
+  contract: Contract!
+}
+
 type Transaction @entity {
   id: ID!
   from: String!
@@ -358,7 +383,7 @@ type Asset @entity {
   symbol: String!
   decimals: Int!
 }
-# 
+
 type Policy @entity {
   id: ID!
   timestamp: BigInt!

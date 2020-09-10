@@ -16,6 +16,7 @@ export function handlePolicyDeregistered(event: PolicyDeregistered): void {
   deregistration.transaction = ensureTransaction(event).id;
   deregistration.contract = ensureContract(event.params.policy, 'PolicyManager', event.block.timestamp).id;
   deregistration.policy = ensurePolicy(event.params.policy, event.params.identifier.toHex()).id;
+  deregistration.identifier = event.params.identifier.toHex()
   deregistration.save();
 }
 
@@ -41,5 +42,6 @@ export function handlePolicyRegistered(event: PolicyRegistered): void {
   registration.transaction = ensureTransaction(event).id;
   registration.contract = ensureContract(event.address, 'PolicyManager', event.block.timestamp).id;
   registration.policy = ensurePolicy(event.params.policy, event.params.identifier.toHex()).id;
+  registration.identifier = event.params.identifier.toHex()
   registration.save();
 }
