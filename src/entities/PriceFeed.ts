@@ -1,7 +1,7 @@
 import { Address } from '@graphprotocol/graph-ts';
-import { PriceFeed } from '../generated/schema';
+import { Asset, PriceFeed } from '../generated/schema';
 
-export function ensurePriceFeed(priceFeedAddress: Address): PriceFeed {
+export function ensurePriceFeed(priceFeedAddress: Address, asset: Asset): PriceFeed {
   let priceFeed = PriceFeed.load(priceFeedAddress.toHex()) as PriceFeed;
   if (priceFeed) {
     return priceFeed;
@@ -9,7 +9,7 @@ export function ensurePriceFeed(priceFeedAddress: Address): PriceFeed {
 
   priceFeed = new PriceFeed(priceFeedAddress.toHex());
   priceFeed.current = false;
-  priceFeed.save();
+  priceFeed.asset = asset.id;
 
   return priceFeed;
 }

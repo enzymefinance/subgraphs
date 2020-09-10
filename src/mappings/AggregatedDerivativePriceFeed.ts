@@ -9,9 +9,10 @@ import { zeroAddress } from '../constants';
 
 export function handlePriceFeedSet(event: PriceFeedSet): void {
   let derivativePriceFeedSet = new DerivativePriceFeedSet(genericId(event));
+  let derivative = ensureAsset(event.params.derivative);
 
   if (!event.params.prevPriceFeed.equals(zeroAddress)) {
-    let prevPriceFeed = ensurePriceFeed(event.params.prevPriceFeed);
+    let prevPriceFeed = ensurePriceFeed(event.params.prevPriceFeed, derivative);
     prevPriceFeed.current = false;
     prevPriceFeed.currentEnd = event.block.timestamp;
     prevPriceFeed.save();
@@ -19,9 +20,7 @@ export function handlePriceFeedSet(event: PriceFeedSet): void {
     derivativePriceFeedSet.prevPriceFeed = prevPriceFeed.id;
   }
 
-  let derivative = ensureAsset(event.params.derivative);
-
-  let nextPriceFeed = ensurePriceFeed(event.params.nextPriceFeed);
+  let nextPriceFeed = ensurePriceFeed(event.params.nextPriceFeed, derivative);
   nextPriceFeed.current = true;
   nextPriceFeed.currentStart = event.block.timestamp;
   nextPriceFeed.save();
