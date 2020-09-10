@@ -349,8 +349,8 @@ type Asset @entity {
 type PriceFeed @entity {
   id: ID!
   # TODO: set the following as an array, as we might have pricefeeds that provide price for multiple assets
-  # However, we might then have a situation where the priceFeed is current for one of the Assets, but not for another one?
-  asset: Asset!
+  # However, we then have a situation where the priceFeed is current for one of the Assets, but not for another one?
+  asset: [Asset!]!
   current: Boolean!
   currentStart: BigInt
   currentEnd: BigInt
