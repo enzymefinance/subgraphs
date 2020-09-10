@@ -1,7 +1,11 @@
-import { PriceFeedSet } from '../generated/AggregatedDerivativePriceFeedContract';
+import {
+  PriceFeedSet,
+  AggregatedDerivativePriceFeedContract,
+} from '../generated/AggregatedDerivativePriceFeedContract';
 import { DerivativePriceFeedSet } from '../generated/schema';
 import { genericId } from '../utils/genericId';
 import { useAsset, ensureAsset } from '../entities/Asset';
+import { Address } from '@graphprotocol/graph-ts';
 import { ensureContract } from '../entities/Contract';
 import { ensurePriceFeed } from '../entities/PriceFeed';
 import { ensureTransaction } from '../entities/Transaction';
@@ -16,9 +20,14 @@ export function handlePriceFeedSet(event: PriceFeedSet): void {
   // Specify that our Asset instance is a derivative
   derivative.isDerivative = true;
 
-  // TODO: Find out what the derivative is derived from & assign it
-  // primitive =
-  // derivative.derivedFrom =
+  // Find out what the derivative is derived from & assign it
+  let contract = AggregatedDerivativePriceFeedContract.bind(event.address);
+  let primitivesArray = contract.getRatesToUnderlyings(Address.fromString(derivative.id)).value0;
+  let primitivesStringArray = new Array<string>(primitivesArray.length);
+  for (let i = 0; i < primitivesArray.length; ++i) {
+    primitivesStringArray[i] = primitivesArray[i].toString();
+  }
+  derivative.derivedFrom = primitivesStringArray;
 
   // Assign our derivative its new price feed
   derivative.currentPriceFeed = nextPriceFeed.id;
@@ -26,17 +35,20 @@ export function handlePriceFeedSet(event: PriceFeedSet): void {
 
   if (!event.params.prevPriceFeed.equals(zeroAddress)) {
     let prevPriceFeed = ensurePriceFeed(event.params.prevPriceFeed);
-    // Check if the price feed is already listed for the asset
 
-    prevPriceFeed.asset.push(derivative.id);
-    /*     prevPriceFeed.current = false;
-    prevPriceFeed.currentEnd = event.block.timestamp; */
+    // Only add asset to pricefeed if it isn't already in the pricefeed asset array
+    if (prevPriceFeed.asset.indexOf(derivative.id) === -1) {
+      prevPriceFeed.asset.push(derivative.id);
+    }
+
     prevPriceFeed.save();
-
     derivativePriceFeedSet.prevPriceFeed = prevPriceFeed.id;
   }
 
-  nextPriceFeed.asset.push(derivative);
+  // Only add asset to pricefeed if it isn't already in the pricefeed asset array
+  if (nextPriceFeed.asset.indexOf(derivative.id) === -1) {
+    nextPriceFeed.asset.push(derivative.id);
+  }
   nextPriceFeed.save();
 
   derivativePriceFeedSet.derivative = derivative.id;
