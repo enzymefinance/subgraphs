@@ -24,10 +24,13 @@ export function ensureAsset(address: Address): Asset {
   let symbol = contract.symbol();
   let decimals = contract.decimals();
 
+  // TODO: Check if the Asset is a derivative and populate isDerivative & derivedFrom
+
   asset = new Asset(address.toHex());
   asset.name = name;
   asset.symbol = symbol;
   asset.decimals = decimals;
+  asset.isDerivative = false;
   asset.save();
 
   return asset;
