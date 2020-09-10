@@ -50,7 +50,8 @@ export function handleCallOnIntegrationExecuted(event: CallOnIntegrationExecuted
   for (let i: i32 = 0; i < event.params.outgoingAssets.length; i++) {
     outgoingAssets.push(ensureAssets(event.params.outgoingAssets)[i].id);
   }
-
+  
+  execution.contract = ensureContract(event.address, 'IntegrationManager', event.block.timestamp).id
   execution.fund = fund.id;
   execution.account = ensureAccount(address).id;
   execution.incomingAssets = incomingAssets;
