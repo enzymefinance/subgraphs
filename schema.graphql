@@ -148,6 +148,17 @@ type AmguPayment implements Event & FundEvent @entity {
   transaction: Transaction!
 }
 
+type AssetWithdrawal implements Event & FundEvent @entity {
+  id: ID!
+  asset: Asset!
+  fund: Fund!
+  account: Account!
+  timestamp: BigInt!
+  transaction: Transaction!
+  target: String!
+  amount: BigInt!
+}
+
 type TrackedAssetAddition implements Event & FundEvent @entity {
   id: ID!
   fund: Fund!

@@ -11,18 +11,34 @@ import {
 } from '../generated/VaultLibContract';
 import { useFund } from '../entities/Fund';
 import { ensureAsset } from '../entities/Asset';
-import { TrackedAssetAddition, TrackedAssetRemoval } from '../generated/schema';
+import { TrackedAssetAddition, TrackedAssetRemoval, AssetWithdrawal } from '../generated/schema';
 import { arrayUnique } from '../utils/arrayUnique';
 import { arrayDiff } from '../utils/arrayDiff';
 import { genericId } from '../utils/genericId';
-import { ensureTransaction, transactionId } from '../entities/Transaction';
+import { ensureTransaction } from '../entities/Transaction';
 import { ensureAccount } from '../entities/Account';
 import { Address } from '@graphprotocol/graph-ts';
 import { ensureContract } from '../entities/Contract';
 
 export function handleAccessorSet(event: AccessorSet): void {}
 export function handleApproval(event: Approval): void {}
-export function handleAssetWithdrawn(event: AssetWithdrawn): void {}
+
+export function handleAssetWithdrawn(event: AssetWithdrawn): void {
+  let asset = ensureAsset(event.params.asset);
+  let fund = useFund(event.address.toHex());
+  let id = genericId(event);
+  let address = Address.fromString(ensureTransaction(event).from);
+  let withdrawal = new AssetWithdrawal(id);
+  withdrawal.asset = asset.id;
+  withdrawal.fund = fund.id;
+  withdrawal.account = ensureAccount(address).id;
+  withdrawal.timestamp = event.block.timestamp;
+  withdrawal.transaction = ensureTransaction(event).id;
+  withdrawal.target = event.params.target;
+  withdrawal.amount = event.params.amount;
+  withdrawal.save();
+}
+
 export function handleMigratorSet(event: MigratorSet): void {}
 export function handleOwnerSet(event: OwnerSet): void {}
 
