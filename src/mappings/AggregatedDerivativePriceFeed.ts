@@ -33,7 +33,11 @@ export function handlePriceFeedSet(event: PriceFeedSet): void {
 
   derivativePriceFeedSet.derivative = derivative.id;
   derivativePriceFeedSet.nextPriceFeed = nextPriceFeed.id;
-  derivativePriceFeedSet.contract = ensureContract(event.address, 'DerivativePriceFeedSet', event.block.timestamp).id;
+  derivativePriceFeedSet.contract = ensureContract(
+    event.address,
+    'AggregatedDerivativePriceFeed',
+    event.block.timestamp,
+  ).id;
   derivativePriceFeedSet.timestamp = event.block.timestamp;
   derivativePriceFeedSet.transaction = ensureTransaction(event).id;
 
