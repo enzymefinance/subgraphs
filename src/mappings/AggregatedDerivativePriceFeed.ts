@@ -10,6 +10,8 @@ import { zeroAddress } from '../constants';
 export function handlePriceFeedSet(event: PriceFeedSet): void {
   let derivativePriceFeedSet = new DerivativePriceFeedSet(genericId(event));
   let derivative = ensureAsset(event.params.derivative);
+  derivative.isDerivative = true;
+  derivative.save();
 
   if (!event.params.prevPriceFeed.equals(zeroAddress)) {
     let prevPriceFeed = ensurePriceFeed(event.params.prevPriceFeed);
@@ -20,6 +22,8 @@ export function handlePriceFeedSet(event: PriceFeedSet): void {
 
     derivativePriceFeedSet.prevPriceFeed = prevPriceFeed.id;
   }
+
+  // TODO: Get underlying asset for derivative
 
   let nextPriceFeed = ensurePriceFeed(event.params.nextPriceFeed);
   nextPriceFeed.asset = derivative.id;
