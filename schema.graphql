@@ -351,9 +351,6 @@ type PriceFeed @entity {
   # TODO: set the following as an array, as we might have pricefeeds that provide price for multiple assets
   # However, we then have a situation where the priceFeed is current for one of the Assets, but not for another one?
   asset: [Asset!]!
-  current: Boolean!
-  currentStart: BigInt
-  currentEnd: BigInt
 }
 
 type Share implements Metric @entity {
