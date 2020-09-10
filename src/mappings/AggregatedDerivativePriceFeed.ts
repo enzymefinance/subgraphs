@@ -12,7 +12,8 @@ export function handlePriceFeedSet(event: PriceFeedSet): void {
   let derivative = ensureAsset(event.params.derivative);
 
   if (!event.params.prevPriceFeed.equals(zeroAddress)) {
-    let prevPriceFeed = ensurePriceFeed(event.params.prevPriceFeed, derivative);
+    let prevPriceFeed = ensurePriceFeed(event.params.prevPriceFeed);
+    prevPriceFeed.asset = derivative.id;
     prevPriceFeed.current = false;
     prevPriceFeed.currentEnd = event.block.timestamp;
     prevPriceFeed.save();
@@ -20,7 +21,8 @@ export function handlePriceFeedSet(event: PriceFeedSet): void {
     derivativePriceFeedSet.prevPriceFeed = prevPriceFeed.id;
   }
 
-  let nextPriceFeed = ensurePriceFeed(event.params.nextPriceFeed, derivative);
+  let nextPriceFeed = ensurePriceFeed(event.params.nextPriceFeed);
+  nextPriceFeed.asset = derivative.id;
   nextPriceFeed.current = true;
   nextPriceFeed.currentStart = event.block.timestamp;
   nextPriceFeed.save();
