@@ -265,6 +265,17 @@ type DerivativePriceFeedSet implements Event & NetworkEvent @entity {
   prevPriceFeed: PriceFeed
 }
 
+type PrimitivePriceFeedSet implements Event & NetworkEvent @entity {
+  id: ID!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+
+  primitive: Asset!
+  nextPriceFeed: PriceFeed!
+  prevPriceFeed: PriceFeed
+}
+
 #################################################
 # High-level entities
 #################################################
