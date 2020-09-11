@@ -11,7 +11,13 @@ import {
 } from '../generated/VaultLibContract';
 import { useFund } from '../entities/Fund';
 import { ensureAsset } from '../entities/Asset';
-import { TrackedAssetAddition, TrackedAssetRemoval, AssetWithdrawal, AccessorSetEvent } from '../generated/schema';
+import {
+  TrackedAssetAddition,
+  TrackedAssetRemoval,
+  AssetWithdrawal,
+  AccessorSetEvent,
+  ApprovalGranted,
+} from '../generated/schema';
 import { arrayUnique } from '../utils/arrayUnique';
 import { arrayDiff } from '../utils/arrayDiff';
 import { genericId } from '../utils/genericId';
@@ -20,6 +26,7 @@ import { ensureAccount } from '../entities/Account';
 import { Address } from '@graphprotocol/graph-ts';
 import { ensureContract } from '../entities/Contract';
 import { ensureComptroller } from '../entities/Comptroller';
+import { useAdapter } from '../entities/Adapter';
 
 export function handleAccessorSet(event: AccessorSet): void {
   let id = genericId(event);
@@ -30,11 +37,20 @@ export function handleAccessorSet(event: AccessorSet): void {
   accessorSet.prevAccessor = ensureComptroller(event.params.prevAccessor).id;
   accessorSet.nextAccessor = ensureComptroller(event.params.nextAccessor).id;
   accessorSet.transaction = ensureTransaction(event).id;
-  accessorSet.save()
+  accessorSet.save();
 }
 
 export function handleApproval(event: Approval): void {
-  
+  let id = genericId(event);
+  let approval = new ApprovalGranted(id);
+  approval.fund = useFund(event.address.toHex()).id;
+  approval.account = ensureAccount(Address.fromString(ensureTransaction(event).from)).id;
+  approval.contract = ensureContract(event.address, 'VaultLib', event.block.timestamp).id;
+  approval.timestamp = event.block.timestamp;
+  approval.transaction = ensureTransaction(event).id;
+  approval.owner = ensureAccount(Address.fromString(ensureTransaction(event).from)).id;
+  approval.spender = useAdapter(event.params.spender.toHex()).id
+  approval.value = event.params.value
 }
 
 export function handleAssetWithdrawn(event: AssetWithdrawn): void {

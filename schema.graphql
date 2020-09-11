@@ -215,6 +215,18 @@ type AccessorSetEvent implements Event  & FundEvent @entity {
   timestamp: BigInt!
 }
 
+type ApprovalGranted implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  owner: Account!
+  spender: Adapter!
+  value: BigInt!
+}
+
 #################################################
 # Low-level network event entities
 #################################################
