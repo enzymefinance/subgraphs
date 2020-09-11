@@ -4,7 +4,7 @@ import {
 } from '../generated/AggregatedDerivativePriceFeedContract';
 import { DerivativePriceFeedSet } from '../generated/schema';
 import { genericId } from '../utils/genericId';
-import { useAsset, ensureAsset } from '../entities/Asset';
+import { ensureAsset } from '../entities/Asset';
 import { Address } from '@graphprotocol/graph-ts';
 import { ensureContract } from '../entities/Contract';
 import { ensurePriceFeed } from '../entities/PriceFeed';
@@ -36,7 +36,7 @@ export function handlePriceFeedSet(event: PriceFeedSet): void {
   if (!event.params.prevPriceFeed.equals(zeroAddress)) {
     let prevPriceFeed = ensurePriceFeed(event.params.prevPriceFeed);
 
-    // Only add asset to pricefeed if it isn't already in the pricefeed asset array
+    // Only add asset to pricefeed.asset array if it isn't there already
     if (prevPriceFeed.asset.indexOf(derivative.id) === -1) {
       prevPriceFeed.asset.push(derivative.id);
     }
@@ -45,7 +45,7 @@ export function handlePriceFeedSet(event: PriceFeedSet): void {
     derivativePriceFeedSet.prevPriceFeed = prevPriceFeed.id;
   }
 
-  // Only add asset to pricefeed if it isn't already in the pricefeed asset array
+  // Only add asset to pricefeed.asset array if it isn't there already
   if (nextPriceFeed.asset.indexOf(derivative.id) === -1) {
     nextPriceFeed.asset.push(derivative.id);
   }
