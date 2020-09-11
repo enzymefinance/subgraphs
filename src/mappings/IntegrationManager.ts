@@ -11,7 +11,7 @@ import { ensureTransaction } from '../entities/Transaction';
 import { ensureAdapter } from '../entities/Adapter';
 import { useFund } from '../entities/Fund';
 import { ensureAccount } from '../entities/Account';
-import { ensureAssets } from '../entities/Asset';
+import { ensureAsset, ensureAssets } from '../entities/Asset';
 
 export function handleAdapterDeregistered(event: AdapterDeregistered): void {
   let id = genericId(event);
@@ -40,18 +40,11 @@ export function handleCallOnIntegrationExecuted(event: CallOnIntegrationExecuted
   let execution = new CallOnIntegrationExecution(id);
   let fund = useFund(event.address.toHex());
   let address = Address.fromString(ensureTransaction(event).from);
-
-  let incomingAssets: string[] = [];
-  for (let i: i32 = 0; i < event.params.incomingAssets.length; i++) {
-    incomingAssets.push(ensureAssets(event.params.incomingAssets)[i].id);
-  }
-
-  let outgoingAssets: string[] = [];
-  for (let i: i32 = 0; i < event.params.outgoingAssets.length; i++) {
-    outgoingAssets.push(ensureAssets(event.params.outgoingAssets)[i].id);
-  }
   
-  execution.contract = ensureContract(event.address, 'IntegrationManager', event.block.timestamp).id
+  let incomingAssets = event.params.incomingAssets.map<string>((asset) => ensureAsset(asset).id);
+  let outgoingAssets = event.params.outgoingAssets.map<string>((asset) => ensureAsset(asset).id);
+  
+  execution.contract = ensureContract(event.address, 'IntegrationManager', event.block.timestamp).id;
   execution.fund = fund.id;
   execution.account = ensureAccount(address).id;
   execution.incomingAssets = incomingAssets;

@@ -11,7 +11,7 @@ import {
 } from '../generated/VaultLibContract';
 import { useFund } from '../entities/Fund';
 import { ensureAsset } from '../entities/Asset';
-import { TrackedAssetAddition, TrackedAssetRemoval, AssetWithdrawal } from '../generated/schema';
+import { TrackedAssetAddition, TrackedAssetRemoval, AssetWithdrawal, AccessorSetEvent } from '../generated/schema';
 import { arrayUnique } from '../utils/arrayUnique';
 import { arrayDiff } from '../utils/arrayDiff';
 import { genericId } from '../utils/genericId';
@@ -19,22 +19,34 @@ import { ensureTransaction } from '../entities/Transaction';
 import { ensureAccount } from '../entities/Account';
 import { Address } from '@graphprotocol/graph-ts';
 import { ensureContract } from '../entities/Contract';
+import { ensureComptroller } from '../entities/Comptroller';
 
-export function handleAccessorSet(event: AccessorSet): void {}
-export function handleApproval(event: Approval): void {}
+export function handleAccessorSet(event: AccessorSet): void {
+  let id = genericId(event);
+  let accessorSet = new AccessorSetEvent(id);
+  accessorSet.contract = ensureContract(event.address, 'VaultLib', event.block.timestamp).id;
+  accessorSet.fund = useFund(event.address.toHex()).id;
+  accessorSet.account = ensureAccount(Address.fromString(ensureTransaction(event).from)).id;
+  accessorSet.prevAccessor = ensureComptroller(event.params.prevAccessor).id;
+  accessorSet.nextAccessor = ensureComptroller(event.params.nextAccessor).id;
+  accessorSet.transaction = ensureTransaction(event).id;
+  accessorSet.save()
+}
+
+export function handleApproval(event: Approval): void {
+  
+}
 
 export function handleAssetWithdrawn(event: AssetWithdrawn): void {
-  let asset = ensureAsset(event.params.asset);
-  let fund = useFund(event.address.toHex());
   let id = genericId(event);
   let address = Address.fromString(ensureTransaction(event).from);
   let withdrawal = new AssetWithdrawal(id);
-  withdrawal.asset = asset.id;
-  withdrawal.fund = fund.id;
+  withdrawal.asset = ensureAsset(event.params.asset).id;
+  withdrawal.fund = useFund(event.address.toHex()).id;
   withdrawal.account = ensureAccount(address).id;
   withdrawal.timestamp = event.block.timestamp;
   withdrawal.transaction = ensureTransaction(event).id;
-  withdrawal.target = event.params.target;
+  withdrawal.target = event.params.target.toHex();
   withdrawal.amount = event.params.amount;
   withdrawal.save();
 }
@@ -43,10 +55,9 @@ export function handleMigratorSet(event: MigratorSet): void {}
 export function handleOwnerSet(event: OwnerSet): void {}
 
 export function handleTrackedAssetAdded(event: TrackedAssetAdded): void {
-  let asset = ensureAsset(event.params.asset);
-  let fund = useFund(event.address.toHex());
-
   let id = genericId(event);
+  let fund = useFund(event.address.toHex());
+  let asset = ensureAsset(event.params.asset);
   let trackedAssetAddition = new TrackedAssetAddition(id);
   trackedAssetAddition.asset = asset.id;
   trackedAssetAddition.fund = fund.id;
@@ -61,10 +72,9 @@ export function handleTrackedAssetAdded(event: TrackedAssetAdded): void {
 }
 
 export function handleTrackedAssetRemoved(event: TrackedAssetRemoved): void {
-  let asset = ensureAsset(event.params.asset);
-  let fund = useFund(event.address.toHex());
-
   let id = genericId(event);
+  let fund = useFund(event.address.toHex());
+  let asset = ensureAsset(event.params.asset);
   let trackedAssetRemoval = new TrackedAssetRemoval(id);
   trackedAssetRemoval.asset = asset.id;
   trackedAssetRemoval.fund = fund.id;

@@ -15,7 +15,6 @@ import {
 import {
   AmguPayment,
   Asset,
-  CallOnIntegrationExecution,
   FundConfigSetting,
   FundStatusUpdate,
 } from '../generated/schema';

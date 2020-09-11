@@ -22,6 +22,7 @@ export function ensurePolicy(address: Address, identifier: string): Policy {
 
   policy = new Policy(address.toHex());
   policy.identifier = identifier;
+  policy.funds = []
   policy.save();
 
   return policy;

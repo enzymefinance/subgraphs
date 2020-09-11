@@ -153,6 +153,7 @@ type AssetWithdrawal implements Event & FundEvent @entity {
   asset: Asset!
   fund: Fund!
   account: Account!
+  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
   target: String!
@@ -203,7 +204,16 @@ type PolicyEnabled implements Event & FundEvent @entity {
   transaction: Transaction!
 }
 
-
+type AccessorSetEvent implements Event  & FundEvent @entity {
+  id: ID!
+  contract: Contract!
+  fund: Fund!
+  account: Account!
+  prevAccessor: Comptroller!
+  nextAccessor: Comptroller!
+  transaction: Transaction!
+  timestamp: BigInt!
+}
 
 #################################################
 # Low-level network event entities
@@ -311,6 +321,8 @@ type FundDeployerOwnershipTransfer implements Event & NetworkEvent @entity {
   transaction: Transaction!
 }
 
+
+
 #################################################
 # High-level entities
 #################################################
@@ -318,6 +330,11 @@ type FundDeployerOwnershipTransfer implements Event & NetworkEvent @entity {
 type Adapter @entity {
   id: ID!
   identifier: String!
+  contract: Contract!
+}
+
+type Accessor @entity {
+  id: ID!
   contract: Contract!
 }
 

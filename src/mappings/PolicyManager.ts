@@ -24,13 +24,19 @@ export function handlePolicyEnabledForFund(event: PolicyEnabledForFund): void {
   let id = genericId(event);
   let enabled = new PolicyEnabled(id);
   let fund = useFund(event.address.toHex());
+  let policy = usePolicy(event.params.policy.toHex())
+ 
+  policy.funds = arrayUnique<string>(policy.funds.concat([fund.id]))
+  policy.save()
+ 
   enabled.fund = fund.id;
   enabled.account = ensureAccount(Address.fromString(fund.manager)).id;
   enabled.timestamp = event.block.timestamp;
   enabled.transaction = ensureTransaction(event).id;
   enabled.contract = ensureContract(event.params.policy, 'PolicyManager', event.block.timestamp).id;
-  enabled.policy = usePolicy(event.params.policy.toHex()).id;
+  enabled.policy = policy.id;
   enabled.save();
+ 
   fund.policies = arrayUnique<string>(fund.policies.concat([enabled.policy]));
   fund.save();
 }
