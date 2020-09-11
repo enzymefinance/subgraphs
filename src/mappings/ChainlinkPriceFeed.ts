@@ -6,6 +6,7 @@ import { ensureTransaction } from '../entities/Transaction';
 import { ensureAsset } from '../entities/Asset';
 import { genericId } from '../utils/genericId';
 import { zeroAddress } from '../constants';
+import { arrayUnique } from '../utils/arrayUnique';
 
 export function handleAggregatorSet(event: AggregatorSet): void {
   let primitivePriceFeedSet = new PrimitivePriceFeedSet(genericId(event));
@@ -14,25 +15,21 @@ export function handleAggregatorSet(event: AggregatorSet): void {
   let primitive = ensureAsset(event.params.primitive);
 
   // Assign our primitive its new price feed
-  primitive.currentPriceFeed = nextPriceFeed.id;
+  primitive.priceFeed = nextPriceFeed.id;
   primitive.save();
 
   if (!event.params.prevAggregator.equals(zeroAddress)) {
     let prevPriceFeed = ensurePriceFeed(event.params.prevAggregator);
 
     // Only add asset to pricefeed.asset array if it isn't there already
-    if (prevPriceFeed.asset.indexOf(primitive.id) === -1) {
-      prevPriceFeed.asset.push(primitive.id);
-    }
+    prevPriceFeed.assets = arrayUnique<string>(prevPriceFeed.assets.concat([primitive.id]));
 
     prevPriceFeed.save();
     primitivePriceFeedSet.prevPriceFeed = prevPriceFeed.id;
   }
 
   // Only add asset to pricefeed.asset array if it isn't there already
-  if (nextPriceFeed.asset.indexOf(primitive.id) === -1) {
-    nextPriceFeed.asset.push(primitive.id);
-  }
+  nextPriceFeed.assets = arrayUnique<string>(nextPriceFeed.assets.concat([primitive.id]));
   nextPriceFeed.save();
 
   primitivePriceFeedSet.primitive = primitive.id;

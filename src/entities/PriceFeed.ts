@@ -8,5 +8,6 @@ export function ensurePriceFeed(priceFeedAddress: Address): PriceFeed {
   }
 
   priceFeed = new PriceFeed(priceFeedAddress.toHex());
+  priceFeed.assets = [];
   return priceFeed;
 }
