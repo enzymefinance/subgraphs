@@ -28,6 +28,8 @@ export function ensureAsset(address: Address): Asset {
   asset.name = name;
   asset.symbol = symbol;
   asset.decimals = decimals;
+  asset.isDerivative = false;
+  asset.priceFeed = '';
   asset.save();
 
   return asset;

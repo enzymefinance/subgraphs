@@ -333,7 +333,27 @@ type FundDeployerOwnershipTransfer implements Event & NetworkEvent @entity {
   transaction: Transaction!
 }
 
+type DerivativePriceFeedSet implements Event & NetworkEvent @entity {
+  id: ID!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
 
+  derivative: Asset!
+  nextPriceFeed: PriceFeed!
+  prevPriceFeed: PriceFeed
+}
+
+type PrimitivePriceFeedSet implements Event & NetworkEvent @entity {
+  id: ID!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+
+  primitive: Asset!
+  nextPriceFeed: PriceFeed!
+  prevPriceFeed: PriceFeed
+}
 
 #################################################
 # High-level entities
@@ -425,6 +445,14 @@ type Asset @entity {
   name: String!
   symbol: String!
   decimals: Int!
+  isDerivative: Boolean!
+  derivedFrom: [Asset!]
+  priceFeed: PriceFeed!
+}
+
+type PriceFeed @entity {
+  id: ID!
+  assets: [Asset!]!
 }
 
 type Policy @entity {
