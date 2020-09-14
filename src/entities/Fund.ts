@@ -50,7 +50,7 @@ export function createFund(event: NewFundDeployed): Fund {
   fund.name = event.params.fundName;
   fund.inception = event.block.timestamp;
   fund.deployer = ensureFundDeployer(event.address).id;
-  fund.comptroller = ensureComptroller(event.params.comptrollerProxy).id;
+  fund.accessor = ensureComptroller(event.params.comptrollerProxy).id;
   fund.manager = ensureManager(event.params.fundOwner).id;
   fund.trackedAssets = [];
   fund.shares = shares.id;
@@ -58,6 +58,7 @@ export function createFund(event: NewFundDeployed): Fund {
   fund.state = state.id;
   fund.status = 'None';
   fund.denominationAsset = ensureAsset(event.params.denominationAsset).id;
+  fund.creator = ensureManager(event.params.fundOwner).id;
   // fund.payouts = payout.id;
   // fund.fees = fees.map<string>((fee) => fee.id);
   fund.save();

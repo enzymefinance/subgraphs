@@ -157,7 +157,7 @@ type AssetWithdrawal implements Event & FundEvent @entity {
   timestamp: BigInt!
   transaction: Transaction!
   target: String!
-  amount: BigInt!
+  amount: BigDecimal!
 }
 
 type TrackedAssetAddition implements Event & FundEvent @entity {
@@ -187,9 +187,9 @@ type CallOnIntegrationExecution implements Event & FundEvent @entity {
   contract: Contract!
   adapter: String!
   incomingAssets: [Asset!]!
-  incomingAssetAmounts: [BigInt!]!
+  incomingAssetAmounts: [BigDecimal!]!
   outgoingAssets: [Asset!]!
-  outgoingAssetAmounts: [BigInt!]!
+  outgoingAssetAmounts: [BigDecimal!]!
   timestamp: BigInt!
   transaction: Transaction!
 }
@@ -204,7 +204,7 @@ type PolicyEnabled implements Event & FundEvent @entity {
   transaction: Transaction!
 }
 
-type AccessorSetEvent implements Event  & FundEvent @entity {
+type AccessorSetEvent implements Event & FundEvent @entity {
   id: ID!
   contract: Contract!
   fund: Fund!
@@ -215,41 +215,89 @@ type AccessorSetEvent implements Event  & FundEvent @entity {
   timestamp: BigInt!
 }
 
-type ApprovalGranted implements Event & FundEvent @entity {
+type OwnerSetEvent implements Event & FundEvent @entity {
   id: ID!
   fund: Fund!
   account: Account!
   contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  owner: Account!
-  spender: Adapter!
-  value: BigInt!
+  prevOwner: Account!
+  nextOwner: Account!
 }
+
+type MigratorSetEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  prevMigrator: Account!
+  nextMigrator: Account!
+}
+
+type VaultLibSetEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  prevVaultLib: Account!
+  nextVaultLib: Account!
+}
+
+#  approvals and transfers will only be applicable if and when the transfer of fund shares is allowed.
+#  see comments in mappings/VaultLib.ts to enable event monitoring for these entities
+
+# type ApprovalGranted implements Event & FundEvent @entity {
+#   id: ID!
+#   fund: Fund!
+#   account: Account!
+#   contract: Contract!
+#   timestamp: BigInt!
+#   transaction: Transaction!
+#   owner: Account!
+#   spender: IntegrationAdapter!
+#   value: BigInt!
+# }
+
+# type TransferEvent implements Event & FundEvent @entity {
+#   id: ID!
+#   fund: Fund!
+#   account: Account!
+#   contract: Contract!
+#   timestamp: BigInt!
+#   transaction: Transaction!
+#   from: Account!
+#   to: Account!
+#   amount: BigDecimal!
+# }
 
 #################################################
 # Low-level network event entities
 #################################################
 
-type IntegrationRegistration implements Event  @entity {
+type IntegrationRegistration implements Event @NetworkEvent @entity {
   id: ID!
   identifier: String!
   contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  adapter: Adapter!
+  integrationAdapter: IntegrationAdapter!
 }
 
-type IntegrationDeregistration implements Event  @entity {
+type IntegrationDeregistration implements Event @NetworkEvent @entity {
   id: ID!
   identifier: String!
   contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  adapter: Adapter!
+  integrationAdapter: IntegrationAdapter!
 }
 
-type PolicyRegistration implements Event  @entity {
+type PolicyRegistration implements Event @NetworkEvent @entity {
   id: ID!
   identifier: String!
   contract: Contract!
@@ -258,7 +306,7 @@ type PolicyRegistration implements Event  @entity {
   policy: Policy!
 }
 
-type PolicyDeregistration implements Event  @entity {
+type PolicyDeregistration implements Event @NetworkEvent @entity {
   id: ID!
   identifier: String!
   contract: Contract!
@@ -359,14 +407,9 @@ type PrimitivePriceFeedSet implements Event & NetworkEvent @entity {
 # High-level entities
 #################################################
 
-type Adapter @entity {
+type IntegrationAdapter @entity {
   id: ID!
   identifier: String!
-  contract: Contract!
-}
-
-type Accessor @entity {
-  id: ID!
   contract: Contract!
 }
 
@@ -411,7 +454,6 @@ type Fund @entity {
   status: String!
   manager: Account!
   denominationAsset: Asset!
-  comptroller: Comptroller!
   trackedAssets: [Asset!]!
   shares: Share!
   sharesHistory: [Share!]! @derivedFrom(field: "fund")
@@ -420,7 +462,11 @@ type Fund @entity {
   state: State!
   stateHistory: [State!]! @derivedFrom(field: "fund")
   events: [FundEvent!]! @derivedFrom(field: "fund")
-  policies: [Policy!]! 
+  policies: [Policy!]!
+  # refactor mapping to accomodate accessor rather than comptroller
+  accessor: Comptroller!
+  migrator: String
+  creator: Account!
 }
 
 type Account @entity {
