@@ -182,6 +182,18 @@ type CallOnIntegrationExecution implements Event & FundEvent @entity {
   transaction: Transaction!
 }
 
+type FeeEnabled implements Event & FundEvent @entity {
+  id: ID!
+  contract: Contract!
+  fund: Fund!
+  account: Account!
+  fee: Fee!
+  comptrollerProxy: Comptroller!
+  settingsData: Bytes!
+  timestamp: BigInt!
+  transaction: Transaction!
+}
+
 #################################################
 # Low-level network event entities
 #################################################
@@ -276,9 +288,36 @@ type PrimitivePriceFeedSet implements Event & NetworkEvent @entity {
   prevPriceFeed: PriceFeed
 }
 
+type FeeRegisteredEvent implements Event & NetworkEvent @entity {
+  id: ID!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+
+  fee: Fee!
+  identifier: String!
+}
+
+type FeeDeregisteredEvent implements Event & NetworkEvent @entity {
+  id: ID!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+
+  fee: Fee!
+  identifier: String!
+}
+
 #################################################
 # High-level entities
 #################################################
+
+type Fee @entity {
+  id: ID!
+  timestamp: BigInt!
+  identifier: String!
+  funds: [Fund!]!
+}
 
 type Transaction @entity {
   id: ID!
@@ -398,3 +437,4 @@ type State implements Metric @entity {
   # payouts: Payout!
   events: [FundEvent!]!
 }
+
