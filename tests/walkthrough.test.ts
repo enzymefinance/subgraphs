@@ -97,7 +97,6 @@ describe('Walkthrough', () => {
     expect(subgraphInvestment.investor.investor).toBe(true);
 
     // get share price
-
     const ct = new ComptrollerLib(fund.comptrollerProxy, provider);
     const sharePrice = await ct.buyShares
       .args(randomAddress(), utils.parseEther('1'), utils.parseEther('1'))
