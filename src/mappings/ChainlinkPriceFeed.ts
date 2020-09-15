@@ -1,5 +1,5 @@
 import { AggregatorSet } from '../generated/ChainlinkPriceFeedContract';
-import { PrimitivePriceFeedSet } from '../generated/schema';
+import { AggregatorSetEvent } from '../generated/schema';
 import { ensureContract } from '../entities/Contract';
 import { ensurePriceFeed } from '../entities/PriceFeed';
 import { ensureTransaction } from '../entities/Transaction';
@@ -9,7 +9,7 @@ import { zeroAddress } from '../constants';
 import { arrayUnique } from '../utils/arrayUnique';
 
 export function handleAggregatorSet(event: AggregatorSet): void {
-  let primitivePriceFeedSet = new PrimitivePriceFeedSet(genericId(event));
+  let primitivePriceFeedSet = new AggregatorSetEvent(genericId(event));
   let nextPriceFeed = ensurePriceFeed(event.params.nextAggregator);
 
   let primitive = ensureAsset(event.params.primitive);
@@ -34,7 +34,7 @@ export function handleAggregatorSet(event: AggregatorSet): void {
 
   primitivePriceFeedSet.primitive = primitive.id;
   primitivePriceFeedSet.nextPriceFeed = nextPriceFeed.id;
-  primitivePriceFeedSet.contract = ensureContract(event.address, 'ChainlinkPriceFeed', event.block.timestamp).id;
+  primitivePriceFeedSet.contract = ensureContract(event.address, 'ChainlinkPriceFeed', event).id;
   primitivePriceFeedSet.timestamp = event.block.timestamp;
   primitivePriceFeedSet.transaction = ensureTransaction(event).id;
 

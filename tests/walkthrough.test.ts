@@ -6,12 +6,13 @@ import {
   getCurrentFundDeployer,
   redeemShares,
 } from '@melonproject/melonjs';
-import { resolveAddress } from '@crestproject/ethers';
+import { resolveAddress, randomAddress } from '@crestproject/ethers';
 import { fetchDeployment, createAccount, Deployment } from './utils/deployment';
 import { waitForSubgraph } from './utils/subgraph';
 import { fetchFund } from './utils/subgraph-queries/fetchFund';
 import { fetchInvestment } from './utils/subgraph-queries/fetchInvestment';
 import { fetchRedemption } from './utils/subgraph-queries/fetchRedemption';
+import { ComptrollerLib } from '@melonproject/melonjs';
 
 describe('Walkthrough', () => {
   let deployment: Deployment;
@@ -60,7 +61,7 @@ describe('Walkthrough', () => {
       signer,
       comptrollerProxy: fund.comptrollerProxy,
       denominationAsset: deployment.wethToken,
-      investmentAmount: utils.parseEther('2'),
+      investmentAmount: utils.parseEther('20'),
     };
 
     const approveInvestmentTx = await approveInvestmentAmount(approveArgs);
@@ -74,7 +75,7 @@ describe('Walkthrough', () => {
     expect(BigNumber.from(approved.value)).toEqual(approveArgs.investmentAmount);
 
     // buy shares
-    const sharesToBuy = 2;
+    const sharesToBuy = 1;
     const buySharesArgs = {
       signer,
       comptrollerProxy: fund.comptrollerProxy,
@@ -94,6 +95,15 @@ describe('Walkthrough', () => {
 
     expect(subgraphInvestment.shares).toEqual(sharesToBuy.toString());
     expect(subgraphInvestment.investor.investor).toBe(true);
+
+    // get share price
+    const ct = new ComptrollerLib(fund.comptrollerProxy, provider);
+    const sharePrice = await ct.buyShares
+      .args(randomAddress(), utils.parseEther('1'), utils.parseEther('1'))
+      .from(signer.address)
+      .call();
+
+    expect(sharePrice).toEqual(utils.parseEther('1'));
 
     // // redeem shares
     const redeemSharesArgs = {
