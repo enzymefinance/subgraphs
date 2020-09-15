@@ -30,6 +30,7 @@ export function ensureAsset(address: Address): Asset {
   asset.decimals = decimals;
   asset.isDerivative = false;
   asset.priceFeed = '';
+  asset.fundsTracking = [];
   asset.save();
 
   return asset;

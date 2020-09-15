@@ -558,6 +558,8 @@ type Asset @entity {
   isDerivative: Boolean!
   derivedFrom: [Asset!]
   priceFeed: PriceFeed!
+  fundsDenomination: [Fund!]! @derivedFrom(field: "denominationAsset")
+  fundsTracking: [Fund!]!
 }
 
 type PriceFeed @entity {

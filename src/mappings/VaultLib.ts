@@ -112,11 +112,9 @@ export function handleTrackedAssetAdded(event: TrackedAssetAdded): void {
   trackedAssetAddition.contract = useContract(event.address.toHex()).id;
   trackedAssetAddition.timestamp = event.block.timestamp;
   trackedAssetAddition.transaction = ensureTransaction(event).id;
-
   trackedAssetAddition.save();
 
   fund.trackedAssets = arrayUnique<string>(fund.trackedAssets.concat([asset.id]));
-
   fund.save();
 }
 
@@ -124,6 +122,7 @@ export function handleTrackedAssetRemoved(event: TrackedAssetRemoved): void {
   let id = genericId(event);
   let fund = useFund(event.address.toHex());
   let asset = ensureAsset(event.params.asset);
+
   let trackedAssetRemoval = new TrackedAssetRemovedEvent(id);
   trackedAssetRemoval.asset = asset.id;
   trackedAssetRemoval.fund = fund.id;
@@ -132,6 +131,9 @@ export function handleTrackedAssetRemoved(event: TrackedAssetRemoved): void {
   trackedAssetRemoval.contract = useContract(event.address.toHex()).id;
   trackedAssetRemoval.transaction = ensureTransaction(event).id;
   trackedAssetRemoval.save();
+
+  asset.fundsTracking = arrayDiff<string>(asset.fundsTracking, [asset.id]);
+  asset.save();
 
   fund.trackedAssets = arrayDiff<string>(fund.trackedAssets, [asset.id]);
   fund.save();
