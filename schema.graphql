@@ -279,7 +279,7 @@ type VaultLibSetEvent implements Event & FundEvent @entity {
 # Low-level network event entities
 #################################################
 
-type IntegrationRegistration implements Event @NetworkEvent @entity {
+type IntegrationRegistration implements Event & NetworkEvent @entity {
   id: ID!
   identifier: String!
   contract: Contract!
@@ -288,7 +288,7 @@ type IntegrationRegistration implements Event @NetworkEvent @entity {
   integrationAdapter: IntegrationAdapter!
 }
 
-type IntegrationDeregistration implements Event @NetworkEvent @entity {
+type IntegrationDeregistration implements Event & NetworkEvent @entity {
   id: ID!
   identifier: String!
   contract: Contract!
@@ -297,7 +297,7 @@ type IntegrationDeregistration implements Event @NetworkEvent @entity {
   integrationAdapter: IntegrationAdapter!
 }
 
-type PolicyRegistration implements Event @NetworkEvent @entity {
+type PolicyRegistration implements Event & NetworkEvent @entity {
   id: ID!
   identifier: String!
   contract: Contract!
@@ -306,7 +306,7 @@ type PolicyRegistration implements Event @NetworkEvent @entity {
   policy: Policy!
 }
 
-type PolicyDeregistration implements Event @NetworkEvent @entity {
+type PolicyDeregistration implements Event & NetworkEvent @entity {
   id: ID!
   identifier: String!
   contract: Contract!
