@@ -197,34 +197,34 @@ type CallOnIntegrationExecutedEvent implements Event & FundEvent @entity {
   transaction: Transaction!
 }
 
-
-type MigrationCancellation implements Event & FundEvent @entity { {
+type MigrationCancellationEvent implements Event & FundEvent @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  
-  migration: Migration!
-}}
 
-type MigrationSignaling implements Event & FundEvent @entity { {
+  migration: Migration!
+  signalTimestamp: BigInt!
+}
+
+type MigrationSignalingEvent implements Event & FundEvent @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  
-  migration: Migration!
-}}
 
-type MigrationExcution implements Event & FundEvent @entity { {
+  migration: Migration!
+}
+
+type MigrationExecutionEvent implements Event & FundEvent @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  
-  migration: Migration!
-}}
 
+  migration: Migration!
+  signalTimestamp: BigInt!
+}
 
 type PolicyEnabledForFundEvent implements Event & FundEvent @entity {
   id: ID!
@@ -468,13 +468,15 @@ type Contract @entity {
 
 type FundDeployer @entity {
   id: ID!
-  current: Boolean!
-  currentStart: BigInt!
-  currentEnd: BigInt
+  release: Release! @derivedFrom(field: "deployer")
   funds: [Fund!]! @derivedFrom(field: "deployer")
 }
 
 type Comptroller @entity {
+  id: ID!
+}
+
+type VaultLib @entity {
   id: ID!
 }
 
@@ -486,6 +488,7 @@ type Fund @entity {
   status: String!
   manager: Account!
   accessor: Comptroller!
+  vaultLib: VaultLib!
   migrator: String
   denominationAsset: Asset!
   trackedAssets: [Asset!]!
@@ -498,21 +501,35 @@ type Fund @entity {
   state: State!
   stateHistory: [State!]! @derivedFrom(field: "fund")
   events: [FundEvent!]! @derivedFrom(field: "fund")
-  migrations: [MigrationRequest!] @derivedFrom(field: "fund")
+  creator: Account!
+  migrations: [Migration!] @derivedFrom(field: "fund")
 }
 
-type MigrationRequest @entity {
+type Migration @entity {
   id: ID!
-
+  # Same as ID, but gives us access to fields like "current, currentstart, etc."
+  deployer: FundDeployer!
+  # fund === vaultProxy
   fund: Fund!
+  vaultLib: Account!
+  # Not sure about this one
+  signalTimestamp: BigInt!
+  executed: Boolean!
+  cancelled: Boolean!
+}
 
-  # What the migration wants to update:
-  fundDeployer: FundDeployer!
-  vaultProxy: Fund!
-  vaultLib: Fund!
-
-  timestamp: BigInt!
-  creator: Account!
+type Release @entity {
+  # This ID will be the FundDeployer
+  id: ID!
+  current: Boolean!
+  currentStart: BigInt!
+  currentEnd: BigInt
+  # Same as the ID, added as a convenience
+  deployer: FundDeployer!
+  # New comptrollerLib
+  comptrollerLib: Comptroller
+  vaultLib: Account!
+  funds: [Fund!]
 }
 
 type Account @entity {
