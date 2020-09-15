@@ -247,8 +247,8 @@ type VaultLibSetEvent implements Event & FundEvent @entity {
   contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  prevVaultLib: String
-  nextVaultLib: String
+  prevVaultLib: String!
+  nextVaultLib: String!
 }
 
 #  approvals will only be applicable if and when the transfer of fund shares is allowed.
