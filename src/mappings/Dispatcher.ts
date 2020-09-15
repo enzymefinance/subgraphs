@@ -3,6 +3,8 @@ import { ensureContract } from '../entities/Contract';
 import { ensureFundDeployer } from '../entities/FundDeployer';
 import { ensureTransaction } from '../entities/Transaction';
 import { createRelease, useRelease } from '../entities/Release';
+import { useFund } from '../entities//Fund';
+import { ensureMigration, useMigration, generateMigrationId } from '../entities/Migration';
 import {
   CurrentFundDeployerSet,
   MigrationCancelled,
@@ -29,20 +31,20 @@ export function handleCurrentFundDeployerSet(event: CurrentFundDeployerSet): voi
 
   if (!event.params.prevFundDeployer.equals(zeroAddress)) {
     let prevFundDeployer = ensureFundDeployer(event.params.prevFundDeployer);
-    /*     prevFundDeployer.current = false;
-    prevFundDeployer.currentEnd = event.block.timestamp; */
+    /* modifying fields of previous fund deployer? */
     prevFundDeployer.save();
+
     fundDeployerSet.prevFundDeployer = prevFundDeployer.id;
 
-    // Update previous release
+    // Update previous Release
     let prevRelease = useRelease(prevFundDeployer.id);
     prevRelease.current = false;
     prevRelease.currentEnd = event.block.timestamp;
+    prevRelease.save();
   }
 
   let nextFundDeployer = ensureFundDeployer(event.params.nextFundDeployer);
-  /*   nextFundDeployer.current = true;
-  nextFundDeployer.currentStart = event.block.timestamp; */
+  /* modifying fields of next fund deployer? */
   nextFundDeployer.save();
 
   fundDeployerSet.contract = ensureContract(event.address, 'Dispatcher', event).id;
@@ -51,24 +53,68 @@ export function handleCurrentFundDeployerSet(event: CurrentFundDeployerSet): voi
   fundDeployerSet.transaction = ensureTransaction(event).id;
   fundDeployerSet.save();
 
-  // TODO: Create a new release and populate it with the data fetched from the new fund deployer (vaultlib, accessorlib, etc)
-
   // Create new release
-  let nextRelease = createRelease(nextFundDeployer.id);
-  nextRelease.current = true;
-  nextRelease.currentStart = event.block.timestamp;
-
+  let nextRelease = createRelease(event);
   nextRelease.save();
 }
 
 export function handleMigrationCancelled(event: MigrationCancelled): void {
   let migrationCancellation = new MigrationCancellationEvent(genericId(event));
+  let migrationId = generateMigrationId(
+    event.params.vaultProxy,
+    event.params.prevFundDeployer,
+    event.params.nextFundDeployer,
+  );
+  // Retrieving the migration request
+  let migration = useMigration(migrationId);
+  // Setting our event
+
+  migrationCancellation.timestamp = event.block.timestamp;
+  migrationCancellation.transaction = ensureTransaction(event).id;
+  migrationCancellation.contract = ensureContract(event.address, 'Dispatcher', event).id;
+  migrationCancellation.migration = migration.id;
+  migrationCancellation.signalTimestamp = event.params.signalTimestamp;
+  migrationCancellation.save();
+
+  // Setting our migration as canceled
+  migration.canceled = true;
+  migration.save();
 }
 export function handleMigrationExecuted(event: MigrationExecuted): void {
   let migrationExecution = new MigrationExecutionEvent(genericId(event));
+  let migrationId = generateMigrationId(
+    event.params.vaultProxy,
+    event.params.prevFundDeployer,
+    event.params.nextFundDeployer,
+  );
+  // Retrieving the migration request
+  let migration = useMigration(migrationId);
+  // Setting the event
+  migrationExecution.timestamp = event.block.timestamp;
+  migrationExecution.transaction = ensureTransaction(event).id;
+  migrationExecution.contract = ensureContract(event.address, 'Dispatcher', event).id;
+  migrationExecution.migration = migration.id;
+  migrationExecution.signalTimestamp = event.params.signalTimestamp;
+  migrationExecution.save();
+
+  // Updating our fund to the proper release.
+  let fund = useFund(event.params.vaultProxy.toHex());
+  fund.release = useRelease(event.params.nextFundDeployer.toHex()).id;
+
+  // Setting the migration as executed
+  migration.executed = true;
+  migration.save();
 }
 export function handleMigrationSignaled(event: MigrationSignaled): void {
   let migrationSignaling = new MigrationSignalingEvent(genericId(event));
+  // Creating a migration instance (or recovering previously canceled one)
+  let migration = ensureMigration(event);
+  // Setting the event
+  migrationSignaling.timestamp = event.block.timestamp;
+  migrationSignaling.transaction = ensureTransaction(event).id;
+  migrationSignaling.contract = ensureContract(event.address, 'Dispatcher', event).id;
+  migrationSignaling.migration = migration.id;
+  migrationSignaling.save();
 }
 export function handlePostCancelMigrationOriginHookFailed(event: PostCancelMigrationOriginHookFailed): void {}
 export function handlePostCancelMigrationTargetHookFailed(event: PostCancelMigrationTargetHookFailed): void {}
