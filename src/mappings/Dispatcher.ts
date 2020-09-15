@@ -2,6 +2,7 @@ import { zeroAddress } from '../constants';
 import { ensureContract } from '../entities/Contract';
 import { ensureFundDeployer } from '../entities/FundDeployer';
 import { ensureTransaction } from '../entities/Transaction';
+import { createRelease, useRelease } from '../entities/Release';
 import {
   CurrentFundDeployerSet,
   MigrationCancelled,
@@ -15,7 +16,12 @@ import {
   PreSignalMigrationOriginHookFailed,
   VaultProxyDeployed,
 } from '../generated/DispatcherContract';
-import { FundDeployerSetEvent } from '../generated/schema';
+import {
+  FundDeployerSetEvent,
+  MigrationCancellationEvent,
+  MigrationExecutionEvent,
+  MigrationSignalingEvent,
+} from '../generated/schema';
 import { genericId } from '../utils/genericId';
 
 export function handleCurrentFundDeployerSet(event: CurrentFundDeployerSet): void {
@@ -23,16 +29,20 @@ export function handleCurrentFundDeployerSet(event: CurrentFundDeployerSet): voi
 
   if (!event.params.prevFundDeployer.equals(zeroAddress)) {
     let prevFundDeployer = ensureFundDeployer(event.params.prevFundDeployer);
-    prevFundDeployer.current = false;
-    prevFundDeployer.currentEnd = event.block.timestamp;
+    /*     prevFundDeployer.current = false;
+    prevFundDeployer.currentEnd = event.block.timestamp; */
     prevFundDeployer.save();
-
     fundDeployerSet.prevFundDeployer = prevFundDeployer.id;
+
+    // Update previous release
+    let prevRelease = useRelease(prevFundDeployer.id);
+    prevRelease.current = false;
+    prevRelease.currentEnd = event.block.timestamp;
   }
 
   let nextFundDeployer = ensureFundDeployer(event.params.nextFundDeployer);
-  nextFundDeployer.current = true;
-  nextFundDeployer.currentStart = event.block.timestamp;
+  /*   nextFundDeployer.current = true;
+  nextFundDeployer.currentStart = event.block.timestamp; */
   nextFundDeployer.save();
 
   fundDeployerSet.contract = ensureContract(event.address, 'Dispatcher', event).id;
@@ -40,13 +50,26 @@ export function handleCurrentFundDeployerSet(event: CurrentFundDeployerSet): voi
   fundDeployerSet.nextFundDeployer = nextFundDeployer.id;
   fundDeployerSet.transaction = ensureTransaction(event).id;
   fundDeployerSet.save();
+
+  // TODO: Create a new release and populate it with the data fetched from the new fund deployer (vaultlib, accessorlib, etc)
+
+  // Create new release
+  let nextRelease = createRelease(nextFundDeployer.id);
+  nextRelease.current = true;
+  nextRelease.currentStart = event.block.timestamp;
+
+  nextRelease.save();
 }
 
 export function handleMigrationCancelled(event: MigrationCancelled): void {
-  let migrationCancelled = new MigrationCancellation(genericId(event));
+  let migrationCancellation = new MigrationCancellationEvent(genericId(event));
 }
-export function handleMigrationExecuted(event: MigrationExecuted): void {}
-export function handleMigrationSignaled(event: MigrationSignaled): void {}
+export function handleMigrationExecuted(event: MigrationExecuted): void {
+  let migrationExecution = new MigrationExecutionEvent(genericId(event));
+}
+export function handleMigrationSignaled(event: MigrationSignaled): void {
+  let migrationSignaling = new MigrationSignalingEvent(genericId(event));
+}
 export function handlePostCancelMigrationOriginHookFailed(event: PostCancelMigrationOriginHookFailed): void {}
 export function handlePostCancelMigrationTargetHookFailed(event: PostCancelMigrationTargetHookFailed): void {}
 export function handlePostMigrateOriginHookFailed(event: PostMigrateOriginHookFailed): void {}
