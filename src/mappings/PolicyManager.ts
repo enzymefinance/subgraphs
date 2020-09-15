@@ -15,8 +15,8 @@ export function handlePolicyRegistered(event: PolicyRegistered): void {
 
   registration.timestamp = event.block.timestamp;
   registration.transaction = ensureTransaction(event).id;
-  registration.contract = ensureContract(event.address, 'PolicyManager', event.block.timestamp).id;
-  registration.policy = ensurePolicy(event.params.policy, event.params.identifier.toHex()).id;
+  registration.contract = ensureContract(event.address, 'PolicyManager', event).id;
+  registration.policy = ensurePolicy(event.params.policy).id;
   registration.identifier = event.params.identifier.toHex();
 
   registration.save();
@@ -45,7 +45,7 @@ export function handlePolicyEnabledForFund(event: PolicyEnabledForFund): void {
   policy.save();
 
   enabled.fund = fund.id;
-  enabled.account = ensureManager(Address.fromString(fund.manager)).id;
+  enabled.account = ensureManager(Address.fromString(fund.manager), event).id;
   enabled.timestamp = event.block.timestamp;
   enabled.transaction = ensureTransaction(event).id;
   enabled.contract = useContract(event.address.toHex()).id;

@@ -1,9 +1,7 @@
-import { Policy } from "../generated/schema";
-import { logCritical } from "../utils/logCritical";
-import { Address } from "@graphprotocol/graph-ts";
-
-
-
+import { Policy } from '../generated/schema';
+import { logCritical } from '../utils/logCritical';
+import { Address } from '@graphprotocol/graph-ts';
+import { IPolicyInterface } from '../generated/IPolicyInterface';
 
 export function usePolicy(id: string): Policy {
   let policy = Policy.load(id);
@@ -14,15 +12,18 @@ export function usePolicy(id: string): Policy {
   return policy as Policy;
 }
 
-export function ensurePolicy(address: Address, identifier: string): Policy {
+export function ensurePolicy(address: Address): Policy {
   let policy = Policy.load(address.toHex()) as Policy;
   if (policy) {
     return policy;
   }
 
+  let contract = IPolicyInterface.bind(address);
+  let identifier = contract.identifier();
+
   policy = new Policy(address.toHex());
   policy.identifier = identifier;
-  policy.funds = []
+  policy.funds = [];
   policy.save();
 
   return policy;

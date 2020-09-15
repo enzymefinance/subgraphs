@@ -167,6 +167,8 @@ dataSources:
           file: ./node_modules/@melonproject/release/artifacts/ComptrollerLib.json
         - name: StandardERC20Contract
           file: ./node_modules/@melonproject/release/artifacts/StandardERC20.json
+        - name: IPolicyInterface
+          file: ./node_modules/@melonproject/release/artifacts/IPolicy.json
       eventHandlers:
         - event: PolicyDeregistered(indexed address,indexed string)
           handler: handlePolicyDeregistered

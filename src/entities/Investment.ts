@@ -62,7 +62,7 @@ export function createInvestmentAddition(
   addition.account = investment.investor;
   addition.investor = investment.investor;
   addition.fund = investment.fund;
-  addition.contract = ensureContract(event.address, 'ComptrollerLib', event.block.timestamp).id;
+  addition.contract = ensureContract(event.address, 'ComptrollerLib', event).id;
   addition.investment = investment.id;
   addition.asset = asset.id;
   addition.quantity = quantity;
@@ -94,7 +94,7 @@ export function createInvestmentRedemption(
   redemption.account = investment.investor;
   redemption.investor = investment.investor;
   redemption.fund = investment.fund;
-  redemption.contract = ensureContract(event.address, 'ComptrollerLib', event.block.timestamp).id;
+  redemption.contract = ensureContract(event.address, 'ComptrollerLib', event).id;
   redemption.investment = investment.id;
   redemption.shares = shares;
   redemption.assets = assets.map<string>((item) => item.id);

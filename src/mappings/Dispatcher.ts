@@ -35,7 +35,7 @@ export function handleCurrentFundDeployerSet(event: CurrentFundDeployerSet): voi
   nextFundDeployer.currentStart = event.block.timestamp;
   nextFundDeployer.save();
 
-  fundDeployerSet.contract = ensureContract(event.address, 'Dispatcher', event.block.timestamp).id;
+  fundDeployerSet.contract = ensureContract(event.address, 'Dispatcher', event).id;
   fundDeployerSet.timestamp = event.block.timestamp;
   fundDeployerSet.nextFundDeployer = nextFundDeployer.id;
   fundDeployerSet.transaction = ensureTransaction(event).id;

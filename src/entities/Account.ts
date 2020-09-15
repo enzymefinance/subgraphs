@@ -1,9 +1,9 @@
-import { Address } from '@graphprotocol/graph-ts';
+import { Address, BigInt, ethereum } from '@graphprotocol/graph-ts';
 import { Account } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
 
-export function ensureManager(managerAddress: Address): Account {
-  let account = ensureAccount(managerAddress);
+export function ensureManager(managerAddress: Address, event: ethereum.Event): Account {
+  let account = ensureAccount(managerAddress, event);
 
   if (!account.manager) {
     account.manager = true;
@@ -13,8 +13,8 @@ export function ensureManager(managerAddress: Address): Account {
   return account;
 }
 
-export function ensureInvestor(investorAddress: Address): Account {
-  let account = ensureAccount(investorAddress);
+export function ensureInvestor(investorAddress: Address, event: ethereum.Event): Account {
+  let account = ensureAccount(investorAddress, event);
 
   if (!account.investor) {
     account.investor = true;
@@ -33,13 +33,14 @@ export function useAccount(id: string): Account {
   return account as Account;
 }
 
-export function ensureAccount(accountAddress: Address): Account {
+export function ensureAccount(accountAddress: Address, event: ethereum.Event): Account {
   let account = Account.load(accountAddress.toHex()) as Account;
   if (account) {
     return account;
   }
 
   account = new Account(accountAddress.toHex());
+  account.firstSeen = event.block.timestamp;
   account.manager = false;
   account.investor = false;
   account.save();

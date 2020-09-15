@@ -301,6 +301,13 @@
   dependencies:
     ethers "^5.0.12"
 
+"@crestproject/ethers@^0.0.48":
+  version "0.0.48"
+  resolved "https://registry.yarnpkg.com/@crestproject/ethers/-/ethers-0.0.48.tgz#3f1acdf8d116f82bc9fef4affbeecb87a087c463"
+  integrity sha512-uiNg7FjrwYcwAcAMIJjC3hCJ8pDS2gnFQEtIvhDnBnP6u+2Pt0sX5oNgEdZdvUuZ76mCTVWxLuFTEocuZekSug==
+  dependencies:
+    ethers "^5.0.12"
+
 "@crestproject/evm@^0.0.47":
   version "0.0.47"
   resolved "https://registry.yarnpkg.com/@crestproject/evm/-/evm-0.0.47.tgz#bb94fc831f527218423e4568fb1d1d60327a44ac"
@@ -1126,12 +1133,12 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@melonproject/melonjs@^2.0.1-dev.496+918fab2f":
-  version "2.0.1-dev.496"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_2hQFpB/%40melonproject%2Fmelonjs-2.0.1-dev.496.tgz#e505a520a80086dea6e60704902156ee37d5496c"
-  integrity sha1-5QWlIKgAht6m5gcEkCFW7jfVSWw=
+"@melonproject/melonjs@^2.0.1-dev.498+0d01a766":
+  version "2.0.1-dev.498"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_gLQlV/%40melonproject%2Fmelonjs-2.0.1-dev.498.tgz#0c35d4169901969464a083ab743ca86e46ed29c0"
+  integrity sha1-DDXUFpkBlpRkoIOrdDyobkbtKcA=
   dependencies:
-    "@crestproject/ethers" "^0.0.47"
+    "@crestproject/ethers" "^0.0.48"
     "@melonproject/persistent" "^2.0.1-dev.4904+25635ba6"
     "@melonproject/release" "^2.0.1-dev.4904+25635ba6"
     "@melonproject/utils" "^2.0.1-dev.4904+25635ba6"
@@ -1494,10 +1501,15 @@
   dependencies:
     "@types/node" "*"
 
-"@types/prettier@^2.0.0", "@types/prettier@^2.0.2":
+"@types/prettier@^2.0.0":
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@types/prettier/-/prettier-2.1.0.tgz#5f96562c1075ee715a5b138f0b7f591c1f40f6b8"
   integrity sha512-hiYA88aHiEIgDmeKlsyVsuQdcFn3Z2VuFd/Xm/HCnGnPD8UFU5BM128uzzRVVGEzKDKYUrRsRH9S2o+NUy/3IA==
+
+"@types/prettier@^2.1.1":
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/@types/prettier/-/prettier-2.1.1.tgz#be148756d5480a84cde100324c03a86ae5739fb5"
+  integrity sha512-2zs+O+UkDsJ1Vcp667pd3f8xearMdopz/z54i99wtRDI5KLmngk7vlrYZD0ZjKHaROR03EznlBbVY9PfAEyJIQ==
 
 "@types/qs@*":
   version "6.9.4"
