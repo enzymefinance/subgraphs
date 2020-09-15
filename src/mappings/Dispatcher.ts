@@ -42,7 +42,9 @@ export function handleCurrentFundDeployerSet(event: CurrentFundDeployerSet): voi
   fundDeployerSet.save();
 }
 
-export function handleMigrationCancelled(event: MigrationCancelled): void {}
+export function handleMigrationCancelled(event: MigrationCancelled): void {
+  let migrationCancelled = new MigrationCancellation(genericId(event));
+}
 export function handleMigrationExecuted(event: MigrationExecuted): void {}
 export function handleMigrationSignaled(event: MigrationSignaled): void {}
 export function handlePostCancelMigrationOriginHookFailed(event: PostCancelMigrationOriginHookFailed): void {}

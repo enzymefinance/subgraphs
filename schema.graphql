@@ -182,6 +182,36 @@ type CallOnIntegrationExecution implements Event & FundEvent @entity {
   transaction: Transaction!
 }
 
+
+type MigrationCancellation implements Event & FundEvent @entity { {
+  id: ID!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  
+  migration: Migration!
+}}
+
+type MigrationSignaling implements Event & FundEvent @entity { {
+  id: ID!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  
+  migration: Migration!
+}}
+
+type MigrationExcution implements Event & FundEvent @entity { {
+  id: ID!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  
+  migration: Migration!
+}}
+
+
+
 #################################################
 # Low-level network event entities
 #################################################
@@ -196,6 +226,7 @@ type FundDeployerSet implements Event & NetworkEvent @entity {
 
   transaction: Transaction!
 }
+
 
 type AmguPriceChange implements Event & NetworkEvent @entity {
   id: ID!
@@ -330,6 +361,20 @@ type Fund @entity {
   state: State!
   stateHistory: [State!]! @derivedFrom(field: "fund")
   events: [FundEvent!]! @derivedFrom(field: "fund")
+  migrations: [MigrationRequest!] @derivedFrom(field: "fund")
+}
+
+type MigrationRequest @entity {
+  id: ID!
+
+  fund: Fund!
+
+  # What the migration wants to update:
+  fundDeployer: FundDeployer!
+  vaultProxy: Fund!
+  vaultLib: Fund!
+
+  timestamp: BigInt!
 }
 
 type Account @entity {
@@ -363,6 +408,8 @@ type PriceFeed @entity {
   id: ID!
   assets: [Asset!]!
 }
+
+
 
 type Share implements Metric @entity {
   id: ID!
