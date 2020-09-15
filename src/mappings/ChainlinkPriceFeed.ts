@@ -34,7 +34,7 @@ export function handleAggregatorSet(event: AggregatorSet): void {
 
   primitivePriceFeedSet.primitive = primitive.id;
   primitivePriceFeedSet.nextPriceFeed = nextPriceFeed.id;
-  primitivePriceFeedSet.contract = ensureContract(event.address, 'ChainlinkPriceFeed', event.block.timestamp).id;
+  primitivePriceFeedSet.contract = ensureContract(event.address, 'ChainlinkPriceFeed', event).id;
   primitivePriceFeedSet.timestamp = event.block.timestamp;
   primitivePriceFeedSet.transaction = ensureTransaction(event).id;
 

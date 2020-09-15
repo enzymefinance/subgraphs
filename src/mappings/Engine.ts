@@ -23,7 +23,7 @@ export function handleAmguPaidInEther(event: AmguPaidInEther): void {
   let id = genericId(event);
 
   let amguPayment = new AmguPaidInEtherEvent(id);
-  amguPayment.contract = ensureContract(event.address, 'Engine', event.block.timestamp).id;
+  amguPayment.contract = ensureContract(event.address, 'Engine', event).id;
   amguPayment.timestamp = event.block.timestamp;
   amguPayment.amount = toBigDecimal(event.params.amount);
   amguPayment.transaction = ensureTransaction(event).id;
@@ -36,7 +36,7 @@ export function handleAmguPriceSet(event: AmguPriceSet): void {
   let amguPrice = new AmguPriceSetEvent(id);
   amguPrice.price = toBigDecimal(event.params.nextAmguPrice);
   amguPrice.timestamp = event.block.timestamp;
-  amguPrice.contract = ensureContract(event.address, 'Engine', event.block.timestamp).id;
+  amguPrice.contract = ensureContract(event.address, 'Engine', event).id;
   amguPrice.transaction = ensureTransaction(event).id;
   amguPrice.save();
 }
@@ -45,7 +45,7 @@ export function handleEtherTakerAdded(event: EtherTakerAdded): void {
   let id = genericId(event);
 
   let etherTaker = new EtherTakerAddedEvent(id);
-  etherTaker.contract = ensureContract(event.address, 'Engine', event.block.timestamp).id;
+  etherTaker.contract = ensureContract(event.address, 'Engine', event).id;
   etherTaker.timestamp = event.block.timestamp;
   etherTaker.etherTaker = event.params.etherTaker.toHex();
   etherTaker.transaction = ensureTransaction(event).id;
@@ -56,7 +56,7 @@ export function handleEtherTakerRemoved(event: EtherTakerRemoved): void {
   let id = genericId(event);
 
   let etherTaker = new EtherTakerRemovedEvent(id);
-  etherTaker.contract = ensureContract(event.address, 'Engine', event.block.timestamp).id;
+  etherTaker.contract = ensureContract(event.address, 'Engine', event).id;
   etherTaker.timestamp = event.block.timestamp;
   etherTaker.etherTaker = event.params.etherTaker.toHex();
   etherTaker.transaction = ensureTransaction(event).id;
@@ -67,7 +67,7 @@ export function handleFrozenEtherThawed(event: FrozenEtherThawed): void {
   let id = genericId(event);
 
   let etherThawed = new FrozenEtherThawedEvent(id);
-  etherThawed.contract = ensureContract(event.address, 'Engine', event.block.timestamp).id;
+  etherThawed.contract = ensureContract(event.address, 'Engine', event).id;
   etherThawed.timestamp = event.block.timestamp;
   etherThawed.amount = toBigDecimal(event.params.amount);
   etherThawed.transaction = ensureTransaction(event).id;
@@ -78,7 +78,7 @@ export function handleMlnTokensBurned(event: MlnTokensBurned): void {
   let id = genericId(event);
 
   let tokensBurned = new MlnTokensBurnedEvent(id);
-  tokensBurned.contract = ensureContract(event.address, 'Engine', event.block.timestamp).id;
+  tokensBurned.contract = ensureContract(event.address, 'Engine', event).id;
   tokensBurned.timestamp = event.block.timestamp;
   tokensBurned.amount = toBigDecimal(event.params.amount);
   tokensBurned.transaction = ensureTransaction(event).id;

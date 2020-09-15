@@ -53,6 +53,7 @@ type NewFundDeployedEvent implements Event & FundEvent @entity {
   timestamp: BigInt!
   comptrollerProxy: Comptroller!
   vaultProxy: Fund!
+  caller: Account!
   fundOwner: Account!
   fundName: String!
   denominationAsset: Asset!
@@ -211,7 +212,7 @@ type AccessorSetEvent implements Event & FundEvent @entity {
   contract: Contract!
   fund: Fund!
   account: Account!
-  prevAccessor: Comptroller!
+  prevAccessor: Comptroller
   nextAccessor: Comptroller!
   transaction: Transaction!
   timestamp: BigInt!
@@ -224,7 +225,7 @@ type OwnerSetEvent implements Event & FundEvent @entity {
   contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  prevOwner: Account!
+  prevOwner: Account
   nextOwner: Account!
 }
 
@@ -246,14 +247,14 @@ type VaultLibSetEvent implements Event & FundEvent @entity {
   contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  prevVaultLib: Account!
-  nextVaultLib: Account!
+  prevVaultLib: String
+  nextVaultLib: String
 }
 
-#  approvals and transfers will only be applicable if and when the transfer of fund shares is allowed.
+#  approvals will only be applicable if and when the transfer of fund shares is allowed.
 #  see comments in mappings/VaultLib.ts to enable event monitoring for these entities
 
-# type ApprovalGranted implements Event & FundEvent @entity {
+# type ApprovalEvent implements Event & FundEvent @entity {
 #   id: ID!
 #   fund: Fund!
 #   account: Account!
@@ -262,7 +263,7 @@ type VaultLibSetEvent implements Event & FundEvent @entity {
 #   transaction: Transaction!
 #   owner: Account!
 #   spender: IntegrationAdapter!
-#   value: BigInt!
+#   value: BigDecimal!
 # }
 
 type TransferEvent implements Event & FundEvent @entity {
@@ -272,8 +273,8 @@ type TransferEvent implements Event & FundEvent @entity {
   contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  from: Account!
-  to: Account!
+  from: String!
+  to: String!
   amount: BigDecimal!
 }
 
@@ -455,8 +456,12 @@ type Fund @entity {
   deployer: FundDeployer!
   status: String!
   manager: Account!
+  accessor: Comptroller!
+  migrator: String
   denominationAsset: Asset!
   trackedAssets: [Asset!]!
+  policies: [Policy!]!
+  investments: [Investment!]! @derivedFrom(field: "fund")
   shares: Share!
   sharesHistory: [Share!]! @derivedFrom(field: "fund")
   portfolio: Portfolio!
@@ -464,14 +469,12 @@ type Fund @entity {
   state: State!
   stateHistory: [State!]! @derivedFrom(field: "fund")
   events: [FundEvent!]! @derivedFrom(field: "fund")
-  policies: [Policy!]!
-  accessor: Comptroller!
-  migrator: String
   creator: Account!
 }
 
 type Account @entity {
   id: ID!
+  firstSeen: BigInt!
   manager: Boolean!
   managements: [Fund!]! @derivedFrom(field: "manager")
   investor: Boolean!
@@ -483,7 +486,7 @@ type Investment @entity {
   id: ID!
   fund: Fund!
   investor: Account!
-  # changes: [SharesChange!]! @derivedFrom(field: "investment")
+  changes: [SharesChange!]! @derivedFrom(field: "investment")
   shares: BigDecimal!
 }
 

@@ -20,7 +20,7 @@ export function handleAmguPaid(event: AmguPaid): void {
   let id = genericId(event);
   let amguPaid = new AmguPaidEvent(id);
   amguPaid.amount = toBigDecimal(event.params.ethPaid);
-  amguPaid.payer = ensureAccount(event.params.payer).id;
+  amguPaid.payer = ensureAccount(event.params.payer, event).id;
   amguPaid.gas = event.params.gasUsed.toI32();
   amguPaid.timestamp = event.block.timestamp;
   amguPaid.transaction = ensureTransaction(event).id;
@@ -33,7 +33,7 @@ export function handleFundConfigSet(event: FundConfigSet): void {
   let id = genericId(event);
   let fundConfig = new FundConfigSetEvent(id);
   fundConfig.timestamp = event.block.timestamp;
-  fundConfig.contract = ensureContract(event.address, 'ComptrollerLib', event.block.timestamp).id;
+  fundConfig.contract = ensureContract(event.address, 'ComptrollerLib', event).id;
   fundConfig.fund = fundId;
   fundConfig.account = useAccount(event.transaction.from.toHex()).id;
   fundConfig.denominationAsset = ensureAsset(event.params.denominationAsset).id;
@@ -50,7 +50,7 @@ export function handleFundStatusUpdated(event: FundStatusUpdated): void {
   let id = genericId(event);
   let fundStatusUpdate = new FundStatusUpdatedEvent(id);
   fundStatusUpdate.timestamp = event.block.timestamp;
-  fundStatusUpdate.contract = ensureContract(event.address, 'ComptrollerLib', event.block.timestamp).id;
+  fundStatusUpdate.contract = ensureContract(event.address, 'ComptrollerLib', event).id;
   fundStatusUpdate.fund = fund.id;
   fundStatusUpdate.account = useAccount(event.transaction.from.toHex()).id;
   fundStatusUpdate.prevStatus = event.params.prevStatus;
@@ -65,7 +65,7 @@ export function handleFundStatusUpdated(event: FundStatusUpdated): void {
 export function handleSharesBought(event: SharesBought): void {
   let fund = useFund(dataSource.context().getString('vaultProxy'));
 
-  let account = ensureInvestor(event.params.buyer);
+  let account = ensureInvestor(event.params.buyer, event);
   let investment = ensureInvestment(account, fund);
   let asset = useAsset(fund.denominationAsset);
   let quantity = toBigDecimal(event.params.investmentAmount, asset.decimals);
@@ -77,7 +77,7 @@ export function handleSharesBought(event: SharesBought): void {
 export function handleSharesRedeemed(event: SharesRedeemed): void {
   let fund = useFund(dataSource.context().getString('vaultProxy'));
 
-  let account = ensureInvestor(event.params.redeemer);
+  let account = ensureInvestor(event.params.redeemer, event);
   let investment = ensureInvestment(account, fund);
   let shares = toBigDecimal(event.params.sharesQuantity);
   let assets = event.params.receivedAssets.map<Asset>((id) => useAsset(id.toHex()));
