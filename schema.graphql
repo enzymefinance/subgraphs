@@ -197,23 +197,21 @@ type CallOnIntegrationExecutedEvent implements Event & FundEvent @entity {
   transaction: Transaction!
 }
 
-type MigrationCancellationEvent implements Event & FundEvent @entity {
-  id: ID!
-  contract: Contract!
-  timestamp: BigInt!
-  transaction: Transaction!
-
-  migration: Migration!
-  signalTimestamp: BigInt!
-}
-
 type MigrationSignalingEvent implements Event & FundEvent @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-
   migration: Migration!
+}
+
+type MigrationCancellationEvent implements Event & FundEvent @entity {
+  id: ID!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  migration: Migration!
+  signalTimestamp: BigInt!
 }
 
 type MigrationExecutionEvent implements Event & FundEvent @entity {
@@ -221,7 +219,6 @@ type MigrationExecutionEvent implements Event & FundEvent @entity {
   contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-
   migration: Migration!
   signalTimestamp: BigInt!
 }
@@ -468,7 +465,7 @@ type Contract @entity {
 
 type FundDeployer @entity {
   id: ID!
-  release: Release! @derivedFrom(field: "deployer")
+  release: Release! @derivedFrom(field: "fundDeployer")
   funds: [Fund!]! @derivedFrom(field: "deployer")
 }
 
@@ -484,11 +481,15 @@ type Fund @entity {
   id: ID!
   name: String!
   inception: BigInt!
+
+  # Unique for whole release, so can be refactored to Release?
   deployer: FundDeployer!
+  # This is our accessor for this fund (for this release)
+  accessor: Comptroller!
+
+  release: Release!
   status: String!
   manager: Account!
-  accessor: Comptroller!
-  vaultLib: VaultLib!
   migrator: String
   denominationAsset: Asset!
   trackedAssets: [Asset!]!
@@ -507,29 +508,27 @@ type Fund @entity {
 
 type Migration @entity {
   id: ID!
-  # Same as ID, but gives us access to fields like "current, currentstart, etc."
-  deployer: FundDeployer!
-  # fund === vaultProxy
+  prevRelease: Release!
+  nextRelease: Release!
   fund: Fund!
-  vaultLib: Account!
-  # Not sure about this one
   signalTimestamp: BigInt!
   executed: Boolean!
-  cancelled: Boolean!
+  canceled: Boolean!
 }
 
 type Release @entity {
-  # This ID will be the FundDeployer
+  # This ID is the FundDeployer address
   id: ID!
+  # Gets updated when new FundDeployer is deployed (handleCurrentFundDeployerSet event)
   current: Boolean!
   currentStart: BigInt!
   currentEnd: BigInt
   # Same as the ID, added as a convenience
-  deployer: FundDeployer!
-  # New comptrollerLib
-  comptrollerLib: Comptroller
-  vaultLib: Account!
-  funds: [Fund!]
+  fundDeployer: FundDeployer!
+  # This is shared by all funds on same release
+  comptrollerLib: Contract!
+  vaultLib: VaultLib!
+  funds: [Fund!] @derivedFrom(field: "release")
 }
 
 type Account @entity {
