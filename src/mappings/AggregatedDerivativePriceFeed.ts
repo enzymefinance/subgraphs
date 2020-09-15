@@ -2,7 +2,7 @@ import {
   PriceFeedSet,
   AggregatedDerivativePriceFeedContract,
 } from '../generated/AggregatedDerivativePriceFeedContract';
-import { DerivativePriceFeedSet } from '../generated/schema';
+import { PriceFeedSetEvent } from '../generated/schema';
 import { genericId } from '../utils/genericId';
 import { ensureAsset } from '../entities/Asset';
 import { Address } from '@graphprotocol/graph-ts';
@@ -13,7 +13,7 @@ import { zeroAddress } from '../constants';
 import { arrayUnique } from '../utils/arrayUnique';
 
 export function handlePriceFeedSet(event: PriceFeedSet): void {
-  let derivativePriceFeedSet = new DerivativePriceFeedSet(genericId(event));
+  let derivativePriceFeedSet = new PriceFeedSetEvent(genericId(event));
   let nextPriceFeed = ensurePriceFeed(event.params.nextPriceFeed);
 
   let derivative = ensureAsset(event.params.derivative);

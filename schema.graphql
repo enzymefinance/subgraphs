@@ -45,7 +45,7 @@ interface Metric {
 # Low-level fund event entities
 #################################################
 
-type FundDeployment implements Event & FundEvent @entity {
+type NewFundDeployedEvent implements Event & FundEvent @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -61,7 +61,7 @@ type FundDeployment implements Event & FundEvent @entity {
   transaction: Transaction!
 }
 
-type ComptrollerProxyDeployment implements Event & FundEvent @entity {
+type ComptrollerProxyDeployedEvent implements Event & FundEvent @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -72,7 +72,7 @@ type ComptrollerProxyDeployment implements Event & FundEvent @entity {
   transaction: Transaction!
 }
 
-type FundStatusUpdate implements Event & FundEvent @entity {
+type FundStatusUpdatedEvent implements Event & FundEvent @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -83,7 +83,7 @@ type FundStatusUpdate implements Event & FundEvent @entity {
   transaction: Transaction!
 }
 
-type FundConfigSetting implements Event & FundEvent @entity {
+type FundConfigSetEvent implements Event & FundEvent @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -96,7 +96,7 @@ type FundConfigSetting implements Event & FundEvent @entity {
   transaction: Transaction!
 }
 
-type SharesAddition implements Event & FundEvent & SharesChange @entity {
+type SharesBoughtEvent implements Event & FundEvent & SharesChange @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -110,7 +110,7 @@ type SharesAddition implements Event & FundEvent & SharesChange @entity {
   transaction: Transaction!
 }
 
-type SharesRedemption implements Event & FundEvent & SharesChange @entity {
+type SharesRedeemedEvent implements Event & FundEvent & SharesChange @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -124,19 +124,21 @@ type SharesRedemption implements Event & FundEvent & SharesChange @entity {
   transaction: Transaction!
 }
 
-type SharesReward implements Event & SharesChange @entity {
-  id: ID!
-  fund: Fund!
-  account: Account!
-  contract: Contract!
-  investor: Account!
-  investment: Investment!
-  shares: BigDecimal!
-  timestamp: BigInt!
-  transaction: Transaction!
-}
+# TODO: implement when fees are implemented in protocol
 
-type AmguPayment implements Event & FundEvent @entity {
+# type SharesReward implements Event & SharesChange @entity {
+#   id: ID!
+#   fund: Fund!
+#   account: Account!
+#   contract: Contract!
+#   investor: Account!
+#   investment: Investment!
+#   shares: BigDecimal!
+#   timestamp: BigInt!
+#   transaction: Transaction!
+# }
+
+type AmguPaidEvent implements Event & FundEvent @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -148,7 +150,7 @@ type AmguPayment implements Event & FundEvent @entity {
   transaction: Transaction!
 }
 
-type AssetWithdrawal implements Event & FundEvent @entity {
+type AssetWithdrawnEvent implements Event & FundEvent @entity {
   id: ID!
   asset: Asset!
   fund: Fund!
@@ -160,7 +162,7 @@ type AssetWithdrawal implements Event & FundEvent @entity {
   amount: BigDecimal!
 }
 
-type TrackedAssetAddition implements Event & FundEvent @entity {
+type TrackedAssetAddedEvent implements Event & FundEvent @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -170,7 +172,7 @@ type TrackedAssetAddition implements Event & FundEvent @entity {
   transaction: Transaction!
 }
 
-type TrackedAssetRemoval implements Event & FundEvent @entity {
+type TrackedAssetRemovedEvent implements Event & FundEvent @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -180,7 +182,7 @@ type TrackedAssetRemoval implements Event & FundEvent @entity {
   transaction: Transaction!
 }
 
-type CallOnIntegrationExecution implements Event & FundEvent @entity {
+type CallOnIntegrationExecutedEvent implements Event & FundEvent @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -194,7 +196,7 @@ type CallOnIntegrationExecution implements Event & FundEvent @entity {
   transaction: Transaction!
 }
 
-type PolicyEnabled implements Event & FundEvent @entity {
+type PolicyEnabledForFundEvent implements Event & FundEvent @entity {
   id: ID!
   contract: Contract!
   fund: Fund!
@@ -279,7 +281,7 @@ type TransferEvent implements Event & FundEvent @entity {
 # Low-level network event entities
 #################################################
 
-type IntegrationRegistration implements Event & NetworkEvent @entity {
+type AdapterRegisteredEvent implements Event & NetworkEvent @entity {
   id: ID!
   identifier: String!
   contract: Contract!
@@ -288,7 +290,7 @@ type IntegrationRegistration implements Event & NetworkEvent @entity {
   integrationAdapter: IntegrationAdapter!
 }
 
-type IntegrationDeregistration implements Event & NetworkEvent @entity {
+type AdapterDeregisteredEvent implements Event & NetworkEvent @entity {
   id: ID!
   identifier: String!
   contract: Contract!
@@ -297,7 +299,7 @@ type IntegrationDeregistration implements Event & NetworkEvent @entity {
   integrationAdapter: IntegrationAdapter!
 }
 
-type PolicyRegistration implements Event & NetworkEvent @entity {
+type PolicyRegisteredEvent implements Event & NetworkEvent @entity {
   id: ID!
   identifier: String!
   contract: Contract!
@@ -306,7 +308,7 @@ type PolicyRegistration implements Event & NetworkEvent @entity {
   policy: Policy!
 }
 
-type PolicyDeregistration implements Event & NetworkEvent @entity {
+type PolicyDeregisteredEvent implements Event & NetworkEvent @entity {
   id: ID!
   identifier: String!
   contract: Contract!
@@ -315,7 +317,7 @@ type PolicyDeregistration implements Event & NetworkEvent @entity {
   policy: Policy!
 }
 
-type FundDeployerSet implements Event & NetworkEvent @entity {
+type FundDeployerSetEvent implements Event & NetworkEvent @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
@@ -324,7 +326,7 @@ type FundDeployerSet implements Event & NetworkEvent @entity {
   transaction: Transaction!
 }
 
-type AmguPriceChange implements Event & NetworkEvent @entity {
+type AmguPriceSetEvent implements Event & NetworkEvent @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
@@ -332,7 +334,7 @@ type AmguPriceChange implements Event & NetworkEvent @entity {
   transaction: Transaction!
 }
 
-type MlnTokensBurn implements Event & NetworkEvent @entity {
+type MlnTokensBurnedEvent implements Event & NetworkEvent @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
@@ -340,7 +342,7 @@ type MlnTokensBurn implements Event & NetworkEvent @entity {
   transaction: Transaction!
 }
 
-type FrozenEtherThaw implements Event & NetworkEvent @entity {
+type FrozenEtherThawedEvent implements Event & NetworkEvent @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
@@ -348,7 +350,7 @@ type FrozenEtherThaw implements Event & NetworkEvent @entity {
   transaction: Transaction!
 }
 
-type AmguPaymentInEther implements Event & NetworkEvent @entity {
+type AmguPaidInEtherEvent implements Event & NetworkEvent @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
@@ -356,7 +358,7 @@ type AmguPaymentInEther implements Event & NetworkEvent @entity {
   transaction: Transaction!
 }
 
-type EtherTakerAddition implements Event & NetworkEvent @entity {
+type EtherTakerAddedEvent implements Event & NetworkEvent @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
@@ -364,7 +366,7 @@ type EtherTakerAddition implements Event & NetworkEvent @entity {
   transaction: Transaction!
 }
 
-type EtherTakerRemoval implements Event & NetworkEvent @entity {
+type EtherTakerRemovedEvent implements Event & NetworkEvent @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
@@ -372,7 +374,7 @@ type EtherTakerRemoval implements Event & NetworkEvent @entity {
   transaction: Transaction!
 }
 
-type FundDeployerOwnershipTransfer implements Event & NetworkEvent @entity {
+type OwnershipTransferredEvent implements Event & NetworkEvent @entity {
   id: ID!
   contract: Contract!
   previousOwner: String!
@@ -381,7 +383,7 @@ type FundDeployerOwnershipTransfer implements Event & NetworkEvent @entity {
   transaction: Transaction!
 }
 
-type DerivativePriceFeedSet implements Event & NetworkEvent @entity {
+type PriceFeedSetEvent implements Event & NetworkEvent @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
@@ -392,7 +394,7 @@ type DerivativePriceFeedSet implements Event & NetworkEvent @entity {
   prevPriceFeed: PriceFeed
 }
 
-type PrimitivePriceFeedSet implements Event & NetworkEvent @entity {
+type AggregatorSetEvent implements Event & NetworkEvent @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!

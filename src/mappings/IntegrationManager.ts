@@ -4,7 +4,7 @@ import {
   CallOnIntegrationExecuted,
 } from '../generated/IntegrationManagerContract';
 import { genericId } from '../utils/genericId';
-import { IntegrationDeregistration, CallOnIntegrationExecution } from '../generated/schema';
+import { AdapterDeregisteredEvent, CallOnIntegrationExecutedEvent } from '../generated/schema';
 import { ensureContract, useContract } from '../entities/Contract';
 import { ensureTransaction } from '../entities/Transaction';
 import { ensureAdapter, useAdapter } from '../entities/IntegrationAdapter';
@@ -16,7 +16,7 @@ import { BigDecimal } from '@graphprotocol/graph-ts';
 
 export function handleAdapterDeregistered(event: AdapterDeregistered): void {
   let id = genericId(event);
-  let deregistration = new IntegrationDeregistration(id);
+  let deregistration = new AdapterDeregisteredEvent(id);
 
   deregistration.identifier = event.params.identifier.toHex();
   deregistration.contract = ensureContract(event.params.adapter, 'IntegrationManager', event.block.timestamp).id;
@@ -29,7 +29,7 @@ export function handleAdapterDeregistered(event: AdapterDeregistered): void {
 
 export function handleAdapterRegistered(event: AdapterRegistered): void {
   let id = genericId(event);
-  let registration = new IntegrationDeregistration(id);
+  let registration = new AdapterDeregisteredEvent(id);
 
   registration.identifier = event.params.identifier.toHex();
   registration.contract = ensureContract(event.params.adapter, 'IntegrationManager', event.block.timestamp).id;
@@ -42,7 +42,7 @@ export function handleAdapterRegistered(event: AdapterRegistered): void {
 
 export function handleCallOnIntegrationExecuted(event: CallOnIntegrationExecuted): void {
   let id = genericId(event);
-  let execution = new CallOnIntegrationExecution(id);
+  let execution = new CallOnIntegrationExecutedEvent(id);
   let fund = useFund(event.address.toHex());
   let address = event.transaction.from;
 

@@ -1,22 +1,45 @@
 import { DataSourceContext } from '@graphprotocol/graph-ts';
+import { ensureAccount, ensureManager } from '../entities/Account';
+import { ensureAsset } from '../entities/Asset';
+import { ensureComptroller } from '../entities/Comptroller';
+import { ensureContract } from '../entities/Contract';
 import { createFund } from '../entities/Fund';
+import { ensureTransaction } from '../entities/Transaction';
+import { ComptrollerLibContract } from '../generated/ComptrollerLibContract';
 import {
-  NewFundDeployed,
   AmguPaid,
   ComptrollerProxyDeployed,
+  NewFundDeployed,
   OwnershipTransferred,
 } from '../generated/FundDeployerContract';
+import {
+  AmguPaidEvent,
+  ComptrollerProxyDeployedEvent,
+  NewFundDeployedEvent,
+  OwnershipTransferredEvent,
+} from '../generated/schema';
 import { ComptrollerLibDataSource, VaultLibDataSource } from '../generated/templates';
 import { genericId } from '../utils/genericId';
-import { AmguPayment, ComptrollerProxyDeployment, FundDeployerOwnershipTransfer } from '../generated/schema';
 import { toBigDecimal } from '../utils/tokenValue';
-import { ensureAccount, ensureManager } from '../entities/Account';
-import { ensureTransaction } from '../entities/Transaction';
-import { ensureContract } from '../entities/Contract';
-import { ensureComptroller } from '../entities/Comptroller';
-import { ComptrollerLibContract } from '../generated/ComptrollerLibContract';
 
 export function handleNewFundDeployed(event: NewFundDeployed): void {
+  let id = event.params.vaultProxy.toHex();
+
+  let fundDeployment = new NewFundDeployedEvent(id);
+  fundDeployment.timestamp = event.block.timestamp;
+  fundDeployment.fund = id;
+  fundDeployment.account = ensureManager(event.params.fundOwner).id;
+  fundDeployment.contract = ensureContract(event.address, 'FundDeployer', event.block.timestamp).id;
+  fundDeployment.comptrollerProxy = ensureComptroller(event.params.comptrollerProxy).id;
+  fundDeployment.vaultProxy = event.params.vaultProxy.toHex();
+  fundDeployment.fundOwner = ensureManager(event.params.fundOwner).id;
+  fundDeployment.fundName = event.params.fundName;
+  fundDeployment.denominationAsset = ensureAsset(event.params.denominationAsset).id;
+  fundDeployment.feeManagerConfig = event.params.feeManagerConfig.toHex();
+  fundDeployment.policyManagerConfig = event.params.policyManagerConfig.toHex();
+  fundDeployment.transaction = ensureTransaction(event).id;
+  fundDeployment.save();
+
   createFund(event);
 
   let comptrollerContext = new DataSourceContext();
@@ -28,7 +51,7 @@ export function handleNewFundDeployed(event: NewFundDeployed): void {
 
 export function handleAmguPaid(event: AmguPaid): void {
   let id = genericId(event);
-  let amguPaid = new AmguPayment(id);
+  let amguPaid = new AmguPaidEvent(id);
   amguPaid.amount = toBigDecimal(event.params.ethPaid);
   amguPaid.payer = ensureAccount(event.params.payer).id;
   amguPaid.gas = event.params.gasUsed.toI32();
@@ -41,7 +64,7 @@ export function handleComptrollerProxyDeployed(event: ComptrollerProxyDeployed):
   let comptrollerProxy = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let vaultProxy = comptrollerProxy.getVaultProxy();
 
-  let comptrollerProxyDeployment = new ComptrollerProxyDeployment(event.params.comptrollerProxy.toHex());
+  let comptrollerProxyDeployment = new ComptrollerProxyDeployedEvent(event.params.comptrollerProxy.toHex());
   comptrollerProxyDeployment.timestamp = event.block.timestamp;
   comptrollerProxyDeployment.fund = vaultProxy.toHex();
   comptrollerProxyDeployment.account = ensureManager(event.params.fundOwner).id;
@@ -55,7 +78,7 @@ export function handleComptrollerProxyDeployed(event: ComptrollerProxyDeployed):
 export function handleOwnershipTransferred(event: OwnershipTransferred): void {
   let id = genericId(event);
 
-  let transfer = new FundDeployerOwnershipTransfer(id);
+  let transfer = new OwnershipTransferredEvent(id);
   transfer.timestamp = event.block.timestamp;
   transfer.contract = ensureContract(event.address, 'FundDeployer', event.block.timestamp).id;
   transfer.previousOwner = event.params.previousOwner.toHex();

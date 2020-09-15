@@ -1,5 +1,5 @@
 import { BigDecimal, ethereum } from '@graphprotocol/graph-ts';
-import { Account, Asset, Fund, Investment, SharesAddition, SharesRedemption } from '../generated/schema';
+import { Account, Asset, Fund, Investment, SharesBoughtEvent, SharesRedeemedEvent } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
 import { useFund } from './Fund';
 import { trackFundPortfolio } from './Portfolio';
@@ -57,8 +57,8 @@ export function createInvestmentAddition(
   quantity: BigDecimal,
   shares: BigDecimal,
   event: ethereum.Event,
-): SharesAddition {
-  let addition = new SharesAddition(changeId(investment, event));
+): SharesBoughtEvent {
+  let addition = new SharesBoughtEvent(changeId(investment, event));
   addition.account = investment.investor;
   addition.investor = investment.investor;
   addition.fund = investment.fund;
@@ -89,8 +89,8 @@ export function createInvestmentRedemption(
   quantities: BigDecimal[],
   shares: BigDecimal,
   event: ethereum.Event,
-): SharesRedemption {
-  let redemption = new SharesRedemption(changeId(investment, event));
+): SharesRedeemedEvent {
+  let redemption = new SharesRedeemedEvent(changeId(investment, event));
   redemption.account = investment.investor;
   redemption.investor = investment.investor;
   redemption.fund = investment.fund;
