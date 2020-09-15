@@ -5,13 +5,13 @@ import { useFund } from '../entities/Fund';
 import { ensurePolicy, usePolicy } from '../entities/Policy';
 import { ensureTransaction } from '../entities/Transaction';
 import { PolicyDeregistered, PolicyEnabledForFund, PolicyRegistered } from '../generated/PolicyManagerContract';
-import { PolicyDeregistration, PolicyEnabled, PolicyRegistration } from '../generated/schema';
+import { PolicyDeregisteredEvent, PolicyEnabledForFundEvent, PolicyRegisteredEvent } from '../generated/schema';
 import { arrayUnique } from '../utils/arrayUnique';
 import { genericId } from '../utils/genericId';
 
 export function handlePolicyRegistered(event: PolicyRegistered): void {
   let id = genericId(event);
-  let registration = new PolicyRegistration(id);
+  let registration = new PolicyRegisteredEvent(id);
 
   registration.timestamp = event.block.timestamp;
   registration.transaction = ensureTransaction(event).id;
@@ -24,7 +24,7 @@ export function handlePolicyRegistered(event: PolicyRegistered): void {
 
 export function handlePolicyDeregistered(event: PolicyDeregistered): void {
   let id = genericId(event);
-  let deregistration = new PolicyDeregistration(id);
+  let deregistration = new PolicyDeregisteredEvent(id);
 
   deregistration.timestamp = event.block.timestamp;
   deregistration.transaction = ensureTransaction(event).id;
@@ -37,7 +37,7 @@ export function handlePolicyDeregistered(event: PolicyDeregistered): void {
 
 export function handlePolicyEnabledForFund(event: PolicyEnabledForFund): void {
   let id = genericId(event);
-  let enabled = new PolicyEnabled(id);
+  let enabled = new PolicyEnabledForFundEvent(id);
   let fund = useFund(event.address.toHex());
   let policy = usePolicy(event.params.policy.toHex());
 

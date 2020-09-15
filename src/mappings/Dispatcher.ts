@@ -1,3 +1,7 @@
+import { zeroAddress } from '../constants';
+import { ensureContract } from '../entities/Contract';
+import { ensureFundDeployer } from '../entities/FundDeployer';
+import { ensureTransaction } from '../entities/Transaction';
 import {
   CurrentFundDeployerSet,
   MigrationCancelled,
@@ -11,15 +15,11 @@ import {
   PreSignalMigrationOriginHookFailed,
   VaultProxyDeployed,
 } from '../generated/DispatcherContract';
-import { ensureFundDeployer } from '../entities/FundDeployer';
-import { zeroAddress } from '../constants';
-import { FundDeployerSet } from '../generated/schema';
+import { FundDeployerSetEvent } from '../generated/schema';
 import { genericId } from '../utils/genericId';
-import { ensureTransaction } from '../entities/Transaction';
-import { ensureContract } from '../entities/Contract';
 
 export function handleCurrentFundDeployerSet(event: CurrentFundDeployerSet): void {
-  let fundDeployerSet = new FundDeployerSet(genericId(event));
+  let fundDeployerSet = new FundDeployerSetEvent(genericId(event));
 
   if (!event.params.prevFundDeployer.equals(zeroAddress)) {
     let prevFundDeployer = ensureFundDeployer(event.params.prevFundDeployer);

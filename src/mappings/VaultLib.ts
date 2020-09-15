@@ -7,11 +7,11 @@ import { useFund } from '../entities/Fund';
 import { ensureTransaction } from '../entities/Transaction';
 import {
   AccessorSetEvent,
-  AssetWithdrawal,
+  AssetWithdrawnEvent,
   MigratorSetEvent,
   OwnerSetEvent,
-  TrackedAssetAddition,
-  TrackedAssetRemoval,
+  TrackedAssetAddedEvent,
+  TrackedAssetRemovedEvent,
   TransferEvent,
   VaultLibSetEvent,
 } from '../generated/schema';
@@ -47,7 +47,7 @@ export function handleAccessorSet(event: AccessorSet): void {
 
 export function handleAssetWithdrawn(event: AssetWithdrawn): void {
   let id = genericId(event);
-  let withdrawal = new AssetWithdrawal(id);
+  let withdrawal = new AssetWithdrawnEvent(id);
   let address = Address.fromString(ensureTransaction(event).from);
 
   withdrawal.asset = ensureAsset(event.params.asset).id;
@@ -96,7 +96,7 @@ export function handleTrackedAssetAdded(event: TrackedAssetAdded): void {
   let id = genericId(event);
   let fund = useFund(event.address.toHex());
   let asset = ensureAsset(event.params.asset);
-  let trackedAssetAddition = new TrackedAssetAddition(id);
+  let trackedAssetAddition = new TrackedAssetAddedEvent(id);
 
   trackedAssetAddition.asset = asset.id;
   trackedAssetAddition.fund = fund.id;
@@ -116,7 +116,7 @@ export function handleTrackedAssetRemoved(event: TrackedAssetRemoved): void {
   let id = genericId(event);
   let fund = useFund(event.address.toHex());
   let asset = ensureAsset(event.params.asset);
-  let trackedAssetRemoval = new TrackedAssetRemoval(id);
+  let trackedAssetRemoval = new TrackedAssetRemovedEvent(id);
   trackedAssetRemoval.asset = asset.id;
   trackedAssetRemoval.fund = fund.id;
   trackedAssetRemoval.timestamp = event.block.timestamp;
