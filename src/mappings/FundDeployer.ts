@@ -19,12 +19,11 @@ import { ComptrollerLibContract } from '../generated/ComptrollerLibContract';
 export function handleNewFundDeployed(event: NewFundDeployed): void {
   createFund(event);
 
-  let compTrollerContext = new DataSourceContext();
-  compTrollerContext.setString('vaultProxy', event.params.vaultProxy.toHex());
-  compTrollerContext.setString('fund', event.params.vaultProxy.toHex());
+  let comptrollerContext = new DataSourceContext();
+  comptrollerContext.setString('vaultProxy', event.params.vaultProxy.toHex());
 
   VaultLibDataSource.create(event.params.vaultProxy);
-  ComptrollerLibDataSource.createWithContext(event.params.comptrollerProxy, compTrollerContext);
+  ComptrollerLibDataSource.createWithContext(event.params.comptrollerProxy, comptrollerContext);
 }
 
 export function handleAmguPaid(event: AmguPaid): void {

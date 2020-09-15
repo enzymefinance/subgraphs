@@ -12,12 +12,7 @@ import {
   SharesBought,
   SharesRedeemed,
 } from '../generated/ComptrollerLibContract';
-import {
-  AmguPayment,
-  Asset,
-  FundConfigSetting,
-  FundStatusUpdate,
-} from '../generated/schema';
+import { AmguPayment, Asset, FundConfigSetting, FundStatusUpdate } from '../generated/schema';
 import { genericId } from '../utils/genericId';
 import { toBigDecimal } from '../utils/tokenValue';
 
@@ -31,25 +26,6 @@ export function handleAmguPaid(event: AmguPaid): void {
   amguPaid.transaction = ensureTransaction(event).id;
   amguPaid.save();
 }
-
-// export function handleCallOnIntegrationExecuted(event: CallOnIntegrationExecuted): void {
-//   let id = genericId(event);
-//   let fund = useFund(dataSource.context().getString('vaultProxy'));
-//   let incomingAssets = event.params.incomingAssets.map<Asset>((id) => useAsset(id.toHex()));
-//   let outgoingAssets = event.params.outgoingAssets.map<Asset>((id) => useAsset(id.toHex()));
-
-//   let callOnIntegration = new CallOnIntegrationExecution(id);
-//   callOnIntegration.contract = ensureContract(event.address, 'ComptrollerLib', event.block.timestamp).id;
-//   callOnIntegration.fund = fund.id;
-//   callOnIntegration.account = useAccount(event.transaction.from.toHex()).id;
-//   callOnIntegration.adapter = event.params.adapter.toHex();
-//   callOnIntegration.incomingAssets = incomingAssets.map<string>((asset) => asset.id);
-//   callOnIntegration.incomingAssetAmounts = event.params.incomingAssetAmounts;
-//   callOnIntegration.outgoingAssets = outgoingAssets.map<string>((asset) => asset.id);
-//   callOnIntegration.outgoingAssetAmounts = event.params.outgoingAssetAmounts;
-//   callOnIntegration.transaction = ensureTransaction(event).id;
-//   callOnIntegration.save();
-// }
 
 export function handleFundConfigSet(event: FundConfigSet): void {
   let fundId = dataSource.context().getString('vaultProxy');

@@ -5,7 +5,7 @@ import {
 } from '../generated/IntegrationManagerContract';
 import { genericId } from '../utils/genericId';
 import { IntegrationDeregistration, CallOnIntegrationExecution } from '../generated/schema';
-import { ensureContract } from '../entities/Contract';
+import { ensureContract, useContract } from '../entities/Contract';
 import { ensureTransaction } from '../entities/Transaction';
 import { ensureAdapter, useAdapter } from '../entities/IntegrationAdapter';
 import { useFund } from '../entities/Fund';
@@ -49,7 +49,7 @@ export function handleCallOnIntegrationExecuted(event: CallOnIntegrationExecuted
   let incomingAssets = event.params.incomingAssets.map<string>((asset) => ensureAsset(asset).id);
   let outgoingAssets = event.params.outgoingAssets.map<string>((asset) => ensureAsset(asset).id);
 
-  execution.contract = ensureContract(event.address, 'IntegrationManager', event.block.timestamp).id;
+  execution.contract = useContract(event.address.toHex()).id;
   execution.fund = fund.id;
   execution.account = ensureManager(address).id;
   execution.incomingAssets = incomingAssets;
