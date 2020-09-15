@@ -11,7 +11,7 @@ export interface Redemption {
 
 const redemptionQuery = gql`
   query Redemption($transaction: String!, $block: Int!) {
-    sharesRedemptions(where: { transaction: $transaction }, block: { number: $block }) {
+    sharesRedeemedEvents(where: { transaction: $transaction }, block: { number: $block }) {
       id
       transaction {
         id
@@ -23,11 +23,11 @@ const redemptionQuery = gql`
 
 export async function fetchRedemption(endpoint: string, transaction: string, block: number) {
   const result = await request<{
-    sharesRedemptions: Redemption[];
+    sharesRedeemedEvents: Redemption[];
   }>(endpoint, redemptionQuery, {
     transaction,
     block,
   });
 
-  return result.sharesRedemptions[0];
+  return result.sharesRedeemedEvents[0];
 }
