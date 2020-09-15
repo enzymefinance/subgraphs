@@ -1,4 +1,4 @@
-import { DataSourceContext } from '@graphprotocol/graph-ts';
+import { dataSource, DataSourceContext } from '@graphprotocol/graph-ts';
 import { ensureAccount, ensureManager } from '../entities/Account';
 import { ensureAsset } from '../entities/Asset';
 import { ensureComptroller } from '../entities/Comptroller';
@@ -45,7 +45,7 @@ export function handleNewFundDeployed(event: NewFundDeployed): void {
 
   let comptrollerContext = new DataSourceContext();
   comptrollerContext.setString('vaultProxy', event.params.vaultProxy.toHex());
-
+  
   VaultLibDataSource.create(event.params.vaultProxy);
   ComptrollerLibDataSource.createWithContext(event.params.comptrollerProxy, comptrollerContext);
 }

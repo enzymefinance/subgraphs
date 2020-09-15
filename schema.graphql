@@ -444,7 +444,6 @@ type FeeDeregisteredEvent implements Event & NetworkEvent @entity {
 
 type Fee @entity {
   id: ID!
-  timestamp: BigInt!
   identifier: String!
   funds: [Fund!]!
 }
@@ -548,7 +547,6 @@ type PriceFeed @entity {
 
 type Policy @entity {
   id: ID!
-  timestamp: BigInt!
   identifier: String!
   funds: [Fund!]!
 }
@@ -587,4 +585,3 @@ type State implements Metric @entity {
   # payouts: Payout!
   events: [FundEvent!]!
 }
-

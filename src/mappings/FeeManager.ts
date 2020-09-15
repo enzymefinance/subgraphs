@@ -46,7 +46,7 @@ export function handleFeeRegistered(event: FeeRegistered): void {
   registration.contract = ensureContract(event.address, 'FeeManager', event).id
   registration.timestamp = event.block.timestamp
   registration.transaction = ensureTransaction(event).id
-  registration.fee = ensureFee(event.params.fee, event.params.identifier.toHex(), event.block.timestamp).id
+  registration.fee = ensureFee(event.params.fee).id
 
   registration.save()
 }
@@ -54,5 +54,5 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
 
 }
 export function handleFeeSharesOutstandingPaidForFund(event: FeeSharesOutstandingPaidForFund): void {
-  
+
 }

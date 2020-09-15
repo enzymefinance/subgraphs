@@ -133,6 +133,8 @@ dataSources:
           file: ./node_modules/@melonproject/release/artifacts/ComptrollerLib.json
         - name: StandardERC20Contract
           file: ./node_modules/@melonproject/release/artifacts/StandardERC20.json
+        - name: IFeeInterface
+          file: ./node_modules/@melonproject/release/artifacts/IFee.json
       eventHandlers:
         - event: FeeDeregistered(indexed address,indexed string)
           handler: handleFeeDeregistered
@@ -199,6 +201,8 @@ dataSources:
           file: ./node_modules/@melonproject/release/artifacts/ComptrollerLib.json
         - name: StandardERC20Contract
           file: ./node_modules/@melonproject/release/artifacts/StandardERC20.json
+        - name: IIntegrationAdapterInterface
+          file: ./node_modules/@melonproject/release/artifacts/IIntegrationAdapter.json
       eventHandlers:
         - event: AdapterDeregistered(indexed address,indexed string)
           handler: handleAdapterDeregistered

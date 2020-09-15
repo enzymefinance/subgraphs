@@ -35,7 +35,7 @@ export function handleAdapterRegistered(event: AdapterRegistered): void {
   registration.contract = ensureContract(event.params.adapter, 'IntegrationManager', event).id;
   registration.timestamp = event.block.timestamp;
   registration.transaction = ensureTransaction(event).id;
-  registration.integrationAdapter = ensureIntegrationAdapter(event.params.adapter, event.params.identifier.toHex()).id;
+  registration.integrationAdapter = ensureIntegrationAdapter(event.params.adapter).id;
 
   registration.save();
 }

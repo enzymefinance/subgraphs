@@ -1,4 +1,5 @@
 import { Address, BigInt } from '@graphprotocol/graph-ts';
+import { IFeeInterface } from '../generated/IFeeInterface';
 import { Fee } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
 
@@ -11,15 +12,17 @@ export function useFee(id: string): Fee {
   return fee as Fee;
 }
 
-export function ensureFee(address: Address, identifier: string, timestamp: BigInt): Fee {
+export function ensureFee(address: Address): Fee {
   let fee = Fee.load(address.toHex()) as Fee;
   if (fee) {
     return fee;
   }
 
+  let contract = IFeeInterface.bind(address);
+  let identifier = contract.identifier();
+
   fee = new Fee(address.toHex());
   fee.identifier = identifier;
-  fee.timestamp = timestamp;
   fee.funds = [];
   fee.save();
 
