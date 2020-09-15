@@ -1,5 +1,9 @@
+import { Address, BigInt } from '@graphprotocol/graph-ts';
 import { MigrationSignaled } from '../generated/DispatcherContract';
-import { Migration } from '../generated/schema';
+import { Migration, Fund, FundDeployer } from '../generated/schema';
+import { useFundDeployer } from './FundDeployer';
+import { useRelease } from './Release';
+import { useFund } from './Fund';
 import { logCritical } from '../utils/logCritical';
 
 export function useMigration(id: string): Migration {
@@ -11,33 +15,50 @@ export function useMigration(id: string): Migration {
   return migration as Migration;
 }
 
-export function createMigration(event: MigrationSignaled): Fund {
-  let id = event.params.vaultProxy.toHex();
+export function ensureMigration(event: MigrationSignaled): Migration {
+  let id = generateMigrationId(event.params.vaultProxy, event.params.prevFundDeployer, event.params.nextFundDeployer);
+  let migration = Migration.load(id);
+  if (migration) {
+    // Setting canceled as false in case we're re-signaling a previously canceled Migration (that cancelled Migration has the same ID)
+    migration.canceled = false;
+    return migration;
+  }
+  migration = new Migration(id);
+  migration.prevRelease = useRelease(event.params.prevFundDeployer.toHex()).id;
+  migration.nextRelease = useRelease(event.params.nextFundDeployer.toHex()).id;
+  migration.fund = useFund(event.params.vaultProxy.toHex()).id;
+  migration.signalTimestamp = event.block.timestamp;
+  migration.canceled = false;
+  migration.executed = false;
+  migration.save();
+  return migration;
+}
 
-  let fund = new Fund(id);
-  let shares = createShares(BigDecimal.fromString('0'), fund, event, null);
-  let portfolio = createPortfolio([], fund, event, null);
-  // let payout = createPayout([], null, context);
-  let state = createState(shares, portfolio, fund, event);
+/* export function createMigration(event: MigrationSignaled): Migration {
+  let id = genericId(event);
+  let migration = new Migration(id);
 
-  // let fees = createFees(context);
+  migration.prevRelease = useRelease(event.params.prevFundDeployer).id;
+  migration.nextRelease = useRelease(event.params.nextFundDeployer).id;
+  migration.fund = useFund(event.params.vaultProxy);
+  migration.signalTimestamp = event.params.signalTimestamp;
+  migration.canceled = false;
+  migration.executed = false;
+  migration.save();
 
-  fund.name = event.params.fundName;
-  fund.inception = event.block.timestamp;
-  fund.deployer = ensureFundDeployer(event.address).id;
-  fund.accessor = ensureComptroller(event.params.comptrollerProxy).id;
-  fund.manager = ensureManager(event.params.fundOwner, event).id;
-  fund.creator = ensureAccount(event.params.caller, event).id;
-  fund.trackedAssets = [];
-  fund.shares = shares.id;
-  fund.portfolio = portfolio.id;
-  fund.state = state.id;
-  fund.status = 'None';
-  fund.denominationAsset = ensureAsset(event.params.denominationAsset).id;
-  fund.policies = [];
-  // fund.payouts = payout.id;
-  // fund.fees = fees.map<string>((fee) => fee.id);
-  fund.save();
+  return migration;
+} */
 
-  return fund;
+export function generateMigrationId(fund: Address, prevFundDeployer: Address, nextFundDeployer: Address): string {
+  // Uniquely identifies a migration. Each fund can only have one migration from X to Y.
+  // At the moment, we're re-using a migrationId if a fund
+  // Don't forget the case where a fund may have cancelled a migration, but then wants to migrate again (with same prevRelease and nextRelease)
+  // Check at the mapping inside the Dispatcher contract.
+  return (
+    useFund(fund.toHex()).id +
+    '/' +
+    useFundDeployer(prevFundDeployer.toHex()).id +
+    '/' +
+    useFundDeployer(nextFundDeployer.toHex()).id
+  );
 }
