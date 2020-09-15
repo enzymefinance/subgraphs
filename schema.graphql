@@ -263,17 +263,17 @@ type VaultLibSetEvent implements Event & FundEvent @entity {
 #   value: BigInt!
 # }
 
-# type TransferEvent implements Event & FundEvent @entity {
-#   id: ID!
-#   fund: Fund!
-#   account: Account!
-#   contract: Contract!
-#   timestamp: BigInt!
-#   transaction: Transaction!
-#   from: Account!
-#   to: Account!
-#   amount: BigDecimal!
-# }
+type TransferEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  from: Account!
+  to: Account!
+  amount: BigDecimal!
+}
 
 #################################################
 # Low-level network event entities
