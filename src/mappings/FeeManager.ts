@@ -66,7 +66,7 @@ export function handleFeeRegistered(event: FeeRegistered): void {
 export function handleFeeSettledForFund(event: FeeSettledForFund): void {
   let id = genericId(event);
   let settled = new FeeSettledForFundEvent(id);
-  let comptroller = ComptrollerLibContract.bind(event.comptrollerProxy);
+  let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let fund = useFund(comptroller.getVaultProxy().toHex());
 
   settled.contract = ensureContract(event.address, 'FeeManager', event).id;
@@ -86,7 +86,7 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
 export function handleFeeSharesOutstandingPaidForFund(event: FeeSharesOutstandingPaidForFund): void {
   let id = genericId(event);
   let sharesPaid = new FeeSharesOutstandingPaidForFundEvent(id);
-  let comptroller = ComptrollerLibContract.bind(event.comptrollerProxy);
+  let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let fund = useFund(comptroller.getVaultProxy().toHex());
 
   sharesPaid.contract = ensureContract(event.address, 'FeeManager', event).id;
