@@ -209,6 +209,34 @@ type FeeEnabledForFundEvent implements Event & FundEvent @entity {
   settingsData: Bytes!
 }
 
+type FeeSettledForFundEvent implements Event & FundEvent @entity {
+  id: ID!
+  contract: Contract!
+  fund: Fund!
+  account: Account!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: Comptroller!
+  fee: Fee!
+  payer: Fund!
+  payee: Account!
+  sharesDue: BigDecimal!
+}
+
+type FeeSharesOutstandingPaidForFundEvent implements Event & FundEvent @entity {
+  id: ID!
+  contract: Contract!
+  fund: Fund!
+  account: Account!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: Comptroller!
+  fee: Fee!
+  payer: Fund!
+  payee: Account!
+  sharesDue: BigDecimal!
+}
+
 type PolicyEnabledForFundEvent implements Event & FundEvent @entity {
   id: ID!
   contract: Contract!
