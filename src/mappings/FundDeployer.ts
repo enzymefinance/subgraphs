@@ -25,8 +25,6 @@ import { toBigDecimal } from '../utils/tokenValue';
 export function handleNewFundDeployed(event: NewFundDeployed): void {
   let id = event.params.vaultProxy.toHex();
 
-  event.params.denominationAsset;
-
   let fundDeployment = new NewFundDeployedEvent(id);
   fundDeployment.timestamp = event.block.timestamp;
   fundDeployment.fund = id;
