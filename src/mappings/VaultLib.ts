@@ -68,7 +68,7 @@ export function handleMigratorSet(event: MigratorSet): void {
 
   migratorSet.fund = useFund(event.address.toHex()).id;
   migratorSet.account = ensureManager(Address.fromString(ensureTransaction(event).from)).id;
-  migratorSet.contract = ensureContract(event.address, 'VaultLib', event.block.timestamp).id;
+  migratorSet.contract = useContract(event.address.toHex()).id;
   migratorSet.timestamp = event.block.timestamp;
   migratorSet.transaction = ensureTransaction(event).id;
   migratorSet.prevMigrator = ensureAccount(event.params.prevMigrator).id;
@@ -166,13 +166,15 @@ export function handleVaultLibSet(event: VaultLibSet): void {
 
 export function handleTransfer(event: Transfer): void {
   let id = genericId(event);
+
   let transfer = new TransferEvent(id);
   transfer.fund = useFund(event.address.toHex()).id;
-  transfer.account = ensureManager(Address.fromString(ensureTransaction(event).from)).id;
-  transfer.contract = ensureContract(event.address, 'VaultLib', event.block.timestamp).id;
+  transfer.account = ensureAccount(Address.fromString(ensureTransaction(event).from)).id;
+  transfer.contract = useContract(event.address.toHex()).id;
   transfer.timestamp = event.block.timestamp;
   transfer.transaction = ensureTransaction(event).id;
-  transfer.from = ensureComptroller(Address.fromString(ensureTransaction(event).from)).id;
+  transfer.from = ensureAccount(event.params.from).id;
   transfer.to = ensureAccount(event.params.to).id;
   transfer.amount = toBigDecimal(event.params.value);
+  transfer.save();
 }
