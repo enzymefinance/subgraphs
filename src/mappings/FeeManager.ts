@@ -1,9 +1,11 @@
+import { Address } from '@graphprotocol/graph-ts';
 import { ensureManager } from '../entities/Account';
 import { ensureComptroller, useComptroller } from '../entities/Comptroller';
 import { ensureContract } from '../entities/Contract';
 import { ensureFee, useFee } from '../entities/Fee';
 import { useFund } from '../entities/Fund';
 import { ensureTransaction } from '../entities/Transaction';
+import { ComptrollerLibContract } from '../generated/ComptrollerLibContract';
 import {
   FeeDeregistered,
   FeeEnabledForFund,
@@ -64,43 +66,39 @@ export function handleFeeRegistered(event: FeeRegistered): void {
 export function handleFeeSettledForFund(event: FeeSettledForFund): void {
   let id = genericId(event);
   let settled = new FeeSettledForFundEvent(id);
-  // this seems wrong - passing event.address to both contract and fund?
-  let fund = useFund(event.address.toHex()).id;
+  let comptroller = ComptrollerLibContract.bind(event.comptrollerProxy);
+  let fund = useFund(comptroller.getVaultProxy().toHex());
 
   settled.contract = ensureContract(event.address, 'FeeManager', event).id;
-  settled.fund = fund;
+  settled.fund = fund.id;
   settled.account = ensureManager(event.transaction.from, event).id;
   settled.timestamp = event.block.timestamp;
   settled.transaction = ensureTransaction(event).id;
   settled.comptrollerProxy = useComptroller(event.params.comptrollerProxy.toHex()).id;
   settled.fee = useFee(event.params.fee.toHex()).id;
-  settled.payer = fund;
+  settled.payer = fund.id;
   settled.sharesDue = toBigDecimal(event.params.sharesDue);
-  // because it's always called by the manager, this will always have a 'to', right?
-  settled.payee = ensureManager(event.transaction.to!, event).id;
+  settled.payee = ensureManager(Address.fromString(fund.manager), event).id;
 
-  settled.save()
+  settled.save();
 }
 
 export function handleFeeSharesOutstandingPaidForFund(event: FeeSharesOutstandingPaidForFund): void {
   let id = genericId(event);
   let sharesPaid = new FeeSharesOutstandingPaidForFundEvent(id);
-  // this seems wrong - passing event.address to both contract and fund?
-  let fund = useFund(event.address.toHex()).id;
-  
+  let comptroller = ComptrollerLibContract.bind(event.comptrollerProxy);
+  let fund = useFund(comptroller.getVaultProxy().toHex());
+
   sharesPaid.contract = ensureContract(event.address, 'FeeManager', event).id;
-  sharesPaid.fund = fund;
+  sharesPaid.fund = fund.id;
   sharesPaid.account = ensureManager(event.transaction.from, event).id;
   sharesPaid.timestamp = event.block.timestamp;
   sharesPaid.transaction = ensureTransaction(event).id;
   sharesPaid.comptrollerProxy = useComptroller(event.params.comptrollerProxy.toHex()).id;
   sharesPaid.fee = useFee(event.params.fee.toHex()).id;
-  sharesPaid.payer = fund;
+  sharesPaid.payer = fund.id;
   sharesPaid.sharesDue = toBigDecimal(event.params.sharesDue);
-  // because it's always called by the manager, this will always have a 'to', right?
-  sharesPaid.payee = ensureManager(event.transaction.to!, event).id;
+  sharesPaid.payee = ensureManager(Address.fromString(fund.manager), event).id;
 
-  sharesPaid.save()
+  sharesPaid.save();
 }
-
-
