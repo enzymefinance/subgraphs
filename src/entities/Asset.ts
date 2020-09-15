@@ -1,7 +1,7 @@
 import { Address } from '@graphprotocol/graph-ts';
 import { Asset } from '../generated/schema';
-import { logCritical } from '../utils/logCritical';
 import { StandardERC20Contract } from '../generated/StandardERC20Contract';
+import { logCritical } from '../utils/logCritical';
 
 export function useAsset(id: string): Asset {
   let asset = Asset.load(id);
@@ -30,6 +30,7 @@ export function ensureAsset(address: Address): Asset {
   asset.decimals = decimals;
   asset.isDerivative = false;
   asset.priceFeed = '';
+  asset.fundsTracking = [];
   asset.save();
 
   return asset;

@@ -1,4 +1,4 @@
-import { Address, BigInt } from '@graphprotocol/graph-ts';
+import { Address, BigInt, ethereum } from '@graphprotocol/graph-ts';
 import { Contract } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
 
@@ -11,7 +11,7 @@ export function useContract(id: string): Contract {
   return contract as Contract;
 }
 
-export function ensureContract(address: Address, name: string, timestamp: BigInt): Contract {
+export function ensureContract(address: Address, name: string, event: ethereum.Event): Contract {
   let contract = Contract.load(address.toHex()) as Contract;
   if (contract) {
     return contract;
@@ -19,7 +19,7 @@ export function ensureContract(address: Address, name: string, timestamp: BigInt
 
   contract = new Contract(address.toHex());
   contract.name = name;
-  contract.timestamp = timestamp;
+  contract.timestamp = event.block.timestamp;
   contract.save();
 
   return contract;
