@@ -463,7 +463,6 @@ type Fund @entity {
   stateHistory: [State!]! @derivedFrom(field: "fund")
   events: [FundEvent!]! @derivedFrom(field: "fund")
   policies: [Policy!]!
-  # refactor mapping to accomodate accessor rather than comptroller
   accessor: Comptroller!
   migrator: String
   creator: Account!
