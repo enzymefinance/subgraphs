@@ -1,6 +1,18 @@
-import { Address, BigInt, ethereum } from '@graphprotocol/graph-ts';
+import { Address, ethereum } from '@graphprotocol/graph-ts';
 import { Account } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
+
+export function useManager(id: string): Account {
+  let manager = Account.load(id);
+  
+  if (manager == null) {
+    logCritical('Failed to load account {}.', [id]);
+  } else if (!manager.manager) {
+    logCritical('Account {} is not a manager.', [id]);
+  }
+
+  return manager as Account;
+}
 
 export function ensureManager(managerAddress: Address, event: ethereum.Event): Account {
   let account = ensureAccount(managerAddress, event);
@@ -11,6 +23,18 @@ export function ensureManager(managerAddress: Address, event: ethereum.Event): A
   }
 
   return account;
+}
+
+export function useInvestor(id: string): Account {
+  let investor = Account.load(id);
+ 
+  if (investor == null) {
+    logCritical('Failed to load account {}.', [id]);
+  } else if (!investor.investor) {
+    logCritical('Account {} is not an investor.', [id]);
+  }
+  
+  return investor as Account;
 }
 
 export function ensureInvestor(investorAddress: Address, event: ethereum.Event): Account {

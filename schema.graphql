@@ -197,6 +197,46 @@ type CallOnIntegrationExecutedEvent implements Event & FundEvent @entity {
   transaction: Transaction!
 }
 
+type FeeEnabledForFundEvent implements Event & FundEvent @entity {
+  id: ID!
+  contract: Contract!
+  fund: Fund!
+  account: Account!
+  timestamp: BigInt!
+  transaction: Transaction!
+  fee: Fee!
+  comptrollerProxy: Comptroller!
+  settingsData: Bytes!
+}
+
+type FeeSettledForFundEvent implements Event & FundEvent @entity {
+  id: ID!
+  contract: Contract!
+  fund: Fund!
+  account: Account!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: Comptroller!
+  fee: Fee!
+  payer: Fund!
+  payee: Account!
+  sharesDue: BigDecimal!
+}
+
+type FeeSharesOutstandingPaidForFundEvent implements Event & FundEvent @entity {
+  id: ID!
+  contract: Contract!
+  fund: Fund!
+  account: Account!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: Comptroller!
+  fee: Fee!
+  payer: Fund!
+  payee: Account!
+  sharesDue: BigDecimal!
+}
+
 type PolicyEnabledForFundEvent implements Event & FundEvent @entity {
   id: ID!
   contract: Contract!
@@ -406,9 +446,35 @@ type AggregatorSetEvent implements Event & NetworkEvent @entity {
   prevPriceFeed: PriceFeed
 }
 
+type FeeRegisteredEvent implements Event & NetworkEvent @entity {
+  id: ID!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+
+  fee: Fee!
+  identifier: String!
+}
+
+type FeeDeregisteredEvent implements Event & NetworkEvent @entity {
+  id: ID!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+
+  fee: Fee!
+  identifier: String!
+}
+
 #################################################
 # High-level entities
 #################################################
+
+type Fee @entity {
+  id: ID!
+  identifier: String!
+  funds: [Fund!]!
+}
 
 type IntegrationAdapter @entity {
   id: ID!
@@ -461,6 +527,7 @@ type Fund @entity {
   denominationAsset: Asset!
   trackedAssets: [Asset!]!
   policies: [Policy!]!
+  fees: [Fee!]!
   investments: [Investment!]! @derivedFrom(field: "fund")
   shares: Share!
   sharesHistory: [Share!]! @derivedFrom(field: "fund")
@@ -509,7 +576,6 @@ type PriceFeed @entity {
 
 type Policy @entity {
   id: ID!
-  timestamp: BigInt!
   identifier: String!
   funds: [Fund!]!
 }
