@@ -4,6 +4,7 @@ import { Migration, Fund, FundDeployer } from '../generated/schema';
 import { useFundDeployer } from './FundDeployer';
 import { useRelease } from './Release';
 import { useFund } from './Fund';
+import { ensureVaultLib } from './VaultLib';
 import { logCritical } from '../utils/logCritical';
 
 export function useMigration(id: string): Migration {
@@ -51,9 +52,6 @@ export function ensureMigration(event: MigrationSignaled): Migration {
 
 export function generateMigrationId(fund: Address, prevFundDeployer: Address, nextFundDeployer: Address): string {
   // Uniquely identifies a migration. Each fund can only have one migration from X to Y.
-  // At the moment, we're re-using a migrationId if a fund
-  // Don't forget the case where a fund may have cancelled a migration, but then wants to migrate again (with same prevRelease and nextRelease)
-  // Check at the mapping inside the Dispatcher contract.
   return (
     useFund(fund.toHex()).id +
     '/' +
