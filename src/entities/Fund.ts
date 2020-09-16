@@ -35,7 +35,7 @@ export function createFund(event: NewFundDeployed): Fund {
   fund.inception = event.block.timestamp;
   fund.deployer = ensureFundDeployer(event.address).id;
   // Release ID is the FundDeployer address
-  fund.release = useRelease(event.address).id;
+  fund.release = useRelease(event.address.toHex()).id;
   fund.accessor = ensureComptroller(event.params.comptrollerProxy).id;
   fund.manager = ensureManager(event.params.fundOwner, event).id;
   fund.creator = ensureAccount(event.params.caller, event).id;
