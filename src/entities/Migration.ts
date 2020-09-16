@@ -20,8 +20,8 @@ export function ensureMigration(event: MigrationSignaled): Migration {
   let id = generateMigrationId(event);
   let migration = Migration.load(id);
   if (migration) {
-    // Setting canceled as false in case we're re-signaling a previously canceled Migration (that cancelled Migration has the same ID)
-    migration.canceled = false;
+    // Setting cancelled as false in case we're re-signaling a previously cancelled Migration (that cancelled Migration has the same ID)
+    migration.cancelled = false;
     return migration as Migration;
   }
   migration = new Migration(id);
@@ -29,7 +29,7 @@ export function ensureMigration(event: MigrationSignaled): Migration {
   migration.nextRelease = useRelease(event.params.nextFundDeployer.toHex()).id;
   migration.fund = useFund(event.params.vaultProxy.toHex()).id;
   migration.signalTimestamp = event.block.timestamp;
-  migration.canceled = false;
+  migration.cancelled = false;
   migration.executed = false;
   // nextAccessor gets assigned to fund on migration execution
   migration.nextAccessor = ensureComptroller(event.params.nextVaultAccessor).id;
