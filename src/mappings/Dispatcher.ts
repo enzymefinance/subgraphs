@@ -69,11 +69,7 @@ export function handleCurrentFundDeployerSet(event: CurrentFundDeployerSet): voi
 
 export function handleMigrationCancelled(event: MigrationCancelled): void {
   let migrationCancellation = new MigrationCancellationEvent(genericId(event));
-  let migrationId = generateMigrationId(
-    event.params.vaultProxy,
-    event.params.prevFundDeployer,
-    event.params.nextFundDeployer,
-  );
+  let migrationId = generateMigrationId(event as MigrationSignaled);
   // Retrieving the migration request
   let migration = useMigration(migrationId);
   // Setting the event
@@ -92,11 +88,7 @@ export function handleMigrationCancelled(event: MigrationCancelled): void {
 }
 export function handleMigrationExecuted(event: MigrationExecuted): void {
   let migrationExecution = new MigrationExecutionEvent(genericId(event));
-  let migrationId = generateMigrationId(
-    event.params.vaultProxy,
-    event.params.prevFundDeployer,
-    event.params.nextFundDeployer,
-  );
+  let migrationId = generateMigrationId(event as MigrationSignaled);
   // Retrieving the migration request
   let migration = useMigration(migrationId);
   // Setting the event
@@ -133,11 +125,7 @@ export function handleMigrationSignaled(event: MigrationSignaled): void {
 }
 export function handlePostCancelMigrationOriginHookFailed(event: PostCancelMigrationOriginHookFailed): void {
   let hook = new PostCancelMigrationOriginHookFailureEvent(genericId(event));
-  let migrationId = generateMigrationId(
-    event.params.vaultProxy,
-    event.params.prevFundDeployer,
-    event.params.nextFundDeployer,
-  );
+  let migrationId = generateMigrationId(event as MigrationSignaled);
   // Retrieving the migration request
   let migration = useMigration(migrationId);
   // Setting the event
@@ -153,11 +141,7 @@ export function handlePostCancelMigrationOriginHookFailed(event: PostCancelMigra
 }
 export function handlePostCancelMigrationTargetHookFailed(event: PostCancelMigrationTargetHookFailed): void {
   let hook = new PostCancelMigrationTargetHookFailureEvent(genericId(event));
-  let migrationId = generateMigrationId(
-    event.params.vaultProxy,
-    event.params.prevFundDeployer,
-    event.params.nextFundDeployer,
-  );
+  let migrationId = generateMigrationId(event as MigrationSignaled);
   // Retrieving the migration request
   let migration = useMigration(migrationId);
   // Setting the event
@@ -174,11 +158,7 @@ export function handlePostCancelMigrationTargetHookFailed(event: PostCancelMigra
 
 export function handlePreMigrateOriginHookFailed(event: PreMigrateOriginHookFailed): void {
   let hook = new PreMigrateOriginHookFailureEvent(genericId(event));
-  let migrationId = generateMigrationId(
-    event.params.vaultProxy,
-    event.params.prevFundDeployer,
-    event.params.nextFundDeployer,
-  );
+  let migrationId = generateMigrationId(event as MigrationSignaled);
   // Retrieving the migration request
   let migration = useMigration(migrationId);
   // Setting the event
@@ -195,11 +175,7 @@ export function handlePreMigrateOriginHookFailed(event: PreMigrateOriginHookFail
 
 export function handlePostMigrateOriginHookFailed(event: PostMigrateOriginHookFailed): void {
   let hook = new PostMigrateOriginHookFailureEvent(genericId(event));
-  let migrationId = generateMigrationId(
-    event.params.vaultProxy,
-    event.params.prevFundDeployer,
-    event.params.nextFundDeployer,
-  );
+  let migrationId = generateMigrationId(event as MigrationSignaled);
   // Retrieving the migration request
   let migration = useMigration(migrationId);
   // Setting the event
@@ -216,11 +192,7 @@ export function handlePostMigrateOriginHookFailed(event: PostMigrateOriginHookFa
 
 export function handlePreSignalMigrationOriginHookFailed(event: PreSignalMigrationOriginHookFailed): void {
   let hook = new PreSignalMigrationOriginHookFailureEvent(genericId(event));
-  let migrationId = generateMigrationId(
-    event.params.vaultProxy,
-    event.params.prevFundDeployer,
-    event.params.nextFundDeployer,
-  );
+  let migrationId = generateMigrationId(event as MigrationSignaled);
   // Retrieving the migration request
   let migration = useMigration(migrationId);
   // Setting the event
@@ -236,11 +208,7 @@ export function handlePreSignalMigrationOriginHookFailed(event: PreSignalMigrati
 
 export function handlePostSignalMigrationOriginHookFailed(event: PostSignalMigrationOriginHookFailed): void {
   let hook = new PostSignalMigrationOriginHookFailureEvent(genericId(event));
-  let migrationId = generateMigrationId(
-    event.params.vaultProxy,
-    event.params.prevFundDeployer,
-    event.params.nextFundDeployer,
-  );
+  let migrationId = generateMigrationId(event as MigrationSignaled);
   // Retrieving the migration request
   let migration = useMigration(migrationId);
   // Setting the event

@@ -1,5 +1,5 @@
 import { Address, BigInt } from '@graphprotocol/graph-ts';
-import { MigrationSignaled } from '../generated/DispatcherContract';
+import { MigrationCancelled, MigrationSignaled } from '../generated/DispatcherContract';
 import { Migration, Fund, FundDeployer } from '../generated/schema';
 import { useFundDeployer } from './FundDeployer';
 import { useRelease } from './Release';
@@ -17,7 +17,7 @@ export function useMigration(id: string): Migration {
 }
 
 export function ensureMigration(event: MigrationSignaled): Migration {
-  let id = generateMigrationId(event.params.vaultProxy, event.params.prevFundDeployer, event.params.nextFundDeployer);
+  let id = generateMigrationId(event);
   let migration = Migration.load(id);
   if (migration) {
     // Setting canceled as false in case we're re-signaling a previously canceled Migration (that cancelled Migration has the same ID)
@@ -37,13 +37,13 @@ export function ensureMigration(event: MigrationSignaled): Migration {
   return migration as Migration;
 }
 
-export function generateMigrationId(fund: Address, prevFundDeployer: Address, nextFundDeployer: Address): string {
+export function generateMigrationId(event: MigrationSignaled): string {
   // Uniquely identifies a migration. Each fund can only have one migration from X to Y.
   return (
-    useFund(fund.toHex()).id +
+    event.params.vaultProxy.toHex() +
     '/' +
-    useFundDeployer(prevFundDeployer.toHex()).id +
+    event.params.prevFundDeployer.toHex() +
     '/' +
-    useFundDeployer(nextFundDeployer.toHex()).id
+    event.params.nextFundDeployer.toHex()
   );
 }
