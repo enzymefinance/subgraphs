@@ -527,6 +527,7 @@ type Fund @entity {
   denominationAsset: Asset!
   trackedAssets: [Asset!]!
   policies: [Policy!]!
+  fees: [Fee!]!
   investments: [Investment!]! @derivedFrom(field: "fund")
   shares: Share!
   sharesHistory: [Share!]! @derivedFrom(field: "fund")
