@@ -4,8 +4,9 @@ import { ensureFundDeployer } from '../entities/FundDeployer';
 import { ensureTransaction } from '../entities/Transaction';
 import { createRelease, useRelease } from '../entities/Release';
 import { useFund } from '../entities/Fund';
-import { useAccount } from '../entities/Account';
-import { useComptroller } from '../entities/Comptroller';
+import { useAccount, ensureAccount } from '../entities/Account';
+import { useComptroller, ensureComptroller } from '../entities/Comptroller';
+import { ensureVaultLib } from '../entities/VaultLib';
 import { ensureMigration, useMigration, generateMigrationId } from '../entities/Migration';
 import {
   CurrentFundDeployerSet,
@@ -31,6 +32,7 @@ import {
   PostMigrateOriginHookFailureEvent,
   PreSignalMigrationOriginHookFailureEvent,
   PostSignalMigrationOriginHookFailureEvent,
+  VaultProxyDeploymentEvent,
 } from '../generated/schema';
 import { genericId } from '../utils/genericId';
 
@@ -252,4 +254,20 @@ export function handlePostSignalMigrationOriginHookFailed(event: PostSignalMigra
   hook.save();
 }
 
-export function handleVaultProxyDeployed(event: VaultProxyDeployed): void {}
+export function handleVaultProxyDeployed(event: VaultProxyDeployed): void {
+  // This gets called by the FundDeployer contract to deploy the VaultProxy
+  let vaultDeployment = new VaultProxyDeploymentEvent(genericId(event));
+  vaultDeployment.contract = ensureContract(event.address, 'Dispatcher', event).id;
+  vaultDeployment.timestamp = event.block.timestamp;
+  vaultDeployment.transaction = ensureTransaction(event).id;
+  vaultDeployment.fundDeployer = ensureFundDeployer(event.params.fundDeployer).id;
+  vaultDeployment.owner = ensureAccount(event.params.owner, event).id;
+  // We can't useFund yet since it is created by the NewFundDeployed event in the FundDeployer contract
+  // This means that we don't actually create a VaultProxy here, it's just referenced here
+  // Workaround might be to create VaultProxy high-level entity?
+  // Might not matter though since unless createNewFund fails at the "3. Set config" stage, fund will get created will all info
+  vaultDeployment.fund = event.params.vaultProxy.toHex();
+  vaultDeployment.vaultLib = ensureVaultLib(event.params.vaultLib).id;
+  vaultDeployment.accessor = ensureComptroller(event.params.vaultAccessor).id;
+  vaultDeployment.fundName = event.params.fundName;
+}
