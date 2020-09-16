@@ -598,7 +598,7 @@ type Migration @entity {
   signalTimestamp: BigInt!
   executed: Boolean!
   canceled: Boolean!
-  nextAccessor: Comptroller
+  nextAccessor: Comptroller!
 }
 
 type Release @entity {

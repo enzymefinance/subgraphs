@@ -5,6 +5,7 @@ import { ensureTransaction } from '../entities/Transaction';
 import { createRelease, useRelease } from '../entities/Release';
 import { useFund } from '../entities/Fund';
 import { useAccount } from '../entities/Account';
+import { ensureComptroller } from '../entities/Comptroller';
 import { ensureMigration, useMigration, generateMigrationId } from '../entities/Migration';
 import {
   CurrentFundDeployerSet,
@@ -109,6 +110,7 @@ export function handleMigrationExecuted(event: MigrationExecuted): void {
   // Updating our fund to the proper release.
   let fund = useFund(event.params.vaultProxy.toHex());
   fund.release = useRelease(event.params.nextFundDeployer.toHex()).id;
+  fund.accessor = ensureComptroller(migration.nextAccessor).id;
 
   // Setting the migration as executed
   migration.executed = true;
