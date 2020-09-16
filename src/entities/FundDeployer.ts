@@ -18,8 +18,6 @@ export function ensureFundDeployer(address: Address): FundDeployer {
   }
 
   fundDeployer = new FundDeployer(address.toHex());
-  /*   fundDeployer.current = false;
-  fundDeployer.currentStart = BigInt.fromI32(0); */
   fundDeployer.save();
 
   return fundDeployer;
