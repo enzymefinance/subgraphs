@@ -31,24 +31,11 @@ export function ensureMigration(event: MigrationSignaled): Migration {
   migration.signalTimestamp = event.block.timestamp;
   migration.canceled = false;
   migration.executed = false;
+  // nextAccessor gets assigned to fund on migration execution
+  migration.nextAccessor = event.params.nextVaultAccessor;
   migration.save();
   return migration as Migration;
 }
-
-/* export function createMigration(event: MigrationSignaled): Migration {
-  let id = genericId(event);
-  let migration = new Migration(id);
-
-  migration.prevRelease = useRelease(event.params.prevFundDeployer).id;
-  migration.nextRelease = useRelease(event.params.nextFundDeployer).id;
-  migration.fund = useFund(event.params.vaultProxy);
-  migration.signalTimestamp = event.params.signalTimestamp;
-  migration.canceled = false;
-  migration.executed = false;
-  migration.save();
-
-  return migration;
-} */
 
 export function generateMigrationId(fund: Address, prevFundDeployer: Address, nextFundDeployer: Address): string {
   // Uniquely identifies a migration. Each fund can only have one migration from X to Y.
