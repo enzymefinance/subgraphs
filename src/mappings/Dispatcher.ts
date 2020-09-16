@@ -4,6 +4,7 @@ import { ensureFundDeployer } from '../entities/FundDeployer';
 import { ensureTransaction } from '../entities/Transaction';
 import { createRelease, useRelease } from '../entities/Release';
 import { useFund } from '../entities/Fund';
+import { useAccount } from '../entities/Account';
 import { ensureMigration, useMigration, generateMigrationId } from '../entities/Migration';
 import {
   CurrentFundDeployerSet,
@@ -68,11 +69,12 @@ export function handleMigrationCancelled(event: MigrationCancelled): void {
   );
   // Retrieving the migration request
   let migration = useMigration(migrationId);
-  // Setting our event
-
+  // Setting the event
+  migrationCancellation.fund = useFund(event.params.vaultProxy.toHex()).id;
+  migrationCancellation.account = useAccount(event.address.toHex()).id;
+  migrationCancellation.contract = ensureContract(event.address, 'Dispatcher', event).id;
   migrationCancellation.timestamp = event.block.timestamp;
   migrationCancellation.transaction = ensureTransaction(event).id;
-  migrationCancellation.contract = ensureContract(event.address, 'Dispatcher', event).id;
   migrationCancellation.migration = migration.id;
   migrationCancellation.signalTimestamp = event.params.signalTimestamp;
   migrationCancellation.save();
@@ -91,6 +93,8 @@ export function handleMigrationExecuted(event: MigrationExecuted): void {
   // Retrieving the migration request
   let migration = useMigration(migrationId);
   // Setting the event
+  migrationExecution.fund = useFund(event.params.vaultProxy.toHex()).id;
+  migrationExecution.account = useAccount(event.address.toHex()).id;
   migrationExecution.timestamp = event.block.timestamp;
   migrationExecution.transaction = ensureTransaction(event).id;
   migrationExecution.contract = ensureContract(event.address, 'Dispatcher', event).id;
@@ -111,6 +115,8 @@ export function handleMigrationSignaled(event: MigrationSignaled): void {
   // Creating a migration instance (or recovering previously canceled one)
   let migration = ensureMigration(event);
   // Setting the event
+  migrationSignaling.fund = useFund(event.params.vaultProxy.toHex()).id;
+  migrationSignaling.account = useAccount(event.address.toHex()).id;
   migrationSignaling.timestamp = event.block.timestamp;
   migrationSignaling.transaction = ensureTransaction(event).id;
   migrationSignaling.contract = ensureContract(event.address, 'Dispatcher', event).id;
