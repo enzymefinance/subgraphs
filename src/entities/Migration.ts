@@ -22,7 +22,7 @@ export function ensureMigration(event: MigrationSignaled): Migration {
   if (migration) {
     // Setting canceled as false in case we're re-signaling a previously canceled Migration (that cancelled Migration has the same ID)
     migration.canceled = false;
-    return migration;
+    return migration as Migration;
   }
   migration = new Migration(id);
   migration.prevRelease = useRelease(event.params.prevFundDeployer.toHex()).id;
@@ -32,7 +32,7 @@ export function ensureMigration(event: MigrationSignaled): Migration {
   migration.canceled = false;
   migration.executed = false;
   migration.save();
-  return migration;
+  return migration as Migration;
 }
 
 /* export function createMigration(event: MigrationSignaled): Migration {
