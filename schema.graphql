@@ -487,6 +487,10 @@ type ComptrollerLib @entity {
   id: ID!
 }
 
+type Dispatcher @entity {
+  id: ID!
+}
+
 type Fund @entity {
   id: ID!
   name: String!
@@ -536,6 +540,7 @@ type Release @entity {
   # This is shared by all funds on same release
   comptrollerLib: ComptrollerLib!
   vaultLib: VaultLib!
+  dispatcher: Dispatcher!
   funds: [Fund!] @derivedFrom(field: "release")
 }
 
