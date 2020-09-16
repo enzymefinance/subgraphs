@@ -510,6 +510,19 @@ type AggregatorSetEvent implements Event & NetworkEvent @entity {
   prevPriceFeed: PriceFeed
 }
 
+type VaultProxyDeploymentEvent implements Event & NetworkEvent @entity {
+  id: ID!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  fundDeployer: FundDeployer!
+  owner: Account!
+  fund: Fund!
+  vaultLib: VaultLib!
+  accessor: Comptroller!
+  fundName: String!
+}
+
 #################################################
 # High-level entities
 #################################################
