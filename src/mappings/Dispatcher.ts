@@ -55,6 +55,7 @@ export function handleCurrentFundDeployerSet(event: CurrentFundDeployerSet): voi
 
   // Create new release
   let nextRelease = createRelease(event);
+  // Add data here? Or do that in createRelease?
   nextRelease.save();
 }
 
