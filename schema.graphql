@@ -483,16 +483,18 @@ type VaultLib @entity {
   id: ID!
 }
 
+type ComptrollerLib @entity {
+  id: ID!
+}
+
 type Fund @entity {
   id: ID!
   name: String!
   inception: BigInt!
-
-  # Unique for whole release, so can be refactored to Release?
+  # Added as convenience, but it's the same as Release
   fundDeployer: FundDeployer!
-  # This is our accessor for this fund (for this release)
+  # This is our accessor for this fund (only for this release)
   accessor: Comptroller!
-
   release: Release!
   status: String!
   manager: Account!
@@ -532,7 +534,7 @@ type Release @entity {
   # Same as the ID, added as a convenience
   fundDeployer: FundDeployer!
   # This is shared by all funds on same release
-  comptrollerLib: Contract!
+  comptrollerLib: ComptrollerLib!
   vaultLib: VaultLib!
   funds: [Fund!] @derivedFrom(field: "release")
 }
