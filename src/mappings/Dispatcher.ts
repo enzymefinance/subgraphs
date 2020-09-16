@@ -1,5 +1,5 @@
 import { zeroAddress } from '../constants';
-import { useContract } from '../entities/Contract';
+import { ensureContract, useContract } from '../entities/Contract';
 import { ensureFundDeployer } from '../entities/FundDeployer';
 import { ensureTransaction } from '../entities/Transaction';
 import { createRelease, useRelease } from '../entities/Release';
@@ -57,7 +57,7 @@ export function handleCurrentFundDeployerSet(event: CurrentFundDeployerSet): voi
   // modifying fields of next fund deployer?
   nextFundDeployer.save();
 
-  fundDeployerSet.contract = useContract(event.address, 'Dispatcher', event).id;
+  fundDeployerSet.contract = useContract(event.address.toHex()).id;
   fundDeployerSet.timestamp = event.block.timestamp;
   fundDeployerSet.nextFundDeployer = nextFundDeployer.id;
   fundDeployerSet.transaction = ensureTransaction(event).id;
@@ -65,17 +65,24 @@ export function handleCurrentFundDeployerSet(event: CurrentFundDeployerSet): voi
 
   // Create new release.
   createRelease(event);
+
+  event.transaction.gasPrice;
 }
 
 export function handleMigrationCancelled(event: MigrationCancelled): void {
   let migrationCancellation = new MigrationCancelledEvent(genericId(event));
-  let migrationId = generateMigrationId(event as MigrationSignaled);
+  let migrationId = generateMigrationId(
+    event.params.vaultProxy.toHex(),
+    event.params.prevFundDeployer.toHex(),
+    event.params.nextFundDeployer.toHex(),
+    event.params.signalTimestamp.toString(),
+  );
   // Retrieving the migration request
   let migration = useMigration(migrationId);
   // Setting the event
   migrationCancellation.fund = useFund(event.params.vaultProxy.toHex()).id;
   migrationCancellation.account = useAccount(event.address.toHex()).id;
-  migrationCancellation.contract = useContract(event.address, 'Dispatcher', event).id;
+  migrationCancellation.contract = useContract(event.address.toHex()).id;
   migrationCancellation.timestamp = event.block.timestamp;
   migrationCancellation.transaction = ensureTransaction(event).id;
   migrationCancellation.migration = migration.id;
@@ -88,7 +95,12 @@ export function handleMigrationCancelled(event: MigrationCancelled): void {
 }
 export function handleMigrationExecuted(event: MigrationExecuted): void {
   let migrationExecution = new MigrationExecutedEvent(genericId(event));
-  let migrationId = generateMigrationId(event as MigrationSignaled);
+  let migrationId = generateMigrationId(
+    event.params.vaultProxy.toHex(),
+    event.params.prevFundDeployer.toHex(),
+    event.params.nextFundDeployer.toHex(),
+    event.params.signalTimestamp.toString(),
+  );
   // Retrieving the migration request
   let migration = useMigration(migrationId);
   // Setting the event
@@ -96,7 +108,7 @@ export function handleMigrationExecuted(event: MigrationExecuted): void {
   migrationExecution.account = useAccount(event.address.toHex()).id;
   migrationExecution.timestamp = event.block.timestamp;
   migrationExecution.transaction = ensureTransaction(event).id;
-  migrationExecution.contract = useContract(event.address, 'Dispatcher', event).id;
+  migrationExecution.contract = useContract(event.address.toHex()).id;
   migrationExecution.migration = migration.id;
   migrationExecution.signalTimestamp = event.params.signalTimestamp;
   migrationExecution.save();
@@ -119,19 +131,24 @@ export function handleMigrationSignaled(event: MigrationSignaled): void {
   migrationSignaling.account = useAccount(event.address.toHex()).id;
   migrationSignaling.timestamp = event.block.timestamp;
   migrationSignaling.transaction = ensureTransaction(event).id;
-  migrationSignaling.contract = useContract(event.address, 'Dispatcher', event).id;
+  migrationSignaling.contract = useContract(event.address.toHex()).id;
   migrationSignaling.migration = migration.id;
   migrationSignaling.save();
 }
 export function handlePostCancelMigrationOriginHookFailed(event: PostCancelMigrationOriginHookFailed): void {
   let hook = new PostCancelMigrationOriginHookFailedEvent(genericId(event));
-  let migrationId = generateMigrationId(event as MigrationSignaled);
+  let migrationId = generateMigrationId(
+    event.params.vaultProxy.toHex(),
+    event.params.prevFundDeployer.toHex(),
+    event.params.nextFundDeployer.toHex(),
+    event.params.signalTimestamp.toString(),
+  );
   // Retrieving the migration request
   let migration = useMigration(migrationId);
   // Setting the event
   hook.fund = useFund(event.params.vaultProxy.toHex()).id;
   hook.account = useAccount(event.address.toHex()).id;
-  hook.contract = useContract(event.address, 'Dispatcher', event).id;
+  hook.contract = useContract(event.address.toHex()).id;
   hook.timestamp = event.block.timestamp;
   hook.transaction = ensureTransaction(event).id;
   hook.migration = migration.id;
@@ -141,13 +158,18 @@ export function handlePostCancelMigrationOriginHookFailed(event: PostCancelMigra
 }
 export function handlePostCancelMigrationTargetHookFailed(event: PostCancelMigrationTargetHookFailed): void {
   let hook = new PostCancelMigrationTargetHookFailedEvent(genericId(event));
-  let migrationId = generateMigrationId(event as MigrationSignaled);
+  let migrationId = generateMigrationId(
+    event.params.vaultProxy.toHex(),
+    event.params.prevFundDeployer.toHex(),
+    event.params.nextFundDeployer.toHex(),
+    event.params.signalTimestamp.toString(),
+  );
   // Retrieving the migration request
   let migration = useMigration(migrationId);
   // Setting the event
   hook.fund = useFund(event.params.vaultProxy.toHex()).id;
   hook.account = useAccount(event.address.toHex()).id;
-  hook.contract = useContract(event.address, 'Dispatcher', event).id;
+  hook.contract = useContract(event.address.toHex()).id;
   hook.timestamp = event.block.timestamp;
   hook.transaction = ensureTransaction(event).id;
   hook.migration = migration.id;
@@ -158,13 +180,18 @@ export function handlePostCancelMigrationTargetHookFailed(event: PostCancelMigra
 
 export function handlePreMigrateOriginHookFailed(event: PreMigrateOriginHookFailed): void {
   let hook = new PreMigrateOriginHookFailedEvent(genericId(event));
-  let migrationId = generateMigrationId(event as MigrationSignaled);
+  let migrationId = generateMigrationId(
+    event.params.vaultProxy.toHex(),
+    event.params.prevFundDeployer.toHex(),
+    event.params.nextFundDeployer.toHex(),
+    event.params.signalTimestamp.toString(),
+  );
   // Retrieving the migration request
   let migration = useMigration(migrationId);
   // Setting the event
   hook.fund = useFund(event.params.vaultProxy.toHex()).id;
   hook.account = useAccount(event.address.toHex()).id;
-  hook.contract = useContract(event.address, 'Dispatcher', event).id;
+  hook.contract = useContract(event.address.toHex()).id;
   hook.timestamp = event.block.timestamp;
   hook.transaction = ensureTransaction(event).id;
   hook.migration = migration.id;
@@ -175,13 +202,18 @@ export function handlePreMigrateOriginHookFailed(event: PreMigrateOriginHookFail
 
 export function handlePostMigrateOriginHookFailed(event: PostMigrateOriginHookFailed): void {
   let hook = new PostMigrateOriginHookFailedEvent(genericId(event));
-  let migrationId = generateMigrationId(event as MigrationSignaled);
+  let migrationId = generateMigrationId(
+    event.params.vaultProxy.toHex(),
+    event.params.prevFundDeployer.toHex(),
+    event.params.nextFundDeployer.toHex(),
+    event.params.signalTimestamp.toString(),
+  );
   // Retrieving the migration request
   let migration = useMigration(migrationId);
   // Setting the event
   hook.fund = useFund(event.params.vaultProxy.toHex()).id;
   hook.account = useAccount(event.address.toHex()).id;
-  hook.contract = useContract(event.address, 'Dispatcher', event).id;
+  hook.contract = useContract(event.address.toHex()).id;
   hook.timestamp = event.block.timestamp;
   hook.transaction = ensureTransaction(event).id;
   hook.migration = migration.id;
@@ -192,13 +224,18 @@ export function handlePostMigrateOriginHookFailed(event: PostMigrateOriginHookFa
 
 export function handlePreSignalMigrationOriginHookFailed(event: PreSignalMigrationOriginHookFailed): void {
   let hook = new PreSignalMigrationOriginHookFailedEvent(genericId(event));
-  let migrationId = generateMigrationId(event as MigrationSignaled);
+  let migrationId = generateMigrationId(
+    event.params.vaultProxy.toHex(),
+    event.params.prevFundDeployer.toHex(),
+    event.params.nextFundDeployer.toHex(),
+    event.block.timestamp.toString(),
+  );
   // Retrieving the migration request
   let migration = useMigration(migrationId);
   // Setting the event
   hook.fund = useFund(event.params.vaultProxy.toHex()).id;
   hook.account = useAccount(event.address.toHex()).id;
-  hook.contract = useContract(event.address, 'Dispatcher', event).id;
+  hook.contract = useContract(event.address.toHex()).id;
   hook.timestamp = event.block.timestamp;
   hook.transaction = ensureTransaction(event).id;
   hook.migration = migration.id;
@@ -208,13 +245,18 @@ export function handlePreSignalMigrationOriginHookFailed(event: PreSignalMigrati
 
 export function handlePostSignalMigrationOriginHookFailed(event: PostSignalMigrationOriginHookFailed): void {
   let hook = new PostSignalMigrationOriginHookFailedEvent(genericId(event));
-  let migrationId = generateMigrationId(event as MigrationSignaled);
+  let migrationId = generateMigrationId(
+    event.params.vaultProxy.toHex(),
+    event.params.prevFundDeployer.toHex(),
+    event.params.nextFundDeployer.toHex(),
+    event.block.timestamp.toString(),
+  );
   // Retrieving the migration request
   let migration = useMigration(migrationId);
   // Setting the event
   hook.fund = useFund(event.params.vaultProxy.toHex()).id;
   hook.account = useAccount(event.address.toHex()).id;
-  hook.contract = useContract(event.address, 'Dispatcher', event).id;
+  hook.contract = useContract(event.address.toHex()).id;
   hook.timestamp = event.block.timestamp;
   hook.transaction = ensureTransaction(event).id;
   hook.migration = migration.id;
@@ -225,7 +267,7 @@ export function handlePostSignalMigrationOriginHookFailed(event: PostSignalMigra
 export function handleVaultProxyDeployed(event: VaultProxyDeployed): void {
   // This gets called by the FundDeployer contract to deploy the VaultProxy
   let vaultDeployment = new VaultProxyDeploymentEvent(genericId(event));
-  vaultDeployment.contract = useContract(event.address, 'Dispatcher', event).id;
+  vaultDeployment.contract = ensureContract(event.address, 'Dispatcher', event).id;
   vaultDeployment.timestamp = event.block.timestamp;
   vaultDeployment.transaction = ensureTransaction(event).id;
   vaultDeployment.fundDeployer = ensureFundDeployer(event.params.fundDeployer).id;

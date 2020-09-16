@@ -1,7 +1,5 @@
-import { Address, BigInt } from '@graphprotocol/graph-ts';
-import { MigrationCancelled, MigrationSignaled } from '../generated/DispatcherContract';
+import { MigrationSignaled } from '../generated/DispatcherContract';
 import { Migration, Fund, FundDeployer } from '../generated/schema';
-import { useFundDeployer } from './FundDeployer';
 import { useRelease } from './Release';
 import { useFund } from './Fund';
 import { ensureComptroller } from './Comptroller';
@@ -17,11 +15,14 @@ export function useMigration(id: string): Migration {
 }
 
 export function ensureMigration(event: MigrationSignaled): Migration {
-  let id = generateMigrationId(event);
+  let id = generateMigrationId(
+    event.params.vaultProxy.toHex(),
+    event.params.prevFundDeployer.toHex(),
+    event.params.nextFundDeployer.toHex(),
+    event.block.timestamp.toString(),
+  );
   let migration = Migration.load(id);
   if (migration) {
-    // Setting cancelled as false in case we're re-signaling a previously cancelled Migration (that cancelled Migration has the same ID)
-    migration.cancelled = false;
     return migration as Migration;
   }
   migration = new Migration(id);
@@ -31,19 +32,18 @@ export function ensureMigration(event: MigrationSignaled): Migration {
   migration.signalTimestamp = event.block.timestamp;
   migration.cancelled = false;
   migration.executed = false;
-  // nextAccessor gets assigned to fund on migration execution
   migration.nextAccessor = ensureComptroller(event.params.nextVaultAccessor).id;
   migration.save();
   return migration as Migration;
 }
 
-export function generateMigrationId(event: MigrationSignaled): string {
-  // Uniquely identifies a migration. Each fund can only have one migration from X to Y.
-  return (
-    event.params.vaultProxy.toHex() +
-    '/' +
-    event.params.prevFundDeployer.toHex() +
-    '/' +
-    event.params.nextFundDeployer.toHex()
-  );
+// Uniquely identifies a signaled migration.
+export function generateMigrationId(
+  vaultProxy: string,
+  prevFundDeployer: string,
+  nextFundDeployer: string,
+  timestamp: string,
+): string {
+  let arr: string[] = [vaultProxy, prevFundDeployer, nextFundDeployer, timestamp];
+  return arr.join('/');
 }
