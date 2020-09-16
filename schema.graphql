@@ -197,7 +197,7 @@ type CallOnIntegrationExecutedEvent implements Event & FundEvent @entity {
   transaction: Transaction!
 }
 
-type MigrationSignalingEvent implements Event & FundEvent @entity {
+type MigrationSignaledEvent implements Event & FundEvent @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -207,18 +207,7 @@ type MigrationSignalingEvent implements Event & FundEvent @entity {
   migration: Migration!
 }
 
-type MigrationCancellationEvent implements Event & FundEvent @entity {
-  id: ID!
-  fund: Fund!
-  account: Account!
-  contract: Contract!
-  timestamp: BigInt!
-  transaction: Transaction!
-  migration: Migration!
-  signalTimestamp: BigInt!
-}
-
-type MigrationExecutionEvent implements Event & FundEvent @entity {
+type MigrationCancelledEvent implements Event & FundEvent @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -229,7 +218,7 @@ type MigrationExecutionEvent implements Event & FundEvent @entity {
   signalTimestamp: BigInt!
 }
 
-type PostCancelMigrationOriginHookFailureEvent implements Event & FundEvent @entity {
+type MigrationExecutedEvent implements Event & FundEvent @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -238,10 +227,9 @@ type PostCancelMigrationOriginHookFailureEvent implements Event & FundEvent @ent
   transaction: Transaction!
   migration: Migration!
   signalTimestamp: BigInt!
-  failureData: Bytes!
 }
 
-type PostCancelMigrationTargetHookFailureEvent implements Event & FundEvent @entity {
+type PostCancelMigrationOriginHookFailedEvent implements Event & FundEvent @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -253,7 +241,7 @@ type PostCancelMigrationTargetHookFailureEvent implements Event & FundEvent @ent
   failureData: Bytes!
 }
 
-type PreMigrateOriginHookFailureEvent implements Event & FundEvent @entity {
+type PostCancelMigrationTargetHookFailedEvent implements Event & FundEvent @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -265,7 +253,7 @@ type PreMigrateOriginHookFailureEvent implements Event & FundEvent @entity {
   failureData: Bytes!
 }
 
-type PostMigrateOriginHookFailureEvent implements Event & FundEvent @entity {
+type PreMigrateOriginHookFailedEvent implements Event & FundEvent @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -277,7 +265,7 @@ type PostMigrateOriginHookFailureEvent implements Event & FundEvent @entity {
   failureData: Bytes!
 }
 
-type PreSignalMigrationOriginHookFailureEvent implements Event & FundEvent @entity {
+type PostMigrateOriginHookFailedEvent implements Event & FundEvent @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -289,7 +277,19 @@ type PreSignalMigrationOriginHookFailureEvent implements Event & FundEvent @enti
   failureData: Bytes!
 }
 
-type PostSignalMigrationOriginHookFailureEvent implements Event & FundEvent @entity {
+type PreSignalMigrationOriginHookFailedEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  migration: Migration!
+  signalTimestamp: BigInt!
+  failureData: Bytes!
+}
+
+type PostSignalMigrationOriginHookFailedEvent implements Event & FundEvent @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -610,7 +610,7 @@ type Migration @entity {
   fund: Fund!
   signalTimestamp: BigInt!
   executed: Boolean!
-  canceled: Boolean!
+  cancelled: Boolean!
   nextAccessor: Comptroller!
 }
 
