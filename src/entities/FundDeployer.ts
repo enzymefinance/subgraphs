@@ -1,4 +1,4 @@
-import { Address, BigInt } from '@graphprotocol/graph-ts';
+import { Address } from '@graphprotocol/graph-ts';
 import { FundDeployer } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
 
