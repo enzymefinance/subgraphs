@@ -1,4 +1,4 @@
-import { dataSource, DataSourceContext } from '@graphprotocol/graph-ts';
+import {  DataSourceContext } from '@graphprotocol/graph-ts';
 import { ensureAccount, ensureManager } from '../entities/Account';
 import { ensureAsset } from '../entities/Asset';
 import { ensureComptroller } from '../entities/Comptroller';

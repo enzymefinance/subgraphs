@@ -1,9 +1,9 @@
-import { Address } from '@graphprotocol/graph-ts';
-import { ensureManager } from '../entities/Account';
+import { useManager } from '../entities/Account';
 import { ensureContract, useContract } from '../entities/Contract';
 import { useFund } from '../entities/Fund';
 import { ensurePolicy, usePolicy } from '../entities/Policy';
 import { ensureTransaction } from '../entities/Transaction';
+import { ComptrollerLibContract } from '../generated/ComptrollerLibContract';
 import { PolicyDeregistered, PolicyEnabledForFund, PolicyRegistered } from '../generated/PolicyManagerContract';
 import { PolicyDeregisteredEvent, PolicyEnabledForFundEvent, PolicyRegisteredEvent } from '../generated/schema';
 import { arrayUnique } from '../utils/arrayUnique';
@@ -38,14 +38,15 @@ export function handlePolicyDeregistered(event: PolicyDeregistered): void {
 export function handlePolicyEnabledForFund(event: PolicyEnabledForFund): void {
   let id = genericId(event);
   let enabled = new PolicyEnabledForFundEvent(id);
-  let fund = useFund(event.address.toHex());
+  let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
+  let fund = useFund(comptroller.getVaultProxy().toHex());
   let policy = usePolicy(event.params.policy.toHex());
 
   policy.funds = arrayUnique<string>(policy.funds.concat([fund.id]));
   policy.save();
 
   enabled.fund = fund.id;
-  enabled.account = ensureManager(Address.fromString(fund.manager), event).id;
+  enabled.account = useManager(event.transaction.from.toHex()).id;
   enabled.timestamp = event.block.timestamp;
   enabled.transaction = ensureTransaction(event).id;
   enabled.contract = useContract(event.address.toHex()).id;
