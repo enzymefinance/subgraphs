@@ -483,7 +483,7 @@ type Fund @entity {
   inception: BigInt!
 
   # Unique for whole release, so can be refactored to Release?
-  deployer: FundDeployer!
+  fundDeployer: FundDeployer!
   # This is our accessor for this fund (for this release)
   accessor: Comptroller!
 
