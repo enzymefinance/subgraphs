@@ -24,6 +24,12 @@ import {
   MigrationCancellationEvent,
   MigrationExecutionEvent,
   MigrationSignalingEvent,
+  PostCancelMigrationOriginHookFailureEvent,
+  PostCancelMigrationTargetHookFailureEvent,
+  PreMigrateOriginHookFailureEvent,
+  PostMigrateOriginHookFailureEvent,
+  PreSignalMigrationOriginHookFailureEvent,
+  PostSignalMigrationOriginHookFailureEvent,
 } from '../generated/schema';
 import { genericId } from '../utils/genericId';
 
