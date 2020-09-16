@@ -6,6 +6,8 @@ import { ensureFundDeployer } from '../entities/FundDeployer';
 import { ensureVaultLib } from '../entities/VaultLib';
 import { ensureComptrollerLib } from '../entities/ComptrollerLib';
 import { ensureDispatcher } from '../entities/Dispatcher';
+import { ensurePriceFeed } from '../entities/PriceFeed';
+import { ComptrollerLibContract } from '../generated/ComptrollerLibContract';
 
 export function useRelease(id: string): Release {
   let release = Release.load(id);
@@ -30,14 +32,27 @@ export function createRelease(event: CurrentFundDeployerSet): Release {
 
   // Retrieve new VaultLib
   release.vaultLib = ensureVaultLib(fundDeployerContract.getVaultLib()).id;
+
   // Retrieve new ComptrollerLib.
-  // Field is mandatory, so must be set in FundDeployer before the release is created (i.e. before setCurrentFundDeployer is called on the Dispatcher contract)
+  // Field is mandatory, so must have already been set in FundDeployer before the release is created
   release.comptrollerLib = ensureComptrollerLib(fundDeployerContract.getComptrollerLib()).id;
 
   // Retrieve Dispatcher
-  release.dispatcher = ensureDispatcher(fundDeployerContract.getDispatcher()).id;
+  let dispatcher = fundDeployerContract.getDispatcher();
+  release.dispatcher = ensureDispatcher(dispatcher).id;
 
   //TODO: Retrieve & Assign other modules?
+  let comptrollerLibContract = ComptrollerLibContract.bind(dispatcher);
+  release.engine = comptrollerLibContract.getEngine();
+
+  let routes = comptrollerLibContract.getRoutes();
+  release.derivativePriceFeed = ensurePriceFeed(routes.value0);
+  release.feeManager = routes.value1;
+  // .value2 is fundDeployer, not needed
+  release.integrationManager = routes.value3;
+  release.policyManager = routes.value4;
+  release.primitivePriceFeed = routes.value5;
+  release.valueInterpreter = routes.value6;
 
   release.save();
   return release;

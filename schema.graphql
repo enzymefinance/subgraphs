@@ -627,6 +627,13 @@ type Release @entity {
   comptrollerLib: ComptrollerLib!
   vaultLib: VaultLib!
   dispatcher: Dispatcher!
+  engine: Engine!
+  derivativePriceFeed: PriceFeed!
+  feeManager: Manager!
+  integrationManager: Manager!
+  policyManager: Manager!
+  primitivePriceFeed: PriceFeed!
+  valueInterpreter: ValueInterpreter!
   funds: [Fund!] @derivedFrom(field: "release")
 }
 
