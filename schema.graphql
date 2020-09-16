@@ -197,15 +197,6 @@ type CallOnIntegrationExecutedEvent implements Event & FundEvent @entity {
   transaction: Transaction!
 }
 
-interface FundEvent {
-  id: ID!
-  fund: Fund!
-  account: Account!
-  contract: Contract!
-  timestamp: BigInt!
-  transaction: Transaction!
-}
-
 type MigrationSignalingEvent implements Event & FundEvent @entity {
   id: ID!
   fund: Fund!
