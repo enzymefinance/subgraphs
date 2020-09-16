@@ -60,10 +60,8 @@ export function handleCurrentFundDeployerSet(event: CurrentFundDeployerSet): voi
   fundDeployerSet.transaction = ensureTransaction(event).id;
   fundDeployerSet.save();
 
-  // Create new release
-  let nextRelease = createRelease(event);
-  // Add data here? Or do that in createRelease?
-  nextRelease.save();
+  // Create new release.
+  createRelease(event);
 }
 
 export function handleMigrationCancelled(event: MigrationCancelled): void {
