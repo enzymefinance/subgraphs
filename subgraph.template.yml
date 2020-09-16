@@ -21,6 +21,8 @@ dataSources:
       abis:
         - name: DispatcherContract
           file: ./node_modules/@melonproject/persistent/artifacts/Dispatcher.json
+        - name: FundDeployerContract
+          file: ./node_modules/@melonproject/release/artifacts/FundDeployer.json
       eventHandlers:
         - event: CurrentFundDeployerSet(address,address)
           handler: handleCurrentFundDeployerSet
