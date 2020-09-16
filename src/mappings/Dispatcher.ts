@@ -127,10 +127,127 @@ export function handleMigrationSignaled(event: MigrationSignaled): void {
   migrationSignaling.migration = migration.id;
   migrationSignaling.save();
 }
-export function handlePostCancelMigrationOriginHookFailed(event: PostCancelMigrationOriginHookFailed): void {}
-export function handlePostCancelMigrationTargetHookFailed(event: PostCancelMigrationTargetHookFailed): void {}
-export function handlePostMigrateOriginHookFailed(event: PostMigrateOriginHookFailed): void {}
-export function handlePostSignalMigrationOriginHookFailed(event: PostSignalMigrationOriginHookFailed): void {}
-export function handlePreMigrateOriginHookFailed(event: PreMigrateOriginHookFailed): void {}
-export function handlePreSignalMigrationOriginHookFailed(event: PreSignalMigrationOriginHookFailed): void {}
+export function handlePostCancelMigrationOriginHookFailed(event: PostCancelMigrationOriginHookFailed): void {
+  let hook = new PostCancelMigrationOriginHookFailureEvent(genericId(event));
+  let migrationId = generateMigrationId(
+    event.params.vaultProxy,
+    event.params.prevFundDeployer,
+    event.params.nextFundDeployer,
+  );
+  // Retrieving the migration request
+  let migration = useMigration(migrationId);
+  // Setting the event
+  hook.fund = useFund(event.params.vaultProxy.toHex()).id;
+  hook.account = useAccount(event.address.toHex()).id;
+  hook.contract = ensureContract(event.address, 'Dispatcher', event).id;
+  hook.timestamp = event.block.timestamp;
+  hook.transaction = ensureTransaction(event).id;
+  hook.migration = migration.id;
+  hook.signalTimestamp = event.params.signalTimestamp;
+  hook.failureData = event.params.failureReturnData;
+  hook.save();
+}
+export function handlePostCancelMigrationTargetHookFailed(event: PostCancelMigrationTargetHookFailed): void {
+  let hook = new PostCancelMigrationTargetHookFailureEvent(genericId(event));
+  let migrationId = generateMigrationId(
+    event.params.vaultProxy,
+    event.params.prevFundDeployer,
+    event.params.nextFundDeployer,
+  );
+  // Retrieving the migration request
+  let migration = useMigration(migrationId);
+  // Setting the event
+  hook.fund = useFund(event.params.vaultProxy.toHex()).id;
+  hook.account = useAccount(event.address.toHex()).id;
+  hook.contract = ensureContract(event.address, 'Dispatcher', event).id;
+  hook.timestamp = event.block.timestamp;
+  hook.transaction = ensureTransaction(event).id;
+  hook.migration = migration.id;
+  hook.signalTimestamp = event.params.signalTimestamp;
+  hook.failureData = event.params.failureReturnData;
+  hook.save();
+}
+
+export function handlePreMigrateOriginHookFailed(event: PreMigrateOriginHookFailed): void {
+  let hook = new PreMigrateOriginHookFailureEvent(genericId(event));
+  let migrationId = generateMigrationId(
+    event.params.vaultProxy,
+    event.params.prevFundDeployer,
+    event.params.nextFundDeployer,
+  );
+  // Retrieving the migration request
+  let migration = useMigration(migrationId);
+  // Setting the event
+  hook.fund = useFund(event.params.vaultProxy.toHex()).id;
+  hook.account = useAccount(event.address.toHex()).id;
+  hook.contract = ensureContract(event.address, 'Dispatcher', event).id;
+  hook.timestamp = event.block.timestamp;
+  hook.transaction = ensureTransaction(event).id;
+  hook.migration = migration.id;
+  hook.signalTimestamp = event.params.signalTimestamp;
+  hook.failureData = event.params.failureReturnData;
+  hook.save();
+}
+
+export function handlePostMigrateOriginHookFailed(event: PostMigrateOriginHookFailed): void {
+  let hook = new PostMigrateOriginHookFailureEvent(genericId(event));
+  let migrationId = generateMigrationId(
+    event.params.vaultProxy,
+    event.params.prevFundDeployer,
+    event.params.nextFundDeployer,
+  );
+  // Retrieving the migration request
+  let migration = useMigration(migrationId);
+  // Setting the event
+  hook.fund = useFund(event.params.vaultProxy.toHex()).id;
+  hook.account = useAccount(event.address.toHex()).id;
+  hook.contract = ensureContract(event.address, 'Dispatcher', event).id;
+  hook.timestamp = event.block.timestamp;
+  hook.transaction = ensureTransaction(event).id;
+  hook.migration = migration.id;
+  hook.signalTimestamp = event.params.signalTimestamp;
+  hook.failureData = event.params.failureReturnData;
+  hook.save();
+}
+
+export function handlePreSignalMigrationOriginHookFailed(event: PreSignalMigrationOriginHookFailed): void {
+  let hook = new PreSignalMigrationOriginHookFailureEvent(genericId(event));
+  let migrationId = generateMigrationId(
+    event.params.vaultProxy,
+    event.params.prevFundDeployer,
+    event.params.nextFundDeployer,
+  );
+  // Retrieving the migration request
+  let migration = useMigration(migrationId);
+  // Setting the event
+  hook.fund = useFund(event.params.vaultProxy.toHex()).id;
+  hook.account = useAccount(event.address.toHex()).id;
+  hook.contract = ensureContract(event.address, 'Dispatcher', event).id;
+  hook.timestamp = event.block.timestamp;
+  hook.transaction = ensureTransaction(event).id;
+  hook.migration = migration.id;
+  hook.failureData = event.params.failureReturnData;
+  hook.save();
+}
+
+export function handlePostSignalMigrationOriginHookFailed(event: PostSignalMigrationOriginHookFailed): void {
+  let hook = new PostSignalMigrationOriginHookFailureEvent(genericId(event));
+  let migrationId = generateMigrationId(
+    event.params.vaultProxy,
+    event.params.prevFundDeployer,
+    event.params.nextFundDeployer,
+  );
+  // Retrieving the migration request
+  let migration = useMigration(migrationId);
+  // Setting the event
+  hook.fund = useFund(event.params.vaultProxy.toHex()).id;
+  hook.account = useAccount(event.address.toHex()).id;
+  hook.contract = ensureContract(event.address, 'Dispatcher', event).id;
+  hook.timestamp = event.block.timestamp;
+  hook.transaction = ensureTransaction(event).id;
+  hook.migration = migration.id;
+  hook.failureData = event.params.failureReturnData;
+  hook.save();
+}
+
 export function handleVaultProxyDeployed(event: VaultProxyDeployed): void {}
