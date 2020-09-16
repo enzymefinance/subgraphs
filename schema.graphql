@@ -466,7 +466,7 @@ type Contract @entity {
 type FundDeployer @entity {
   id: ID!
   release: Release! @derivedFrom(field: "fundDeployer")
-  funds: [Fund!]! @derivedFrom(field: "deployer")
+  funds: [Fund!]! @derivedFrom(field: "fundDeployer")
 }
 
 type Comptroller @entity {
