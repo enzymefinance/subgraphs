@@ -4,7 +4,7 @@ import { Migration, Fund, FundDeployer } from '../generated/schema';
 import { useFundDeployer } from './FundDeployer';
 import { useRelease } from './Release';
 import { useFund } from './Fund';
-import { ensureVaultLib } from './VaultLib';
+import { ensureComptroller } from './Comptroller';
 import { logCritical } from '../utils/logCritical';
 
 export function useMigration(id: string): Migration {
@@ -32,7 +32,7 @@ export function ensureMigration(event: MigrationSignaled): Migration {
   migration.canceled = false;
   migration.executed = false;
   // nextAccessor gets assigned to fund on migration execution
-  migration.nextAccessor = event.params.nextVaultAccessor;
+  migration.nextAccessor = ensureComptroller(event.params.nextVaultAccessor).id;
   migration.save();
   return migration as Migration;
 }
