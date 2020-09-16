@@ -299,6 +299,8 @@ type PostSignalMigrationOriginHookFailedEvent implements Event & FundEvent @enti
   migration: Migration!
   signalTimestamp: BigInt!
   failureData: Bytes!
+}
+
 type FeeEnabledForFundEvent implements Event & FundEvent @entity {
   id: ID!
   contract: Contract!
@@ -691,13 +693,13 @@ type Release @entity {
   comptrollerLib: ComptrollerLib!
   vaultLib: VaultLib!
   dispatcher: Dispatcher!
-  engine: Engine!
+  engine: Contract!
   derivativePriceFeed: PriceFeed!
-  feeManager: Manager!
-  integrationManager: Manager!
-  policyManager: Manager!
+  feeManager: Contract!
+  integrationManager: Contract!
+  policyManager: Contract!
   primitivePriceFeed: PriceFeed!
-  valueInterpreter: ValueInterpreter!
+  valueInterpreter: Contract!
   funds: [Fund!] @derivedFrom(field: "release")
 }
 

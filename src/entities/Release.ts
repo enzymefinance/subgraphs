@@ -41,19 +41,18 @@ export function createRelease(event: CurrentFundDeployerSet): Release {
   let dispatcher = fundDeployerContract.getDispatcher();
   release.dispatcher = ensureDispatcher(dispatcher).id;
 
-  //TODO: Retrieve & Assign other modules?
+  // Retrieve other data from ComptrollerLib
   let comptrollerLibContract = ComptrollerLibContract.bind(dispatcher);
-  release.engine = comptrollerLibContract.getEngine();
+  release.engine = comptrollerLibContract.getEngine().toHex();
 
   let routes = comptrollerLibContract.getRoutes();
-  release.derivativePriceFeed = ensurePriceFeed(routes.value0);
-  release.feeManager = routes.value1;
+  release.derivativePriceFeed = ensurePriceFeed(routes.value0).id;
+  release.feeManager = routes.value1.toHex();
   // .value2 is fundDeployer, not needed
-  release.integrationManager = routes.value3;
-  release.policyManager = routes.value4;
-  release.primitivePriceFeed = routes.value5;
-  release.valueInterpreter = routes.value6;
-
+  release.integrationManager = routes.value3.toHex();
+  release.policyManager = routes.value4.toHex();
+  release.primitivePriceFeed = routes.value5.toHex();
+  release.valueInterpreter = routes.value6.toHex();
   release.save();
   return release;
 }
