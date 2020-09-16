@@ -3,7 +3,7 @@ import { ensureContract } from '../entities/Contract';
 import { ensureFundDeployer } from '../entities/FundDeployer';
 import { ensureTransaction } from '../entities/Transaction';
 import { createRelease, useRelease } from '../entities/Release';
-import { useFund } from '../entities//Fund';
+import { useFund } from '../entities/Fund';
 import { ensureMigration, useMigration, generateMigrationId } from '../entities/Migration';
 import {
   CurrentFundDeployerSet,
@@ -31,7 +31,7 @@ export function handleCurrentFundDeployerSet(event: CurrentFundDeployerSet): voi
 
   if (!event.params.prevFundDeployer.equals(zeroAddress)) {
     let prevFundDeployer = ensureFundDeployer(event.params.prevFundDeployer);
-    /* modifying fields of previous fund deployer? */
+    // modifying fields of previous fund deployer?
     prevFundDeployer.save();
 
     fundDeployerSet.prevFundDeployer = prevFundDeployer.id;
@@ -44,7 +44,7 @@ export function handleCurrentFundDeployerSet(event: CurrentFundDeployerSet): voi
   }
 
   let nextFundDeployer = ensureFundDeployer(event.params.nextFundDeployer);
-  /* modifying fields of next fund deployer? */
+  // modifying fields of next fund deployer?
   nextFundDeployer.save();
 
   fundDeployerSet.contract = ensureContract(event.address, 'Dispatcher', event).id;
