@@ -229,6 +229,78 @@ type MigrationExecutionEvent implements Event & FundEvent @entity {
   signalTimestamp: BigInt!
 }
 
+type PostCancelMigrationOriginHookFailureEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  migration: Migration!
+  signalTimestamp: BigInt!
+  failureData: Bytes!
+}
+
+type PostCancelMigrationTargetHookFailureEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  migration: Migration!
+  signalTimestamp: BigInt!
+  failureData: Bytes!
+}
+
+type PreMigrateOriginHookFailureEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  migration: Migration!
+  signalTimestamp: BigInt!
+  failureData: Bytes!
+}
+
+type PostMigrateOriginHookFailureEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  migration: Migration!
+  signalTimestamp: BigInt!
+  failureData: Bytes!
+}
+
+type PreSignalMigrationOriginHookFailureEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  migration: Migration!
+  signalTimestamp: BigInt!
+  failureData: Bytes!
+}
+
+type PostSignalMigrationOriginHookFailureEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  migration: Migration!
+  signalTimestamp: BigInt!
+  failureData: Bytes!
+}
+
 type PolicyEnabledForFundEvent implements Event & FundEvent @entity {
   id: ID!
   contract: Contract!
