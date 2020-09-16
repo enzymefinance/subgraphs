@@ -20,6 +20,12 @@ export function createRelease(event: CurrentFundDeployerSet): Release {
   release.fundDeployer = fundDeployer.id;
   release.current = true;
   release.currentStart = event.block.timestamp;
+  //TODO: Retrieve & Assign VaultLib
+
+  //TODO: Retrieve & Assign ComptrollerLib
+
+  //TODO: Retrieve & Assign
+
   release.save();
 
   return release;
