@@ -35,14 +35,15 @@ export function createRelease(event: CurrentFundDeployerSet): Release {
 
   // Retrieve new ComptrollerLib.
   // Field is mandatory, so must have already been set in FundDeployer before the release is created
-  release.comptrollerLib = ensureComptrollerLib(fundDeployerContract.getComptrollerLib()).id;
+  let comptrollerLib = fundDeployerContract.getComptrollerLib();
+  release.comptrollerLib = ensureComptrollerLib(comptrollerLib).id;
 
   // Retrieve Dispatcher
   let dispatcher = fundDeployerContract.getDispatcher();
   release.dispatcher = ensureDispatcher(dispatcher).id;
 
   // Retrieve other data from ComptrollerLib
-  let comptrollerLibContract = ComptrollerLibContract.bind(dispatcher);
+  let comptrollerLibContract = ComptrollerLibContract.bind(comptrollerLib);
   release.engine = comptrollerLibContract.getEngine().toHex();
 
   let routes = comptrollerLibContract.getRoutes();
@@ -54,5 +55,6 @@ export function createRelease(event: CurrentFundDeployerSet): Release {
   release.primitivePriceFeed = routes.value5.toHex();
   release.valueInterpreter = routes.value6.toHex();
   release.save();
+
   return release;
 }

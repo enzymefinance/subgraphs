@@ -57,7 +57,7 @@ export function handleCurrentFundDeployerSet(event: CurrentFundDeployerSet): voi
   // modifying fields of next fund deployer?
   nextFundDeployer.save();
 
-  fundDeployerSet.contract = useContract(event.address.toHex()).id;
+  fundDeployerSet.contract = ensureContract(event.address, 'Dispatcher', event).id;
   fundDeployerSet.timestamp = event.block.timestamp;
   fundDeployerSet.nextFundDeployer = nextFundDeployer.id;
   fundDeployerSet.transaction = ensureTransaction(event).id;
@@ -65,8 +65,6 @@ export function handleCurrentFundDeployerSet(event: CurrentFundDeployerSet): voi
 
   // Create new release.
   createRelease(event);
-
-  event.transaction.gasPrice;
 }
 
 export function handleMigrationCancelled(event: MigrationCancelled): void {
