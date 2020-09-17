@@ -197,6 +197,110 @@ type CallOnIntegrationExecutedEvent implements Event & FundEvent @entity {
   transaction: Transaction!
 }
 
+type MigrationSignaledEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  migration: Migration!
+}
+
+type MigrationCancelledEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  migration: Migration!
+  signalTimestamp: BigInt!
+}
+
+type MigrationExecutedEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  migration: Migration!
+  signalTimestamp: BigInt!
+}
+
+type PostCancelMigrationOriginHookFailedEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  migration: Migration!
+  signalTimestamp: BigInt!
+  failureData: Bytes!
+}
+
+type PostCancelMigrationTargetHookFailedEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  migration: Migration!
+  signalTimestamp: BigInt!
+  failureData: Bytes!
+}
+
+type PreMigrateOriginHookFailedEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  migration: Migration!
+  signalTimestamp: BigInt!
+  failureData: Bytes!
+}
+
+type PostMigrateOriginHookFailedEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  migration: Migration!
+  signalTimestamp: BigInt!
+  failureData: Bytes!
+}
+
+type PreSignalMigrationOriginHookFailedEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  migration: Migration!
+  signalTimestamp: BigInt!
+  failureData: Bytes!
+}
+
+type PostSignalMigrationOriginHookFailedEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  migration: Migration!
+  signalTimestamp: BigInt!
+  failureData: Bytes!
+}
+
 type FeeEnabledForFundEvent implements Event & FundEvent @entity {
   id: ID!
   contract: Contract!
@@ -446,12 +550,24 @@ type AggregatorSetEvent implements Event & NetworkEvent @entity {
   prevPriceFeed: PriceFeed
 }
 
+type VaultProxyDeploymentEvent implements Event & NetworkEvent @entity {
+  id: ID!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  fundDeployer: FundDeployer!
+  owner: Account!
+  fund: Fund!
+  vaultLib: VaultLib!
+  accessor: Comptroller!
+  fundName: String!
+}
+
 type FeeRegisteredEvent implements Event & NetworkEvent @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-
   fee: Fee!
   identifier: String!
 }
@@ -505,13 +621,23 @@ type Contract @entity {
 
 type FundDeployer @entity {
   id: ID!
-  current: Boolean!
-  currentStart: BigInt!
-  currentEnd: BigInt
-  funds: [Fund!]! @derivedFrom(field: "deployer")
+  release: Release! @derivedFrom(field: "fundDeployer")
+  funds: [Fund!]! @derivedFrom(field: "fundDeployer")
 }
 
 type Comptroller @entity {
+  id: ID!
+}
+
+type VaultLib @entity {
+  id: ID!
+}
+
+type ComptrollerLib @entity {
+  id: ID!
+}
+
+type Dispatcher @entity {
   id: ID!
 }
 
@@ -519,10 +645,13 @@ type Fund @entity {
   id: ID!
   name: String!
   inception: BigInt!
-  deployer: FundDeployer!
+  # Added as convenience, but it's the same as Release
+  fundDeployer: FundDeployer!
+  # This is our accessor for this fund (only for this release)
+  accessor: Comptroller!
+  release: Release!
   status: String!
   manager: Account!
-  accessor: Comptroller!
   migrator: String
   denominationAsset: Asset!
   trackedAssets: [Asset!]!
@@ -537,6 +666,41 @@ type Fund @entity {
   stateHistory: [State!]! @derivedFrom(field: "fund")
   events: [FundEvent!]! @derivedFrom(field: "fund")
   creator: Account!
+  migrations: [Migration!] @derivedFrom(field: "fund")
+}
+
+type Migration @entity {
+  id: ID!
+  prevRelease: Release!
+  nextRelease: Release!
+  fund: Fund!
+  signalTimestamp: BigInt!
+  executed: Boolean!
+  cancelled: Boolean!
+  nextAccessor: Comptroller!
+}
+
+type Release @entity {
+  # This ID is the FundDeployer address
+  id: ID!
+  # Gets updated when new FundDeployer is deployed (handleCurrentFundDeployerSet event)
+  current: Boolean!
+  currentStart: BigInt!
+  currentEnd: BigInt
+  # Same as the ID, added as a convenience
+  fundDeployer: FundDeployer!
+  # This is shared by all funds on same release
+  comptrollerLib: ComptrollerLib!
+  vaultLib: VaultLib!
+  dispatcher: Dispatcher!
+  engine: Contract!
+  derivativePriceFeed: PriceFeed!
+  feeManager: Contract!
+  integrationManager: Contract!
+  policyManager: Contract!
+  primitivePriceFeed: PriceFeed!
+  valueInterpreter: Contract!
+  funds: [Fund!] @derivedFrom(field: "release")
 }
 
 type Account @entity {
