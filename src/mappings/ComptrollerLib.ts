@@ -17,8 +17,7 @@ import { genericId } from '../utils/genericId';
 import { toBigDecimal } from '../utils/tokenValue';
 
 export function handleAmguPaid(event: AmguPaid): void {
-  let id = genericId(event);
-  let amguPaid = new AmguPaidEvent(id);
+  let amguPaid = new AmguPaidEvent(genericId(event));
   amguPaid.amount = toBigDecimal(event.params.ethPaid);
   amguPaid.payer = ensureAccount(event.params.payer, event).id;
   amguPaid.gas = event.params.gasUsed.toI32();
@@ -30,8 +29,7 @@ export function handleAmguPaid(event: AmguPaid): void {
 export function handleFundConfigSet(event: FundConfigSet): void {
   let fundId = dataSource.context().getString('vaultProxy');
 
-  let id = genericId(event);
-  let fundConfig = new FundConfigSetEvent(id);
+  let fundConfig = new FundConfigSetEvent(genericId(event));
   fundConfig.timestamp = event.block.timestamp;
   fundConfig.contract = ensureContract(event.address, 'ComptrollerLib', event).id;
   fundConfig.fund = fundId;
@@ -47,8 +45,7 @@ export function handleFundConfigSet(event: FundConfigSet): void {
 export function handleFundStatusUpdated(event: FundStatusUpdated): void {
   let fund = useFund(dataSource.context().getString('vaultProxy'));
 
-  let id = genericId(event);
-  let fundStatusUpdate = new FundStatusUpdatedEvent(id);
+  let fundStatusUpdate = new FundStatusUpdatedEvent(genericId(event));
   fundStatusUpdate.timestamp = event.block.timestamp;
   fundStatusUpdate.contract = ensureContract(event.address, 'ComptrollerLib', event).id;
   fundStatusUpdate.fund = fund.id;

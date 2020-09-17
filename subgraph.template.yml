@@ -327,11 +327,11 @@ templates:
       eventHandlers:
         - event: AmguPaid(indexed address,uint256,uint256)
           handler: handleAmguPaid
+        - event: FundConfigSet(indexed address,indexed address,bytes,bytes)
+          handler: handleFundConfigSet
         - event: FundStatusUpdated(indexed uint8,indexed uint8)
           handler: handleFundStatusUpdated
         - event: SharesBought(indexed address,indexed address,uint256,uint256,uint256)
           handler: handleSharesBought
         - event: SharesRedeemed(indexed address,uint256,address[],uint256[])
           handler: handleSharesRedeemed
-        - event: FundConfigSet(indexed address,indexed address,bytes,bytes)
-          handler: handleFundConfigSet

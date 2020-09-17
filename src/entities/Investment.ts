@@ -6,14 +6,10 @@ import { trackFundPortfolio } from './Portfolio';
 import { trackFundShares } from './Shares';
 import { ensureTransaction } from './Transaction';
 import { ensureContract } from './Contract';
+import { genericId } from '../utils/genericId';
 
 function investmentId(investor: Account, fund: Fund): string {
   return fund.id + '/' + investor.id;
-}
-
-function changeId(investment: Investment, event: ethereum.Event): string {
-  let suffix = event.transaction.hash.toHex() + '/' + event.logIndex.toString();
-  return investment.id + '/' + suffix;
 }
 
 export function ensureInvestment(investor: Account, fund: Fund): Investment {
@@ -58,7 +54,9 @@ export function createInvestmentAddition(
   shares: BigDecimal,
   event: ethereum.Event,
 ): SharesBoughtEvent {
-  let addition = new SharesBoughtEvent(changeId(investment, event));
+  let id = genericId(event);
+
+  let addition = new SharesBoughtEvent(id);
   addition.account = investment.investor;
   addition.investor = investment.investor;
   addition.fund = investment.fund;
@@ -90,7 +88,9 @@ export function createInvestmentRedemption(
   shares: BigDecimal,
   event: ethereum.Event,
 ): SharesRedeemedEvent {
-  let redemption = new SharesRedeemedEvent(changeId(investment, event));
+  let id = genericId(event);
+
+  let redemption = new SharesRedeemedEvent(id);
   redemption.account = investment.investor;
   redemption.investor = investment.investor;
   redemption.fund = investment.fund;

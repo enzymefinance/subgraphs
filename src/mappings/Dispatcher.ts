@@ -1,13 +1,13 @@
 import { zeroAddress } from '../constants';
+import { ensureAccount, ensureManager, useAccount } from '../entities/Account';
+import { ensureComptroller, useComptroller } from '../entities/Comptroller';
 import { ensureContract, useContract } from '../entities/Contract';
-import { ensureFundDeployer } from '../entities/FundDeployer';
-import { ensureTransaction } from '../entities/Transaction';
-import { createRelease, useRelease } from '../entities/Release';
 import { useFund } from '../entities/Fund';
-import { useAccount, ensureAccount } from '../entities/Account';
-import { useComptroller, ensureComptroller } from '../entities/Comptroller';
+import { ensureFundDeployer } from '../entities/FundDeployer';
+import { ensureMigration, generateMigrationId, useMigration } from '../entities/Migration';
+import { createRelease, useRelease } from '../entities/Release';
+import { ensureTransaction } from '../entities/Transaction';
 import { ensureVaultLib } from '../entities/VaultLib';
-import { ensureMigration, useMigration, generateMigrationId } from '../entities/Migration';
 import {
   CurrentFundDeployerSet,
   MigrationCancelled,
@@ -28,11 +28,11 @@ import {
   MigrationSignaledEvent,
   PostCancelMigrationOriginHookFailedEvent,
   PostCancelMigrationTargetHookFailedEvent,
-  PreMigrateOriginHookFailedEvent,
   PostMigrateOriginHookFailedEvent,
-  PreSignalMigrationOriginHookFailedEvent,
   PostSignalMigrationOriginHookFailedEvent,
-  VaultProxyDeploymentEvent,
+  PreMigrateOriginHookFailedEvent,
+  PreSignalMigrationOriginHookFailedEvent,
+  VaultProxyDeployedEvent,
 } from '../generated/schema';
 import { genericId } from '../utils/genericId';
 
@@ -264,14 +264,16 @@ export function handlePostSignalMigrationOriginHookFailed(event: PostSignalMigra
 
 export function handleVaultProxyDeployed(event: VaultProxyDeployed): void {
   // This gets called by the FundDeployer contract to deploy the VaultProxy
-  let vaultDeployment = new VaultProxyDeploymentEvent(genericId(event));
-  vaultDeployment.contract = ensureContract(event.address, 'Dispatcher', event).id;
+  let vaultDeployment = new VaultProxyDeployedEvent(genericId(event));
+  vaultDeployment.fund = event.params.vaultProxy.toHex();
+  vaultDeployment.account = ensureManager(event.params.owner, event).id;
+  vaultDeployment.contract = useContract(event.address.toHex()).id;
   vaultDeployment.timestamp = event.block.timestamp;
   vaultDeployment.transaction = ensureTransaction(event).id;
   vaultDeployment.fundDeployer = ensureFundDeployer(event.params.fundDeployer).id;
-  vaultDeployment.owner = ensureAccount(event.params.owner, event).id;
-  vaultDeployment.fund = event.params.vaultProxy.toHex();
+  vaultDeployment.owner = ensureManager(event.params.owner, event).id;
   vaultDeployment.vaultLib = ensureVaultLib(event.params.vaultLib).id;
   vaultDeployment.accessor = ensureComptroller(event.params.vaultAccessor).id;
   vaultDeployment.fundName = event.params.fundName;
+  vaultDeployment.save();
 }

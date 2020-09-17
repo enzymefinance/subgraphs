@@ -10,41 +10,31 @@ import { arrayUnique } from '../utils/arrayUnique';
 import { genericId } from '../utils/genericId';
 
 export function handlePolicyRegistered(event: PolicyRegistered): void {
-  let id = genericId(event);
-  let registration = new PolicyRegisteredEvent(id);
-
+  let registration = new PolicyRegisteredEvent(genericId(event));
   registration.timestamp = event.block.timestamp;
   registration.transaction = ensureTransaction(event).id;
   registration.contract = ensureContract(event.address, 'PolicyManager', event).id;
   registration.policy = ensurePolicy(event.params.policy).id;
   registration.identifier = event.params.identifier.toHex();
-
   registration.save();
 }
 
 export function handlePolicyDeregistered(event: PolicyDeregistered): void {
-  let id = genericId(event);
-  let deregistration = new PolicyDeregisteredEvent(id);
-
+  let deregistration = new PolicyDeregisteredEvent(genericId(event));
   deregistration.timestamp = event.block.timestamp;
   deregistration.transaction = ensureTransaction(event).id;
   deregistration.contract = useContract(event.address.toHex()).id;
   deregistration.policy = usePolicy(event.params.policy.toHex()).id;
   deregistration.identifier = event.params.identifier.toHex();
-
   deregistration.save();
 }
 
 export function handlePolicyEnabledForFund(event: PolicyEnabledForFund): void {
-  let id = genericId(event);
-  let enabled = new PolicyEnabledForFundEvent(id);
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let fund = useFund(comptroller.getVaultProxy().toHex());
   let policy = usePolicy(event.params.policy.toHex());
 
-  policy.funds = arrayUnique<string>(policy.funds.concat([fund.id]));
-  policy.save();
-
+  let enabled = new PolicyEnabledForFundEvent(genericId(event));
   enabled.fund = fund.id;
   enabled.account = useManager(event.transaction.from.toHex()).id;
   enabled.timestamp = event.block.timestamp;
@@ -52,6 +42,9 @@ export function handlePolicyEnabledForFund(event: PolicyEnabledForFund): void {
   enabled.contract = useContract(event.address.toHex()).id;
   enabled.policy = policy.id;
   enabled.save();
+
+  policy.funds = arrayUnique<string>(policy.funds.concat([fund.id]));
+  policy.save();
 
   fund.policies = arrayUnique<string>(fund.policies.concat([policy.id]));
   fund.save();

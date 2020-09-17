@@ -426,6 +426,21 @@ type TransferEvent implements Event & FundEvent @entity {
 # Low-level network event entities
 #################################################
 
+# VaultProxyDeployedEvent is both a fund event and a network event
+type VaultProxyDeployedEvent implements Event & FundEvent & NetworkEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  fundDeployer: FundDeployer!
+  owner: Account!
+  vaultLib: VaultLib!
+  accessor: Comptroller!
+  fundName: String!
+}
+
 type AdapterRegisteredEvent implements Event & NetworkEvent @entity {
   id: ID!
   identifier: String!
@@ -548,19 +563,6 @@ type AggregatorSetEvent implements Event & NetworkEvent @entity {
   primitive: Asset!
   nextPriceFeed: PriceFeed!
   prevPriceFeed: PriceFeed
-}
-
-type VaultProxyDeploymentEvent implements Event & NetworkEvent @entity {
-  id: ID!
-  contract: Contract!
-  timestamp: BigInt!
-  transaction: Transaction!
-  fundDeployer: FundDeployer!
-  owner: Account!
-  fund: Fund!
-  vaultLib: VaultLib!
-  accessor: Comptroller!
-  fundName: String!
 }
 
 type FeeRegisteredEvent implements Event & NetworkEvent @entity {

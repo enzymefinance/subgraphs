@@ -24,36 +24,29 @@ import { genericId } from '../utils/genericId';
 import { toBigDecimal } from '../utils/tokenValue';
 
 export function handleFeeRegistered(event: FeeRegistered): void {
-  let id = genericId(event);
-  let registered = new FeeRegisteredEvent(id);
-
+  let registered = new FeeRegisteredEvent(genericId(event));
   registered.contract = ensureContract(event.address, 'FeeManager', event).id;
   registered.timestamp = event.block.timestamp;
   registered.transaction = ensureTransaction(event).id;
   registered.fee = ensureFee(event.params.fee).id;
-
   registered.save();
 }
 
 export function handleFeeDeregistered(event: FeeDeregistered): void {
-  let id = genericId(event);
-  let deregistration = new FeeDeregisteredEvent(id);
-
+  let deregistration = new FeeDeregisteredEvent(genericId(event));
   deregistration.contract = ensureContract(event.address, 'FeeManager', event).id;
   deregistration.timestamp = event.block.timestamp;
   deregistration.transaction = ensureTransaction(event).id;
   deregistration.fee = useFee(event.params.fee.toHex()).id;
-
   deregistration.save();
 }
 
 export function handleFeeEnabledForFund(event: FeeEnabledForFund): void {
-  let id = genericId(event);
-  let enabled = new FeeEnabledForFundEvent(id);
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let fund = useFund(comptroller.getVaultProxy().toHex());
   let fee = useFee(event.params.fee.toHex());
 
+  let enabled = new FeeEnabledForFundEvent(genericId(event));
   enabled.fund = fund.id;
   enabled.contract = ensureContract(event.address, 'FeeManager', event).id;
   enabled.account = useManager(event.transaction.from.toHex()).id;
@@ -64,19 +57,18 @@ export function handleFeeEnabledForFund(event: FeeEnabledForFund): void {
   enabled.settingsData = event.params.settingsData;
   enabled.save();
 
-  fee.funds = arrayUnique<string>(fee.funds.concat([fund.id]))
-  fee.save()
+  fee.funds = arrayUnique<string>(fee.funds.concat([fund.id]));
+  fee.save();
 
   fund.fees = arrayUnique<string>(fund.fees.concat([fee.id]));
-  fund.save()
+  fund.save();
 }
 
 export function handleFeeSettledForFund(event: FeeSettledForFund): void {
-  let id = genericId(event);
-  let settled = new FeeSettledForFundEvent(id);
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let fund = useFund(comptroller.getVaultProxy().toHex());
 
+  let settled = new FeeSettledForFundEvent(genericId(event));
   settled.contract = ensureContract(event.address, 'FeeManager', event).id;
   settled.fund = fund.id;
   settled.account = useManager(event.transaction.from.toHex()).id;
@@ -87,16 +79,14 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
   settled.payer = fund.id;
   settled.sharesDue = toBigDecimal(event.params.sharesDue);
   settled.payee = useManager(fund.manager).id;
-
   settled.save();
 }
 
 export function handleFeeSharesOutstandingPaidForFund(event: FeeSharesOutstandingPaidForFund): void {
-  let id = genericId(event);
-  let sharesPaid = new FeeSharesOutstandingPaidForFundEvent(id);
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let fund = useFund(comptroller.getVaultProxy().toHex());
 
+  let sharesPaid = new FeeSharesOutstandingPaidForFundEvent(genericId(event));
   sharesPaid.contract = ensureContract(event.address, 'FeeManager', event).id;
   sharesPaid.fund = fund.id;
   sharesPaid.account = useManager(event.transaction.from.toHex()).id;
@@ -107,6 +97,5 @@ export function handleFeeSharesOutstandingPaidForFund(event: FeeSharesOutstandin
   sharesPaid.payer = fund.id;
   sharesPaid.sharesDue = toBigDecimal(event.params.sharesDue);
   sharesPaid.payee = useManager(fund.manager).id;
-
   sharesPaid.save();
 }

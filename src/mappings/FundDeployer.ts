@@ -1,4 +1,4 @@
-import {  DataSourceContext } from '@graphprotocol/graph-ts';
+import { DataSourceContext } from '@graphprotocol/graph-ts';
 import { ensureAccount, ensureManager } from '../entities/Account';
 import { ensureAsset } from '../entities/Asset';
 import { ensureComptroller } from '../entities/Comptroller';
@@ -23,11 +23,9 @@ import { genericId } from '../utils/genericId';
 import { toBigDecimal } from '../utils/tokenValue';
 
 export function handleNewFundDeployed(event: NewFundDeployed): void {
-  let id = event.params.vaultProxy.toHex();
-
-  let fundDeployment = new NewFundDeployedEvent(id);
+  let fundDeployment = new NewFundDeployedEvent(genericId(event));
   fundDeployment.timestamp = event.block.timestamp;
-  fundDeployment.fund = id;
+  fundDeployment.fund = event.params.vaultProxy.toHex();
   fundDeployment.account = ensureManager(event.params.fundOwner, event).id;
   fundDeployment.contract = ensureContract(event.address, 'FundDeployer', event).id;
   fundDeployment.comptrollerProxy = ensureComptroller(event.params.comptrollerProxy).id;
@@ -45,14 +43,13 @@ export function handleNewFundDeployed(event: NewFundDeployed): void {
 
   let comptrollerContext = new DataSourceContext();
   comptrollerContext.setString('vaultProxy', event.params.vaultProxy.toHex());
-  
+
   VaultLibDataSource.create(event.params.vaultProxy);
   ComptrollerLibDataSource.createWithContext(event.params.comptrollerProxy, comptrollerContext);
 }
 
 export function handleAmguPaid(event: AmguPaid): void {
-  let id = genericId(event);
-  let amguPaid = new AmguPaidEvent(id);
+  let amguPaid = new AmguPaidEvent(genericId(event));
   amguPaid.amount = toBigDecimal(event.params.ethPaid);
   amguPaid.payer = ensureAccount(event.params.payer, event).id;
   amguPaid.gas = event.params.gasUsed.toI32();
@@ -65,7 +62,7 @@ export function handleComptrollerProxyDeployed(event: ComptrollerProxyDeployed):
   let comptrollerProxy = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let vaultProxy = comptrollerProxy.getVaultProxy();
 
-  let comptrollerProxyDeployment = new ComptrollerProxyDeployedEvent(event.params.comptrollerProxy.toHex());
+  let comptrollerProxyDeployment = new ComptrollerProxyDeployedEvent(genericId(event));
   comptrollerProxyDeployment.timestamp = event.block.timestamp;
   comptrollerProxyDeployment.fund = vaultProxy.toHex();
   comptrollerProxyDeployment.account = ensureManager(event.params.fundOwner, event).id;
@@ -77,9 +74,7 @@ export function handleComptrollerProxyDeployed(event: ComptrollerProxyDeployed):
 }
 
 export function handleOwnershipTransferred(event: OwnershipTransferred): void {
-  let id = genericId(event);
-
-  let transfer = new OwnershipTransferredEvent(id);
+  let transfer = new OwnershipTransferredEvent(genericId(event));
   transfer.timestamp = event.block.timestamp;
   transfer.contract = ensureContract(event.address, 'FundDeployer', event).id;
   transfer.previousOwner = event.params.previousOwner.toHex();
