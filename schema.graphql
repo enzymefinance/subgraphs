@@ -69,7 +69,6 @@ type ComptrollerProxyDeployedEvent implements Event & FundEvent @entity {
   contract: Contract!
   timestamp: BigInt!
   comptrollerProxy: Comptroller!
-  fundOwner: Account!
   transaction: Transaction!
 }
 
@@ -91,8 +90,8 @@ type FundConfigSetEvent implements Event & FundEvent @entity {
   contract: Contract!
   denominationAsset: Asset!
   vaultProxy: Fund!
-  feeManagerConfig: String!
-  policyManagerConfig: String!
+  feeManagerConfigData: String!
+  policyManagerConfigData: String!
   timestamp: BigInt!
   transaction: Transaction!
 }

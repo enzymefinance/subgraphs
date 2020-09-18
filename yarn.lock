@@ -1133,41 +1133,41 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@melonproject/melonjs@^2.0.1-dev.498+0d01a766":
-  version "2.0.1-dev.498"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_gLQlV/%40melonproject%2Fmelonjs-2.0.1-dev.498.tgz#0c35d4169901969464a083ab743ca86e46ed29c0"
-  integrity sha1-DDXUFpkBlpRkoIOrdDyobkbtKcA=
+"@melonproject/melonjs@^2.0.1-dev.500+4979b78a":
+  version "2.0.1-dev.500"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_270jwA/%40melonproject%2Fmelonjs-2.0.1-dev.500.tgz#70d7bfbd485b937f52b86eab8812645f29272927"
+  integrity sha1-cNe/vUhbk39SuG6riBJkXyknKSc=
   dependencies:
     "@crestproject/ethers" "^0.0.48"
-    "@melonproject/persistent" "^2.0.1-dev.4904+25635ba6"
-    "@melonproject/release" "^2.0.1-dev.4904+25635ba6"
-    "@melonproject/utils" "^2.0.1-dev.4904+25635ba6"
+    "@melonproject/persistent" "^2.0.1-dev.4907+9f1cb684"
+    "@melonproject/release" "^2.0.1-dev.4907+9f1cb684"
+    "@melonproject/utils" "^2.0.1-dev.4907+9f1cb684"
     bignumber.js "^9.0.0"
-    ethers "^5.0.12"
+    ethers "^5.0.14"
 
-"@melonproject/persistent@^2.0.1-dev.4904+25635ba6":
-  version "2.0.1-dev.4904"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_MKOBp/%40melonproject%2Fpersistent-2.0.1-dev.4904.tgz#ae1f98e1f8869d6de0d6569fa73aba4ef47815cd"
-  integrity sha1-rh+Y4fiGnW3g1lafpzq6TvR4Fc0=
+"@melonproject/persistent@^2.0.1-dev.4907+9f1cb684":
+  version "2.0.1-dev.4907"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_1UTthj/%40melonproject%2Fpersistent-2.0.1-dev.4907.tgz#49aee9a6f088a5d61268157d27d153a76314fdfa"
+  integrity sha1-Sa7ppvCIpdYSaBV9J9FTp2MU/fo=
   dependencies:
     "@crestproject/crestproject" "^0.0.47"
-    "@melonproject/utils" "^2.0.1-dev.4904+25635ba6"
+    "@melonproject/utils" "^2.0.1-dev.4907+9f1cb684"
     ethers "^5.0.13"
 
-"@melonproject/release@^2.0.1-dev.4904+25635ba6":
-  version "2.0.1-dev.4904"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_1kbpf4/%40melonproject%2Frelease-2.0.1-dev.4904.tgz#e26cc2ab521403c817caf7804780a2cab0437737"
-  integrity sha1-4mzCq1IUA8gXyveAR4CiyrBDdzc=
+"@melonproject/release@^2.0.1-dev.4907+9f1cb684":
+  version "2.0.1-dev.4907"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_6Ylok/%40melonproject%2Frelease-2.0.1-dev.4907.tgz#cd2b6d6b8c3764cfe1dc99a7e008c010e0063afd"
+  integrity sha1-zStta4w3ZM/h3Jmn4AjAEOAGOv0=
   dependencies:
     "@crestproject/crestproject" "^0.0.47"
-    "@melonproject/persistent" "^2.0.1-dev.4904+25635ba6"
-    "@melonproject/utils" "^2.0.1-dev.4904+25635ba6"
+    "@melonproject/persistent" "^2.0.1-dev.4907+9f1cb684"
+    "@melonproject/utils" "^2.0.1-dev.4907+9f1cb684"
     ethers "^5.0.13"
 
-"@melonproject/utils@^2.0.1-dev.4904+25635ba6":
-  version "2.0.1-dev.4904"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_h2UGE/%40melonproject%2Futils-2.0.1-dev.4904.tgz#84bb66252fb5fcbca2b0bdea5dea4054d28308f4"
-  integrity sha1-hLtmJS+1/LyisL3qXepAVNKDCPQ=
+"@melonproject/utils@^2.0.1-dev.4907+9f1cb684":
+  version "2.0.1-dev.4907"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_1mTXr4/%40melonproject%2Futils-2.0.1-dev.4907.tgz#ee806a89f1bec355b646eee166568981da44803a"
+  integrity sha1-7oBqifG+w1W2Ru7hZlaJgdpEgDo=
   dependencies:
     "@crestproject/crestproject" "^0.0.47"
     ethers "^5.0.13"
@@ -1441,10 +1441,18 @@
   dependencies:
     "@types/istanbul-lib-report" "*"
 
-"@types/jest@26.x", "@types/jest@^26.0.13":
+"@types/jest@26.x":
   version "26.0.13"
   resolved "https://registry.yarnpkg.com/@types/jest/-/jest-26.0.13.tgz#5a7b9d5312f5dd521a38329c38ee9d3802a0b85e"
   integrity sha512-sCzjKow4z9LILc6DhBvn5AkIfmQzDZkgtVVKmGwVrs5tuid38ws281D4l+7x1kP487+FlKDh5kfMZ8WSPAdmdA==
+  dependencies:
+    jest-diff "^25.2.1"
+    pretty-format "^25.2.1"
+
+"@types/jest@^26.0.14":
+  version "26.0.14"
+  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-26.0.14.tgz#078695f8f65cb55c5a98450d65083b2b73e5a3f3"
+  integrity sha512-Hz5q8Vu0D288x3iWXePSn53W7hAjP0H7EQ6QvDO9c7t46mR0lNOLlfuwQ+JkVxuhygHzlzPX+0jKdA3ZgSh+Vg==
   dependencies:
     jest-diff "^25.2.1"
     pretty-format "^25.2.1"
@@ -1479,10 +1487,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.12.56.tgz#83591a89723d8ec3eaf722137e1784a7351edb6c"
   integrity sha512-8OdIupOIZtmObR13fvGyTvpcuzKmMugkATeVcfNwCjGtHxhjEKmOvLqXwR8U9VOtNnZ4EXaSfNiLVsPinaCXkQ==
 
-"@types/node@^14.10.1":
-  version "14.10.1"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.10.1.tgz#cc323bad8e8a533d4822f45ce4e5326f36e42177"
-  integrity sha512-aYNbO+FZ/3KGeQCEkNhHFRIzBOUgc7QvcVNKXbfnhDkSfwUv91JsQQa10rDgKSTSLkXZ1UIyPe4FJJNVgw1xWQ==
+"@types/node@^14.11.1":
+  version "14.11.1"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.11.1.tgz#56af902ad157e763f9ba63d671c39cda3193c835"
+  integrity sha512-oTQgnd0hblfLsJ6BvJzzSL+Inogp3lq9fGgqRkMB/ziKMgEUaFl801OncOzUmalfzt14N0oPHMK47ipl+wbTIw==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"
@@ -3399,6 +3407,42 @@ ethers@^5.0.13:
   version "5.0.13"
   resolved "https://registry.yarnpkg.com/ethers/-/ethers-5.0.13.tgz#843e98d344acbef74f4d2ab40922bbda1f83e322"
   integrity sha512-xtSVE6r3ltLZ2EHtzA0rd1s2TQaLTC11qhSG+iYhOgno+lhyIXffBC8CzLkQEp51+GlRTn9/xCjly6JCn5qwMA==
+  dependencies:
+    "@ethersproject/abi" "^5.0.5"
+    "@ethersproject/abstract-provider" "^5.0.4"
+    "@ethersproject/abstract-signer" "^5.0.4"
+    "@ethersproject/address" "^5.0.4"
+    "@ethersproject/base64" "^5.0.3"
+    "@ethersproject/basex" "^5.0.3"
+    "@ethersproject/bignumber" "^5.0.7"
+    "@ethersproject/bytes" "^5.0.4"
+    "@ethersproject/constants" "^5.0.4"
+    "@ethersproject/contracts" "^5.0.4"
+    "@ethersproject/hash" "^5.0.4"
+    "@ethersproject/hdnode" "^5.0.4"
+    "@ethersproject/json-wallets" "^5.0.6"
+    "@ethersproject/keccak256" "^5.0.3"
+    "@ethersproject/logger" "^5.0.5"
+    "@ethersproject/networks" "^5.0.3"
+    "@ethersproject/pbkdf2" "^5.0.3"
+    "@ethersproject/properties" "^5.0.3"
+    "@ethersproject/providers" "^5.0.8"
+    "@ethersproject/random" "^5.0.3"
+    "@ethersproject/rlp" "^5.0.3"
+    "@ethersproject/sha2" "^5.0.3"
+    "@ethersproject/signing-key" "^5.0.4"
+    "@ethersproject/solidity" "^5.0.4"
+    "@ethersproject/strings" "^5.0.4"
+    "@ethersproject/transactions" "^5.0.5"
+    "@ethersproject/units" "^5.0.4"
+    "@ethersproject/wallet" "^5.0.4"
+    "@ethersproject/web" "^5.0.6"
+    "@ethersproject/wordlists" "^5.0.4"
+
+ethers@^5.0.14:
+  version "5.0.14"
+  resolved "https://registry.yarnpkg.com/ethers/-/ethers-5.0.14.tgz#fc33613ff3c1eb04c481f32083f2be315079e2a2"
+  integrity sha512-6WkoYwAURTr/4JiSZlrMJ9mm3pBv/bWrOu7sVXdLGw9QU4cp/GDZVrKKnh5GafMTzanuNBJoaEanPCjsbe4Mig==
   dependencies:
     "@ethersproject/abi" "^5.0.5"
     "@ethersproject/abstract-provider" "^5.0.4"
@@ -6893,10 +6937,15 @@ prettier@^1.13.5:
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.19.1.tgz#f7d7f5ff8a9cd872a7be4ca142095956a60797cb"
   integrity sha512-s7PoyDv/II1ObgQunCbB9PdLmUcBZcnWOcxDh7O0N/UwDEsHyqkW+Qh28jW+mVuCdx7gLB0BotYI1Y6uI9iyew==
 
-prettier@^2.0.5, prettier@^2.1.1:
+prettier@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.1.1.tgz#d9485dd5e499daa6cb547023b87a6cf51bee37d6"
   integrity sha512-9bY+5ZWCfqj3ghYBLxApy2zf6m+NJo5GzmLTpr9FsApsfjriNnS2dahWReHMi7qNPhhHl9SYHJs2cHZLgexNIw==
+
+prettier@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.1.2.tgz#3050700dae2e4c8b67c4c3f666cdb8af405e1ce5"
+  integrity sha512-16c7K+x4qVlJg9rEbXl7HEGmQyZlG4R9AgP+oHKRMsMsuk8s+ATStlf1NpDqyBI1HpVyfjLOeMhH2LvuNvV5Vg==
 
 pretty-format@^25.2.1, pretty-format@^25.5.0:
   version "25.5.0"

@@ -36,8 +36,8 @@ export function handleFundConfigSet(event: FundConfigSet): void {
   fundConfig.account = useAccount(event.transaction.from.toHex()).id;
   fundConfig.denominationAsset = ensureAsset(event.params.denominationAsset).id;
   fundConfig.vaultProxy = fundId;
-  fundConfig.feeManagerConfig = event.params.feeManagerConfig.toHex();
-  fundConfig.policyManagerConfig = event.params.policyManagerConfig.toHex();
+  fundConfig.feeManagerConfigData = event.params.feeManagerConfigData.toHex();
+  fundConfig.policyManagerConfigData = event.params.policyManagerConfigData.toHex();
   fundConfig.transaction = ensureTransaction(event).id;
   fundConfig.save();
 }

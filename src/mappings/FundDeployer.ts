@@ -65,10 +65,9 @@ export function handleComptrollerProxyDeployed(event: ComptrollerProxyDeployed):
   let comptrollerProxyDeployment = new ComptrollerProxyDeployedEvent(genericId(event));
   comptrollerProxyDeployment.timestamp = event.block.timestamp;
   comptrollerProxyDeployment.fund = vaultProxy.toHex();
-  comptrollerProxyDeployment.account = ensureManager(event.params.fundOwner, event).id;
+  comptrollerProxyDeployment.account = ensureManager(event.transaction.from, event).id;
   comptrollerProxyDeployment.contract = ensureContract(event.address, 'FundDeployer', event).id;
   comptrollerProxyDeployment.comptrollerProxy = ensureComptroller(event.params.comptrollerProxy).id;
-  comptrollerProxyDeployment.fundOwner = ensureManager(event.params.fundOwner, event).id;
   comptrollerProxyDeployment.transaction = ensureTransaction(event).id;
   comptrollerProxyDeployment.save();
 }

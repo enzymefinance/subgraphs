@@ -10,7 +10,7 @@ import {
   FeeEnabledForFund,
   FeeRegistered,
   FeeSettledForFund,
-  FeeSharesOutstandingPaidForFund,
+  SharesOutstandingPaidForFee,
 } from '../generated/FeeManagerContract';
 import {
   FeeDeregisteredEvent,
@@ -29,6 +29,7 @@ export function handleFeeRegistered(event: FeeRegistered): void {
   registered.timestamp = event.block.timestamp;
   registered.transaction = ensureTransaction(event).id;
   registered.fee = ensureFee(event.params.fee).id;
+  registered.identifier = event.params.identifier.toString();
   registered.save();
 }
 
@@ -82,7 +83,7 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
   settled.save();
 }
 
-export function handleFeeSharesOutstandingPaidForFund(event: FeeSharesOutstandingPaidForFund): void {
+export function handleSharesOutstandingPaidForFee(event: SharesOutstandingPaidForFee): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let fund = useFund(comptroller.getVaultProxy().toHex());
 

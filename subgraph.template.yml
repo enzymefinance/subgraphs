@@ -9,7 +9,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: '{{dispatcher}}'
+      address: "{{dispatcher}}"
       abi: DispatcherContract
       startBlock: 0
     mapping:
@@ -53,7 +53,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: '{{engine}}'
+      address: "{{engine}}"
       abi: EngineContract
       startBlock: 0
     mapping:
@@ -87,7 +87,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: '{{fundDeployer}}'
+      address: "{{fundDeployer}}"
       abi: FundDeployerContract
       startBlock: 0
     mapping:
@@ -106,12 +106,12 @@ dataSources:
         - name: StandardERC20Contract
           file: ./node_modules/@melonproject/release/artifacts/StandardERC20.json
       eventHandlers:
-        - event: NewFundDeployed(address,address,address,indexed address,string,indexed address,bytes,bytes)
-          handler: handleNewFundDeployed
         - event: AmguPaid(indexed address,uint256,uint256)
           handler: handleAmguPaid
-        - event: ComptrollerProxyDeployed(address,indexed address)
+        - event: ComptrollerProxyDeployed(address,address)
           handler: handleComptrollerProxyDeployed
+        - event: NewFundDeployed(address,address,address,indexed address,string,indexed address,bytes,bytes)
+          handler: handleNewFundDeployed
         - event: OwnershipTransferred(indexed address,indexed address)
           handler: handleOwnershipTransferred
 
@@ -119,7 +119,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: '{{feeManager}}'
+      address: "{{feeManager}}"
       abi: FeeManagerContract
       startBlock: 0
     mapping:
@@ -146,16 +146,16 @@ dataSources:
           handler: handleFeeEnabledForFund
         - event: FeeRegistered(indexed address,indexed string)
           handler: handleFeeRegistered
-        - event: FeeSettledForFund(indexed address,indexed address,address,address,uint256)
+        - event: FeeSettledForFund(indexed address,indexed address,uint8,uint256)
           handler: handleFeeSettledForFund
-        - event: FeeSharesOutstandingPaidForFund(indexed address,indexed address,address,address,uint256)
-          handler: handleFeeSharesOutstandingPaidForFund
+        - event: SharesOutstandingPaidForFee(indexed address,indexed address,address,uint256)
+          handler: handleSharesOutstandingPaidForFee
 
   - name: PolicyManagerDataSource
     kind: ethereum/contract
     network: mainnet
     source:
-      address: '{{policyManager}}'
+      address: "{{policyManager}}"
       abi: PolicyManagerContract
       startBlock: 0
     mapping:
@@ -187,7 +187,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: '{{integrationManager}}'
+      address: "{{integrationManager}}"
       abi: IntegrationManagerContract
       startBlock: 0
     mapping:
@@ -219,7 +219,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: '{{chainlinkPriceFeed}}'
+      address: "{{chainlinkPriceFeed}}"
       abi: ChainlinkPriceFeedContract
       startBlock: 0
     mapping:
@@ -245,7 +245,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: '{{aggregatedDerivativePriceFeed}}'
+      address: "{{aggregatedDerivativePriceFeed}}"
       abi: AggregatedDerivativePriceFeedContract
       startBlock: 0
     mapping:
@@ -270,7 +270,7 @@ dataSources:
 templates:
   - name: VaultLibDataSource
     kind: ethereum/contract
-    network: 'mainnet'
+    network: "mainnet"
     source:
       abi: VaultLibContract
     mapping:
@@ -308,7 +308,7 @@ templates:
 
   - name: ComptrollerLibDataSource
     kind: ethereum/contract
-    network: 'mainnet'
+    network: "mainnet"
     source:
       abi: ComptrollerLibContract
     mapping:

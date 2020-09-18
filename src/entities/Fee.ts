@@ -1,4 +1,4 @@
-import { Address, BigInt } from '@graphprotocol/graph-ts';
+import { Address } from '@graphprotocol/graph-ts';
 import { IFeeInterface } from '../generated/IFeeInterface';
 import { Fee } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
