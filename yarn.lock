@@ -1133,41 +1133,41 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@melonproject/melonjs@^2.0.1-dev.500+4979b78a":
-  version "2.0.1-dev.500"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_270jwA/%40melonproject%2Fmelonjs-2.0.1-dev.500.tgz#70d7bfbd485b937f52b86eab8812645f29272927"
-  integrity sha1-cNe/vUhbk39SuG6riBJkXyknKSc=
+"@melonproject/melonjs@^2.0.1-dev.501+1fbbb1e9":
+  version "2.0.1-dev.501"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_1VKm28/%40melonproject%2Fmelonjs-2.0.1-dev.501.tgz#c00cad4013211934b7def3b8baa274d6688a1735"
+  integrity sha1-wAytQBMhGTS33vO4uqJ01miKFzU=
   dependencies:
     "@crestproject/ethers" "^0.0.48"
-    "@melonproject/persistent" "^2.0.1-dev.4907+9f1cb684"
-    "@melonproject/release" "^2.0.1-dev.4907+9f1cb684"
-    "@melonproject/utils" "^2.0.1-dev.4907+9f1cb684"
+    "@melonproject/persistent" "^2.0.1-dev.4910+f81dcacf"
+    "@melonproject/release" "^2.0.1-dev.4910+f81dcacf"
+    "@melonproject/utils" "^2.0.1-dev.4910+f81dcacf"
     bignumber.js "^9.0.0"
     ethers "^5.0.14"
 
-"@melonproject/persistent@^2.0.1-dev.4907+9f1cb684":
-  version "2.0.1-dev.4907"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_1UTthj/%40melonproject%2Fpersistent-2.0.1-dev.4907.tgz#49aee9a6f088a5d61268157d27d153a76314fdfa"
-  integrity sha1-Sa7ppvCIpdYSaBV9J9FTp2MU/fo=
+"@melonproject/persistent@^2.0.1-dev.4910+f81dcacf":
+  version "2.0.1-dev.4910"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_rdwqd/%40melonproject%2Fpersistent-2.0.1-dev.4910.tgz#5abb97a6294e0d2950fa99b5912cf102345001b8"
+  integrity sha1-WruXpilODSlQ+pm1kSzxAjRQAbg=
   dependencies:
     "@crestproject/crestproject" "^0.0.47"
-    "@melonproject/utils" "^2.0.1-dev.4907+9f1cb684"
+    "@melonproject/utils" "^2.0.1-dev.4910+f81dcacf"
     ethers "^5.0.13"
 
-"@melonproject/release@^2.0.1-dev.4907+9f1cb684":
-  version "2.0.1-dev.4907"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_6Ylok/%40melonproject%2Frelease-2.0.1-dev.4907.tgz#cd2b6d6b8c3764cfe1dc99a7e008c010e0063afd"
-  integrity sha1-zStta4w3ZM/h3Jmn4AjAEOAGOv0=
+"@melonproject/release@^2.0.1-dev.4910+f81dcacf":
+  version "2.0.1-dev.4910"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_YDQ0k/%40melonproject%2Frelease-2.0.1-dev.4910.tgz#5344b0ad6abe5812fb31bd16d9b233cf150b03cd"
+  integrity sha1-U0SwrWq+WBL7Mb0W2bIzzxULA80=
   dependencies:
     "@crestproject/crestproject" "^0.0.47"
-    "@melonproject/persistent" "^2.0.1-dev.4907+9f1cb684"
-    "@melonproject/utils" "^2.0.1-dev.4907+9f1cb684"
+    "@melonproject/persistent" "^2.0.1-dev.4910+f81dcacf"
+    "@melonproject/utils" "^2.0.1-dev.4910+f81dcacf"
     ethers "^5.0.13"
 
-"@melonproject/utils@^2.0.1-dev.4907+9f1cb684":
-  version "2.0.1-dev.4907"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_1mTXr4/%40melonproject%2Futils-2.0.1-dev.4907.tgz#ee806a89f1bec355b646eee166568981da44803a"
-  integrity sha1-7oBqifG+w1W2Ru7hZlaJgdpEgDo=
+"@melonproject/utils@^2.0.1-dev.4910+f81dcacf":
+  version "2.0.1-dev.4910"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_2ciGma/%40melonproject%2Futils-2.0.1-dev.4910.tgz#427014acbe3b733fd92ceb63a47552ec8bfbc73b"
+  integrity sha1-QnAUrL47cz/ZLOtjpHVS7Iv7xzs=
   dependencies:
     "@crestproject/crestproject" "^0.0.47"
     ethers "^5.0.13"
@@ -1810,12 +1810,12 @@ asn1@~0.2.3:
   dependencies:
     safer-buffer "~2.1.0"
 
-assemblyscript@^0.14.10:
-  version "0.14.10"
-  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.14.10.tgz#dc17f5f1b8ba34cf17d79a587f10f250733ddcd3"
-  integrity sha512-XQT2Hpf6bZtf9Cd1OdJ4rVQF3m80WBQUERnNRjymzKAFCYBpgKVAlVG8TDEhfzct+Bs4hsiS736G02K9cNzMaA==
+assemblyscript@^0.14.11:
+  version "0.14.11"
+  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.14.11.tgz#b37f2fca898e0a980dc9f30e8e9deca22cbbf1b5"
+  integrity sha512-If7HuhmV5thbOBJH13fP4aPmazYeVXkEuzdZZRgknIBeOkObXWB4v3/rpGPFxkNW4Q5+rc2YWefjOdWK8OVIig==
   dependencies:
-    binaryen "95.0.0-nightly.20200813"
+    binaryen "97.0.0-nightly.20200919"
     long "^4.0.0"
 
 "assemblyscript@https://github.com/AssemblyScript/assemblyscript#36040d5b5312f19a025782b5e36663823494c2f3":
@@ -2009,10 +2009,10 @@ binaryen@77.0.0-nightly.20190407:
   resolved "https://registry.yarnpkg.com/binaryen/-/binaryen-77.0.0-nightly.20190407.tgz#fbe4f8ba0d6bd0809a84eb519d2d5b5ddff3a7d1"
   integrity sha512-1mxYNvQ0xywMe582K7V6Vo2zzhZZxMTeGHH8aE/+/AND8f64D8Q1GThVY3RVRwGY/4p+p95ccw9Xbw2ovFXRIg==
 
-binaryen@95.0.0-nightly.20200813:
-  version "95.0.0-nightly.20200813"
-  resolved "https://registry.yarnpkg.com/binaryen/-/binaryen-95.0.0-nightly.20200813.tgz#c84b332a7b06d4a9a2096c57b29c3e889130bcfb"
-  integrity sha512-xY+fhSAkVxptBoQAn9X4o21zTFycOjc+PeqbWSwcDqrSmXBXUMeq7qHhz4EWSWlFDKobHeUaiIbzLzlmciDWHw==
+binaryen@97.0.0-nightly.20200919:
+  version "97.0.0-nightly.20200919"
+  resolved "https://registry.yarnpkg.com/binaryen/-/binaryen-97.0.0-nightly.20200919.tgz#40660f7c355701f8e7d842fb894e4dded564ac1a"
+  integrity sha512-BqKZxONTh53SVl2QUqVidoSo/nvL6FMKUG21SvB6V46M1Y6EbJrXES5Nt2c9XYveWpJjA297zIoxTUdI/PMDSA==
 
 bindings@^1.5.0:
   version "1.5.0"
@@ -5291,7 +5291,7 @@ jest-snapshot@^26.4.2:
     pretty-format "^26.4.2"
     semver "^7.3.2"
 
-jest-util@26.x, jest-util@^26.3.0:
+jest-util@26.x, jest-util@^26.1.0, jest-util@^26.3.0:
   version "26.3.0"
   resolved "https://registry.yarnpkg.com/jest-util/-/jest-util-26.3.0.tgz#a8974b191df30e2bf523ebbfdbaeb8efca535b3e"
   integrity sha512-4zpn6bwV0+AMFN0IYhH/wnzIQzRaYVrz1A8sYnRnj4UXDXbOVtWmlaZkO9mipFqZ13okIfN87aDoJWB7VH6hcw==
@@ -8172,7 +8172,7 @@ ts-essentials@^2.0.7:
   resolved "https://registry.yarnpkg.com/ts-essentials/-/ts-essentials-2.0.12.tgz#c9303f3d74f75fa7528c3d49b80e089ab09d8745"
   integrity sha512-3IVX4nI6B5cc31/GFFE+i8ey/N2eA0CZDbo6n0yrz0zDX8ZJ8djmU1p+XRz7G3is0F3bB3pu2pAroFdAWQKU3w==
 
-ts-jest@^26.1.3, ts-jest@^26.2.0:
+ts-jest@^26.1.3:
   version "26.3.0"
   resolved "https://registry.yarnpkg.com/ts-jest/-/ts-jest-26.3.0.tgz#6b2845045347dce394f069bb59358253bc1338a9"
   integrity sha512-Jq2uKfx6bPd9+JDpZNMBJMdMQUC3sJ08acISj8NXlVgR2d5OqslEHOR2KHMgwymu8h50+lKIm0m0xj/ioYdW2Q==
@@ -8188,6 +8188,23 @@ ts-jest@^26.1.3, ts-jest@^26.2.0:
     mkdirp "1.x"
     semver "7.x"
     yargs-parser "18.x"
+
+ts-jest@^26.4.0:
+  version "26.4.0"
+  resolved "https://registry.yarnpkg.com/ts-jest/-/ts-jest-26.4.0.tgz#903c7827f3d3bc33efc2f91be294b164400c32e3"
+  integrity sha512-ofBzoCqf6Nv/PoWb/ByV3VNKy2KJSikamOBxvR3E6eVdIw10GwAXoyvMWXXjZJK2s6S27ZE8fI+JBTnGaovl6Q==
+  dependencies:
+    "@types/jest" "26.x"
+    bs-logger "0.x"
+    buffer-from "1.x"
+    fast-json-stable-stringify "2.x"
+    jest-util "^26.1.0"
+    json5 "2.x"
+    lodash.memoize "4.x"
+    make-error "1.x"
+    mkdirp "1.x"
+    semver "7.x"
+    yargs-parser "20.x"
 
 ts-node@^9.0.0:
   version "9.0.0"
@@ -8271,10 +8288,10 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typescript@^4.0.2:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.0.2.tgz#7ea7c88777c723c681e33bf7988be5d008d05ac2"
-  integrity sha512-e4ERvRV2wb+rRZ/IQeb3jm2VxBsirQLpQhdxplZ2MEzGvDkkMmPglecnNDfSUBivMjP93vRbngYYDQqQ/78bcQ==
+typescript@^4.0.3:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.0.3.tgz#153bbd468ef07725c1df9c77e8b453f8d36abba5"
+  integrity sha512-tEu6DGxGgRJPb/mVPIZ48e69xCn2yRmCgYmDugAVwmJ6o+0u1RI18eO7E7WBTLYLaEVVOhwQmcdhQHweux/WPg==
 
 uglify-js@^3.1.4:
   version "3.10.4"
@@ -8629,6 +8646,11 @@ yargs-parser@18.x, yargs-parser@^18.1.2:
   dependencies:
     camelcase "^5.0.0"
     decamelize "^1.2.0"
+
+yargs-parser@20.x:
+  version "20.2.0"
+  resolved "https://registry.yarnpkg.com/yargs-parser/-/yargs-parser-20.2.0.tgz#944791ca2be2e08ddadd3d87e9de4c6484338605"
+  integrity sha512-2agPoRFPoIcFzOIp6656gcvsg2ohtscpw2OINr/q46+Sq41xz2OYLqx5HRHabmFU1OARIPAYH5uteICE7mn/5A==
 
 yargs-parser@^16.1.0:
   version "16.1.0"
