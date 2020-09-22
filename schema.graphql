@@ -588,6 +588,7 @@ type AnswerUpdatedEvent implements Event & NetworkEvent @entity {
   contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
+  asset: Asset!
 
   current: BigDecimal!
   roundId: BigInt!
@@ -740,6 +741,7 @@ type Asset @entity {
   decimals: Int!
   isDerivative: Boolean!
   derivedFrom: [Asset!]
+  prices: [AssetPrice!]! @derivedFrom(field: "asset")
   priceFeed: PriceFeed!
   fundsDenomination: [Fund!]! @derivedFrom(field: "denominationAsset")
   fundsTracking: [Fund!]!
@@ -748,6 +750,13 @@ type Asset @entity {
 type PriceFeed @entity {
   id: ID!
   assets: [Asset!]!
+}
+
+type AssetPrice @entity {
+  id: ID!
+  asset: Asset!
+  price: BigDecimal!
+  timestamp: BigInt!
 }
 
 type Policy @entity {
