@@ -43,5 +43,8 @@
     "preset": "ts-jest",
     "testTimeout": 30000,
     "testEnvironment": "node"
+  },
+  "dependencies": {
+    "@chainlink/contracts": "^0.0.10"
   }
 }
