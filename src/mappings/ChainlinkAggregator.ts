@@ -3,7 +3,7 @@ import { useAsset } from '../entities/Asset';
 import { assetPriceId } from '../entities/AssetPrice';
 import { ensureContract } from '../entities/Contract';
 import { ensureTransaction } from '../entities/Transaction';
-import { AnswerUpdated } from '../generated/AggregatorInterface';
+import { AnswerUpdated, NewRound } from '../generated/AggregatorInterface';
 import { AnswerUpdatedEvent, AssetPrice } from '../generated/schema';
 import { genericId } from '../utils/genericId';
 import { toBigDecimal } from '../utils/tokenValue';
@@ -29,3 +29,5 @@ export function handleAnswerUpdated(event: AnswerUpdated): void {
   assetPrice.price = toBigDecimal(event.params.current, asset.decimals);
   assetPrice.save();
 }
+
+export function handleNewRound(event: NewRound): void {}
