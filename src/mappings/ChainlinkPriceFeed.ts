@@ -7,6 +7,8 @@ import { ensureAsset } from '../entities/Asset';
 import { genericId } from '../utils/genericId';
 import { zeroAddress } from '../constants';
 import { arrayUnique } from '../utils/arrayUnique';
+import { DataSourceContext } from '@graphprotocol/graph-ts';
+import { ChainlinkAggregatorDataSource } from '../generated/templates';
 
 export function handleAggregatorSet(event: AggregatorSet): void {
   let primitivePriceFeedSet = new AggregatorSetEvent(genericId(event));
@@ -39,4 +41,9 @@ export function handleAggregatorSet(event: AggregatorSet): void {
   primitivePriceFeedSet.transaction = ensureTransaction(event).id;
 
   primitivePriceFeedSet.save();
+
+  // new chainlink aggregator
+  let aggregatorContext = new DataSourceContext();
+  aggregatorContext.setString('asset', primitive.id);
+  ChainlinkAggregatorDataSource.createWithContext(event.params.nextAggregator, aggregatorContext);
 }

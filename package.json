@@ -14,6 +14,7 @@
     "lint": "yarn prettier --list-different {src,scripts}/{*,**/*}.{ts,json,yaml}"
   },
   "devDependencies": {
+    "@chainlink/contracts": "^0.0.10",
     "@graphprotocol/graph-cli": "^0.18.0",
     "@graphprotocol/graph-ts": "^0.18.1",
     "@melonproject/melonjs": "^2.0.1-dev.501+1fbbb1e9",
@@ -43,5 +44,6 @@
     "preset": "ts-jest",
     "testTimeout": 30000,
     "testEnvironment": "node"
-  }
+  },
+  "dependencies": {}
 }
