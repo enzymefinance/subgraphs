@@ -539,6 +539,17 @@ type InvestorWhitelistAddressesRemovedEvent implements Event & FundEvent @entity
   items: [Account!]!
 }
 
+type MaxConcentrationSetEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: Comptroller!
+  value: BigDecimal!
+}
+
 #################################################
 # Low-level network event entities
 #################################################
@@ -926,6 +937,15 @@ type InvestorWhitelistSetting implements PolicySetting @entity {
   policy: Policy!
   fund: Fund!
   listed: [Account!]!
+  timestamp: BigInt!
+  events: [FundEvent!]!
+}
+
+type MaxConcentrationSetting implements PolicySetting @entity {
+  id: ID!
+  policy: Policy!
+  fund: Fund!
+  maxConcentration: BigDecimal!
   timestamp: BigInt!
   events: [FundEvent!]!
 }
