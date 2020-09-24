@@ -59,6 +59,7 @@ export function useAccount(id: string): Account {
 
 export function ensureAccount(accountAddress: Address, event: ethereum.Event): Account {
   let account = Account.load(accountAddress.toHex()) as Account;
+
   if (account) {
     return account;
   }
@@ -68,7 +69,6 @@ export function ensureAccount(accountAddress: Address, event: ethereum.Event): A
   account.firstSeen = event.block.timestamp;
   account.manager = false;
   account.investor = false;
-  // The line below fails when handling AddressedAdded for an investorWhitelist
   account.save();
 
   return account;

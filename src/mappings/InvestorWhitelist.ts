@@ -18,7 +18,7 @@ export function handleAddressesAdded(event: AddressesAdded): void {
   let policy = usePolicy(event.address.toHex());
   // TODO: This fails (in ensureAccount). Fix it!
   // let items = event.params.items.map<string>((item) => ensureAccount(item, event).id);
-  let items: string[] = [];
+  let items = event.params.items.map<string>((item) => item.toHex());
 
   let addressesAdded = new InvestorWhitelistAddressesAddedEvent(genericId(event));
   addressesAdded.fund = vault.toHex(); // fund does not exist yet
