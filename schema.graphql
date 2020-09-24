@@ -570,7 +570,7 @@ type ManagementFeeSettingsAddedEvent implements Event & FundEvent @entity {
   rate: BigDecimal!
 }
 
-type ManagementFeeSettletd implements Event & FundEvent @entity {
+type ManagementFeeSettledEvent implements Event & FundEvent @entity {
   id: ID!
   fund: Fund!
   account: Account!
