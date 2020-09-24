@@ -19,6 +19,14 @@ export interface Deployment {
   aggregatedDerivativePriceFeed: string;
   chaiAdapter: string;
   kyberAdapter: string;
+  managementFee: string;
+  performanceFee: string;
+  adapterBlacklist: string;
+  adapterWhitelist: string;
+  assetBlacklist: string;
+  assetWhitelist: string;
+  maxConcentration: string;
+  userWhitelist: string;
 }
 
 const deploymentQuery = gql`
@@ -42,6 +50,14 @@ const deploymentQuery = gql`
       aggregatedDerivativePriceFeed
       chaiAdapter
       kyberAdapter
+      managementFee
+      performanceFee
+      adapterBlacklist
+      adapterWhitelist
+      assetBlacklist
+      assetWhitelist
+      maxConcentration
+      userWhitelist
     }
   }
 `;
@@ -67,6 +83,14 @@ const createDeploymentMutation = gql`
       aggregatedDerivativePriceFeed
       chaiAdapter
       kyberAdapter
+      managementFee
+      performanceFee
+      adapterBlacklist
+      adapterWhitelist
+      assetBlacklist
+      assetWhitelist
+      maxConcentration
+      userWhitelist
     }
   }
 `;
