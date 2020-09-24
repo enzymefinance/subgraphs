@@ -379,6 +379,30 @@ dataSources:
         - event: AddressesRemoved(indexed address,address[])
           handler: handleAddressesRemoved
 
+  - name: MaxConcentrationDataSource
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      address: "{{maxConcentration}}"
+      abi: MaxConcentrationContract
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/MaxConcentration.ts
+      entities: []
+      abis:
+        - name: MaxConcentrationContract
+          file: ./node_modules/@melonproject/release/artifacts/MaxConcentration.json
+        - name: VaultLibContract
+          file: ./node_modules/@melonproject/release/artifacts/VaultLib.json
+        - name: ComptrollerLibContract
+          file: ./node_modules/@melonproject/release/artifacts/ComptrollerLib.json
+      eventHandlers:
+        - event: MaxConcentrationSet(address,uint256)
+          handler: handleMaxConcentrationSet
+
   - name: IntegrationManagerDataSource
     kind: ethereum/contract
     network: mainnet
