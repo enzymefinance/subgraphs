@@ -9,7 +9,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: "{{dispatcher}}"
+      address: '{{dispatcher}}'
       abi: DispatcherContract
       startBlock: 0
     mapping:
@@ -53,7 +53,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: "{{engine}}"
+      address: '{{engine}}'
       abi: EngineContract
       startBlock: 0
     mapping:
@@ -87,7 +87,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: "{{fundDeployer}}"
+      address: '{{fundDeployer}}'
       abi: FundDeployerContract
       startBlock: 0
     mapping:
@@ -119,7 +119,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: "{{feeManager}}"
+      address: '{{feeManager}}'
       abi: FeeManagerContract
       startBlock: 0
     mapping:
@@ -155,7 +155,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: "{{managementFee}}"
+      address: '{{managementFee}}'
       abi: ManagementFeeContract
       startBlock: 0
     mapping:
@@ -187,7 +187,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: "{{performanceFee}}"
+      address: '{{performanceFee}}'
       abi: PerformanceFeeContract
       startBlock: 0
     mapping:
@@ -219,7 +219,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: "{{policyManager}}"
+      address: '{{policyManager}}'
       abi: PolicyManagerContract
       startBlock: 0
     mapping:
@@ -251,7 +251,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: "{{adapterBlacklist}}"
+      address: '{{adapterBlacklist}}'
       abi: AdapterBlacklistContract
       startBlock: 0
     mapping:
@@ -277,7 +277,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: "{{adapterWhitelist}}"
+      address: '{{adapterWhitelist}}'
       abi: AdapterWhitelistContract
       startBlock: 0
     mapping:
@@ -305,7 +305,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: "{{assetWhitelist}}"
+      address: '{{assetWhitelist}}'
       abi: AssetWhitelistContract
       startBlock: 0
     mapping:
@@ -331,7 +331,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: "{{assetBlacklist}}"
+      address: '{{assetBlacklist}}'
       abi: AssetBlacklistContract
       startBlock: 0
     mapping:
@@ -353,21 +353,21 @@ dataSources:
         - event: AddressesRemoved(indexed address,address[])
           handler: handleAddressesRemoved
 
-  - name: UserWhitelistDataSource
+  - name: InvestorWhitelistDataSource
     kind: ethereum/contract
     network: mainnet
     source:
-      address: "{{userWhitelist}}"
-      abi: UserWhitelistContract
+      address: '{{userWhitelist}}'
+      abi: InvestorWhitelistContract
       startBlock: 0
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
-      file: ./src/mappings/UserWhitelist.ts
+      file: ./src/mappings/InvestorWhitelist.ts
       entities: []
       abis:
-        - name: UserWhitelistContract
+        - name: InvestorWhitelistContract
           file: ./node_modules/@melonproject/release/artifacts/UserWhitelist.json
         - name: VaultLibContract
           file: ./node_modules/@melonproject/release/artifacts/VaultLib.json
@@ -383,7 +383,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: "{{maxConcentration}}"
+      address: '{{maxConcentration}}'
       abi: MaxConcentrationContract
       startBlock: 0
     mapping:
@@ -407,7 +407,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: "{{integrationManager}}"
+      address: '{{integrationManager}}'
       abi: IntegrationManagerContract
       startBlock: 0
     mapping:
@@ -439,7 +439,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: "{{chainlinkPriceFeed}}"
+      address: '{{chainlinkPriceFeed}}'
       abi: ChainlinkPriceFeedContract
       startBlock: 0
     mapping:
@@ -465,7 +465,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: "{{aggregatedDerivativePriceFeed}}"
+      address: '{{aggregatedDerivativePriceFeed}}'
       abi: AggregatedDerivativePriceFeedContract
       startBlock: 0
     mapping:
@@ -490,7 +490,7 @@ dataSources:
 templates:
   - name: VaultLibDataSource
     kind: ethereum/contract
-    network: "mainnet"
+    network: 'mainnet'
     source:
       abi: VaultLibContract
     mapping:
@@ -528,7 +528,7 @@ templates:
 
   - name: ComptrollerLibDataSource
     kind: ethereum/contract
-    network: "mainnet"
+    network: 'mainnet'
     source:
       abi: ComptrollerLibContract
     mapping:

@@ -517,6 +517,28 @@ type AssetWhitelistAddressesRemovedEvent implements Event & FundEvent @entity {
   items: [Asset!]!
 }
 
+type InvestorWhitelistAddressesAddedEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: Comptroller!
+  items: [Account!]!
+}
+
+type InvestorWhitelistAddressesRemovedEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: Comptroller!
+  items: [Account!]!
+}
+
 #################################################
 # Low-level network event entities
 #################################################
@@ -895,6 +917,15 @@ type AssetWhitelistSetting implements PolicySetting @entity {
   policy: Policy!
   fund: Fund!
   listed: [Asset!]!
+  timestamp: BigInt!
+  events: [FundEvent!]!
+}
+
+type InvestorWhitelistSetting implements PolicySetting @entity {
+  id: ID!
+  policy: Policy!
+  fund: Fund!
+  listed: [Account!]!
   timestamp: BigInt!
   events: [FundEvent!]!
 }
