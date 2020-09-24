@@ -41,6 +41,14 @@ interface Metric {
   events: [FundEvent!]!
 }
 
+interface PolicySetting {
+  id: ID!
+  policy: Policy!
+  fund: Fund!
+  timestamp: BigInt!
+  events: [FundEvent!]!
+}
+
 #################################################
 # Low-level fund event entities
 #################################################
@@ -421,6 +429,28 @@ type TransferEvent implements Event & FundEvent @entity {
   amount: BigDecimal!
 }
 
+type AdapterBlacklistAddressesAddedEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: Comptroller!
+  items: [IntegrationAdapter!]!
+}
+
+type AdapterBlacklistAddressesRemovedEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: Comptroller!
+  items: [IntegrationAdapter!]!
+}
+
 #################################################
 # Low-level network event entities
 #################################################
@@ -669,6 +699,7 @@ type Fund @entity {
   denominationAsset: Asset!
   trackedAssets: [Asset!]!
   policies: [Policy!]!
+  policySettings: [PolicySetting!]!
   fees: [Fee!]!
   investments: [Investment!]! @derivedFrom(field: "fund")
   shares: Share!
@@ -763,6 +794,16 @@ type Policy @entity {
   id: ID!
   identifier: String!
   funds: [Fund!]!
+  settings: [PolicySetting!]! @derivedFrom(field: "policy")
+}
+
+type AdapterBlacklistSetting implements PolicySetting @entity {
+  id: ID!
+  policy: Policy!
+  fund: Fund!
+  blacklisted: [IntegrationAdapter!]!
+  timestamp: BigInt!
+  events: [FundEvent!]!
 }
 
 type Share implements Metric @entity {
