@@ -38,15 +38,22 @@ describe('Walkthrough', () => {
       dispatcherAddress: deployment.dispatcher,
     });
 
-    const policies = [deployment.assetBlacklist];
+    // create fund with policies
 
     const blacklistedTokens = [deployment.mlnToken];
     const assetBlacklistSettings = await encodeArgs(['address[]'], [blacklistedTokens]);
-    const policiesSettingsData = [assetBlacklistSettings];
+
+    const whitelistedTokens = [deployment.wethToken];
+    const assetWhitelistSettings = await encodeArgs(['address[]'], [whitelistedTokens]);
+
+    const whitelistedInvestors = [randomAddress()];
+    const investorWhitelistSettings = await encodeArgs(['address[]'], [whitelistedInvestors]);
+
+    const policies = [deployment.assetBlacklist, deployment.assetWhitelist, deployment.userWhitelist];
+    const policiesSettingsData = [assetBlacklistSettings, assetWhitelistSettings, investorWhitelistSettings];
 
     const policyManagerConfig = await encodeArgs(['address[]', 'bytes[]'], [policies, policiesSettingsData]);
 
-    // create fund with policies
     const deployer = new FundDeployer(fundDeployer, signer);
     await deployer.createNewFund
       .args(signer.address, 'My Fund with Policies', deployment.wethToken, '0x', policyManagerConfig)

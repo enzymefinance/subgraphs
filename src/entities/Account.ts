@@ -1,10 +1,10 @@
-import { Address, ethereum } from '@graphprotocol/graph-ts';
+import { Address, ethereum, log } from '@graphprotocol/graph-ts';
 import { Account } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
 
 export function useManager(id: string): Account {
   let manager = Account.load(id);
-  
+
   if (manager == null) {
     logCritical('Failed to load account {}.', [id]);
   } else if (!manager.manager) {
@@ -27,13 +27,13 @@ export function ensureManager(managerAddress: Address, event: ethereum.Event): A
 
 export function useInvestor(id: string): Account {
   let investor = Account.load(id);
- 
+
   if (investor == null) {
     logCritical('Failed to load account {}.', [id]);
   } else if (!investor.investor) {
     logCritical('Account {} is not an investor.', [id]);
   }
-  
+
   return investor as Account;
 }
 
@@ -64,9 +64,11 @@ export function ensureAccount(accountAddress: Address, event: ethereum.Event): A
   }
 
   account = new Account(accountAddress.toHex());
+
   account.firstSeen = event.block.timestamp;
   account.manager = false;
   account.investor = false;
+  // The line below fails when handling AddressedAdded for an investorWhitelist
   account.save();
 
   return account;

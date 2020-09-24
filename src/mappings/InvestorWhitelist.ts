@@ -1,13 +1,12 @@
-import { useManager } from '../entities/Account';
-import { ensureInvestorWhitelistSetting, useInvestorWhitelistSetting } from '../entities/InvestorWhitelistSetting';
+import { ensureAccount, useManager } from '../entities/Account';
 import { useComptroller } from '../entities/Comptroller';
 import { ensureContract, useContract } from '../entities/Contract';
 import { useFund } from '../entities/Fund';
-import { useInvestor } from '../entities/Account';
+import { ensureInvestorWhitelistSetting, useInvestorWhitelistSetting } from '../entities/InvestorWhitelistSetting';
 import { usePolicy } from '../entities/Policy';
 import { ensureTransaction } from '../entities/Transaction';
-import { AddressesAdded, AddressesRemoved } from '../generated/InvestorWhitelistContract';
 import { ComptrollerLibContract } from '../generated/ComptrollerLibContract';
+import { AddressesAdded, AddressesRemoved } from '../generated/InvestorWhitelistContract';
 import { InvestorWhitelistAddressesAddedEvent, InvestorWhitelistAddressesRemovedEvent } from '../generated/schema';
 import { arrayDiff } from '../utils/arrayDiff';
 import { arrayUnique } from '../utils/arrayUnique';
@@ -17,7 +16,9 @@ export function handleAddressesAdded(event: AddressesAdded): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let vault = comptroller.getVaultProxy();
   let policy = usePolicy(event.address.toHex());
-  let items = event.params.items.map<string>((item) => useInvestor(item.toHex()).id);
+  // TODO: This fails (in ensureAccount). Fix it!
+  // let items = event.params.items.map<string>((item) => ensureAccount(item, event).id);
+  let items: string[] = [];
 
   let addressesAdded = new InvestorWhitelistAddressesAddedEvent(genericId(event));
   addressesAdded.fund = vault.toHex(); // fund does not exist yet
@@ -41,7 +42,7 @@ export function handleAddressesRemoved(event: AddressesRemoved): void {
   let vault = comptroller.getVaultProxy();
   let fund = useFund(vault.toHex());
   let policy = usePolicy(event.address.toHex());
-  let items = event.params.items.map<string>((item) => useInvestor(item.toHex()).id);
+  let items = event.params.items.map<string>((item) => ensureAccount(item, event).id);
 
   let addressesRemoved = new InvestorWhitelistAddressesRemovedEvent(genericId(event));
   addressesRemoved.fund = fund.id;
