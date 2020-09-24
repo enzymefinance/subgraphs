@@ -353,6 +353,32 @@ dataSources:
         - event: AddressesRemoved(indexed address,address[])
           handler: handleAddressesRemoved
 
+  - name: UserWhitelistDataSource
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      address: "{{userWhitelist}}"
+      abi: UserWhitelistContract
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/UserWhitelist.ts
+      entities: []
+      abis:
+        - name: UserWhitelistContract
+          file: ./node_modules/@melonproject/release/artifacts/UserWhitelist.json
+        - name: VaultLibContract
+          file: ./node_modules/@melonproject/release/artifacts/VaultLib.json
+        - name: ComptrollerLibContract
+          file: ./node_modules/@melonproject/release/artifacts/ComptrollerLib.json
+      eventHandlers:
+        - event: AddressesAdded(indexed address,address[])
+          handler: handleAddressesAdded
+        - event: AddressesRemoved(indexed address,address[])
+          handler: handleAddressesRemoved
+
   - name: IntegrationManagerDataSource
     kind: ethereum/contract
     network: mainnet
