@@ -775,7 +775,6 @@ type AnswerUpdatedEvent implements Event & NetworkEvent @entity {
 type IntegrationAdapter @entity {
   id: ID!
   identifier: String!
-  contract: Contract!
 }
 
 type Transaction @entity {

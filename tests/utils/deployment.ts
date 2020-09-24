@@ -27,7 +27,7 @@ export interface Deployment {
   assetBlacklist: string;
   assetWhitelist: string;
   maxConcentration: string;
-  userWhitelist: string;
+  investorWhitelist: string;
 }
 
 const deploymentQuery = gql`
@@ -59,7 +59,7 @@ const deploymentQuery = gql`
       assetBlacklist
       assetWhitelist
       maxConcentration
-      userWhitelist
+      investorWhitelist
     }
   }
 `;
@@ -93,7 +93,7 @@ const createDeploymentMutation = gql`
       assetBlacklist
       assetWhitelist
       maxConcentration
-      userWhitelist
+      investorWhitelist
     }
   }
 `;

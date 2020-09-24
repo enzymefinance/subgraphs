@@ -68,7 +68,7 @@ describe('Walkthrough', () => {
     const whitelistedInvestors = [randomAddress()];
     const investorWhitelistSettings = await encodeArgs(['address[]'], [whitelistedInvestors]);
 
-    const policies = [deployment.assetBlacklist, deployment.assetWhitelist, deployment.userWhitelist];
+    const policies = [deployment.assetBlacklist, deployment.assetWhitelist, deployment.investorWhitelist];
     const policiesSettingsData = [assetBlacklistSettings, assetWhitelistSettings, investorWhitelistSettings];
 
     const policyManagerConfig = await encodeArgs(['address[]', 'bytes[]'], [policies, policiesSettingsData]);

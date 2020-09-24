@@ -32,7 +32,7 @@ const query = gql`
       assetBlacklist
       assetWhitelist
       maxConcentration
-      userWhitelist
+      investorWhitelist
     }
   }
 `;
@@ -63,7 +63,7 @@ interface Result {
     assetBlacklist: string;
     assetWhitelist: string;
     maxConcentration: string;
-    userWhitelist: string;
+    investorWhitelist: string;
   };
 }
 

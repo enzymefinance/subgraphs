@@ -357,7 +357,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: '{{userWhitelist}}'
+      address: '{{investorWhitelist}}'
       abi: InvestorWhitelistContract
       startBlock: 0
     mapping:
@@ -368,7 +368,7 @@ dataSources:
       entities: []
       abis:
         - name: InvestorWhitelistContract
-          file: ./node_modules/@melonproject/release/artifacts/UserWhitelist.json
+          file: ./node_modules/@melonproject/release/artifacts/InvestorWhitelist.json
         - name: VaultLibContract
           file: ./node_modules/@melonproject/release/artifacts/VaultLib.json
         - name: ComptrollerLibContract
