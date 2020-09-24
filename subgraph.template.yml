@@ -183,6 +183,42 @@ dataSources:
         - event: Settled(indexed address,uint256,uint256)
           handler: handleSettled
 
+  - name: PerformanceFeeDataSource
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      address: "{{performanceFee}}"
+      abi: PerformanceFeeContract
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/PerformanceFee.ts
+      entities: []
+      abis:
+        - name: PerformanceFeeContract
+          file: ./node_modules/@melonproject/release/artifacts/PerformanceFee.json
+        - name: FeeManagerContract
+          file: ./node_modules/@melonproject/release/artifacts/FeeManager.json
+        - name: VaultLibContract
+          file: ./node_modules/@melonproject/release/artifacts/VaultLib.json
+        - name: ComptrollerLibContract
+          file: ./node_modules/@melonproject/release/artifacts/ComptrollerLib.json
+        - name: StandardERC20Contract
+          file: ./node_modules/@melonproject/release/artifacts/StandardERC20.json
+        - name: IFeeInterface
+          file: ./node_modules/@melonproject/release/artifacts/IFee.json
+      eventHandlers:
+        - event: ActivatedForFund(indexed address)
+          handler: handleActivatedForFund
+        - event: FundSettingsAdded(indexed address,uint256,uint256)
+          handler: handleFundSettingsAdded
+        - event: PaidOut(indexed address)
+          handler: handlePaidOut
+        - event: PerformanceUpdated(indexed address,uint256,uint256,int256)
+          handler: handlePerformanceUpdated
+
   - name: PolicyManagerDataSource
     kind: ethereum/contract
     network: mainnet
