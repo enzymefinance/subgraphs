@@ -473,6 +473,50 @@ type AdapterWhitelistAddressesRemovedEvent implements Event & FundEvent @entity 
   items: [IntegrationAdapter!]!
 }
 
+type AssetBlacklistAddressesAddedEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: Comptroller!
+  items: [Asset!]!
+}
+
+type AssetBlacklistAddressesRemovedEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: Comptroller!
+  items: [Asset!]!
+}
+
+type AssetWhitelistAddressesAddedEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: Comptroller!
+  items: [Asset!]!
+}
+
+type AssetWhitelistAddressesRemovedEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: Comptroller!
+  items: [Asset!]!
+}
+
 #################################################
 # Low-level network event entities
 #################################################
@@ -833,6 +877,24 @@ type AdapterWhitelistSetting implements PolicySetting @entity {
   policy: Policy!
   fund: Fund!
   listed: [IntegrationAdapter!]!
+  timestamp: BigInt!
+  events: [FundEvent!]!
+}
+
+type AssetBlacklistSetting implements PolicySetting @entity {
+  id: ID!
+  policy: Policy!
+  fund: Fund!
+  listed: [Asset!]!
+  timestamp: BigInt!
+  events: [FundEvent!]!
+}
+
+type AssetWhitelistSetting implements PolicySetting @entity {
+  id: ID!
+  policy: Policy!
+  fund: Fund!
+  listed: [Asset!]!
   timestamp: BigInt!
   events: [FundEvent!]!
 }

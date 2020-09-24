@@ -1,7 +1,7 @@
 import { useManager } from '../entities/Account';
 import { ensureAdapterWhitelistSetting, useAdapterWhitelistSetting } from '../entities/AdapterWhitelistSetting';
 import { useComptroller } from '../entities/Comptroller';
-import { useContract } from '../entities/Contract';
+import { ensureContract, useContract } from '../entities/Contract';
 import { useFund } from '../entities/Fund';
 import { useIntegrationAdapter } from '../entities/IntegrationAdapter';
 import { usePolicy } from '../entities/Policy';
@@ -20,9 +20,9 @@ export function handleAddressesAdded(event: AddressesAdded): void {
   let items = event.params.items.map<string>((item) => useIntegrationAdapter(item.toHex()).id);
 
   let addressesAdded = new AdapterWhitelistAddressesAddedEvent(genericId(event));
-  addressesAdded.fund = vault.toHex(); // fund does not exist
+  addressesAdded.fund = vault.toHex(); // fund does not exist yet
   addressesAdded.account = useManager(event.transaction.from.toHex()).id;
-  addressesAdded.contract = useContract(event.address.toHex()).id;
+  addressesAdded.contract = ensureContract(event.address, 'AdapterWhitelist', event).id;
   addressesAdded.timestamp = event.block.timestamp;
   addressesAdded.transaction = ensureTransaction(event).id;
   addressesAdded.comptrollerProxy = useComptroller(event.params.comptrollerProxy.toHex()).id;
