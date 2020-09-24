@@ -1,6 +1,5 @@
 import { BigInt } from '@graphprotocol/graph-ts';
 import { AdapterBlacklistSetting, Fund, Policy } from '../generated/schema';
-import { arrayUnique } from '../utils/arrayUnique';
 import { logCritical } from '../utils/logCritical';
 
 export function adapterBlacklistSettingId(fundId: string, policy: Policy): string {
@@ -29,7 +28,7 @@ export function ensureAdapterBlacklistSetting(fundId: string, policy: Policy): A
   setting = new AdapterBlacklistSetting(id);
   setting.policy = policy.id;
   setting.fund = fundId;
-  setting.blacklisted = [];
+  setting.listed = [];
   setting.events = [];
   setting.timestamp = BigInt.fromI32(0);
   setting.save();

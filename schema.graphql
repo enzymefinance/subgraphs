@@ -451,6 +451,28 @@ type AdapterBlacklistAddressesRemovedEvent implements Event & FundEvent @entity 
   items: [IntegrationAdapter!]!
 }
 
+type AdapterWhitelistAddressesAddedEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: Comptroller!
+  items: [IntegrationAdapter!]!
+}
+
+type AdapterWhitelistAddressesRemovedEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: Comptroller!
+  items: [IntegrationAdapter!]!
+}
+
 #################################################
 # Low-level network event entities
 #################################################
@@ -801,7 +823,16 @@ type AdapterBlacklistSetting implements PolicySetting @entity {
   id: ID!
   policy: Policy!
   fund: Fund!
-  blacklisted: [IntegrationAdapter!]!
+  listed: [IntegrationAdapter!]!
+  timestamp: BigInt!
+  events: [FundEvent!]!
+}
+
+type AdapterWhitelistSetting implements PolicySetting @entity {
+  id: ID!
+  policy: Policy!
+  fund: Fund!
+  listed: [IntegrationAdapter!]!
   timestamp: BigInt!
   events: [FundEvent!]!
 }

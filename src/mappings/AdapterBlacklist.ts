@@ -30,11 +30,12 @@ export function handleAddressesAdded(event: AddressesAdded): void {
   addressesAdded.save();
 
   let setting = ensureAdapterBlacklistSetting(vault.toHex(), policy);
-  setting.blacklisted = arrayUnique<string>(setting.blacklisted.concat(items));
+  setting.listed = arrayUnique<string>(setting.listed.concat(items));
   setting.events = arrayUnique<string>(setting.events.concat([addressesAdded.id]));
   setting.timestamp = event.block.timestamp;
   setting.save();
 }
+
 export function handleAddressesRemoved(event: AddressesRemoved): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let vault = comptroller.getVaultProxy();
@@ -53,7 +54,7 @@ export function handleAddressesRemoved(event: AddressesRemoved): void {
   addressesRemoved.save();
 
   let setting = useAdapterBlacklistSetting(fund, policy);
-  setting.blacklisted = arrayDiff<string>(setting.blacklisted, items);
+  setting.listed = arrayDiff<string>(setting.listed, items);
   setting.events = arrayUnique<string>(setting.events.concat([addressesRemoved.id]));
   setting.timestamp = event.block.timestamp;
   setting.save();
