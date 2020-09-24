@@ -38,7 +38,26 @@ describe('Walkthrough', () => {
       dispatcherAddress: deployment.dispatcher,
     });
 
-    // create fund with policies
+    // create fund with fees
+
+    const managementFeeSettings = await encodeArgs(['uint256'], [BigNumber.from('100000000000000000')]);
+
+    const performanceFeeSettings = await encodeArgs(
+      ['uint256', 'uint256'],
+      [BigNumber.from('100000000000000000'), BigNumber.from('1000000')],
+    );
+
+    const fees = [deployment.managementFee, deployment.performanceFee];
+    const feesSettingsData = [managementFeeSettings, performanceFeeSettings];
+
+    const feeManagerConfig = await encodeArgs(['address[]', 'bytes[]'], [fees, feesSettingsData]);
+
+    const deployer = new FundDeployer(fundDeployer, signer);
+    await deployer.createNewFund
+      .args(signer.address, 'My Fund with Fees', deployment.wethToken, feeManagerConfig, '0x')
+      .send();
+
+    // // create fund with policies
 
     const blacklistedTokens = [deployment.mlnToken];
     const assetBlacklistSettings = await encodeArgs(['address[]'], [blacklistedTokens]);
@@ -54,7 +73,6 @@ describe('Walkthrough', () => {
 
     const policyManagerConfig = await encodeArgs(['address[]', 'bytes[]'], [policies, policiesSettingsData]);
 
-    const deployer = new FundDeployer(fundDeployer, signer);
     await deployer.createNewFund
       .args(signer.address, 'My Fund with Policies', deployment.wethToken, '0x', policyManagerConfig)
       .send();

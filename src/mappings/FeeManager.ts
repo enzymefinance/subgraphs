@@ -44,11 +44,11 @@ export function handleFeeDeregistered(event: FeeDeregistered): void {
 
 export function handleFeeEnabledForFund(event: FeeEnabledForFund): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
-  let fund = useFund(comptroller.getVaultProxy().toHex());
+  let fundId = comptroller.getVaultProxy().toHex();
   let fee = useFee(event.params.fee.toHex());
 
   let enabled = new FeeEnabledForFundEvent(genericId(event));
-  enabled.fund = fund.id;
+  enabled.fund = fundId;
   enabled.contract = ensureContract(event.address, 'FeeManager', event).id;
   enabled.account = useManager(event.transaction.from.toHex()).id;
   enabled.timestamp = event.block.timestamp;
@@ -58,11 +58,8 @@ export function handleFeeEnabledForFund(event: FeeEnabledForFund): void {
   enabled.settingsData = event.params.settingsData;
   enabled.save();
 
-  fee.funds = arrayUnique<string>(fee.funds.concat([fund.id]));
+  fee.funds = arrayUnique<string>(fee.funds.concat([fundId]));
   fee.save();
-
-  fund.fees = arrayUnique<string>(fund.fees.concat([fee.id]));
-  fund.save();
 }
 
 export function handleFeeSettledForFund(event: FeeSettledForFund): void {
