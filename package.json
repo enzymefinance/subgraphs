@@ -17,7 +17,7 @@
     "@chainlink/contracts": "^0.0.10",
     "@graphprotocol/graph-cli": "^0.18.0",
     "@graphprotocol/graph-ts": "^0.18.1",
-    "@melonproject/melonjs": "^2.0.1-dev.506+6bc4a441",
+    "@melonproject/melonjs": "^2.0.1-dev.507+9cd68158",
     "@melonproject/persistent": "^2.0.1-dev.4913+7e3ef0b9",
     "@melonproject/release": "^2.0.1-dev.4913+7e3ef0b9",
     "@melonproject/utils": "^2.0.1-dev.4913+7e3ef0b9",

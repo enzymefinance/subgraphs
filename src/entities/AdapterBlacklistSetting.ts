@@ -3,12 +3,12 @@ import { AdapterBlacklistSetting, Fund, Policy } from '../generated/schema';
 import { arrayUnique } from '../utils/arrayUnique';
 import { logCritical } from '../utils/logCritical';
 
-export function adapterBlacklistSettingId(fund: Fund, policy: Policy): string {
-  return fund.id + '/' + policy.id;
+export function adapterBlacklistSettingId(fundId: string, policy: Policy): string {
+  return fundId + '/' + policy.id;
 }
 
 export function useAdapterBlacklistSetting(fund: Fund, policy: Policy): AdapterBlacklistSetting {
-  let id = adapterBlacklistSettingId(fund, policy);
+  let id = adapterBlacklistSettingId(fund.id, policy);
   let setting = AdapterBlacklistSetting.load(id) as AdapterBlacklistSetting;
 
   if (setting == null) {
@@ -18,8 +18,8 @@ export function useAdapterBlacklistSetting(fund: Fund, policy: Policy): AdapterB
   return setting as AdapterBlacklistSetting;
 }
 
-export function ensureAdapterBlacklistSetting(fund: Fund, policy: Policy): AdapterBlacklistSetting {
-  let id = adapterBlacklistSettingId(fund, policy);
+export function ensureAdapterBlacklistSetting(fundId: string, policy: Policy): AdapterBlacklistSetting {
+  let id = adapterBlacklistSettingId(fundId, policy);
   let setting = AdapterBlacklistSetting.load(id) as AdapterBlacklistSetting;
 
   if (setting) {
@@ -28,14 +28,11 @@ export function ensureAdapterBlacklistSetting(fund: Fund, policy: Policy): Adapt
 
   setting = new AdapterBlacklistSetting(id);
   setting.policy = policy.id;
-  setting.fund = fund.id;
+  setting.fund = fundId;
   setting.blacklisted = [];
   setting.events = [];
   setting.timestamp = BigInt.fromI32(0);
   setting.save();
-
-  fund.policySettings = arrayUnique<string>(fund.policySettings.concat([id]));
-  fund.save();
 
   return setting;
 }

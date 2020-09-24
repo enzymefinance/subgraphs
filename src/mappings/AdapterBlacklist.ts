@@ -1,5 +1,4 @@
-import { Address, dataSource } from '@graphprotocol/graph-ts';
-import { ensureAccount, useManager } from '../entities/Account';
+import { useManager } from '../entities/Account';
 import { ensureAdapterBlacklistSetting, useAdapterBlacklistSetting } from '../entities/AdapterBlacklistSetting';
 import { useComptroller } from '../entities/Comptroller';
 import { useContract } from '../entities/Contract';
@@ -9,13 +8,7 @@ import { usePolicy } from '../entities/Policy';
 import { ensureTransaction } from '../entities/Transaction';
 import { AddressesAdded, AddressesRemoved } from '../generated/AdapterBlacklistContract';
 import { ComptrollerLibContract } from '../generated/ComptrollerLibContract';
-import {
-  AdapterBlacklistAddressesAddedEvent,
-  AdapterBlacklistAddressesRemovedEvent,
-  AdapterBlacklistSetting,
-  Fund,
-  Policy,
-} from '../generated/schema';
+import { AdapterBlacklistAddressesAddedEvent, AdapterBlacklistAddressesRemovedEvent } from '../generated/schema';
 import { arrayDiff } from '../utils/arrayDiff';
 import { arrayUnique } from '../utils/arrayUnique';
 import { genericId } from '../utils/genericId';
@@ -23,12 +16,11 @@ import { genericId } from '../utils/genericId';
 export function handleAddressesAdded(event: AddressesAdded): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let vault = comptroller.getVaultProxy();
-  let fund = useFund(vault.toHex());
   let policy = usePolicy(event.address.toHex());
   let items = event.params.items.map<string>((item) => useIntegrationAdapter(item.toHex()).id);
 
   let addressesAdded = new AdapterBlacklistAddressesAddedEvent(genericId(event));
-  addressesAdded.fund = fund.id;
+  addressesAdded.fund = vault.toHex(); // fund does not exist
   addressesAdded.account = useManager(event.transaction.from.toHex()).id;
   addressesAdded.contract = useContract(event.address.toHex()).id;
   addressesAdded.timestamp = event.block.timestamp;
@@ -37,7 +29,7 @@ export function handleAddressesAdded(event: AddressesAdded): void {
   addressesAdded.items = items;
   addressesAdded.save();
 
-  let setting = ensureAdapterBlacklistSetting(fund, policy);
+  let setting = ensureAdapterBlacklistSetting(vault.toHex(), policy);
   setting.blacklisted = arrayUnique<string>(setting.blacklisted.concat(items));
   setting.events = arrayUnique<string>(setting.events.concat([addressesAdded.id]));
   setting.timestamp = event.block.timestamp;

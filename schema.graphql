@@ -698,8 +698,8 @@ type Fund @entity {
   migrator: String
   denominationAsset: Asset!
   trackedAssets: [Asset!]!
-  policies: [Policy!]!
-  policySettings: [PolicySetting!]!
+  policies: [Policy!]! @derivedFrom(field: "funds")
+  policySettings: [PolicySetting!]! @derivedFrom(field: "fund")
   fees: [Fee!]!
   investments: [Investment!]! @derivedFrom(field: "fund")
   shares: Share!

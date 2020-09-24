@@ -2,6 +2,7 @@ import request, { gql } from 'graphql-request';
 
 export interface Deployment {
   wethToken: string;
+  mlnToken: string;
   chaiPriceSource: string;
   chaiIntegratee: string;
   kyberIntegratee: string;
@@ -33,6 +34,7 @@ const deploymentQuery = gql`
   query {
     deployment {
       wethToken
+      mlnToken
       chaiPriceSource
       chaiIntegratee
       kyberIntegratee
@@ -66,6 +68,7 @@ const createDeploymentMutation = gql`
   mutation {
     createDeployment {
       wethToken
+      mlnToken
       chaiPriceSource
       chaiIntegratee
       kyberIntegratee
