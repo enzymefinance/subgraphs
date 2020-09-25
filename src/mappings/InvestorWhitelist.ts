@@ -16,9 +16,12 @@ export function handleAddressesAdded(event: AddressesAdded): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let vault = comptroller.getVaultProxy();
   let policy = usePolicy(event.address.toHex());
-  // TODO: This fails (in ensureAccount). Fix it!
-  // let items = event.params.items.map<string>((item) => ensureAccount(item, event).id);
-  let items = event.params.items.map<string>((item) => item.toHex());
+
+  let newAddresses = event.params.items;
+  let items: string[] = [];
+  for (let i: i32 = 0; i < event.params.items.length; i++) {
+    items.push(ensureAccount(newAddresses[i], event).id);
+  }
 
   let addressesAdded = new InvestorWhitelistAddressesAddedEvent(genericId(event));
   addressesAdded.fund = vault.toHex(); // fund does not exist yet
