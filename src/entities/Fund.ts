@@ -12,12 +12,12 @@ import { createShares } from './Shares';
 import { createState } from './State';
 
 export function useFund(id: string): Fund {
-  let fund = Fund.load(id);
+  let fund = Fund.load(id) as Fund;
   if (fund == null) {
     logCritical('Failed to load fund {}.', [id]);
   }
 
-  return fund as Fund;
+  return fund;
 }
 
 export function createFund(event: NewFundDeployed): Fund {
@@ -45,10 +45,6 @@ export function createFund(event: NewFundDeployed): Fund {
   fund.state = state.id;
   fund.status = 'None';
   fund.denominationAsset = ensureAsset(event.params.denominationAsset).id;
-  fund.policies = [];
-  fund.fees = [];
-  // fund.payouts = payout.id;
-  // fund.fees = fees.map<string>((fee) => fee.id);
   fund.save();
 
   return fund;

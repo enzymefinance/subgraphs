@@ -5,6 +5,7 @@ import {
   buyShares,
   getCurrentFundDeployer,
   redeemShares,
+  FundDeployer,
 } from '@melonproject/melonjs';
 import { resolveAddress, randomAddress } from '@crestproject/ethers';
 import { fetchDeployment, createAccount, Deployment } from './utils/deployment';
@@ -12,7 +13,7 @@ import { waitForSubgraph } from './utils/subgraph';
 import { fetchFund } from './utils/subgraph-queries/fetchFund';
 import { fetchInvestment } from './utils/subgraph-queries/fetchInvestment';
 import { fetchRedemption } from './utils/subgraph-queries/fetchRedemption';
-import { ComptrollerLib } from '@melonproject/melonjs';
+import { ComptrollerLib, encodeArgs } from '@melonproject/melonjs';
 
 describe('Walkthrough', () => {
   let deployment: Deployment;
@@ -36,6 +37,45 @@ describe('Walkthrough', () => {
       provider,
       dispatcherAddress: deployment.dispatcher,
     });
+
+    // create fund with fees
+
+    const managementFeeSettings = await encodeArgs(['uint256'], [BigNumber.from('100000000000000000')]);
+
+    const performanceFeeSettings = await encodeArgs(
+      ['uint256', 'uint256'],
+      [BigNumber.from('100000000000000000'), BigNumber.from('1000000')],
+    );
+
+    const fees = [deployment.managementFee, deployment.performanceFee];
+    const feesSettingsData = [managementFeeSettings, performanceFeeSettings];
+
+    const feeManagerConfig = await encodeArgs(['address[]', 'bytes[]'], [fees, feesSettingsData]);
+
+    const deployer = new FundDeployer(fundDeployer, signer);
+    await deployer.createNewFund
+      .args(signer.address, 'My Fund with Fees', deployment.wethToken, feeManagerConfig, '0x')
+      .send();
+
+    // // create fund with policies
+
+    const blacklistedTokens = [deployment.mlnToken];
+    const assetBlacklistSettings = await encodeArgs(['address[]'], [blacklistedTokens]);
+
+    const whitelistedTokens = [deployment.wethToken];
+    const assetWhitelistSettings = await encodeArgs(['address[]'], [whitelistedTokens]);
+
+    const whitelistedInvestors = [randomAddress()];
+    const investorWhitelistSettings = await encodeArgs(['address[]'], [whitelistedInvestors]);
+
+    const policies = [deployment.assetBlacklist, deployment.assetWhitelist, deployment.investorWhitelist];
+    const policiesSettingsData = [assetBlacklistSettings, assetWhitelistSettings, investorWhitelistSettings];
+
+    const policyManagerConfig = await encodeArgs(['address[]', 'bytes[]'], [policies, policiesSettingsData]);
+
+    await deployer.createNewFund
+      .args(signer.address, 'My Fund with Policies', deployment.wethToken, '0x', policyManagerConfig)
+      .send();
 
     // create fund
     const newFundArgs = {

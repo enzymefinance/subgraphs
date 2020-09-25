@@ -3,15 +3,15 @@ import { Account } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
 
 export function useManager(id: string): Account {
-  let manager = Account.load(id);
-  
+  let manager = Account.load(id) as Account;
+
   if (manager == null) {
     logCritical('Failed to load account {}.', [id]);
   } else if (!manager.manager) {
     logCritical('Account {} is not a manager.', [id]);
   }
 
-  return manager as Account;
+  return manager;
 }
 
 export function ensureManager(managerAddress: Address, event: ethereum.Event): Account {
@@ -27,13 +27,13 @@ export function ensureManager(managerAddress: Address, event: ethereum.Event): A
 
 export function useInvestor(id: string): Account {
   let investor = Account.load(id);
- 
+
   if (investor == null) {
     logCritical('Failed to load account {}.', [id]);
   } else if (!investor.investor) {
     logCritical('Account {} is not an investor.', [id]);
   }
-  
+
   return investor as Account;
 }
 
@@ -59,11 +59,13 @@ export function useAccount(id: string): Account {
 
 export function ensureAccount(accountAddress: Address, event: ethereum.Event): Account {
   let account = Account.load(accountAddress.toHex()) as Account;
+
   if (account) {
     return account;
   }
 
   account = new Account(accountAddress.toHex());
+
   account.firstSeen = event.block.timestamp;
   account.manager = false;
   account.investor = false;

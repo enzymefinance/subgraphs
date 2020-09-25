@@ -41,6 +41,22 @@ interface Metric {
   events: [FundEvent!]!
 }
 
+interface FeeSetting {
+  id: ID!
+  fee: Fee!
+  fund: Fund!
+  timestamp: BigInt!
+  events: [FundEvent!]!
+}
+
+interface PolicySetting {
+  id: ID!
+  policy: Policy!
+  fund: Fund!
+  timestamp: BigInt!
+  events: [FundEvent!]!
+}
+
 #################################################
 # Low-level fund event entities
 #################################################
@@ -421,6 +437,163 @@ type TransferEvent implements Event & FundEvent @entity {
   amount: BigDecimal!
 }
 
+type AdapterBlacklistAddressesAddedEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: Comptroller!
+  items: [IntegrationAdapter!]!
+}
+
+type AdapterBlacklistAddressesRemovedEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: Comptroller!
+  items: [IntegrationAdapter!]!
+}
+
+type AdapterWhitelistAddressesAddedEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: Comptroller!
+  items: [IntegrationAdapter!]!
+}
+
+type AdapterWhitelistAddressesRemovedEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: Comptroller!
+  items: [IntegrationAdapter!]!
+}
+
+type AssetBlacklistAddressesAddedEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: Comptroller!
+  items: [Asset!]!
+}
+
+type AssetBlacklistAddressesRemovedEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: Comptroller!
+  items: [Asset!]!
+}
+
+type AssetWhitelistAddressesAddedEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: Comptroller!
+  items: [Asset!]!
+}
+
+type AssetWhitelistAddressesRemovedEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: Comptroller!
+  items: [Asset!]!
+}
+
+type InvestorWhitelistAddressesAddedEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: Comptroller!
+  items: [Account!]!
+}
+
+type InvestorWhitelistAddressesRemovedEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: Comptroller!
+  items: [Account!]!
+}
+
+type MaxConcentrationSetEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: Comptroller!
+  value: BigDecimal!
+}
+
+# rename event to ManagementFeeSet
+type ManagementFeeSettingsAddedEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: Comptroller!
+  rate: BigDecimal!
+}
+
+type ManagementFeeSettledEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: Comptroller!
+  sharesDue: BigDecimal!
+  prevSettled: BigInt!
+}
+
+type PerformanceFeeSettingsAddedEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: Comptroller!
+  rate: BigDecimal!
+  period: BigInt!
+}
+
 #################################################
 # Low-level network event entities
 #################################################
@@ -599,16 +772,9 @@ type AnswerUpdatedEvent implements Event & NetworkEvent @entity {
 # High-level entities
 #################################################
 
-type Fee @entity {
-  id: ID!
-  identifier: String!
-  funds: [Fund!]!
-}
-
 type IntegrationAdapter @entity {
   id: ID!
   identifier: String!
-  contract: Contract!
 }
 
 type Transaction @entity {
@@ -668,8 +834,10 @@ type Fund @entity {
   migrator: String
   denominationAsset: Asset!
   trackedAssets: [Asset!]!
-  policies: [Policy!]!
-  fees: [Fee!]!
+  policies: [Policy!]! @derivedFrom(field: "funds")
+  policySettings: [PolicySetting!]! @derivedFrom(field: "fund")
+  fees: [Fee!]! @derivedFrom(field: "funds")
+  feeSettings: [FeeSetting!]! @derivedFrom(field: "fund")
   investments: [Investment!]! @derivedFrom(field: "fund")
   shares: Share!
   sharesHistory: [Share!]! @derivedFrom(field: "fund")
@@ -759,10 +927,90 @@ type AssetPrice @entity {
   timestamp: BigInt!
 }
 
+type Fee @entity {
+  id: ID!
+  identifier: String!
+  funds: [Fund!]!
+}
+
+type ManagementFeeSetting implements FeeSetting @entity {
+  id: ID!
+  fee: Fee!
+  fund: Fund!
+  rate: BigDecimal!
+  timestamp: BigInt!
+  events: [FundEvent!]!
+}
+
+type PerformanceFeeSetting implements FeeSetting @entity {
+  id: ID!
+  fee: Fee!
+  fund: Fund!
+  rate: BigDecimal!
+  period: BigInt!
+  timestamp: BigInt!
+  events: [FundEvent!]!
+}
+
 type Policy @entity {
   id: ID!
   identifier: String!
   funds: [Fund!]!
+  settings: [PolicySetting!]! @derivedFrom(field: "policy")
+}
+
+type AdapterBlacklistSetting implements PolicySetting @entity {
+  id: ID!
+  policy: Policy!
+  fund: Fund!
+  listed: [IntegrationAdapter!]!
+  timestamp: BigInt!
+  events: [FundEvent!]!
+}
+
+type AdapterWhitelistSetting implements PolicySetting @entity {
+  id: ID!
+  policy: Policy!
+  fund: Fund!
+  listed: [IntegrationAdapter!]!
+  timestamp: BigInt!
+  events: [FundEvent!]!
+}
+
+type AssetBlacklistSetting implements PolicySetting @entity {
+  id: ID!
+  policy: Policy!
+  fund: Fund!
+  listed: [Asset!]!
+  timestamp: BigInt!
+  events: [FundEvent!]!
+}
+
+type AssetWhitelistSetting implements PolicySetting @entity {
+  id: ID!
+  policy: Policy!
+  fund: Fund!
+  listed: [Asset!]!
+  timestamp: BigInt!
+  events: [FundEvent!]!
+}
+
+type InvestorWhitelistSetting implements PolicySetting @entity {
+  id: ID!
+  policy: Policy!
+  fund: Fund!
+  listed: [Account!]!
+  timestamp: BigInt!
+  events: [FundEvent!]!
+}
+
+type MaxConcentrationSetting implements PolicySetting @entity {
+  id: ID!
+  policy: Policy!
+  fund: Fund!
+  maxConcentration: BigDecimal!
+  timestamp: BigInt!
+  events: [FundEvent!]!
 }
 
 type Share implements Metric @entity {

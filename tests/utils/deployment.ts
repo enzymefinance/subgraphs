@@ -2,6 +2,7 @@ import request, { gql } from 'graphql-request';
 
 export interface Deployment {
   wethToken: string;
+  mlnToken: string;
   chaiPriceSource: string;
   chaiIntegratee: string;
   kyberIntegratee: string;
@@ -19,12 +20,21 @@ export interface Deployment {
   aggregatedDerivativePriceFeed: string;
   chaiAdapter: string;
   kyberAdapter: string;
+  managementFee: string;
+  performanceFee: string;
+  adapterBlacklist: string;
+  adapterWhitelist: string;
+  assetBlacklist: string;
+  assetWhitelist: string;
+  maxConcentration: string;
+  investorWhitelist: string;
 }
 
 const deploymentQuery = gql`
   query {
     deployment {
       wethToken
+      mlnToken
       chaiPriceSource
       chaiIntegratee
       kyberIntegratee
@@ -42,6 +52,14 @@ const deploymentQuery = gql`
       aggregatedDerivativePriceFeed
       chaiAdapter
       kyberAdapter
+      managementFee
+      performanceFee
+      adapterBlacklist
+      adapterWhitelist
+      assetBlacklist
+      assetWhitelist
+      maxConcentration
+      investorWhitelist
     }
   }
 `;
@@ -50,6 +68,7 @@ const createDeploymentMutation = gql`
   mutation {
     createDeployment {
       wethToken
+      mlnToken
       chaiPriceSource
       chaiIntegratee
       kyberIntegratee
@@ -67,6 +86,14 @@ const createDeploymentMutation = gql`
       aggregatedDerivativePriceFeed
       chaiAdapter
       kyberAdapter
+      managementFee
+      performanceFee
+      adapterBlacklist
+      adapterWhitelist
+      assetBlacklist
+      assetWhitelist
+      maxConcentration
+      investorWhitelist
     }
   }
 `;

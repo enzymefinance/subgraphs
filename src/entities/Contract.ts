@@ -3,12 +3,12 @@ import { Contract } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
 
 export function useContract(id: string): Contract {
-  let contract = Contract.load(id);
+  let contract = Contract.load(id) as Contract;
   if (contract == null) {
     logCritical('Failed to load contract {}.', [id]);
   }
 
-  return contract as Contract;
+  return contract;
 }
 
 export function ensureContract(address: Address, name: string, event: ethereum.Event): Contract {

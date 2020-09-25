@@ -151,6 +151,70 @@ dataSources:
         - event: SharesOutstandingPaidForFee(indexed address,indexed address,address,uint256)
           handler: handleSharesOutstandingPaidForFee
 
+  - name: ManagementFeeDataSource
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      address: '{{managementFee}}'
+      abi: ManagementFeeContract
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/ManagementFee.ts
+      entities: []
+      abis:
+        - name: ManagementFeeContract
+          file: ./node_modules/@melonproject/release/artifacts/ManagementFee.json
+        - name: FeeManagerContract
+          file: ./node_modules/@melonproject/release/artifacts/FeeManager.json
+        - name: VaultLibContract
+          file: ./node_modules/@melonproject/release/artifacts/VaultLib.json
+        - name: ComptrollerLibContract
+          file: ./node_modules/@melonproject/release/artifacts/ComptrollerLib.json
+        - name: StandardERC20Contract
+          file: ./node_modules/@melonproject/release/artifacts/StandardERC20.json
+        - name: IFeeInterface
+          file: ./node_modules/@melonproject/release/artifacts/IFee.json
+      eventHandlers:
+        - event: FundSettingsAdded(indexed address,uint256)
+          handler: handleFundSettingsAdded
+        - event: Settled(indexed address,uint256,uint256)
+          handler: handleSettled
+
+  - name: PerformanceFeeDataSource
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      address: '{{performanceFee}}'
+      abi: PerformanceFeeContract
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/PerformanceFee.ts
+      entities: []
+      abis:
+        - name: PerformanceFeeContract
+          file: ./node_modules/@melonproject/release/artifacts/PerformanceFee.json
+        - name: FeeManagerContract
+          file: ./node_modules/@melonproject/release/artifacts/FeeManager.json
+        - name: VaultLibContract
+          file: ./node_modules/@melonproject/release/artifacts/VaultLib.json
+        - name: ComptrollerLibContract
+          file: ./node_modules/@melonproject/release/artifacts/ComptrollerLib.json
+      eventHandlers:
+        - event: ActivatedForFund(indexed address)
+          handler: handleActivatedForFund
+        - event: FundSettingsAdded(indexed address,uint256,uint256)
+          handler: handleFundSettingsAdded
+        - event: PaidOut(indexed address)
+          handler: handlePaidOut
+        - event: PerformanceUpdated(indexed address,uint256,uint256,int256)
+          handler: handlePerformanceUpdated
+
   - name: PolicyManagerDataSource
     kind: ethereum/contract
     network: mainnet
@@ -182,6 +246,162 @@ dataSources:
           handler: handlePolicyEnabledForFund
         - event: PolicyRegistered(indexed address,indexed string)
           handler: handlePolicyRegistered
+
+  - name: AdapterBlacklistDataSource
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      address: '{{adapterBlacklist}}'
+      abi: AdapterBlacklistContract
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/AdapterBlacklist.ts
+      entities: []
+      abis:
+        - name: AdapterBlacklistContract
+          file: ./node_modules/@melonproject/release/artifacts/AdapterBlacklist.json
+        - name: VaultLibContract
+          file: ./node_modules/@melonproject/release/artifacts/VaultLib.json
+        - name: ComptrollerLibContract
+          file: ./node_modules/@melonproject/release/artifacts/ComptrollerLib.json
+      eventHandlers:
+        - event: AddressesAdded(indexed address,address[])
+          handler: handleAddressesAdded
+        - event: AddressesRemoved(indexed address,address[])
+          handler: handleAddressesRemoved
+
+  - name: AdapterWhitelistDataSource
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      address: '{{adapterWhitelist}}'
+      abi: AdapterWhitelistContract
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/AdapterWhitelist.ts
+      entities: []
+      abis:
+        - name: AdapterWhitelistContract
+          file: ./node_modules/@melonproject/release/artifacts/AdapterWhitelist.json
+        - name: FeeManagerContract
+          file: ./node_modules/@melonproject/release/artifacts/FeeManager.json
+        - name: VaultLibContract
+          file: ./node_modules/@melonproject/release/artifacts/VaultLib.json
+        - name: ComptrollerLibContract
+          file: ./node_modules/@melonproject/release/artifacts/ComptrollerLib.json
+      eventHandlers:
+        - event: AddressesAdded(indexed address,address[])
+          handler: handleAddressesAdded
+        - event: AddressesRemoved(indexed address,address[])
+          handler: handleAddressesRemoved
+
+  - name: AssetWhitelistDataSource
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      address: '{{assetWhitelist}}'
+      abi: AssetWhitelistContract
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/AssetWhitelist.ts
+      entities: []
+      abis:
+        - name: AssetWhitelistContract
+          file: ./node_modules/@melonproject/release/artifacts/AssetWhitelist.json
+        - name: VaultLibContract
+          file: ./node_modules/@melonproject/release/artifacts/VaultLib.json
+        - name: ComptrollerLibContract
+          file: ./node_modules/@melonproject/release/artifacts/ComptrollerLib.json
+      eventHandlers:
+        - event: AddressesAdded(indexed address,address[])
+          handler: handleAddressesAdded
+        - event: AddressesRemoved(indexed address,address[])
+          handler: handleAddressesRemoved
+
+  - name: AssetBlacklistDataSource
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      address: '{{assetBlacklist}}'
+      abi: AssetBlacklistContract
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/AssetBlacklist.ts
+      entities: []
+      abis:
+        - name: AssetBlacklistContract
+          file: ./node_modules/@melonproject/release/artifacts/AssetBlacklist.json
+        - name: VaultLibContract
+          file: ./node_modules/@melonproject/release/artifacts/VaultLib.json
+        - name: ComptrollerLibContract
+          file: ./node_modules/@melonproject/release/artifacts/ComptrollerLib.json
+      eventHandlers:
+        - event: AddressesAdded(indexed address,address[])
+          handler: handleAddressesAdded
+        - event: AddressesRemoved(indexed address,address[])
+          handler: handleAddressesRemoved
+
+  - name: InvestorWhitelistDataSource
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      address: '{{investorWhitelist}}'
+      abi: InvestorWhitelistContract
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/InvestorWhitelist.ts
+      entities: []
+      abis:
+        - name: InvestorWhitelistContract
+          file: ./node_modules/@melonproject/release/artifacts/InvestorWhitelist.json
+        - name: VaultLibContract
+          file: ./node_modules/@melonproject/release/artifacts/VaultLib.json
+        - name: ComptrollerLibContract
+          file: ./node_modules/@melonproject/release/artifacts/ComptrollerLib.json
+      eventHandlers:
+        - event: AddressesAdded(indexed address,address[])
+          handler: handleAddressesAdded
+        - event: AddressesRemoved(indexed address,address[])
+          handler: handleAddressesRemoved
+
+  - name: MaxConcentrationDataSource
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      address: '{{maxConcentration}}'
+      abi: MaxConcentrationContract
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/MaxConcentration.ts
+      entities: []
+      abis:
+        - name: MaxConcentrationContract
+          file: ./node_modules/@melonproject/release/artifacts/MaxConcentration.json
+        - name: VaultLibContract
+          file: ./node_modules/@melonproject/release/artifacts/VaultLib.json
+        - name: ComptrollerLibContract
+          file: ./node_modules/@melonproject/release/artifacts/ComptrollerLib.json
+      eventHandlers:
+        - event: MaxConcentrationSet(address,uint256)
+          handler: handleMaxConcentrationSet
 
   - name: IntegrationManagerDataSource
     kind: ethereum/contract

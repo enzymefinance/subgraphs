@@ -31,11 +31,11 @@ export function handlePolicyDeregistered(event: PolicyDeregistered): void {
 
 export function handlePolicyEnabledForFund(event: PolicyEnabledForFund): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
-  let fund = useFund(comptroller.getVaultProxy().toHex());
+  let fundId = comptroller.getVaultProxy().toHex();
   let policy = usePolicy(event.params.policy.toHex());
 
   let enabled = new PolicyEnabledForFundEvent(genericId(event));
-  enabled.fund = fund.id;
+  enabled.fund = fundId;
   enabled.account = useManager(event.transaction.from.toHex()).id;
   enabled.timestamp = event.block.timestamp;
   enabled.transaction = ensureTransaction(event).id;
@@ -43,9 +43,6 @@ export function handlePolicyEnabledForFund(event: PolicyEnabledForFund): void {
   enabled.policy = policy.id;
   enabled.save();
 
-  policy.funds = arrayUnique<string>(policy.funds.concat([fund.id]));
+  policy.funds = arrayUnique<string>(policy.funds.concat([fundId]));
   policy.save();
-
-  fund.policies = arrayUnique<string>(fund.policies.concat([policy.id]));
-  fund.save();
 }

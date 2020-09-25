@@ -3,12 +3,12 @@ import { Dispatcher } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
 
 export function useDispatcher(id: string): Dispatcher {
-  let dispatcher = Dispatcher.load(id);
+  let dispatcher = Dispatcher.load(id) as Dispatcher;
   if (dispatcher == null) {
     logCritical('Failed to load dispatcher {}.', [id]);
   }
 
-  return dispatcher as Dispatcher;
+  return dispatcher;
 }
 
 export function ensureDispatcher(address: Address): Dispatcher {

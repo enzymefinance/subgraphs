@@ -38,12 +38,12 @@ export function ensureShares(fund: Fund, event: ethereum.Event, cause: Entity): 
 }
 
 export function useShares(id: string): Share {
-  let shares = Share.load(id);
+  let shares = Share.load(id) as Share;
   if (shares == null) {
     logCritical('Failed to load fund shares {}.', [id]);
   }
 
-  return shares as Share;
+  return shares;
 }
 
 export function trackFundShares(fund: Fund, event: ethereum.Event, cause: Entity): Share {

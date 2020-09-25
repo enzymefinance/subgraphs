@@ -3,12 +3,12 @@ import { FundDeployer } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
 
 export function useFundDeployer(id: string): FundDeployer {
-  let fundDeployer = FundDeployer.load(id);
+  let fundDeployer = FundDeployer.load(id) as FundDeployer;
   if (fundDeployer == null) {
     logCritical('Failed to load fund deployer {}.', [id]);
   }
 
-  return fundDeployer as FundDeployer;
+  return fundDeployer;
 }
 
 export function ensureFundDeployer(address: Address): FundDeployer {

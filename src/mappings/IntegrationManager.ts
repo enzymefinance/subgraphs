@@ -1,18 +1,28 @@
+import { BigDecimal } from '@graphprotocol/graph-ts';
+import { useAccount } from '../entities/Account';
+import { ensureAsset } from '../entities/Asset';
+import { ensureContract, useContract } from '../entities/Contract';
+import { useFund } from '../entities/Fund';
+import { ensureIntegrationAdapter, useIntegrationAdapter } from '../entities/IntegrationAdapter';
+import { ensureTransaction } from '../entities/Transaction';
 import {
   AdapterDeregistered,
   AdapterRegistered,
   CallOnIntegrationExecuted,
 } from '../generated/IntegrationManagerContract';
+import { AdapterDeregisteredEvent, AdapterRegisteredEvent, CallOnIntegrationExecutedEvent } from '../generated/schema';
 import { genericId } from '../utils/genericId';
-import { AdapterDeregisteredEvent, CallOnIntegrationExecutedEvent } from '../generated/schema';
-import { ensureContract, useContract } from '../entities/Contract';
-import { ensureTransaction } from '../entities/Transaction';
-import { ensureIntegrationAdapter, useIntegrationAdapter } from '../entities/IntegrationAdapter';
-import { useFund } from '../entities/Fund';
-import { ensureManager, useAccount } from '../entities/Account';
-import { ensureAsset } from '../entities/Asset';
 import { toBigDecimal } from '../utils/tokenValue';
-import { BigDecimal } from '@graphprotocol/graph-ts';
+
+export function handleAdapterRegistered(event: AdapterRegistered): void {
+  let registration = new AdapterRegisteredEvent(genericId(event));
+  registration.identifier = event.params.identifier.toHex();
+  registration.contract = ensureContract(event.params.adapter, 'IntegrationManager', event).id;
+  registration.timestamp = event.block.timestamp;
+  registration.transaction = ensureTransaction(event).id;
+  registration.integrationAdapter = ensureIntegrationAdapter(event.params.adapter).id;
+  registration.save();
+}
 
 export function handleAdapterDeregistered(event: AdapterDeregistered): void {
   let deregistration = new AdapterDeregisteredEvent(genericId(event));
@@ -22,16 +32,6 @@ export function handleAdapterDeregistered(event: AdapterDeregistered): void {
   deregistration.transaction = ensureTransaction(event).id;
   deregistration.integrationAdapter = useIntegrationAdapter(event.params.adapter.toHex()).id;
   deregistration.save();
-}
-
-export function handleAdapterRegistered(event: AdapterRegistered): void {
-  let registration = new AdapterDeregisteredEvent(genericId(event));
-  registration.identifier = event.params.identifier.toHex();
-  registration.contract = ensureContract(event.params.adapter, 'IntegrationManager', event).id;
-  registration.timestamp = event.block.timestamp;
-  registration.transaction = ensureTransaction(event).id;
-  registration.integrationAdapter = ensureIntegrationAdapter(event.params.adapter).id;
-  registration.save();
 }
 
 export function handleCallOnIntegrationExecuted(event: CallOnIntegrationExecuted): void {

@@ -3,12 +3,12 @@ import { VaultLib } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
 
 export function useVaultLib(id: string): VaultLib {
-  let vaultLib = VaultLib.load(id);
+  let vaultLib = VaultLib.load(id) as VaultLib;
   if (vaultLib == null) {
     logCritical('Failed to load comptroller {}.', [id]);
   }
 
-  return vaultLib as VaultLib;
+  return vaultLib;
 }
 
 export function ensureVaultLib(address: Address): VaultLib {

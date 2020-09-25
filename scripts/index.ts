@@ -25,6 +25,14 @@ const query = gql`
       aggregatedDerivativePriceFeed
       chaiAdapter
       kyberAdapter
+      managementFee
+      performanceFee
+      adapterBlacklist
+      adapterWhitelist
+      assetBlacklist
+      assetWhitelist
+      maxConcentration
+      investorWhitelist
     }
   }
 `;
@@ -48,6 +56,14 @@ interface Result {
     aggregatedDerivativePriceFeed: string;
     chaiAdapter: string;
     kyberAdapter: string;
+    managementFee: string;
+    performanceFee: string;
+    adapterBlacklist: string;
+    adapterWhitelist: string;
+    assetBlacklist: string;
+    assetWhitelist: string;
+    maxConcentration: string;
+    investorWhitelist: string;
   };
 }
 
