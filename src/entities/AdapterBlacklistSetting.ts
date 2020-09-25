@@ -1,13 +1,10 @@
 import { BigInt } from '@graphprotocol/graph-ts';
 import { AdapterBlacklistSetting, Fund, Policy } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
-
-export function adapterBlacklistSettingId(fundId: string, policy: Policy): string {
-  return fundId + '/' + policy.id;
-}
+import { policySettingId } from '../utils/policySettingId';
 
 export function useAdapterBlacklistSetting(fund: Fund, policy: Policy): AdapterBlacklistSetting {
-  let id = adapterBlacklistSettingId(fund.id, policy);
+  let id = policySettingId(fund.id, policy);
   let setting = AdapterBlacklistSetting.load(id) as AdapterBlacklistSetting;
 
   if (setting == null) {
@@ -18,7 +15,7 @@ export function useAdapterBlacklistSetting(fund: Fund, policy: Policy): AdapterB
 }
 
 export function ensureAdapterBlacklistSetting(fundId: string, policy: Policy): AdapterBlacklistSetting {
-  let id = adapterBlacklistSettingId(fundId, policy);
+  let id = policySettingId(fundId, policy);
   let setting = AdapterBlacklistSetting.load(id) as AdapterBlacklistSetting;
 
   if (setting) {

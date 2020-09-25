@@ -1,13 +1,10 @@
 import { BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 import { ManagementFeeSetting, Fund, Policy, Fee } from '../generated/schema';
+import { feeSettingId } from '../utils/feeSettingId';
 import { logCritical } from '../utils/logCritical';
 
-export function managementFeeSettingId(fundId: string, fee: Fee): string {
-  return fundId + '/' + fee.id;
-}
-
 export function useManagementFeeSetting(fund: Fund, policy: Policy): ManagementFeeSetting {
-  let id = managementFeeSettingId(fund.id, policy);
+  let id = feeSettingId(fund.id, policy);
   let setting = ManagementFeeSetting.load(id) as ManagementFeeSetting;
 
   if (setting == null) {
@@ -18,7 +15,7 @@ export function useManagementFeeSetting(fund: Fund, policy: Policy): ManagementF
 }
 
 export function ensureManagementFeeSetting(fundId: string, fee: Fee): ManagementFeeSetting {
-  let id = managementFeeSettingId(fundId, fee);
+  let id = feeSettingId(fundId, fee);
   let setting = ManagementFeeSetting.load(id) as ManagementFeeSetting;
 
   if (setting) {

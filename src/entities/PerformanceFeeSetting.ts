@@ -1,13 +1,10 @@
 import { BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 import { PerformanceFeeSetting, Fund, Policy, Fee } from '../generated/schema';
+import { feeSettingId } from '../utils/feeSettingId';
 import { logCritical } from '../utils/logCritical';
 
-export function performanceFeeSettingId(fundId: string, fee: Fee): string {
-  return fundId + '/' + fee.id;
-}
-
 export function usePerformanceFeeSetting(fund: Fund, policy: Policy): PerformanceFeeSetting {
-  let id = performanceFeeSettingId(fund.id, policy);
+  let id = feeSettingId(fund.id, policy);
   let setting = PerformanceFeeSetting.load(id) as PerformanceFeeSetting;
 
   if (setting == null) {
@@ -18,7 +15,7 @@ export function usePerformanceFeeSetting(fund: Fund, policy: Policy): Performanc
 }
 
 export function ensurePerformanceFeeSetting(fundId: string, fee: Fee): PerformanceFeeSetting {
-  let id = performanceFeeSettingId(fundId, fee);
+  let id = feeSettingId(fundId, fee);
   let setting = PerformanceFeeSetting.load(id) as PerformanceFeeSetting;
 
   if (setting) {

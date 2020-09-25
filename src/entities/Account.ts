@@ -1,4 +1,4 @@
-import { Address, ethereum, log } from '@graphprotocol/graph-ts';
+import { Address, ethereum } from '@graphprotocol/graph-ts';
 import { Account } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
 

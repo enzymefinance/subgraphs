@@ -1,13 +1,10 @@
 import { BigInt } from '@graphprotocol/graph-ts';
 import { InvestorWhitelistSetting, Fund, Policy } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
-
-export function investorWhitelistSettingId(fundId: string, policy: Policy): string {
-  return fundId + '/' + policy.id;
-}
+import { policySettingId } from '../utils/policySettingId';
 
 export function useInvestorWhitelistSetting(fund: Fund, policy: Policy): InvestorWhitelistSetting {
-  let id = investorWhitelistSettingId(fund.id, policy);
+  let id = policySettingId(fund.id, policy);
   let setting = InvestorWhitelistSetting.load(id) as InvestorWhitelistSetting;
 
   if (setting == null) {
@@ -18,7 +15,7 @@ export function useInvestorWhitelistSetting(fund: Fund, policy: Policy): Investo
 }
 
 export function ensureInvestorWhitelistSetting(fundId: string, policy: Policy): InvestorWhitelistSetting {
-  let id = investorWhitelistSettingId(fundId, policy);
+  let id = policySettingId(fundId, policy);
   let setting = InvestorWhitelistSetting.load(id) as InvestorWhitelistSetting;
 
   if (setting) {

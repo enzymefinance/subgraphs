@@ -1,13 +1,10 @@
 import { BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 import { MaxConcentrationSetting, Fund, Policy } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
-
-export function maxConcentrationSettingId(fundId: string, policy: Policy): string {
-  return fundId + '/' + policy.id;
-}
+import { policySettingId } from '../utils/policySettingId';
 
 export function useMaxConcentrationSetting(fund: Fund, policy: Policy): MaxConcentrationSetting {
-  let id = maxConcentrationSettingId(fund.id, policy);
+  let id = policySettingId(fund.id, policy);
   let setting = MaxConcentrationSetting.load(id) as MaxConcentrationSetting;
 
   if (setting == null) {
@@ -18,7 +15,7 @@ export function useMaxConcentrationSetting(fund: Fund, policy: Policy): MaxConce
 }
 
 export function ensureMaxConcentrationSetting(fundId: string, policy: Policy): MaxConcentrationSetting {
-  let id = maxConcentrationSettingId(fundId, policy);
+  let id = policySettingId(fundId, policy);
   let setting = MaxConcentrationSetting.load(id) as MaxConcentrationSetting;
 
   if (setting) {

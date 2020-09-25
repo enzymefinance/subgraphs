@@ -1,13 +1,10 @@
 import { BigInt } from '@graphprotocol/graph-ts';
 import { AdapterWhitelistSetting, Fund, Policy } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
-
-export function adapterWhitelistSettingId(fundId: string, policy: Policy): string {
-  return fundId + '/' + policy.id;
-}
+import { policySettingId } from '../utils/policySettingId';
 
 export function useAdapterWhitelistSetting(fund: Fund, policy: Policy): AdapterWhitelistSetting {
-  let id = adapterWhitelistSettingId(fund.id, policy);
+  let id = policySettingId(fund.id, policy);
   let setting = AdapterWhitelistSetting.load(id) as AdapterWhitelistSetting;
 
   if (setting == null) {
@@ -18,7 +15,7 @@ export function useAdapterWhitelistSetting(fund: Fund, policy: Policy): AdapterW
 }
 
 export function ensureAdapterWhitelistSetting(fundId: string, policy: Policy): AdapterWhitelistSetting {
-  let id = adapterWhitelistSettingId(fundId, policy);
+  let id = policySettingId(fundId, policy);
   let setting = AdapterWhitelistSetting.load(id) as AdapterWhitelistSetting;
 
   if (setting) {

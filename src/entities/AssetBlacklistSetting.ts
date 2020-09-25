@@ -1,13 +1,10 @@
 import { BigInt } from '@graphprotocol/graph-ts';
 import { AssetBlacklistSetting, Fund, Policy } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
-
-export function assetBlacklistSettingId(fundId: string, policy: Policy): string {
-  return fundId + '/' + policy.id;
-}
+import { policySettingId } from '../utils/policySettingId';
 
 export function useAssetBlacklistSetting(fund: Fund, policy: Policy): AssetBlacklistSetting {
-  let id = assetBlacklistSettingId(fund.id, policy);
+  let id = policySettingId(fund.id, policy);
   let setting = AssetBlacklistSetting.load(id) as AssetBlacklistSetting;
 
   if (setting == null) {
@@ -18,7 +15,7 @@ export function useAssetBlacklistSetting(fund: Fund, policy: Policy): AssetBlack
 }
 
 export function ensureAssetBlacklistSetting(fundId: string, policy: Policy): AssetBlacklistSetting {
-  let id = assetBlacklistSettingId(fundId, policy);
+  let id = policySettingId(fundId, policy);
   let setting = AssetBlacklistSetting.load(id) as AssetBlacklistSetting;
 
   if (setting) {
