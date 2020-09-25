@@ -11,7 +11,7 @@ export function useAdapterWhitelistSetting(fund: Fund, policy: Policy): AdapterW
     logCritical('Failed to load AdapterWhitelistSetting {}.', [id]);
   }
 
-  return setting as AdapterWhitelistSetting;
+  return setting;
 }
 
 export function ensureAdapterWhitelistSetting(fundId: string, policy: Policy): AdapterWhitelistSetting {

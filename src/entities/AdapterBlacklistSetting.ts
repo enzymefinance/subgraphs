@@ -11,7 +11,7 @@ export function useAdapterBlacklistSetting(fund: Fund, policy: Policy): AdapterB
     logCritical('Failed to load AdapterBlacklistSetting {}.', [id]);
   }
 
-  return setting as AdapterBlacklistSetting;
+  return setting;
 }
 
 export function ensureAdapterBlacklistSetting(fundId: string, policy: Policy): AdapterBlacklistSetting {

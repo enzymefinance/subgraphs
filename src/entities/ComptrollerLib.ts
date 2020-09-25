@@ -3,12 +3,13 @@ import { ComptrollerLib } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
 
 export function useComptrollerLib(id: string): ComptrollerLib {
-  let comptrollerLib = ComptrollerLib.load(id);
+  let comptrollerLib = ComptrollerLib.load(id) as ComptrollerLib;
+
   if (comptrollerLib == null) {
     logCritical('Failed to load comptrollerLib {}.', [id]);
   }
 
-  return comptrollerLib as ComptrollerLib;
+  return comptrollerLib;
 }
 
 export function ensureComptrollerLib(address: Address): ComptrollerLib {

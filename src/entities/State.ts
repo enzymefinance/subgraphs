@@ -42,10 +42,10 @@ export function ensureState(fund: Fund, event: ethereum.Event): State {
 }
 
 export function useState(id: string): State {
-  let state = State.load(id);
+  let state = State.load(id) as State;
   if (state == null) {
     logCritical('Failed to load fund aggregated state {}.', [id]);
   }
 
-  return state as State;
+  return state;
 }

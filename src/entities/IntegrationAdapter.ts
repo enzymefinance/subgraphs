@@ -4,12 +4,12 @@ import { Address } from '@graphprotocol/graph-ts';
 import { IIntegrationAdapterInterface } from '../generated/IIntegrationAdapterInterface';
 
 export function useIntegrationAdapter(id: string): IntegrationAdapter {
-  let integrationAdapter = IntegrationAdapter.load(id);
+  let integrationAdapter = IntegrationAdapter.load(id) as IntegrationAdapter;
   if (integrationAdapter == null) {
     logCritical('Failed to load adapter {}.', [id]);
   }
 
-  return integrationAdapter as IntegrationAdapter;
+  return integrationAdapter;
 }
 
 export function ensureIntegrationAdapter(address: Address): IntegrationAdapter {

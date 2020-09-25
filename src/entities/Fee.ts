@@ -4,12 +4,12 @@ import { Fee } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
 
 export function useFee(id: string): Fee {
-  let fee = Fee.load(id);
+  let fee = Fee.load(id) as Fee;
   if (fee == null) {
     logCritical('Failed to load fee {}.', [id]);
   }
 
-  return fee as Fee;
+  return fee;
 }
 
 export function ensureFee(address: Address): Fee {

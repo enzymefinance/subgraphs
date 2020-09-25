@@ -11,7 +11,7 @@ export function useMaxConcentrationSetting(fund: Fund, policy: Policy): MaxConce
     logCritical('Failed to load MaxConcentrationSetting {}.', [id]);
   }
 
-  return setting as MaxConcentrationSetting;
+  return setting;
 }
 
 export function ensureMaxConcentrationSetting(fundId: string, policy: Policy): MaxConcentrationSetting {

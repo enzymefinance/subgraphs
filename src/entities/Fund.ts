@@ -12,12 +12,12 @@ import { createShares } from './Shares';
 import { createState } from './State';
 
 export function useFund(id: string): Fund {
-  let fund = Fund.load(id);
+  let fund = Fund.load(id) as Fund;
   if (fund == null) {
     logCritical('Failed to load fund {}.', [id]);
   }
 
-  return fund as Fund;
+  return fund;
 }
 
 export function createFund(event: NewFundDeployed): Fund {

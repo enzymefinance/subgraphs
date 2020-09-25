@@ -10,12 +10,12 @@ import { ensurePriceFeed } from '../entities/PriceFeed';
 import { ComptrollerLibContract } from '../generated/ComptrollerLibContract';
 
 export function useRelease(id: string): Release {
-  let release = Release.load(id);
+  let release = Release.load(id) as Release;
   if (release == null) {
     logCritical('Failed to load release {}.', [id]);
   }
 
-  return release as Release;
+  return release;
 }
 
 export function createRelease(event: CurrentFundDeployerSet): Release {

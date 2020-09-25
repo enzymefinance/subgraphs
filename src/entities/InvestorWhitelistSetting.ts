@@ -11,7 +11,7 @@ export function useInvestorWhitelistSetting(fund: Fund, policy: Policy): Investo
     logCritical('Failed to load InvestorWhitelistSetting {}.', [id]);
   }
 
-  return setting as InvestorWhitelistSetting;
+  return setting;
 }
 
 export function ensureInvestorWhitelistSetting(fundId: string, policy: Policy): InvestorWhitelistSetting {

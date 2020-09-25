@@ -3,7 +3,7 @@ import { Account } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
 
 export function useManager(id: string): Account {
-  let manager = Account.load(id);
+  let manager = Account.load(id) as Account;
 
   if (manager == null) {
     logCritical('Failed to load account {}.', [id]);
@@ -11,7 +11,7 @@ export function useManager(id: string): Account {
     logCritical('Account {} is not a manager.', [id]);
   }
 
-  return manager as Account;
+  return manager;
 }
 
 export function ensureManager(managerAddress: Address, event: ethereum.Event): Account {

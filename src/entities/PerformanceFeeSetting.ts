@@ -11,7 +11,7 @@ export function usePerformanceFeeSetting(fund: Fund, policy: Policy): Performanc
     logCritical('Failed to load PerformanceFeeSetting {}.', [id]);
   }
 
-  return setting as PerformanceFeeSetting;
+  return setting;
 }
 
 export function ensurePerformanceFeeSetting(fundId: string, fee: Fee): PerformanceFeeSetting {

@@ -4,12 +4,12 @@ import { StandardERC20Contract } from '../generated/StandardERC20Contract';
 import { logCritical } from '../utils/logCritical';
 
 export function useAsset(id: string): Asset {
-  let asset = Asset.load(id);
+  let asset = Asset.load(id) as Asset;
   if (asset == null) {
     logCritical('Failed to load asset {}.', [id]);
   }
 
-  return asset as Asset;
+  return asset;
 }
 
 export function ensureAsset(address: Address): Asset {

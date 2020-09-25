@@ -6,12 +6,12 @@ import { ensureComptroller } from './Comptroller';
 import { logCritical } from '../utils/logCritical';
 
 export function useMigration(id: string): Migration {
-  let migration = Migration.load(id);
+  let migration = Migration.load(id) as Migration;
   if (migration == null) {
     logCritical('Failed to load migration {}.', [id]);
   }
 
-  return migration as Migration;
+  return migration;
 }
 
 export function ensureMigration(event: MigrationSignaled): Migration {
@@ -21,9 +21,9 @@ export function ensureMigration(event: MigrationSignaled): Migration {
     event.params.nextFundDeployer.toHex(),
     event.block.timestamp.toString(),
   );
-  let migration = Migration.load(id);
+  let migration = Migration.load(id) as Migration;
   if (migration) {
-    return migration as Migration;
+    return migration;
   }
   migration = new Migration(id);
   migration.prevRelease = useRelease(event.params.prevFundDeployer.toHex()).id;
@@ -34,7 +34,8 @@ export function ensureMigration(event: MigrationSignaled): Migration {
   migration.executed = false;
   migration.nextAccessor = ensureComptroller(event.params.nextVaultAccessor).id;
   migration.save();
-  return migration as Migration;
+
+  return migration;
 }
 
 // Uniquely identifies a signaled migration.

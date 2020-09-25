@@ -11,7 +11,7 @@ export function useAssetWhitelistSetting(fund: Fund, policy: Policy): AssetWhite
     logCritical('Failed to load AssetWhitelistSetting {}.', [id]);
   }
 
-  return setting as AssetWhitelistSetting;
+  return setting;
 }
 
 export function ensureAssetWhitelistSetting(fundId: string, policy: Policy): AssetWhitelistSetting {

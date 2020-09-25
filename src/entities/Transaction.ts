@@ -8,12 +8,12 @@ export function transactionId(tx: ethereum.Transaction): string {
 }
 
 export function useTransaction(id: string): Transaction {
-  let transaction = Transaction.load(id);
+  let transaction = Transaction.load(id) as Transaction;
   if (transaction == null) {
     logCritical('Failed to load transaction {}.', [id]);
   }
 
-  return transaction as Transaction;
+  return transaction;
 }
 
 export function ensureTransaction(event: ethereum.Event): Transaction {

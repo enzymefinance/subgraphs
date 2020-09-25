@@ -11,7 +11,7 @@ export function useManagementFeeSetting(fund: Fund, policy: Policy): ManagementF
     logCritical('Failed to load ManagementFeeSetting {}.', [id]);
   }
 
-  return setting as ManagementFeeSetting;
+  return setting;
 }
 
 export function ensureManagementFeeSetting(fundId: string, fee: Fee): ManagementFeeSetting {

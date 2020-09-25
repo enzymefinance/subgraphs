@@ -45,12 +45,12 @@ export function ensurePortfolio(fund: Fund, event: ethereum.Event, cause: Entity
 }
 
 export function usePortfolio(id: string): Portfolio {
-  let porfolio = Portfolio.load(id);
+  let porfolio = Portfolio.load(id) as Portfolio;
   if (porfolio == null) {
     logCritical('Failed to load fund porfolio {}.', [id]);
   }
 
-  return porfolio as Portfolio;
+  return porfolio;
 }
 
 function holdingId(asset: Asset, fund: Fund, event: ethereum.Event): string {
@@ -70,12 +70,12 @@ function createHolding(asset: Asset, quantity: BigDecimal, fund: Fund, event: et
 }
 
 export function useHolding(id: string): Holding {
-  let holdings = Holding.load(id);
+  let holdings = Holding.load(id) as Holding;
   if (holdings == null) {
     logCritical('Failed to load fund holdings {}.', [id]);
   }
 
-  return holdings as Holding;
+  return holdings;
 }
 
 function findHolding(holdings: Holding[], asset: Asset): Holding | null {

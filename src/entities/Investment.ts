@@ -14,6 +14,7 @@ function investmentId(investor: Account, fund: Fund): string {
 
 export function ensureInvestment(investor: Account, fund: Fund): Investment {
   let id = investmentId(investor, fund);
+
   let investment = Investment.load(id) as Investment;
   if (investment) {
     return investment;
@@ -30,21 +31,21 @@ export function ensureInvestment(investor: Account, fund: Fund): Investment {
 
 export function useInvestment(investor: Account, fund: Fund): Investment {
   let id = investmentId(investor, fund);
-  let investment = Investment.load(id);
+  let investment = Investment.load(id) as Investment;
   if (investment == null) {
     logCritical('Failed to load investment {}.', [id]);
   }
 
-  return investment as Investment;
+  return investment;
 }
 
 export function useInvestmentWithId(id: string): Investment {
-  let investment = Investment.load(id);
+  let investment = Investment.load(id) as Investment;
   if (investment == null) {
     logCritical('Failed to load investment {}.', [id]);
   }
 
-  return investment as Investment;
+  return investment;
 }
 
 export function createInvestmentAddition(

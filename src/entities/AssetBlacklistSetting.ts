@@ -11,7 +11,7 @@ export function useAssetBlacklistSetting(fund: Fund, policy: Policy): AssetBlack
     logCritical('Failed to load AssetBlacklistSetting {}.', [id]);
   }
 
-  return setting as AssetBlacklistSetting;
+  return setting;
 }
 
 export function ensureAssetBlacklistSetting(fundId: string, policy: Policy): AssetBlacklistSetting {
