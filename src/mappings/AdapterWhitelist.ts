@@ -1,4 +1,4 @@
-import { useManager } from '../entities/Account';
+import { ensureManager, useManager } from '../entities/Account';
 import { ensureAdapterWhitelistSetting, useAdapterWhitelistSetting } from '../entities/AdapterWhitelistSetting';
 import { useComptroller } from '../entities/Comptroller';
 import { ensureContract, useContract } from '../entities/Contract';
@@ -21,7 +21,7 @@ export function handleAddressesAdded(event: AddressesAdded): void {
 
   let addressesAdded = new AdapterWhitelistAddressesAddedEvent(genericId(event));
   addressesAdded.fund = vault.toHex(); // fund does not exist yet
-  addressesAdded.account = useManager(event.transaction.from.toHex()).id;
+  addressesAdded.account = ensureManager(event.transaction.from, event).id;
   addressesAdded.contract = ensureContract(event.address, 'AdapterWhitelist', event).id;
   addressesAdded.timestamp = event.block.timestamp;
   addressesAdded.transaction = ensureTransaction(event).id;
