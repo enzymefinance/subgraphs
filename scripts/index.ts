@@ -97,7 +97,7 @@ yargs
     (yargs) => {
       return yargs.option('deployment', {
         type: 'string',
-        default: 'http://localhost:4000/graphql',
+        default: 'https://testnet.avantgarde.finance/graphql',
       });
     },
     async (args) => {
