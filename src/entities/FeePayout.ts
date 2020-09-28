@@ -1,8 +1,9 @@
-import { BigDecimal, BigInt, Entity, ethereum, Value } from '@graphprotocol/graph-ts';
-import { Fee, FeePayout, Fund, IndividualFeePayout, State } from '../generated/schema';
+import { BigDecimal, Entity, ethereum } from '@graphprotocol/graph-ts';
+import { Fee, FeePayout, Fund, IndividualFeePayout } from '../generated/schema';
 import { arrayUnique } from '../utils/arrayUnique';
 import { logCritical } from '../utils/logCritical';
-import { trackIndividualFee, useIndividualFeePayout } from './IndividualFeePayout';
+import { trackIndividualFee } from './IndividualFeePayout';
+import { ensureState } from './State';
 
 export function payoutId(fund: Fund, event: ethereum.Event): string {
   return fund.id + '/' + event.block.timestamp.toString() + '/payout';
@@ -25,14 +26,11 @@ export function createFeePayout(
   return payout;
 }
 
-export function ensureFeePayout(fund: Fund, state: State, event: ethereum.Event, cause: Entity): FeePayout {
+export function ensureFeePayout(fund: Fund, event: ethereum.Event, cause: Entity): FeePayout {
   let feePayout = FeePayout.load(payoutId(fund, event)) as FeePayout;
 
   if (!feePayout) {
-    let previous = useFeePayout(state.feePayout).payouts;
-    let records = previous.map<IndividualFeePayout>((id) => useIndividualFeePayout(id));
-
-    feePayout = createFeePayout(records, fund, event, cause);
+    feePayout = createFeePayout([], fund, event, cause);
   } else {
     let events = feePayout.events;
     feePayout.events = arrayUnique<string>(events.concat([cause.getString('id')]));
@@ -55,16 +53,16 @@ export function trackFeePayout(
   fund: Fund,
   fee: Fee,
   shares: BigDecimal,
-  state: State,
   event: ethereum.Event,
   cause: Entity,
 ): FeePayout {
-  let feePayout = ensureFeePayout(fund, state, event, cause);
+  let feePayout = ensureFeePayout(fund, event, cause);
   feePayout.shares = feePayout.shares.plus(shares);
 
   feePayout.payouts = feePayout.payouts.concat([trackIndividualFee(fund, fee, shares, event, cause).id]);
   feePayout.save();
 
+  let state = ensureState(fund, event);
   let events = state.events;
   state.events = arrayUnique<string>(events.concat(feePayout.events));
   state.feePayout = feePayout.id;

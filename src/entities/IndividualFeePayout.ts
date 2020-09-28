@@ -4,7 +4,7 @@ import { arrayUnique } from '../utils/arrayUnique';
 import { logCritical } from '../utils/logCritical';
 
 function feePayoutId(fund: Fund, fee: Fee, event: ethereum.Event): string {
-  return fund.id + '/' + event.block.timestamp.toString() + '/fee/' + fee.identifier;
+  return fund.id + '/' + event.block.timestamp.toString() + '/payout/' + fee.identifier;
 }
 
 function createIndividualFeePayout(
