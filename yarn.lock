@@ -1149,41 +1149,41 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@melonproject/melonjs@^2.0.1-dev.510+bb686c0a":
-  version "2.0.1-dev.510"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_1x5FlR/%40melonproject%2Fmelonjs-2.0.1-dev.510.tgz#1581a0437093296125fbd086c711ea3418a3da66"
-  integrity sha1-FYGgQ3CTKWEl+9CGxxHqNBij2mY=
+"@melonproject/melonjs@^2.0.1-dev.512+f0bb1351":
+  version "2.0.1-dev.512"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_ELmYm/%40melonproject%2Fmelonjs-2.0.1-dev.512.tgz#ce97893e2e9975c6ae189b64f29baf717a8ede66"
+  integrity sha1-zpeJPi6ZdcauGJtk8puvcXqO3mY=
   dependencies:
     "@crestproject/ethers" "^0.0.50"
-    "@melonproject/persistent" "^2.0.1-dev.4919+d06c07bf"
-    "@melonproject/release" "^2.0.1-dev.4919+d06c07bf"
-    "@melonproject/utils" "^2.0.1-dev.4919+d06c07bf"
+    "@melonproject/persistent" "^2.0.1-dev.4920+947f18dd"
+    "@melonproject/release" "^2.0.1-dev.4920+947f18dd"
+    "@melonproject/utils" "^2.0.1-dev.4920+947f18dd"
     bignumber.js "^9.0.0"
     ethers "^5.0.14"
 
-"@melonproject/persistent@^2.0.1-dev.4919+d06c07bf":
-  version "2.0.1-dev.4919"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_1JFccw/%40melonproject%2Fpersistent-2.0.1-dev.4919.tgz#7f31501322d240a5daafcc8cd788dc6018406d27"
-  integrity sha1-fzFQEyLSQKXar8yM14jcYBhAbSc=
+"@melonproject/persistent@^2.0.1-dev.4920+947f18dd":
+  version "2.0.1-dev.4920"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_jx94A/%40melonproject%2Fpersistent-2.0.1-dev.4920.tgz#d81d597f51c6353773a68728d9579ed54297fba5"
+  integrity sha1-2B1Zf1HGNTdzpoco2Vee1UKX+6U=
   dependencies:
     "@crestproject/crestproject" "^0.0.50"
-    "@melonproject/utils" "^2.0.1-dev.4919+d06c07bf"
+    "@melonproject/utils" "^2.0.1-dev.4920+947f18dd"
     ethers "^5.0.14"
 
-"@melonproject/release@^2.0.1-dev.4919+d06c07bf":
-  version "2.0.1-dev.4919"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_2h5vNh/%40melonproject%2Frelease-2.0.1-dev.4919.tgz#d00cdba612e17123ffb48014ec429f13d4037988"
-  integrity sha1-0AzbphLhcSP/tIAU7EKfE9QDeYg=
+"@melonproject/release@^2.0.1-dev.4920+947f18dd":
+  version "2.0.1-dev.4920"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_em0Yz/%40melonproject%2Frelease-2.0.1-dev.4920.tgz#f1d1ccdb53e6b90d98673e07522378dd47e141b8"
+  integrity sha1-8dHM21PmuQ2YZz4HUiN43UfhQbg=
   dependencies:
     "@crestproject/crestproject" "^0.0.50"
-    "@melonproject/persistent" "^2.0.1-dev.4919+d06c07bf"
-    "@melonproject/utils" "^2.0.1-dev.4919+d06c07bf"
+    "@melonproject/persistent" "^2.0.1-dev.4920+947f18dd"
+    "@melonproject/utils" "^2.0.1-dev.4920+947f18dd"
     ethers "^5.0.14"
 
-"@melonproject/utils@^2.0.1-dev.4919+d06c07bf":
-  version "2.0.1-dev.4919"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_Eir4x/%40melonproject%2Futils-2.0.1-dev.4919.tgz#f139c6be611439d80cc4d41bca3c78d21bca2185"
-  integrity sha1-8TnGvmEUOdgMxNQbyjx40hvKIYU=
+"@melonproject/utils@^2.0.1-dev.4920+947f18dd":
+  version "2.0.1-dev.4920"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_26T4It/%40melonproject%2Futils-2.0.1-dev.4920.tgz#43c43868bb725d75c23ea686ea3bf0bbf205e2cc"
+  integrity sha1-Q8Q4aLtyXXXCPqaG6jvwu/IF4sw=
   dependencies:
     "@crestproject/crestproject" "^0.0.50"
     ethers "^5.0.14"

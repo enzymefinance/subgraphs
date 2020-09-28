@@ -52,30 +52,17 @@ describe('Walkthrough', () => {
 
     const feeManagerConfig = await encodeArgs(['address[]', 'bytes[]'], [fees, feesSettingsData]);
 
-    const deployer = new FundDeployer(fundDeployer, signer);
-    await deployer.createNewFund
-      .args(signer.address, 'My Fund with Fees', deployment.wethToken, feeManagerConfig, '0x')
-      .send();
-
-    // // create fund with policies
-
+    // prepare policies
     const blacklistedTokens = [deployment.mlnToken];
     const assetBlacklistSettings = await encodeArgs(['address[]'], [blacklistedTokens]);
 
     const whitelistedTokens = [deployment.wethToken];
     const assetWhitelistSettings = await encodeArgs(['address[]'], [whitelistedTokens]);
 
-    const whitelistedInvestors = [randomAddress()];
-    const investorWhitelistSettings = await encodeArgs(['address[]'], [whitelistedInvestors]);
-
-    const policies = [deployment.assetBlacklist, deployment.assetWhitelist, deployment.investorWhitelist];
-    const policiesSettingsData = [assetBlacklistSettings, assetWhitelistSettings, investorWhitelistSettings];
+    const policies = [deployment.assetBlacklist, deployment.assetWhitelist];
+    const policiesSettingsData = [assetBlacklistSettings, assetWhitelistSettings];
 
     const policyManagerConfig = await encodeArgs(['address[]', 'bytes[]'], [policies, policiesSettingsData]);
-
-    await deployer.createNewFund
-      .args(signer.address, 'My Fund with Policies', deployment.wethToken, '0x', policyManagerConfig)
-      .send();
 
     // create fund
     const newFundArgs = {
@@ -84,8 +71,8 @@ describe('Walkthrough', () => {
       fundOwner: signer.address,
       denominationAsset: deployment.wethToken,
       fundName: 'My Super Fund',
-      feeManagerConfig: '0x',
-      policyManagerConfig: '0x',
+      feeManagerConfig,
+      policyManagerConfig,
     };
 
     const createNewFundTx = await createNewFund(newFundArgs);
@@ -159,5 +146,11 @@ describe('Walkthrough', () => {
     const transactionHash = redeemed.__receipt.transactionHash;
     const subgraphRedemption = await fetchRedemption(subgraphApi, transactionHash, redeemed.__receipt.blockNumber);
     expect(subgraphRedemption.transaction.id).toEqual(transactionHash);
+
+    // buy more shares
+    const buyMoreSharesTx = await buyShares(buySharesArgs);
+    const boughtMoreShares = await buyMoreSharesTx();
+
+    await waitForSubgraph(subgraphStatusEndpoint, boughtMoreShares.__receipt.blockNumber);
   });
 });
