@@ -831,6 +831,8 @@ type Fund @entity {
   sharesHistory: [Share!]! @derivedFrom(field: "fund")
   portfolio: Portfolio!
   portfolioHistory: [Portfolio!]! @derivedFrom(field: "fund")
+  feePayouts: FeePayout!
+  feePayoutsHistory: [FeePayout!]! @derivedFrom(field: "fund")
   state: State!
   stateHistory: [State!]! @derivedFrom(field: "fund")
   events: [FundEvent!]! @derivedFrom(field: "fund")
@@ -1032,6 +1034,24 @@ type State implements Metric @entity {
   timestamp: BigInt!
   shares: Share!
   portfolio: Portfolio!
-  # payouts: Payout!
+  feePayout: FeePayout!
+  events: [FundEvent!]!
+}
+
+type FeePayout implements Metric @entity {
+  id: ID!
+  fund: Fund!
+  timestamp: BigInt!
+  shares: BigDecimal!
+  payouts: [IndividualFeePayout!]!
+  events: [FundEvent!]!
+}
+
+type IndividualFeePayout implements Metric @entity {
+  id: ID!
+  fund: Fund!
+  timestamp: BigInt!
+  fee: Fee!
+  shares: BigDecimal!
   events: [FundEvent!]!
 }

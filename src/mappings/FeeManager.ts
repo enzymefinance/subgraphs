@@ -89,6 +89,7 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
   settled.save();
 
   trackFundShares(fund, event, settled);
+  // trackPayout(shares, reward, context);
 }
 
 export function handleSharesOutstandingPaidForFee(event: SharesOutstandingPaidForFee): void {
