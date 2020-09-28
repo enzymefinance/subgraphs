@@ -1,8 +1,11 @@
-import { useManager } from '../entities/Account';
+import { Address } from '@graphprotocol/graph-ts';
+import { ensureInvestor, useManager } from '../entities/Account';
 import { ensureComptroller, useComptroller } from '../entities/Comptroller';
 import { ensureContract } from '../entities/Contract';
 import { ensureFee, useFee } from '../entities/Fee';
 import { useFund } from '../entities/Fund';
+import { ensureInvestment } from '../entities/Investment';
+import { trackFundShares } from '../entities/Shares';
 import { ensureTransaction } from '../entities/Transaction';
 import { ComptrollerLibContract } from '../generated/ComptrollerLibContract';
 import {
@@ -65,7 +68,10 @@ export function handleFeeEnabledForFund(event: FeeEnabledForFund): void {
 
 export function handleFeeSettledForFund(event: FeeSettledForFund): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
+
   let fund = useFund(comptroller.getVaultProxy().toHex());
+  let investor = ensureInvestor(Address.fromString(fund.manager), event);
+  let investment = ensureInvestment(investor, fund);
 
   let settled = new FeeSettledForFundEvent(genericId(event));
   settled.contract = ensureContract(event.address, 'FeeManager', event).id;
@@ -73,12 +79,16 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
   settled.account = useManager(event.transaction.from.toHex()).id;
   settled.timestamp = event.block.timestamp;
   settled.transaction = ensureTransaction(event).id;
+  settled.investment = investment.id;
+  settled.shares = toBigDecimal(event.params.sharesDue);
   settled.comptrollerProxy = useComptroller(event.params.comptrollerProxy.toHex()).id;
   settled.fee = useFee(event.params.fee.toHex()).id;
   settled.payer = fund.id;
   settled.sharesDue = toBigDecimal(event.params.sharesDue);
   settled.payee = useManager(fund.manager).id;
   settled.save();
+
+  trackFundShares(fund, event, settled);
 }
 
 export function handleSharesOutstandingPaidForFee(event: SharesOutstandingPaidForFee): void {

@@ -140,20 +140,6 @@ type SharesRedeemedEvent implements Event & FundEvent & SharesChange @entity {
   transaction: Transaction!
 }
 
-# TODO: implement when fees are implemented in protocol
-
-# type SharesReward implements Event & SharesChange @entity {
-#   id: ID!
-#   fund: Fund!
-#   account: Account!
-#   contract: Contract!
-#   investor: Account!
-#   investment: Investment!
-#   shares: BigDecimal!
-#   timestamp: BigInt!
-#   transaction: Transaction!
-# }
-
 type AmguPaidEvent implements Event & FundEvent @entity {
   id: ID!
   fund: Fund!
@@ -328,13 +314,15 @@ type FeeEnabledForFundEvent implements Event & FundEvent @entity {
   settingsData: Bytes!
 }
 
-type FeeSettledForFundEvent implements Event & FundEvent @entity {
+type FeeSettledForFundEvent implements Event & FundEvent & SharesChange @entity {
   id: ID!
   contract: Contract!
   fund: Fund!
   account: Account!
   timestamp: BigInt!
   transaction: Transaction!
+  investment: Investment!
+  shares: BigDecimal!
   comptrollerProxy: Comptroller!
   fee: Fee!
   payer: Fund!
