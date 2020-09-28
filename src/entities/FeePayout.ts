@@ -19,7 +19,7 @@ export function createFeePayout(
   payout.timestamp = event.block.timestamp;
   payout.fund = fund.id;
   payout.shares = BigDecimal.fromString('0');
-  payout.payouts = feePayouts.map<string>((item) => item.id);
+  payout.individualPayouts = feePayouts.map<string>((item) => item.id);
   payout.events = cause ? [cause.getString('id')] : [];
   payout.save();
 
@@ -59,7 +59,9 @@ export function trackFeePayout(
   let feePayout = ensureFeePayout(fund, event, cause);
   feePayout.shares = feePayout.shares.plus(shares);
 
-  feePayout.payouts = feePayout.payouts.concat([trackIndividualFee(fund, fee, shares, event, cause).id]);
+  feePayout.individualPayouts = feePayout.individualPayouts.concat([
+    trackIndividualFee(fund, fee, shares, event, cause).id,
+  ]);
   feePayout.save();
 
   let state = ensureState(fund, event);

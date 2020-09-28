@@ -330,13 +330,15 @@ type FeeSettledForFundEvent implements Event & FundEvent & SharesChange @entity 
   sharesDue: BigDecimal!
 }
 
-type FeeSharesOutstandingPaidForFundEvent implements Event & FundEvent @entity {
+type FeeSharesOutstandingPaidForFundEvent implements Event & FundEvent & SharesChange @entity {
   id: ID!
   contract: Contract!
   fund: Fund!
   account: Account!
   timestamp: BigInt!
   transaction: Transaction!
+  investment: Investment!
+  shares: BigDecimal!
   comptrollerProxy: Comptroller!
   fee: Fee!
   payer: Fund!
@@ -546,7 +548,6 @@ type MaxConcentrationSetEvent implements Event & FundEvent @entity {
   value: BigDecimal!
 }
 
-# rename event to ManagementFeeSet
 type ManagementFeeSettingsAddedEvent implements Event & FundEvent @entity {
   id: ID!
   fund: Fund!
@@ -812,9 +813,7 @@ type Fund @entity {
   id: ID!
   name: String!
   inception: BigInt!
-  # Added as convenience, but it's the same as Release
   fundDeployer: FundDeployer!
-  # This is our accessor for this fund (only for this release)
   accessor: Comptroller!
   release: Release!
   status: String!
@@ -1043,7 +1042,7 @@ type FeePayout implements Metric @entity {
   fund: Fund!
   timestamp: BigInt!
   shares: BigDecimal!
-  payouts: [IndividualFeePayout!]!
+  individualPayouts: [IndividualFeePayout!]!
   events: [FundEvent!]!
 }
 
