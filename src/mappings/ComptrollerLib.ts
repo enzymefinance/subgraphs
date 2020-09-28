@@ -1,4 +1,4 @@
-import { BigDecimal, dataSource, log } from '@graphprotocol/graph-ts';
+import { BigDecimal, BigInt, dataSource, log } from '@graphprotocol/graph-ts';
 import { ensureAccount, ensureInvestor, useAccount } from '../entities/Account';
 import { useAsset, ensureAsset } from '../entities/Asset';
 import { ensureContract } from '../entities/Contract';
@@ -55,7 +55,14 @@ export function handleFundStatusUpdated(event: FundStatusUpdated): void {
   fundStatusUpdate.transaction = ensureTransaction(event).id;
   fundStatusUpdate.save();
 
-  fund.status = event.params.nextStatus == 0 ? 'None' : event.params.nextStatus == 1 ? 'Active' : 'Inactive';
+  fund.status =
+    event.params.nextStatus == 0
+      ? 'None'
+      : event.params.nextStatus == 1
+      ? 'Pending'
+      : event.params.nextStatus == 2
+      ? 'Active'
+      : 'Shutdown';
   fund.save();
 }
 

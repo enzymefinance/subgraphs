@@ -16,21 +16,21 @@ import { toBigDecimal } from '../utils/tokenValue';
 
 export function handleAdapterRegistered(event: AdapterRegistered): void {
   let registration = new AdapterRegisteredEvent(genericId(event));
-  registration.identifier = event.params.identifier.toHex();
   registration.contract = ensureContract(event.params.adapter, 'IntegrationManager', event).id;
   registration.timestamp = event.block.timestamp;
   registration.transaction = ensureTransaction(event).id;
   registration.integrationAdapter = ensureIntegrationAdapter(event.params.adapter).id;
+  registration.identifier = event.params.identifier.toHex();
   registration.save();
 }
 
 export function handleAdapterDeregistered(event: AdapterDeregistered): void {
   let deregistration = new AdapterDeregisteredEvent(genericId(event));
-  deregistration.identifier = event.params.identifier.toHex();
   deregistration.contract = ensureContract(event.params.adapter, 'IntegrationManager', event).id;
   deregistration.timestamp = event.block.timestamp;
   deregistration.transaction = ensureTransaction(event).id;
   deregistration.integrationAdapter = useIntegrationAdapter(event.params.adapter.toHex()).id;
+  deregistration.identifier = event.params.identifier.toHex();
   deregistration.save();
 }
 

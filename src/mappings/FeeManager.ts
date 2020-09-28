@@ -29,7 +29,7 @@ export function handleFeeRegistered(event: FeeRegistered): void {
   registered.timestamp = event.block.timestamp;
   registered.transaction = ensureTransaction(event).id;
   registered.fee = ensureFee(event.params.fee).id;
-  registered.identifier = event.params.identifier.toString();
+  registered.identifier = event.params.identifier.toHex();
   registered.save();
 }
 
@@ -39,6 +39,7 @@ export function handleFeeDeregistered(event: FeeDeregistered): void {
   deregistration.timestamp = event.block.timestamp;
   deregistration.transaction = ensureTransaction(event).id;
   deregistration.fee = useFee(event.params.fee.toHex()).id;
+  deregistration.identifier = event.params.identifier.toHex();
   deregistration.save();
 }
 
