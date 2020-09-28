@@ -20,7 +20,7 @@ import {
 } from '../generated/schema';
 import { ComptrollerLibDataSource, VaultLibDataSource } from '../generated/templates';
 import { genericId } from '../utils/genericId';
-import { toBigDecimal } from '../utils/tokenValue';
+import { toBigDecimal } from '../utils/toBigDecimal';
 
 export function handleNewFundDeployed(event: NewFundDeployed): void {
   let fundDeployment = new NewFundDeployedEvent(genericId(event));

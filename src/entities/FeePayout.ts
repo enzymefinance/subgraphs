@@ -5,7 +5,7 @@ import { logCritical } from '../utils/logCritical';
 import { trackIndividualFee } from './IndividualFeePayout';
 import { ensureState } from './State';
 
-export function payoutId(fund: Fund, event: ethereum.Event): string {
+function feePayoutId(fund: Fund, event: ethereum.Event): string {
   return fund.id + '/' + event.block.timestamp.toString() + '/payout';
 }
 
@@ -15,7 +15,7 @@ export function createFeePayout(
   event: ethereum.Event,
   cause: Entity | null,
 ): FeePayout {
-  let payout = new FeePayout(payoutId(fund, event));
+  let payout = new FeePayout(feePayoutId(fund, event));
   payout.timestamp = event.block.timestamp;
   payout.fund = fund.id;
   payout.shares = BigDecimal.fromString('0');
@@ -27,7 +27,7 @@ export function createFeePayout(
 }
 
 export function ensureFeePayout(fund: Fund, event: ethereum.Event, cause: Entity): FeePayout {
-  let feePayout = FeePayout.load(payoutId(fund, event)) as FeePayout;
+  let feePayout = FeePayout.load(feePayoutId(fund, event)) as FeePayout;
 
   if (!feePayout) {
     feePayout = createFeePayout([], fund, event, cause);

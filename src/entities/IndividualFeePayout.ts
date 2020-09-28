@@ -3,7 +3,7 @@ import { Fee, Fund, IndividualFeePayout } from '../generated/schema';
 import { arrayUnique } from '../utils/arrayUnique';
 import { logCritical } from '../utils/logCritical';
 
-function feePayoutId(fund: Fund, fee: Fee, event: ethereum.Event): string {
+function individualFeePayoutId(fund: Fund, fee: Fee, event: ethereum.Event): string {
   return fund.id + '/' + event.block.timestamp.toString() + '/payout/' + fee.identifier;
 }
 
@@ -14,7 +14,7 @@ function createIndividualFeePayout(
   event: ethereum.Event,
   cause: Entity,
 ): IndividualFeePayout {
-  let feePayout = new IndividualFeePayout(feePayoutId(fund, fee, event));
+  let feePayout = new IndividualFeePayout(individualFeePayoutId(fund, fee, event));
   feePayout.timestamp = event.block.timestamp;
   feePayout.fund = fund.id;
   feePayout.fee = fee.id;
@@ -32,7 +32,7 @@ export function ensureIndividualFeePayout(
   event: ethereum.Event,
   cause: Entity,
 ): IndividualFeePayout {
-  let feePayout = IndividualFeePayout.load(feePayoutId(fund, fee, event)) as IndividualFeePayout;
+  let feePayout = IndividualFeePayout.load(individualFeePayoutId(fund, fee, event)) as IndividualFeePayout;
 
   if (!feePayout) {
     feePayout = createIndividualFeePayout(fund, fee, shares, event, cause);

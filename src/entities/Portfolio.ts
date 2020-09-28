@@ -3,7 +3,7 @@ import { Asset, Fund, Holding, Portfolio } from '../generated/schema';
 import { VaultLibContract } from '../generated/VaultLibContract';
 import { arrayUnique } from '../utils/arrayUnique';
 import { logCritical } from '../utils/logCritical';
-import { toBigDecimal } from '../utils/tokenValue';
+import { toBigDecimal } from '../utils/toBigDecimal';
 import { useAsset } from './Asset';
 import { ensureState, useState } from './State';
 

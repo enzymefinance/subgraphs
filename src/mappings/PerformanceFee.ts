@@ -9,7 +9,7 @@ import { ActivatedForFund, FundSettingsAdded, PaidOut, PerformanceUpdated } from
 import { PerformanceFeeSettingsAddedEvent } from '../generated/schema';
 import { arrayUnique } from '../utils/arrayUnique';
 import { genericId } from '../utils/genericId';
-import { toBigDecimal } from '../utils/tokenValue';
+import { toBigDecimal } from '../utils/toBigDecimal';
 
 export function handleActivatedForFund(event: ActivatedForFund): void {}
 

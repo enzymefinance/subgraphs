@@ -25,7 +25,7 @@ import {
 } from '../generated/schema';
 import { arrayUnique } from '../utils/arrayUnique';
 import { genericId } from '../utils/genericId';
-import { toBigDecimal } from '../utils/tokenValue';
+import { toBigDecimal } from '../utils/toBigDecimal';
 
 export function handleFeeRegistered(event: FeeRegistered): void {
   let registered = new FeeRegisteredEvent(genericId(event));

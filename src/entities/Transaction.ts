@@ -1,7 +1,7 @@
 import { ethereum, crypto } from '@graphprotocol/graph-ts';
 import { Transaction } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
-import { toBigDecimal } from '../utils/tokenValue';
+import { toBigDecimal } from '../utils/toBigDecimal';
 
 export function transactionId(tx: ethereum.Transaction): string {
   return tx.hash.toHex();

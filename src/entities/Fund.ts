@@ -30,8 +30,6 @@ export function createFund(event: NewFundDeployed): Fund {
   let feePayout = createFeePayout([], fund, event, null);
   let state = createState(shares, portfolio, feePayout, fund, event);
 
-  // let fees = createFees(context);
-
   fund.name = event.params.fundName;
   fund.inception = event.block.timestamp;
   fund.fundDeployer = ensureFundDeployer(event.address).id;

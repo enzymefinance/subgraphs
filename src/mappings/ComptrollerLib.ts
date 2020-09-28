@@ -23,7 +23,7 @@ import {
   SharesRedeemedEvent,
 } from '../generated/schema';
 import { genericId } from '../utils/genericId';
-import { toBigDecimal } from '../utils/tokenValue';
+import { toBigDecimal } from '../utils/toBigDecimal';
 
 export function handleAmguPaid(event: AmguPaid): void {
   let amguPaid = new AmguPaidEvent(genericId(event));
@@ -101,7 +101,6 @@ export function handleSharesBought(event: SharesBought): void {
 
   trackFundPortfolio(fund, event, addition);
   trackFundShares(fund, event, addition);
-  // trackFundInvestments(event, fund, addition);
 }
 
 export function handleSharesRedeemed(event: SharesRedeemed): void {
@@ -136,5 +135,4 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
 
   trackFundPortfolio(fund, event, redemption);
   trackFundShares(fund, event, redemption);
-  // trackFundInvestments(event, fund, redemption);
 }

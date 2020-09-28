@@ -10,7 +10,7 @@ import { FundSettingsAdded, Settled } from '../generated/ManagementFeeContract';
 import { ManagementFeeSettingsAddedEvent, ManagementFeeSettledEvent } from '../generated/schema';
 import { arrayUnique } from '../utils/arrayUnique';
 import { genericId } from '../utils/genericId';
-import { toBigDecimal } from '../utils/tokenValue';
+import { toBigDecimal } from '../utils/toBigDecimal';
 
 export function handleFundSettingsAdded(event: FundSettingsAdded): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);

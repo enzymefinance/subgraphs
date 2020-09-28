@@ -3,7 +3,7 @@ import { ethereum, BigDecimal, Entity, Address } from '@graphprotocol/graph-ts';
 import { logCritical } from '../utils/logCritical';
 import { arrayUnique } from '../utils/arrayUnique';
 import { useState, ensureState } from './State';
-import { toBigDecimal } from '../utils/tokenValue';
+import { toBigDecimal } from '../utils/toBigDecimal';
 import { StandardERC20Contract } from '../generated/StandardERC20Contract';
 
 export function shareId(fund: Fund, event: ethereum.Event): string {

@@ -6,7 +6,7 @@ import { ensureTransaction } from '../entities/Transaction';
 import { AnswerUpdated, NewRound } from '../generated/AggregatorInterface';
 import { AnswerUpdatedEvent, AssetPrice } from '../generated/schema';
 import { genericId } from '../utils/genericId';
-import { toBigDecimal } from '../utils/tokenValue';
+import { toBigDecimal } from '../utils/toBigDecimal';
 
 export function handleAnswerUpdated(event: AnswerUpdated): void {
   let assetId = dataSource.context().getString('asset');
