@@ -1,8 +1,12 @@
-import { useManager } from '../entities/Account';
+import { Address } from '@graphprotocol/graph-ts';
+import { ensureInvestor, useManager } from '../entities/Account';
 import { ensureComptroller, useComptroller } from '../entities/Comptroller';
-import { ensureContract } from '../entities/Contract';
+import { ensureContract, useContract } from '../entities/Contract';
 import { ensureFee, useFee } from '../entities/Fee';
+import { trackFeePayout } from '../entities/FeePayout';
 import { useFund } from '../entities/Fund';
+import { ensureInvestment } from '../entities/Investment';
+import { trackFundShares } from '../entities/Shares';
 import { ensureTransaction } from '../entities/Transaction';
 import { ComptrollerLibContract } from '../generated/ComptrollerLibContract';
 import {
@@ -21,7 +25,7 @@ import {
 } from '../generated/schema';
 import { arrayUnique } from '../utils/arrayUnique';
 import { genericId } from '../utils/genericId';
-import { toBigDecimal } from '../utils/tokenValue';
+import { toBigDecimal } from '../utils/toBigDecimal';
 
 export function handleFeeRegistered(event: FeeRegistered): void {
   let registered = new FeeRegisteredEvent(genericId(event));
@@ -65,36 +69,55 @@ export function handleFeeEnabledForFund(event: FeeEnabledForFund): void {
 
 export function handleFeeSettledForFund(event: FeeSettledForFund): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
+
   let fund = useFund(comptroller.getVaultProxy().toHex());
+  let investor = ensureInvestor(Address.fromString(fund.manager), event);
+  let investment = ensureInvestment(investor, fund);
+  let fee = useFee(event.params.fee.toHex());
+  let shares = toBigDecimal(event.params.sharesDue);
 
   let settled = new FeeSettledForFundEvent(genericId(event));
-  settled.contract = ensureContract(event.address, 'FeeManager', event).id;
+  settled.contract = useContract(event.address.toHex()).id;
   settled.fund = fund.id;
   settled.account = useManager(event.transaction.from.toHex()).id;
   settled.timestamp = event.block.timestamp;
   settled.transaction = ensureTransaction(event).id;
+  settled.investment = investment.id;
+  settled.shares = shares;
   settled.comptrollerProxy = useComptroller(event.params.comptrollerProxy.toHex()).id;
-  settled.fee = useFee(event.params.fee.toHex()).id;
+  settled.fee = fee.id;
   settled.payer = fund.id;
-  settled.sharesDue = toBigDecimal(event.params.sharesDue);
+  settled.sharesDue = shares;
   settled.payee = useManager(fund.manager).id;
   settled.save();
+
+  trackFundShares(fund, event, settled);
+  trackFeePayout(fund, fee, shares, event, settled);
 }
 
 export function handleSharesOutstandingPaidForFee(event: SharesOutstandingPaidForFee): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let fund = useFund(comptroller.getVaultProxy().toHex());
+  let investor = ensureInvestor(Address.fromString(fund.manager), event);
+  let investment = ensureInvestment(investor, fund);
+  let fee = useFee(event.params.fee.toHex());
+  let shares = toBigDecimal(event.params.sharesDue);
 
   let sharesPaid = new FeeSharesOutstandingPaidForFundEvent(genericId(event));
-  sharesPaid.contract = ensureContract(event.address, 'FeeManager', event).id;
+  sharesPaid.contract = useContract(event.address.toHex()).id;
   sharesPaid.fund = fund.id;
   sharesPaid.account = useManager(event.transaction.from.toHex()).id;
   sharesPaid.timestamp = event.block.timestamp;
   sharesPaid.transaction = ensureTransaction(event).id;
+  sharesPaid.investment = investment.id;
+  sharesPaid.shares = shares;
   sharesPaid.comptrollerProxy = useComptroller(event.params.comptrollerProxy.toHex()).id;
-  sharesPaid.fee = useFee(event.params.fee.toHex()).id;
+  sharesPaid.fee = fee.id;
   sharesPaid.payer = fund.id;
   sharesPaid.sharesDue = toBigDecimal(event.params.sharesDue);
   sharesPaid.payee = useManager(fund.manager).id;
   sharesPaid.save();
+
+  trackFundShares(fund, event, sharesPaid);
+  trackFeePayout(fund, fee, shares, event, sharesPaid);
 }

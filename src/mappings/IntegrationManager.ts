@@ -12,7 +12,7 @@ import {
 } from '../generated/IntegrationManagerContract';
 import { AdapterDeregisteredEvent, AdapterRegisteredEvent, CallOnIntegrationExecutedEvent } from '../generated/schema';
 import { genericId } from '../utils/genericId';
-import { toBigDecimal } from '../utils/tokenValue';
+import { toBigDecimal } from '../utils/toBigDecimal';
 
 export function handleAdapterRegistered(event: AdapterRegistered): void {
   let registration = new AdapterRegisteredEvent(genericId(event));

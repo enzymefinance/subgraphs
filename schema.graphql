@@ -140,20 +140,6 @@ type SharesRedeemedEvent implements Event & FundEvent & SharesChange @entity {
   transaction: Transaction!
 }
 
-# TODO: implement when fees are implemented in protocol
-
-# type SharesReward implements Event & SharesChange @entity {
-#   id: ID!
-#   fund: Fund!
-#   account: Account!
-#   contract: Contract!
-#   investor: Account!
-#   investment: Investment!
-#   shares: BigDecimal!
-#   timestamp: BigInt!
-#   transaction: Transaction!
-# }
-
 type AmguPaidEvent implements Event & FundEvent @entity {
   id: ID!
   fund: Fund!
@@ -328,13 +314,15 @@ type FeeEnabledForFundEvent implements Event & FundEvent @entity {
   settingsData: Bytes!
 }
 
-type FeeSettledForFundEvent implements Event & FundEvent @entity {
+type FeeSettledForFundEvent implements Event & FundEvent & SharesChange @entity {
   id: ID!
   contract: Contract!
   fund: Fund!
   account: Account!
   timestamp: BigInt!
   transaction: Transaction!
+  investment: Investment!
+  shares: BigDecimal!
   comptrollerProxy: Comptroller!
   fee: Fee!
   payer: Fund!
@@ -342,13 +330,15 @@ type FeeSettledForFundEvent implements Event & FundEvent @entity {
   sharesDue: BigDecimal!
 }
 
-type FeeSharesOutstandingPaidForFundEvent implements Event & FundEvent @entity {
+type FeeSharesOutstandingPaidForFundEvent implements Event & FundEvent & SharesChange @entity {
   id: ID!
   contract: Contract!
   fund: Fund!
   account: Account!
   timestamp: BigInt!
   transaction: Transaction!
+  investment: Investment!
+  shares: BigDecimal!
   comptrollerProxy: Comptroller!
   fee: Fee!
   payer: Fund!
@@ -558,7 +548,6 @@ type MaxConcentrationSetEvent implements Event & FundEvent @entity {
   value: BigDecimal!
 }
 
-# rename event to ManagementFeeSet
 type ManagementFeeSettingsAddedEvent implements Event & FundEvent @entity {
   id: ID!
   fund: Fund!
@@ -824,9 +813,7 @@ type Fund @entity {
   id: ID!
   name: String!
   inception: BigInt!
-  # Added as convenience, but it's the same as Release
   fundDeployer: FundDeployer!
-  # This is our accessor for this fund (only for this release)
   accessor: Comptroller!
   release: Release!
   status: String!
@@ -843,6 +830,8 @@ type Fund @entity {
   sharesHistory: [Share!]! @derivedFrom(field: "fund")
   portfolio: Portfolio!
   portfolioHistory: [Portfolio!]! @derivedFrom(field: "fund")
+  feePayout: FeePayout!
+  feePayoutHistory: [FeePayout!]! @derivedFrom(field: "fund")
   state: State!
   stateHistory: [State!]! @derivedFrom(field: "fund")
   events: [FundEvent!]! @derivedFrom(field: "fund")
@@ -1044,6 +1033,24 @@ type State implements Metric @entity {
   timestamp: BigInt!
   shares: Share!
   portfolio: Portfolio!
-  # payouts: Payout!
+  feePayout: FeePayout!
+  events: [FundEvent!]!
+}
+
+type FeePayout implements Metric @entity {
+  id: ID!
+  fund: Fund!
+  timestamp: BigInt!
+  shares: BigDecimal!
+  individualPayouts: [IndividualFeePayout!]!
+  events: [FundEvent!]!
+}
+
+type IndividualFeePayout implements Metric @entity {
+  id: ID!
+  fund: Fund!
+  timestamp: BigInt!
+  fee: Fee!
+  shares: BigDecimal!
   events: [FundEvent!]!
 }

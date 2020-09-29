@@ -17,7 +17,7 @@ import {
   MlnTokensBurnedEvent,
 } from '../generated/schema';
 import { genericId } from '../utils/genericId';
-import { toBigDecimal } from '../utils/tokenValue';
+import { toBigDecimal } from '../utils/toBigDecimal';
 
 export function handleAmguPaidInEther(event: AmguPaidInEther): void {
   let amguPayment = new AmguPaidInEtherEvent(genericId(event));

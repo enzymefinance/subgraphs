@@ -29,7 +29,7 @@ import {
 import { arrayDiff } from '../utils/arrayDiff';
 import { arrayUnique } from '../utils/arrayUnique';
 import { genericId } from '../utils/genericId';
-import { toBigDecimal } from '../utils/tokenValue';
+import { toBigDecimal } from '../utils/toBigDecimal';
 
 export function handleAccessorSet(event: AccessorSet): void {
   let accessorSet = new AccessorSetEvent(genericId(event));

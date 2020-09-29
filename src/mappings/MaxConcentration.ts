@@ -9,7 +9,7 @@ import { MaxConcentrationSet } from '../generated/MaxConcentrationContract';
 import { MaxConcentrationSetEvent } from '../generated/schema';
 import { arrayUnique } from '../utils/arrayUnique';
 import { genericId } from '../utils/genericId';
-import { toBigDecimal } from '../utils/tokenValue';
+import { toBigDecimal } from '../utils/toBigDecimal';
 
 export function handleMaxConcentrationSet(event: MaxConcentrationSet): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);

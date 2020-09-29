@@ -1,15 +1,16 @@
 import { ensureManager } from '../entities/Account';
 import { useComptroller } from '../entities/Comptroller';
-import { ensureContract } from '../entities/Contract';
+import { ensureContract, useContract } from '../entities/Contract';
 import { useFee } from '../entities/Fee';
+import { useFund } from '../entities/Fund';
 import { ensureManagementFeeSetting } from '../entities/ManagementFeeSetting';
 import { ensureTransaction } from '../entities/Transaction';
 import { ComptrollerLibContract } from '../generated/ComptrollerLibContract';
 import { FundSettingsAdded, Settled } from '../generated/ManagementFeeContract';
-import { ManagementFeeSettingsAddedEvent } from '../generated/schema';
+import { ManagementFeeSettingsAddedEvent, ManagementFeeSettledEvent } from '../generated/schema';
 import { arrayUnique } from '../utils/arrayUnique';
 import { genericId } from '../utils/genericId';
-import { toBigDecimal } from '../utils/tokenValue';
+import { toBigDecimal } from '../utils/toBigDecimal';
 
 export function handleFundSettingsAdded(event: FundSettingsAdded): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
@@ -34,4 +35,17 @@ export function handleFundSettingsAdded(event: FundSettingsAdded): void {
   setting.save();
 }
 
-export function handleSettled(event: Settled): void {}
+export function handleSettled(event: Settled): void {
+  let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
+
+  let settled = new ManagementFeeSettledEvent(genericId(event));
+  settled.fund = useFund(comptroller.getVaultProxy().toHex()).id;
+  settled.account = ensureManager(event.transaction.from, event).id;
+  settled.contract = useContract(event.address.toHex()).id;
+  settled.timestamp = event.block.timestamp;
+  settled.transaction = ensureTransaction(event).id;
+  settled.comptrollerProxy = useComptroller(event.params.comptrollerProxy.toHex()).id;
+  settled.sharesDue = toBigDecimal(event.params.sharesQuantity);
+  settled.prevSettled = event.params.prevSettled;
+  settled.save();
+}
