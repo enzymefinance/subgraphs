@@ -40,7 +40,7 @@ export function createFund(event: NewFundDeployed): Fund {
   fund.trackedAssets = [];
   fund.shares = shares.id;
   fund.portfolio = portfolio.id;
-  fund.feePayouts = feePayout.id;
+  fund.feePayout = feePayout.id;
   fund.state = state.id;
   fund.status = 'Active';
   fund.denominationAsset = ensureAsset(event.params.denominationAsset).id;

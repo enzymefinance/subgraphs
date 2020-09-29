@@ -830,8 +830,8 @@ type Fund @entity {
   sharesHistory: [Share!]! @derivedFrom(field: "fund")
   portfolio: Portfolio!
   portfolioHistory: [Portfolio!]! @derivedFrom(field: "fund")
-  feePayouts: FeePayout!
-  feePayoutsHistory: [FeePayout!]! @derivedFrom(field: "fund")
+  feePayout: FeePayout!
+  feePayoutHistory: [FeePayout!]! @derivedFrom(field: "fund")
   state: State!
   stateHistory: [State!]! @derivedFrom(field: "fund")
   events: [FundEvent!]! @derivedFrom(field: "fund")

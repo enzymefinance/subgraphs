@@ -70,7 +70,7 @@ export function trackFeePayout(
   state.feePayout = feePayout.id;
   state.save();
 
-  fund.feePayouts = feePayout.id;
+  fund.feePayout = feePayout.id;
   fund.save();
 
   return feePayout;
