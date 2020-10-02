@@ -103,14 +103,27 @@ yargs
     async (args) => {
       const deploymentJson = await (await request<Result>(args.deployment, query)).deployment;
 
-      const templateFile = path.join(__dirname, '..', 'subgraph.template.yml');
-      const subgraphFile = path.join(__dirname, '..', 'subgraph.yaml');
-      const templateContent = fs.readFileSync(templateFile, 'utf8');
+      {
+        const templateFile = path.join(__dirname, '../templates/subgraph.yml');
+        const subgraphFile = path.join(__dirname, '../subgraph.yaml');
+        const templateContent = fs.readFileSync(templateFile, 'utf8');
 
-      const compile = handlebars.compile(templateContent);
-      const replaced = compile(deploymentJson);
+        const compile = handlebars.compile(templateContent);
+        const replaced = compile(deploymentJson);
 
-      fs.writeFileSync(subgraphFile, replaced);
+        fs.writeFileSync(subgraphFile, replaced);
+      }
+
+      {
+        const templateFile = path.join(__dirname, '../templates/addresses.ts');
+        const subgraphFile = path.join(__dirname, '../src/addresses.ts');
+        const templateContent = fs.readFileSync(templateFile, 'utf8');
+
+        const compile = handlebars.compile(templateContent);
+        const replaced = compile(deploymentJson);
+
+        fs.writeFileSync(subgraphFile, replaced);
+      }
     },
   )
   .help().argv;

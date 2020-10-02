@@ -1,12 +1,6 @@
-import { BigDecimal, ethereum } from '@graphprotocol/graph-ts';
-import { Account, Asset, Fund, Investment } from '../generated/schema';
+import { BigDecimal } from '@graphprotocol/graph-ts';
+import { Account, Fund, Investment } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
-import { useFund } from './Fund';
-import { trackFundPortfolio } from './Portfolio';
-import { trackFundShares } from './Shares';
-import { ensureTransaction } from './Transaction';
-import { ensureContract } from './Contract';
-import { genericId } from '../utils/genericId';
 
 function investmentId(investor: Account, fund: Fund): string {
   return fund.id + '/' + investor.id;

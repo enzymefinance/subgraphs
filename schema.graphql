@@ -67,7 +67,7 @@ type NewFundDeployedEvent implements Event & FundEvent @entity {
   account: Account!
   contract: Contract!
   timestamp: BigInt!
-  comptrollerProxy: Comptroller!
+  comptrollerProxy: Contract!
   vaultProxy: Fund!
   caller: Account!
   fundOwner: Account!
@@ -84,7 +84,7 @@ type ComptrollerProxyDeployedEvent implements Event & FundEvent @entity {
   account: Account!
   contract: Contract!
   timestamp: BigInt!
-  comptrollerProxy: Comptroller!
+  comptrollerProxy: Contract!
   transaction: Transaction!
 }
 
@@ -310,7 +310,7 @@ type FeeEnabledForFundEvent implements Event & FundEvent @entity {
   timestamp: BigInt!
   transaction: Transaction!
   fee: Fee!
-  comptrollerProxy: Comptroller!
+  comptrollerProxy: Contract!
   settingsData: Bytes!
 }
 
@@ -323,7 +323,7 @@ type FeeSettledForFundEvent implements Event & FundEvent & SharesChange @entity 
   transaction: Transaction!
   investment: Investment!
   shares: BigDecimal!
-  comptrollerProxy: Comptroller!
+  comptrollerProxy: Contract!
   fee: Fee!
   payer: Fund!
   payee: Account!
@@ -339,7 +339,7 @@ type FeeSharesOutstandingPaidForFundEvent implements Event & FundEvent & SharesC
   transaction: Transaction!
   investment: Investment!
   shares: BigDecimal!
-  comptrollerProxy: Comptroller!
+  comptrollerProxy: Contract!
   fee: Fee!
   payer: Fund!
   payee: Account!
@@ -361,8 +361,8 @@ type AccessorSetEvent implements Event & FundEvent @entity {
   contract: Contract!
   fund: Fund!
   account: Account!
-  prevAccessor: Comptroller
-  nextAccessor: Comptroller!
+  prevAccessor: Contract
+  nextAccessor: Contract!
   transaction: Transaction!
   timestamp: BigInt!
 }
@@ -385,7 +385,7 @@ type MigratorSetEvent implements Event & FundEvent @entity {
   contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  prevMigrator: Account!
+  prevMigrator: Account
   nextMigrator: Account!
 }
 
@@ -396,8 +396,8 @@ type VaultLibSetEvent implements Event & FundEvent @entity {
   contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  prevVaultLib: String!
-  nextVaultLib: String!
+  prevVaultLib: Contract
+  nextVaultLib: Contract!
 }
 
 #  approvals will only be applicable if and when the transfer of fund shares is allowed.
@@ -434,7 +434,7 @@ type AdapterBlacklistAddressesAddedEvent implements Event & FundEvent @entity {
   contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: Comptroller!
+  comptrollerProxy: Contract!
   items: [IntegrationAdapter!]!
 }
 
@@ -445,7 +445,7 @@ type AdapterBlacklistAddressesRemovedEvent implements Event & FundEvent @entity 
   contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: Comptroller!
+  comptrollerProxy: Contract!
   items: [IntegrationAdapter!]!
 }
 
@@ -456,7 +456,7 @@ type AdapterWhitelistAddressesAddedEvent implements Event & FundEvent @entity {
   contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: Comptroller!
+  comptrollerProxy: Contract!
   items: [IntegrationAdapter!]!
 }
 
@@ -467,7 +467,7 @@ type AdapterWhitelistAddressesRemovedEvent implements Event & FundEvent @entity 
   contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: Comptroller!
+  comptrollerProxy: Contract!
   items: [IntegrationAdapter!]!
 }
 
@@ -478,7 +478,7 @@ type AssetBlacklistAddressesAddedEvent implements Event & FundEvent @entity {
   contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: Comptroller!
+  comptrollerProxy: Contract!
   items: [Asset!]!
 }
 
@@ -489,7 +489,7 @@ type AssetBlacklistAddressesRemovedEvent implements Event & FundEvent @entity {
   contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: Comptroller!
+  comptrollerProxy: Contract!
   items: [Asset!]!
 }
 
@@ -500,7 +500,7 @@ type AssetWhitelistAddressesAddedEvent implements Event & FundEvent @entity {
   contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: Comptroller!
+  comptrollerProxy: Contract!
   items: [Asset!]!
 }
 
@@ -511,7 +511,7 @@ type AssetWhitelistAddressesRemovedEvent implements Event & FundEvent @entity {
   contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: Comptroller!
+  comptrollerProxy: Contract!
   items: [Asset!]!
 }
 
@@ -522,7 +522,7 @@ type InvestorWhitelistAddressesAddedEvent implements Event & FundEvent @entity {
   contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: Comptroller!
+  comptrollerProxy: Contract!
   items: [Account!]!
 }
 
@@ -533,7 +533,7 @@ type InvestorWhitelistAddressesRemovedEvent implements Event & FundEvent @entity
   contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: Comptroller!
+  comptrollerProxy: Contract!
   items: [Account!]!
 }
 
@@ -544,7 +544,7 @@ type MaxConcentrationSetEvent implements Event & FundEvent @entity {
   contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: Comptroller!
+  comptrollerProxy: Contract!
   value: BigDecimal!
 }
 
@@ -555,7 +555,7 @@ type ManagementFeeSettingsAddedEvent implements Event & FundEvent @entity {
   contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: Comptroller!
+  comptrollerProxy: Contract!
   rate: BigDecimal!
 }
 
@@ -566,7 +566,7 @@ type ManagementFeeSettledEvent implements Event & FundEvent @entity {
   contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: Comptroller!
+  comptrollerProxy: Contract!
   sharesDue: BigDecimal!
   prevSettled: BigInt!
 }
@@ -578,7 +578,7 @@ type PerformanceFeeSettingsAddedEvent implements Event & FundEvent @entity {
   contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: Comptroller!
+  comptrollerProxy: Contract!
   rate: BigDecimal!
   period: BigInt!
 }
@@ -595,10 +595,10 @@ type VaultProxyDeployedEvent implements Event & FundEvent & NetworkEvent @entity
   contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  fundDeployer: FundDeployer!
+  fundDeployer: Contract!
   owner: Account!
-  vaultLib: VaultLib!
-  accessor: Comptroller!
+  vaultLib: Contract!
+  accessor: Contract!
   fundName: String!
 }
 
@@ -642,8 +642,8 @@ type FundDeployerSetEvent implements Event & NetworkEvent @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
-  nextFundDeployer: FundDeployer!
-  prevFundDeployer: FundDeployer
+  nextFundDeployer: Contract!
+  prevFundDeployer: Contract
   transaction: Transaction!
 }
 
@@ -709,10 +709,9 @@ type PriceFeedSetEvent implements Event & NetworkEvent @entity {
   contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-
   derivative: Asset!
-  nextPriceFeed: PriceFeed!
-  prevPriceFeed: PriceFeed
+  nextPriceFeed: String!
+  prevPriceFeed: String!
 }
 
 type AggregatorSetEvent implements Event & NetworkEvent @entity {
@@ -720,10 +719,9 @@ type AggregatorSetEvent implements Event & NetworkEvent @entity {
   contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-
   primitive: Asset!
-  nextPriceFeed: PriceFeed!
-  prevPriceFeed: PriceFeed
+  nextPriceFeed: String!
+  prevPriceFeed: String!
 }
 
 type FeeRegisteredEvent implements Event & NetworkEvent @entity {
@@ -740,18 +738,17 @@ type FeeDeregisteredEvent implements Event & NetworkEvent @entity {
   contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-
   fee: Fee!
   identifier: String!
 }
 
-type AnswerUpdatedEvent implements Event & NetworkEvent @entity {
+type ChainlinkAggregatorAnswerUpdatedEvent implements Event & NetworkEvent @entity {
   id: ID!
   contract: Contract!
+  aggregator: ChainlinkAggregator!
   timestamp: BigInt!
   transaction: Transaction!
   asset: Asset!
-
   current: BigDecimal!
   roundId: BigInt!
   updatedAt: BigInt!
@@ -760,11 +757,6 @@ type AnswerUpdatedEvent implements Event & NetworkEvent @entity {
 #################################################
 # High-level entities
 #################################################
-
-type IntegrationAdapter @entity {
-  id: ID!
-  identifier: String!
-}
 
 type Transaction @entity {
   id: ID!
@@ -783,48 +775,22 @@ type Transaction @entity {
 type Contract @entity {
   id: ID!
   name: String!
-  timestamp: BigInt!
   events: [Event!]! @derivedFrom(field: "contract")
-}
-
-type FundDeployer @entity {
-  id: ID!
-  release: Release! @derivedFrom(field: "fundDeployer")
-  funds: [Fund!]! @derivedFrom(field: "fundDeployer")
-}
-
-type Comptroller @entity {
-  id: ID!
-}
-
-type VaultLib @entity {
-  id: ID!
-}
-
-type ComptrollerLib @entity {
-  id: ID!
-}
-
-type Dispatcher @entity {
-  id: ID!
 }
 
 type Fund @entity {
   id: ID!
+  accessor: String!
   name: String!
   inception: BigInt!
-  fundDeployer: FundDeployer!
-  accessor: Comptroller!
   release: Release!
   status: String!
   manager: Account!
   migrator: String
   denominationAsset: Asset!
   trackedAssets: [Asset!]!
-  policies: [Policy!]! @derivedFrom(field: "funds")
-  policySettings: [PolicySetting!]! @derivedFrom(field: "fund")
-  fees: [Fee!]! @derivedFrom(field: "funds")
-  feeSettings: [FeeSetting!]! @derivedFrom(field: "fund")
+  policies: [PolicySetting!]! @derivedFrom(field: "fund")
+  fees: [FeeSetting!]! @derivedFrom(field: "fund")
   investments: [Investment!]! @derivedFrom(field: "fund")
   shares: Share!
   sharesHistory: [Share!]! @derivedFrom(field: "fund")
@@ -847,29 +813,14 @@ type Migration @entity {
   signalTimestamp: BigInt!
   executed: Boolean!
   cancelled: Boolean!
-  nextAccessor: Comptroller!
+  nextAccessor: String!
 }
 
 type Release @entity {
-  # This ID is the FundDeployer address
   id: ID!
-  # Gets updated when new FundDeployer is deployed (handleCurrentFundDeployerSet event)
   current: Boolean!
   currentStart: BigInt!
   currentEnd: BigInt
-  # Same as the ID, added as a convenience
-  fundDeployer: FundDeployer!
-  # This is shared by all funds on same release
-  comptrollerLib: ComptrollerLib!
-  vaultLib: VaultLib!
-  dispatcher: Dispatcher!
-  engine: Contract!
-  derivativePriceFeed: PriceFeed!
-  feeManager: Contract!
-  integrationManager: Contract!
-  policyManager: Contract!
-  primitivePriceFeed: PriceFeed!
-  valueInterpreter: Contract!
   funds: [Fund!] @derivedFrom(field: "release")
 }
 
@@ -889,31 +840,6 @@ type Investment @entity {
   investor: Account!
   changes: [SharesChange!]! @derivedFrom(field: "investment")
   shares: BigDecimal!
-}
-
-type Asset @entity {
-  id: ID!
-  name: String!
-  symbol: String!
-  decimals: Int!
-  isDerivative: Boolean!
-  derivedFrom: [Asset!]
-  prices: [AssetPrice!]! @derivedFrom(field: "asset")
-  priceFeed: PriceFeed!
-  fundsDenomination: [Fund!]! @derivedFrom(field: "denominationAsset")
-  fundsTracking: [Fund!]!
-}
-
-type PriceFeed @entity {
-  id: ID!
-  assets: [Asset!]!
-}
-
-type AssetPrice @entity {
-  id: ID!
-  asset: Asset!
-  price: BigDecimal!
-  timestamp: BigInt!
 }
 
 type Fee @entity {
@@ -939,6 +865,11 @@ type PerformanceFeeSetting implements FeeSetting @entity {
   period: BigInt!
   timestamp: BigInt!
   events: [FundEvent!]!
+}
+
+type IntegrationAdapter @entity {
+  id: ID!
+  identifier: String!
 }
 
 type Policy @entity {
@@ -1053,4 +984,123 @@ type IndividualFeePayout implements Metric @entity {
   fee: Fee!
   shares: BigDecimal!
   events: [FundEvent!]!
+}
+
+#################################################
+# Assets and prices
+#################################################
+
+type Asset @entity {
+  id: ID!
+  name: String!
+  symbol: String!
+  decimals: Int!
+  active: Boolean!
+
+  # Latest price and candles
+  price: AssetPrice
+  hourlyCandle: HourlyAssetPriceCandle
+  dailyCandle: DailyAssetPriceCandle
+  weeklyCandle: WeeklyAssetPriceCandle
+
+  # Historical prices and candles
+  priceHistory: [AssetPrice!]! @derivedFrom(field: "asset")
+  hourlyCandleHistory: [HourlyAssetPriceCandle!]! @derivedFrom(field: "asset")
+  dailyCandleHistory: [DailyAssetPriceCandle!]! @derivedFrom(field: "asset")
+  weeklyCandleHistory: [WeeklyAssetPriceCandle!]! @derivedFrom(field: "asset")
+
+  # Fund references
+  denominatedFunds: [Fund!]! @derivedFrom(field: "denominationAsset")
+  trackingFunds: [Fund!]! @derivedFrom(field: "trackedAssets")
+}
+
+type AssetPrice @entity {
+  id: ID!
+  asset: Asset!
+  price: BigDecimal!
+  timestamp: BigInt!
+}
+
+type HourlyAssetPriceCandle @entity {
+  id: ID!
+  asset: Asset!
+  group: HourlyAssetPriceCandleGroup!
+  openTimestamp: BigInt!
+  closeTimestamp: BigInt!
+  averagePrice: BigDecimal!
+  medianPrice: BigDecimal!
+  openPrice: BigDecimal!
+  closePrice: BigDecimal!
+  lowPrice: BigDecimal!
+  highPrice: BigDecimal!
+  includedPrices: [AssetPrice!]!
+}
+
+type DailyAssetPriceCandle @entity {
+  id: ID!
+  asset: Asset!
+  group: DailyAssetPriceCandleGroup!
+  openTimestamp: BigInt!
+  closeTimestamp: BigInt!
+  averagePrice: BigDecimal!
+  medianPrice: BigDecimal!
+  openPrice: BigDecimal!
+  closePrice: BigDecimal!
+  lowPrice: BigDecimal!
+  highPrice: BigDecimal!
+  includedPrices: [AssetPrice!]!
+}
+
+type WeeklyAssetPriceCandle @entity {
+  id: ID!
+  asset: Asset!
+  group: WeeklyAssetPriceCandleGroup!
+  openTimestamp: BigInt!
+  closeTimestamp: BigInt!
+  averagePrice: BigDecimal!
+  medianPrice: BigDecimal!
+  openPrice: BigDecimal!
+  closePrice: BigDecimal!
+  lowPrice: BigDecimal!
+  highPrice: BigDecimal!
+  includedPrices: [AssetPrice!]!
+}
+
+type HourlyAssetPriceCandleGroup @entity {
+  id: ID!
+  open: BigInt!
+  close: BigInt!
+  candles: [HourlyAssetPriceCandle!]! @derivedFrom(field: "group")
+}
+
+type DailyAssetPriceCandleGroup @entity {
+  id: ID!
+  open: BigInt!
+  close: BigInt!
+  candles: [DailyAssetPriceCandle!]! @derivedFrom(field: "group")
+}
+
+type WeeklyAssetPriceCandleGroup @entity {
+  id: ID!
+  open: BigInt!
+  close: BigInt!
+  candles: [WeeklyAssetPriceCandle!]! @derivedFrom(field: "group")
+}
+
+type ChainlinkAggregator @entity {
+  id: ID!
+  asset: Asset!
+  active: Boolean!
+  updates: [ChainlinkAggregatorAnswerUpdatedEvent!]! @derivedFrom(field: "aggregator")
+}
+
+# Knowing the timestamp of the most recent update allows us to create missing
+# candles / fill gaps and decide when to re-fetch prices for our derivatives.
+# Every time a new hour / day / week is started (checked with modulo based
+# on the timestamp), we create new group entities and also fill gaps in the
+# candles. We can always load the most recent candles because we know the
+# when it was most recently updated.
+type Cron @entity {
+  id: ID!
+  latest: BigInt!
 }

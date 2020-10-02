@@ -560,7 +560,7 @@ templates:
     kind: ethereum/contract
     network: mainnet
     source:
-      abi: AggregatorInterface
+      abi: ChainlinkAggregatorContract
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -568,10 +568,8 @@ templates:
       entities: []
       file: ./src/mappings/ChainlinkAggregator.ts
       abis:
-        - name: AggregatorInterface
+        - name: ChainlinkAggregatorContract
           file: ./node_modules/@chainlink/contracts/abi/v0.6/AggregatorInterface.json
       eventHandlers:
         - event: AnswerUpdated(indexed int256,indexed uint256,uint256)
           handler: handleAnswerUpdated
-        - event: NewRound(indexed uint256,indexed address,uint256)
-          handler: handleNewRound

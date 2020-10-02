@@ -3,9 +3,7 @@ import { NewFundDeployed } from '../generated/FundDeployerContract';
 import { Fund } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
 import { ensureAccount, ensureManager } from './Account';
-import { ensureAsset } from './Asset';
-import { ensureComptroller } from './Comptroller';
-import { ensureFundDeployer } from './FundDeployer';
+import { useAsset } from './Asset';
 import { useRelease } from './Release';
 import { createPortfolio } from './Portfolio';
 import { createShares } from './Shares';
@@ -32,9 +30,8 @@ export function createFund(event: NewFundDeployed): Fund {
 
   fund.name = event.params.fundName;
   fund.inception = event.block.timestamp;
-  fund.fundDeployer = ensureFundDeployer(event.address).id;
   fund.release = useRelease(event.address.toHex()).id;
-  fund.accessor = ensureComptroller(event.params.comptrollerProxy).id;
+  fund.accessor = event.params.comptrollerProxy.toHex();
   fund.manager = ensureManager(event.params.fundOwner, event).id;
   fund.creator = ensureAccount(event.params.caller, event).id;
   fund.trackedAssets = [];
@@ -43,7 +40,7 @@ export function createFund(event: NewFundDeployed): Fund {
   fund.feePayout = feePayout.id;
   fund.state = state.id;
   fund.status = 'Active';
-  fund.denominationAsset = ensureAsset(event.params.denominationAsset).id;
+  fund.denominationAsset = useAsset(event.params.denominationAsset.toHex()).id;
   fund.save();
 
   return fund;

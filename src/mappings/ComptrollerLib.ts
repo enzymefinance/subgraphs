@@ -1,6 +1,6 @@
-import { BigDecimal, BigInt, dataSource, log } from '@graphprotocol/graph-ts';
+import { BigDecimal, dataSource } from '@graphprotocol/graph-ts';
 import { ensureAccount, ensureInvestor, useAccount } from '../entities/Account';
-import { useAsset, ensureAsset } from '../entities/Asset';
+import { useAsset } from '../entities/Asset';
 import { ensureContract } from '../entities/Contract';
 import { useFund } from '../entities/Fund';
 import { ensureInvestment } from '../entities/Investment';
@@ -37,13 +37,12 @@ export function handleAmguPaid(event: AmguPaid): void {
 
 export function handleFundConfigSet(event: FundConfigSet): void {
   let fundId = dataSource.context().getString('vaultProxy');
-
   let fundConfig = new FundConfigSetEvent(genericId(event));
   fundConfig.timestamp = event.block.timestamp;
-  fundConfig.contract = ensureContract(event.address, 'ComptrollerLib', event).id;
+  fundConfig.contract = ensureContract(event.address, 'ComptrollerLib').id;
   fundConfig.fund = fundId;
   fundConfig.account = useAccount(event.transaction.from.toHex()).id;
-  fundConfig.denominationAsset = ensureAsset(event.params.denominationAsset).id;
+  fundConfig.denominationAsset = useAsset(event.params.denominationAsset.toHex()).id;
   fundConfig.vaultProxy = fundId;
   fundConfig.feeManagerConfigData = event.params.feeManagerConfigData.toHex();
   fundConfig.policyManagerConfigData = event.params.policyManagerConfigData.toHex();
@@ -51,33 +50,40 @@ export function handleFundConfigSet(event: FundConfigSet): void {
   fundConfig.save();
 }
 
+function translateFundStatus(status: number): string {
+  if (status == 0) {
+    return 'None';
+  }
+
+  if (status == 1) {
+    return 'Pending';
+  }
+
+  if (status == 2) {
+    return 'Active';
+  }
+
+  return 'Shutdown';
+}
+
 export function handleFundStatusUpdated(event: FundStatusUpdated): void {
   let fund = useFund(dataSource.context().getString('vaultProxy'));
+  fund.status = translateFundStatus(event.params.nextStatus);
+  fund.save();
 
   let fundStatusUpdate = new FundStatusUpdatedEvent(genericId(event));
   fundStatusUpdate.timestamp = event.block.timestamp;
-  fundStatusUpdate.contract = ensureContract(event.address, 'ComptrollerLib', event).id;
+  fundStatusUpdate.contract = ensureContract(event.address, 'ComptrollerLib').id;
   fundStatusUpdate.fund = fund.id;
   fundStatusUpdate.account = useAccount(event.transaction.from.toHex()).id;
   fundStatusUpdate.prevStatus = event.params.prevStatus;
   fundStatusUpdate.nextStatus = event.params.nextStatus;
   fundStatusUpdate.transaction = ensureTransaction(event).id;
   fundStatusUpdate.save();
-
-  fund.status =
-    event.params.nextStatus == 0
-      ? 'None'
-      : event.params.nextStatus == 1
-      ? 'Pending'
-      : event.params.nextStatus == 2
-      ? 'Active'
-      : 'Shutdown';
-  fund.save();
 }
 
 export function handleSharesBought(event: SharesBought): void {
   let fund = useFund(dataSource.context().getString('vaultProxy'));
-
   let investor = ensureInvestor(event.params.buyer, event);
   let investment = ensureInvestment(investor, fund);
   let asset = useAsset(fund.denominationAsset);
@@ -87,7 +93,7 @@ export function handleSharesBought(event: SharesBought): void {
   addition.account = investment.investor;
   addition.investor = investment.investor;
   addition.fund = investment.fund;
-  addition.contract = ensureContract(event.address, 'ComptrollerLib', event).id;
+  addition.contract = ensureContract(event.address, 'ComptrollerLib').id;
   addition.investment = investment.id;
   addition.asset = asset.id;
   addition.quantity = toBigDecimal(event.params.investmentAmount, asset.decimals);
@@ -105,7 +111,6 @@ export function handleSharesBought(event: SharesBought): void {
 
 export function handleSharesRedeemed(event: SharesRedeemed): void {
   let fund = useFund(dataSource.context().getString('vaultProxy'));
-
   let account = ensureInvestor(event.params.redeemer, event);
   let investment = ensureInvestment(account, fund);
   let shares = toBigDecimal(event.params.sharesQuantity);
@@ -121,7 +126,7 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
   redemption.account = investment.investor;
   redemption.investor = investment.investor;
   redemption.fund = investment.fund;
-  redemption.contract = ensureContract(event.address, 'ComptrollerLib', event).id;
+  redemption.contract = ensureContract(event.address, 'ComptrollerLib').id;
   redemption.investment = investment.id;
   redemption.shares = shares;
   redemption.assets = assets.map<string>((item) => item.id);

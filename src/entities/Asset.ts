@@ -1,4 +1,5 @@
 import { Address } from '@graphprotocol/graph-ts';
+import { zeroAddress } from '../constants';
 import { Asset } from '../generated/schema';
 import { StandardERC20Contract } from '../generated/StandardERC20Contract';
 import { logCritical } from '../utils/logCritical';
@@ -19,7 +20,6 @@ export function ensureAsset(address: Address): Asset {
   }
 
   let contract = StandardERC20Contract.bind(address);
-
   let name = contract.name();
   let symbol = contract.symbol();
   let decimals = contract.decimals();
@@ -28,9 +28,8 @@ export function ensureAsset(address: Address): Asset {
   asset.name = name;
   asset.symbol = symbol;
   asset.decimals = decimals;
-  asset.isDerivative = false;
-  asset.priceFeed = '';
-  asset.fundsTracking = [];
+  asset.active = true;
+  asset.price = zeroAddress.toHex();
   asset.save();
 
   return asset;

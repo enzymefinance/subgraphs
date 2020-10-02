@@ -1,7 +1,6 @@
 import { DataSourceContext } from '@graphprotocol/graph-ts';
 import { ensureAccount, ensureManager } from '../entities/Account';
-import { ensureAsset } from '../entities/Asset';
-import { ensureComptroller } from '../entities/Comptroller';
+import { useAsset } from '../entities/Asset';
 import { ensureContract } from '../entities/Contract';
 import { createFund } from '../entities/Fund';
 import { ensureTransaction } from '../entities/Transaction';
@@ -27,13 +26,13 @@ export function handleNewFundDeployed(event: NewFundDeployed): void {
   fundDeployment.timestamp = event.block.timestamp;
   fundDeployment.fund = event.params.vaultProxy.toHex();
   fundDeployment.account = ensureManager(event.params.fundOwner, event).id;
-  fundDeployment.contract = ensureContract(event.address, 'FundDeployer', event).id;
-  fundDeployment.comptrollerProxy = ensureComptroller(event.params.comptrollerProxy).id;
+  fundDeployment.contract = ensureContract(event.address, 'FundDeployer').id;
+  fundDeployment.comptrollerProxy = event.params.comptrollerProxy.toHex();
   fundDeployment.vaultProxy = event.params.vaultProxy.toHex();
   fundDeployment.fundOwner = ensureManager(event.params.fundOwner, event).id;
   fundDeployment.fundName = event.params.fundName;
   fundDeployment.caller = ensureAccount(event.params.caller, event).id;
-  fundDeployment.denominationAsset = ensureAsset(event.params.denominationAsset).id;
+  fundDeployment.denominationAsset = useAsset(event.params.denominationAsset.toHex()).id;
   fundDeployment.feeManagerConfig = event.params.feeManagerConfig.toHex();
   fundDeployment.policyManagerConfig = event.params.policyManagerConfig.toHex();
   fundDeployment.transaction = ensureTransaction(event).id;
@@ -59,6 +58,7 @@ export function handleAmguPaid(event: AmguPaid): void {
 }
 
 export function handleComptrollerProxyDeployed(event: ComptrollerProxyDeployed): void {
+  // TODO: Instead of calling the contract, load the vault proxy from the fund / fund version entity.
   let comptrollerProxy = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let vaultProxy = comptrollerProxy.getVaultProxy();
 
@@ -66,8 +66,8 @@ export function handleComptrollerProxyDeployed(event: ComptrollerProxyDeployed):
   comptrollerProxyDeployment.timestamp = event.block.timestamp;
   comptrollerProxyDeployment.fund = vaultProxy.toHex();
   comptrollerProxyDeployment.account = ensureManager(event.transaction.from, event).id;
-  comptrollerProxyDeployment.contract = ensureContract(event.address, 'FundDeployer', event).id;
-  comptrollerProxyDeployment.comptrollerProxy = ensureComptroller(event.params.comptrollerProxy).id;
+  comptrollerProxyDeployment.contract = ensureContract(event.address, 'FundDeployer').id;
+  comptrollerProxyDeployment.comptrollerProxy = event.params.comptrollerProxy.toHex();
   comptrollerProxyDeployment.transaction = ensureTransaction(event).id;
   comptrollerProxyDeployment.save();
 }
@@ -75,7 +75,7 @@ export function handleComptrollerProxyDeployed(event: ComptrollerProxyDeployed):
 export function handleOwnershipTransferred(event: OwnershipTransferred): void {
   let transfer = new OwnershipTransferredEvent(genericId(event));
   transfer.timestamp = event.block.timestamp;
-  transfer.contract = ensureContract(event.address, 'FundDeployer', event).id;
+  transfer.contract = ensureContract(event.address, 'FundDeployer').id;
   transfer.previousOwner = event.params.previousOwner.toHex();
   transfer.newOwner = event.params.newOwner.toHex();
   transfer.transaction = ensureTransaction(event).id;

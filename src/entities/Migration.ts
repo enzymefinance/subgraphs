@@ -1,8 +1,7 @@
 import { MigrationSignaled } from '../generated/DispatcherContract';
-import { Migration, Fund, FundDeployer } from '../generated/schema';
+import { Migration } from '../generated/schema';
 import { useRelease } from './Release';
 import { useFund } from './Fund';
-import { ensureComptroller } from './Comptroller';
 import { logCritical } from '../utils/logCritical';
 
 export function useMigration(id: string): Migration {
@@ -21,10 +20,12 @@ export function ensureMigration(event: MigrationSignaled): Migration {
     event.params.nextFundDeployer.toHex(),
     event.block.timestamp.toString(),
   );
+
   let migration = Migration.load(id) as Migration;
   if (migration) {
     return migration;
   }
+
   migration = new Migration(id);
   migration.prevRelease = useRelease(event.params.prevFundDeployer.toHex()).id;
   migration.nextRelease = useRelease(event.params.nextFundDeployer.toHex()).id;
@@ -32,7 +33,7 @@ export function ensureMigration(event: MigrationSignaled): Migration {
   migration.signalTimestamp = event.block.timestamp;
   migration.cancelled = false;
   migration.executed = false;
-  migration.nextAccessor = ensureComptroller(event.params.nextVaultAccessor).id;
+  migration.nextAccessor = event.params.nextVaultAccessor.toHex();
   migration.save();
 
   return migration;
