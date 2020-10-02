@@ -1,9 +1,7 @@
 import { Address, DataSourceContext } from '@graphprotocol/graph-ts';
-import { ChainlinkAggregatorContract } from '../generated/ChainlinkAggregatorContract';
 import { Asset, ChainlinkAggregator } from '../generated/schema';
 import { ChainlinkAggregatorDataSource } from '../generated/templates';
 import { logCritical } from '../utils/logCritical';
-import { trackAssetPrice } from './AssetPrice';
 
 export function chainlinkAggregatorId(aggregatorAddress: string, assetId: string): string {
   return aggregatorAddress + '/' + assetId;
