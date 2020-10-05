@@ -43,14 +43,14 @@ export function handleCurrentFundDeployerSet(event: CurrentFundDeployerSet): voi
   fundDeployerSet.save();
 
   if (!event.params.prevFundDeployer.equals(zeroAddress)) {
-    // Update previous Release
+    // Update previous release
     let prevRelease = useRelease(event.params.prevFundDeployer.toHex());
     prevRelease.current = false;
-    prevRelease.currentEnd = event.block.timestamp;
+    prevRelease.close = event.block.timestamp;
     prevRelease.save();
   }
 
-  // Create new release.
+  // Create new release
   createRelease(event);
 }
 

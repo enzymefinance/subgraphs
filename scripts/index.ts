@@ -8,6 +8,7 @@ import request, { gql } from 'graphql-request';
 const query = gql`
   {
     deployment {
+      wethToken
       chaiPriceSource
       chaiIntegratee
       kyberIntegratee

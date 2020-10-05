@@ -14,7 +14,7 @@ export function useRelease(id: string): Release {
 export function createRelease(event: CurrentFundDeployerSet): Release {
   let release = new Release(event.params.nextFundDeployer.toHex());
   release.current = true;
-  release.currentStart = event.block.timestamp;
+  release.open = event.block.timestamp;
   release.save();
 
   return release;

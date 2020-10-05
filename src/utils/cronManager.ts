@@ -1,34 +1,88 @@
 import { BigInt } from '@graphprotocol/graph-ts';
+import { useAsset } from '../entities/Asset';
+import { trackAssetPrice, useAssetPrice } from '../entities/AssetPrice';
+import {
+  ensureDailyAssetPriceCandleGroup,
+  ensureHourlyAssetPriceCandleGroup,
+  ensureWeeklyAssetPriceCandleGroup,
+} from '../entities/AssetPriceCandleGroup';
 import { Cron } from '../generated/schema';
-import { getHourlyOpenTime } from './timeHelpers';
+import { arrayUnique } from './arrayUnique';
+import { logCritical } from './logCritical';
+import { getDayOpenTime, getHourOpenTime, getTenMinuteOpenTime, getWeekOpenTime } from './timeHelpers';
+import { fetchAssetPrice } from './valueInterpreter';
 
-function maintainCronTimer(timestamp: BigInt): BigInt {
+export function ensureCron(): Cron {
   let cron = Cron.load('SINGLETON') as Cron;
   if (cron == null) {
     cron = new Cron('SINGLETON');
-    cron.latest = BigInt.fromI32(0);
+    cron.cron = BigInt.fromI32(-1);
+    cron.primitives = [];
+    cron.derivatives = [];
     cron.save();
   }
 
-  if (cron.latest.lt(timestamp)) {
-    cron.latest = timestamp;
-    cron.save();
-  }
-
-  return cron.latest;
+  return cron;
 }
 
 export function triggerCron(timestamp: BigInt): void {
-  let previous = maintainCronTimer(timestamp);
-  if (previous.ge(timestamp)) {
+  let cron = ensureCron();
+  if (cron.cron.ge(timestamp)) {
     // We've been here before. No need to run the cron job.
     return;
   }
 
-  let previousHour = getHourlyOpenTime(timestamp);
-  let currentHour = getHourlyOpenTime(timestamp);
-  if (currentHour.gt(previousHour)) {
-    // TODO: Add logic to maintain hourly/daily/weekly candles and trigger updates
-    // for all derivates in predefined time intervals.
+  cronDerivatives(cron, timestamp);
+  cronCandles(cron, timestamp);
+
+  cron.cron = timestamp;
+  cron.save();
+}
+
+function cronDerivatives(cron: Cron, timestamp: BigInt): void {
+  let previousWindow = getTenMinuteOpenTime(cron.cron);
+  let currentWindow = getTenMinuteOpenTime(timestamp);
+
+  // Only update the derivative prices once per time window.
+  if (!currentWindow.gt(previousWindow)) {
+    return;
+  }
+
+  let derivatives = cron.derivatives;
+  for (let i: i32 = 0; i < derivatives.length; i++) {
+    let asset = useAsset(derivatives[i]);
+    let current = fetchAssetPrice(asset);
+    trackAssetPrice(asset, timestamp, current);
+  }
+}
+
+function cronCandles(cron: Cron, timestamp: BigInt): void {
+  let currentHour = getHourOpenTime(timestamp);
+  if (!currentHour.gt(getHourOpenTime(cron.cron))) {
+    // Bail out early if no updates are required.
+    return;
+  }
+
+  ensureHourlyAssetPriceCandleGroup(currentHour);
+
+  let currentDay = getDayOpenTime(timestamp);
+  if (currentDay.gt(getDayOpenTime(cron.cron))) {
+    ensureDailyAssetPriceCandleGroup(currentDay);
+  }
+
+  let currentWeek = getWeekOpenTime(timestamp);
+  if (currentWeek.gt(getWeekOpenTime(cron.cron))) {
+    ensureWeeklyAssetPriceCandleGroup(currentWeek);
+  }
+
+  let ids = arrayUnique<string>(cron.primitives.concat(cron.derivatives));
+  for (let i: i32 = 0; i < ids.length; i++) {
+    let asset = useAsset(ids[i]);
+    if (asset.price == null) {
+      logCritical('Missing price for asset {}', [asset.id]);
+    }
+
+    let price = useAssetPrice(asset.price as string);
+    trackAssetPrice(asset, timestamp, price.price);
   }
 }

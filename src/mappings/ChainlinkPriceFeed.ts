@@ -6,6 +6,12 @@ import { ensureAsset } from '../entities/Asset';
 import { genericId } from '../utils/genericId';
 import { zeroAddress } from '../constants';
 import { disableChainlinkAggregator, enableChainlinkAggregator } from '../entities/ChainlinkAggregator';
+import { ensureCron, triggerCron } from '../utils/cronManager';
+import { arrayDiff } from '../utils/arrayDiff';
+import { arrayUnique } from '../utils/arrayUnique';
+import { ChainlinkAggregatorContract } from '../generated/ChainlinkAggregatorContract';
+import { trackAssetPrice } from '../entities/AssetPrice';
+import { toBigDecimal } from '../utils/toBigDecimal';
 
 export function handleAggregatorSet(event: AggregatorSet): void {
   let primitive = ensureAsset(event.params.primitive);
@@ -24,14 +30,23 @@ export function handleAggregatorSet(event: AggregatorSet): void {
   }
 
   if (!event.params.nextAggregator.equals(zeroAddress)) {
+    // Whenever a new asset is registered, we need to fetch its current price immediately.
+    let contract = ChainlinkAggregatorContract.bind(event.params.nextAggregator);
+    let current = toBigDecimal(contract.latestAnswer(), primitive.decimals);
+    trackAssetPrice(primitive, event.block.timestamp, current);
+
+    // Keep tracking this asset using the registered chainlink aggregator.
     enableChainlinkAggregator(event.params.nextAggregator, primitive);
   }
 
+  let cron = ensureCron();
   if (event.params.nextAggregator.equals(zeroAddress)) {
-    primitive.active = false;
-    primitive.save();
+    cron.primitives = arrayDiff<string>(cron.derivatives, [primitive.id]);
   } else {
-    primitive.active = true;
-    primitive.save();
+    cron.primitives = arrayUnique<string>(cron.primitives.concat([primitive.id]));
   }
+  cron.save();
+
+  // It's important that we run cron last.
+  triggerCron(event.block.timestamp);
 }

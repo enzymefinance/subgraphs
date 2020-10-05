@@ -5,6 +5,11 @@ import { ensureAsset } from '../entities/Asset';
 import { ensureContract } from '../entities/Contract';
 import { ensureTransaction } from '../entities/Transaction';
 import { zeroAddress } from '../constants';
+import { ensureCron, triggerCron } from '../utils/cronManager';
+import { arrayUnique } from '../utils/arrayUnique';
+import { arrayDiff } from '../utils/arrayDiff';
+import { fetchAssetPrice } from '../utils/valueInterpreter';
+import { trackAssetPrice } from '../entities/AssetPrice';
 
 export function handlePriceFeedSet(event: PriceFeedSet): void {
   let derivative = ensureAsset(event.params.derivative);
@@ -19,10 +24,18 @@ export function handlePriceFeedSet(event: PriceFeedSet): void {
   derivativePriceFeedSet.save();
 
   if (event.params.nextPriceFeed.equals(zeroAddress)) {
-    derivative.active = false;
-    derivative.save();
-  } else {
-    derivative.active = true;
-    derivative.save();
+    let current = fetchAssetPrice(derivative);
+    trackAssetPrice(derivative, event.block.timestamp, current);
   }
+
+  let cron = ensureCron();
+  if (event.params.nextPriceFeed.equals(zeroAddress)) {
+    cron.derivatives = arrayDiff<string>(cron.derivatives, [derivative.id]);
+  } else {
+    cron.derivatives = arrayUnique<string>(cron.derivatives.concat([derivative.id]));
+  }
+  cron.save();
+
+  // It's important that we run cron last.
+  triggerCron(event.block.timestamp);
 }
