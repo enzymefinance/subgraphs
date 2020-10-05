@@ -32,7 +32,7 @@ export function handleAnswerUpdated(event: AnswerUpdated): void {
   answerUpdated.save();
 
   // NOTE: We use the block timestamp here on purpose (instead of event.params.updatedAt).
-  trackAssetPrice(asset, current, event.block.timestamp);
+  trackAssetPrice(asset, event.block.timestamp, current);
 
   // NOTE: We might want to add this to other mappings in our code base too. We'll need to do some
   // fine tuning to find the right balance (consider performance penalty of using this too

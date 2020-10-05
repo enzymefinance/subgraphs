@@ -33,7 +33,7 @@ export function handleAggregatorSet(event: AggregatorSet): void {
     // Whenever a new asset is registered, we need to fetch its current price immediately.
     let contract = ChainlinkAggregatorContract.bind(event.params.nextAggregator);
     let current = toBigDecimal(contract.latestAnswer(), primitive.decimals);
-    trackAssetPrice(primitive, current, event.block.timestamp);
+    trackAssetPrice(primitive, event.block.timestamp, current);
 
     // Keep tracking this asset using the registered chainlink aggregator.
     enableChainlinkAggregator(event.params.nextAggregator, primitive);

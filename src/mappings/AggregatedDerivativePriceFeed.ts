@@ -9,7 +9,7 @@ import { ensureCron, triggerCron } from '../utils/cronManager';
 import { arrayUnique } from '../utils/arrayUnique';
 import { arrayDiff } from '../utils/arrayDiff';
 import { fetchAssetPrice } from '../utils/valueInterpreter';
-import { ensureAssetPrice, trackAssetPrice } from '../entities/AssetPrice';
+import { trackAssetPrice } from '../entities/AssetPrice';
 
 export function handlePriceFeedSet(event: PriceFeedSet): void {
   let derivative = ensureAsset(event.params.derivative);
@@ -23,9 +23,9 @@ export function handlePriceFeedSet(event: PriceFeedSet): void {
   derivativePriceFeedSet.nextPriceFeed = event.params.nextPriceFeed.toHex();
   derivativePriceFeedSet.save();
 
-  if (!event.params.nextPriceFeed.equals(zeroAddress)) {
+  if (event.params.nextPriceFeed.equals(zeroAddress)) {
     let current = fetchAssetPrice(derivative);
-    trackAssetPrice(derivative, current, event.block.timestamp);
+    trackAssetPrice(derivative, event.block.timestamp, current);
   }
 
   let cron = ensureCron();

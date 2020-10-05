@@ -1,91 +1,106 @@
 import { BigInt } from '@graphprotocol/graph-ts';
-import { DailyAssetPriceCandle, HourlyAssetPriceCandle, AssetPrice, WeeklyAssetPriceCandle } from '../generated/schema';
+import {
+  DailyAssetPriceCandle,
+  HourlyAssetPriceCandle,
+  AssetPrice,
+  WeeklyAssetPriceCandle,
+  Asset,
+} from '../generated/schema';
 import { day, dayAdjustment, hour, hourAdjustment, week, weekAdjustment } from '../utils/timeHelpers';
+import { useAssetPrice } from './AssetPrice';
 import { AssetPriceCandle } from './AssetPriceEntity';
 
 export function assetPriceCandleId(assetId: string, type: string, open: BigInt): string {
   return assetId + '/' + type + '/' + open.toString();
 }
 
-export function updateHourlyAssetPriceCandle(price: AssetPrice, timestamp: BigInt): HourlyAssetPriceCandle {
+export function updateHourlyAssetPriceCandle(asset: Asset, current: AssetPrice): HourlyAssetPriceCandle {
+  let type = 'Hourly';
   let interval = hour;
   let adjustment = hourAdjustment;
-  return maintainAssetPriceCandle('Hourly', interval, adjustment, timestamp, price) as HourlyAssetPriceCandle;
+  return maintainAssetPriceCandle(type, interval, adjustment, asset, current) as HourlyAssetPriceCandle;
 }
 
-export function updateDailyAssetPriceCandle(price: AssetPrice, timestamp: BigInt): DailyAssetPriceCandle {
+export function updateDailyAssetPriceCandle(asset: Asset, current: AssetPrice): DailyAssetPriceCandle {
+  let type = 'Daily';
   let interval = day;
   let adjustment = dayAdjustment;
-  return maintainAssetPriceCandle('Daily', interval, adjustment, timestamp, price) as DailyAssetPriceCandle;
+  return maintainAssetPriceCandle(type, interval, adjustment, asset, current) as DailyAssetPriceCandle;
 }
 
-export function updateWeeklyAssetPriceCandle(price: AssetPrice, timestamp: BigInt): WeeklyAssetPriceCandle {
+export function updateWeeklyAssetPriceCandle(asset: Asset, current: AssetPrice): WeeklyAssetPriceCandle {
+  let type = 'Weekly';
   let interval = week;
   let adjustment = weekAdjustment;
-  return maintainAssetPriceCandle('Weekly', interval, adjustment, timestamp, price) as WeeklyAssetPriceCandle;
+  return maintainAssetPriceCandle(type, interval, adjustment, asset, current) as WeeklyAssetPriceCandle;
 }
 
 export function maintainAssetPriceCandle(
   type: string,
   interval: BigInt,
   adjustment: BigInt,
-  timestamp: BigInt,
-  price: AssetPrice,
+  asset: Asset,
+  current: AssetPrice,
 ): AssetPriceCandle {
-  let excess = timestamp.minus(adjustment).mod(interval);
-  let from = timestamp.minus(excess);
+  let excess = current.timestamp.minus(adjustment).mod(interval);
+  let from = current.timestamp.minus(excess);
   let to = from.plus(interval);
 
-  let id = assetPriceCandleId(price.asset, type, from);
+  let id = assetPriceCandleId(current.asset, type, from);
   let candle = AssetPriceCandle.load(type, id) as AssetPriceCandle;
   if (!candle) {
-    return createAssetPriceCandle(id, type, price, from, to);
+    return createAssetPriceCandle(id, type, asset, current, from, to);
   }
 
-  return updateAssetPriceCandle(type, candle, price);
+  return updateAssetPriceCandle(type, candle, current);
 }
 
 function createAssetPriceCandle(
   id: string,
   type: string,
-  price: AssetPrice,
+  asset: Asset,
+  current: AssetPrice,
   from: BigInt,
   to: BigInt,
 ): AssetPriceCandle {
+  let previous = asset.price == null || asset.price == current.id ? current : useAssetPrice(asset.price);
+  let high = previous.price.gt(current.price) ? previous : current;
+  let low = previous.price.lt(current.price) ? previous : current;
+
   let candle = new AssetPriceCandle(id);
-  candle.asset = price.asset;
+  candle.asset = current.asset;
   candle.group = from.toString();
   candle.from = from;
   candle.to = to;
-  candle.open = price.price;
-  candle.openRef = price.id;
-  candle.close = price.price;
-  candle.closeRef = price.id;
-  candle.high = price.price;
-  candle.highRef = price.id;
-  candle.low = price.price;
-  candle.lowRef = price.id;
+  candle.open = previous.price;
+  candle.openRef = previous.id;
+  candle.close = current.price;
+  candle.closeRef = current.id;
+  candle.high = high.price;
+  candle.highRef = high.id;
+  candle.low = low.price;
+  candle.lowRef = low.id;
   candle.save(type);
 
   return candle;
 }
 
-function updateAssetPriceCandle(type: string, candle: AssetPriceCandle, price: AssetPrice): AssetPriceCandle {
-  if (candle.closeRef == price.id) {
+function updateAssetPriceCandle(type: string, candle: AssetPriceCandle, current: AssetPrice): AssetPriceCandle {
+  if (candle.closeRef == current.id) {
     return candle;
   }
 
-  candle.close = price.price;
-  candle.closeRef = price.id;
+  candle.close = current.price;
+  candle.closeRef = current.id;
 
-  if (price.price.lt(candle.low)) {
-    candle.low = price.price;
-    candle.lowRef = price.id;
+  if (current.price.lt(candle.low)) {
+    candle.low = current.price;
+    candle.lowRef = current.id;
   }
 
-  if (price.price.gt(candle.high)) {
-    candle.high = price.price;
-    candle.highRef = price.id;
+  if (current.price.gt(candle.high)) {
+    candle.high = current.price;
+    candle.highRef = current.id;
   }
 
   candle.save(type);

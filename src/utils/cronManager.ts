@@ -52,7 +52,7 @@ function cronDerivatives(cron: Cron, timestamp: BigInt): void {
   for (let i: i32 = 0; i < derivatives.length; i++) {
     let asset = useAsset(derivatives[i]);
     let current = fetchAssetPrice(asset);
-    trackAssetPrice(asset, current, timestamp);
+    trackAssetPrice(asset, timestamp, current);
   }
 }
 
@@ -78,11 +78,11 @@ function cronCandles(cron: Cron, timestamp: BigInt): void {
   let ids = arrayUnique<string>(cron.primitives.concat(cron.derivatives));
   for (let i: i32 = 0; i < ids.length; i++) {
     let asset = useAsset(ids[i]);
-    if (!asset.price) {
+    if (asset.price == null) {
       logCritical('Missing price for asset {}', [asset.id]);
     }
 
     let price = useAssetPrice(asset.price as string);
-    trackAssetPrice(asset, price.price, timestamp);
+    trackAssetPrice(asset, timestamp, price.price);
   }
 }

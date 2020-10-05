@@ -47,17 +47,19 @@ export function ensureAssetPrice(asset: Asset, current: BigDecimal, timestamp: B
   return price;
 }
 
-export function trackAssetPrice(asset: Asset, current: BigDecimal, timestamp: BigInt): AssetPrice {
-  let price = ensureAssetPrice(asset, current, timestamp);
-  let hourly = updateHourlyAssetPriceCandle(price, timestamp);
-  let daily = updateDailyAssetPriceCandle(price, timestamp);
-  let weekly = updateWeeklyAssetPriceCandle(price, timestamp);
+export function trackAssetPrice(asset: Asset, timestamp: BigInt, price: BigDecimal): AssetPrice {
+  let current = ensureAssetPrice(asset, price, timestamp);
+  let hourly = updateHourlyAssetPriceCandle(asset, current);
+  let daily = updateDailyAssetPriceCandle(asset, current);
+  let weekly = updateWeeklyAssetPriceCandle(asset, current);
 
-  asset.price = price.id;
+  // NOTE: It's important that we update the price references AFTER the candles
+  // have been updated. Otherwise, we can't carry over the previous to the new candles.
+  asset.price = current.id;
   asset.hourly = hourly.id;
   asset.daily = daily.id;
   asset.weekly = weekly.id;
   asset.save();
 
-  return price;
+  return current;
 }
