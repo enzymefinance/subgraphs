@@ -53,8 +53,8 @@ export function trackAssetPrice(asset: Asset, timestamp: BigInt, price: BigDecim
   let daily = updateDailyAssetPriceCandle(asset, current);
   let weekly = updateWeeklyAssetPriceCandle(asset, current);
 
-  // NOTE: It's important that we update the price references AFTER the candles
-  // have been updated. Otherwise, we can't carry over the previous to the new candles.
+  // NOTE: It's important that we update the price references AFTER the candles have been updated.
+  // Otherwise, we can't carry over the previous to the new candles.
   asset.price = current.id;
   asset.hourly = hourly.id;
   asset.daily = daily.id;

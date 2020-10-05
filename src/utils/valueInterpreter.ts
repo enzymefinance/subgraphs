@@ -17,7 +17,7 @@ export function fetchAssetPrice(asset: Asset): BigDecimal {
   // calculating the value with the value interpreter, this is also the rate.
   let one = BigInt.fromI32(10).pow(asset.decimals as u8);
   let address = Address.fromString(asset.id);
-  let value = contract.calcCanonicalAssetValue(
+  let call = contract.try_calcCanonicalAssetValue(
     chainlinkPriceFeedAddress,
     aggregatedDerivativePriceFeedAddress,
     address,
@@ -27,5 +27,7 @@ export function fetchAssetPrice(asset: Asset): BigDecimal {
 
   // TODO: Do we have to use the derivative decimals here or 18?!?
   // let current = toBigDecimal(value.value0, 18);
-  return toBigDecimal(value.value0, asset.decimals);
+  let valid = !call.reverted && call.value.value1 == true;
+  let value = valid ? toBigDecimal(call.value.value0, asset.decimals) : BigDecimal.fromString('0');
+  return value;
 }
