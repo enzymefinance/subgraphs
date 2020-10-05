@@ -1,56 +1,5 @@
 import { BigInt, Entity, Value, store, BigDecimal } from '@graphprotocol/graph-ts';
 
-export class AssetPriceAggregate extends Entity {
-  constructor(id: string) {
-    super();
-    this.set('id', Value.fromString(id));
-  }
-
-  save(type: string): void {
-    store.set(type + 'AssetPriceAggregate', this.get('id').toString(), this);
-  }
-
-  static load(type: string, id: string): AssetPriceAggregate | null {
-    return store.get(type + 'AssetPriceAggregate', id) as AssetPriceAggregate | null;
-  }
-
-  get id(): string {
-    let value = this.get('id');
-    return value.toString();
-  }
-
-  set id(value: string) {
-    this.set('id', Value.fromString(value));
-  }
-
-  get openTimestamp(): BigInt {
-    let value = this.get('openTimestamp');
-    return value.toBigInt();
-  }
-
-  set openTimestamp(value: BigInt) {
-    this.set('openTimestamp', Value.fromBigInt(value));
-  }
-
-  get closeTimestamp(): BigInt {
-    let value = this.get('closeTimestamp');
-    return value.toBigInt();
-  }
-
-  set closeTimestamp(value: BigInt) {
-    this.set('closeTimestamp', Value.fromBigInt(value));
-  }
-
-  get candles(): Array<string> {
-    let value = this.get('candles');
-    return value.toStringArray();
-  }
-
-  set candles(value: Array<string>) {
-    this.set('candles', Value.fromStringArray(value));
-  }
-}
-
 export class AssetPriceCandle extends Entity {
   constructor(id: string) {
     super();
@@ -92,84 +41,135 @@ export class AssetPriceCandle extends Entity {
     this.set('asset', Value.fromString(value));
   }
 
-  get openTimestamp(): BigInt {
-    let value = this.get('openTimestamp');
+  get from(): BigInt {
+    let value = this.get('from');
     return value.toBigInt();
   }
 
-  set openTimestamp(value: BigInt) {
-    this.set('openTimestamp', Value.fromBigInt(value));
+  set from(value: BigInt) {
+    this.set('from', Value.fromBigInt(value));
   }
 
-  get closeTimestamp(): BigInt {
-    let value = this.get('closeTimestamp');
+  get to(): BigInt {
+    let value = this.get('to');
     return value.toBigInt();
   }
 
-  set closeTimestamp(value: BigInt) {
-    this.set('closeTimestamp', Value.fromBigInt(value));
+  set to(value: BigInt) {
+    this.set('to', Value.fromBigInt(value));
   }
 
-  get averagePrice(): BigDecimal {
-    let value = this.get('averagePrice');
+  get open(): BigDecimal {
+    let value = this.get('open');
     return value.toBigDecimal();
   }
 
-  set averagePrice(value: BigDecimal) {
-    this.set('averagePrice', Value.fromBigDecimal(value));
+  set open(value: BigDecimal) {
+    this.set('open', Value.fromBigDecimal(value));
   }
 
-  get medianPrice(): BigDecimal {
-    let value = this.get('medianPrice');
+  get openRef(): string {
+    let value = this.get('openRef');
+    return value.toString();
+  }
+
+  set openRef(value: string) {
+    this.set('openRef', Value.fromString(value));
+  }
+
+  get close(): BigDecimal {
+    let value = this.get('close');
     return value.toBigDecimal();
   }
 
-  set medianPrice(value: BigDecimal) {
-    this.set('medianPrice', Value.fromBigDecimal(value));
+  set close(value: BigDecimal) {
+    this.set('close', Value.fromBigDecimal(value));
   }
 
-  get openPrice(): BigDecimal {
-    let value = this.get('openPrice');
+  get closeRef(): string {
+    let value = this.get('closeRef');
+    return value.toString();
+  }
+
+  set closeRef(value: string) {
+    this.set('closeRef', Value.fromString(value));
+  }
+
+  get low(): BigDecimal {
+    let value = this.get('low');
     return value.toBigDecimal();
   }
 
-  set openPrice(value: BigDecimal) {
-    this.set('openPrice', Value.fromBigDecimal(value));
+  set low(value: BigDecimal) {
+    this.set('low', Value.fromBigDecimal(value));
   }
 
-  get closePrice(): BigDecimal {
-    let value = this.get('closePrice');
+  get lowRef(): string {
+    let value = this.get('lowRef');
+    return value.toString();
+  }
+
+  set lowRef(value: string) {
+    this.set('lowRef', Value.fromString(value));
+  }
+
+  get high(): BigDecimal {
+    let value = this.get('high');
     return value.toBigDecimal();
   }
 
-  set closePrice(value: BigDecimal) {
-    this.set('closePrice', Value.fromBigDecimal(value));
+  set high(value: BigDecimal) {
+    this.set('high', Value.fromBigDecimal(value));
   }
 
-  get lowPrice(): BigDecimal {
-    let value = this.get('lowPrice');
-    return value.toBigDecimal();
+  get highRef(): string {
+    let value = this.get('highRef');
+    return value.toString();
   }
 
-  set lowPrice(value: BigDecimal) {
-    this.set('lowPrice', Value.fromBigDecimal(value));
+  set highRef(value: string) {
+    this.set('highRef', Value.fromString(value));
+  }
+}
+
+export class AssetPriceCandleGroup extends Entity {
+  constructor(id: string) {
+    super();
+    this.set('id', Value.fromString(id));
   }
 
-  get highPrice(): BigDecimal {
-    let value = this.get('highPrice');
-    return value.toBigDecimal();
+  save(type: string): void {
+    store.set(type + 'AssetPriceCandleGroup', this.get('id').toString(), this);
   }
 
-  set highPrice(value: BigDecimal) {
-    this.set('highPrice', Value.fromBigDecimal(value));
+  static load(type: string, id: string): AssetPriceCandleGroup | null {
+    return store.get(type + 'AssetPriceCandleGroup', id) as AssetPriceCandleGroup | null;
   }
 
-  get includedPrices(): Array<string> {
-    let value = this.get('includedPrices');
-    return value.toStringArray();
+  get id(): string {
+    let value = this.get('id');
+    return value.toString();
   }
 
-  set includedPrices(value: Array<string>) {
-    this.set('includedPrices', Value.fromStringArray(value));
+  set id(value: string) {
+    this.set('id', Value.fromString(value));
+  }
+
+  get from(): BigInt {
+    let value = this.get('from');
+    return value.toBigInt();
+  }
+
+  set from(value: BigInt) {
+    this.set('from', Value.fromBigInt(value));
+  }
+
+  get to(): BigInt {
+    let value = this.get('to');
+    return value.toBigInt();
+  }
+
+  set to(value: BigInt) {
+    this.set('to', Value.fromBigInt(value));
   }
 }

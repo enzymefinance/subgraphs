@@ -6,29 +6,33 @@ import { AnswerUpdated } from '../generated/ChainlinkAggregatorContract';
 import { ChainlinkAggregatorAnswerUpdatedEvent } from '../generated/schema';
 import { genericId } from '../utils/genericId';
 import { toBigDecimal } from '../utils/toBigDecimal';
-import { trackAssetPrice } from '../entities/AssetPrice';
+import { ensureAssetPrice, trackAssetPrice } from '../entities/AssetPrice';
 import { useChainlinkAggregator } from '../entities/ChainlinkAggregator';
 import { triggerCron } from '../utils/cronManager';
 
 export function handleAnswerUpdated(event: AnswerUpdated): void {
   let context = dataSource.context();
   let aggregator = useChainlinkAggregator(context.getString('aggregator'));
-
-  if (aggregator.active) {
-    let asset = useAsset(aggregator.asset);
-    let answerUpdated = new ChainlinkAggregatorAnswerUpdatedEvent(genericId(event));
-    answerUpdated.contract = ensureContract(event.address, 'ChainlinkAggregator').id;
-    answerUpdated.timestamp = event.block.timestamp;
-    answerUpdated.transaction = ensureTransaction(event).id;
-    answerUpdated.asset = asset.id;
-    answerUpdated.aggregator = aggregator.id;
-    answerUpdated.current = toBigDecimal(event.params.current, asset.decimals);
-    answerUpdated.roundId = event.params.roundId;
-    answerUpdated.updatedAt = event.params.updatedAt;
-    answerUpdated.save();
-
-    trackAssetPrice(asset, event.params.current, event.params.updatedAt);
+  if (!aggregator.active) {
+    return;
   }
+
+  let asset = useAsset(aggregator.asset);
+  let current = toBigDecimal(event.params.current, asset.decimals);
+
+  let answerUpdated = new ChainlinkAggregatorAnswerUpdatedEvent(genericId(event));
+  answerUpdated.contract = ensureContract(event.address, 'ChainlinkAggregator').id;
+  answerUpdated.timestamp = event.block.timestamp;
+  answerUpdated.transaction = ensureTransaction(event).id;
+  answerUpdated.asset = asset.id;
+  answerUpdated.aggregator = aggregator.id;
+  answerUpdated.current = current;
+  answerUpdated.roundId = event.params.roundId;
+  answerUpdated.updatedAt = event.params.updatedAt;
+  answerUpdated.save();
+
+  // NOTE: We use the block timestamp here on purpose (instead of event.params.updatedAt).
+  trackAssetPrice(asset, current, event.block.timestamp);
 
   // NOTE: We might want to add this to other mappings in our code base too. We'll need to do some
   // fine tuning to find the right balance (consider performance penalty of using this too

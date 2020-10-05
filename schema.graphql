@@ -819,8 +819,8 @@ type Migration @entity {
 type Release @entity {
   id: ID!
   current: Boolean!
-  currentStart: BigInt!
-  currentEnd: BigInt
+  open: BigInt!
+  close: BigInt
   funds: [Fund!] @derivedFrom(field: "release")
 }
 
@@ -995,19 +995,18 @@ type Asset @entity {
   name: String!
   symbol: String!
   decimals: Int!
-  active: Boolean!
 
   # Latest price and candles
   price: AssetPrice
-  hourlyCandle: HourlyAssetPriceCandle
-  dailyCandle: DailyAssetPriceCandle
-  weeklyCandle: WeeklyAssetPriceCandle
+  hourly: HourlyAssetPriceCandle
+  daily: DailyAssetPriceCandle
+  weekly: WeeklyAssetPriceCandle
 
   # Historical prices and candles
   priceHistory: [AssetPrice!]! @derivedFrom(field: "asset")
-  hourlyCandleHistory: [HourlyAssetPriceCandle!]! @derivedFrom(field: "asset")
-  dailyCandleHistory: [DailyAssetPriceCandle!]! @derivedFrom(field: "asset")
-  weeklyCandleHistory: [WeeklyAssetPriceCandle!]! @derivedFrom(field: "asset")
+  hourlyHistory: [HourlyAssetPriceCandle!]! @derivedFrom(field: "asset")
+  dailyHistory: [DailyAssetPriceCandle!]! @derivedFrom(field: "asset")
+  weeklyHistory: [WeeklyAssetPriceCandle!]! @derivedFrom(field: "asset")
 
   # Fund references
   denominatedFunds: [Fund!]! @derivedFrom(field: "denominationAsset")
@@ -1025,65 +1024,68 @@ type HourlyAssetPriceCandle @entity {
   id: ID!
   asset: Asset!
   group: HourlyAssetPriceCandleGroup!
-  openTimestamp: BigInt!
-  closeTimestamp: BigInt!
-  averagePrice: BigDecimal!
-  medianPrice: BigDecimal!
-  openPrice: BigDecimal!
-  closePrice: BigDecimal!
-  lowPrice: BigDecimal!
-  highPrice: BigDecimal!
-  includedPrices: [AssetPrice!]!
+  from: BigInt!
+  to: BigInt!
+  open: BigDecimal!
+  openRef: AssetPrice!
+  close: BigDecimal!
+  closeRef: AssetPrice!
+  low: BigDecimal!
+  lowRef: AssetPrice!
+  high: BigDecimal!
+  highRef: AssetPrice!
 }
 
 type DailyAssetPriceCandle @entity {
   id: ID!
   asset: Asset!
   group: DailyAssetPriceCandleGroup!
-  openTimestamp: BigInt!
-  closeTimestamp: BigInt!
-  averagePrice: BigDecimal!
-  medianPrice: BigDecimal!
-  openPrice: BigDecimal!
-  closePrice: BigDecimal!
-  lowPrice: BigDecimal!
-  highPrice: BigDecimal!
-  includedPrices: [AssetPrice!]!
+  from: BigInt!
+  to: BigInt!
+  open: BigDecimal!
+  openRef: AssetPrice!
+  close: BigDecimal!
+  closeRef: AssetPrice!
+  low: BigDecimal!
+  lowRef: AssetPrice!
+  high: BigDecimal!
+  highRef: AssetPrice!
 }
 
 type WeeklyAssetPriceCandle @entity {
   id: ID!
   asset: Asset!
   group: WeeklyAssetPriceCandleGroup!
-  openTimestamp: BigInt!
-  closeTimestamp: BigInt!
-  averagePrice: BigDecimal!
-  medianPrice: BigDecimal!
-  openPrice: BigDecimal!
-  closePrice: BigDecimal!
-  lowPrice: BigDecimal!
-  highPrice: BigDecimal!
-  includedPrices: [AssetPrice!]!
+  from: BigInt!
+  to: BigInt!
+  open: BigDecimal!
+  openRef: AssetPrice!
+  close: BigDecimal!
+  closeRef: AssetPrice!
+  low: BigDecimal!
+  lowRef: AssetPrice!
+  high: BigDecimal!
+  highRef: AssetPrice!
 }
 
 type HourlyAssetPriceCandleGroup @entity {
   id: ID!
-  open: BigInt!
-  close: BigInt!
+  from: BigInt!
+  to: BigInt!
   candles: [HourlyAssetPriceCandle!]! @derivedFrom(field: "group")
 }
 
 type DailyAssetPriceCandleGroup @entity {
   id: ID!
-  open: BigInt!
-  close: BigInt!
+  from: BigInt!
+  to: BigInt!
   candles: [DailyAssetPriceCandle!]! @derivedFrom(field: "group")
 }
 
 type WeeklyAssetPriceCandleGroup @entity {
   id: ID!
-  open: BigInt!
-  close: BigInt!
+  from: BigInt!
+  to: BigInt!
   candles: [WeeklyAssetPriceCandle!]! @derivedFrom(field: "group")
 }
 
@@ -1102,5 +1104,16 @@ type ChainlinkAggregator @entity {
 # when it was most recently updated.
 type Cron @entity {
   id: ID!
-  latest: BigInt!
+
+  # The last time that cron was triggered.
+  cron: BigInt!
+
+  # The currently tracked primitives. This is used to know which assets we
+  # need to maintain candles for.
+  primitives: [Asset!]!
+
+  # The currently tracked derivatives. This is used to know which derivatives
+  # to fetch prices for (as a side effect, because they don't have a dedicated
+  # price oracle that emits events on their behalf) and to update their candles.
+  derivatives: [Asset!]!
 }

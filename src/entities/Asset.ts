@@ -28,7 +28,6 @@ export function ensureAsset(address: Address): Asset {
   asset.name = name;
   asset.symbol = symbol;
   asset.decimals = decimals;
-  asset.active = true;
   asset.price = zeroAddress.toHex();
   asset.save();
 
