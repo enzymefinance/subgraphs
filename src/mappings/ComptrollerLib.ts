@@ -45,14 +45,10 @@ export function handleAmguPaid(event: AmguPaid): void {
 
 function translateFundStatus(status: number): string {
   if (status == 0) {
-    return 'None';
-  }
-
-  if (status == 1) {
     return 'Pending';
   }
 
-  if (status == 2) {
+  if (status == 1) {
     return 'Active';
   }
 
