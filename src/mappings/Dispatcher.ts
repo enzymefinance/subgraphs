@@ -38,8 +38,10 @@ export function handleCurrentFundDeployerSet(event: CurrentFundDeployerSet): voi
   fundDeployerSet.contract = ensureContract(event.address, 'Dispatcher').id;
   fundDeployerSet.timestamp = event.block.timestamp;
   fundDeployerSet.transaction = ensureTransaction(event).id;
-  fundDeployerSet.prevFundDeployer = event.params.prevFundDeployer.toHex();
-  fundDeployerSet.nextFundDeployer = event.params.nextFundDeployer.toHex();
+  if (event.params.prevFundDeployer != zeroAddress) {
+    fundDeployerSet.prevFundDeployer = ensureContract(event.params.prevFundDeployer, 'FundDeployer').id;
+  }
+  fundDeployerSet.nextFundDeployer = ensureContract(event.params.nextFundDeployer, 'FundDeployer').id;
   fundDeployerSet.save();
 
   if (!event.params.prevFundDeployer.equals(zeroAddress)) {
