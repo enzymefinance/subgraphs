@@ -14,7 +14,14 @@ import {
   StatusUpdated,
   VaultProxySet,
 } from '../generated/ComptrollerLibContract';
-import { AmguPaidEvent, Asset, SharesBoughtEvent, SharesRedeemedEvent, StatusUpdatedEvent } from '../generated/schema';
+import {
+  AmguPaidEvent,
+  Asset,
+  SharesBoughtEvent,
+  SharesRedeemedEvent,
+  StatusUpdatedEvent,
+  VaultProxySetEvent,
+} from '../generated/schema';
 import { genericId } from '../utils/genericId';
 import { toBigDecimal } from '../utils/toBigDecimal';
 
@@ -27,21 +34,6 @@ export function handleAmguPaid(event: AmguPaid): void {
   amguPaid.transaction = ensureTransaction(event).id;
   amguPaid.save();
 }
-
-// export function handleFundConfigSet(event: FundConfigSet): void {
-//   let fundId = dataSource.context().getString('vaultProxy');
-//   let fundConfig = new FundConfigSetEvent(genericId(event));
-//   fundConfig.timestamp = event.block.timestamp;
-//   fundConfig.contract = ensureContract(event.address, 'ComptrollerLib').id;
-//   fundConfig.fund = fundId;
-//   fundConfig.account = useAccount(event.transaction.from.toHex()).id;
-//   fundConfig.denominationAsset = useAsset(event.params.denominationAsset.toHex()).id;
-//   fundConfig.vaultProxy = fundId;
-//   fundConfig.feeManagerConfigData = event.params.feeManagerConfigData.toHex();
-//   fundConfig.policyManagerConfigData = event.params.policyManagerConfigData.toHex();
-//   fundConfig.transaction = ensureTransaction(event).id;
-//   fundConfig.save();
-// }
 
 function translateFundStatus(status: number): string {
   if (status == 0) {
@@ -131,5 +123,12 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
 }
 
 export function handleVaultProxySet(event: VaultProxySet): void {
-  // TODO: implement
+  let vaultProxySet = new VaultProxySetEvent(genericId(event));
+  vaultProxySet.fund = event.params.vaultProxy.toHex();
+  vaultProxySet.account = useAccount(event.transaction.from.toHex()).id;
+  vaultProxySet.contract = ensureContract(event.address, 'ComptrollerLib').id;
+  vaultProxySet.timestamp = event.block.timestamp;
+  vaultProxySet.transaction = ensureTransaction(event).id;
+  vaultProxySet.vaultProxy = event.params.vaultProxy.toHex();
+  vaultProxySet.save();
 }
