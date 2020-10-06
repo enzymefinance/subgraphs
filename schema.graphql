@@ -408,20 +408,17 @@ type VaultLibSetEvent implements Event & FundEvent @entity {
   nextVaultLib: Contract!
 }
 
-#  approvals will only be applicable if and when the transfer of fund shares is allowed.
-#  see comments in mappings/VaultLib.ts to enable event monitoring for these entities
-
-# type ApprovalEvent implements Event & FundEvent @entity {
-#   id: ID!
-#   fund: Fund!
-#   account: Account!
-#   contract: Contract!
-#   timestamp: BigInt!
-#   transaction: Transaction!
-#   owner: Account!
-#   spender: IntegrationAdapter!
-#   value: BigDecimal!
-# }
+type ApprovalEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  owner: String!
+  spender: String!
+  value: BigDecimal!
+}
 
 type TransferEvent implements Event & FundEvent @entity {
   id: ID!
