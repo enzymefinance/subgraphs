@@ -1,19 +1,19 @@
-import { providers, Wallet, utils, BigNumber } from 'ethers';
+import { randomAddress, resolveAddress } from '@crestproject/ethers';
 import {
-  createNewFund,
   approveInvestmentAmount,
   buyShares,
+  ComptrollerLib,
+  createNewFund,
+  encodeArgs,
   getCurrentFundDeployer,
   redeemShares,
-  FundDeployer,
 } from '@melonproject/melonjs';
-import { resolveAddress, randomAddress } from '@crestproject/ethers';
-import { fetchDeployment, createAccount, Deployment } from './utils/deployment';
+import { BigNumber, providers, utils, Wallet } from 'ethers';
+import { createAccount, Deployment, fetchDeployment } from './utils/deployment';
 import { waitForSubgraph } from './utils/subgraph';
 import { fetchFund } from './utils/subgraph-queries/fetchFund';
 import { fetchInvestment } from './utils/subgraph-queries/fetchInvestment';
 import { fetchRedemption } from './utils/subgraph-queries/fetchRedemption';
-import { ComptrollerLib, encodeArgs } from '@melonproject/melonjs';
 
 describe('Walkthrough', () => {
   let deployment: Deployment;
@@ -50,7 +50,7 @@ describe('Walkthrough', () => {
     const fees = [deployment.managementFee, deployment.performanceFee];
     const feesSettingsData = [managementFeeSettings, performanceFeeSettings];
 
-    const feeManagerConfig = await encodeArgs(['address[]', 'bytes[]'], [fees, feesSettingsData]);
+    const feeManagerConfigData = await encodeArgs(['address[]', 'bytes[]'], [fees, feesSettingsData]);
 
     // prepare policies
     const blacklistedTokens = [deployment.mlnToken];
@@ -62,7 +62,7 @@ describe('Walkthrough', () => {
     const policies = [deployment.assetBlacklist, deployment.assetWhitelist];
     const policiesSettingsData = [assetBlacklistSettings, assetWhitelistSettings];
 
-    const policyManagerConfig = await encodeArgs(['address[]', 'bytes[]'], [policies, policiesSettingsData]);
+    const policyManagerConfigData = await encodeArgs(['address[]', 'bytes[]'], [policies, policiesSettingsData]);
 
     // create fund
     const newFundArgs = {
@@ -71,12 +71,13 @@ describe('Walkthrough', () => {
       fundOwner: signer.address,
       denominationAsset: deployment.wethToken,
       fundName: 'My Super Fund',
-      feeManagerConfig,
-      policyManagerConfig,
+      feeManagerConfigData: '0x',
+      policyManagerConfigData: '0x',
     };
 
     const createNewFundTx = await createNewFund(newFundArgs);
     const fund = await createNewFundTx();
+    expect(fund.fundName).toBe(newFundArgs.fundName);
 
     await waitForSubgraph(subgraphStatusEndpoint, fund.__receipt.blockNumber);
     const subgraphFund = await fetchFund(subgraphApi, fund.vaultProxy.toLowerCase(), fund.__receipt.blockNumber);

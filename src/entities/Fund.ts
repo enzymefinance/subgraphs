@@ -1,14 +1,14 @@
 import { BigDecimal } from '@graphprotocol/graph-ts';
-import { NewFundDeployed } from '../generated/FundDeployerContract';
+import { NewFundCreated } from '../generated/FundDeployerContract';
 import { Fund } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
 import { ensureAccount, ensureManager } from './Account';
 import { useAsset } from './Asset';
-import { useRelease } from './Release';
+import { createFeePayout } from './FeePayout';
 import { createPortfolio } from './Portfolio';
+import { useRelease } from './Release';
 import { createShares } from './Shares';
 import { createState } from './State';
-import { createFeePayout } from './FeePayout';
 
 export function useFund(id: string): Fund {
   let fund = Fund.load(id) as Fund;
@@ -19,7 +19,7 @@ export function useFund(id: string): Fund {
   return fund;
 }
 
-export function createFund(event: NewFundDeployed): Fund {
+export function createFund(event: NewFundCreated): Fund {
   let id = event.params.vaultProxy.toHex();
 
   let fund = new Fund(id);
@@ -33,7 +33,7 @@ export function createFund(event: NewFundDeployed): Fund {
   fund.release = useRelease(event.address.toHex()).id;
   fund.accessor = event.params.comptrollerProxy.toHex();
   fund.manager = ensureManager(event.params.fundOwner, event).id;
-  fund.creator = ensureAccount(event.params.caller, event).id;
+  fund.creator = ensureAccount(event.params.creator, event).id;
   fund.trackedAssets = [];
   fund.shares = shares.id;
   fund.portfolio = portfolio.id;

@@ -61,7 +61,7 @@ interface PolicySetting {
 # Low-level fund event entities
 #################################################
 
-type NewFundDeployedEvent implements Event & FundEvent @entity {
+type NewFundCreatedEvent implements Event & FundEvent @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -69,12 +69,12 @@ type NewFundDeployedEvent implements Event & FundEvent @entity {
   timestamp: BigInt!
   comptrollerProxy: Contract!
   vaultProxy: Fund!
-  caller: Account!
+  creator: Account!
   fundOwner: Account!
   fundName: String!
   denominationAsset: Asset!
-  feeManagerConfig: String!
-  policyManagerConfig: String!
+  feeManagerConfigData: String!
+  policyManagerConfigData: String!
   transaction: Transaction!
 }
 
@@ -88,29 +88,28 @@ type ComptrollerProxyDeployedEvent implements Event & FundEvent @entity {
   transaction: Transaction!
 }
 
-type FundStatusUpdatedEvent implements Event & FundEvent @entity {
+type StatusUpdatedEvent implements Event & FundEvent @entity {
   id: ID!
   fund: Fund!
   account: Account!
   contract: Contract!
-  prevStatus: Int!
   nextStatus: Int!
   timestamp: BigInt!
   transaction: Transaction!
 }
 
-type FundConfigSetEvent implements Event & FundEvent @entity {
-  id: ID!
-  fund: Fund!
-  account: Account!
-  contract: Contract!
-  denominationAsset: Asset!
-  vaultProxy: Fund!
-  feeManagerConfigData: String!
-  policyManagerConfigData: String!
-  timestamp: BigInt!
-  transaction: Transaction!
-}
+# type FundConfigSetEvent implements Event & FundEvent @entity {
+#   id: ID!
+#   fund: Fund!
+#   account: Account!
+#   contract: Contract!
+#   denominationAsset: Asset!
+#   vaultProxy: Fund!
+#   feeManagerConfigData: String!
+#   policyManagerConfigData: String!
+#   timestamp: BigInt!
+#   transaction: Transaction!
+# }
 
 type SharesBoughtEvent implements Event & FundEvent & SharesChange @entity {
   id: ID!

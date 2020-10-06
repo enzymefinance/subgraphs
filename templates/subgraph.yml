@@ -9,7 +9,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: '{{dispatcher}}'
+      address: "{{dispatcher}}"
       abi: DispatcherContract
       startBlock: 0
     mapping:
@@ -53,7 +53,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: '{{engine}}'
+      address: "{{engine}}"
       abi: EngineContract
       startBlock: 0
     mapping:
@@ -87,7 +87,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: '{{fundDeployer}}'
+      address: "{{fundDeployer}}"
       abi: FundDeployerContract
       startBlock: 0
     mapping:
@@ -108,18 +108,24 @@ dataSources:
       eventHandlers:
         - event: AmguPaid(indexed address,uint256,uint256)
           handler: handleAmguPaid
-        - event: ComptrollerProxyDeployed(address,address)
+        - event: ComptrollerLibSet(address)
+          handler: handleComptrollerLibSet
+        - event: ComptrollerProxyDeployed(indexed address,address,indexed address,bytes,bytes,indexed bool)
           handler: handleComptrollerProxyDeployed
-        - event: NewFundDeployed(address,address,address,indexed address,string,indexed address,bytes,bytes)
-          handler: handleNewFundDeployed
-        - event: OwnershipTransferred(indexed address,indexed address)
-          handler: handleOwnershipTransferred
+        - event: NewFundCreated(indexed address,address,address,indexed address,string,indexed address,bytes,bytes)
+          handler: handleNewFundCreated
+        - event: ReleaseStatusSet(indexed uint8,indexed uint8)
+          handler: handleReleaseStatusSet
+        - event: VaultCallDeregistered(indexed address,bytes4)
+          handler: handleVaultCallDeregistered
+        - event: VaultCallRegistered(indexed address,bytes4)
+          handler: handleVaultCallRegistered
 
   - name: FeeManagerDataSource
     kind: ethereum/contract
     network: mainnet
     source:
-      address: '{{feeManager}}'
+      address: "{{feeManager}}"
       abi: FeeManagerContract
       startBlock: 0
     mapping:
@@ -155,7 +161,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: '{{managementFee}}'
+      address: "{{managementFee}}"
       abi: ManagementFeeContract
       startBlock: 0
     mapping:
@@ -187,7 +193,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: '{{performanceFee}}'
+      address: "{{performanceFee}}"
       abi: PerformanceFeeContract
       startBlock: 0
     mapping:
@@ -219,7 +225,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: '{{policyManager}}'
+      address: "{{policyManager}}"
       abi: PolicyManagerContract
       startBlock: 0
     mapping:
@@ -251,7 +257,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: '{{adapterBlacklist}}'
+      address: "{{adapterBlacklist}}"
       abi: AdapterBlacklistContract
       startBlock: 0
     mapping:
@@ -277,7 +283,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: '{{adapterWhitelist}}'
+      address: "{{adapterWhitelist}}"
       abi: AdapterWhitelistContract
       startBlock: 0
     mapping:
@@ -305,7 +311,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: '{{assetWhitelist}}'
+      address: "{{assetWhitelist}}"
       abi: AssetWhitelistContract
       startBlock: 0
     mapping:
@@ -331,7 +337,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: '{{assetBlacklist}}'
+      address: "{{assetBlacklist}}"
       abi: AssetBlacklistContract
       startBlock: 0
     mapping:
@@ -357,7 +363,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: '{{investorWhitelist}}'
+      address: "{{investorWhitelist}}"
       abi: InvestorWhitelistContract
       startBlock: 0
     mapping:
@@ -383,7 +389,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: '{{maxConcentration}}'
+      address: "{{maxConcentration}}"
       abi: MaxConcentrationContract
       startBlock: 0
     mapping:
@@ -407,7 +413,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: '{{integrationManager}}'
+      address: "{{integrationManager}}"
       abi: IntegrationManagerContract
       startBlock: 0
     mapping:
@@ -439,7 +445,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: '{{chainlinkPriceFeed}}'
+      address: "{{chainlinkPriceFeed}}"
       abi: ChainlinkPriceFeedContract
       startBlock: 0
     mapping:
@@ -469,7 +475,7 @@ dataSources:
     kind: ethereum/contract
     network: mainnet
     source:
-      address: '{{aggregatedDerivativePriceFeed}}'
+      address: "{{aggregatedDerivativePriceFeed}}"
       abi: AggregatedDerivativePriceFeedContract
       startBlock: 0
     mapping:
@@ -496,7 +502,7 @@ dataSources:
 templates:
   - name: VaultLibDataSource
     kind: ethereum/contract
-    network: 'mainnet'
+    network: "mainnet"
     source:
       abi: VaultLibContract
     mapping:
@@ -534,7 +540,7 @@ templates:
 
   - name: ComptrollerLibDataSource
     kind: ethereum/contract
-    network: 'mainnet'
+    network: "mainnet"
     source:
       abi: ComptrollerLibContract
     mapping:
@@ -553,14 +559,16 @@ templates:
       eventHandlers:
         - event: AmguPaid(indexed address,uint256,uint256)
           handler: handleAmguPaid
-        - event: FundConfigSet(indexed address,indexed address,bytes,bytes)
-          handler: handleFundConfigSet
-        - event: FundStatusUpdated(indexed uint8,indexed uint8)
-          handler: handleFundStatusUpdated
+        - event: MigratedSharesDuePaid(address,uint256)
+          handler: handleMigratedSharesDuePaid
         - event: SharesBought(indexed address,indexed address,uint256,uint256,uint256)
           handler: handleSharesBought
         - event: SharesRedeemed(indexed address,uint256,address[],uint256[])
           handler: handleSharesRedeemed
+        - event: StatusUpdated(indexed uint8)
+          handler: handleStatusUpdated
+        - event: VaultProxySet(address)
+          handler: handleVaultProxySet
 
   - name: ChainlinkAggregatorDataSource
     kind: ethereum/contract
