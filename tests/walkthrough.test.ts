@@ -71,7 +71,8 @@ describe('Walkthrough', () => {
       fundOwner: signer.address,
       denominationAsset: deployment.wethToken,
       fundName: 'My Super Fund',
-      feeManagerConfigData: '0x',
+      feeManagerConfigData,
+      // TODO: fix policyManagerConfigData
       policyManagerConfigData: '0x',
     };
 
