@@ -12,7 +12,6 @@ import { genericId } from '../utils/genericId';
 import { toBigDecimal } from '../utils/toBigDecimal';
 
 export function handleFundSettingsAdded(event: FundSettingsAdded): void {
-  // TODO: Instead of calling the contract, load the vault proxy from the fund / fund version entity.
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let vault = comptroller.getVaultProxy();
   let fee = useFee(event.address.toHex());

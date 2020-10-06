@@ -310,6 +310,18 @@ type FeeEnabledForFundEvent implements Event & FundEvent @entity {
   settingsData: Bytes!
 }
 
+type FeesRecipientSetEvent implements Event & FundEvent @entity {
+  id: ID!
+  contract: Contract!
+  fund: Fund!
+  account: Account!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: Contract!
+  prevFeesRecipient: String!
+  nextFeesRecipient: String!
+}
+
 type FeeSettledForFundEvent implements Event & FundEvent & SharesChange @entity {
   id: ID!
   contract: Contract!
@@ -577,6 +589,16 @@ type PerformanceFeeSettingsAddedEvent implements Event & FundEvent @entity {
   comptrollerProxy: Contract!
   rate: BigDecimal!
   period: BigInt!
+}
+
+type PerformanceFeeActivatedForFundEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: Contract!
 }
 
 #################################################

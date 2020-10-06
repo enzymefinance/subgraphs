@@ -9,10 +9,12 @@ import { trackFundShares } from '../entities/Shares';
 import { ensureTransaction } from '../entities/Transaction';
 import { ComptrollerLibContract } from '../generated/ComptrollerLibContract';
 import {
+  AllSharesOutstandingForcePaid,
   FeeDeregistered,
   FeeEnabledForFund,
   FeeRegistered,
   FeeSettledForFund,
+  FeesRecipientSet,
   SharesOutstandingPaidForFee,
 } from '../generated/FeeManagerContract';
 import {
@@ -21,20 +23,13 @@ import {
   FeeRegisteredEvent,
   FeeSettledForFundEvent,
   FeeSharesOutstandingPaidForFundEvent,
+  FeesRecipientSetEvent,
 } from '../generated/schema';
 import { arrayUnique } from '../utils/arrayUnique';
 import { genericId } from '../utils/genericId';
 import { toBigDecimal } from '../utils/toBigDecimal';
 
-export function handleFeeRegistered(event: FeeRegistered): void {
-  let registered = new FeeRegisteredEvent(genericId(event));
-  registered.contract = ensureContract(event.address, 'FeeManager').id;
-  registered.timestamp = event.block.timestamp;
-  registered.transaction = ensureTransaction(event).id;
-  registered.fee = ensureFee(event.params.fee).id;
-  registered.identifier = event.params.identifier.toHex();
-  registered.save();
-}
+export function handleAllSharesOutstandingForcePaid(event: AllSharesOutstandingForcePaid): void {}
 
 export function handleFeeDeregistered(event: FeeDeregistered): void {
   let deregistration = new FeeDeregisteredEvent(genericId(event));
@@ -44,6 +39,16 @@ export function handleFeeDeregistered(event: FeeDeregistered): void {
   deregistration.fee = useFee(event.params.fee.toHex()).id;
   deregistration.identifier = event.params.identifier.toHex();
   deregistration.save();
+}
+
+export function handleFeeRegistered(event: FeeRegistered): void {
+  let registered = new FeeRegisteredEvent(genericId(event));
+  registered.contract = ensureContract(event.address, 'FeeManager').id;
+  registered.timestamp = event.block.timestamp;
+  registered.transaction = ensureTransaction(event).id;
+  registered.fee = ensureFee(event.params.fee).id;
+  registered.identifier = event.params.identifier.toHex();
+  registered.save();
 }
 
 export function handleFeeEnabledForFund(event: FeeEnabledForFund): void {
@@ -122,4 +127,20 @@ export function handleSharesOutstandingPaidForFee(event: SharesOutstandingPaidFo
 
   trackFundShares(fund, event, sharesPaid);
   trackFeePayout(fund, fee, shares, event, sharesPaid);
+}
+
+export function handleFeesRecipientSet(event: FeesRecipientSet): void {
+  let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
+  let vaultProxy = comptroller.getVaultProxy().toHex();
+
+  let feeRecipientSet = new FeesRecipientSetEvent(genericId(event));
+  feeRecipientSet.contract = ensureContract(event.address, 'FeeManager').id;
+  feeRecipientSet.fund = vaultProxy;
+  feeRecipientSet.account = useManager(event.transaction.from.toHex()).id;
+  feeRecipientSet.timestamp = event.block.timestamp;
+  feeRecipientSet.transaction = ensureTransaction(event).id;
+  feeRecipientSet.comptrollerProxy = event.params.comptrollerProxy.toHex();
+  feeRecipientSet.prevFeesRecipient = event.params.prevFeesRecipient.toHex();
+  feeRecipientSet.nextFeesRecipient = event.params.nextFeesRecipient.toHex();
+  feeRecipientSet.save();
 }
