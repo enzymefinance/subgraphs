@@ -61,7 +61,7 @@ interface PolicySetting {
 # Low-level fund event entities
 #################################################
 
-type NewFundDeployedEvent implements Event & FundEvent @entity {
+type NewFundCreatedEvent implements Event & FundEvent @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -69,12 +69,12 @@ type NewFundDeployedEvent implements Event & FundEvent @entity {
   timestamp: BigInt!
   comptrollerProxy: Contract!
   vaultProxy: Fund!
-  caller: Account!
+  creator: Account!
   fundOwner: Account!
   fundName: String!
   denominationAsset: Asset!
-  feeManagerConfig: String!
-  policyManagerConfig: String!
+  feeManagerConfigData: String!
+  policyManagerConfigData: String!
   transaction: Transaction!
 }
 
@@ -88,28 +88,24 @@ type ComptrollerProxyDeployedEvent implements Event & FundEvent @entity {
   transaction: Transaction!
 }
 
-type FundStatusUpdatedEvent implements Event & FundEvent @entity {
+type StatusUpdatedEvent implements Event & FundEvent @entity {
   id: ID!
   fund: Fund!
   account: Account!
   contract: Contract!
-  prevStatus: Int!
   nextStatus: Int!
   timestamp: BigInt!
   transaction: Transaction!
 }
 
-type FundConfigSetEvent implements Event & FundEvent @entity {
+type VaultProxySetEvent implements Event & FundEvent @entity {
   id: ID!
   fund: Fund!
   account: Account!
   contract: Contract!
-  denominationAsset: Asset!
-  vaultProxy: Fund!
-  feeManagerConfigData: String!
-  policyManagerConfigData: String!
   timestamp: BigInt!
   transaction: Transaction!
+  vaultProxy: String!
 }
 
 type SharesBoughtEvent implements Event & FundEvent & SharesChange @entity {
@@ -314,6 +310,18 @@ type FeeEnabledForFundEvent implements Event & FundEvent @entity {
   settingsData: Bytes!
 }
 
+type FeesRecipientSetEvent implements Event & FundEvent @entity {
+  id: ID!
+  contract: Contract!
+  fund: Fund!
+  account: Account!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: Contract!
+  prevFeesRecipient: String!
+  nextFeesRecipient: String!
+}
+
 type FeeSettledForFundEvent implements Event & FundEvent & SharesChange @entity {
   id: ID!
   contract: Contract!
@@ -400,20 +408,17 @@ type VaultLibSetEvent implements Event & FundEvent @entity {
   nextVaultLib: Contract!
 }
 
-#  approvals will only be applicable if and when the transfer of fund shares is allowed.
-#  see comments in mappings/VaultLib.ts to enable event monitoring for these entities
-
-# type ApprovalEvent implements Event & FundEvent @entity {
-#   id: ID!
-#   fund: Fund!
-#   account: Account!
-#   contract: Contract!
-#   timestamp: BigInt!
-#   transaction: Transaction!
-#   owner: Account!
-#   spender: IntegrationAdapter!
-#   value: BigDecimal!
-# }
+type ApprovalEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  owner: String!
+  spender: String!
+  value: BigDecimal!
+}
 
 type TransferEvent implements Event & FundEvent @entity {
   id: ID!
@@ -581,6 +586,16 @@ type PerformanceFeeSettingsAddedEvent implements Event & FundEvent @entity {
   comptrollerProxy: Contract!
   rate: BigDecimal!
   period: BigInt!
+}
+
+type PerformanceFeeActivatedForFundEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: Contract!
 }
 
 #################################################

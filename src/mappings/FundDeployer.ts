@@ -7,36 +7,31 @@ import { ensureTransaction } from '../entities/Transaction';
 import { ComptrollerLibContract } from '../generated/ComptrollerLibContract';
 import {
   AmguPaid,
+  ComptrollerLibSet,
   ComptrollerProxyDeployed,
-  NewFundDeployed,
-  OwnershipTransferred,
+  NewFundCreated,
 } from '../generated/FundDeployerContract';
-import {
-  AmguPaidEvent,
-  ComptrollerProxyDeployedEvent,
-  NewFundDeployedEvent,
-  OwnershipTransferredEvent,
-} from '../generated/schema';
+import { AmguPaidEvent, ComptrollerProxyDeployedEvent, NewFundCreatedEvent } from '../generated/schema';
 import { ComptrollerLibDataSource, VaultLibDataSource } from '../generated/templates';
 import { genericId } from '../utils/genericId';
 import { toBigDecimal } from '../utils/toBigDecimal';
 
-export function handleNewFundDeployed(event: NewFundDeployed): void {
-  let fundDeployment = new NewFundDeployedEvent(genericId(event));
-  fundDeployment.timestamp = event.block.timestamp;
-  fundDeployment.fund = event.params.vaultProxy.toHex();
-  fundDeployment.account = ensureManager(event.params.fundOwner, event).id;
-  fundDeployment.contract = ensureContract(event.address, 'FundDeployer').id;
-  fundDeployment.comptrollerProxy = event.params.comptrollerProxy.toHex();
-  fundDeployment.vaultProxy = event.params.vaultProxy.toHex();
-  fundDeployment.fundOwner = ensureManager(event.params.fundOwner, event).id;
-  fundDeployment.fundName = event.params.fundName;
-  fundDeployment.caller = ensureAccount(event.params.caller, event).id;
-  fundDeployment.denominationAsset = useAsset(event.params.denominationAsset.toHex()).id;
-  fundDeployment.feeManagerConfig = event.params.feeManagerConfig.toHex();
-  fundDeployment.policyManagerConfig = event.params.policyManagerConfig.toHex();
-  fundDeployment.transaction = ensureTransaction(event).id;
-  fundDeployment.save();
+export function handleNewFundCreated(event: NewFundCreated): void {
+  let fundCreation = new NewFundCreatedEvent(genericId(event));
+  fundCreation.timestamp = event.block.timestamp;
+  fundCreation.fund = event.params.vaultProxy.toHex();
+  fundCreation.account = ensureManager(event.params.fundOwner, event).id;
+  fundCreation.contract = ensureContract(event.address, 'FundDeployer').id;
+  fundCreation.comptrollerProxy = event.params.comptrollerProxy.toHex();
+  fundCreation.vaultProxy = event.params.vaultProxy.toHex();
+  fundCreation.fundOwner = ensureManager(event.params.fundOwner, event).id;
+  fundCreation.fundName = event.params.fundName;
+  fundCreation.creator = ensureAccount(event.params.creator, event).id;
+  fundCreation.denominationAsset = useAsset(event.params.denominationAsset.toHex()).id;
+  fundCreation.feeManagerConfigData = event.params.feeManagerConfigData.toHex();
+  fundCreation.policyManagerConfigData = event.params.policyManagerConfigData.toHex();
+  fundCreation.transaction = ensureTransaction(event).id;
+  fundCreation.save();
 
   createFund(event);
 
@@ -57,6 +52,10 @@ export function handleAmguPaid(event: AmguPaid): void {
   amguPaid.save();
 }
 
+export function handleComptrollerLibSet(event: ComptrollerLibSet): void {
+  // TODO: implement
+}
+
 export function handleComptrollerProxyDeployed(event: ComptrollerProxyDeployed): void {
   // TODO: Instead of calling the contract, load the vault proxy from the fund / fund version entity.
   let comptrollerProxy = ComptrollerLibContract.bind(event.params.comptrollerProxy);
@@ -70,14 +69,4 @@ export function handleComptrollerProxyDeployed(event: ComptrollerProxyDeployed):
   comptrollerProxyDeployment.comptrollerProxy = event.params.comptrollerProxy.toHex();
   comptrollerProxyDeployment.transaction = ensureTransaction(event).id;
   comptrollerProxyDeployment.save();
-}
-
-export function handleOwnershipTransferred(event: OwnershipTransferred): void {
-  let transfer = new OwnershipTransferredEvent(genericId(event));
-  transfer.timestamp = event.block.timestamp;
-  transfer.contract = ensureContract(event.address, 'FundDeployer').id;
-  transfer.previousOwner = event.params.previousOwner.toHex();
-  transfer.newOwner = event.params.newOwner.toHex();
-  transfer.transaction = ensureTransaction(event).id;
-  transfer.save();
 }

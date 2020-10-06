@@ -5,15 +5,27 @@ import { ensurePerformanceFeeSetting } from '../entities/PerformanceFeeSetting';
 import { ensureTransaction } from '../entities/Transaction';
 import { ComptrollerLibContract } from '../generated/ComptrollerLibContract';
 import { ActivatedForFund, FundSettingsAdded, PaidOut, PerformanceUpdated } from '../generated/PerformanceFeeContract';
-import { PerformanceFeeSettingsAddedEvent } from '../generated/schema';
+import { PerformanceFeeActivatedForFundEvent, PerformanceFeeSettingsAddedEvent } from '../generated/schema';
 import { arrayUnique } from '../utils/arrayUnique';
 import { genericId } from '../utils/genericId';
 import { toBigDecimal } from '../utils/toBigDecimal';
 
-export function handleActivatedForFund(event: ActivatedForFund): void {}
+export function handleActivatedForFund(event: ActivatedForFund): void {
+  let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
+  let vault = comptroller.getVaultProxy();
+  let fee = useFee(event.address.toHex());
+
+  let feeActivation = new PerformanceFeeActivatedForFundEvent(genericId(event));
+  feeActivation.fund = vault.toHex(); // fund does not exist yet
+  feeActivation.account = ensureManager(event.transaction.from, event).id;
+  feeActivation.contract = ensureContract(event.address, 'PerformanceFee').id;
+  feeActivation.timestamp = event.block.timestamp;
+  feeActivation.transaction = ensureTransaction(event).id;
+  feeActivation.comptrollerProxy = event.params.comptrollerProxy.toHex();
+  feeActivation.save();
+}
 
 export function handleFundSettingsAdded(event: FundSettingsAdded): void {
-  // TODO: Instead of calling the contract, load the vault proxy from the fund / fund version entity.
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let vault = comptroller.getVaultProxy();
   let fee = useFee(event.address.toHex());

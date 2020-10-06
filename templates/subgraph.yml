@@ -108,12 +108,18 @@ dataSources:
       eventHandlers:
         - event: AmguPaid(indexed address,uint256,uint256)
           handler: handleAmguPaid
-        - event: ComptrollerProxyDeployed(address,address)
+        - event: ComptrollerLibSet(address)
+          handler: handleComptrollerLibSet
+        - event: ComptrollerProxyDeployed(indexed address,address,indexed address,bytes,bytes,indexed bool)
           handler: handleComptrollerProxyDeployed
-        - event: NewFundDeployed(address,address,address,indexed address,string,indexed address,bytes,bytes)
-          handler: handleNewFundDeployed
-        - event: OwnershipTransferred(indexed address,indexed address)
-          handler: handleOwnershipTransferred
+        - event: NewFundCreated(indexed address,address,address,indexed address,string,indexed address,bytes,bytes)
+          handler: handleNewFundCreated
+        - event: ReleaseStatusSet(indexed uint8,indexed uint8)
+          handler: handleReleaseStatusSet
+        - event: VaultCallDeregistered(indexed address,bytes4)
+          handler: handleVaultCallDeregistered
+        - event: VaultCallRegistered(indexed address,bytes4)
+          handler: handleVaultCallRegistered
 
   - name: FeeManagerDataSource
     kind: ethereum/contract
@@ -140,6 +146,8 @@ dataSources:
         - name: IFeeInterface
           file: ./node_modules/@melonproject/release/artifacts/IFee.json
       eventHandlers:
+        - event: AllSharesOutstandingForcePaid(indexed address,address,uint256)
+          handler: handleAllSharesOutstandingForcePaid
         - event: FeeDeregistered(indexed address,indexed string)
           handler: handleFeeDeregistered
         - event: FeeEnabledForFund(indexed address,indexed address,bytes)
@@ -148,6 +156,8 @@ dataSources:
           handler: handleFeeRegistered
         - event: FeeSettledForFund(indexed address,indexed address,uint8,uint256)
           handler: handleFeeSettledForFund
+        - event: FeesRecipientSet(indexed address,address,address)
+          handler: handleFeesRecipientSet
         - event: SharesOutstandingPaidForFee(indexed address,indexed address,address,uint256)
           handler: handleSharesOutstandingPaidForFee
 
@@ -553,14 +563,16 @@ templates:
       eventHandlers:
         - event: AmguPaid(indexed address,uint256,uint256)
           handler: handleAmguPaid
-        - event: FundConfigSet(indexed address,indexed address,bytes,bytes)
-          handler: handleFundConfigSet
-        - event: FundStatusUpdated(indexed uint8,indexed uint8)
-          handler: handleFundStatusUpdated
+        - event: MigratedSharesDuePaid(address,uint256)
+          handler: handleMigratedSharesDuePaid
         - event: SharesBought(indexed address,indexed address,uint256,uint256,uint256)
           handler: handleSharesBought
         - event: SharesRedeemed(indexed address,uint256,address[],uint256[])
           handler: handleSharesRedeemed
+        - event: StatusUpdated(indexed uint8)
+          handler: handleStatusUpdated
+        - event: VaultProxySet(address)
+          handler: handleVaultProxySet
 
   - name: ChainlinkAggregatorDataSource
     kind: ethereum/contract

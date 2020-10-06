@@ -9,18 +9,18 @@ import { trackFundShares } from '../entities/Shares';
 import { ensureTransaction } from '../entities/Transaction';
 import {
   AmguPaid,
-  FundConfigSet,
-  FundStatusUpdated,
   SharesBought,
   SharesRedeemed,
+  StatusUpdated,
+  VaultProxySet,
 } from '../generated/ComptrollerLibContract';
 import {
   AmguPaidEvent,
   Asset,
-  FundConfigSetEvent,
-  FundStatusUpdatedEvent,
   SharesBoughtEvent,
   SharesRedeemedEvent,
+  StatusUpdatedEvent,
+  VaultProxySetEvent,
 } from '../generated/schema';
 import { genericId } from '../utils/genericId';
 import { toBigDecimal } from '../utils/toBigDecimal';
@@ -35,51 +35,31 @@ export function handleAmguPaid(event: AmguPaid): void {
   amguPaid.save();
 }
 
-export function handleFundConfigSet(event: FundConfigSet): void {
-  let fundId = dataSource.context().getString('vaultProxy');
-  let fundConfig = new FundConfigSetEvent(genericId(event));
-  fundConfig.timestamp = event.block.timestamp;
-  fundConfig.contract = ensureContract(event.address, 'ComptrollerLib').id;
-  fundConfig.fund = fundId;
-  fundConfig.account = useAccount(event.transaction.from.toHex()).id;
-  fundConfig.denominationAsset = useAsset(event.params.denominationAsset.toHex()).id;
-  fundConfig.vaultProxy = fundId;
-  fundConfig.feeManagerConfigData = event.params.feeManagerConfigData.toHex();
-  fundConfig.policyManagerConfigData = event.params.policyManagerConfigData.toHex();
-  fundConfig.transaction = ensureTransaction(event).id;
-  fundConfig.save();
-}
-
 function translateFundStatus(status: number): string {
   if (status == 0) {
-    return 'None';
-  }
-
-  if (status == 1) {
     return 'Pending';
   }
 
-  if (status == 2) {
+  if (status == 1) {
     return 'Active';
   }
 
   return 'Shutdown';
 }
 
-export function handleFundStatusUpdated(event: FundStatusUpdated): void {
+export function handleStatusUpdated(event: StatusUpdated): void {
   let fund = useFund(dataSource.context().getString('vaultProxy'));
   fund.status = translateFundStatus(event.params.nextStatus);
   fund.save();
 
-  let fundStatusUpdate = new FundStatusUpdatedEvent(genericId(event));
-  fundStatusUpdate.timestamp = event.block.timestamp;
-  fundStatusUpdate.contract = ensureContract(event.address, 'ComptrollerLib').id;
-  fundStatusUpdate.fund = fund.id;
-  fundStatusUpdate.account = useAccount(event.transaction.from.toHex()).id;
-  fundStatusUpdate.prevStatus = event.params.prevStatus;
-  fundStatusUpdate.nextStatus = event.params.nextStatus;
-  fundStatusUpdate.transaction = ensureTransaction(event).id;
-  fundStatusUpdate.save();
+  let statusUpdate = new StatusUpdatedEvent(genericId(event));
+  statusUpdate.timestamp = event.block.timestamp;
+  statusUpdate.contract = ensureContract(event.address, 'ComptrollerLib').id;
+  statusUpdate.fund = fund.id;
+  statusUpdate.account = useAccount(event.transaction.from.toHex()).id;
+  statusUpdate.nextStatus = event.params.nextStatus;
+  statusUpdate.transaction = ensureTransaction(event).id;
+  statusUpdate.save();
 }
 
 export function handleSharesBought(event: SharesBought): void {
@@ -140,4 +120,15 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
 
   trackFundPortfolio(fund, event, redemption);
   trackFundShares(fund, event, redemption);
+}
+
+export function handleVaultProxySet(event: VaultProxySet): void {
+  let vaultProxySet = new VaultProxySetEvent(genericId(event));
+  vaultProxySet.fund = event.params.vaultProxy.toHex();
+  vaultProxySet.account = useAccount(event.transaction.from.toHex()).id;
+  vaultProxySet.contract = ensureContract(event.address, 'ComptrollerLib').id;
+  vaultProxySet.timestamp = event.block.timestamp;
+  vaultProxySet.transaction = ensureTransaction(event).id;
+  vaultProxySet.vaultProxy = event.params.vaultProxy.toHex();
+  vaultProxySet.save();
 }

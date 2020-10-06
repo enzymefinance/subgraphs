@@ -7,6 +7,7 @@ import { useFund } from '../entities/Fund';
 import { ensureTransaction } from '../entities/Transaction';
 import {
   AccessorSetEvent,
+  ApprovalEvent,
   AssetWithdrawnEvent,
   MigratorSetEvent,
   OwnerSetEvent,
@@ -17,6 +18,7 @@ import {
 } from '../generated/schema';
 import {
   AccessorSet,
+  Approval,
   AssetWithdrawn,
   MigratorSet,
   OwnerSet,
@@ -129,27 +131,18 @@ export function handleVaultLibSet(event: VaultLibSet): void {
   vaultLibSet.save();
 }
 
-/**
- * approvals will only be applicable if and when the transfer of fund shares is allowed
- * to implement the functions below:
- *  - uncomment the types in schema.graphql
- *  - run yarn codegen
- *  - import the ApprovalEvent and TransferEvent types from ../generated/schema.ts
- *  - import the Approval and Transfer types from ../generated/VaultLibContract.ts
- */
-
-// export function handleApproval(event: Approval): void {
-// let approval = new ApprovalEvent(genericId(event));
-// approval.fund = useFund(event.address.toHex()).id;
-// approval.account = ensureAccount(event.transaction.from).id;
-// approval.contract = event.address.toHex();
-// approval.timestamp = event.block.timestamp;
-// approval.transaction = ensureTransaction(event).id;
-// approval.owner = ensureAccount(event.params.owner).id;
-// approval.spender = nsureAccount(event.params.spender).id
-// approval.value = toBigDecimal(event.params.value);
-// approval.save();
-// }
+export function handleApproval(event: Approval): void {
+  let approval = new ApprovalEvent(genericId(event));
+  approval.fund = useFund(event.address.toHex()).id;
+  approval.account = ensureAccount(event.transaction.from, event).id;
+  approval.contract = event.address.toHex();
+  approval.timestamp = event.block.timestamp;
+  approval.transaction = ensureTransaction(event).id;
+  approval.owner = event.params.owner.toHex();
+  approval.spender = event.params.spender.toHex();
+  approval.value = toBigDecimal(event.params.value);
+  approval.save();
+}
 
 export function handleTransfer(event: Transfer): void {
   let transfer = new TransferEvent(genericId(event));
