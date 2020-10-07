@@ -1,6 +1,6 @@
 import { BigInt } from '@graphprotocol/graph-ts';
-import { HourlyAssetPriceCandle, DailyAssetPriceCandle, WeeklyAssetPriceCandle } from '../generated/schema';
-import { hour, day, week } from '../utils/timeHelpers';
+import { DailyAssetPriceCandle, HourlyAssetPriceCandle } from '../generated/schema';
+import { day, hour } from '../utils/timeHelpers';
 import { AssetPriceCandleGroup } from './AssetPriceEntity';
 
 export function ensureHourlyAssetPriceCandleGroup(from: BigInt): HourlyAssetPriceCandle {
@@ -11,11 +11,6 @@ export function ensureHourlyAssetPriceCandleGroup(from: BigInt): HourlyAssetPric
 export function ensureDailyAssetPriceCandleGroup(from: BigInt): DailyAssetPriceCandle {
   let to = from.plus(day);
   return ensureAssetPriceCandleGroup('Daily', from, to) as DailyAssetPriceCandle;
-}
-
-export function ensureWeeklyAssetPriceCandleGroup(from: BigInt): WeeklyAssetPriceCandle {
-  let to = from.plus(week);
-  return ensureAssetPriceCandleGroup('Weekly', from, to) as WeeklyAssetPriceCandle;
 }
 
 function ensureAssetPriceCandleGroup(type: string, from: BigInt, to: BigInt): AssetPriceCandleGroup {

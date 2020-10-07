@@ -1015,13 +1015,11 @@ type Asset @entity {
   price: AssetPrice
   hourly: HourlyAssetPriceCandle
   daily: DailyAssetPriceCandle
-  weekly: WeeklyAssetPriceCandle
 
   # Historical prices and candles
   priceHistory: [AssetPrice!]! @derivedFrom(field: "asset")
   hourlyHistory: [HourlyAssetPriceCandle!]! @derivedFrom(field: "asset")
   dailyHistory: [DailyAssetPriceCandle!]! @derivedFrom(field: "asset")
-  weeklyHistory: [WeeklyAssetPriceCandle!]! @derivedFrom(field: "asset")
 
   # Fund references
   denominatedFunds: [Fund!]! @derivedFrom(field: "denominationAsset")
@@ -1067,22 +1065,6 @@ type DailyAssetPriceCandle @entity {
   highRef: AssetPrice!
 }
 
-type WeeklyAssetPriceCandle @entity {
-  id: ID!
-  asset: Asset!
-  group: WeeklyAssetPriceCandleGroup!
-  from: BigInt!
-  to: BigInt!
-  open: BigDecimal!
-  openRef: AssetPrice!
-  close: BigDecimal!
-  closeRef: AssetPrice!
-  low: BigDecimal!
-  lowRef: AssetPrice!
-  high: BigDecimal!
-  highRef: AssetPrice!
-}
-
 type HourlyAssetPriceCandleGroup @entity {
   id: ID!
   from: BigInt!
@@ -1097,13 +1079,6 @@ type DailyAssetPriceCandleGroup @entity {
   candles: [DailyAssetPriceCandle!]! @derivedFrom(field: "group")
 }
 
-type WeeklyAssetPriceCandleGroup @entity {
-  id: ID!
-  from: BigInt!
-  to: BigInt!
-  candles: [WeeklyAssetPriceCandle!]! @derivedFrom(field: "group")
-}
-
 type ChainlinkAggregator @entity {
   id: ID!
   asset: Asset!
@@ -1113,7 +1088,7 @@ type ChainlinkAggregator @entity {
 
 # Knowing the timestamp of the most recent update allows us to create missing
 # candles / fill gaps and decide when to re-fetch prices for our derivatives.
-# Every time a new hour / day / week is started (checked with modulo based
+# Every time a new hour / day is started (checked with modulo based
 # on the timestamp), we create new group entities and also fill gaps in the
 # candles. We can always load the most recent candles because we know the
 # when it was most recently updated.

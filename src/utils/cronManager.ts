@@ -1,15 +1,11 @@
 import { BigInt } from '@graphprotocol/graph-ts';
 import { useAsset } from '../entities/Asset';
 import { trackAssetPrice, useAssetPrice } from '../entities/AssetPrice';
-import {
-  ensureDailyAssetPriceCandleGroup,
-  ensureHourlyAssetPriceCandleGroup,
-  ensureWeeklyAssetPriceCandleGroup,
-} from '../entities/AssetPriceCandleGroup';
+import { ensureDailyAssetPriceCandleGroup, ensureHourlyAssetPriceCandleGroup } from '../entities/AssetPriceCandleGroup';
 import { Cron } from '../generated/schema';
 import { arrayUnique } from './arrayUnique';
 import { logCritical } from './logCritical';
-import { getDayOpenTime, getHourOpenTime, getTenMinuteOpenTime, getWeekOpenTime } from './timeHelpers';
+import { getDayOpenTime, getHourOpenTime, getTenMinuteOpenTime } from './timeHelpers';
 import { fetchAssetPrice } from './valueInterpreter';
 
 export function ensureCron(): Cron {
@@ -68,11 +64,6 @@ function cronCandles(cron: Cron, timestamp: BigInt): void {
   let currentDay = getDayOpenTime(timestamp);
   if (currentDay.gt(getDayOpenTime(cron.cron))) {
     ensureDailyAssetPriceCandleGroup(currentDay);
-  }
-
-  let currentWeek = getWeekOpenTime(timestamp);
-  if (currentWeek.gt(getWeekOpenTime(cron.cron))) {
-    ensureWeeklyAssetPriceCandleGroup(currentWeek);
   }
 
   let ids = arrayUnique<string>(cron.primitives.concat(cron.derivatives));

@@ -1,12 +1,6 @@
 import { BigInt } from '@graphprotocol/graph-ts';
-import {
-  DailyAssetPriceCandle,
-  HourlyAssetPriceCandle,
-  AssetPrice,
-  WeeklyAssetPriceCandle,
-  Asset,
-} from '../generated/schema';
-import { day, dayAdjustment, hour, hourAdjustment, week, weekAdjustment } from '../utils/timeHelpers';
+import { Asset, AssetPrice, DailyAssetPriceCandle, HourlyAssetPriceCandle } from '../generated/schema';
+import { day, hour } from '../utils/timeHelpers';
 import { useAssetPrice } from './AssetPrice';
 import { AssetPriceCandle } from './AssetPriceEntity';
 
@@ -17,32 +11,22 @@ export function assetPriceCandleId(assetId: string, type: string, open: BigInt):
 export function updateHourlyAssetPriceCandle(asset: Asset, current: AssetPrice): HourlyAssetPriceCandle {
   let type = 'Hourly';
   let interval = hour;
-  let adjustment = hourAdjustment;
-  return maintainAssetPriceCandle(type, interval, adjustment, asset, current) as HourlyAssetPriceCandle;
+  return maintainAssetPriceCandle(type, interval, asset, current) as HourlyAssetPriceCandle;
 }
 
 export function updateDailyAssetPriceCandle(asset: Asset, current: AssetPrice): DailyAssetPriceCandle {
   let type = 'Daily';
   let interval = day;
-  let adjustment = dayAdjustment;
-  return maintainAssetPriceCandle(type, interval, adjustment, asset, current) as DailyAssetPriceCandle;
-}
-
-export function updateWeeklyAssetPriceCandle(asset: Asset, current: AssetPrice): WeeklyAssetPriceCandle {
-  let type = 'Weekly';
-  let interval = week;
-  let adjustment = weekAdjustment;
-  return maintainAssetPriceCandle(type, interval, adjustment, asset, current) as WeeklyAssetPriceCandle;
+  return maintainAssetPriceCandle(type, interval, asset, current) as DailyAssetPriceCandle;
 }
 
 export function maintainAssetPriceCandle(
   type: string,
   interval: BigInt,
-  adjustment: BigInt,
   asset: Asset,
   current: AssetPrice,
 ): AssetPriceCandle {
-  let excess = current.timestamp.minus(adjustment).mod(interval);
+  let excess = current.timestamp.mod(interval);
   let from = current.timestamp.minus(excess);
   let to = from.plus(interval);
 

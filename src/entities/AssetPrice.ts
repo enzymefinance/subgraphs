@@ -1,11 +1,7 @@
 import { BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 import { Asset, AssetPrice } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
-import {
-  updateHourlyAssetPriceCandle,
-  updateDailyAssetPriceCandle,
-  updateWeeklyAssetPriceCandle,
-} from './AssetPriceCandle';
+import { updateDailyAssetPriceCandle, updateHourlyAssetPriceCandle } from './AssetPriceCandle';
 
 export function assetPriceId(asset: Asset, timestamp: BigInt): string {
   return asset.id + '/' + timestamp.toString();
@@ -51,14 +47,12 @@ export function trackAssetPrice(asset: Asset, timestamp: BigInt, price: BigDecim
   let current = ensureAssetPrice(asset, price, timestamp);
   let hourly = updateHourlyAssetPriceCandle(asset, current);
   let daily = updateDailyAssetPriceCandle(asset, current);
-  let weekly = updateWeeklyAssetPriceCandle(asset, current);
 
   // NOTE: It's important that we update the price references AFTER the candles have been updated.
   // Otherwise, we can't carry over the previous to the new candles.
   asset.price = current.id;
   asset.hourly = hourly.id;
   asset.daily = daily.id;
-  asset.weekly = weekly.id;
   asset.save();
 
   return current;
