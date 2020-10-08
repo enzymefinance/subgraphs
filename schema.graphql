@@ -57,6 +57,15 @@ interface PolicySetting {
   events: [FundEvent!]!
 }
 
+interface IndividualFeePayout {
+  id: ID!
+  fund: Fund!
+  timestamp: BigInt!
+  fee: Fee!
+  shares: BigDecimal!
+  events: [FundEvent!]!
+}
+
 #################################################
 # Low-level fund event entities
 #################################################
@@ -117,7 +126,8 @@ type SharesBoughtEvent implements Event & FundEvent & SharesChange @entity {
   investment: Investment!
   shares: BigDecimal!
   asset: Asset!
-  quantity: BigDecimal!
+  investmentAmount: BigDecimal!
+  sharesBought: BigDecimal!
   timestamp: BigInt!
   transaction: Transaction!
 }
@@ -130,8 +140,8 @@ type SharesRedeemedEvent implements Event & FundEvent & SharesChange @entity {
   investor: Account!
   investment: Investment!
   shares: BigDecimal!
-  assets: [Asset!]!
-  quantities: [BigDecimal!]!
+  payoutAssets: [Asset!]!
+  payoutQuantities: [BigDecimal!]!
   timestamp: BigInt!
   transaction: Transaction!
 }
@@ -992,11 +1002,22 @@ type FeePayout implements Metric @entity {
   events: [FundEvent!]!
 }
 
-type IndividualFeePayout implements Metric @entity {
+type ManagementFeePayout implements Metric & IndividualFeePayout @entity {
   id: ID!
   fund: Fund!
   timestamp: BigInt!
   fee: Fee!
+  shares: BigDecimal!
+  events: [FundEvent!]!
+}
+
+type PerformanceFeePayout implements Metric & IndividualFeePayout @entity {
+  id: ID!
+  fund: Fund!
+  timestamp: BigInt!
+  fee: Fee!
+  grossSharePrice: BigDecimal!
+  hwm: BigDecimal!
   shares: BigDecimal!
   events: [FundEvent!]!
 }

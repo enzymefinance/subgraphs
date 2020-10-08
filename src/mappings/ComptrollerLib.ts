@@ -76,7 +76,8 @@ export function handleSharesBought(event: SharesBought): void {
   addition.contract = ensureContract(event.address, 'ComptrollerLib').id;
   addition.investment = investment.id;
   addition.asset = asset.id;
-  addition.quantity = toBigDecimal(event.params.investmentAmount, asset.decimals);
+  addition.investmentAmount = toBigDecimal(event.params.investmentAmount, asset.decimals);
+  addition.sharesBought = toBigDecimal(event.params.sharesBought);
   addition.shares = shares;
   addition.timestamp = event.block.timestamp;
   addition.transaction = ensureTransaction(event).id;
@@ -109,8 +110,8 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
   redemption.contract = ensureContract(event.address, 'ComptrollerLib').id;
   redemption.investment = investment.id;
   redemption.shares = shares;
-  redemption.assets = assets.map<string>((item) => item.id);
-  redemption.quantities = quantities;
+  redemption.payoutAssets = assets.map<string>((item) => item.id);
+  redemption.payoutQuantities = quantities;
   redemption.timestamp = event.block.timestamp;
   redemption.transaction = ensureTransaction(event).id;
   redemption.save();

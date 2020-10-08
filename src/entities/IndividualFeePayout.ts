@@ -1,5 +1,5 @@
 import { BigDecimal, Entity, ethereum } from '@graphprotocol/graph-ts';
-import { Fee, Fund, IndividualFeePayout } from '../generated/schema';
+import { Fee, Fund, ManagementFeePayout, PerformanceFeePayout } from '../generated/schema';
 import { arrayUnique } from '../utils/arrayUnique';
 import { logCritical } from '../utils/logCritical';
 
@@ -7,14 +7,14 @@ function individualFeePayoutId(fund: Fund, fee: Fee, event: ethereum.Event): str
   return fund.id + '/' + event.block.timestamp.toString() + '/payout/' + fee.identifier;
 }
 
-function createIndividualFeePayout(
+function createManagementFeePayout(
   fund: Fund,
   fee: Fee,
   shares: BigDecimal,
   event: ethereum.Event,
   cause: Entity,
-): IndividualFeePayout {
-  let feePayout = new IndividualFeePayout(individualFeePayoutId(fund, fee, event));
+): ManagementFeePayout {
+  let feePayout = new ManagementFeePayout(individualFeePayoutId(fund, fee, event));
   feePayout.timestamp = event.block.timestamp;
   feePayout.fund = fund.id;
   feePayout.fee = fee.id;
@@ -25,17 +25,17 @@ function createIndividualFeePayout(
   return feePayout;
 }
 
-export function ensureIndividualFeePayout(
+export function ensureManagementFeePayout(
   fund: Fund,
   fee: Fee,
   shares: BigDecimal,
   event: ethereum.Event,
   cause: Entity,
-): IndividualFeePayout {
-  let feePayout = IndividualFeePayout.load(individualFeePayoutId(fund, fee, event)) as IndividualFeePayout;
+): ManagementFeePayout {
+  let feePayout = ManagementFeePayout.load(individualFeePayoutId(fund, fee, event)) as ManagementFeePayout;
 
   if (!feePayout) {
-    feePayout = createIndividualFeePayout(fund, fee, shares, event, cause);
+    feePayout = createManagementFeePayout(fund, fee, shares, event, cause);
   } else {
     let events = feePayout.events;
     feePayout.events = arrayUnique<string>(events.concat([cause.getString('id')]));
@@ -45,21 +45,61 @@ export function ensureIndividualFeePayout(
   return feePayout;
 }
 
-export function useIndividualFeePayout(id: string): IndividualFeePayout {
-  let feePayout = IndividualFeePayout.load(id);
+export function useManagementFeePayout(id: string): ManagementFeePayout {
+  let feePayout = ManagementFeePayout.load(id) as ManagementFeePayout;
   if (feePayout == null) {
     logCritical('Failed to load fee payout {}.', [id]);
   }
 
-  return feePayout as IndividualFeePayout;
+  return feePayout;
 }
 
-export function trackIndividualFee(
+function createPerformanceFeePayout(
   fund: Fund,
   fee: Fee,
   shares: BigDecimal,
   event: ethereum.Event,
   cause: Entity,
-): IndividualFeePayout {
-  return ensureIndividualFeePayout(fund, fee, shares, event, cause);
+): PerformanceFeePayout {
+  let feePayout = new PerformanceFeePayout(individualFeePayoutId(fund, fee, event));
+  feePayout.timestamp = event.block.timestamp;
+  feePayout.fund = fund.id;
+  feePayout.fee = fee.id;
+  feePayout.shares = shares;
+  feePayout.events = [cause.getString('id')];
+  // TODO: get correct values
+  feePayout.grossSharePrice = BigDecimal.fromString('0');
+  feePayout.hwm = BigDecimal.fromString('0');
+  feePayout.save();
+
+  return feePayout;
+}
+
+export function ensurePerformanceFeePayout(
+  fund: Fund,
+  fee: Fee,
+  shares: BigDecimal,
+  event: ethereum.Event,
+  cause: Entity,
+): PerformanceFeePayout {
+  let feePayout = PerformanceFeePayout.load(individualFeePayoutId(fund, fee, event)) as PerformanceFeePayout;
+
+  if (!feePayout) {
+    feePayout = createPerformanceFeePayout(fund, fee, shares, event, cause);
+  } else {
+    let events = feePayout.events;
+    feePayout.events = arrayUnique<string>(events.concat([cause.getString('id')]));
+    feePayout.save();
+  }
+
+  return feePayout;
+}
+
+export function usePerformanceFeePayout(id: string): ManagementFeePayout {
+  let feePayout = ManagementFeePayout.load(id) as ManagementFeePayout;
+  if (feePayout == null) {
+    logCritical('Failed to load fee payout {}.', [id]);
+  }
+
+  return feePayout;
 }

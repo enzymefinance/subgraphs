@@ -98,6 +98,8 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
   settled.save();
 
   trackFundShares(fund, event, settled);
+
+  // TODO: decide if we want to track this here or when individual fees are settled
   trackFeePayout(fund, fee, shares, event, settled);
 }
 

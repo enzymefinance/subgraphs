@@ -1,8 +1,8 @@
 import { BigDecimal, Entity, ethereum } from '@graphprotocol/graph-ts';
-import { Fee, FeePayout, Fund, IndividualFeePayout } from '../generated/schema';
+import { Fee, FeePayout, Fund } from '../generated/schema';
 import { arrayUnique } from '../utils/arrayUnique';
 import { logCritical } from '../utils/logCritical';
-import { trackIndividualFee } from './IndividualFeePayout';
+import { ensureManagementFeePayout, ensurePerformanceFeePayout } from './IndividualFeePayout';
 import { ensureState } from './State';
 
 function feePayoutId(fund: Fund, event: ethereum.Event): string {
@@ -10,7 +10,7 @@ function feePayoutId(fund: Fund, event: ethereum.Event): string {
 }
 
 export function createFeePayout(
-  feePayouts: IndividualFeePayout[],
+  feePayoutIds: string[],
   fund: Fund,
   event: ethereum.Event,
   cause: Entity | null,
@@ -19,7 +19,7 @@ export function createFeePayout(
   payout.timestamp = event.block.timestamp;
   payout.fund = fund.id;
   payout.shares = BigDecimal.fromString('0');
-  payout.individualPayouts = feePayouts.map<string>((item) => item.id);
+  payout.individualPayouts = feePayoutIds;
   payout.events = cause ? [cause.getString('id')] : [];
   payout.save();
 
@@ -59,9 +59,19 @@ export function trackFeePayout(
   let feePayout = ensureFeePayout(fund, event, cause);
   feePayout.shares = feePayout.shares.plus(shares);
 
-  feePayout.individualPayouts = feePayout.individualPayouts.concat([
-    trackIndividualFee(fund, fee, shares, event, cause).id,
-  ]);
+  if (fee.identifier == 'MANAGEMENT') {
+    let e = event 
+    feePayout.individualPayouts = feePayout.individualPayouts.concat([
+      ensureManagementFeePayout(fund, fee, shares, event, cause).id,
+    ]);
+  }
+
+  if (fee.identifier == 'PERFORMANCE') {
+    feePayout.individualPayouts = feePayout.individualPayouts.concat([
+      ensurePerformanceFeePayout(fund, fee, shares, event, cause).id,
+    ]);
+  }
+
   feePayout.save();
 
   let state = ensureState(fund, event);

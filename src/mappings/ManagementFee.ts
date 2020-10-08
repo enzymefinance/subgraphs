@@ -1,6 +1,7 @@
 import { ensureManager } from '../entities/Account';
 import { ensureContract } from '../entities/Contract';
 import { useFee } from '../entities/Fee';
+import { trackFeePayout } from '../entities/FeePayout';
 import { useFund } from '../entities/Fund';
 import { ensureManagementFeeSetting } from '../entities/ManagementFeeSetting';
 import { ensureTransaction } from '../entities/Transaction';
@@ -35,16 +36,22 @@ export function handleFundSettingsAdded(event: FundSettingsAdded): void {
 }
 
 export function handleSettled(event: Settled): void {
-  // TODO: Instead of calling the contract, load the vault proxy from the fund / fund version entity.
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
+  // TODO: Instead of calling the contract, load the vault proxy from the fund / fund version entity.
+  let fund = useFund(comptroller.getVaultProxy().toHex());
+  let fee = useFee(event.address.toHex());
+  let shares = toBigDecimal(event.params.sharesQuantity);
+
   let settled = new ManagementFeeSettledEvent(genericId(event));
-  settled.fund = useFund(comptroller.getVaultProxy().toHex()).id;
+  settled.fund = fund.id;
   settled.account = ensureManager(event.transaction.from, event).id;
   settled.contract = event.address.toHex();
   settled.timestamp = event.block.timestamp;
   settled.transaction = ensureTransaction(event).id;
   settled.comptrollerProxy = event.params.comptrollerProxy.toHex();
-  settled.sharesDue = toBigDecimal(event.params.sharesQuantity);
+  settled.sharesDue = shares;
   settled.prevSettled = event.params.prevSettled;
   settled.save();
+
+  trackFeePayout(fund, fee, shares, event, settled);
 }

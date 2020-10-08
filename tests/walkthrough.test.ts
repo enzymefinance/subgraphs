@@ -69,7 +69,7 @@ describe('Walkthrough', () => {
       signer,
       fundDeployer,
       fundOwner: signer.address,
-      denominationAsset: deployment.wethToken,
+      denominationAsset: deployment.mlnToken,
       fundName: 'My Super Fund',
       feeManagerConfigData,
       // TODO: fix policyManagerConfigData
@@ -89,7 +89,7 @@ describe('Walkthrough', () => {
     const approveArgs = {
       signer,
       comptrollerProxy: fund.comptrollerProxy,
-      denominationAsset: deployment.wethToken,
+      denominationAsset: deployment.mlnToken,
       investmentAmount: utils.parseEther('20'),
     };
 
@@ -109,7 +109,7 @@ describe('Walkthrough', () => {
       signer,
       comptrollerProxy: fund.comptrollerProxy,
       buyer: signer.address,
-      denominationAsset: deployment.wethToken,
+      denominationAsset: deployment.mlnToken,
       investmentAmount: utils.parseEther(sharesToBuy.toString()),
       minSharesQuantity: utils.parseEther(sharesToBuy.toString()),
     };
