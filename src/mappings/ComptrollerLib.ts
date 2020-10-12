@@ -9,19 +9,12 @@ import { trackFundShares } from '../entities/Shares';
 import { ensureTransaction } from '../entities/Transaction';
 import {
   AmguPaid,
+  OverridePauseSet,
   SharesBought,
   SharesRedeemed,
-  StatusUpdated,
   VaultProxySet,
 } from '../generated/ComptrollerLibContract';
-import {
-  AmguPaidEvent,
-  Asset,
-  SharesBoughtEvent,
-  SharesRedeemedEvent,
-  StatusUpdatedEvent,
-  VaultProxySetEvent,
-} from '../generated/schema';
+import { AmguPaidEvent, Asset, SharesBoughtEvent, SharesRedeemedEvent, VaultProxySetEvent } from '../generated/schema';
 import { genericId } from '../utils/genericId';
 import { toBigDecimal } from '../utils/toBigDecimal';
 
@@ -33,33 +26,6 @@ export function handleAmguPaid(event: AmguPaid): void {
   amguPaid.timestamp = event.block.timestamp;
   amguPaid.transaction = ensureTransaction(event).id;
   amguPaid.save();
-}
-
-function translateFundStatus(status: number): string {
-  if (status == 0) {
-    return 'Pending';
-  }
-
-  if (status == 1) {
-    return 'Active';
-  }
-
-  return 'Shutdown';
-}
-
-export function handleStatusUpdated(event: StatusUpdated): void {
-  let fund = useFund(dataSource.context().getString('vaultProxy'));
-  fund.status = translateFundStatus(event.params.nextStatus);
-  fund.save();
-
-  let statusUpdate = new StatusUpdatedEvent(genericId(event));
-  statusUpdate.timestamp = event.block.timestamp;
-  statusUpdate.contract = ensureContract(event.address, 'ComptrollerLib').id;
-  statusUpdate.fund = fund.id;
-  statusUpdate.account = useAccount(event.transaction.from.toHex()).id;
-  statusUpdate.nextStatus = event.params.nextStatus;
-  statusUpdate.transaction = ensureTransaction(event).id;
-  statusUpdate.save();
 }
 
 export function handleSharesBought(event: SharesBought): void {
@@ -132,4 +98,8 @@ export function handleVaultProxySet(event: VaultProxySet): void {
   vaultProxySet.transaction = ensureTransaction(event).id;
   vaultProxySet.vaultProxy = event.params.vaultProxy.toHex();
   vaultProxySet.save();
+}
+
+export function handleOverridePauseSet(event: OverridePauseSet): void {
+  // TODO: implement
 }

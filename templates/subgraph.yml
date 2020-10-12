@@ -565,12 +565,12 @@ templates:
           handler: handleAmguPaid
         - event: MigratedSharesDuePaid(address,uint256)
           handler: handleMigratedSharesDuePaid
+        - event: OverridePauseSet(indexed bool)
+          handler: handleOverridePauseSet
         - event: SharesBought(indexed address,indexed address,uint256,uint256,uint256)
           handler: handleSharesBought
         - event: SharesRedeemed(indexed address,uint256,address[],uint256[])
           handler: handleSharesRedeemed
-        - event: StatusUpdated(indexed uint8)
-          handler: handleStatusUpdated
         - event: VaultProxySet(address)
           handler: handleVaultProxySet
 

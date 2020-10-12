@@ -97,16 +97,6 @@ type ComptrollerProxyDeployedEvent implements Event & FundEvent @entity {
   transaction: Transaction!
 }
 
-type StatusUpdatedEvent implements Event & FundEvent @entity {
-  id: ID!
-  fund: Fund!
-  account: Account!
-  contract: Contract!
-  nextStatus: Int!
-  timestamp: BigInt!
-  transaction: Transaction!
-}
-
 type VaultProxySetEvent implements Event & FundEvent @entity {
   id: ID!
   fund: Fund!
@@ -809,7 +799,6 @@ type Fund @entity {
   name: String!
   inception: BigInt!
   release: Release!
-  status: String!
   manager: Account!
   migrator: String
   denominationAsset: Asset!

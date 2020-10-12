@@ -39,7 +39,6 @@ export function createFund(event: NewFundCreated): Fund {
   fund.portfolio = portfolio.id;
   fund.feePayout = feePayout.id;
   fund.state = state.id;
-  fund.status = 'Active';
   fund.denominationAsset = useAsset(event.params.denominationAsset.toHex()).id;
   fund.save();
 
