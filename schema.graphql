@@ -812,6 +812,8 @@ type Fund @entity {
   portfolioHistory: [Portfolio!]! @derivedFrom(field: "fund")
   feePayout: FeePayout!
   feePayoutHistory: [FeePayout!]! @derivedFrom(field: "fund")
+  calculations: Calculation!
+  calculationsHistory: [Calculation!]! @derivedFrom(field: "fund")
   state: State!
   stateHistory: [State!]! @derivedFrom(field: "fund")
   events: [FundEvent!]! @derivedFrom(field: "fund")
@@ -973,6 +975,17 @@ type Portfolio implements Metric @entity {
   events: [FundEvent!]!
 }
 
+type Calculation implements Metric @entity {
+  id: ID!
+  fund: Fund!
+  timestamp: BigInt!
+  gav: BigDecimal!
+  totalSupply: BigDecimal!
+  grossSharePrice: BigDecimal!
+  netSharePrice: BigDecimal!
+  events: [FundEvent!]!
+}
+
 type State implements Metric @entity {
   id: ID!
   fund: Fund!
@@ -980,6 +993,7 @@ type State implements Metric @entity {
   shares: Share!
   portfolio: Portfolio!
   feePayout: FeePayout!
+  calculations: Calculation!
   events: [FundEvent!]!
 }
 

@@ -1,5 +1,6 @@
 import { Address } from '@graphprotocol/graph-ts';
 import { ensureInvestor, useManager } from '../entities/Account';
+import { trackFundCalculations } from '../entities/Calculations';
 import { ensureContract } from '../entities/Contract';
 import { ensureFee, useFee } from '../entities/Fee';
 import { trackFeePayout } from '../entities/FeePayout';
@@ -101,6 +102,7 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
 
   // TODO: decide if we want to track this here or when individual fees are settled
   trackFeePayout(fund, fee, shares, event, settled);
+  trackFundCalculations(fund, event, settled);
 }
 
 export function handleSharesOutstandingPaidForFee(event: SharesOutstandingPaidForFee): void {
@@ -129,6 +131,7 @@ export function handleSharesOutstandingPaidForFee(event: SharesOutstandingPaidFo
 
   trackFundShares(fund, event, sharesPaid);
   trackFeePayout(fund, fee, shares, event, sharesPaid);
+  trackFundCalculations(fund, event, sharesPaid);
 }
 
 export function handleFeesRecipientSet(event: FeesRecipientSet): void {

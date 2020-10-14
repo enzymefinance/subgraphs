@@ -1,6 +1,7 @@
 import { BigDecimal, dataSource } from '@graphprotocol/graph-ts';
 import { ensureAccount, ensureInvestor, useAccount } from '../entities/Account';
 import { useAsset } from '../entities/Asset';
+import { trackFundCalculations } from '../entities/Calculations';
 import { ensureContract } from '../entities/Contract';
 import { useFund } from '../entities/Fund';
 import { ensureInvestment } from '../entities/Investment';
@@ -54,6 +55,7 @@ export function handleSharesBought(event: SharesBought): void {
 
   trackFundPortfolio(fund, event, addition);
   trackFundShares(fund, event, addition);
+  trackFundCalculations(fund, event, addition);
 }
 
 export function handleSharesRedeemed(event: SharesRedeemed): void {
@@ -87,6 +89,7 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
 
   trackFundPortfolio(fund, event, redemption);
   trackFundShares(fund, event, redemption);
+  trackFundCalculations(fund, event, redemption);
 }
 
 export function handleVaultProxySet(event: VaultProxySet): void {

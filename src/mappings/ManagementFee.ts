@@ -1,4 +1,5 @@
 import { ensureManager } from '../entities/Account';
+import { trackFundCalculations } from '../entities/Calculations';
 import { ensureContract } from '../entities/Contract';
 import { useFee } from '../entities/Fee';
 import { trackFeePayout } from '../entities/FeePayout';
@@ -54,4 +55,5 @@ export function handleSettled(event: Settled): void {
   settled.save();
 
   trackFeePayout(fund, fee, shares, event, settled);
+  trackFundCalculations(fund, event, settled);
 }

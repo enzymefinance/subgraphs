@@ -1,6 +1,7 @@
 import { ethereum } from '@graphprotocol/graph-ts';
-import { FeePayout, Fund, Portfolio, Share, State } from '../generated/schema';
+import { Calculation, FeePayout, Fund, Portfolio, Share, State } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
+import { useCalculations } from './Calculations';
 import { useFeePayout } from './FeePayout';
 import { usePortfolio } from './Portfolio';
 import { useShares } from './Shares';
@@ -13,6 +14,7 @@ export function createState(
   shares: Share,
   holdings: Portfolio,
   feePayout: FeePayout,
+  calculations: Calculation,
   fund: Fund,
   event: ethereum.Event,
 ): State {
@@ -22,6 +24,7 @@ export function createState(
   state.shares = shares.id;
   state.portfolio = holdings.id;
   state.feePayout = feePayout.id;
+  state.calculations = calculations.id;
   state.events = [];
   state.save();
 
@@ -40,7 +43,8 @@ export function ensureState(fund: Fund, event: ethereum.Event): State {
   let shares = useShares(previous.shares);
   let holdings = usePortfolio(previous.portfolio);
   let feePayout = useFeePayout(previous.feePayout);
-  let state = createState(shares, holdings, feePayout, fund, event);
+  let calculations = useCalculations(previous.calculations);
+  let state = createState(shares, holdings, feePayout, calculations, fund, event);
 
   fund.state = state.id;
   fund.save();

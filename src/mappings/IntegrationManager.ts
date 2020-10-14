@@ -1,9 +1,11 @@
 import { BigDecimal } from '@graphprotocol/graph-ts';
 import { useAccount } from '../entities/Account';
 import { useAsset } from '../entities/Asset';
+import { trackFundCalculations } from '../entities/Calculations';
 import { ensureContract } from '../entities/Contract';
 import { useFund } from '../entities/Fund';
 import { ensureIntegrationAdapter, useIntegrationAdapter } from '../entities/IntegrationAdapter';
+import { trackFundShares } from '../entities/Shares';
 import { ensureTransaction } from '../entities/Transaction';
 import {
   AdapterDeregistered,
@@ -35,9 +37,11 @@ export function handleAdapterDeregistered(event: AdapterDeregistered): void {
 }
 
 export function handleCallOnIntegrationExecuted(event: CallOnIntegrationExecuted): void {
+  let fund = useFund(event.params.vaultProxy.toHex());
+
   let execution = new CallOnIntegrationExecutedEvent(genericId(event));
   execution.contract = event.address.toHex();
-  execution.fund = useFund(event.address.toHex()).id;
+  execution.fund = fund.id;
   execution.account = useAccount(event.params.caller.toHex()).id;
   execution.incomingAssets = event.params.incomingAssets.map<string>((asset) => useAsset(asset.toHex()).id);
   execution.incomingAssetAmounts = event.params.incomingAssetAmounts.map<BigDecimal>((amount) => toBigDecimal(amount));
@@ -46,4 +50,7 @@ export function handleCallOnIntegrationExecuted(event: CallOnIntegrationExecuted
   execution.timestamp = event.block.timestamp;
   execution.transaction = ensureTransaction(event).id;
   execution.save();
+
+  trackFundShares(fund, event, execution);
+  trackFundCalculations(fund, event, execution);
 }

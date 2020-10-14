@@ -1,10 +1,10 @@
+import { Address, BigDecimal, Entity, ethereum } from '@graphprotocol/graph-ts';
 import { Fund, Share } from '../generated/schema';
-import { ethereum, BigDecimal, Entity, Address } from '@graphprotocol/graph-ts';
-import { logCritical } from '../utils/logCritical';
-import { arrayUnique } from '../utils/arrayUnique';
-import { useState, ensureState } from './State';
-import { toBigDecimal } from '../utils/toBigDecimal';
 import { StandardERC20Contract } from '../generated/StandardERC20Contract';
+import { arrayUnique } from '../utils/arrayUnique';
+import { logCritical } from '../utils/logCritical';
+import { toBigDecimal } from '../utils/toBigDecimal';
+import { ensureState, useState } from './State';
 
 export function shareId(fund: Fund, event: ethereum.Event): string {
   return fund.id + '/' + event.block.timestamp.toString() + '/shares';
