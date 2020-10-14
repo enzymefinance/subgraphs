@@ -49,7 +49,7 @@
   },
   "jest": {
     "preset": "ts-jest",
-    "testTimeout": 30000,
+    "testTimeout": 300000,
     "testEnvironment": "node"
   },
   "dependencies": {}
