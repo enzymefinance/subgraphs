@@ -1171,8 +1171,8 @@
 
 "@melonproject/release@^2.0.1-dev.4939+68805e85":
   version "2.0.1-dev.4939"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_1xiI0S/%40melonproject%2Frelease-2.0.1-dev.4939.tgz#b783a07ae380ebfa551966026dc3cb446777adf7"
-  integrity sha1-t4OgeuOA6/pVGWYCbcPLRGd3rfc=
+  resolved "https://npm.fury.io/melonproject/~/up/ver_1tmBfR/%40melonproject%2Frelease-2.0.1-dev.4939.tgz#89d584bfe46dab8c74803de629730dbfd69d7a63"
+  integrity sha1-idWEv+Rtq4x0gD3mKXMNv9ademM=
   dependencies:
     "@crestproject/crestproject" "^0.0.56"
     "@melonproject/persistent" "^2.0.1-dev.4939+68805e85"
