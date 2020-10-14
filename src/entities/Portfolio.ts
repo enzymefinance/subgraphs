@@ -62,6 +62,7 @@ function createHolding(asset: Asset, quantity: BigDecimal, fund: Fund, event: et
   holding.timestamp = event.block.timestamp;
   holding.fund = fund.id;
   holding.asset = asset.id;
+  holding.price = asset.price;
   holding.quantity = quantity;
   holding.events = [cause.getString('id')];
   holding.save();

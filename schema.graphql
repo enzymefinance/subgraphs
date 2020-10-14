@@ -960,6 +960,7 @@ type Holding implements Metric @entity {
   fund: Fund!
   timestamp: BigInt!
   asset: Asset!
+  price: AssetPrice
   quantity: BigDecimal!
   events: [FundEvent!]!
 }
