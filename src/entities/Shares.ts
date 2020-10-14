@@ -60,6 +60,9 @@ export function trackFundShares(fund: Fund, event: ethereum.Event, cause: Entity
   state.save();
 
   fund.shares = shares.id;
+  if (fund.firstInvestment == null && !totalSupply.isZero()) {
+    fund.firstInvestment = event.block.timestamp;
+  }
   fund.save();
 
   return shares;

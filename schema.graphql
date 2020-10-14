@@ -798,6 +798,7 @@ type Fund @entity {
   accessor: String!
   name: String!
   inception: BigInt!
+  firstInvestment: BigInt
   release: Release!
   manager: Account!
   migrator: String
