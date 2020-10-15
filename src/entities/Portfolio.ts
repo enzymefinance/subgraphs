@@ -104,7 +104,8 @@ export function trackFundPortfolio(fund: Fund, event: ethereum.Event, cause: Ent
     let quantity = toBigDecimal(assetBalances[i], asset.decimals);
 
     // Add the fund holding entry for the current asset unless it's 0.
-    if (!quantity.digits.isZero()) {
+    // Always add denomination asset (even if it's zero)
+    if (!quantity.digits.isZero() || asset.id == fund.denominationAsset) {
       let match = findHolding(previousHoldings, asset) as Holding;
 
       // Re-use the previous holding entry unless it has changed.
