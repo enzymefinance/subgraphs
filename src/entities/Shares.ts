@@ -25,8 +25,8 @@ export function ensureShares(fund: Fund, event: ethereum.Event, cause: Entity): 
   let shares = Share.load(shareId(fund, event)) as Share;
 
   if (!shares) {
-    let aggregate = useState(fund.state);
-    let previous = useShares(aggregate.shares);
+    let state = useState(fund.state);
+    let previous = useShares(state.shares);
     shares = createShares(previous.shares, fund, event, cause);
   } else {
     let events = shares.events;

@@ -57,12 +57,11 @@ interface PolicySetting {
   events: [FundEvent!]!
 }
 
-interface IndividualFeePayout {
+interface IndividualFeeState {
   id: ID!
   fund: Fund!
   timestamp: BigInt!
   fee: Fee!
-  shares: BigDecimal!
   events: [FundEvent!]!
 }
 
@@ -335,6 +334,7 @@ type FeeSettledForFundEvent implements Event & FundEvent & SharesChange @entity 
   fee: Fee!
   payer: Fund!
   payee: Account!
+  settlementType: Int!
   sharesDue: BigDecimal!
 }
 
@@ -839,8 +839,8 @@ type Fund @entity {
   sharesHistory: [Share!]! @derivedFrom(field: "fund")
   portfolio: Portfolio!
   portfolioHistory: [Portfolio!]! @derivedFrom(field: "fund")
-  feePayout: FeePayout!
-  feePayoutHistory: [FeePayout!]! @derivedFrom(field: "fund")
+  feeState: Fee!
+  feeStateHistory: [FeeState!]! @derivedFrom(field: "fund")
   calculations: Calculation!
   calculationsHistory: [Calculation!]! @derivedFrom(field: "fund")
   state: State!
@@ -908,7 +908,6 @@ type PerformanceFeeSetting implements FeeSetting @entity {
   fund: Fund!
   rate: BigDecimal!
   period: BigInt!
-  highWaterMark: BigDecimal!
   timestamp: BigInt!
   events: [FundEvent!]!
 }
@@ -1022,37 +1021,35 @@ type State implements Metric @entity {
   timestamp: BigInt!
   shares: Share!
   portfolio: Portfolio!
-  feePayout: FeePayout!
+  feeState: FeeState!
   calculations: Calculation!
   events: [FundEvent!]!
 }
 
-type FeePayout implements Metric @entity {
+type FeeState implements Metric @entity {
   id: ID!
   fund: Fund!
   timestamp: BigInt!
-  shares: BigDecimal!
-  individualPayouts: [IndividualFeePayout!]!
+  feeStates: [IndividualFeeState!]!
   events: [FundEvent!]!
 }
 
-type ManagementFeePayout implements Metric & IndividualFeePayout @entity {
+type ManagementFeeState implements Metric & IndividualFeeState @entity {
   id: ID!
   fund: Fund!
   timestamp: BigInt!
   fee: Fee!
-  shares: BigDecimal!
   events: [FundEvent!]!
 }
 
-type PerformanceFeePayout implements Metric & IndividualFeePayout @entity {
+type PerformanceFeeState implements Metric & IndividualFeeState @entity {
   id: ID!
   fund: Fund!
   timestamp: BigInt!
   fee: Fee!
   grossSharePrice: BigDecimal!
+  aggregateValueDue: BigDecimal!
   highWaterMark: BigDecimal!
-  shares: BigDecimal!
   events: [FundEvent!]!
 }
 

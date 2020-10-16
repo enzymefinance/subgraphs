@@ -1,8 +1,10 @@
 import { ensureManager } from '../entities/Account';
 import { ensureContract } from '../entities/Contract';
 import { useFee } from '../entities/Fee';
+import { trackFeeState } from '../entities/FeeState';
 import { useFund } from '../entities/Fund';
-import { ensurePerformanceFeeSetting, usePerformanceFeeSetting } from '../entities/PerformanceFeeSetting';
+import { ensurePerformanceFeeSetting } from '../entities/PerformanceFeeSetting';
+import { performanceFeeStateId, usePerformanceFeeState } from '../entities/PerformanceFeeState';
 import { ensureTransaction } from '../entities/Transaction';
 import { ComptrollerLibContract } from '../generated/ComptrollerLibContract';
 import { ActivatedForFund, FundSettingsAdded, PaidOut, PerformanceUpdated } from '../generated/PerformanceFeeContract';
@@ -44,7 +46,6 @@ export function handleFundSettingsAdded(event: FundSettingsAdded): void {
 export function handleActivatedForFund(event: ActivatedForFund): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let vault = comptroller.getVaultProxy();
-  let fee = useFee(event.address.toHex());
 
   let feeActivation = new PerformanceFeeActivatedForFundEvent(genericId(event));
   feeActivation.fund = vault.toHex(); // fund does not exist yet
@@ -55,11 +56,6 @@ export function handleActivatedForFund(event: ActivatedForFund): void {
   feeActivation.comptrollerProxy = event.params.comptrollerProxy.toHex();
   feeActivation.highWaterMark = toBigDecimal(event.params.highWaterMark);
   feeActivation.save();
-
-  let setting = ensurePerformanceFeeSetting(vault.toHex(), fee);
-  setting.highWaterMark = toBigDecimal(event.params.highWaterMark);
-  setting.timestamp = event.block.timestamp;
-  setting.save();
 }
 
 export function handlePaidOut(event: PaidOut): void {
@@ -78,9 +74,11 @@ export function handlePaidOut(event: PaidOut): void {
   paidOut.nextHighWaterMark = toBigDecimal(event.params.nextHighWaterMark);
   paidOut.save();
 
-  let setting = usePerformanceFeeSetting(fund, fee);
-  setting.highWaterMark = toBigDecimal(event.params.nextHighWaterMark);
-  setting.save();
+  trackFeeState(fund, fee, event, paidOut);
+
+  let performanceFeeState = usePerformanceFeeState(performanceFeeStateId(fund, event));
+  performanceFeeState.highWaterMark = toBigDecimal(event.params.nextHighWaterMark);
+  performanceFeeState.save();
 }
 
 export function handlePerformanceUpdated(event: PerformanceUpdated): void {
@@ -101,4 +99,11 @@ export function handlePerformanceUpdated(event: PerformanceUpdated): void {
   updated.nextSharePrice = toBigDecimal(event.params.nextSharePrice);
   updated.sharesOutstandingDiff = toBigDecimal(event.params.sharesOutstandingDiff);
   updated.save();
+
+  trackFeeState(fund, fee, event, updated);
+
+  let performanceFeeState = usePerformanceFeeState(performanceFeeStateId(fund, event));
+  performanceFeeState.aggregateValueDue = toBigDecimal(event.params.nextAggregateValueDue);
+  performanceFeeState.grossSharePrice = toBigDecimal(event.params.nextSharePrice);
+  performanceFeeState.save();
 }

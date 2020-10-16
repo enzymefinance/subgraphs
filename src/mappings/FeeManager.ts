@@ -3,7 +3,7 @@ import { ensureInvestor, useManager } from '../entities/Account';
 import { trackFundCalculations } from '../entities/Calculations';
 import { ensureContract } from '../entities/Contract';
 import { ensureFee, useFee } from '../entities/Fee';
-import { trackFeePayout } from '../entities/FeePayout';
+import { trackFeeState } from '../entities/FeeState';
 import { useFund } from '../entities/Fund';
 import { ensureInvestment } from '../entities/Investment';
 import { trackFundShares } from '../entities/Shares';
@@ -30,7 +30,9 @@ import { arrayUnique } from '../utils/arrayUnique';
 import { genericId } from '../utils/genericId';
 import { toBigDecimal } from '../utils/toBigDecimal';
 
-export function handleAllSharesOutstandingForcePaid(event: AllSharesOutstandingForcePaid): void {}
+export function handleAllSharesOutstandingForcePaid(event: AllSharesOutstandingForcePaid): void {
+  // TODO: implement
+}
 
 export function handleFeeDeregistered(event: FeeDeregistered): void {
   let deregistration = new FeeDeregisteredEvent(genericId(event));
@@ -94,14 +96,13 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
   settled.comptrollerProxy = event.params.comptrollerProxy.toHex();
   settled.fee = fee.id;
   settled.payer = fund.id;
-  settled.sharesDue = shares;
   settled.payee = useManager(fund.manager).id;
+  settled.settlementType = event.params.settlementType;
+  settled.sharesDue = shares;
   settled.save();
 
   trackFundShares(fund, event, settled);
-
-  // TODO: decide if we want to track this here or when individual fees are settled
-  trackFeePayout(fund, fee, shares, event, settled);
+  trackFeeState(fund, fee, event, settled);
   trackFundCalculations(fund, event, settled);
 }
 
@@ -130,7 +131,7 @@ export function handleSharesOutstandingPaidForFee(event: SharesOutstandingPaidFo
   sharesPaid.save();
 
   trackFundShares(fund, event, sharesPaid);
-  trackFeePayout(fund, fee, shares, event, sharesPaid);
+  trackFeeState(fund, fee, event, sharesPaid);
   trackFundCalculations(fund, event, sharesPaid);
 }
 
