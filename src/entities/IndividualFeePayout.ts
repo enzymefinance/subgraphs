@@ -69,7 +69,7 @@ function createPerformanceFeePayout(
   feePayout.events = [cause.getString('id')];
   // TODO: get correct values
   feePayout.grossSharePrice = BigDecimal.fromString('0');
-  feePayout.hwm = BigDecimal.fromString('0');
+  feePayout.highWaterMark = BigDecimal.fromString('0');
   feePayout.save();
 
   return feePayout;

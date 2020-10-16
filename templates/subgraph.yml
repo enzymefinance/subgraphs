@@ -216,13 +216,13 @@ dataSources:
         - name: ComptrollerLibContract
           file: ./node_modules/@melonproject/release/artifacts/ComptrollerLib.json
       eventHandlers:
-        - event: ActivatedForFund(indexed address)
+        - event: ActivatedForFund(indexed address,uint256)
           handler: handleActivatedForFund
         - event: FundSettingsAdded(indexed address,uint256,uint256)
           handler: handleFundSettingsAdded
-        - event: PaidOut(indexed address)
+        - event: PaidOut(indexed address,uint256,uint256)
           handler: handlePaidOut
-        - event: PerformanceUpdated(indexed address,uint256,uint256,int256)
+        - event: PerformanceUpdated(indexed address,uint256,uint256,uint256,uint256,int256)
           handler: handlePerformanceUpdated
 
   - name: PolicyManagerDataSource

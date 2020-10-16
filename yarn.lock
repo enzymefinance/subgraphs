@@ -1148,41 +1148,41 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@melonproject/melonjs@^2.0.1-dev.517+4e2e54ac":
-  version "2.0.1-dev.517"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_1uVPk0/%40melonproject%2Fmelonjs-2.0.1-dev.517.tgz#bce2a795f7cbc72532e04f7e21bdd3d72fd3594d"
-  integrity sha1-vOKnlffLxyUy4E9+Ib3T1y/TWU0=
+"@melonproject/melonjs@^2.0.1-dev.520+c5590973":
+  version "2.0.1-dev.520"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_1TSmGY/%40melonproject%2Fmelonjs-2.0.1-dev.520.tgz#720f002a3e73b5ee73beda209be240e6e89886a0"
+  integrity sha1-cg8AKj5zte5zvtogm+JA5uiYhqA=
   dependencies:
     "@crestproject/ethers" "^0.0.56"
-    "@melonproject/persistent" "^2.0.1-dev.4939+68805e85"
-    "@melonproject/release" "^2.0.1-dev.4939+68805e85"
-    "@melonproject/utils" "^2.0.1-dev.4939+68805e85"
+    "@melonproject/persistent" "^2.0.1-dev.4943+63b82512"
+    "@melonproject/release" "^2.0.1-dev.4943+63b82512"
+    "@melonproject/utils" "^2.0.1-dev.4943+63b82512"
     bignumber.js "^9.0.1"
     ethers "^5.0.17"
 
-"@melonproject/persistent@^2.0.1-dev.4939+68805e85":
-  version "2.0.1-dev.4939"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_1ZxkBe/%40melonproject%2Fpersistent-2.0.1-dev.4939.tgz#3900daed298d9aad8fe0787b50b83de2246e74af"
-  integrity sha1-OQDa7SmNmq2P4Hh7ULg94iRudK8=
+"@melonproject/persistent@^2.0.1-dev.4943+63b82512":
+  version "2.0.1-dev.4943"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_1HY6Tw/%40melonproject%2Fpersistent-2.0.1-dev.4943.tgz#1ca6098af7cb0c35c54dfa08c8e79438e2a15b5d"
+  integrity sha1-HKYJivfLDDXFTfoIyOeUOOKhW10=
   dependencies:
     "@crestproject/crestproject" "^0.0.56"
-    "@melonproject/utils" "^2.0.1-dev.4939+68805e85"
+    "@melonproject/utils" "^2.0.1-dev.4943+63b82512"
     ethers "^5.0.14"
 
-"@melonproject/release@^2.0.1-dev.4939+68805e85":
-  version "2.0.1-dev.4939"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_1tmBfR/%40melonproject%2Frelease-2.0.1-dev.4939.tgz#89d584bfe46dab8c74803de629730dbfd69d7a63"
-  integrity sha1-idWEv+Rtq4x0gD3mKXMNv9ademM=
+"@melonproject/release@^2.0.1-dev.4943+63b82512":
+  version "2.0.1-dev.4943"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_2d7DH7/%40melonproject%2Frelease-2.0.1-dev.4943.tgz#c2569435dae920f84b20252687dc00c263376219"
+  integrity sha1-wlaUNdrpIPhLICUmh9wAwmM3Yhk=
   dependencies:
     "@crestproject/crestproject" "^0.0.56"
-    "@melonproject/persistent" "^2.0.1-dev.4939+68805e85"
-    "@melonproject/utils" "^2.0.1-dev.4939+68805e85"
+    "@melonproject/persistent" "^2.0.1-dev.4943+63b82512"
+    "@melonproject/utils" "^2.0.1-dev.4943+63b82512"
     ethers "^5.0.14"
 
-"@melonproject/utils@^2.0.1-dev.4939+68805e85":
-  version "2.0.1-dev.4939"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_XBBoL/%40melonproject%2Futils-2.0.1-dev.4939.tgz#7c07290d556a6960856723e1035199039a12c746"
-  integrity sha1-fAcpDVVqaWCFZyPhA1GZA5oSx0Y=
+"@melonproject/utils@^2.0.1-dev.4943+63b82512":
+  version "2.0.1-dev.4943"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_1ayCrZ/%40melonproject%2Futils-2.0.1-dev.4943.tgz#7f9e909fd2d0b43e10bdba0643e1d58e1cc040b4"
+  integrity sha1-f56Qn9LQtD4QvboGQ+HVjhzAQLQ=
   dependencies:
     "@crestproject/crestproject" "^0.0.56"
     ethers "^5.0.14"
@@ -1805,10 +1805,10 @@ asn1@~0.2.3:
   dependencies:
     safer-buffer "~2.1.0"
 
-assemblyscript@^0.15.1:
-  version "0.15.1"
-  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.15.1.tgz#efc21fd8ae551f54907dfe8db0bfbf1b0ed6ed14"
-  integrity sha512-uTwvg0/JcPVh2DDCaD4zmqz/AQ+IbL0SFHrd/R6G/ignMtUfS1EBrvIpCpMJgzDkYoPVWxSQwbbFjC85MqbvTw==
+assemblyscript@^0.16.0:
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.16.0.tgz#6dbe3119bdb995b74ad982e3d1dc48ee553b106d"
+  integrity sha512-5ICmWhbbYc1quczfnNSpsrzbMyqIuaJozAAu4QwMT31Rs/i4UIuhtB42K55dexAsGMS2QZH3Cv/qZjEqCn/YIg==
   dependencies:
     binaryen "97.0.0-nightly.20201008"
     long "^4.0.0"
@@ -2515,10 +2515,10 @@ cliui@^6.0.0:
     strip-ansi "^6.0.0"
     wrap-ansi "^6.2.0"
 
-cliui@^7.0.0:
-  version "7.0.1"
-  resolved "https://registry.yarnpkg.com/cliui/-/cliui-7.0.1.tgz#a4cb67aad45cd83d8d05128fc9f4d8fbb887e6b3"
-  integrity sha512-rcvHOWyGyid6I1WjT/3NatKj2kDt9OdSHSXpyLXaMWFbKpGACNW8pRhhdPUq9MWUOdwn8Rz9AVETjF4105rZZQ==
+cliui@^7.0.2:
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/cliui/-/cliui-7.0.2.tgz#e3a412e1d5ec0ccbe50d1b4120fc8164e97881f4"
+  integrity sha512-lhpKkuUj67j5JgZIPZxLe7nSa4MQoojzRVWQyzMqBp2hBg6gwRjUDAwC1YDeBaC3APDBKNnjWbv2mlDF4XgOSA==
   dependencies:
     string-width "^4.2.0"
     strip-ansi "^6.0.0"
@@ -2735,12 +2735,12 @@ create-hmac@^1.1.0, create-hmac@^1.1.4, create-hmac@^1.1.7:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
-cross-fetch@^3.0.5:
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-3.0.5.tgz#2739d2981892e7ab488a7ad03b92df2816e03f4c"
-  integrity sha512-FFLcLtraisj5eteosnX1gf01qYDCOc4fDy0+euOt8Kn9YBY2NtXL/pCoYPavw24NIQkQqm5ZOLsGD5Zzj0gyew==
+cross-fetch@^3.0.6:
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-3.0.6.tgz#3a4040bc8941e653e0e9cf17f29ebcd177d3365c"
+  integrity sha512-KBPUbqgFjzWlVcURG+Svp9TlhA5uliYtiNx/0r8nv0pdypeQCRJ9IaSIc3q/x3q8t3F75cHuwxVql1HFGHCNJQ==
   dependencies:
-    node-fetch "2.6.0"
+    node-fetch "2.6.1"
 
 cross-spawn@^6.0.0:
   version "6.0.5"
@@ -3310,10 +3310,10 @@ es6-symbol@^3.1.1, es6-symbol@~3.1.3:
     d "^1.0.1"
     ext "^1.1.2"
 
-escalade@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/escalade/-/escalade-3.0.2.tgz#6a580d70edb87880f22b4c91d0d56078df6962c4"
-  integrity sha512-gPYAU37hYCUhW5euPeR+Y74F7BL+IBsV93j5cvGriSaD1aG6MGsqsV1yamRdrWrb2j3aiZvb0X+UBOWpx3JWtQ==
+escalade@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/escalade/-/escalade-3.1.1.tgz#d8cfdc7000965c5a0174b4a82eaa5c0552742e40"
+  integrity sha512-k0er2gUkLf8O0zKJiAhmkTnJlTvINGv7ygDNPbeIsX/TJjGJZHuh9B2UxbsaEkmlEo9MfhrSzmhIlhRlI2GXnw==
 
 escape-html@~1.0.3:
   version "1.0.3"
@@ -4211,12 +4211,12 @@ graceful-fs@^4.1.10, graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.2.0,
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.4.tgz#2256bde14d3632958c465ebc96dc467ca07a29fb"
   integrity sha512-WjKPNJF79dtJAVniUlGGWHYGz2jWxT6VhN/4m1NdkbZ2nOsEF+cI1Edgql5zCRhs/VsQYRvrXctxktVXZUkixw==
 
-graphql-request@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/graphql-request/-/graphql-request-3.1.0.tgz#c487488a1aa7b9a0f02335026b4ec897d645f9d4"
-  integrity sha512-Flg2Bd4Ek9BDJ5qacZC/iYuiS3LroHxQTmlUnfqjo/6jKwowY25FVtoLTnssMCBrYspRYEYEIfF1GN8J3/o5JQ==
+graphql-request@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/graphql-request/-/graphql-request-3.2.0.tgz#d356bbea6dc496ab7969aa0892a0ba9ac938a347"
+  integrity sha512-s4zIfQsDkGUv5ECCkGq55Png7hJjFBV7PMIadB403VDaXv0T1RThPSRgZM1hiKgB420rOItkR5BDQ3vPvaAWqw==
   dependencies:
-    cross-fetch "^3.0.5"
+    cross-fetch "^3.0.6"
     extract-files "^9.0.0"
     form-data "^3.0.0"
 
@@ -6339,12 +6339,7 @@ node-addon-api@^2.0.0:
   resolved "https://registry.yarnpkg.com/node-addon-api/-/node-addon-api-2.0.2.tgz#432cfa82962ce494b132e9d72a15b29f71ff5d32"
   integrity sha512-Ntyt4AIXyaLIuMHF6IOoTakB3K+RWxwtsHNRxllEoA6vPwP9o4866g6YWDLUdnucilZhmkxiHwHr11gAENw+QA==
 
-node-fetch@2.6.0:
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.0.tgz#e633456386d4aa55863f676a7ab0daa8fdecb0fd"
-  integrity sha512-8dG4H5ujfvFiqDmVu9fQ5bOHUC15JMjMY/Zumv26oOvvVJjM67KF8koCWIabKQ1GJIa9r2mMZscBq/TbdOcmNA==
-
-node-fetch@^2.3.0:
+node-fetch@2.6.1, node-fetch@^2.3.0:
   version "2.6.1"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.1.tgz#045bd323631f76ed2e2b55573394416b639a0052"
   integrity sha512-V4aYg89jEoVRxRb2fJdAg8FHvI7cEyYdVAh94HH0UIK8oJxUfkjlDQN9RbMx+bEjP7+ggMiFRprSti032Oipxw==
@@ -9182,10 +9177,10 @@ y18n@^4.0.0:
   resolved "https://registry.yarnpkg.com/y18n/-/y18n-4.0.0.tgz#95ef94f85ecc81d007c264e190a120f0a3c8566b"
   integrity sha512-r9S/ZyXu/Xu9q1tYlpsLIsa3EeLXXk0VwlxqTcFRfg9EhMW+17kbt9G0NrgCmhGb5vT2hyhJZLfDGx+7+5Uj/w==
 
-y18n@^5.0.1:
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/y18n/-/y18n-5.0.1.tgz#1ad2a7eddfa8bce7caa2e1f6b5da96c39d99d571"
-  integrity sha512-/jJ831jEs4vGDbYPQp4yGKDYPSCCEQ45uZWJHE1AoYBzqdZi8+LDWas0z4HrmJXmKdpFsTiowSHXdxyFhpmdMg==
+y18n@^5.0.2:
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/y18n/-/y18n-5.0.3.tgz#978115b82befe2b5c762bf55980b7b01a4a2d5d9"
+  integrity sha512-JeFbcHQ/7hVmMBXW6UB6Tg7apStHd/ztGz1JN78y3pFi/q0Ht1eA6PVkvw56gm7UA8fcJR/ziRlYEDMGoju0yQ==
 
 yaeti@^0.0.6:
   version "0.0.6"
@@ -9223,10 +9218,10 @@ yargs-parser@^16.1.0:
     camelcase "^5.0.0"
     decamelize "^1.2.0"
 
-yargs-parser@^20.0.0:
-  version "20.0.0"
-  resolved "https://registry.yarnpkg.com/yargs-parser/-/yargs-parser-20.0.0.tgz#c65a1daaa977ad63cebdd52159147b789a4e19a9"
-  integrity sha512-8eblPHTL7ZWRkyjIZJjnGf+TijiKJSwA24svzLRVvtgoi/RZiKa9fFQTrlx0OKLnyHSdt/enrdadji6WFfESVA==
+yargs-parser@^20.2.2:
+  version "20.2.2"
+  resolved "https://registry.yarnpkg.com/yargs-parser/-/yargs-parser-20.2.2.tgz#84562c6b1c41ccec2f13d346c7dd83f8d1a0dc70"
+  integrity sha512-XmrpXaTl6noDsf1dKpBuUNCOHqjs0g3jRMXf/ztRxdOmb+er8kE5z5b55Lz3p5u2T8KJ59ENBnASS8/iapVJ5g==
 
 yargs@^15.4.1:
   version "15.4.1"
@@ -9245,18 +9240,18 @@ yargs@^15.4.1:
     y18n "^4.0.0"
     yargs-parser "^18.1.2"
 
-yargs@^16.0.3:
-  version "16.0.3"
-  resolved "https://registry.yarnpkg.com/yargs/-/yargs-16.0.3.tgz#7a919b9e43c90f80d4a142a89795e85399a7e54c"
-  integrity sha512-6+nLw8xa9uK1BOEOykaiYAJVh6/CjxWXK/q9b5FpRgNslt8s22F2xMBqVIKgCRjNgGvGPBy8Vog7WN7yh4amtA==
+yargs@^16.1.0:
+  version "16.1.0"
+  resolved "https://registry.yarnpkg.com/yargs/-/yargs-16.1.0.tgz#fc333fe4791660eace5a894b39d42f851cd48f2a"
+  integrity sha512-upWFJOmDdHN0syLuESuvXDmrRcWd1QafJolHskzaw79uZa7/x53gxQKiR07W59GWY1tFhhU/Th9DrtSfpS782g==
   dependencies:
-    cliui "^7.0.0"
-    escalade "^3.0.2"
+    cliui "^7.0.2"
+    escalade "^3.1.1"
     get-caller-file "^2.0.5"
     require-directory "^2.1.1"
     string-width "^4.2.0"
-    y18n "^5.0.1"
-    yargs-parser "^20.0.0"
+    y18n "^5.0.2"
+    yargs-parser "^20.2.2"
 
 yauzl@^2.4.2:
   version "2.10.0"

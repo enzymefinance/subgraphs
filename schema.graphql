@@ -596,6 +596,34 @@ type PerformanceFeeActivatedForFundEvent implements Event & FundEvent @entity {
   timestamp: BigInt!
   transaction: Transaction!
   comptrollerProxy: Contract!
+  highWaterMark: BigDecimal!
+}
+
+type PerformanceFeePaidOutEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: Contract!
+  prevHighWaterMark: BigDecimal!
+  nextHighWaterMark: BigDecimal!
+}
+
+type PerformanceFeePerformanceUpdatedEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: Contract!
+  prevAggregateValueDue: BigDecimal!
+  nextAggregateValueDue: BigDecimal!
+  prevSharePrice: BigDecimal!
+  nextSharePrice: BigDecimal!
+  sharesOutstandingDiff: BigDecimal!
 }
 
 #################################################
@@ -880,6 +908,7 @@ type PerformanceFeeSetting implements FeeSetting @entity {
   fund: Fund!
   rate: BigDecimal!
   period: BigInt!
+  highWaterMark: BigDecimal!
   timestamp: BigInt!
   events: [FundEvent!]!
 }
@@ -1022,7 +1051,7 @@ type PerformanceFeePayout implements Metric & IndividualFeePayout @entity {
   timestamp: BigInt!
   fee: Fee!
   grossSharePrice: BigDecimal!
-  hwm: BigDecimal!
+  highWaterMark: BigDecimal!
   shares: BigDecimal!
   events: [FundEvent!]!
 }
