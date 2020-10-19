@@ -6,14 +6,17 @@ import {
   createNewFund,
   encodeArgs,
   getCurrentFundDeployer,
+  KyberAdapter,
   redeemShares,
 } from '@melonproject/melonjs';
 import { BigNumber, providers, utils, Wallet } from 'ethers';
 import { createAccount, Deployment, fetchDeployment } from './utils/deployment';
+import { kyberTakeOrderArgs } from './utils/kyberTakeOrderArgs';
 import { waitForSubgraph } from './utils/subgraph';
 import { fetchFund } from './utils/subgraph-queries/fetchFund';
 import { fetchInvestment } from './utils/subgraph-queries/fetchInvestment';
 import { fetchRedemption } from './utils/subgraph-queries/fetchRedemption';
+import { callOnIntegrationArgs, callOnIntegrationSelector, takeOrderSelector } from './utils/trading';
 
 describe('Walkthrough', () => {
   let deployment: Deployment;
@@ -59,17 +62,17 @@ describe('Walkthrough', () => {
     const whitelistedTokens = [deployment.wethToken];
     const assetWhitelistSettings = await encodeArgs(['address[]'], [whitelistedTokens]);
 
-    const policies = [deployment.assetBlacklist, deployment.assetWhitelist];
-    const policiesSettingsData = [assetBlacklistSettings, assetWhitelistSettings];
+    // const policies = [deployment.assetBlacklist, deployment.assetWhitelist];
+    // const policiesSettingsData = [assetBlacklistSettings, assetWhitelistSettings];
 
-    const policyManagerConfigData = await encodeArgs(['address[]', 'bytes[]'], [policies, policiesSettingsData]);
+    // const policyManagerConfigData = await encodeArgs(['address[]', 'bytes[]'], [policies, policiesSettingsData]);
 
     // create fund
     const newFundArgs = {
       signer,
       fundDeployer,
       fundOwner: signer.address,
-      denominationAsset: deployment.mlnToken,
+      denominationAsset: deployment.wethToken,
       fundName: 'My Super Fund',
       feeManagerConfigData,
       // TODO: fix policyManagerConfigData
@@ -89,7 +92,7 @@ describe('Walkthrough', () => {
     const approveArgs = {
       signer,
       comptrollerProxy: fund.comptrollerProxy,
-      denominationAsset: deployment.mlnToken,
+      denominationAsset: deployment.wethToken,
       investmentAmount: utils.parseEther('20'),
     };
 
@@ -109,7 +112,7 @@ describe('Walkthrough', () => {
       signer,
       comptrollerProxy: fund.comptrollerProxy,
       buyer: signer.address,
-      denominationAsset: deployment.mlnToken,
+      denominationAsset: deployment.wethToken,
       investmentAmount: utils.parseEther(sharesToBuy.toString()),
       minSharesQuantity: utils.parseEther(sharesToBuy.toString()),
     };
@@ -154,5 +157,30 @@ describe('Walkthrough', () => {
     const boughtMoreShares = await buyMoreSharesTx();
 
     await waitForSubgraph(subgraphStatusEndpoint, boughtMoreShares.__receipt.blockNumber);
+
+    // trade
+
+    const takeOrderArgs = await kyberTakeOrderArgs({
+      incomingAsset: deployment.mlnToken,
+      minIncomingAssetAmount: utils.parseEther('0.000000001'),
+      outgoingAsset: deployment.wethToken,
+      outgoingAssetAmount: utils.parseEther('1'),
+    });
+
+    const callArgs = await callOnIntegrationArgs({
+      adapter: new KyberAdapter(await resolveAddress(deployment.kyberAdapter), signer),
+      selector: takeOrderSelector,
+      encodedCallArgs: takeOrderArgs,
+    });
+
+    const comptrollerProxy = new ComptrollerLib(await resolveAddress(fund.comptrollerProxy), signer);
+    const takeOrderTx = comptrollerProxy.callOnExtension(
+      await resolveAddress(deployment.integrationManager),
+      callOnIntegrationSelector,
+      callArgs,
+    );
+    await expect(takeOrderTx).resolves.toBeReceipt();
+
+    return takeOrderTx;
   });
 });

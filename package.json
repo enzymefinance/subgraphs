@@ -22,9 +22,10 @@
   },
   "devDependencies": {
     "@chainlink/contracts": "^0.0.10",
-    "@graphprotocol/graph-cli": "^0.18.0",
-    "@graphprotocol/graph-ts": "^0.18.1",
-    "@melonproject/melonjs": "^2.0.1-dev.520+c5590973",
+    "@crestproject/jest": "^0.0.56",
+    "@graphprotocol/graph-cli": "^0.19.0",
+    "@graphprotocol/graph-ts": "^0.19.0",
+    "@melonproject/melonjs": "^2.0.1-dev.522+dbe20e83",
     "@melonproject/persistent": "^2.0.1-dev.4947+b7d340ae",
     "@melonproject/release": "^2.0.1-dev.4947+b7d340ae",
     "@melonproject/utils": "^2.0.1-dev.4947+b7d340ae",
@@ -39,7 +40,7 @@
     "glob": "^7.1.6",
     "graphql-request": "^3.2.0",
     "handlebars": "^4.7.6",
-    "jest": "^26.5.3",
+    "jest": "^26.6.0",
     "prettier": "^2.1.2",
     "rimraf": "^3.0.2",
     "ts-jest": "^26.4.1",
@@ -48,7 +49,7 @@
     "yargs": "^16.1.0"
   },
   "jest": {
-    "preset": "ts-jest",
+    "preset": "@crestproject/jest",
     "testTimeout": 300000,
     "testEnvironment": "node"
   },

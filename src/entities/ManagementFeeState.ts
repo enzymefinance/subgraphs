@@ -4,7 +4,7 @@ import { arrayDiff } from '../utils/arrayDiff';
 import { arrayUnique } from '../utils/arrayUnique';
 import { logCritical } from '../utils/logCritical';
 import { feeStateId, useFeeState } from './FeeState';
-import { stateId, useState } from './State';
+import { useState } from './State';
 
 function managementFeeStateId(fund: Fund, event: ethereum.Event): string {
   return fund.id + '/' + event.block.timestamp.toString() + '/feeState/management';
@@ -45,7 +45,7 @@ export function ensureManagementFeeState(
   let managementFeeState = ManagementFeeState.load(managementFeeStateId(fund, event)) as ManagementFeeState;
 
   if (!managementFeeState) {
-    let state = useState(stateId(fund, event));
+    let state = useState(fund.state);
     let previousFeeState = useFeeState(state.feeState);
 
     let previous = findManagementFeeState(previousFeeState.feeStates);

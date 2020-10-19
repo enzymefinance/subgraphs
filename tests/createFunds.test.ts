@@ -53,7 +53,7 @@ describe('Walkthrough', () => {
         fundDeployer,
         fundOwner: signer.address,
         denominationAsset: deployment.mlnToken,
-        fundName: `ThursdayAfternoonFunds (${new Date().toLocaleTimeString()})`,
+        fundName: `MLN Fund (${new Date().toLocaleTimeString()})`,
         feeManagerConfigData,
         // TODO: fix policyManagerConfigData
         policyManagerConfigData: '0x',
