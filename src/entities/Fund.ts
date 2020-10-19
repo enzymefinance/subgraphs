@@ -5,7 +5,7 @@ import { logCritical } from '../utils/logCritical';
 import { ensureAccount, ensureManager } from './Account';
 import { useAsset } from './Asset';
 import { createCalculations } from './Calculations';
-import { createFeePayout } from './FeePayout';
+import { createFeeState } from './FeeState';
 import { createPortfolio } from './Portfolio';
 import { useRelease } from './Release';
 import { createShares } from './Shares';
@@ -26,9 +26,10 @@ export function createFund(event: NewFundCreated): Fund {
   let fund = new Fund(id);
   let shares = createShares(BigDecimal.fromString('0'), fund, event, null);
   let portfolio = createPortfolio([], fund, event, null);
-  let feePayout = createFeePayout([], fund, event, null);
+
+  let feeState = createFeeState([], fund, event, null);
   let calculations = createCalculations(fund, event, null);
-  let state = createState(shares, portfolio, feePayout, calculations, fund, event);
+  let state = createState(shares, portfolio, feeState, calculations, fund, event);
 
   fund.name = event.params.fundName;
   fund.inception = event.block.timestamp;
@@ -36,10 +37,10 @@ export function createFund(event: NewFundCreated): Fund {
   fund.accessor = event.params.comptrollerProxy.toHex();
   fund.manager = ensureManager(event.params.fundOwner, event).id;
   fund.creator = ensureAccount(event.params.creator, event).id;
-  fund.trackedAssets = [];
+  fund.trackedAssets = new Array<string>();
   fund.shares = shares.id;
   fund.portfolio = portfolio.id;
-  fund.feePayout = feePayout.id;
+  fund.feeState = feeState.id;
   fund.calculations = calculations.id;
   fund.state = state.id;
   fund.denominationAsset = useAsset(event.params.denominationAsset.toHex()).id;

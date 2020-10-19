@@ -145,6 +145,8 @@ dataSources:
           file: ./node_modules/@melonproject/release/artifacts/StandardERC20.json
         - name: IFeeInterface
           file: ./node_modules/@melonproject/release/artifacts/IFee.json
+        - name: PerformanceFeeContract
+          file: ./node_modules/@melonproject/release/artifacts/PerformanceFee.json
       eventHandlers:
         - event: AllSharesOutstandingForcePaid(indexed address,address,uint256)
           handler: handleAllSharesOutstandingForcePaid
@@ -216,13 +218,13 @@ dataSources:
         - name: ComptrollerLibContract
           file: ./node_modules/@melonproject/release/artifacts/ComptrollerLib.json
       eventHandlers:
-        - event: ActivatedForFund(indexed address)
+        - event: ActivatedForFund(indexed address,uint256)
           handler: handleActivatedForFund
         - event: FundSettingsAdded(indexed address,uint256,uint256)
           handler: handleFundSettingsAdded
-        - event: PaidOut(indexed address)
+        - event: PaidOut(indexed address,uint256,uint256)
           handler: handlePaidOut
-        - event: PerformanceUpdated(indexed address,uint256,uint256,int256)
+        - event: PerformanceUpdated(indexed address,uint256,uint256,uint256,uint256,int256)
           handler: handlePerformanceUpdated
 
   - name: PolicyManagerDataSource
@@ -442,7 +444,7 @@ dataSources:
           handler: handleAdapterDeregistered
         - event: AdapterRegistered(indexed address,indexed string)
           handler: handleAdapterRegistered
-        - event: CallOnIntegrationExecuted(indexed address,indexed address,address,indexed address,address[],uint256[],address[],uint256[])
+        - event: CallOnIntegrationExecuted(indexed address,address,address,indexed address,indexed bytes4,bytes,address[],uint256[],address[],uint256[])
           handler: handleCallOnIntegrationExecuted
 
   - name: ChainlinkPriceFeedDataSource

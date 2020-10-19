@@ -1,8 +1,8 @@
 import { ethereum } from '@graphprotocol/graph-ts';
-import { Calculation, FeePayout, Fund, Portfolio, Share, State } from '../generated/schema';
+import { Calculation, FeeState, Fund, Portfolio, Share, State } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
 import { useCalculations } from './Calculations';
-import { useFeePayout } from './FeePayout';
+import { useFeeState } from './FeeState';
 import { usePortfolio } from './Portfolio';
 import { useShares } from './Shares';
 
@@ -13,7 +13,7 @@ export function stateId(fund: Fund, event: ethereum.Event): string {
 export function createState(
   shares: Share,
   holdings: Portfolio,
-  feePayout: FeePayout,
+  feeState: FeeState,
   calculations: Calculation,
   fund: Fund,
   event: ethereum.Event,
@@ -23,9 +23,9 @@ export function createState(
   state.fund = fund.id;
   state.shares = shares.id;
   state.portfolio = holdings.id;
-  state.feePayout = feePayout.id;
+  state.feeState = feeState.id;
   state.calculations = calculations.id;
-  state.events = [];
+  state.events = new Array<string>();
   state.save();
 
   // load additional infos
@@ -42,9 +42,9 @@ export function ensureState(fund: Fund, event: ethereum.Event): State {
   let previous = useState(fund.state);
   let shares = useShares(previous.shares);
   let holdings = usePortfolio(previous.portfolio);
-  let feePayout = useFeePayout(previous.feePayout);
+  let feeState = useFeeState(previous.feeState);
   let calculations = useCalculations(previous.calculations);
-  let state = createState(shares, holdings, feePayout, calculations, fund, event);
+  let state = createState(shares, holdings, feeState, calculations, fund, event);
 
   fund.state = state.id;
   fund.save();

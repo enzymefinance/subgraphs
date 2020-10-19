@@ -15,7 +15,7 @@ export function createShares(shares: BigDecimal, fund: Fund, event: ethereum.Eve
   entity.timestamp = event.block.timestamp;
   entity.fund = fund.id;
   entity.shares = shares;
-  entity.events = cause ? [cause.getString('id')] : [];
+  entity.events = cause ? [cause.getString('id')] : new Array<string>();
   entity.save();
 
   return entity;
@@ -25,8 +25,8 @@ export function ensureShares(fund: Fund, event: ethereum.Event, cause: Entity): 
   let shares = Share.load(shareId(fund, event)) as Share;
 
   if (!shares) {
-    let aggregate = useState(fund.state);
-    let previous = useShares(aggregate.shares);
+    let state = useState(fund.state);
+    let previous = useShares(state.shares);
     shares = createShares(previous.shares, fund, event, cause);
   } else {
     let events = shares.events;

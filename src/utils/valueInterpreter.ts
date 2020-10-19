@@ -1,12 +1,7 @@
 import { Address, BigDecimal, BigInt } from '@graphprotocol/graph-ts';
+import { valueInterpreterAddress, wethTokenAddress } from '../addresses';
 import { Asset } from '../generated/schema';
 import { ValueInterpreterContract } from '../generated/ValueInterpreterContract';
-import {
-  valueInterpreterAddress,
-  chainlinkPriceFeedAddress,
-  aggregatedDerivativePriceFeedAddress,
-  wethTokenAddress,
-} from '../addresses';
 import { toBigDecimal } from './toBigDecimal';
 
 export function fetchAssetPrice(asset: Asset): BigDecimal {
@@ -17,13 +12,7 @@ export function fetchAssetPrice(asset: Asset): BigDecimal {
   // calculating the value with the value interpreter, this is also the rate.
   let one = BigInt.fromI32(10).pow(asset.decimals as u8);
   let address = Address.fromString(asset.id);
-  let call = contract.try_calcCanonicalAssetValue(
-    chainlinkPriceFeedAddress,
-    aggregatedDerivativePriceFeedAddress,
-    address,
-    one,
-    wethTokenAddress,
-  );
+  let call = contract.try_calcCanonicalAssetValue(address, one, wethTokenAddress);
 
   // TODO: Do we have to use the derivative decimals here or 18?!?
   // let current = toBigDecimal(value.value0, 18);

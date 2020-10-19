@@ -37,9 +37,9 @@ export function useAssets(ids: string[]): Asset[] {
 }
 
 export function ensureAssets(addresses: Address[]): Asset[] {
-  let assets: Asset[] = [];
+  let assets: Asset[] = new Array<Asset>();
   for (let i: i32 = 0; i < addresses.length; i++) {
-    assets.push(ensureAsset(addresses[i]));
+    assets = assets.concat([ensureAsset(addresses[i])]);
   }
 
   return assets;

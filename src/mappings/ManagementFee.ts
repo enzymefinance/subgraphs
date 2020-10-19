@@ -1,8 +1,6 @@
 import { ensureManager } from '../entities/Account';
-import { trackFundCalculations } from '../entities/Calculations';
 import { ensureContract } from '../entities/Contract';
 import { useFee } from '../entities/Fee';
-import { trackFeePayout } from '../entities/FeePayout';
 import { useFund } from '../entities/Fund';
 import { ensureManagementFeeSetting } from '../entities/ManagementFeeSetting';
 import { ensureTransaction } from '../entities/Transaction';
@@ -54,6 +52,5 @@ export function handleSettled(event: Settled): void {
   settled.prevSettled = event.params.prevSettled;
   settled.save();
 
-  trackFeePayout(fund, fee, shares, event, settled);
-  trackFundCalculations(fund, event, settled);
+  // trackFeeState(fund, fee, event, settled);
 }

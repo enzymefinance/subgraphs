@@ -13,8 +13,8 @@ export function ensureCron(): Cron {
   if (cron == null) {
     cron = new Cron('SINGLETON');
     cron.cron = BigInt.fromI32(-1);
-    cron.primitives = [];
-    cron.derivatives = [];
+    cron.primitives = new Array<string>();
+    cron.derivatives = new Array<string>();
     cron.save();
   }
 

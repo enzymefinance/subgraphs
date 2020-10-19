@@ -23,7 +23,7 @@ export function ensurePolicy(address: Address): Policy {
 
   policy = new Policy(address.toHex());
   policy.identifier = identifier;
-  policy.funds = [];
+  policy.funds = new Array<string>();
   policy.save();
 
   return policy;

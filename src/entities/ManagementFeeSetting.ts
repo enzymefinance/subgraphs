@@ -26,7 +26,7 @@ export function ensureManagementFeeSetting(fundId: string, fee: Fee): Management
   setting.fee = fee.id;
   setting.fund = fundId;
   setting.rate = BigDecimal.fromString('0');
-  setting.events = [];
+  setting.events = new Array<string>();
   setting.timestamp = BigInt.fromI32(0);
   setting.save();
 
