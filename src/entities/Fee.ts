@@ -23,7 +23,7 @@ export function ensureFee(address: Address): Fee {
 
   fee = new Fee(address.toHex());
   fee.identifier = identifier;
-  fee.funds = [];
+  fee.funds = new Array<string>();
   fee.save();
 
   return fee;

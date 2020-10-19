@@ -27,7 +27,7 @@ export function ensurePerformanceFeeSetting(fundId: string, fee: Fee): Performan
   setting.fund = fundId;
   setting.rate = BigDecimal.fromString('0');
   setting.period = BigInt.fromI32(0);
-  setting.events = [];
+  setting.events = new Array<string>();
   setting.timestamp = BigInt.fromI32(0);
   setting.save();
 

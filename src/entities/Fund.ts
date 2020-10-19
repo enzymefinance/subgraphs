@@ -37,7 +37,7 @@ export function createFund(event: NewFundCreated): Fund {
   fund.accessor = event.params.comptrollerProxy.toHex();
   fund.manager = ensureManager(event.params.fundOwner, event).id;
   fund.creator = ensureAccount(event.params.creator, event).id;
-  fund.trackedAssets = [];
+  fund.trackedAssets = new Array<string>();
   fund.shares = shares.id;
   fund.portfolio = portfolio.id;
   fund.feeState = feeState.id;

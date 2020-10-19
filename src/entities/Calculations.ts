@@ -20,7 +20,7 @@ export function createCalculations(fund: Fund, event: ethereum.Event, cause: Ent
   calculations.totalSupply = BigDecimal.fromString('0');
   calculations.grossSharePrice = BigDecimal.fromString('0');
   calculations.netSharePrice = BigDecimal.fromString('0');
-  calculations.events = cause ? [cause.getString('id')] : [];
+  calculations.events = cause ? [cause.getString('id')] : new Array<string>();
   calculations.save();
 
   return calculations;

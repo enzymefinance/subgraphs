@@ -18,7 +18,7 @@ export function handleAddressesAdded(event: AddressesAdded): void {
   let policy = usePolicy(event.address.toHex());
 
   let newAddresses = event.params.items;
-  let items: string[] = [];
+  let items: string[] = new Array<string>();
   for (let i: i32 = 0; i < event.params.items.length; i++) {
     items = items.concat([ensureAccount(newAddresses[i], event).id]);
   }

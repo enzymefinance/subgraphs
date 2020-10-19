@@ -15,7 +15,7 @@ export function createShares(shares: BigDecimal, fund: Fund, event: ethereum.Eve
   entity.timestamp = event.block.timestamp;
   entity.fund = fund.id;
   entity.shares = shares;
-  entity.events = cause ? [cause.getString('id')] : [];
+  entity.events = cause ? [cause.getString('id')] : new Array<string>();
   entity.save();
 
   return entity;

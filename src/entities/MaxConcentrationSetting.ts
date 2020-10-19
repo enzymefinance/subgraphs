@@ -26,7 +26,7 @@ export function ensureMaxConcentrationSetting(fundId: string, policy: Policy): M
   setting.policy = policy.id;
   setting.fund = fundId;
   setting.maxConcentration = BigDecimal.fromString('0');
-  setting.events = [];
+  setting.events = new Array<string>();
   setting.timestamp = BigInt.fromI32(0);
   setting.save();
 

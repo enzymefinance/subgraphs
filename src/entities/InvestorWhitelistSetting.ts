@@ -25,8 +25,8 @@ export function ensureInvestorWhitelistSetting(fundId: string, policy: Policy): 
   setting = new InvestorWhitelistSetting(id);
   setting.policy = policy.id;
   setting.fund = fundId;
-  setting.listed = [];
-  setting.events = [];
+  setting.listed = new Array<string>();
+  setting.events = new Array<string>();
   setting.timestamp = BigInt.fromI32(0);
   setting.save();
 

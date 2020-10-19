@@ -21,7 +21,7 @@ export function createPortfolio(
   portfolio.timestamp = event.block.timestamp;
   portfolio.fund = fund.id;
   portfolio.holdings = holdings.map<string>((item) => item.id);
-  portfolio.events = cause ? [cause.getString('id')] : [];
+  portfolio.events = cause ? [cause.getString('id')] : new Array<string>();
   portfolio.save();
 
   return portfolio;
@@ -92,7 +92,7 @@ function findHolding(holdings: Holding[], asset: Asset): Holding | null {
 export function trackFundPortfolio(fund: Fund, event: ethereum.Event, cause: Entity): Portfolio {
   let portfolio = ensurePortfolio(fund, event, cause);
   let previousHoldings: Holding[] = portfolio.holdings.map<Holding>((id) => useHolding(id));
-  let nextHoldings: Holding[] = [];
+  let nextHoldings: Holding[] = new Array<Holding>();
 
   let vaultProxy = VaultLibContract.bind(Address.fromString(fund.id));
 

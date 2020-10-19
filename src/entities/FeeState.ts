@@ -20,7 +20,7 @@ export function createFeeState(
   feeState.timestamp = event.block.timestamp;
   feeState.fund = fund.id;
   feeState.feeStates = feeStateIds;
-  feeState.events = cause ? [cause.getString('id')] : [];
+  feeState.events = cause ? [cause.getString('id')] : new Array<string>();
   feeState.save();
 
   return feeState;

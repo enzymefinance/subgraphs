@@ -25,7 +25,7 @@ export function createState(
   state.portfolio = holdings.id;
   state.feeState = feeState.id;
   state.calculations = calculations.id;
-  state.events = [];
+  state.events = new Array<string>();
   state.save();
 
   // load additional infos
