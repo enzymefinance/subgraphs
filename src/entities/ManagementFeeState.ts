@@ -28,14 +28,8 @@ export function createManagementFeeState(
 
 function findManagementFeeState(feeStates: string[]): ManagementFeeState | null {
   for (let i: i32 = 0; i < feeStates.length; i++) {
-    let managementFeeState = ManagementFeeState.load(feeStates[i]);
-
-    if (managementFeeState != null) {
-      let fee = Fee.load(managementFeeState.fee);
-
-      if (fee != null && fee.identifier == 'MANAGEMENT') {
-        return managementFeeState;
-      }
+    if (feeStates[i].endsWith('/management')) {
+      return ManagementFeeState.load(feeStates[i]);
     }
   }
 

@@ -68,7 +68,7 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
 
   let quantities: BigDecimal[] = [];
   for (let i: i32 = 0; i < assets.length; i++) {
-    quantities.push(toBigDecimal(qtys[i], assets[i].decimals));
+    quantities = quantities.concat([toBigDecimal(qtys[i], assets[i].decimals)]);
   }
 
   let redemption = new SharesRedeemedEvent(genericId(event));

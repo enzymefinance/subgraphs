@@ -20,7 +20,7 @@ export function handleAddressesAdded(event: AddressesAdded): void {
   let newAddresses = event.params.items;
   let items: string[] = [];
   for (let i: i32 = 0; i < event.params.items.length; i++) {
-    items.push(ensureAccount(newAddresses[i], event).id);
+    items = items.concat([ensureAccount(newAddresses[i], event).id]);
   }
 
   let addressesAdded = new InvestorWhitelistAddressesAddedEvent(genericId(event));

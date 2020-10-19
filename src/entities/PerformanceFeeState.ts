@@ -38,14 +38,8 @@ function createPerformanceFeeState(
 
 function findPerformanceFeeState(feeStates: string[]): PerformanceFeeState | null {
   for (let i: i32 = 0; i < feeStates.length; i++) {
-    let performanceFeeState = PerformanceFeeState.load(feeStates[i]);
-
-    if (performanceFeeState != null) {
-      let fee = Fee.load(performanceFeeState.fee);
-
-      if (fee != null && fee.identifier == 'PERFORMANCE') {
-        return performanceFeeState;
-      }
+    if (feeStates[i].endsWith('/performance')) {
+      return PerformanceFeeState.load(feeStates[i]);
     }
   }
 
@@ -78,27 +72,11 @@ export function ensurePerformanceFeeState(
         cause,
       );
 
-      let fs = previousFeeState.feeStates;
-      for (let i: i16 = 0; i < fs.length; i++) {
-        log.warning('ZZZZZZZZZZ prev {}', [fs[i]]);
-      }
-
-      log.warning('XXXXXXXXXXXX previous {} new {}', [previous.id, performanceFeeState.id]);
-
-      let ids = arrayDiff<string>(fs, [previous.id]);
-
-      for (let i: i16 = 0; i < ids.length; i++) {
-        log.warning('BBBBBBBBBBB id {}', [ids[i]]);
-      }
-
-      let newIds = arrayUnique<string>(ids.concat([performanceFeeState.id]));
-
-      for (let i: i16 = 0; i < newIds.length; i++) {
-        log.warning('AAAAAAAAAAA id {}', [newIds[i]]);
-      }
+      let ids = arrayDiff<string>(previousFeeState.feeStates, [previous.id]);
+      ids = arrayUnique<string>(ids.concat([performanceFeeState.id]));
 
       let feeState = useFeeState(feeStateId(fund, event));
-      feeState.feeStates = newIds;
+      feeState.feeStates = ids;
       feeState.save();
     } else {
       performanceFeeState = createPerformanceFeeState(

@@ -110,9 +110,9 @@ export function trackFundPortfolio(fund: Fund, event: ethereum.Event, cause: Ent
 
       // Re-use the previous holding entry unless it has changed.
       if (match != null && match.quantity == quantity) {
-        nextHoldings.push(match);
+        nextHoldings = nextHoldings.concat([match]);
       } else {
-        nextHoldings.push(createHolding(asset, quantity, fund, event, cause));
+        nextHoldings = nextHoldings.concat([createHolding(asset, quantity, fund, event, cause)]);
       }
     }
   }
