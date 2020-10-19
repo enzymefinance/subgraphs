@@ -1,4 +1,4 @@
-import { BigDecimal, Entity, ethereum } from '@graphprotocol/graph-ts';
+import { BigDecimal, Entity, ethereum, log } from '@graphprotocol/graph-ts';
 import { Fee, Fund, PerformanceFeeState } from '../generated/schema';
 import { arrayDiff } from '../utils/arrayDiff';
 import { arrayUnique } from '../utils/arrayUnique';
@@ -23,17 +23,17 @@ function createPerformanceFeeState(
   event: ethereum.Event,
   cause: Entity,
 ): PerformanceFeeState {
-  let feeState = new PerformanceFeeState(performanceFeeStateId(fund, event));
-  feeState.timestamp = event.block.timestamp;
-  feeState.fund = fund.id;
-  feeState.fee = fee.id;
-  feeState.events = [cause.getString('id')];
-  feeState.grossSharePrice = args.grossSharePrice;
-  feeState.highWaterMark = args.highWaterMark;
-  feeState.aggregateValueDue = args.aggregateValueDue;
-  feeState.save();
+  let performanceFeeState = new PerformanceFeeState(performanceFeeStateId(fund, event));
+  performanceFeeState.timestamp = event.block.timestamp;
+  performanceFeeState.fund = fund.id;
+  performanceFeeState.fee = fee.id;
+  performanceFeeState.events = [cause.getString('id')];
+  performanceFeeState.grossSharePrice = args.grossSharePrice;
+  performanceFeeState.highWaterMark = args.highWaterMark;
+  performanceFeeState.aggregateValueDue = args.aggregateValueDue;
+  performanceFeeState.save();
 
-  return feeState;
+  return performanceFeeState;
 }
 
 function findPerformanceFeeState(feeStates: string[]): PerformanceFeeState | null {
@@ -78,11 +78,27 @@ export function ensurePerformanceFeeState(
         cause,
       );
 
-      let ids = arrayDiff<string>(previousFeeState.feeStates, [previous.id]);
-      ids = arrayUnique<string>(ids.concat([performanceFeeState.id]));
+      let fs = previousFeeState.feeStates;
+      for (let i: i16 = 0; i < fs.length; i++) {
+        log.warning('ZZZZZZZZZZ prev {}', [fs[i]]);
+      }
+
+      log.warning('XXXXXXXXXXXX previous {} new {}', [previous.id, performanceFeeState.id]);
+
+      let ids = arrayDiff<string>(fs, [previous.id]);
+
+      for (let i: i16 = 0; i < ids.length; i++) {
+        log.warning('BBBBBBBBBBB id {}', [ids[i]]);
+      }
+
+      let newIds = arrayUnique<string>(ids.concat([performanceFeeState.id]));
+
+      for (let i: i16 = 0; i < newIds.length; i++) {
+        log.warning('AAAAAAAAAAA id {}', [newIds[i]]);
+      }
 
       let feeState = useFeeState(feeStateId(fund, event));
-      feeState.feeStates = ids;
+      feeState.feeStates = newIds;
       feeState.save();
     } else {
       performanceFeeState = createPerformanceFeeState(
@@ -96,6 +112,7 @@ export function ensurePerformanceFeeState(
         event,
         cause,
       );
+
       let feeState = useFeeState(feeStateId(fund, event));
       feeState.feeStates = feeState.feeStates.concat([performanceFeeState.id]);
       feeState.save();

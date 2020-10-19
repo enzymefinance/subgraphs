@@ -1,10 +1,8 @@
 import { ensureManager } from '../entities/Account';
 import { ensureContract } from '../entities/Contract';
 import { useFee } from '../entities/Fee';
-import { trackFeeState } from '../entities/FeeState';
 import { useFund } from '../entities/Fund';
 import { ensurePerformanceFeeSetting } from '../entities/PerformanceFeeSetting';
-import { performanceFeeStateId, usePerformanceFeeState } from '../entities/PerformanceFeeState';
 import { ensureTransaction } from '../entities/Transaction';
 import { ComptrollerLibContract } from '../generated/ComptrollerLibContract';
 import { ActivatedForFund, FundSettingsAdded, PaidOut, PerformanceUpdated } from '../generated/PerformanceFeeContract';
@@ -74,11 +72,11 @@ export function handlePaidOut(event: PaidOut): void {
   paidOut.nextHighWaterMark = toBigDecimal(event.params.nextHighWaterMark);
   paidOut.save();
 
-  trackFeeState(fund, fee, event, paidOut);
+  // trackFeeState(fund, fee, event, paidOut);
 
-  let performanceFeeState = usePerformanceFeeState(performanceFeeStateId(fund, event));
-  performanceFeeState.highWaterMark = toBigDecimal(event.params.nextHighWaterMark);
-  performanceFeeState.save();
+  // let performanceFeeState = usePerformanceFeeState(performanceFeeStateId(fund, event));
+  // performanceFeeState.highWaterMark = toBigDecimal(event.params.nextHighWaterMark);
+  // performanceFeeState.save();
 }
 
 export function handlePerformanceUpdated(event: PerformanceUpdated): void {
@@ -100,10 +98,10 @@ export function handlePerformanceUpdated(event: PerformanceUpdated): void {
   updated.sharesOutstandingDiff = toBigDecimal(event.params.sharesOutstandingDiff);
   updated.save();
 
-  trackFeeState(fund, fee, event, updated);
+  // trackFeeState(fund, fee, event, updated);
 
-  let performanceFeeState = usePerformanceFeeState(performanceFeeStateId(fund, event));
-  performanceFeeState.aggregateValueDue = toBigDecimal(event.params.nextAggregateValueDue);
-  performanceFeeState.grossSharePrice = toBigDecimal(event.params.nextSharePrice);
-  performanceFeeState.save();
+  // let performanceFeeState = usePerformanceFeeState(performanceFeeStateId(fund, event));
+  // performanceFeeState.aggregateValueDue = toBigDecimal(event.params.nextAggregateValueDue);
+  // performanceFeeState.grossSharePrice = toBigDecimal(event.params.nextSharePrice);
+  // performanceFeeState.save();
 }

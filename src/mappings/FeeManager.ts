@@ -3,7 +3,6 @@ import { ensureInvestor, useManager } from '../entities/Account';
 import { trackFundCalculations } from '../entities/Calculations';
 import { ensureContract } from '../entities/Contract';
 import { ensureFee, useFee } from '../entities/Fee';
-import { trackFeeState } from '../entities/FeeState';
 import { useFund } from '../entities/Fund';
 import { ensureInvestment } from '../entities/Investment';
 import { trackFundShares } from '../entities/Shares';
@@ -131,7 +130,7 @@ export function handleSharesOutstandingPaidForFee(event: SharesOutstandingPaidFo
   sharesPaid.save();
 
   trackFundShares(fund, event, sharesPaid);
-  trackFeeState(fund, fee, event, sharesPaid);
+  // trackFeeState(fund, fee, event, sharesPaid);
   trackFundCalculations(fund, event, sharesPaid);
 }
 

@@ -16,14 +16,14 @@ export function createFeeState(
   event: ethereum.Event,
   cause: Entity | null,
 ): FeeState {
-  let payout = new FeeState(feeStateId(fund, event));
-  payout.timestamp = event.block.timestamp;
-  payout.fund = fund.id;
-  payout.feeStates = feeStateIds;
-  payout.events = cause ? [cause.getString('id')] : [];
-  payout.save();
+  let feeState = new FeeState(feeStateId(fund, event));
+  feeState.timestamp = event.block.timestamp;
+  feeState.fund = fund.id;
+  feeState.feeStates = feeStateIds;
+  feeState.events = cause ? [cause.getString('id')] : [];
+  feeState.save();
 
-  return payout;
+  return feeState;
 }
 
 export function ensureFeeState(fund: Fund, event: ethereum.Event, cause: Entity): FeeState {
@@ -56,10 +56,10 @@ export function trackFeeState(fund: Fund, fee: Fee, event: ethereum.Event, cause
 
   if (fee.identifier == 'MANAGEMENT') {
     ensureManagementFeeState(fund, fee, event, cause);
-  }
-
-  if (fee.identifier == 'PERFORMANCE') {
+  } else if (fee.identifier == 'PERFORMANCE') {
     ensurePerformanceFeeState(fund, fee, event, cause);
+  } else {
+    return feeState;
   }
 
   let state = ensureState(fund, event);
