@@ -43,6 +43,7 @@ export function handleCallOnIntegrationExecuted(event: CallOnIntegrationExecuted
   execution.contract = event.address.toHex();
   execution.fund = fund.id;
   execution.account = useAccount(event.params.caller.toHex()).id;
+  execution.adapter = event.params.adapter.toHex();
   execution.incomingAssets = event.params.incomingAssets.map<string>((asset) => useAsset(asset.toHex()).id);
   execution.incomingAssetAmounts = event.params.incomingAssetAmounts.map<BigDecimal>((amount) => toBigDecimal(amount));
   execution.outgoingAssets = event.params.outgoingAssets.map<string>((asset) => useAsset(asset.toHex()).id);
