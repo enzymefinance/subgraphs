@@ -174,12 +174,11 @@ describe('Walkthrough', () => {
     });
 
     const comptrollerProxy = new ComptrollerLib(await resolveAddress(fund.comptrollerProxy), signer);
-    const takeOrderTx = comptrollerProxy.callOnExtension(
-      await resolveAddress(deployment.integrationManager),
-      callOnIntegrationSelector,
-      callArgs,
-    );
-    await expect(takeOrderTx).resolves.toBeReceipt();
+    const takeOrderTx = await comptrollerProxy.callOnExtension
+      .args(await resolveAddress(deployment.integrationManager), callOnIntegrationSelector, callArgs)
+      .send(false);
+
+    await expect(takeOrderTx.wait()).resolves.toBeReceipt();
 
     return takeOrderTx;
   });
