@@ -131,7 +131,7 @@ export function handleSharesOutstandingPaidForFee(event: SharesOutstandingPaidFo
   sharesPaid.save();
 
   trackFundShares(fund, event, sharesPaid);
-  // trackFeeState(fund, fee, event, sharesPaid);
+  trackFeeState(fund, fee, event, sharesPaid);
   trackFundCalculations(fund, event, sharesPaid);
 }
 

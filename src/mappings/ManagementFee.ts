@@ -51,4 +51,6 @@ export function handleSettled(event: Settled): void {
   settled.sharesDue = shares;
   settled.prevSettled = event.params.prevSettled;
   settled.save();
+
+  // trackFeeState(fund, fee, event, settled);
 }

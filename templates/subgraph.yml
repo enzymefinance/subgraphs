@@ -145,6 +145,8 @@ dataSources:
           file: ./node_modules/@melonproject/release/artifacts/StandardERC20.json
         - name: IFeeInterface
           file: ./node_modules/@melonproject/release/artifacts/IFee.json
+        - name: PerformanceFeeContract
+          file: ./node_modules/@melonproject/release/artifacts/PerformanceFee.json
       eventHandlers:
         - event: AllSharesOutstandingForcePaid(indexed address,address,uint256)
           handler: handleAllSharesOutstandingForcePaid

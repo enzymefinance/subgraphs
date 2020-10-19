@@ -1,8 +1,10 @@
-import { BigDecimal, Entity, ethereum, log } from '@graphprotocol/graph-ts';
+import { Address, BigDecimal, Entity, ethereum } from '@graphprotocol/graph-ts';
+import { PerformanceFeeContract } from '../generated/PerformanceFeeContract';
 import { Fee, Fund, PerformanceFeeState } from '../generated/schema';
 import { arrayDiff } from '../utils/arrayDiff';
 import { arrayUnique } from '../utils/arrayUnique';
 import { logCritical } from '../utils/logCritical';
+import { toBigDecimal } from '../utils/toBigDecimal';
 import { feeStateId, useFeeState } from './FeeState';
 import { stateId, useState } from './State';
 
@@ -79,13 +81,16 @@ export function ensurePerformanceFeeState(
       feeState.feeStates = ids;
       feeState.save();
     } else {
+      let contract = PerformanceFeeContract.bind(Address.fromString(fee.id));
+      let feeInfo = contract.getFeeInfoForFund(Address.fromString(fund.accessor));
+
       performanceFeeState = createPerformanceFeeState(
         fund,
         fee,
         {
-          grossSharePrice: BigDecimal.fromString('0'),
-          highWaterMark: BigDecimal.fromString('0'),
-          aggregateValueDue: BigDecimal.fromString('0'),
+          grossSharePrice: toBigDecimal(feeInfo.lastSharePrice),
+          highWaterMark: toBigDecimal(feeInfo.highWaterMark),
+          aggregateValueDue: toBigDecimal(feeInfo.aggregateValueDue),
         },
         event,
         cause,
