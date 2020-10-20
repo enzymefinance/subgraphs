@@ -24,7 +24,12 @@ export function createFund(event: NewFundCreated): Fund {
   let id = event.params.vaultProxy.toHex();
 
   let fund = new Fund(id);
-  let shares = createShares(BigDecimal.fromString('0'), fund, event, null);
+  let shares = createShares(
+    fund,
+    { totalSupply: BigDecimal.fromString('0'), outstandingForFees: BigDecimal.fromString('0') },
+    event,
+    null,
+  );
   let portfolio = createPortfolio([], fund, event, null);
 
   let feeState = createFeeState([], fund, event, null);

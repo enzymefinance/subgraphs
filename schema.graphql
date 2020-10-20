@@ -983,7 +983,8 @@ type Share implements Metric @entity {
   id: ID!
   fund: Fund!
   timestamp: BigInt!
-  shares: BigDecimal!
+  totalSupply: BigDecimal!
+  outstandingForFees: BigDecimal!
   events: [FundEvent!]!
 }
 

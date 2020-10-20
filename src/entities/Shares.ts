@@ -6,15 +6,21 @@ import { logCritical } from '../utils/logCritical';
 import { toBigDecimal } from '../utils/toBigDecimal';
 import { ensureState, useState } from './State';
 
+class CreateSharesArgs {
+  totalSupply: BigDecimal;
+  outstandingForFees: BigDecimal;
+}
+
 export function shareId(fund: Fund, event: ethereum.Event): string {
   return fund.id + '/' + event.block.timestamp.toString() + '/shares';
 }
 
-export function createShares(shares: BigDecimal, fund: Fund, event: ethereum.Event, cause: Entity | null): Share {
+export function createShares(fund: Fund, args: CreateSharesArgs, event: ethereum.Event, cause: Entity | null): Share {
   let entity = new Share(shareId(fund, event));
   entity.timestamp = event.block.timestamp;
   entity.fund = fund.id;
-  entity.shares = shares;
+  entity.totalSupply = args.totalSupply;
+  entity.outstandingForFees = args.outstandingForFees;
   entity.events = cause ? [cause.getString('id')] : new Array<string>();
   entity.save();
 
@@ -27,7 +33,12 @@ export function ensureShares(fund: Fund, event: ethereum.Event, cause: Entity): 
   if (!shares) {
     let state = useState(fund.state);
     let previous = useShares(state.shares);
-    shares = createShares(previous.shares, fund, event, cause);
+    shares = createShares(
+      fund,
+      { totalSupply: previous.totalSupply, outstandingForFees: previous.outstandingForFees },
+      event,
+      cause,
+    );
   } else {
     let events = shares.events;
     shares.events = arrayUnique<string>(events.concat([cause.getString('id')]));
@@ -47,10 +58,14 @@ export function useShares(id: string): Share {
 }
 
 export function trackFundShares(fund: Fund, event: ethereum.Event, cause: Entity): Share {
-  let totalSupply = StandardERC20Contract.bind(Address.fromString(fund.id)).totalSupply();
+  let fundAddress = Address.fromString(fund.id);
+  let contract = StandardERC20Contract.bind(fundAddress);
+  let totalSupply = contract.totalSupply();
+  let outstanding = contract.balanceOf(fundAddress);
 
   let shares = ensureShares(fund, event, cause);
-  shares.shares = toBigDecimal(totalSupply);
+  shares.totalSupply = toBigDecimal(totalSupply);
+  shares.outstandingForFees = toBigDecimal(outstanding);
   shares.save();
 
   let state = ensureState(fund, event);
