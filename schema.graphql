@@ -334,7 +334,7 @@ type FeeSettledForFundEvent implements Event & FundEvent & SharesChange @entity 
   fee: Fee!
   payer: Fund!
   payee: Account!
-  settlementType: Int!
+  settlementType: String!
   sharesDue: BigDecimal!
 }
 
@@ -908,6 +908,7 @@ type PerformanceFeeSetting implements FeeSetting @entity {
   fund: Fund!
   rate: BigDecimal!
   period: BigInt!
+  activated: BigInt!
   timestamp: BigInt!
   events: [FundEvent!]!
 }
@@ -1039,6 +1040,7 @@ type ManagementFeeState implements Metric & IndividualFeeState @entity {
   fund: Fund!
   timestamp: BigInt!
   fee: Fee!
+  lastSettled: BigInt!
   events: [FundEvent!]!
 }
 
@@ -1047,9 +1049,11 @@ type PerformanceFeeState implements Metric & IndividualFeeState @entity {
   fund: Fund!
   timestamp: BigInt!
   fee: Fee!
+  lastPaid: BigInt!
   grossSharePrice: BigDecimal!
   aggregateValueDue: BigDecimal!
   highWaterMark: BigDecimal!
+  sharesOutstanding: BigDecimal!
   events: [FundEvent!]!
 }
 

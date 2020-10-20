@@ -1,4 +1,4 @@
-import { Address, BigDecimal, Entity, ethereum } from '@graphprotocol/graph-ts';
+import { Address, BigDecimal, BigInt, Entity, ethereum } from '@graphprotocol/graph-ts';
 import { PerformanceFeeContract } from '../generated/PerformanceFeeContract';
 import { Fee, Fund, PerformanceFeeState } from '../generated/schema';
 import { arrayDiff } from '../utils/arrayDiff';
@@ -12,6 +12,8 @@ class PerformanceFeeStateArgs {
   grossSharePrice: BigDecimal;
   highWaterMark: BigDecimal;
   aggregateValueDue: BigDecimal;
+  sharesOutstanding: BigDecimal;
+  lastPaid: BigInt;
 }
 
 export function performanceFeeStateId(fund: Fund, event: ethereum.Event): string {
@@ -33,6 +35,8 @@ function createPerformanceFeeState(
   performanceFeeState.grossSharePrice = args.grossSharePrice;
   performanceFeeState.highWaterMark = args.highWaterMark;
   performanceFeeState.aggregateValueDue = args.aggregateValueDue;
+  performanceFeeState.sharesOutstanding = args.sharesOutstanding;
+  performanceFeeState.lastPaid = args.lastPaid;
   performanceFeeState.save();
 
   return performanceFeeState;
@@ -69,6 +73,8 @@ export function ensurePerformanceFeeState(
           grossSharePrice: previous.grossSharePrice,
           highWaterMark: previous.highWaterMark,
           aggregateValueDue: previous.aggregateValueDue,
+          sharesOutstanding: previous.sharesOutstanding,
+          lastPaid: previous.lastPaid,
         },
         event,
         cause,
@@ -91,6 +97,8 @@ export function ensurePerformanceFeeState(
           grossSharePrice: toBigDecimal(feeInfo.lastSharePrice),
           highWaterMark: toBigDecimal(feeInfo.highWaterMark),
           aggregateValueDue: toBigDecimal(feeInfo.aggregateValueDue),
+          sharesOutstanding: BigDecimal.fromString('0'),
+          lastPaid: feeInfo.lastPaid,
         },
         event,
         cause,

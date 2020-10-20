@@ -4,6 +4,7 @@ import { useFee } from '../entities/Fee';
 import { trackFeeState } from '../entities/FeeState';
 import { useFund } from '../entities/Fund';
 import { ensureManagementFeeSetting } from '../entities/ManagementFeeSetting';
+import { managementFeeStateId, useManagementFeeState } from '../entities/ManagementFeeState';
 import { ensureTransaction } from '../entities/Transaction';
 import { ComptrollerLibContract } from '../generated/ComptrollerLibContract';
 import { FundSettingsAdded, Settled } from '../generated/ManagementFeeContract';
@@ -54,4 +55,8 @@ export function handleSettled(event: Settled): void {
   settled.save();
 
   trackFeeState(fund, fee, event, settled);
+
+  let managementFeeState = useManagementFeeState(managementFeeStateId(fund, event));
+  managementFeeState.lastSettled = event.block.timestamp;
+  managementFeeState.save();
 }

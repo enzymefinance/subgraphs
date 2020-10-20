@@ -28,6 +28,7 @@ import {
 } from '../generated/schema';
 import { arrayUnique } from '../utils/arrayUnique';
 import { genericId } from '../utils/genericId';
+import { convertSettlementType } from '../utils/settlementType';
 import { toBigDecimal } from '../utils/toBigDecimal';
 
 export function handleAllSharesOutstandingForcePaid(event: AllSharesOutstandingForcePaid): void {
@@ -84,6 +85,7 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
   let investment = ensureInvestment(investor, fund);
   let fee = useFee(event.params.fee.toHex());
   let shares = toBigDecimal(event.params.sharesDue);
+  let settlementType = convertSettlementType(event.params.settlementType);
 
   let settled = new FeeSettledForFundEvent(genericId(event));
   settled.contract = event.address.toHex();
@@ -97,7 +99,7 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
   settled.fee = fee.id;
   settled.payer = fund.id;
   settled.payee = useManager(fund.manager).id;
-  settled.settlementType = event.params.settlementType;
+  settled.settlementType = settlementType;
   settled.sharesDue = shares;
   settled.save();
 
