@@ -22,6 +22,7 @@
   },
   "devDependencies": {
     "@chainlink/contracts": "^0.0.10",
+    "@crestproject/crestproject": "^0.0.58",
     "@crestproject/jest": "^0.0.58",
     "@graphprotocol/graph-cli": "^0.19.0",
     "@graphprotocol/graph-ts": "^0.19.0",
@@ -37,6 +38,7 @@
     "@types/yargs": "^15.0.9",
     "assemblyscript": "^0.16.1",
     "axios": "^0.20.0",
+    "ethers": "^5.0.18",
     "glob": "^7.1.6",
     "graphql-request": "^3.2.0",
     "handlebars": "^4.7.6",

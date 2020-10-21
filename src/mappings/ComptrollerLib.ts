@@ -10,6 +10,7 @@ import { trackFundShares } from '../entities/Shares';
 import { ensureTransaction } from '../entities/Transaction';
 import {
   AmguPaid,
+  MigratedSharesDuePaid,
   OverridePauseSet,
   SharesBought,
   SharesRedeemed,
@@ -104,5 +105,9 @@ export function handleVaultProxySet(event: VaultProxySet): void {
 }
 
 export function handleOverridePauseSet(event: OverridePauseSet): void {
+  // TODO: implement
+}
+
+export function handleMigratedSharesDuePaid(event: MigratedSharesDuePaid): void {
   // TODO: implement
 }
