@@ -309,6 +309,11 @@
   dependencies:
     ethers "^5.0.12"
 
+"@crestproject/ethers@^0.0.58":
+  version "0.0.58"
+  resolved "https://registry.yarnpkg.com/@crestproject/ethers/-/ethers-0.0.58.tgz#48d1909da3666ca4ef097f957f3a6bd47bd3305d"
+  integrity sha512-Y7gyPPlTBHkFpvxfqLBlUyBsYxUiuy45iFpfE+frE6QcC/UblROhgbrIt+L7WwCXaDVTvtC1em66iXGpNvJ7uw==
+
 "@crestproject/evm@^0.0.56":
   version "0.0.56"
   resolved "https://registry.yarnpkg.com/@crestproject/evm/-/evm-0.0.56.tgz#187666fe98adc6383bfc6580d54cc283699fe341"
@@ -316,6 +321,13 @@
   dependencies:
     "@crestproject/ethers" "^0.0.56"
     ethers "^5.0.12"
+
+"@crestproject/evm@^0.0.58":
+  version "0.0.58"
+  resolved "https://registry.yarnpkg.com/@crestproject/evm/-/evm-0.0.58.tgz#1a2e8ee708ac5002c1bcc4b8737c29ce2a653f5c"
+  integrity sha512-FOrVpb0ybSU5p+Eaul3pT/WWAabUU93S1z9qa6U2R7tcGaRBVHo4SN3GXvKjr973GlfZg2j4eOWZ5zWUkq8l6g==
+  dependencies:
+    "@crestproject/ethers" "^0.0.58"
 
 "@crestproject/jest@^0.0.56":
   version "0.0.56"
@@ -326,6 +338,14 @@
     "@crestproject/evm" "^0.0.56"
     ethers "^5.0.12"
     ts-jest "^26.1.3"
+
+"@crestproject/jest@^0.0.58":
+  version "0.0.58"
+  resolved "https://registry.yarnpkg.com/@crestproject/jest/-/jest-0.0.58.tgz#002353f58728b2167ccbdf31939d4616adce3c96"
+  integrity sha512-gnOx7aKtgBpbzFJ46d515fvtWm0qNo01EP3n7HpxEcJ62uZoc5FlasNRnHuR+gxjuccjflZfzB13HqUjOY0B1Q==
+  dependencies:
+    "@crestproject/ethers" "^0.0.58"
+    "@crestproject/evm" "^0.0.58"
 
 "@ethersproject/abi@5.0.0-beta.153":
   version "5.0.0-beta.153"
@@ -1169,6 +1189,13 @@
     "@melonproject/utils" "^2.0.1-dev.4947+b7d340ae"
     ethers "^5.0.14"
 
+"@melonproject/persistent@^2.0.1-dev.4957+085cde73":
+  version "2.0.1-dev.4957"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_TXWF1/%40melonproject%2Fpersistent-2.0.1-dev.4957.tgz#4ee2327c5a0ba0322c386ba65789e71b98c95a41"
+  integrity sha1-TuIyfFoLoDIsOGumV4nnG5jJWkE=
+  dependencies:
+    "@melonproject/utils" "^2.0.1-dev.4957+085cde73"
+
 "@melonproject/release@^2.0.1-dev.4947+b7d340ae":
   version "2.0.1-dev.4947"
   resolved "https://npm.fury.io/melonproject/~/up/ver_7sdgE/%40melonproject%2Frelease-2.0.1-dev.4947.tgz#3a1a953193e06ccd1527978c5c7223e519de31f6"
@@ -1179,6 +1206,14 @@
     "@melonproject/utils" "^2.0.1-dev.4947+b7d340ae"
     ethers "^5.0.14"
 
+"@melonproject/release@^2.0.1-dev.4957+085cde73":
+  version "2.0.1-dev.4957"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_RD4Uy/%40melonproject%2Frelease-2.0.1-dev.4957.tgz#bf22b27e808d3d19b75ea6e728b39574f4e8b7a2"
+  integrity sha1-vyKyfoCNPRm3XqbnKLOVdPTot6I=
+  dependencies:
+    "@melonproject/persistent" "^2.0.1-dev.4957+085cde73"
+    "@melonproject/utils" "^2.0.1-dev.4957+085cde73"
+
 "@melonproject/utils@^2.0.1-dev.4947+b7d340ae":
   version "2.0.1-dev.4947"
   resolved "https://npm.fury.io/melonproject/~/up/ver_1qdxA2/%40melonproject%2Futils-2.0.1-dev.4947.tgz#9cfc07f154db0968ec05284aa76f0327d2d1cd09"
@@ -1186,6 +1221,11 @@
   dependencies:
     "@crestproject/crestproject" "^0.0.56"
     ethers "^5.0.14"
+
+"@melonproject/utils@^2.0.1-dev.4957+085cde73":
+  version "2.0.1-dev.4957"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_mwfzC/%40melonproject%2Futils-2.0.1-dev.4957.tgz#7efb3e9f568582699e7736b2e5431b9ed351adb9"
+  integrity sha1-fvs+n1aFgmmedzay5UMbntNRrbk=
 
 "@protobufjs/utf8@^1.1.0":
   version "1.1.0"
@@ -1438,13 +1478,13 @@
     jest-diff "^25.2.1"
     pretty-format "^25.2.1"
 
-"@types/jest@^26.0.14":
-  version "26.0.14"
-  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-26.0.14.tgz#078695f8f65cb55c5a98450d65083b2b73e5a3f3"
-  integrity sha512-Hz5q8Vu0D288x3iWXePSn53W7hAjP0H7EQ6QvDO9c7t46mR0lNOLlfuwQ+JkVxuhygHzlzPX+0jKdA3ZgSh+Vg==
+"@types/jest@^26.0.15":
+  version "26.0.15"
+  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-26.0.15.tgz#12e02c0372ad0548e07b9f4e19132b834cb1effe"
+  integrity sha512-s2VMReFXRg9XXxV+CW9e5Nz8fH2K1aEhwgjUqPPbQd7g95T0laAcvLv032EhFHIa5GHsZ8W7iJEQVaJq6k3Gog==
   dependencies:
-    jest-diff "^25.2.1"
-    pretty-format "^25.2.1"
+    jest-diff "^26.0.0"
+    pretty-format "^26.0.0"
 
 "@types/lodash@^4.14.159":
   version "4.14.161"
@@ -1481,10 +1521,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.12.62.tgz#733923d73669188d35950253dd18a21570085d2b"
   integrity sha512-qAfo81CsD7yQIM9mVyh6B/U47li5g7cfpVQEDMfQeF8pSZVwzbhwU3crc0qG4DmpsebpJPR49AKOExQyJ05Cpg==
 
-"@types/node@^14.11.10":
-  version "14.11.10"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.11.10.tgz#8c102aba13bf5253f35146affbf8b26275069bef"
-  integrity sha512-yV1nWZPlMFpoXyoknm4S56y2nlTAuFYaJuQtYRAOU7xA/FJ9RY0Xm7QOkaYMMmr8ESdHIuUb6oQgR/0+2NqlyA==
+"@types/node@^14.14.0":
+  version "14.14.0"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.0.tgz#f1091b6ad5de18e8e91bdbd43ec63f13de372538"
+  integrity sha512-BfbIHP9IapdupGhq/hc+jT5dyiBVZ2DdeC5WwJWQWDb0GijQlzUFAeIQn/2GtvZcd2HVUU7An8felIICFTC2qg==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"
@@ -5117,7 +5157,7 @@ jest-diff@^25.2.1:
     jest-get-type "^25.2.6"
     pretty-format "^25.5.0"
 
-jest-diff@^26.6.0:
+jest-diff@^26.0.0, jest-diff@^26.6.0:
   version "26.6.0"
   resolved "https://registry.yarnpkg.com/jest-diff/-/jest-diff-26.6.0.tgz#5e5bbbaf93ec5017fae2b3ef12fc895e29988379"
   integrity sha512-IH09rKsdWY8YEY7ii2BHlSq59oXyF2pK3GoK+hOK9eD/x6009eNB5Jv1shLMKgxekodPzLlV7eZP1jPFQYds8w==
@@ -6912,7 +6952,7 @@ pretty-format@^25.2.1, pretty-format@^25.5.0:
     ansi-styles "^4.0.0"
     react-is "^16.12.0"
 
-pretty-format@^26.6.0:
+pretty-format@^26.0.0, pretty-format@^26.6.0:
   version "26.6.0"
   resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-26.6.0.tgz#1e1030e3c70e3ac1c568a5fd15627671ea159391"
   integrity sha512-Uumr9URVB7bm6SbaByXtx+zGlS+0loDkFMHP0kHahMjmfCtmFY03iqd++5v3Ld6iB5TocVXlBN/T+DXMn9d4BA==

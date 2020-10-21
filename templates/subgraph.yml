@@ -565,7 +565,7 @@ templates:
       eventHandlers:
         - event: AmguPaid(indexed address,uint256,uint256)
           handler: handleAmguPaid
-        - event: MigratedSharesDuePaid(address,uint256)
+        - event: MigratedSharesDuePaid(uint256)
           handler: handleMigratedSharesDuePaid
         - event: OverridePauseSet(indexed bool)
           handler: handleOverridePauseSet

@@ -1,5 +1,6 @@
-import { Address, BigDecimal, Entity, ethereum } from '@graphprotocol/graph-ts';
+import { Address, BigDecimal, BigInt, Entity, ethereum } from '@graphprotocol/graph-ts';
 import { Asset, Fund, Holding, Portfolio } from '../generated/schema';
+import { StandardERC20Contract } from '../generated/StandardERC20Contract';
 import { VaultLibContract } from '../generated/VaultLibContract';
 import { arrayUnique } from '../utils/arrayUnique';
 import { logCritical } from '../utils/logCritical';
@@ -94,14 +95,17 @@ export function trackFundPortfolio(fund: Fund, event: ethereum.Event, cause: Ent
   let previousHoldings: Holding[] = portfolio.holdings.map<Holding>((id) => useHolding(id));
   let nextHoldings: Holding[] = new Array<Holding>();
 
-  let vaultProxy = VaultLibContract.bind(Address.fromString(fund.id));
-
+  let vaultProxyAddress = Address.fromString(fund.id);
+  let vaultProxy = VaultLibContract.bind(vaultProxyAddress);
   let trackedAssets = vaultProxy.getTrackedAssets();
-  let assetBalances = vaultProxy.getAssetBalances(trackedAssets);
 
   for (let i: i32 = 0; i < trackedAssets.length; i++) {
-    let asset = useAsset(trackedAssets[i].toHex());
-    let quantity = toBigDecimal(assetBalances[i], asset.decimals);
+    let assetAddress = trackedAssets[i];
+    let assetContract = StandardERC20Contract.bind(assetAddress);
+    let assetBalance = assetContract.balanceOf(vaultProxyAddress);
+
+    let asset = useAsset(assetAddress.toHex());
+    let quantity = toBigDecimal(assetBalance, asset.decimals);
 
     // Add the fund holding entry for the current asset unless it's 0.
     // Always add denomination asset (even if it's zero)
