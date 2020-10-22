@@ -811,7 +811,7 @@ type ChainlinkAggregatorAnswerUpdatedEvent implements Event & NetworkEvent @enti
   aggregator: ChainlinkAggregator!
   timestamp: BigInt!
   transaction: Transaction!
-  asset: Asset!
+  asset: Asset
   current: BigDecimal!
   roundId: BigInt!
   updatedAt: BigInt!
@@ -1082,11 +1082,18 @@ type PerformanceFeeState implements Metric & IndividualFeeState @entity {
 # Assets and prices
 #################################################
 
+enum AssetType {
+  DERIVATIVE
+  ETH
+  USD
+}
+
 type Asset @entity {
   id: ID!
   name: String!
   symbol: String!
   decimals: Int!
+  type: AssetType!
 
   # Latest price and candles
   price: AssetPrice
@@ -1156,10 +1163,15 @@ type DailyAssetPriceCandleGroup @entity {
   candles: [DailyAssetPriceCandle!]! @derivedFrom(field: "group")
 }
 
+enum ChainlinkAggregatorType {
+  PRIMITIVE
+  ETHUSD
+}
+
 type ChainlinkAggregator @entity {
   id: ID!
-  asset: Asset!
-  rateAsset: String!
+  type: ChainlinkAggregatorType!
+  asset: Asset
   active: Boolean!
   updates: [ChainlinkAggregatorAnswerUpdatedEvent!]! @derivedFrom(field: "aggregator")
 }

@@ -4,15 +4,14 @@ import { genericId } from '../utils/genericId';
 import { ensureAsset } from '../entities/Asset';
 import { ensureContract } from '../entities/Contract';
 import { ensureTransaction } from '../entities/Transaction';
-import { zeroAddress } from '../constants';
 import { ensureCron, triggerCron } from '../utils/cronManager';
 import { arrayUnique } from '../utils/arrayUnique';
-import { arrayDiff } from '../utils/arrayDiff';
 import { fetchAssetPrice } from '../utils/valueInterpreter';
 import { trackAssetPrice } from '../entities/AssetPrice';
 
 export function handlePriceFeedSet(event: PriceFeedSet): void {
   let derivative = ensureAsset(event.params.derivative);
+  derivative.type = 'DERIVATIVE';
 
   let derivativePriceFeedSet = new PriceFeedSetEvent(genericId(event));
   derivativePriceFeedSet.derivative = derivative.id;
@@ -23,17 +22,12 @@ export function handlePriceFeedSet(event: PriceFeedSet): void {
   derivativePriceFeedSet.nextPriceFeed = event.params.nextPriceFeed.toHex();
   derivativePriceFeedSet.save();
 
-  if (event.params.nextPriceFeed.equals(zeroAddress)) {
-    let current = fetchAssetPrice(derivative);
-    trackAssetPrice(derivative, event.block.timestamp, current);
-  }
+  // Whenever a new asset is registered, we need to fetch its current price immediately.
+  let current = fetchAssetPrice(derivative);
+  trackAssetPrice(derivative, event.block.timestamp, current);
 
   let cron = ensureCron();
-  if (event.params.nextPriceFeed.equals(zeroAddress)) {
-    cron.derivatives = arrayDiff<string>(cron.derivatives, [derivative.id]);
-  } else {
-    cron.derivatives = arrayUnique<string>(cron.derivatives.concat([derivative.id]));
-  }
+  cron.derivatives = arrayUnique<string>(cron.derivatives.concat([derivative.id]));
   cron.save();
 
   // It's important that we run cron last.

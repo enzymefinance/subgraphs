@@ -1,18 +1,21 @@
 import { zeroAddress } from '../constants';
 import { ensureAsset } from '../entities/Asset';
 import { trackAssetPrice } from '../entities/AssetPrice';
-import { disableChainlinkAggregator, enableChainlinkAggregator } from '../entities/ChainlinkAggregator';
+import {
+  disableChainlinkAssetAggregator,
+  disableChainlinkEthUsdAggregator,
+  enableChainlinkAssetAggregator,
+  enableChainlinkEthUsdAggregator,
+} from '../entities/ChainlinkAggregator';
 import { ensureContract } from '../entities/Contract';
 import { ensureTransaction } from '../entities/Transaction';
 import { ChainlinkAggregatorContract } from '../generated/ChainlinkAggregatorContract';
 import { ChainlinkAggregatorProxyContract } from '../generated/ChainlinkAggregatorProxyContract';
 import { EthUsdAggregatorSet, PrimitiveSet, StaleRateThresholdSet } from '../generated/ChainlinkPriceFeedContract';
 import { EthUsdAggregatorSetEvent, PrimitiveSetEvent, StaleRateThresholdSetEvent } from '../generated/schema';
-import { arrayDiff } from '../utils/arrayDiff';
 import { arrayUnique } from '../utils/arrayUnique';
 import { ensureCron, triggerCron } from '../utils/cronManager';
 import { genericId } from '../utils/genericId';
-import { rateAsset } from '../utils/rateAsset';
 import { toBigDecimal } from '../utils/toBigDecimal';
 
 // TODO: Chainlink uses proxies for their price oracles. Sadly, these proxies do not
@@ -25,8 +28,11 @@ import { toBigDecimal } from '../utils/toBigDecimal';
 // underlying aggregator whenever we observe a change. This would be possible because
 // chainlink (allegedly) keeps updating the "old" aggregator for a limited amount of time
 // even after they've migrated to a new one and pointed the proxy to the new aggregator.
+
 export function handlePrimitiveSet(event: PrimitiveSet): void {
   let primitive = ensureAsset(event.params.primitive);
+  primitive.type = event.params.nextRateAsset == 1 ? 'USD' : 'ETH';
+  primitive.save();
 
   let primitivePriceFeedSet = new PrimitiveSetEvent(genericId(event));
   primitivePriceFeedSet.primitive = primitive.id;
@@ -42,35 +48,29 @@ export function handlePrimitiveSet(event: PrimitiveSet): void {
   if (!event.params.prevAggregator.equals(zeroAddress)) {
     let proxy = ChainlinkAggregatorProxyContract.bind(event.params.prevAggregator);
     let aggregator = proxy.aggregator();
-
-    disableChainlinkAggregator(aggregator, primitive);
+    disableChainlinkAssetAggregator(aggregator, primitive);
   }
 
-  if (!event.params.nextAggregator.equals(zeroAddress)) {
-    let proxy = ChainlinkAggregatorProxyContract.bind(event.params.nextAggregator);
-    let aggregator = proxy.aggregator();
+  let proxy = ChainlinkAggregatorProxyContract.bind(event.params.nextAggregator);
+  let aggregator = proxy.aggregator();
 
-    // Whenever a new asset is registered, we need to fetch its current price immediately.
-    let contract = ChainlinkAggregatorContract.bind(aggregator);
-    let current = toBigDecimal(contract.latestAnswer(), primitive.decimals);
-    trackAssetPrice(primitive, event.block.timestamp, current);
+  // Whenever a new asset is registered, we need to fetch its current price immediately.
+  let contract = ChainlinkAggregatorContract.bind(aggregator);
+  let current = toBigDecimal(contract.latestAnswer(), primitive.type === 'USD' ? 8 : 18);
+  trackAssetPrice(primitive, event.block.timestamp, current);
 
-    // Keep tracking this asset using the registered chainlink aggregator.
-    enableChainlinkAggregator(aggregator, primitive, rateAsset(event.params.nextRateAsset));
-  }
+  // Keep tracking this asset using the registered chainlink aggregator.
+  enableChainlinkAssetAggregator(aggregator, primitive);
 
   let cron = ensureCron();
-  if (event.params.nextAggregator.equals(zeroAddress)) {
-    cron.primitives = arrayDiff<string>(cron.derivatives, [primitive.id]);
-  } else {
-    cron.primitives = arrayUnique<string>(cron.primitives.concat([primitive.id]));
-  }
+  cron.primitives = arrayUnique<string>(cron.primitives.concat([primitive.id]));
   cron.save();
 
   // It's important that we run cron last.
   triggerCron(event.block.timestamp);
 }
 
+// TODO: Should we use this handler to `ensureAsset` the WETH asset?
 export function handleEthUsdAggregatorSet(event: EthUsdAggregatorSet): void {
   let ethUsdAggregatorSet = new EthUsdAggregatorSetEvent(genericId(event));
   ethUsdAggregatorSet.contract = ensureContract(event.address, 'ChainlinkPriceFeed').id;
@@ -80,9 +80,18 @@ export function handleEthUsdAggregatorSet(event: EthUsdAggregatorSet): void {
   ethUsdAggregatorSet.nextEthUsdAggregator = event.params.nextEthUsdAggregator.toHex();
   ethUsdAggregatorSet.save();
 
-  // TODO:
-  // - track ETH / USD prices
-  // - add to cron
+  if (!event.params.prevEthUsdAggregator.equals(zeroAddress)) {
+    let proxy = ChainlinkAggregatorProxyContract.bind(event.params.prevEthUsdAggregator);
+    let aggregator = proxy.aggregator();
+    disableChainlinkEthUsdAggregator(aggregator);
+  }
+
+  let proxy = ChainlinkAggregatorProxyContract.bind(event.params.nextEthUsdAggregator);
+  let aggregator = proxy.aggregator();
+  enableChainlinkEthUsdAggregator(aggregator);
+
+  // It's important that we run cron last.
+  triggerCron(event.block.timestamp);
 }
 
 export function handleStaleRateThresholdSet(event: StaleRateThresholdSet): void {

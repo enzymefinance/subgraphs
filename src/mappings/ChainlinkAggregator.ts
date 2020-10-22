@@ -17,22 +17,31 @@ export function handleAnswerUpdated(event: AnswerUpdated): void {
     return;
   }
 
-  let asset = useAsset(aggregator.asset);
-  let current = toBigDecimal(event.params.current, asset.decimals);
+  let decimals = context.getI32('decimals');
+  let current = toBigDecimal(event.params.current, decimals);
 
   let answerUpdated = new ChainlinkAggregatorAnswerUpdatedEvent(genericId(event));
   answerUpdated.contract = ensureContract(event.address, 'ChainlinkAggregator').id;
   answerUpdated.timestamp = event.block.timestamp;
   answerUpdated.transaction = ensureTransaction(event).id;
-  answerUpdated.asset = asset.id;
   answerUpdated.aggregator = aggregator.id;
   answerUpdated.current = current;
   answerUpdated.roundId = event.params.roundId;
   answerUpdated.updatedAt = event.params.updatedAt;
-  answerUpdated.save();
 
-  // NOTE: We use the block timestamp here on purpose (instead of event.params.updatedAt).
-  trackAssetPrice(asset, event.block.timestamp, current);
+  if (aggregator.type == 'ASSET') {
+    let asset = useAsset(aggregator.asset as string);
+    answerUpdated.asset = asset.id;
+    answerUpdated.save();
+
+    // NOTE: We use the block timestamp here on purpose (instead of event.params.updatedAt).
+    trackAssetPrice(asset, event.block.timestamp, current);
+  } else if (aggregator.type === 'ETHUSD') {
+    // TODO: Pick all `primitives` from the CronState entity, find the USD-based ones and
+    // update the price for each (through the value interpreter).
+
+    answerUpdated.save();
+  }
 
   // NOTE: We might want to add this to other mappings in our code base too. We'll need to do some
   // fine tuning to find the right balance (consider performance penalty of using this too

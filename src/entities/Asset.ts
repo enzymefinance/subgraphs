@@ -27,6 +27,7 @@ export function ensureAsset(address: Address): Asset {
   asset.name = name;
   asset.symbol = symbol;
   asset.decimals = decimals;
+  asset.type = '';
   asset.save();
 
   return asset;
