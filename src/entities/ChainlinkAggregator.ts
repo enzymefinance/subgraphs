@@ -24,7 +24,7 @@ function enableChainlinkAggregator(
   address: Address,
   id: string,
   type: string,
-  asset: Asset | null,
+  asset: Asset | null = null,
 ): ChainlinkAggregator {
   let aggregator = ChainlinkAggregator.load(id) as ChainlinkAggregator;
 
