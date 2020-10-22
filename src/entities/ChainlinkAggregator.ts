@@ -16,13 +16,14 @@ export function useChainlinkAggregator(id: string): ChainlinkAggregator {
   return aggregator;
 }
 
-export function enableChainlinkAggregator(address: Address, asset: Asset): ChainlinkAggregator {
+export function enableChainlinkAggregator(address: Address, asset: Asset, rateAsset: string): ChainlinkAggregator {
   let id = chainlinkAggregatorId(address.toHex(), asset.id);
   let aggregator = ChainlinkAggregator.load(id) as ChainlinkAggregator;
 
   if (!aggregator) {
     aggregator = new ChainlinkAggregator(id);
     aggregator.asset = asset.id;
+    aggregator.rateAsset = rateAsset;
     aggregator.active = false;
     aggregator.save();
 

@@ -1051,34 +1051,34 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@melonproject/melonjs@^2.0.1-dev.523+124bea95":
-  version "2.0.1-dev.523"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_1s6PNP/%40melonproject%2Fmelonjs-2.0.1-dev.523.tgz#fa17dc428d019305046963d4e63173b8b1ede4e3"
-  integrity sha1-+hfcQo0BkwUEaWPU5jFzuLHt5OM=
+"@melonproject/melonjs@^2.0.1-dev.524+c02955be":
+  version "2.0.1-dev.524"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_fnLaZ/%40melonproject%2Fmelonjs-2.0.1-dev.524.tgz#72b87d469f2347e9c81d7c99df40d500bbd44163"
+  integrity sha1-crh9Rp8jR+nIHXyZ30DVALvUQWM=
   dependencies:
-    "@melonproject/persistent" "^2.0.1-dev.4957+085cde73"
-    "@melonproject/release" "^2.0.1-dev.4957+085cde73"
-    "@melonproject/utils" "^2.0.1-dev.4957+085cde73"
+    "@melonproject/persistent" "^2.0.1-dev.4960+e0f84f60"
+    "@melonproject/release" "^2.0.1-dev.4960+e0f84f60"
+    "@melonproject/utils" "^2.0.1-dev.4960+e0f84f60"
 
-"@melonproject/persistent@^2.0.1-dev.4957+085cde73":
-  version "2.0.1-dev.4957"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_TXWF1/%40melonproject%2Fpersistent-2.0.1-dev.4957.tgz#4ee2327c5a0ba0322c386ba65789e71b98c95a41"
-  integrity sha1-TuIyfFoLoDIsOGumV4nnG5jJWkE=
+"@melonproject/persistent@^2.0.1-dev.4960+e0f84f60":
+  version "2.0.1-dev.4960"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_10LK8V/%40melonproject%2Fpersistent-2.0.1-dev.4960.tgz#fa1d4f442d3036f444be3f61530694aa0d9d0f4b"
+  integrity sha1-+h1PRC0wNvREvj9hUwaUqg2dD0s=
   dependencies:
-    "@melonproject/utils" "^2.0.1-dev.4957+085cde73"
+    "@melonproject/utils" "^2.0.1-dev.4960+e0f84f60"
 
-"@melonproject/release@^2.0.1-dev.4957+085cde73":
-  version "2.0.1-dev.4957"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_RD4Uy/%40melonproject%2Frelease-2.0.1-dev.4957.tgz#bf22b27e808d3d19b75ea6e728b39574f4e8b7a2"
-  integrity sha1-vyKyfoCNPRm3XqbnKLOVdPTot6I=
+"@melonproject/release@^2.0.1-dev.4960+e0f84f60":
+  version "2.0.1-dev.4960"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_1yLxje/%40melonproject%2Frelease-2.0.1-dev.4960.tgz#7a32167b34dc1051df22cd603bee7d0dd1d5225d"
+  integrity sha1-ejIWezTcEFHfIs1gO+59DdHVIl0=
   dependencies:
-    "@melonproject/persistent" "^2.0.1-dev.4957+085cde73"
-    "@melonproject/utils" "^2.0.1-dev.4957+085cde73"
+    "@melonproject/persistent" "^2.0.1-dev.4960+e0f84f60"
+    "@melonproject/utils" "^2.0.1-dev.4960+e0f84f60"
 
-"@melonproject/utils@^2.0.1-dev.4957+085cde73":
-  version "2.0.1-dev.4957"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_mwfzC/%40melonproject%2Futils-2.0.1-dev.4957.tgz#7efb3e9f568582699e7736b2e5431b9ed351adb9"
-  integrity sha1-fvs+n1aFgmmedzay5UMbntNRrbk=
+"@melonproject/utils@^2.0.1-dev.4960+e0f84f60":
+  version "2.0.1-dev.4960"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_tmfIq/%40melonproject%2Futils-2.0.1-dev.4960.tgz#5db7142436d673eb4aee4924f740750de0774f15"
+  integrity sha1-XbcUJDbWc+tK7kkk90B1DeB3TxU=
 
 "@protobufjs/utf8@^1.1.0":
   version "1.1.0"
@@ -1374,10 +1374,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.12.62.tgz#733923d73669188d35950253dd18a21570085d2b"
   integrity sha512-qAfo81CsD7yQIM9mVyh6B/U47li5g7cfpVQEDMfQeF8pSZVwzbhwU3crc0qG4DmpsebpJPR49AKOExQyJ05Cpg==
 
-"@types/node@^14.14.0":
-  version "14.14.0"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.0.tgz#f1091b6ad5de18e8e91bdbd43ec63f13de372538"
-  integrity sha512-BfbIHP9IapdupGhq/hc+jT5dyiBVZ2DdeC5WwJWQWDb0GijQlzUFAeIQn/2GtvZcd2HVUU7An8felIICFTC2qg==
+"@types/node@^14.14.2":
+  version "14.14.2"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.2.tgz#d25295f9e4ca5989a2c610754dc02a9721235eeb"
+  integrity sha512-jeYJU2kl7hL9U5xuI/BhKPZ4vqGM/OmK6whiFAXVhlstzZhVamWhDSmHyGLIp+RVyuF9/d0dqr2P85aFj4BvJg==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"

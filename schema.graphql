@@ -757,14 +757,34 @@ type PriceFeedSetEvent implements Event & NetworkEvent @entity {
   prevPriceFeed: String!
 }
 
-type AggregatorSetEvent implements Event & NetworkEvent @entity {
+type PrimitiveSetEvent implements Event & NetworkEvent @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
   primitive: Asset!
   nextPriceFeed: String!
+  nextRateAsset: Int!
   prevPriceFeed: String!
+  prevRateAsset: Int!
+}
+
+type EthUsdAggregatorSetEvent implements Event & NetworkEvent @entity {
+  id: ID!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  prevEthUsdAggregator: String!
+  nextEthUsdAggregator: String!
+}
+
+type StaleRateThresholdSetEvent implements Event & NetworkEvent @entity {
+  id: ID!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  nextStaleRateThreshold: BigInt!
+  prevStaleRateThreshold: BigInt!
 }
 
 type FeeRegisteredEvent implements Event & NetworkEvent @entity {
@@ -1139,6 +1159,7 @@ type DailyAssetPriceCandleGroup @entity {
 type ChainlinkAggregator @entity {
   id: ID!
   asset: Asset!
+  rateAsset: String!
   active: Boolean!
   updates: [ChainlinkAggregatorAnswerUpdatedEvent!]! @derivedFrom(field: "aggregator")
 }

@@ -1,14 +1,14 @@
 import { dataSource } from '@graphprotocol/graph-ts';
 import { useAsset } from '../entities/Asset';
+import { trackAssetPrice } from '../entities/AssetPrice';
+import { useChainlinkAggregator } from '../entities/ChainlinkAggregator';
 import { ensureContract } from '../entities/Contract';
 import { ensureTransaction } from '../entities/Transaction';
 import { AnswerUpdated } from '../generated/ChainlinkAggregatorContract';
 import { ChainlinkAggregatorAnswerUpdatedEvent } from '../generated/schema';
+import { triggerCron } from '../utils/cronManager';
 import { genericId } from '../utils/genericId';
 import { toBigDecimal } from '../utils/toBigDecimal';
-import { ensureAssetPrice, trackAssetPrice } from '../entities/AssetPrice';
-import { useChainlinkAggregator } from '../entities/ChainlinkAggregator';
-import { triggerCron } from '../utils/cronManager';
 
 export function handleAnswerUpdated(event: AnswerUpdated): void {
   let context = dataSource.context();

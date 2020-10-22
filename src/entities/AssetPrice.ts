@@ -44,6 +44,7 @@ export function ensureAssetPrice(asset: Asset, current: BigDecimal, timestamp: B
 }
 
 export function trackAssetPrice(asset: Asset, timestamp: BigInt, price: BigDecimal): AssetPrice {
+  // TODO: correctly deal with USD priced assets
   let current = ensureAssetPrice(asset, price, timestamp);
   let hourly = updateHourlyAssetPriceCandle(asset, current);
   let daily = updateDailyAssetPriceCandle(asset, current);

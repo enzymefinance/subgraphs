@@ -474,8 +474,12 @@ dataSources:
         - name: ChainlinkAggregatorProxyContract
           file: ./node_modules/@chainlink/contracts/abi/v0.6/AggregatorProxy.json
       eventHandlers:
-        - event: AggregatorSet(indexed address,address,address)
-          handler: handleAggregatorSet
+        - event: EthUsdAggregatorSet(address,address)
+          handler: handleEthUsdAggregatorSet
+        - event: PrimitiveSet(indexed address,address,address,uint8,uint8)
+          handler: handlePrimitiveSet
+        - event: StaleRateThresholdSet(uint256,uint256)
+          handler: handleStaleRateThresholdSet
 
   - name: AggregatedDerivativePriceFeedDataSource
     kind: ethereum/contract
