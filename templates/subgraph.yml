@@ -473,6 +473,8 @@ dataSources:
           file: ./abis/AggregatorInterface.json
         - name: ChainlinkAggregatorProxyContract
           file: ./abis/AggregatorProxy.json
+        - name: ValueInterpreterContract
+          file: ./abis/ValueInterpreter.json  
       eventHandlers:
         - event: EthUsdAggregatorSet(address,address)
           handler: handleEthUsdAggregatorSet

@@ -1,6 +1,9 @@
-import { BigDecimal, BigInt } from '@graphprotocol/graph-ts';
+import { Address, BigDecimal, BigInt, log } from '@graphprotocol/graph-ts';
+import { valueInterpreterAddress, wethTokenAddress } from '../addresses';
 import { Asset, AssetPrice } from '../generated/schema';
+import { ValueInterpreterContract } from '../generated/ValueInterpreterContract';
 import { logCritical } from '../utils/logCritical';
+import { toBigDecimal } from '../utils/toBigDecimal';
 import { updateDailyAssetPriceCandle, updateHourlyAssetPriceCandle } from './AssetPriceCandle';
 
 export function assetPriceId(asset: Asset, timestamp: BigInt): string {
@@ -43,9 +46,26 @@ export function ensureAssetPrice(asset: Asset, current: BigDecimal, timestamp: B
   return price;
 }
 
-export function trackAssetPrice(asset: Asset, timestamp: BigInt, price: BigDecimal): AssetPrice {
+export function trackAssetPrice(asset: Asset, timestamp: BigInt, price: BigDecimal | null = null): AssetPrice {
+  if (asset.type == 'USD' || price == null) {
+    let valueInterpreter = ValueInterpreterContract.bind(valueInterpreterAddress);
+
+    let valueInterpreterValues = valueInterpreter.try_calcLiveAssetValue(
+      Address.fromString(asset.id),
+      BigInt.fromI32(10).pow(asset.decimals as u8),
+      wethTokenAddress,
+    );
+
+    if (!valueInterpreterValues.reverted) {
+      price = toBigDecimal(valueInterpreterValues.value.value0);
+    } else {
+      log.error('No asset price for {}. This is probably fine', [asset.id]);
+      price = BigDecimal.fromString('0');
+    }
+  }
+
   // TODO: correctly deal with USD priced assets
-  let current = ensureAssetPrice(asset, price, timestamp);
+  let current = ensureAssetPrice(asset, price as BigDecimal, timestamp);
   let hourly = updateHourlyAssetPriceCandle(asset, current);
   let daily = updateDailyAssetPriceCandle(asset, current);
 
@@ -57,4 +77,8 @@ export function trackAssetPrice(asset: Asset, timestamp: BigInt, price: BigDecim
   asset.save();
 
   return current;
+}
+
+export function trackUsdQuotedAssetPrices(timestamp: BigInt): void {
+  // loop through all
 }

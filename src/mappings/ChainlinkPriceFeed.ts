@@ -65,6 +65,9 @@ export function handlePrimitiveSet(event: PrimitiveSet): void {
 
   let cron = ensureCron();
   cron.primitives = arrayUnique<string>(cron.primitives.concat([primitive.id]));
+  if (primitive.type == 'USD') {
+    cron.usdQuotedPrimitives = arrayUnique<string>(cron.primitives.concat([primitive.id]));
+  }
   cron.save();
 
   // It's important that we run cron last.

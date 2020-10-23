@@ -1192,6 +1192,9 @@ type Cron @entity {
   # need to maintain candles for.
   primitives: [Asset!]!
 
+  # Asset with prices quoted in USD
+  usdQuotedPrimitives: [Asset!]
+
   # The currently tracked derivatives. This is used to know which derivatives
   # to fetch prices for (as a side effect, because they don't have a dedicated
   # price oracle that emits events on their behalf) and to update their candles.

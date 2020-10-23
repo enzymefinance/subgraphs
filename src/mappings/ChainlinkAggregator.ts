@@ -5,8 +5,8 @@ import { useChainlinkAggregator } from '../entities/ChainlinkAggregator';
 import { ensureContract } from '../entities/Contract';
 import { ensureTransaction } from '../entities/Transaction';
 import { AnswerUpdated } from '../generated/ChainlinkAggregatorContract';
-import { ChainlinkAggregatorAnswerUpdatedEvent } from '../generated/schema';
-import { triggerCron } from '../utils/cronManager';
+import { Asset, ChainlinkAggregatorAnswerUpdatedEvent } from '../generated/schema';
+import { ensureCron, triggerCron } from '../utils/cronManager';
 import { genericId } from '../utils/genericId';
 import { toBigDecimal } from '../utils/toBigDecimal';
 
@@ -39,6 +39,13 @@ export function handleAnswerUpdated(event: AnswerUpdated): void {
   } else if (aggregator.type === 'ETHUSD') {
     // TODO: Pick all `primitives` from the CronState entity, find the USD-based ones and
     // update the price for each (through the value interpreter).
+    let cron = ensureCron();
+    let assets = cron.usdQuotedPrimitives.map<Asset>((primitive) => useAsset(primitive));
+
+    for (let i: i32 = 0; i < assets.length; i++) {
+      let asset = assets[i];
+      trackAssetPrice(asset, event.block.timestamp);
+    }
 
     answerUpdated.save();
   }
