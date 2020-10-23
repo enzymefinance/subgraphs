@@ -1111,6 +1111,11 @@
   resolved "https://npm.fury.io/melonproject/~/up/ver_1NCq4l/%40melonproject%2Futils-2.0.1-dev.4965.tgz#fa3c8cd7d0a0ec6c8ce0450c70237d8386d4a059"
   integrity sha1-+jyM19Cg7GyM4EUMcCN9g4bUoFk=
 
+"@openzeppelin/contracts@^3.2.0":
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-3.2.0.tgz#3e6b3a7662d8ed64271ade96ef42655db983fd9d"
+  integrity sha512-bUOmkSoPkjnUyMiKo6RYnb0VHBk5D9KKDAgNLzF41aqAM3TeE0yGdFF5dVRcV60pZdJLlyFT/jjXIZCWyyEzAQ==
+
 "@protobufjs/utf8@^1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"

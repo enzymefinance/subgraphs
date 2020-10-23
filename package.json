@@ -55,5 +55,7 @@
     "testTimeout": 300000,
     "testEnvironment": "node"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@openzeppelin/contracts": "^3.2.0"
+  }
 }

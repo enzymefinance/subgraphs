@@ -1,6 +1,6 @@
 import { Address } from '@graphprotocol/graph-ts';
 import { Asset } from '../generated/schema';
-import { StandardERC20Contract } from '../generated/StandardERC20Contract';
+import { ERC20Contract } from '../generated/ERC20Contract';
 import { logCritical } from '../utils/logCritical';
 
 export function useAsset(id: string): Asset {
@@ -18,7 +18,7 @@ export function ensureAsset(address: Address): Asset {
     return asset;
   }
 
-  let contract = StandardERC20Contract.bind(address);
+  let contract = ERC20Contract.bind(address);
   let name = contract.name();
   let symbol = contract.symbol();
   let decimals = contract.decimals();
