@@ -20,7 +20,12 @@ export function chainlinkEthUsdAggregatorId(aggregatorAddress: string): string {
   return aggregatorAddress + '/ethusd';
 }
 
-function enableChainlinkAggregator(address: Address, id: string, type: string, asset?: Asset): ChainlinkAggregator {
+function enableChainlinkAggregator(
+  address: Address,
+  id: string,
+  type: string,
+  asset: Asset | null,
+): ChainlinkAggregator {
   let aggregator = ChainlinkAggregator.load(id) as ChainlinkAggregator;
 
   if (!aggregator) {
@@ -32,6 +37,7 @@ function enableChainlinkAggregator(address: Address, id: string, type: string, a
 
     let context = new DataSourceContext();
     context.setString('aggregator', id);
+    context.setI32('decimals', asset == null || asset.type == 'USD' ? 8 : 18);
     ChainlinkAggregatorDataSource.createWithContext(address, context);
   }
 
@@ -45,12 +51,12 @@ function enableChainlinkAggregator(address: Address, id: string, type: string, a
 
 export function enableChainlinkAssetAggregator(address: Address, asset: Asset): ChainlinkAggregator {
   let id = chainlinkAssetAggregatorId(address.toHex(), asset.id);
-  return enableChainlinkAggregator(address, id, 'ASSET', asset);
+  return enableChainlinkAggregator(address, id, 'PRIMITIVE', asset);
 }
 
 export function enableChainlinkEthUsdAggregator(address: Address): ChainlinkAggregator {
   let id = chainlinkEthUsdAggregatorId(address.toHex());
-  return enableChainlinkAggregator(address, id, 'ETHUSD');
+  return enableChainlinkAggregator(address, id, 'ETHUSD', null);
 }
 
 export function disableChainlinkAssetAggregator(address: Address, asset: Asset): ChainlinkAggregator {

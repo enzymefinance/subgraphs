@@ -1,3 +1,4 @@
+import { wethTokenAddress } from '../addresses';
 import { zeroAddress } from '../constants';
 import { ensureAsset } from '../entities/Asset';
 import { trackAssetPrice } from '../entities/AssetPrice';
@@ -70,7 +71,6 @@ export function handlePrimitiveSet(event: PrimitiveSet): void {
   triggerCron(event.block.timestamp);
 }
 
-// TODO: Should we use this handler to `ensureAsset` the WETH asset?
 export function handleEthUsdAggregatorSet(event: EthUsdAggregatorSet): void {
   let ethUsdAggregatorSet = new EthUsdAggregatorSetEvent(genericId(event));
   ethUsdAggregatorSet.contract = ensureContract(event.address, 'ChainlinkPriceFeed').id;
@@ -89,6 +89,11 @@ export function handleEthUsdAggregatorSet(event: EthUsdAggregatorSet): void {
   let proxy = ChainlinkAggregatorProxyContract.bind(event.params.nextEthUsdAggregator);
   let aggregator = proxy.aggregator();
   enableChainlinkEthUsdAggregator(aggregator);
+
+  // We need to create WETH manually
+  let weth = ensureAsset(wethTokenAddress);
+  weth.type = 'ETH';
+  weth.save();
 
   // It's important that we run cron last.
   triggerCron(event.block.timestamp);
