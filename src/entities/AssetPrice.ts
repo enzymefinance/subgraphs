@@ -1,9 +1,7 @@
-import { Address, BigDecimal, BigInt, log } from '@graphprotocol/graph-ts';
-import { valueInterpreterAddress, wethTokenAddress } from '../addresses';
+import { BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 import { Asset, AssetPrice } from '../generated/schema';
-import { ValueInterpreterContract } from '../generated/ValueInterpreterContract';
 import { logCritical } from '../utils/logCritical';
-import { toBigDecimal } from '../utils/toBigDecimal';
+import { fetchAssetPrice } from '../utils/valueInterpreter';
 import { updateDailyAssetPriceCandle, updateHourlyAssetPriceCandle } from './AssetPriceCandle';
 
 export function assetPriceId(asset: Asset, timestamp: BigInt): string {
@@ -48,23 +46,9 @@ export function ensureAssetPrice(asset: Asset, current: BigDecimal, timestamp: B
 
 export function trackAssetPrice(asset: Asset, timestamp: BigInt, price: BigDecimal | null = null): AssetPrice {
   if (asset.type == 'USD' || price == null) {
-    let valueInterpreter = ValueInterpreterContract.bind(valueInterpreterAddress);
-
-    let valueInterpreterValues = valueInterpreter.try_calcLiveAssetValue(
-      Address.fromString(asset.id),
-      BigInt.fromI32(10).pow(asset.decimals as u8),
-      wethTokenAddress,
-    );
-
-    if (!valueInterpreterValues.reverted) {
-      price = toBigDecimal(valueInterpreterValues.value.value0);
-    } else {
-      log.error('No asset price for {}. This is probably fine', [asset.id]);
-      price = BigDecimal.fromString('0');
-    }
+    price = fetchAssetPrice(asset);
   }
 
-  // TODO: correctly deal with USD priced assets
   let current = ensureAssetPrice(asset, price as BigDecimal, timestamp);
   let hourly = updateHourlyAssetPriceCandle(asset, current);
   let daily = updateDailyAssetPriceCandle(asset, current);

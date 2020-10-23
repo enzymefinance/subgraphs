@@ -52,8 +52,8 @@ describe('Walkthrough', () => {
         signer,
         fundDeployer,
         fundOwner: signer.address,
-        denominationAsset: deployment.mlnToken,
-        fundName: `MLN Fund (${new Date().toLocaleTimeString()})`,
+        denominationAsset: deployment.wethToken,
+        fundName: `WETH Fund (${new Date().toLocaleTimeString()})`,
         feeManagerConfigData,
         // TODO: fix policyManagerConfigData
         policyManagerConfigData: '0x',
@@ -67,7 +67,7 @@ describe('Walkthrough', () => {
       const approveArgs = {
         signer,
         comptrollerProxy: fund.comptrollerProxy,
-        denominationAsset: deployment.mlnToken,
+        denominationAsset: deployment.wethToken,
         investmentAmount: utils.parseEther('20'),
       };
 
@@ -84,7 +84,7 @@ describe('Walkthrough', () => {
         signer,
         comptrollerProxy: fund.comptrollerProxy,
         buyer: signer.address,
-        denominationAsset: deployment.mlnToken,
+        denominationAsset: deployment.wethToken,
         investmentAmount: utils.parseEther(sharesToBuy.toString()),
         minSharesQuantity: utils.parseEther(sharesToBuy.toString()),
       };
