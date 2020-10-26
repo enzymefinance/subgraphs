@@ -11,7 +11,12 @@ import {
   ComptrollerProxyDeployed,
   NewFundCreated,
 } from '../generated/FundDeployerContract';
-import { AmguPaidEvent, ComptrollerProxyDeployedEvent, NewFundCreatedEvent } from '../generated/schema';
+import {
+  AmguPaidEvent,
+  ComptrollerLibSetEvent,
+  ComptrollerProxyDeployedEvent,
+  NewFundCreatedEvent,
+} from '../generated/schema';
 import { ComptrollerLibDataSource, VaultLibDataSource } from '../generated/templates';
 import { genericId } from '../utils/genericId';
 import { toBigDecimal } from '../utils/toBigDecimal';
@@ -53,7 +58,12 @@ export function handleAmguPaid(event: AmguPaid): void {
 }
 
 export function handleComptrollerLibSet(event: ComptrollerLibSet): void {
-  // TODO: implement
+  let comptrollerLib = new ComptrollerLibSetEvent(genericId(event));
+  comptrollerLib.timestamp = event.block.timestamp;
+  comptrollerLib.contract = ensureContract(event.address, 'FundDeployer').id;
+  comptrollerLib.comptrollerLib = event.params.comptrollerLib.toHex();
+  comptrollerLib.transaction = ensureTransaction(event).id;
+  comptrollerLib.save();
 }
 
 export function handleComptrollerProxyDeployed(event: ComptrollerProxyDeployed): void {

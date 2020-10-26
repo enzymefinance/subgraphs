@@ -375,7 +375,21 @@ type FeeSettledForFundEvent implements Event & FundEvent & SharesChange @entity 
   sharesDue: BigDecimal!
 }
 
-type FeeSharesOutstandingPaidForFundEvent implements Event & FundEvent & SharesChange @entity {
+type AllSharesOutstandingForcePaidForFundEvent implements Event & FundEvent & SharesChange @entity {
+  id: ID!
+  contract: Contract!
+  fund: Fund!
+  account: Account!
+  timestamp: BigInt!
+  transaction: Transaction!
+  investment: Investment!
+  shares: BigDecimal!
+  comptrollerProxy: Contract!
+  payee: Account!
+  sharesDue: BigDecimal!
+}
+
+type SharesOutstandingPaidForFundEvent implements Event & FundEvent & SharesChange @entity {
   id: ID!
   contract: Contract!
   fund: Fund!
@@ -663,6 +677,26 @@ type PerformanceFeePerformanceUpdatedEvent implements Event & FundEvent @entity 
   sharesOutstandingDiff: BigDecimal!
 }
 
+type OverridePauseSetEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  overridePause: Boolean!
+}
+
+type MigratedSharesDuePaidEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  sharesDue: BigDecimal!
+}
+
 #################################################
 # Low-level network event entities
 #################################################
@@ -680,6 +714,14 @@ type VaultProxyDeployedEvent implements Event & FundEvent & NetworkEvent @entity
   vaultLib: Contract!
   accessor: Contract!
   fundName: String!
+}
+
+type ComptrollerLibSetEvent implements Event & NetworkEvent @entity {
+  id: ID!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerLib: String!
 }
 
 type AdapterRegisteredEvent implements Event & NetworkEvent @entity {

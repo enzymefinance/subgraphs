@@ -2,7 +2,7 @@ import { BigDecimal, dataSource } from '@graphprotocol/graph-ts';
 import { ensureAccount, ensureInvestor, useAccount } from '../entities/Account';
 import { useAsset } from '../entities/Asset';
 import { trackFundCalculations } from '../entities/Calculations';
-import { ensureContract } from '../entities/Contract';
+import { ensureContract, useContract } from '../entities/Contract';
 import { useFund } from '../entities/Fund';
 import { ensureInvestment } from '../entities/Investment';
 import { trackFundPortfolio } from '../entities/Portfolio';
@@ -16,7 +16,15 @@ import {
   SharesRedeemed,
   VaultProxySet,
 } from '../generated/ComptrollerLibContract';
-import { AmguPaidEvent, Asset, SharesBoughtEvent, SharesRedeemedEvent, VaultProxySetEvent } from '../generated/schema';
+import {
+  AmguPaidEvent,
+  Asset,
+  MigratedSharesDuePaidEvent,
+  OverridePauseSetEvent,
+  SharesBoughtEvent,
+  SharesRedeemedEvent,
+  VaultProxySetEvent,
+} from '../generated/schema';
 import { genericId } from '../utils/genericId';
 import { toBigDecimal } from '../utils/toBigDecimal';
 
@@ -105,9 +113,29 @@ export function handleVaultProxySet(event: VaultProxySet): void {
 }
 
 export function handleOverridePauseSet(event: OverridePauseSet): void {
-  // TODO: implement
+  let fund = useFund(dataSource.context().getString('vaultProxy'));
+  let account = ensureInvestor(event.transaction.from, event);
+
+  let overridePauseSet = new OverridePauseSetEvent(genericId(event));
+  overridePauseSet.fund = fund.id;
+  overridePauseSet.account = account.id;
+  overridePauseSet.contract = useContract(event.address.toHex()).id;
+  overridePauseSet.timestamp = event.block.timestamp;
+  overridePauseSet.transaction = ensureTransaction(event).id;
+  overridePauseSet.overridePause = event.params.overridePause;
+  overridePauseSet.save();
 }
 
 export function handleMigratedSharesDuePaid(event: MigratedSharesDuePaid): void {
-  // TODO: implement
+  let fund = useFund(dataSource.context().getString('vaultProxy'));
+  let account = ensureInvestor(event.transaction.from, event);
+
+  let paid = new MigratedSharesDuePaidEvent(genericId(event));
+  paid.fund = fund.id;
+  paid.account = account.id;
+  paid.contract = useContract(event.address.toHex()).id;
+  paid.timestamp = event.block.timestamp;
+  paid.transaction = ensureTransaction(event).id;
+  paid.sharesDue = toBigDecimal(event.params.sharesDue);
+  paid.save();
 }

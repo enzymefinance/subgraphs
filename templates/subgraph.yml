@@ -149,7 +149,7 @@ dataSources:
           file: ./abis/PerformanceFee.json
       eventHandlers:
         - event: AllSharesOutstandingForcePaidForFund(indexed address,address,uint256)
-          handler: handleAllSharesOutstandingForcePaid
+          handler: handleAllSharesOutstandingForcePaidForFund
         - event: FeeDeregistered(indexed address,indexed string)
           handler: handleFeeDeregistered
         - event: FeeEnabledForFund(indexed address,indexed address,bytes)

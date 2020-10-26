@@ -19,12 +19,13 @@ import {
   SharesOutstandingPaidForFund,
 } from '../generated/FeeManagerContract';
 import {
+  AllSharesOutstandingForcePaidForFundEvent,
   FeeDeregisteredEvent,
   FeeEnabledForFundEvent,
   FeeRegisteredEvent,
   FeeSettledForFundEvent,
-  FeeSharesOutstandingPaidForFundEvent,
   FeesRecipientSetForFundEvent,
+  SharesOutstandingPaidForFundEvent,
 } from '../generated/schema';
 import { arrayUnique } from '../utils/arrayUnique';
 import { genericId } from '../utils/genericId';
@@ -33,7 +34,30 @@ import { getSettlementType } from '../utils/getSettlementType';
 import { toBigDecimal } from '../utils/toBigDecimal';
 
 export function handleAllSharesOutstandingForcePaidForFund(event: AllSharesOutstandingForcePaidForFund): void {
-  // TODO: implement
+  let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
+
+  let fund = useFund(comptroller.getVaultProxy().toHex());
+  let investor = ensureInvestor(Address.fromString(fund.manager), event);
+  let investment = ensureInvestment(investor, fund);
+  let shares = toBigDecimal(event.params.sharesDue);
+
+  let settled = new AllSharesOutstandingForcePaidForFundEvent(genericId(event));
+  settled.contract = event.address.toHex();
+  settled.fund = fund.id;
+  settled.account = useManager(event.transaction.from.toHex()).id;
+  settled.timestamp = event.block.timestamp;
+  settled.transaction = ensureTransaction(event).id;
+  settled.investment = investment.id;
+  settled.shares = shares;
+  settled.comptrollerProxy = event.params.comptrollerProxy.toHex();
+  settled.payee = event.params.payee.toHex();
+  settled.sharesDue = shares;
+  settled.save();
+
+  trackFundShares(fund, event, settled);
+  // TODO: what do we need to do for fees here (if anything)?
+  // trackFeeState(fund, fee, event, settled);
+  trackFundCalculations(fund, event, settled);
 }
 
 export function handleFeeDeregistered(event: FeeDeregistered): void {
@@ -115,7 +139,7 @@ export function handleSharesOutstandingPaidForFund(event: SharesOutstandingPaidF
   let fee = useFee(event.params.fee.toHex());
   let shares = toBigDecimal(event.params.sharesDue);
 
-  let sharesPaid = new FeeSharesOutstandingPaidForFundEvent(genericId(event));
+  let sharesPaid = new SharesOutstandingPaidForFundEvent(genericId(event));
   sharesPaid.contract = event.address.toHex();
   sharesPaid.fund = fund.id;
   sharesPaid.account = useManager(event.transaction.from.toHex()).id;
