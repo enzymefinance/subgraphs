@@ -76,7 +76,7 @@ enum AssetType {
 }
 
 enum ChainlinkAggregatorType {
-  PRIMITIVE
+  ASSET
   ETHUSD
 }
 

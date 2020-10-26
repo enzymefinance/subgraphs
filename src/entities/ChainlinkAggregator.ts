@@ -51,7 +51,7 @@ function enableChainlinkAggregator(
 
 export function enableChainlinkAssetAggregator(address: Address, asset: Asset): ChainlinkAggregator {
   let id = chainlinkAssetAggregatorId(address.toHex(), asset.id);
-  return enableChainlinkAggregator(address, id, 'PRIMITIVE', asset);
+  return enableChainlinkAggregator(address, id, 'ASSET', asset);
 }
 
 export function enableChainlinkEthUsdAggregator(address: Address): ChainlinkAggregator {

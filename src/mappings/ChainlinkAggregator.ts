@@ -28,6 +28,7 @@ export function handleAnswerUpdated(event: AnswerUpdated): void {
   answerUpdated.current = current;
   answerUpdated.roundId = event.params.roundId;
   answerUpdated.updatedAt = event.params.updatedAt;
+  answerUpdated.save();
 
   if (aggregator.type == 'ASSET') {
     let asset = useAsset(aggregator.asset as string);
@@ -44,8 +45,6 @@ export function handleAnswerUpdated(event: AnswerUpdated): void {
       let asset = assets[i];
       trackAssetPrice(asset, event.block.timestamp);
     }
-
-    answerUpdated.save();
   }
 
   // NOTE: We might want to add this to other mappings in our code base too. We'll need to do some
