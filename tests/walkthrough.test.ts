@@ -56,16 +56,13 @@ describe('Walkthrough', () => {
     const feeManagerConfigData = await encodeArgs(['address[]', 'bytes[]'], [fees, feesSettingsData]);
 
     // prepare policies
-    const blacklistedTokens = [deployment.mlnToken];
-    const assetBlacklistSettings = await encodeArgs(['address[]'], [blacklistedTokens]);
+    const maxConcentration = deployment.maxConcentration;
+    const maxConcentrationSettings = await encodeArgs(['uint256'], [utils.parseEther('1')]);
 
-    const whitelistedTokens = [deployment.wethToken];
-    const assetWhitelistSettings = await encodeArgs(['address[]'], [whitelistedTokens]);
+    const policies = [maxConcentration];
+    const policiesSettingsData = [maxConcentrationSettings];
 
-    // const policies = [deployment.assetBlacklist, deployment.assetWhitelist];
-    // const policiesSettingsData = [assetBlacklistSettings, assetWhitelistSettings];
-
-    // const policyManagerConfigData = await encodeArgs(['address[]', 'bytes[]'], [policies, policiesSettingsData]);
+    const policyManagerConfigData = await encodeArgs(['address[]', 'bytes[]'], [policies, policiesSettingsData]);
 
     // create fund
     const newFundArgs = {
@@ -75,8 +72,7 @@ describe('Walkthrough', () => {
       denominationAsset: deployment.wethToken,
       fundName: 'My Super Fund',
       feeManagerConfigData,
-      // TODO: fix policyManagerConfigData
-      policyManagerConfigData: '0x',
+      policyManagerConfigData,
     };
 
     const createNewFundTx = await createNewFund(newFundArgs);
@@ -182,7 +178,5 @@ describe('Walkthrough', () => {
       .send(false);
 
     await expect(takeOrderTx.wait()).resolves.toBeReceipt();
-
-    return takeOrderTx;
   });
 });

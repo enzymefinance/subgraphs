@@ -445,7 +445,7 @@ dataSources:
         - event: AdapterRegistered(indexed address,indexed string)
           handler: handleAdapterRegistered
         - event: CallOnIntegrationExecutedForFund(indexed address,address,address,indexed address,indexed bytes4,bytes,address[],uint256[],address[],uint256[])
-          handler: handleCallOnIntegrationExecuted
+          handler: handleCallOnIntegrationExecutedForFund
 
   - name: ChainlinkPriceFeedDataSource
     kind: ethereum/contract

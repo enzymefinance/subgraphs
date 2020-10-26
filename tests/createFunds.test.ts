@@ -2,12 +2,16 @@ import { resolveAddress } from '@crestproject/ethers';
 import {
   approveInvestmentAmount,
   buyShares,
+  ComptrollerLib,
   createNewFund,
   encodeArgs,
   getCurrentFundDeployer,
+  KyberAdapter,
 } from '@melonproject/melonjs';
 import { BigNumber, providers, utils, Wallet } from 'ethers';
 import { createAccount, Deployment, fetchDeployment } from './utils/deployment';
+import { kyberTakeOrderArgs } from './utils/kyberTakeOrderArgs';
+import { callOnIntegrationArgs, integrationManagerActionIds, takeOrderSelector } from './utils/trading';
 
 describe('Walkthrough', () => {
   let deployment: Deployment;
@@ -47,13 +51,13 @@ describe('Walkthrough', () => {
     const feeManagerConfigData = await encodeArgs(['address[]', 'bytes[]'], [fees, feesSettingsData]);
 
     // create funds
-    for (let i = 0; i < 200; i++) {
+    for (let i = 0; i < 10; i++) {
       const newFundArgs = {
         signer,
         fundDeployer,
         fundOwner: signer.address,
         denominationAsset: deployment.wethToken,
-        fundName: `WETH Fund (${new Date().toLocaleTimeString()})`,
+        fundName: `Another WETH Fund with Trade (${new Date().toLocaleTimeString()})`,
         feeManagerConfigData,
         // TODO: fix policyManagerConfigData
         policyManagerConfigData: '0x',
@@ -91,6 +95,31 @@ describe('Walkthrough', () => {
 
       const buySharesTx = await buyShares(buySharesArgs);
       const bought = await buySharesTx();
+
+      // trade
+      const takeOrderArgs = await kyberTakeOrderArgs({
+        incomingAsset: deployment.mlnToken,
+        minIncomingAssetAmount: utils.parseEther('0.000000001'),
+        outgoingAsset: deployment.wethToken,
+        outgoingAssetAmount: utils.parseEther('1'),
+      });
+
+      const callArgs = await callOnIntegrationArgs({
+        adapter: new KyberAdapter(await resolveAddress(deployment.kyberAdapter), signer),
+        selector: takeOrderSelector,
+        encodedCallArgs: takeOrderArgs,
+      });
+
+      const comptrollerProxy = new ComptrollerLib(await resolveAddress(fund.comptrollerProxy), signer);
+      const takeOrderTx = await comptrollerProxy.callOnExtension
+        .args(
+          await resolveAddress(deployment.integrationManager),
+          integrationManagerActionIds.CallOnIntegration,
+          callArgs,
+        )
+        .send(false);
+
+      await expect(takeOrderTx.wait()).resolves.toBeReceipt();
     }
   });
 });

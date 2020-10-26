@@ -5,7 +5,7 @@ import { trackFundCalculations } from '../entities/Calculations';
 import { ensureContract } from '../entities/Contract';
 import { useFund } from '../entities/Fund';
 import { ensureIntegrationAdapter, useIntegrationAdapter } from '../entities/IntegrationAdapter';
-import { trackFundShares } from '../entities/Shares';
+import { trackFundPortfolio } from '../entities/Portfolio';
 import { ensureTransaction } from '../entities/Transaction';
 import {
   AdapterDeregistered,
@@ -40,7 +40,7 @@ export function handleAdapterDeregistered(event: AdapterDeregistered): void {
   deregistration.save();
 }
 
-export function handleCallOnIntegrationExecuted(event: CallOnIntegrationExecutedForFund): void {
+export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationExecutedForFund): void {
   let fund = useFund(event.params.vaultProxy.toHex());
 
   let execution = new CallOnIntegrationExecutedForFundEvent(genericId(event));
@@ -56,6 +56,6 @@ export function handleCallOnIntegrationExecuted(event: CallOnIntegrationExecuted
   execution.transaction = ensureTransaction(event).id;
   execution.save();
 
-  trackFundShares(fund, event, execution);
+  trackFundPortfolio(fund, event, execution);
   trackFundCalculations(fund, event, execution);
 }
