@@ -1,4 +1,4 @@
-export function convertSettlementType(type: number): string {
+export function getSettlementType(type: number): string {
   if (type == 0) {
     return 'None';
   }

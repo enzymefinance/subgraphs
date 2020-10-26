@@ -1,13 +1,12 @@
-import { PriceFeedSet } from '../generated/AggregatedDerivativePriceFeedContract';
-import { PriceFeedSetEvent } from '../generated/schema';
-import { genericId } from '../utils/genericId';
 import { ensureAsset } from '../entities/Asset';
+import { fetchAssetPrice, trackAssetPrice } from '../entities/AssetPrice';
 import { ensureContract } from '../entities/Contract';
 import { ensureTransaction } from '../entities/Transaction';
-import { ensureCron, triggerCron } from '../utils/cronManager';
+import { PriceFeedSet } from '../generated/AggregatedDerivativePriceFeedContract';
+import { PriceFeedSetEvent } from '../generated/schema';
 import { arrayUnique } from '../utils/arrayUnique';
-import { fetchAssetPrice } from '../utils/valueInterpreter';
-import { trackAssetPrice } from '../entities/AssetPrice';
+import { ensureCron, triggerCron } from '../utils/cronManager';
+import { genericId } from '../utils/genericId';
 
 export function handlePriceFeedSet(event: PriceFeedSet): void {
   let derivative = ensureAsset(event.params.derivative);

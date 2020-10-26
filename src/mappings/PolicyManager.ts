@@ -7,6 +7,7 @@ import { PolicyDeregistered, PolicyEnabledForFund, PolicyRegistered } from '../g
 import { PolicyDeregisteredEvent, PolicyEnabledForFundEvent, PolicyRegisteredEvent } from '../generated/schema';
 import { arrayUnique } from '../utils/arrayUnique';
 import { genericId } from '../utils/genericId';
+import { getPolicyHook } from '../utils/getPolicyHook';
 
 export function handlePolicyRegistered(event: PolicyRegistered): void {
   let registration = new PolicyRegisteredEvent(genericId(event));
@@ -15,6 +16,7 @@ export function handlePolicyRegistered(event: PolicyRegistered): void {
   registration.contract = ensureContract(event.address, 'PolicyManager').id;
   registration.policy = ensurePolicy(event.params.policy).id;
   registration.identifier = event.params.identifier.toHex();
+  registration.implementedHooks = event.params.implementedHooks.map<string>((hook) => getPolicyHook(hook));
   registration.save();
 }
 
@@ -29,7 +31,6 @@ export function handlePolicyDeregistered(event: PolicyDeregistered): void {
 }
 
 export function handlePolicyEnabledForFund(event: PolicyEnabledForFund): void {
-  // TODO: Instead of calling the contract, load the vault proxy from the fund / fund version entity.
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let fundId = comptroller.getVaultProxy().toHex();
   let policy = usePolicy(event.params.policy.toHex());

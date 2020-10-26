@@ -10,9 +10,13 @@ import { ensureTransaction } from '../entities/Transaction';
 import {
   AdapterDeregistered,
   AdapterRegistered,
-  CallOnIntegrationExecuted,
+  CallOnIntegrationExecutedForFund,
 } from '../generated/IntegrationManagerContract';
-import { AdapterDeregisteredEvent, AdapterRegisteredEvent, CallOnIntegrationExecutedEvent } from '../generated/schema';
+import {
+  AdapterDeregisteredEvent,
+  AdapterRegisteredEvent,
+  CallOnIntegrationExecutedForFundEvent,
+} from '../generated/schema';
 import { genericId } from '../utils/genericId';
 import { toBigDecimal } from '../utils/toBigDecimal';
 
@@ -36,10 +40,10 @@ export function handleAdapterDeregistered(event: AdapterDeregistered): void {
   deregistration.save();
 }
 
-export function handleCallOnIntegrationExecuted(event: CallOnIntegrationExecuted): void {
+export function handleCallOnIntegrationExecuted(event: CallOnIntegrationExecutedForFund): void {
   let fund = useFund(event.params.vaultProxy.toHex());
 
-  let execution = new CallOnIntegrationExecutedEvent(genericId(event));
+  let execution = new CallOnIntegrationExecutedForFundEvent(genericId(event));
   execution.contract = event.address.toHex();
   execution.fund = fund.id;
   execution.account = useAccount(event.params.caller.toHex()).id;

@@ -11,7 +11,6 @@ import { genericId } from '../utils/genericId';
 import { toBigDecimal } from '../utils/toBigDecimal';
 
 export function handleMaxConcentrationSet(event: MaxConcentrationSet): void {
-  // TODO: Instead of calling the contract, load the vault proxy from the fund / fund version entity.
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let vault = comptroller.getVaultProxy();
   let policy = usePolicy(event.address.toHex());

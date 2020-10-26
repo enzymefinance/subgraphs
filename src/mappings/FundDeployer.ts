@@ -57,7 +57,6 @@ export function handleComptrollerLibSet(event: ComptrollerLibSet): void {
 }
 
 export function handleComptrollerProxyDeployed(event: ComptrollerProxyDeployed): void {
-  // TODO: Instead of calling the contract, load the vault proxy from the fund / fund version entity.
   let comptrollerProxy = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let vaultProxy = comptrollerProxy.getVaultProxy();
 

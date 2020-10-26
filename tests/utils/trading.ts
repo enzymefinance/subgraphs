@@ -2,6 +2,16 @@ import { Call, Contract } from '@crestproject/crestproject';
 import { encodeArgs, sighash } from '@melonproject/melonjs';
 import { BigNumber, BytesLike, utils } from 'ethers';
 
+export enum integrationManagerActionIds {
+  CallOnIntegration,
+}
+
+export enum spendAssetsHandleTypes {
+  None,
+  Approve,
+  Transfer,
+}
+
 // prettier-ignore
 export interface IntegrationAdapterInterface extends Contract {
   parseAssetsForMethod: Call<(_selector: BytesLike, _encodedCallArgs: BytesLike) => { spendAssets_: string[]; spendAssetAmounts_: BigNumber[]; incomingAssets_: string[]; minIncomingAssetAmounts_: BigNumber[]; }>;

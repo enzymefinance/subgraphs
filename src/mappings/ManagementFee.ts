@@ -38,7 +38,6 @@ export function handleFundSettingsAdded(event: FundSettingsAdded): void {
 
 export function handleSettled(event: Settled): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
-  // TODO: Instead of calling the contract, load the vault proxy from the fund / fund version entity.
   let fund = useFund(comptroller.getVaultProxy().toHex());
   let fee = useFee(event.address.toHex());
   let shares = toBigDecimal(event.params.sharesQuantity);

@@ -16,7 +16,7 @@ import { waitForSubgraph } from './utils/subgraph';
 import { fetchFund } from './utils/subgraph-queries/fetchFund';
 import { fetchInvestment } from './utils/subgraph-queries/fetchInvestment';
 import { fetchRedemption } from './utils/subgraph-queries/fetchRedemption';
-import { callOnIntegrationArgs, callOnIntegrationSelector, takeOrderSelector } from './utils/trading';
+import { callOnIntegrationArgs, integrationManagerActionIds, takeOrderSelector } from './utils/trading';
 
 describe('Walkthrough', () => {
   let deployment: Deployment;
@@ -159,7 +159,6 @@ describe('Walkthrough', () => {
     await waitForSubgraph(subgraphStatusEndpoint, boughtMoreShares.__receipt.blockNumber);
 
     // trade
-
     const takeOrderArgs = await kyberTakeOrderArgs({
       incomingAsset: deployment.mlnToken,
       minIncomingAssetAmount: utils.parseEther('0.000000001'),
@@ -175,7 +174,11 @@ describe('Walkthrough', () => {
 
     const comptrollerProxy = new ComptrollerLib(await resolveAddress(fund.comptrollerProxy), signer);
     const takeOrderTx = await comptrollerProxy.callOnExtension
-      .args(await resolveAddress(deployment.integrationManager), callOnIntegrationSelector, callArgs)
+      .args(
+        await resolveAddress(deployment.integrationManager),
+        integrationManagerActionIds.CallOnIntegration,
+        callArgs,
+      )
       .send(false);
 
     await expect(takeOrderTx.wait()).resolves.toBeReceipt();

@@ -37,8 +37,6 @@ export function handleAnswerUpdated(event: AnswerUpdated): void {
     // NOTE: We use the block timestamp here on purpose (instead of event.params.updatedAt).
     trackAssetPrice(asset, event.block.timestamp, current);
   } else if (aggregator.type === 'ETHUSD') {
-    // TODO: Pick all `primitives` from the CronState entity, find the USD-based ones and
-    // update the price for each (through the value interpreter).
     let cron = ensureCron();
     let assets = cron.usdQuotedPrimitives.map<Asset>((primitive) => useAsset(primitive));
 

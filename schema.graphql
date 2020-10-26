@@ -66,6 +66,43 @@ interface IndividualFeeState {
 }
 
 #################################################
+# Enums
+#################################################
+
+enum AssetType {
+  DERIVATIVE
+  ETH
+  USD
+}
+
+enum ChainlinkAggregatorType {
+  PRIMITIVE
+  ETHUSD
+}
+
+enum FeeHook {
+  Continuous
+  PreBuyShares
+  PostBuyShares
+  PreRedeemShares
+}
+
+enum PolicyHook {
+  PreBuyShares
+  PostBuyShares
+  PreCallOnIntegration
+  PostCallOnIntegration
+}
+
+enum SettlementType {
+  None
+  Direct
+  Mint
+  MintSharesOutstanding
+  BurnSharesOutstanding
+}
+
+#################################################
 # Low-level fund event entities
 #################################################
 
@@ -179,7 +216,7 @@ type TrackedAssetRemovedEvent implements Event & FundEvent @entity {
   transaction: Transaction!
 }
 
-type CallOnIntegrationExecutedEvent implements Event & FundEvent @entity {
+type CallOnIntegrationExecutedForFundEvent implements Event & FundEvent @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -309,7 +346,7 @@ type FeeEnabledForFundEvent implements Event & FundEvent @entity {
   settingsData: Bytes!
 }
 
-type FeesRecipientSetEvent implements Event & FundEvent @entity {
+type FeesRecipientSetForFundEvent implements Event & FundEvent @entity {
   id: ID!
   contract: Contract!
   fund: Fund!
@@ -334,7 +371,7 @@ type FeeSettledForFundEvent implements Event & FundEvent & SharesChange @entity 
   fee: Fee!
   payer: Fund!
   payee: Account!
-  settlementType: String!
+  settlementType: SettlementType!
   sharesDue: BigDecimal!
 }
 
@@ -670,6 +707,7 @@ type PolicyRegisteredEvent implements Event & NetworkEvent @entity {
   timestamp: BigInt!
   transaction: Transaction!
   policy: Policy!
+  implementedHooks: [PolicyHook!]!
 }
 
 type PolicyDeregisteredEvent implements Event & NetworkEvent @entity {
@@ -794,6 +832,7 @@ type FeeRegisteredEvent implements Event & NetworkEvent @entity {
   transaction: Transaction!
   fee: Fee!
   identifier: String!
+  implementedHooks: [FeeHook!]!
 }
 
 type FeeDeregisteredEvent implements Event & NetworkEvent @entity {
@@ -1082,12 +1121,6 @@ type PerformanceFeeState implements Metric & IndividualFeeState @entity {
 # Assets and prices
 #################################################
 
-enum AssetType {
-  DERIVATIVE
-  ETH
-  USD
-}
-
 type Asset @entity {
   id: ID!
   name: String!
@@ -1163,11 +1196,6 @@ type DailyAssetPriceCandleGroup @entity {
   candles: [DailyAssetPriceCandle!]! @derivedFrom(field: "group")
 }
 
-enum ChainlinkAggregatorType {
-  PRIMITIVE
-  ETHUSD
-}
-
 type ChainlinkAggregator @entity {
   id: ID!
   type: ChainlinkAggregatorType!
@@ -1193,7 +1221,7 @@ type Cron @entity {
   primitives: [Asset!]!
 
   # Asset with prices quoted in USD
-  usdQuotedPrimitives: [Asset!]
+  usdQuotedPrimitives: [Asset!]!
 
   # The currently tracked derivatives. This is used to know which derivatives
   # to fetch prices for (as a side effect, because they don't have a dedicated

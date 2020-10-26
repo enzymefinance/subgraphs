@@ -12,7 +12,6 @@ import { arrayUnique } from '../utils/arrayUnique';
 import { genericId } from '../utils/genericId';
 
 export function handleAddressesAdded(event: AddressesAdded): void {
-  // TODO: Instead of calling the contract, load the vault proxy from the fund / fund version entity.
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let vault = comptroller.getVaultProxy();
   let policy = usePolicy(event.address.toHex());
@@ -41,7 +40,6 @@ export function handleAddressesAdded(event: AddressesAdded): void {
 }
 
 export function handleAddressesRemoved(event: AddressesRemoved): void {
-  // TODO: Instead of calling the contract, load the vault proxy from the fund / fund version entity.
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let vault = comptroller.getVaultProxy();
   let fund = useFund(vault.toHex());

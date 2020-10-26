@@ -279,46 +279,46 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@crestproject/codegen@^0.0.60":
-  version "0.0.60"
-  resolved "https://registry.yarnpkg.com/@crestproject/codegen/-/codegen-0.0.60.tgz#5d60cfa20d9afc80b7533c1ddfd18a80e1f05867"
-  integrity sha512-Rbn8vAeVUQBFv5KxZtGzdqtzFuYPcQKNKZzUfTxwYCK3PBeNdgaO/DjtDZjR2M20Zf4zb6K6J7FSOS+s5ZjGbg==
+"@crestproject/codegen@^0.0.61":
+  version "0.0.61"
+  resolved "https://registry.yarnpkg.com/@crestproject/codegen/-/codegen-0.0.61.tgz#ab7b93e0628e23bfc5b545aeef5b0382ef83bbdd"
+  integrity sha512-Y/nOcJ2sMBO2NygK9qzpnYa2f7jT9SHy4/PJ05i3uzAb/urPPM9F6AfZh0HmnXBsRwFaHXwAQcCV7XKGDXDQtg==
   optionalDependencies:
     prettier "^2.1.1"
 
-"@crestproject/crestproject@^0.0.60":
-  version "0.0.60"
-  resolved "https://registry.yarnpkg.com/@crestproject/crestproject/-/crestproject-0.0.60.tgz#14437b3e5d561a53083d25b93a68576e9a171339"
-  integrity sha512-/USR5fbc0xCzngMrrmq9/oTQWgmnixGDM81VknfRv2GfZGMZ378XHK/Uk/Gd2g+IT6PRV5Vw9oNXtcpijMBuQw==
+"@crestproject/crestproject@^0.0.61":
+  version "0.0.61"
+  resolved "https://registry.yarnpkg.com/@crestproject/crestproject/-/crestproject-0.0.61.tgz#63b6dba4731eac45a033fa2d9e6ed3cd9ee2801b"
+  integrity sha512-WTBFZIt2U+ohwLODuizoSrzczG/kjzMoCHpYb383Eq71Eq+Zcxqu5Ct6SCu4dBHVUpOG0mG1cUncHedLsqQ67A==
   dependencies:
-    "@crestproject/codegen" "^0.0.60"
-    "@crestproject/ethers" "^0.0.60"
-    "@crestproject/evm" "^0.0.60"
-    "@crestproject/jest" "^0.0.60"
+    "@crestproject/codegen" "^0.0.61"
+    "@crestproject/ethers" "^0.0.61"
+    "@crestproject/evm" "^0.0.61"
+    "@crestproject/jest" "^0.0.61"
     glob "^7.1.6"
     jest-worker "^26.5.0"
     throat "^5.0.0"
     yargs "^16.1.0"
 
-"@crestproject/ethers@^0.0.60":
-  version "0.0.60"
-  resolved "https://registry.yarnpkg.com/@crestproject/ethers/-/ethers-0.0.60.tgz#3f4d3b60bcf58e60e4247f56a3ce20dabd1fa37a"
-  integrity sha512-o2ccrebHkoxckz59fXNuB9Q3CfPQtpkbMQlyAf6LUhOXXx6KiVfpxB0PD4sG0np9C0v+T3TCR47SV73/1Ii6vQ==
+"@crestproject/ethers@^0.0.61":
+  version "0.0.61"
+  resolved "https://registry.yarnpkg.com/@crestproject/ethers/-/ethers-0.0.61.tgz#7fcf44081b01d5f402fbb2138384b9811c9a9a87"
+  integrity sha512-UpkkIOsleQHmNJAI0tpr1QEuSB/iowC4gU3sKpf2ulJh1oGLhjdZ4JmoG0sW6J3OVtgtDJu3DU4z5N6FN6gjxA==
 
-"@crestproject/evm@^0.0.60":
-  version "0.0.60"
-  resolved "https://registry.yarnpkg.com/@crestproject/evm/-/evm-0.0.60.tgz#8a355c23efba433fe45d96170531d2ef2b46f208"
-  integrity sha512-KIL7lj/OWiKa0XdcR7rLfo2Gok4IIgO2PyJgyZGKE9f7cfK7F2MgsbBUR2Y347L946n+hABsyE3iyjvi5iyfkA==
+"@crestproject/evm@^0.0.61":
+  version "0.0.61"
+  resolved "https://registry.yarnpkg.com/@crestproject/evm/-/evm-0.0.61.tgz#3e4ebbb1891e6d3a8d85c8bf6695d1c3b30fbb9c"
+  integrity sha512-pd6+TUO5nXnct6aE1C+vkjWxSWelCl7CZ5rLWLFGqnias9yjyXVGAtEP7ipvQArc99P3/NC4wJ9Zlx5/0bNsRA==
   dependencies:
-    "@crestproject/ethers" "^0.0.60"
+    "@crestproject/ethers" "^0.0.61"
 
-"@crestproject/jest@^0.0.60":
-  version "0.0.60"
-  resolved "https://registry.yarnpkg.com/@crestproject/jest/-/jest-0.0.60.tgz#e8a8044b5b8b1de65176854470f10f863d4fc744"
-  integrity sha512-4UUZL1s2vxgxr1DKWZiTLXnPB5EsJEaekfl1sV18HdLGdQWSslApoV8LSiNxKH0eU4o8gHbwNS/ob8ya25TQbw==
+"@crestproject/jest@^0.0.61":
+  version "0.0.61"
+  resolved "https://registry.yarnpkg.com/@crestproject/jest/-/jest-0.0.61.tgz#f13471bba9d4072a38c3f473031b6106738978df"
+  integrity sha512-LZeVzbFO1MMqdDcWx8GCtRDBYk6+Kr1gAlkm52iiQlsG850sdHeVkyLqlf1NDOyxFAlxtoZR+FTlCi4Y8WRikQ==
   dependencies:
-    "@crestproject/ethers" "^0.0.60"
-    "@crestproject/evm" "^0.0.60"
+    "@crestproject/ethers" "^0.0.61"
+    "@crestproject/evm" "^0.0.61"
 
 "@ethersproject/abi@5.0.0-beta.153":
   version "5.0.0-beta.153"
@@ -905,6 +905,11 @@
     slash "^3.0.0"
     strip-ansi "^6.0.0"
 
+"@jest/create-cache-key-function@^26.5.0":
+  version "26.5.0"
+  resolved "https://registry.yarnpkg.com/@jest/create-cache-key-function/-/create-cache-key-function-26.5.0.tgz#1d07947adc51ea17766d9f0ccf5a8d6ea94c47dc"
+  integrity sha512-DJ+pEBUIqarrbv1W/C39f9YH0rJ4wsXZ/VC6JafJPlHW2HOucKceeaqTOQj9MEDQZjySxMLkOq5mfXZXNZcmWw==
+
 "@jest/environment@^26.6.1":
   version "26.6.1"
   resolved "https://registry.yarnpkg.com/@jest/environment/-/environment-26.6.1.tgz#38a56f1cc66f96bf53befcc5ebeaf1c2dce90e9a"
@@ -1062,54 +1067,34 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@melonproject/melonjs@^2.0.1-dev.524+c02955be":
-  version "2.0.1-dev.524"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_fnLaZ/%40melonproject%2Fmelonjs-2.0.1-dev.524.tgz#72b87d469f2347e9c81d7c99df40d500bbd44163"
-  integrity sha1-crh9Rp8jR+nIHXyZ30DVALvUQWM=
+"@melonproject/melonjs@^2.0.1-dev.529+8a81a2f1":
+  version "2.0.1-dev.529"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_cZO1W/%40melonproject%2Fmelonjs-2.0.1-dev.529.tgz#37a12355863546dfa79f4b4c334a975bd424ee52"
+  integrity sha1-N6EjVYY1Rt+nn0tMM0qXW9Qk7lI=
   dependencies:
-    "@melonproject/persistent" "^2.0.1-dev.4960+e0f84f60"
-    "@melonproject/release" "^2.0.1-dev.4960+e0f84f60"
-    "@melonproject/utils" "^2.0.1-dev.4960+e0f84f60"
+    "@melonproject/persistent" "^2.0.1-dev.4969+7d569678"
+    "@melonproject/release" "^2.0.1-dev.4969+7d569678"
+    "@melonproject/utils" "^2.0.1-dev.4969+7d569678"
 
-"@melonproject/persistent@^2.0.1-dev.4960+e0f84f60":
-  version "2.0.1-dev.4960"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_10LK8V/%40melonproject%2Fpersistent-2.0.1-dev.4960.tgz#fa1d4f442d3036f444be3f61530694aa0d9d0f4b"
-  integrity sha1-+h1PRC0wNvREvj9hUwaUqg2dD0s=
+"@melonproject/persistent@^2.0.1-dev.4969+7d569678":
+  version "2.0.1-dev.4969"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_1HbV1O/%40melonproject%2Fpersistent-2.0.1-dev.4969.tgz#c28cc025099432572cf69886c9467b91cb9a54a8"
+  integrity sha1-wozAJQmUMlcs9piGyUZ7kcuaVKg=
   dependencies:
-    "@melonproject/utils" "^2.0.1-dev.4960+e0f84f60"
+    "@melonproject/utils" "^2.0.1-dev.4969+7d569678"
 
-"@melonproject/persistent@^2.0.1-dev.4965+ccf073fe":
-  version "2.0.1-dev.4965"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_hAm4/%40melonproject%2Fpersistent-2.0.1-dev.4965.tgz#1e9bcb29d9b2f72171aad22a80f92bac9f928069"
-  integrity sha1-HpvLKdmy9yFxqtIqgPkrrJ+SgGk=
+"@melonproject/release@^2.0.1-dev.4969+7d569678":
+  version "2.0.1-dev.4969"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_2eDBRJ/%40melonproject%2Frelease-2.0.1-dev.4969.tgz#b6606351d69452d0065bb277f5d275eb6efd1407"
+  integrity sha1-tmBjUdaUUtAGW7J39dJ16279FAc=
   dependencies:
-    "@melonproject/utils" "^2.0.1-dev.4965+ccf073fe"
+    "@melonproject/persistent" "^2.0.1-dev.4969+7d569678"
+    "@melonproject/utils" "^2.0.1-dev.4969+7d569678"
 
-"@melonproject/release@^2.0.1-dev.4960+e0f84f60":
-  version "2.0.1-dev.4960"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_1yLxje/%40melonproject%2Frelease-2.0.1-dev.4960.tgz#7a32167b34dc1051df22cd603bee7d0dd1d5225d"
-  integrity sha1-ejIWezTcEFHfIs1gO+59DdHVIl0=
-  dependencies:
-    "@melonproject/persistent" "^2.0.1-dev.4960+e0f84f60"
-    "@melonproject/utils" "^2.0.1-dev.4960+e0f84f60"
-
-"@melonproject/release@^2.0.1-dev.4965+ccf073fe":
-  version "2.0.1-dev.4965"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_1aifHZ/%40melonproject%2Frelease-2.0.1-dev.4965.tgz#01b097d61e479c534d7748aa31b6b2220130d418"
-  integrity sha1-AbCX1h5HnFNNd0iqMbayIgEw1Bg=
-  dependencies:
-    "@melonproject/persistent" "^2.0.1-dev.4965+ccf073fe"
-    "@melonproject/utils" "^2.0.1-dev.4965+ccf073fe"
-
-"@melonproject/utils@^2.0.1-dev.4960+e0f84f60":
-  version "2.0.1-dev.4960"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_tmfIq/%40melonproject%2Futils-2.0.1-dev.4960.tgz#5db7142436d673eb4aee4924f740750de0774f15"
-  integrity sha1-XbcUJDbWc+tK7kkk90B1DeB3TxU=
-
-"@melonproject/utils@^2.0.1-dev.4965+ccf073fe":
-  version "2.0.1-dev.4965"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_1NCq4l/%40melonproject%2Futils-2.0.1-dev.4965.tgz#fa3c8cd7d0a0ec6c8ce0450c70237d8386d4a059"
-  integrity sha1-+jyM19Cg7GyM4EUMcCN9g4bUoFk=
+"@melonproject/utils@^2.0.1-dev.4969+7d569678":
+  version "2.0.1-dev.4969"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_BHJzr/%40melonproject%2Futils-2.0.1-dev.4969.tgz#3c8401a86dc69f49be2d22980a738083af89e9b7"
+  integrity sha1-PIQBqG3Gn0m+LSKYCnOAg6+J6bc=
 
 "@openzeppelin/contracts@^3.2.0":
   version "3.2.0"
@@ -1410,10 +1395,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.12.62.tgz#733923d73669188d35950253dd18a21570085d2b"
   integrity sha512-qAfo81CsD7yQIM9mVyh6B/U47li5g7cfpVQEDMfQeF8pSZVwzbhwU3crc0qG4DmpsebpJPR49AKOExQyJ05Cpg==
 
-"@types/node@^14.14.2":
-  version "14.14.2"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.2.tgz#d25295f9e4ca5989a2c610754dc02a9721235eeb"
-  integrity sha512-jeYJU2kl7hL9U5xuI/BhKPZ4vqGM/OmK6whiFAXVhlstzZhVamWhDSmHyGLIp+RVyuF9/d0dqr2P85aFj4BvJg==
+"@types/node@^14.14.3":
+  version "14.14.3"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.3.tgz#e1c09064121f894baaad2bd9f12ce4a41bffb274"
+  integrity sha512-33/L34xS7HVUx23e0wOT2V1qPF1IrHgQccdJVm9uXGTB9vFBrrzBtkQymT8VskeKOxjz55MSqMv0xuLq+u98WQ==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"
@@ -1734,12 +1719,12 @@ asn1@~0.2.3:
   dependencies:
     safer-buffer "~2.1.0"
 
-assemblyscript@^0.16.1:
-  version "0.16.1"
-  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.16.1.tgz#85caa1b427b4b27f7e9fcc8b08cff70262332c3e"
-  integrity sha512-btb/Q2cs42O7NaVRLDpUIb4fF+o4H4id0kjOOOzS25KCOx0voiyGBeWYqfnrOeufMQacvDNqGkjJuGkdTJIrQQ==
+assemblyscript@^0.17.0:
+  version "0.17.0"
+  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.17.0.tgz#a812184a43796baec2613616ddd61f0eeb224be4"
+  integrity sha512-XHk/O25pUyX/XMvwiOVFJ/YAXrGCk6O090+KiDvVim9Ltl3s2+c5l4XGny1TrAa2Wf9nW44f0iEjgAwDfsct0Q==
   dependencies:
-    binaryen "97.0.0-nightly.20201008"
+    binaryen "98.0.0-nightly.20201025"
     long "^4.0.0"
 
 "assemblyscript@https://github.com/AssemblyScript/assemblyscript#36040d5b5312f19a025782b5e36663823494c2f3":
@@ -1807,10 +1792,10 @@ axios@^0.19.0:
   dependencies:
     follow-redirects "1.5.10"
 
-axios@^0.20.0:
-  version "0.20.0"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-0.20.0.tgz#057ba30f04884694993a8cd07fa394cff11c50bd"
-  integrity sha512-ANA4rr2BDcmmAQLOKft2fufrtuvlqR+cXNNinUmvfeSNCOF98PZL+7M/v1zIdGo7OLjEA9J2gXJL+j4zGsl0bA==
+axios@^0.21.0:
+  version "0.21.0"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-0.21.0.tgz#26df088803a2350dff2c27f96fef99fe49442aca"
+  integrity sha512-fmkJBknJKoZwem3/IKSSLpkdNXZeBu5Q7GA/aRsr2btgrptmSCxi2oFjZHqGdK9DoTil9PIHlPIZw2EcRJXRvw==
   dependencies:
     follow-redirects "^1.10.0"
 
@@ -1941,10 +1926,10 @@ binaryen@77.0.0-nightly.20190407:
   resolved "https://registry.yarnpkg.com/binaryen/-/binaryen-77.0.0-nightly.20190407.tgz#fbe4f8ba0d6bd0809a84eb519d2d5b5ddff3a7d1"
   integrity sha512-1mxYNvQ0xywMe582K7V6Vo2zzhZZxMTeGHH8aE/+/AND8f64D8Q1GThVY3RVRwGY/4p+p95ccw9Xbw2ovFXRIg==
 
-binaryen@97.0.0-nightly.20201008:
-  version "97.0.0-nightly.20201008"
-  resolved "https://registry.yarnpkg.com/binaryen/-/binaryen-97.0.0-nightly.20201008.tgz#b9dc6fa3b92b764b66956d079190b48d2e22065f"
-  integrity sha512-GWV30FOQqz+vBIZRbc7GSasLNhh8BNLKH+2u2j5BjqM0WOEqqaP5iSj0mq72We2aVYqpBajJPI/CORY6o2RBxA==
+binaryen@98.0.0-nightly.20201025:
+  version "98.0.0-nightly.20201025"
+  resolved "https://registry.yarnpkg.com/binaryen/-/binaryen-98.0.0-nightly.20201025.tgz#2ab9aa7dd248f3fca3e26ac617626dd6407ec5fe"
+  integrity sha512-jS6VMHF2mRKMBy79DhMDX+j1ph+TahHhLazkybvr90WkXBa80ydWgLTZLe3mxms1iOHJYqFv84TrKCrlFiwzjA==
 
 bindings@^1.5.0:
   version "1.5.0"
@@ -8080,11 +8065,12 @@ tr46@^2.0.2:
   dependencies:
     punycode "^2.1.1"
 
-ts-jest@^26.4.1:
-  version "26.4.1"
-  resolved "https://registry.yarnpkg.com/ts-jest/-/ts-jest-26.4.1.tgz#08ec0d3fc2c3a39e4a46eae5610b69fafa6babd0"
-  integrity sha512-F4aFq01aS6mnAAa0DljNmKr/Kk9y4HVZ1m6/rtJ0ED56cuxINGq3Q9eVAh+z5vcYKe5qnTMvv90vE8vUMFxomg==
+ts-jest@^26.4.2:
+  version "26.4.2"
+  resolved "https://registry.yarnpkg.com/ts-jest/-/ts-jest-26.4.2.tgz#00b6c970bee202ceef7c6e6e9805c4837b22dab8"
+  integrity sha512-0+MynTTzzbuy5rGjzsCKjxHJk5gY906c/FSaqQ3081+G7dp2Yygfa9hVlbrtNNcztffh1mC6Rs9jb/yHpcjsoQ==
   dependencies:
+    "@jest/create-cache-key-function" "^26.5.0"
     "@types/jest" "26.x"
     bs-logger "0.x"
     buffer-from "1.x"

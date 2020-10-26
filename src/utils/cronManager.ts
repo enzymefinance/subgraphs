@@ -1,12 +1,11 @@
 import { BigInt } from '@graphprotocol/graph-ts';
 import { useAsset } from '../entities/Asset';
-import { trackAssetPrice, useAssetPrice } from '../entities/AssetPrice';
+import { fetchAssetPrice, trackAssetPrice, useAssetPrice } from '../entities/AssetPrice';
 import { ensureDailyAssetPriceCandleGroup, ensureHourlyAssetPriceCandleGroup } from '../entities/AssetPriceCandleGroup';
 import { Cron } from '../generated/schema';
 import { arrayUnique } from './arrayUnique';
 import { logCritical } from './logCritical';
 import { getDayOpenTime, getHourOpenTime, getTenMinuteOpenTime } from './timeHelpers';
-import { fetchAssetPrice } from './valueInterpreter';
 
 export function ensureCron(): Cron {
   let cron = Cron.load('SINGLETON') as Cron;
@@ -15,6 +14,7 @@ export function ensureCron(): Cron {
     cron.cron = BigInt.fromI32(-1);
     cron.primitives = new Array<string>();
     cron.derivatives = new Array<string>();
+    cron.usdQuotedPrimitives = new Array<string>();
     cron.save();
   }
 

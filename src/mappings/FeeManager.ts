@@ -10,13 +10,13 @@ import { trackFundShares } from '../entities/Shares';
 import { ensureTransaction } from '../entities/Transaction';
 import { ComptrollerLibContract } from '../generated/ComptrollerLibContract';
 import {
-  AllSharesOutstandingForcePaid,
+  AllSharesOutstandingForcePaidForFund,
   FeeDeregistered,
   FeeEnabledForFund,
   FeeRegistered,
   FeeSettledForFund,
-  FeesRecipientSet,
-  SharesOutstandingPaidForFee,
+  FeesRecipientSetForFund,
+  SharesOutstandingPaidForFund,
 } from '../generated/FeeManagerContract';
 import {
   FeeDeregisteredEvent,
@@ -24,14 +24,15 @@ import {
   FeeRegisteredEvent,
   FeeSettledForFundEvent,
   FeeSharesOutstandingPaidForFundEvent,
-  FeesRecipientSetEvent,
+  FeesRecipientSetForFundEvent,
 } from '../generated/schema';
 import { arrayUnique } from '../utils/arrayUnique';
 import { genericId } from '../utils/genericId';
-import { convertSettlementType } from '../utils/settlementType';
+import { getFeeHook } from '../utils/getFeeHook';
+import { getSettlementType } from '../utils/getSettlementType';
 import { toBigDecimal } from '../utils/toBigDecimal';
 
-export function handleAllSharesOutstandingForcePaid(event: AllSharesOutstandingForcePaid): void {
+export function handleAllSharesOutstandingForcePaidForFund(event: AllSharesOutstandingForcePaidForFund): void {
   // TODO: implement
 }
 
@@ -52,11 +53,11 @@ export function handleFeeRegistered(event: FeeRegistered): void {
   registered.transaction = ensureTransaction(event).id;
   registered.fee = ensureFee(event.params.fee).id;
   registered.identifier = event.params.identifier.toHex();
+  registered.implementedHooks = event.params.implementedHooks.map<string>((hook) => getFeeHook(hook));
   registered.save();
 }
 
 export function handleFeeEnabledForFund(event: FeeEnabledForFund): void {
-  // TODO: Instead of calling the contract, load the vault proxy from the fund / fund version entity.
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let fundId = comptroller.getVaultProxy().toHex();
   let fee = useFee(event.params.fee.toHex());
@@ -77,7 +78,6 @@ export function handleFeeEnabledForFund(event: FeeEnabledForFund): void {
 }
 
 export function handleFeeSettledForFund(event: FeeSettledForFund): void {
-  // TODO: Instead of calling the contract, load the vault proxy from the fund / fund version entity.
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
 
   let fund = useFund(comptroller.getVaultProxy().toHex());
@@ -85,7 +85,6 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
   let investment = ensureInvestment(investor, fund);
   let fee = useFee(event.params.fee.toHex());
   let shares = toBigDecimal(event.params.sharesDue);
-  let settlementType = convertSettlementType(event.params.settlementType);
 
   let settled = new FeeSettledForFundEvent(genericId(event));
   settled.contract = event.address.toHex();
@@ -97,9 +96,9 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
   settled.shares = shares;
   settled.comptrollerProxy = event.params.comptrollerProxy.toHex();
   settled.fee = fee.id;
-  settled.payer = fund.id;
-  settled.payee = useManager(fund.manager).id;
-  settled.settlementType = settlementType;
+  settled.payer = event.params.payer.toHex();
+  settled.payee = event.params.payee.toHex();
+  settled.settlementType = getSettlementType(event.params.settlementType);
   settled.sharesDue = shares;
   settled.save();
 
@@ -108,8 +107,7 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
   trackFundCalculations(fund, event, settled);
 }
 
-export function handleSharesOutstandingPaidForFee(event: SharesOutstandingPaidForFee): void {
-  // TODO: Instead of calling the contract, load the vault proxy from the fund / fund version entity.
+export function handleSharesOutstandingPaidForFund(event: SharesOutstandingPaidForFund): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let fund = useFund(comptroller.getVaultProxy().toHex());
   let investor = ensureInvestor(Address.fromString(fund.manager), event);
@@ -137,11 +135,11 @@ export function handleSharesOutstandingPaidForFee(event: SharesOutstandingPaidFo
   trackFundCalculations(fund, event, sharesPaid);
 }
 
-export function handleFeesRecipientSet(event: FeesRecipientSet): void {
+export function handleFeesRecipientSetForFund(event: FeesRecipientSetForFund): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let vaultProxy = comptroller.getVaultProxy().toHex();
 
-  let feeRecipientSet = new FeesRecipientSetEvent(genericId(event));
+  let feeRecipientSet = new FeesRecipientSetForFundEvent(genericId(event));
   feeRecipientSet.contract = ensureContract(event.address, 'FeeManager').id;
   feeRecipientSet.fund = vaultProxy;
   feeRecipientSet.account = useManager(event.transaction.from.toHex()).id;

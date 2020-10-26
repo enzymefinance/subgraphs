@@ -148,19 +148,19 @@ dataSources:
         - name: PerformanceFeeContract
           file: ./abis/PerformanceFee.json
       eventHandlers:
-        - event: AllSharesOutstandingForcePaid(indexed address,address,uint256)
+        - event: AllSharesOutstandingForcePaidForFund(indexed address,address,uint256)
           handler: handleAllSharesOutstandingForcePaid
         - event: FeeDeregistered(indexed address,indexed string)
           handler: handleFeeDeregistered
         - event: FeeEnabledForFund(indexed address,indexed address,bytes)
           handler: handleFeeEnabledForFund
-        - event: FeeRegistered(indexed address,indexed string)
+        - event: FeeRegistered(indexed address,indexed string,uint8[])
           handler: handleFeeRegistered
-        - event: FeeSettledForFund(indexed address,indexed address,uint8,uint256)
+        - event: FeeSettledForFund(indexed address,indexed address,indexed uint8,address,address,uint256)
           handler: handleFeeSettledForFund
-        - event: FeesRecipientSet(indexed address,address,address)
+        - event: FeesRecipientSetForFund(indexed address,address,address)
           handler: handleFeesRecipientSet
-        - event: SharesOutstandingPaidForFee(indexed address,indexed address,address,uint256)
+        - event: SharesOutstandingPaidForFund(indexed address,indexed address,address,uint256)
           handler: handleSharesOutstandingPaidForFee
 
   - name: ManagementFeeDataSource
@@ -256,7 +256,7 @@ dataSources:
           handler: handlePolicyDeregistered
         - event: PolicyEnabledForFund(indexed address,indexed address,bytes)
           handler: handlePolicyEnabledForFund
-        - event: PolicyRegistered(indexed address,indexed string)
+        - event: PolicyRegistered(indexed address,indexed string,uint8[])
           handler: handlePolicyRegistered
 
   - name: AdapterBlacklistDataSource
@@ -444,7 +444,7 @@ dataSources:
           handler: handleAdapterDeregistered
         - event: AdapterRegistered(indexed address,indexed string)
           handler: handleAdapterRegistered
-        - event: CallOnIntegrationExecuted(indexed address,address,address,indexed address,indexed bytes4,bytes,address[],uint256[],address[],uint256[])
+        - event: CallOnIntegrationExecutedForFund(indexed address,address,address,indexed address,indexed bytes4,bytes,address[],uint256[],address[],uint256[])
           handler: handleCallOnIntegrationExecuted
 
   - name: ChainlinkPriceFeedDataSource

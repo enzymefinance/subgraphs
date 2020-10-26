@@ -1,8 +1,8 @@
 import { ensureManager, useManager } from '../entities/Account';
+import { useAsset } from '../entities/Asset';
 import { ensureAssetWhitelistSetting, useAssetWhitelistSetting } from '../entities/AssetWhitelistSetting';
 import { ensureContract } from '../entities/Contract';
 import { useFund } from '../entities/Fund';
-import { useAsset } from '../entities/Asset';
 import { usePolicy } from '../entities/Policy';
 import { ensureTransaction } from '../entities/Transaction';
 import { AddressesAdded, AddressesRemoved } from '../generated/AssetWhitelistContract';
@@ -13,7 +13,6 @@ import { arrayUnique } from '../utils/arrayUnique';
 import { genericId } from '../utils/genericId';
 
 export function handleAddressesAdded(event: AddressesAdded): void {
-  // TODO: Instead of calling the contract, load the vault proxy from the fund / fund version entity.
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let vault = comptroller.getVaultProxy();
   let policy = usePolicy(event.address.toHex());
@@ -37,7 +36,6 @@ export function handleAddressesAdded(event: AddressesAdded): void {
 }
 
 export function handleAddressesRemoved(event: AddressesRemoved): void {
-  // TODO: Instead of calling the contract, load the vault proxy from the fund / fund version entity.
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let vault = comptroller.getVaultProxy();
   let fund = useFund(vault.toHex());

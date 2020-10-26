@@ -1,7 +1,9 @@
-import { BigDecimal, BigInt } from '@graphprotocol/graph-ts';
+import { Address, BigDecimal, BigInt } from '@graphprotocol/graph-ts';
+import { valueInterpreterAddress, wethTokenAddress } from '../addresses';
 import { Asset, AssetPrice } from '../generated/schema';
+import { ValueInterpreterContract } from '../generated/ValueInterpreterContract';
 import { logCritical } from '../utils/logCritical';
-import { fetchAssetPrice } from '../utils/valueInterpreter';
+import { toBigDecimal } from '../utils/toBigDecimal';
 import { updateDailyAssetPriceCandle, updateHourlyAssetPriceCandle } from './AssetPriceCandle';
 
 export function assetPriceId(asset: Asset, timestamp: BigInt): string {
@@ -65,4 +67,19 @@ export function trackAssetPrice(asset: Asset, timestamp: BigInt, price: BigDecim
 
 export function trackUsdQuotedAssetPrices(timestamp: BigInt): void {
   // loop through all
+}
+
+export function fetchAssetPrice(asset: Asset): BigDecimal {
+  // Whenever a new (derivative) asset is registered, we need to fetch its current price immediately.
+  let contract = ValueInterpreterContract.bind(valueInterpreterAddress);
+
+  // NOTE: Because we are using one "unit" of the given derivative as the amount when
+  // calculating the value with the value interpreter, this is also the rate.
+  let one = BigInt.fromI32(10).pow(asset.decimals as u8);
+  let address = Address.fromString(asset.id);
+  let call = contract.try_calcCanonicalAssetValue(address, one, wethTokenAddress);
+
+  let valid = !call.reverted && call.value.value1 == true;
+  let value = valid ? toBigDecimal(call.value.value0) : BigDecimal.fromString('0');
+  return value;
 }
