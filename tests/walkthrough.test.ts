@@ -70,6 +70,7 @@ describe('Walkthrough', () => {
       fundDeployer,
       fundOwner: signer.address,
       denominationAsset: deployment.wethToken,
+      sharesActionTimelock: 1,
       fundName: 'My Super Fund',
       feeManagerConfigData,
       policyManagerConfigData,

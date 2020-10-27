@@ -1067,34 +1067,34 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@melonproject/melonjs@^2.0.1-dev.529+8a81a2f1":
-  version "2.0.1-dev.529"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_cZO1W/%40melonproject%2Fmelonjs-2.0.1-dev.529.tgz#37a12355863546dfa79f4b4c334a975bd424ee52"
-  integrity sha1-N6EjVYY1Rt+nn0tMM0qXW9Qk7lI=
+"@melonproject/melonjs@^2.0.1-dev.531+8fe3fc1d":
+  version "2.0.1-dev.531"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_2QTJb/%40melonproject%2Fmelonjs-2.0.1-dev.531.tgz#20c5fcc0f61b88f3ead008b37727be98d115fab0"
+  integrity sha1-IMX8wPYbiPPq0Aizdye+mNEV+rA=
   dependencies:
-    "@melonproject/persistent" "^2.0.1-dev.4969+7d569678"
-    "@melonproject/release" "^2.0.1-dev.4969+7d569678"
-    "@melonproject/utils" "^2.0.1-dev.4969+7d569678"
+    "@melonproject/persistent" "^2.0.1-dev.4973+4c24c693"
+    "@melonproject/release" "^2.0.1-dev.4973+4c24c693"
+    "@melonproject/utils" "^2.0.1-dev.4973+4c24c693"
 
-"@melonproject/persistent@^2.0.1-dev.4969+7d569678":
-  version "2.0.1-dev.4969"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_1HbV1O/%40melonproject%2Fpersistent-2.0.1-dev.4969.tgz#c28cc025099432572cf69886c9467b91cb9a54a8"
-  integrity sha1-wozAJQmUMlcs9piGyUZ7kcuaVKg=
+"@melonproject/persistent@^2.0.1-dev.4973+4c24c693":
+  version "2.0.1-dev.4973"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_1s4DqS/%40melonproject%2Fpersistent-2.0.1-dev.4973.tgz#0f59a977737ef66943f31d55da380f44694e4401"
+  integrity sha1-D1mpd3N+9mlD8x1V2jgPRGlORAE=
   dependencies:
-    "@melonproject/utils" "^2.0.1-dev.4969+7d569678"
+    "@melonproject/utils" "^2.0.1-dev.4973+4c24c693"
 
-"@melonproject/release@^2.0.1-dev.4969+7d569678":
-  version "2.0.1-dev.4969"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_2eDBRJ/%40melonproject%2Frelease-2.0.1-dev.4969.tgz#b6606351d69452d0065bb277f5d275eb6efd1407"
-  integrity sha1-tmBjUdaUUtAGW7J39dJ16279FAc=
+"@melonproject/release@^2.0.1-dev.4973+4c24c693":
+  version "2.0.1-dev.4973"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_1Xfyhb/%40melonproject%2Frelease-2.0.1-dev.4973.tgz#48a7e22e10f0a4bf2c788c3f1f0d9c844f7114e6"
+  integrity sha1-SKfiLhDwpL8seIw/Hw2chE9xFOY=
   dependencies:
-    "@melonproject/persistent" "^2.0.1-dev.4969+7d569678"
-    "@melonproject/utils" "^2.0.1-dev.4969+7d569678"
+    "@melonproject/persistent" "^2.0.1-dev.4973+4c24c693"
+    "@melonproject/utils" "^2.0.1-dev.4973+4c24c693"
 
-"@melonproject/utils@^2.0.1-dev.4969+7d569678":
-  version "2.0.1-dev.4969"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_BHJzr/%40melonproject%2Futils-2.0.1-dev.4969.tgz#3c8401a86dc69f49be2d22980a738083af89e9b7"
-  integrity sha1-PIQBqG3Gn0m+LSKYCnOAg6+J6bc=
+"@melonproject/utils@^2.0.1-dev.4973+4c24c693":
+  version "2.0.1-dev.4973"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_1uYYev/%40melonproject%2Futils-2.0.1-dev.4973.tgz#46791a1e469349a8a465789795dba4f98967afcd"
+  integrity sha1-RnkaHkaTSaikZXiXlduk+Ylnr80=
 
 "@openzeppelin/contracts@^3.2.0":
   version "3.2.0"
@@ -1395,10 +1395,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.12.62.tgz#733923d73669188d35950253dd18a21570085d2b"
   integrity sha512-qAfo81CsD7yQIM9mVyh6B/U47li5g7cfpVQEDMfQeF8pSZVwzbhwU3crc0qG4DmpsebpJPR49AKOExQyJ05Cpg==
 
-"@types/node@^14.14.3":
-  version "14.14.3"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.3.tgz#e1c09064121f894baaad2bd9f12ce4a41bffb274"
-  integrity sha512-33/L34xS7HVUx23e0wOT2V1qPF1IrHgQccdJVm9uXGTB9vFBrrzBtkQymT8VskeKOxjz55MSqMv0xuLq+u98WQ==
+"@types/node@^14.14.5":
+  version "14.14.5"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.5.tgz#e92d3b8f76583efa26c1a63a21c9d3c1143daa29"
+  integrity sha512-H5Wn24s/ZOukBmDn03nnGTp18A60ny9AmCwnEcgJiTgSGsCO7k+NWP7zjCCbhlcnVCoI+co52dUAt9GMhOSULw==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"
@@ -8065,10 +8065,10 @@ tr46@^2.0.2:
   dependencies:
     punycode "^2.1.1"
 
-ts-jest@^26.4.2:
-  version "26.4.2"
-  resolved "https://registry.yarnpkg.com/ts-jest/-/ts-jest-26.4.2.tgz#00b6c970bee202ceef7c6e6e9805c4837b22dab8"
-  integrity sha512-0+MynTTzzbuy5rGjzsCKjxHJk5gY906c/FSaqQ3081+G7dp2Yygfa9hVlbrtNNcztffh1mC6Rs9jb/yHpcjsoQ==
+ts-jest@^26.4.3:
+  version "26.4.3"
+  resolved "https://registry.yarnpkg.com/ts-jest/-/ts-jest-26.4.3.tgz#d153a616033e7ec8544b97ddbe2638cbe38d53db"
+  integrity sha512-pFDkOKFGY+nL9v5pkhm+BIFpoAuno96ff7GMnIYr/3L6slFOS365SI0fGEVYx2RKGji5M2elxhWjDMPVcOCdSw==
   dependencies:
     "@jest/create-cache-key-function" "^26.5.0"
     "@types/jest" "26.x"
@@ -8168,10 +8168,10 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typescript@^4.0.3:
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.0.3.tgz#153bbd468ef07725c1df9c77e8b453f8d36abba5"
-  integrity sha512-tEu6DGxGgRJPb/mVPIZ48e69xCn2yRmCgYmDugAVwmJ6o+0u1RI18eO7E7WBTLYLaEVVOhwQmcdhQHweux/WPg==
+typescript@^4.0.5:
+  version "4.0.5"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.0.5.tgz#ae9dddfd1069f1cb5beb3ef3b2170dd7c1332389"
+  integrity sha512-ywmr/VrTVCmNTJ6iV2LwIrfG1P+lv6luD8sUJs+2eI9NLGigaN+nUQc13iHqisq7bra9lnmUSYqbJvegraBOPQ==
 
 uglify-js@^3.1.4:
   version "3.10.4"

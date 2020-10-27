@@ -1,9 +1,9 @@
 import fs from 'fs';
-import path from 'path';
 import glob from 'glob';
-import yargs from 'yargs';
-import handlebars from 'handlebars';
 import request, { gql } from 'graphql-request';
+import handlebars from 'handlebars';
+import path from 'path';
+import yargs from 'yargs';
 
 const query = gql`
   {
@@ -18,6 +18,7 @@ const query = gql`
       valueInterpreter
       engine
       comptrollerLib
+      fundCalculator
       feeManager
       integrationManager
       policyManager
@@ -49,6 +50,7 @@ interface Result {
     valueInterpreter: string;
     engine: string;
     comptrollerLib: string;
+    fundCalculator: string;
     feeManager: string;
     integrationManager: string;
     policyManager: string;

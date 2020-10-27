@@ -1,5 +1,7 @@
 import { Address, BigDecimal, Entity, ethereum } from '@graphprotocol/graph-ts';
+import { fundCalculatorAddress } from '../addresses';
 import { ComptrollerLibContract } from '../generated/ComptrollerLibContract';
+import { FundCalculatorContract } from '../generated/FundCalculatorContract';
 import { Calculation, Fund } from '../generated/schema';
 import { VaultLibContract } from '../generated/VaultLibContract';
 import { arrayUnique } from '../utils/arrayUnique';
@@ -51,12 +53,13 @@ export function useCalculations(id: string): Calculation {
 
 export function trackFundCalculations(fund: Fund, event: ethereum.Event, cause: Entity): void {
   let comptroller = ComptrollerLibContract.bind(Address.fromString(fund.accessor));
+  let calculator = FundCalculatorContract.bind(fundCalculatorAddress);
   let vault = VaultLibContract.bind(Address.fromString(fund.id));
 
   let gav = comptroller.try_calcGav(true);
   let totalSupply = vault.try_totalSupply();
   let grossShareValue = comptroller.try_calcGrossShareValue();
-  let netShareValue = comptroller.try_calcNetShareValue();
+  let netShareValue = calculator.try_calcNetShareValue(Address.fromString(fund.accessor));
 
   if (gav.reverted || totalSupply.reverted || grossShareValue.reverted || netShareValue.reverted) {
     return;

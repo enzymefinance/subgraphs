@@ -33,6 +33,7 @@ export function handleNewFundCreated(event: NewFundCreated): void {
   fundCreation.fundName = event.params.fundName;
   fundCreation.creator = ensureAccount(event.params.creator, event).id;
   fundCreation.denominationAsset = useAsset(event.params.denominationAsset.toHex()).id;
+  fundCreation.sharesActionTimelock = event.params.sharesActionTimelock;
   fundCreation.feeManagerConfigData = event.params.feeManagerConfigData.toHex();
   fundCreation.policyManagerConfigData = event.params.policyManagerConfigData.toHex();
   fundCreation.transaction = ensureTransaction(event).id;

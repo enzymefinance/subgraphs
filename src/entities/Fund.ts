@@ -49,6 +49,7 @@ export function createFund(event: NewFundCreated): Fund {
   fund.calculations = calculations.id;
   fund.state = state.id;
   fund.denominationAsset = useAsset(event.params.denominationAsset.toHex()).id;
+  fund.sharesActionTimelock = event.params.sharesActionTimelock;
   fund.save();
 
   return fund;

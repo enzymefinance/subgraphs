@@ -118,6 +118,7 @@ type NewFundCreatedEvent implements Event & FundEvent @entity {
   fundOwner: Account!
   fundName: String!
   denominationAsset: Asset!
+  sharesActionTimelock: BigInt!
   feeManagerConfigData: String!
   policyManagerConfigData: String!
   transaction: Transaction!
@@ -932,6 +933,7 @@ type Fund @entity {
   manager: Account!
   migrator: String
   denominationAsset: Asset!
+  sharesActionTimelock: BigInt!
   trackedAssets: [Asset!]!
   policies: [PolicySetting!]! @derivedFrom(field: "fund")
   fees: [FeeSetting!]! @derivedFrom(field: "fund")

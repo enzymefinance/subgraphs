@@ -110,9 +110,9 @@ dataSources:
           handler: handleAmguPaid
         - event: ComptrollerLibSet(address)
           handler: handleComptrollerLibSet
-        - event: ComptrollerProxyDeployed(indexed address,address,indexed address,bytes,bytes,indexed bool)
+        - event: ComptrollerProxyDeployed(indexed address,address,indexed address,uint256,bytes,bytes,indexed bool)
           handler: handleComptrollerProxyDeployed
-        - event: NewFundCreated(indexed address,address,address,indexed address,string,indexed address,bytes,bytes)
+        - event: NewFundCreated(indexed address,address,address,indexed address,string,indexed address,uint256,bytes,bytes)
           handler: handleNewFundCreated
         - event: ReleaseStatusSet(indexed uint8,indexed uint8)
           handler: handleReleaseStatusSet
@@ -147,6 +147,8 @@ dataSources:
           file: ./abis/IFee.json
         - name: PerformanceFeeContract
           file: ./abis/PerformanceFee.json
+        - name: FundCalculatorContract
+          file: ./abis/FundCalculator.json
       eventHandlers:
         - event: AllSharesOutstandingForcePaidForFund(indexed address,address,uint256)
           handler: handleAllSharesOutstandingForcePaidForFund
@@ -439,6 +441,8 @@ dataSources:
           file: ./abis/ERC20.json
         - name: IIntegrationAdapterInterface
           file: ./abis/IIntegrationAdapter.json
+        - name: FundCalculatorContract
+          file: ./abis/FundCalculator.json
       eventHandlers:
         - event: AdapterDeregistered(indexed address,indexed string)
           handler: handleAdapterDeregistered
@@ -568,6 +572,8 @@ templates:
           file: ./abis/VaultLib.json
         - name: ERC20Contract
           file: ./abis/ERC20.json
+        - name: FundCalculatorContract
+          file: ./abis/FundCalculator.json
       eventHandlers:
         - event: AmguPaid(indexed address,uint256,uint256)
           handler: handleAmguPaid
