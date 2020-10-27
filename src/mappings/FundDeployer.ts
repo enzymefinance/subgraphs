@@ -78,5 +78,10 @@ export function handleComptrollerProxyDeployed(event: ComptrollerProxyDeployed):
   comptrollerProxyDeployment.contract = ensureContract(event.address, 'FundDeployer').id;
   comptrollerProxyDeployment.comptrollerProxy = event.params.comptrollerProxy.toHex();
   comptrollerProxyDeployment.transaction = ensureTransaction(event).id;
+  comptrollerProxyDeployment.denominationAsset = useAsset(event.params.denominationAsset.toHex()).id;
+  comptrollerProxyDeployment.sharesActionTimelock = event.params.sharesActionTimelock;
+  comptrollerProxyDeployment.feeManagerConfigData = event.params.feeManagerConfigData.toString();
+  comptrollerProxyDeployment.policyManagerConfigData = event.params.policyManagerConfigData.toString();
+  comptrollerProxyDeployment.forMigration = event.params.forMigration;
   comptrollerProxyDeployment.save();
 }

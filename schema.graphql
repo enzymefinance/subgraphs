@@ -132,6 +132,11 @@ type ComptrollerProxyDeployedEvent implements Event & FundEvent @entity {
   timestamp: BigInt!
   comptrollerProxy: Contract!
   transaction: Transaction!
+  denominationAsset: Asset!
+  sharesActionTimelock: BigInt!
+  feeManagerConfigData: String!
+  policyManagerConfigData: String!
+  forMigration: Boolean!
 }
 
 type VaultProxySetEvent implements Event & FundEvent @entity {
