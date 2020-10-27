@@ -1172,6 +1172,7 @@ type PerformanceFeeState implements Metric & IndividualFeeState @entity {
 
 type Asset @entity {
   id: ID!
+  ref: String!
   name: String!
   symbol: String!
   decimals: Int!

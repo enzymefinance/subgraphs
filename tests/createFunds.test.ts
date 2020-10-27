@@ -51,13 +51,14 @@ describe('Walkthrough', () => {
     const feeManagerConfigData = await encodeArgs(['address[]', 'bytes[]'], [fees, feesSettingsData]);
 
     // create funds
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 100; i++) {
       const newFundArgs = {
         signer,
         fundDeployer,
         fundOwner: signer.address,
         denominationAsset: deployment.wethToken,
-        fundName: `Another WETH Fund with Trade (${new Date().toLocaleTimeString()})`,
+        sharesActionTimelock: 1,
+        fundName: `WETH Fund with Trade (${new Date().toLocaleTimeString()})`,
         feeManagerConfigData,
         // TODO: fix policyManagerConfigData
         policyManagerConfigData: '0x',

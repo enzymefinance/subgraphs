@@ -7,7 +7,6 @@ import {
   encodeArgs,
   getCurrentFundDeployer,
   KyberAdapter,
-  redeemShares,
 } from '@melonproject/melonjs';
 import { BigNumber, providers, utils, Wallet } from 'ethers';
 import { createAccount, Deployment, fetchDeployment } from './utils/deployment';
@@ -15,7 +14,6 @@ import { kyberTakeOrderArgs } from './utils/kyberTakeOrderArgs';
 import { waitForSubgraph } from './utils/subgraph';
 import { fetchFund } from './utils/subgraph-queries/fetchFund';
 import { fetchInvestment } from './utils/subgraph-queries/fetchInvestment';
-import { fetchRedemption } from './utils/subgraph-queries/fetchRedemption';
 import { callOnIntegrationArgs, integrationManagerActionIds, takeOrderSelector } from './utils/trading';
 
 describe('Walkthrough', () => {
@@ -135,19 +133,19 @@ describe('Walkthrough', () => {
     expect(sharePrice).toEqual(utils.parseEther('1'));
 
     // // redeem shares
-    const redeemSharesArgs = {
-      signer,
-      comptrollerProxy: fund.comptrollerProxy,
-    };
+    // const redeemSharesArgs = {
+    //   signer,
+    //   comptrollerProxy: fund.comptrollerProxy,
+    // };
 
-    const redeemSharesTx = await redeemShares(redeemSharesArgs);
-    const redeemed = await redeemSharesTx();
+    // const redeemSharesTx = await redeemShares(redeemSharesArgs);
+    // const redeemed = await redeemSharesTx();
 
-    await waitForSubgraph(subgraphStatusEndpoint, redeemed.__receipt.blockNumber);
+    // await waitForSubgraph(subgraphStatusEndpoint, redeemed.__receipt.blockNumber);
 
-    const transactionHash = redeemed.__receipt.transactionHash;
-    const subgraphRedemption = await fetchRedemption(subgraphApi, transactionHash, redeemed.__receipt.blockNumber);
-    expect(subgraphRedemption.transaction.id).toEqual(transactionHash);
+    // const transactionHash = redeemed.__receipt.transactionHash;
+    // const subgraphRedemption = await fetchRedemption(subgraphApi, transactionHash, redeemed.__receipt.blockNumber);
+    // expect(subgraphRedemption.transaction.id).toEqual(transactionHash);
 
     // buy more shares
     const buyMoreSharesTx = await buyShares(buySharesArgs);
