@@ -1078,13 +1078,13 @@
 
 "@melonproject/protocol@^2.0.0-dev.4979+6ecd09af":
   version "2.0.0-dev.4979"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_2h5lz0/%40melonproject%2Fprotocol-2.0.0-dev.4979.tgz#9226f57dd49bd454f929ce1fbed09d2f63869406"
-  integrity sha1-kib1fdSb1FT5Kc4fvtCdL2OGlAY=
+  resolved "https://npm.fury.io/melonproject/~/up/ver_iW9qs/%40melonproject%2Fprotocol-2.0.0-dev.4979.tgz#d06211f4eff7a5aeecec4cd515f7946b1732247e"
+  integrity sha1-0GIR9O/3pa7s7EzVFfeUaxcyJH4=
 
 "@melonproject/testutils@^2.0.0-dev.4979+6ecd09af":
   version "2.0.0-dev.4979"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_tKvQJ/%40melonproject%2Ftestutils-2.0.0-dev.4979.tgz#0391f1c939e6db1a1c358260cf929b7442d6a45a"
-  integrity sha1-A5HxyTnm2xocNYJgz5KbdELWpFo=
+  resolved "https://npm.fury.io/melonproject/~/up/ver_fU6Z1/%40melonproject%2Ftestutils-2.0.0-dev.4979.tgz#1018b467d4c4d867c386289054db7b0b06e83651"
+  integrity sha1-EBi0Z9TE2GfDhiiQVNt7CwboNlE=
   dependencies:
     "@melonproject/protocol" "^2.0.0-dev.4979+6ecd09af"
 
