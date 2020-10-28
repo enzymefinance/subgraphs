@@ -1,3 +1,4 @@
+import { zeroAddress } from '../constants';
 import { ensureContract } from '../entities/Contract';
 import { ensureTransaction } from '../entities/Transaction';
 import {
@@ -6,7 +7,8 @@ import {
   EtherTakerAdded,
   EtherTakerRemoved,
   FrozenEtherThawed,
-  MlnTokensBurned,
+  MlnSoldAndBurned,
+  ValueInterpreterSet,
 } from '../generated/EngineContract';
 import {
   AmguPaidInEtherEvent,
@@ -14,7 +16,8 @@ import {
   EtherTakerAddedEvent,
   EtherTakerRemovedEvent,
   FrozenEtherThawedEvent,
-  MlnTokensBurnedEvent,
+  MlnSoldAndBurnedEvent,
+  ValueInterpreterSetEvent,
 } from '../generated/schema';
 import { genericId } from '../utils/genericId';
 import { toBigDecimal } from '../utils/toBigDecimal';
@@ -64,11 +67,24 @@ export function handleFrozenEtherThawed(event: FrozenEtherThawed): void {
   etherThawed.save();
 }
 
-export function handleMlnTokensBurned(event: MlnTokensBurned): void {
-  let tokensBurned = new MlnTokensBurnedEvent(genericId(event));
+export function handleMlnSoldAndBurned(event: MlnSoldAndBurned): void {
+  let tokensBurned = new MlnSoldAndBurnedEvent(genericId(event));
   tokensBurned.contract = ensureContract(event.address, 'Engine').id;
   tokensBurned.timestamp = event.block.timestamp;
-  tokensBurned.amount = toBigDecimal(event.params.amount);
+  tokensBurned.ethAmount = toBigDecimal(event.params.ethAmount);
+  tokensBurned.mlnAmount = toBigDecimal(event.params.mlnAmount);
   tokensBurned.transaction = ensureTransaction(event).id;
   tokensBurned.save();
+}
+
+export function handleValueInterpreterSet(event: ValueInterpreterSet): void {
+  let valueInterpreterSet = new ValueInterpreterSetEvent(genericId(event));
+  valueInterpreterSet.contract = ensureContract(event.address, 'Engine').id;
+  valueInterpreterSet.timestamp = event.block.timestamp;
+  if (event.params.prevValueInterpreter != zeroAddress) {
+    valueInterpreterSet.prevValueInterpreter = ensureContract(event.params.prevValueInterpreter, 'ValueInterpreter').id;
+  }
+  valueInterpreterSet.nextValueInterpreter = ensureContract(event.params.prevValueInterpreter, 'ValueInterpreter').id;
+  valueInterpreterSet.transaction = ensureTransaction(event).id;
+  valueInterpreterSet.save();
 }

@@ -786,11 +786,21 @@ type AmguPriceSetEvent implements Event & NetworkEvent @entity {
   transaction: Transaction!
 }
 
-type MlnTokensBurnedEvent implements Event & NetworkEvent @entity {
+type MlnSoldAndBurnedEvent implements Event & NetworkEvent @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
-  amount: BigDecimal!
+  ethAmount: BigDecimal!
+  mlnAmount: BigDecimal!
+  transaction: Transaction!
+}
+
+type ValueInterpreterSetEvent implements Event & NetworkEvent @entity {
+  id: ID!
+  contract: Contract!
+  timestamp: BigInt!
+  prevValueInterpreter: Contract
+  nextValueInterpreter: Contract!
   transaction: Transaction!
 }
 

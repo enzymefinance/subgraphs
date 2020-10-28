@@ -80,8 +80,10 @@ dataSources:
           handler: handleEtherTakerRemoved
         - event: FrozenEtherThawed(uint256)
           handler: handleFrozenEtherThawed
-        - event: MlnTokensBurned(uint256)
-          handler: handleMlnTokensBurned
+        - event: MlnSoldAndBurned(uint256,uint256)
+          handler: handleMlnSoldAndBurned
+        - event: ValueInterpreterSet(address,address)
+          handler: handleValueInterpreterSet
 
   - name: FundDeployerDataSource
     kind: ethereum/contract
