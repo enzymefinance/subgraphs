@@ -1,72 +1,28 @@
-import { AddressLike, Call, contract, Contract, randomAddress, resolveAddress, Send } from '@crestproject/crestproject';
+import { randomAddress, resolveAddress } from '@crestproject/crestproject';
 import {
+  redeemShares,
   approveInvestmentAmount,
   buyShares,
   ComptrollerLib,
   createNewFund,
   encodeArgs,
-  getCurrentFundDeployer,
+  kyberTakeOrderArgs,
+  callOnIntegrationArgs,
+  takeOrderSelector,
+  integrationManagerActionIds,
   KyberAdapter,
-  redeemShares,
+  Dispatcher,
+  FundDeployer,
+  MockKyberPriceSource,
 } from '@melonproject/melonjs';
-import { BigNumber, BigNumberish, providers, utils, Wallet } from 'ethers';
-import { createAccount, Deployment, fetchDeployment } from './utils/deployment';
-import { kyberTakeOrderArgs } from './utils/kyberTakeOrderArgs';
+import { BigNumber, providers, utils, Wallet } from 'ethers';
+import { createAccount, fetchDeployment, Deployment } from './utils/deployment';
 import { waitForSubgraph } from './utils/subgraph';
 import { fetchAssets } from './utils/subgraph-queries/fetchAssets';
 import { fetchFund } from './utils/subgraph-queries/fetchFund';
 import { fetchInvestment } from './utils/subgraph-queries/fetchInvestment';
 import { fetchRedemption } from './utils/subgraph-queries/fetchRedemption';
-import { callOnIntegrationArgs, integrationManagerActionIds, takeOrderSelector } from './utils/trading';
 
-export type MockKyberPriceSourceArgs = [_defaultRateAssets: AddressLike[], _wethAddress: AddressLike];
-
-export interface MockKyberPriceSource extends Contract<MockKyberPriceSource> {
-  // Shortcuts (using function name of first overload)
-  ETH_ADDRESS: Call<() => string, MockKyberPriceSource>;
-  MOCK_SLIPPAGE_RATE: Call<() => BigNumber, MockKyberPriceSource>;
-  RATE_PRECISION: Call<() => BigNumber, MockKyberPriceSource>;
-  WETH_ADDRESS: Call<() => string, MockKyberPriceSource>;
-  assetToAssetRate: Call<($$0: AddressLike, $$1: AddressLike) => BigNumber, MockKyberPriceSource>;
-  getExpectedRate: Call<
-    (_baseAsset: AddressLike, _quoteAsset: AddressLike, $$2: BigNumberish) => any[],
-    MockKyberPriceSource
-  >;
-  setRates: Send<
-    (_baseAssets: AddressLike[], _quoteAssets: AddressLike[], _rates: BigNumberish[]) => void,
-    MockKyberPriceSource
-  >;
-  specialAssetToDecimals: Call<($$0: AddressLike) => BigNumber, MockKyberPriceSource>;
-
-  // Explicit accessors (using full function signature)
-  'ETH_ADDRESS()': Call<() => string, MockKyberPriceSource>;
-  'MOCK_SLIPPAGE_RATE()': Call<() => BigNumber, MockKyberPriceSource>;
-  'RATE_PRECISION()': Call<() => BigNumber, MockKyberPriceSource>;
-  'WETH_ADDRESS()': Call<() => string, MockKyberPriceSource>;
-  'assetToAssetRate(address,address)': Call<($$0: AddressLike, $$1: AddressLike) => BigNumber, MockKyberPriceSource>;
-  'getExpectedRate(address,address,uint256)': Call<
-    (_baseAsset: AddressLike, _quoteAsset: AddressLike, $$2: BigNumberish) => any[],
-    MockKyberPriceSource
-  >;
-  'setRates(address[],address[],uint256[])': Send<
-    (_baseAssets: AddressLike[], _quoteAssets: AddressLike[], _rates: BigNumberish[]) => void,
-    MockKyberPriceSource
-  >;
-  'specialAssetToDecimals(address)': Call<($$0: AddressLike) => BigNumber, MockKyberPriceSource>;
-}
-
-// prettier-ignore
-export const MockKyberPriceSource = contract<MockKyberPriceSource, MockKyberPriceSourceArgs>()`
-  constructor(address[] _defaultRateAssets, address _wethAddress)
-  function ETH_ADDRESS() view returns (address)
-  function MOCK_SLIPPAGE_RATE() view returns (uint256)
-  function RATE_PRECISION() view returns (uint256)
-  function WETH_ADDRESS() view returns (address)
-  function assetToAssetRate(address, address) view returns (uint256)
-  function getExpectedRate(address _baseAsset, address _quoteAsset, uint256) view returns (uint256, uint256)
-  function setRates(address[] _baseAssets, address[] _quoteAssets, uint256[] _rates)
-  function specialAssetToDecimals(address) view returns (uint8)
-`;
 describe('Walkthrough', () => {
   let deployment: Deployment;
   let provider: providers.Provider;
@@ -85,10 +41,9 @@ describe('Walkthrough', () => {
   });
 
   it("should walkthrough a fund's lifecycle", async () => {
-    const fundDeployer = await getCurrentFundDeployer({
-      provider,
-      dispatcherAddress: deployment.dispatcher,
-    });
+    const dispatcher = new Dispatcher(deployment.dispatcher, provider);
+    const fundDeployerAddress = await dispatcher.getCurrentFundDeployer();
+    const fundDeployer = new FundDeployer(fundDeployerAddress);
 
     // create fund with fees
 

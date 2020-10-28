@@ -5,13 +5,16 @@ import {
   ComptrollerLib,
   createNewFund,
   encodeArgs,
-  getCurrentFundDeployer,
+  kyberTakeOrderArgs,
+  callOnIntegrationArgs,
+  takeOrderSelector,
+  integrationManagerActionIds,
+  Dispatcher,
+  FundDeployer,
   KyberAdapter,
 } from '@melonproject/melonjs';
 import { BigNumber, providers, utils, Wallet } from 'ethers';
 import { createAccount, Deployment, fetchDeployment } from './utils/deployment';
-import { kyberTakeOrderArgs } from './utils/kyberTakeOrderArgs';
-import { callOnIntegrationArgs, integrationManagerActionIds, takeOrderSelector } from './utils/trading';
 
 describe('Walkthrough', () => {
   let deployment: Deployment;
@@ -29,10 +32,9 @@ describe('Walkthrough', () => {
   });
 
   it("should walkthrough a fund's lifecycle", async () => {
-    const fundDeployer = await getCurrentFundDeployer({
-      provider,
-      dispatcherAddress: deployment.dispatcher,
-    });
+    const dispatcher = new Dispatcher(deployment.dispatcher, provider);
+    const fundDeployerAddress = await dispatcher.getCurrentFundDeployer();
+    const fundDeployer = new FundDeployer(fundDeployerAddress, provider);
 
     // create fund with fees
 
