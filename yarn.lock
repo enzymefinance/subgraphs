@@ -1067,20 +1067,21 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@melonproject/melonjs@^2.0.1-dev.534+1200ca25":
-  version "2.0.1-dev.534"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_1kfn3G/%40melonproject%2Fmelonjs-2.0.1-dev.534.tgz#1f9c1a55b01ad88762c016223dac5ebb8307fc50"
-  integrity sha1-H5waVbAa2IdiwBYiPaxeu4MH/FA=
+"@melonproject/melonjs@^2.0.1-dev.536+2a4dac3b":
+  version "2.0.1-dev.536"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_DdReY/%40melonproject%2Fmelonjs-2.0.1-dev.536.tgz#f640a8a11cbb5e9bc0e359a74600129d0044ba53"
+  integrity sha1-9kCooRy7XpvA41mnRgASnQBEulM=
   dependencies:
-    "@melonproject/protocol" "^2.0.0-dev.4983+6025b9fe"
-    "@melonproject/testutils" "^2.0.0-dev.4983+6025b9fe"
+    "@crestproject/crestproject" "^0.0.64"
+    "@melonproject/protocol" "^2.0.0-dev.4979+6ecd09af"
+    "@melonproject/testutils" "^2.0.0-dev.4979+6ecd09af"
 
-"@melonproject/protocol@^2.0.0-dev.4979+6ecd09af", "@melonproject/protocol@^2.0.0-dev.4983+6025b9fe":
+"@melonproject/protocol@^2.0.0-dev.4979+6ecd09af":
   version "2.0.0-dev.4979"
   resolved "https://npm.fury.io/melonproject/~/up/ver_2h5lz0/%40melonproject%2Fprotocol-2.0.0-dev.4979.tgz#9226f57dd49bd454f929ce1fbed09d2f63869406"
   integrity sha1-kib1fdSb1FT5Kc4fvtCdL2OGlAY=
 
-"@melonproject/testutils@^2.0.0-dev.4979+6ecd09af", "@melonproject/testutils@^2.0.0-dev.4983+6025b9fe":
+"@melonproject/testutils@^2.0.0-dev.4979+6ecd09af":
   version "2.0.0-dev.4979"
   resolved "https://npm.fury.io/melonproject/~/up/ver_tKvQJ/%40melonproject%2Ftestutils-2.0.0-dev.4979.tgz#0391f1c939e6db1a1c358260cf929b7442d6a45a"
   integrity sha1-A5HxyTnm2xocNYJgz5KbdELWpFo=

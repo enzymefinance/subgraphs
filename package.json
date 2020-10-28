@@ -26,7 +26,7 @@
     "@crestproject/jest": "^0.0.64",
     "@graphprotocol/graph-cli": "^0.19.0",
     "@graphprotocol/graph-ts": "^0.19.0",
-    "@melonproject/melonjs": "^2.0.1-dev.534+1200ca25",
+    "@melonproject/melonjs": "^2.0.1-dev.536+2a4dac3b",
     "@melonproject/protocol": "^2.0.0-dev.4979+6ecd09af",
     "@melonproject/testutils": "^2.0.0-dev.4979+6ecd09af",
     "@types/jest": "^26.0.15",
