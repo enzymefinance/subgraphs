@@ -13,6 +13,7 @@ import { BigNumber, providers, utils, Wallet } from 'ethers';
 import { createAccount, Deployment, fetchDeployment } from './utils/deployment';
 import { kyberTakeOrderArgs } from './utils/kyberTakeOrderArgs';
 import { waitForSubgraph } from './utils/subgraph';
+import { fetchAssets } from './utils/subgraph-queries/fetchAssets';
 import { fetchFund } from './utils/subgraph-queries/fetchFund';
 import { fetchInvestment } from './utils/subgraph-queries/fetchInvestment';
 import { fetchRedemption } from './utils/subgraph-queries/fetchRedemption';
@@ -156,29 +157,45 @@ describe('Walkthrough', () => {
 
     await waitForSubgraph(subgraphStatusEndpoint, boughtMoreShares.__receipt.blockNumber);
 
-    // trade
-    const takeOrderArgs = await kyberTakeOrderArgs({
-      incomingAsset: deployment.mlnToken,
-      minIncomingAssetAmount: utils.parseEther('0.000000001'),
-      outgoingAsset: deployment.wethToken,
-      outgoingAssetAmount: utils.parseEther('1'),
-    });
+    // trades
 
-    const callArgs = await callOnIntegrationArgs({
-      adapter: new KyberAdapter(await resolveAddress(deployment.kyberAdapter), signer),
-      selector: takeOrderSelector,
-      encodedCallArgs: takeOrderArgs,
-    });
+    const assets = await fetchAssets(subgraphApi);
 
-    const comptrollerProxy = new ComptrollerLib(await resolveAddress(fund.comptrollerProxy), signer);
-    const takeOrderTx = await comptrollerProxy.callOnExtension
-      .args(
-        await resolveAddress(deployment.integrationManager),
-        integrationManagerActionIds.CallOnIntegration,
-        callArgs,
-      )
-      .send(false);
+    const dai = assets.find((asset) => asset.symbol === 'DAI');
+    const mln = assets.find((asset) => asset.symbol === 'MLN');
+    const zrx = assets.find((asset) => asset.symbol === 'ZRX');
+    const knc = assets.find((asset) => asset.symbol === 'KNC');
 
-    await expect(takeOrderTx.wait()).resolves.toBeReceipt();
+    const tokens = [dai, mln, zrx, knc];
+
+    for (let token of tokens) {
+      if (!token) {
+        continue;
+      }
+
+      const takeOrderArgs = await kyberTakeOrderArgs({
+        incomingAsset: token.id,
+        minIncomingAssetAmount: utils.parseEther('0.000000001'),
+        outgoingAsset: deployment.wethToken,
+        outgoingAssetAmount: utils.parseEther('0.1'),
+      });
+
+      const callArgs = await callOnIntegrationArgs({
+        adapter: new KyberAdapter(await resolveAddress(deployment.kyberAdapter), signer),
+        selector: takeOrderSelector,
+        encodedCallArgs: takeOrderArgs,
+      });
+
+      const comptrollerProxy = new ComptrollerLib(await resolveAddress(fund.comptrollerProxy), signer);
+      const takeOrderTx = await comptrollerProxy.callOnExtension
+        .args(
+          await resolveAddress(deployment.integrationManager),
+          integrationManagerActionIds.CallOnIntegration,
+          callArgs,
+        )
+        .send(false);
+
+      await expect(takeOrderTx.wait()).resolves.toBeReceipt();
+    }
   });
 });
