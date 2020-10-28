@@ -1067,10 +1067,10 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@melonproject/melonjs@^2.0.1-dev.536+2a4dac3b":
-  version "2.0.1-dev.536"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_DdReY/%40melonproject%2Fmelonjs-2.0.1-dev.536.tgz#f640a8a11cbb5e9bc0e359a74600129d0044ba53"
-  integrity sha1-9kCooRy7XpvA41mnRgASnQBEulM=
+"@melonproject/melonjs@^2.0.1-dev.537+84e4101f":
+  version "2.0.1-dev.537"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_zd808/%40melonproject%2Fmelonjs-2.0.1-dev.537.tgz#a1371b2f2eb4102980f06cfad56cc64df07d99bd"
+  integrity sha1-oTcbLy60ECmA8Gz61WzGTfB9mb0=
   dependencies:
     "@crestproject/crestproject" "^0.0.64"
     "@melonproject/protocol" "^2.0.0-dev.4979+6ecd09af"
