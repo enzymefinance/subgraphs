@@ -110,9 +110,9 @@ dataSources:
           handler: handleAmguPaid
         - event: ComptrollerLibSet(address)
           handler: handleComptrollerLibSet
-        - event: ComptrollerProxyDeployed(indexed address,address,indexed address,uint256,bytes,bytes,indexed bool)
+        - event: ComptrollerProxyDeployed(indexed address,address,indexed address,uint256,address[],bytes,bytes,indexed bool)
           handler: handleComptrollerProxyDeployed
-        - event: NewFundCreated(indexed address,address,address,indexed address,string,indexed address,uint256,bytes,bytes)
+        - event: NewFundCreated(indexed address,address,address,indexed address,string,indexed address,uint256,address[],bytes,bytes)
           handler: handleNewFundCreated
         - event: ReleaseStatusSet(indexed uint8,indexed uint8)
           handler: handleReleaseStatusSet

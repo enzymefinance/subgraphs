@@ -119,6 +119,7 @@ type NewFundCreatedEvent implements Event & FundEvent @entity {
   fundName: String!
   denominationAsset: Asset!
   sharesActionTimelock: BigInt!
+  allowedBuySharesCallers: [String!]!
   feeManagerConfigData: String!
   policyManagerConfigData: String!
   transaction: Transaction!
@@ -134,6 +135,7 @@ type ComptrollerProxyDeployedEvent implements Event & FundEvent @entity {
   transaction: Transaction!
   denominationAsset: Asset!
   sharesActionTimelock: BigInt!
+  allowedBuySharesCallers: [String!]!
   feeManagerConfigData: String!
   policyManagerConfigData: String!
   forMigration: Boolean!
@@ -939,6 +941,7 @@ type Fund @entity {
   migrator: String
   denominationAsset: Asset!
   sharesActionTimelock: BigInt!
+  allowedBuySharesCallers: [String!]!
   trackedAssets: [Asset!]!
   policies: [PolicySetting!]! @derivedFrom(field: "fund")
   fees: [FeeSetting!]! @derivedFrom(field: "fund")

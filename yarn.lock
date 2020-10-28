@@ -1067,34 +1067,34 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@melonproject/melonjs@^2.0.1-dev.531+8fe3fc1d":
-  version "2.0.1-dev.531"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_2QTJb/%40melonproject%2Fmelonjs-2.0.1-dev.531.tgz#20c5fcc0f61b88f3ead008b37727be98d115fab0"
-  integrity sha1-IMX8wPYbiPPq0Aizdye+mNEV+rA=
+"@melonproject/melonjs@^2.0.1-dev.533+d8e1d084":
+  version "2.0.1-dev.533"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_262kV3/%40melonproject%2Fmelonjs-2.0.1-dev.533.tgz#7739c10ab9046ec3edc54d93d85434ce0854b41c"
+  integrity sha1-dznBCrkEbsPtxU2T2FQ0zghUtBw=
   dependencies:
-    "@melonproject/persistent" "^2.0.1-dev.4973+4c24c693"
-    "@melonproject/release" "^2.0.1-dev.4973+4c24c693"
-    "@melonproject/utils" "^2.0.1-dev.4973+4c24c693"
+    "@melonproject/persistent" "^2.0.1-dev.4975+5d4ece4c"
+    "@melonproject/release" "^2.0.1-dev.4975+5d4ece4c"
+    "@melonproject/utils" "^2.0.1-dev.4975+5d4ece4c"
 
-"@melonproject/persistent@^2.0.1-dev.4973+4c24c693":
-  version "2.0.1-dev.4973"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_1s4DqS/%40melonproject%2Fpersistent-2.0.1-dev.4973.tgz#0f59a977737ef66943f31d55da380f44694e4401"
-  integrity sha1-D1mpd3N+9mlD8x1V2jgPRGlORAE=
+"@melonproject/persistent@^2.0.1-dev.4975+5d4ece4c":
+  version "2.0.1-dev.4975"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_jVgtn/%40melonproject%2Fpersistent-2.0.1-dev.4975.tgz#c1178ea83c495613ec32e9bf0d3203b6ca5c4be2"
+  integrity sha1-wReOqDxJVhPsMum/DTIDtspcS+I=
   dependencies:
-    "@melonproject/utils" "^2.0.1-dev.4973+4c24c693"
+    "@melonproject/utils" "^2.0.1-dev.4975+5d4ece4c"
 
-"@melonproject/release@^2.0.1-dev.4973+4c24c693":
-  version "2.0.1-dev.4973"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_1Xfyhb/%40melonproject%2Frelease-2.0.1-dev.4973.tgz#48a7e22e10f0a4bf2c788c3f1f0d9c844f7114e6"
-  integrity sha1-SKfiLhDwpL8seIw/Hw2chE9xFOY=
+"@melonproject/release@^2.0.1-dev.4975+5d4ece4c":
+  version "2.0.1-dev.4975"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_hAnEQ/%40melonproject%2Frelease-2.0.1-dev.4975.tgz#44db25d1850c570e8189914678b9a46da26c9fbb"
+  integrity sha1-RNsl0YUMVw6BiZFGeLmkbaJsn7s=
   dependencies:
-    "@melonproject/persistent" "^2.0.1-dev.4973+4c24c693"
-    "@melonproject/utils" "^2.0.1-dev.4973+4c24c693"
+    "@melonproject/persistent" "^2.0.1-dev.4975+5d4ece4c"
+    "@melonproject/utils" "^2.0.1-dev.4975+5d4ece4c"
 
-"@melonproject/utils@^2.0.1-dev.4973+4c24c693":
-  version "2.0.1-dev.4973"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_1uYYev/%40melonproject%2Futils-2.0.1-dev.4973.tgz#46791a1e469349a8a465789795dba4f98967afcd"
-  integrity sha1-RnkaHkaTSaikZXiXlduk+Ylnr80=
+"@melonproject/utils@^2.0.1-dev.4975+5d4ece4c":
+  version "2.0.1-dev.4975"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_25zSnU/%40melonproject%2Futils-2.0.1-dev.4975.tgz#340d452ec5369ca4afdea0c36b945822eaacd154"
+  integrity sha1-NA1FLsU2nKSv3qDDa5RYIuqs0VQ=
 
 "@openzeppelin/contracts@^3.2.0":
   version "3.2.0"
@@ -4064,10 +4064,10 @@ graceful-fs@^4.1.10, graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.2.0,
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.4.tgz#2256bde14d3632958c465ebc96dc467ca07a29fb"
   integrity sha512-WjKPNJF79dtJAVniUlGGWHYGz2jWxT6VhN/4m1NdkbZ2nOsEF+cI1Edgql5zCRhs/VsQYRvrXctxktVXZUkixw==
 
-graphql-request@^3.2.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/graphql-request/-/graphql-request-3.2.0.tgz#d356bbea6dc496ab7969aa0892a0ba9ac938a347"
-  integrity sha512-s4zIfQsDkGUv5ECCkGq55Png7hJjFBV7PMIadB403VDaXv0T1RThPSRgZM1hiKgB420rOItkR5BDQ3vPvaAWqw==
+graphql-request@^3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/graphql-request/-/graphql-request-3.3.0.tgz#1b9003f34b73cd40d691803d2d422fde5c713af3"
+  integrity sha512-NHj65WSIUh8j7TBYgzWU0fqvLfxrqFDrLG8nZUh+IREZw50ljR6JXlXRkr52/fL/46wpItiQNLDrG+UZI+KmzA==
   dependencies:
     cross-fetch "^3.0.6"
     extract-files "^9.0.0"
@@ -5307,16 +5307,7 @@ jest-watcher@^26.6.1:
     jest-util "^26.6.1"
     string-length "^4.0.1"
 
-jest-worker@^26.5.0:
-  version "26.5.0"
-  resolved "https://registry.yarnpkg.com/jest-worker/-/jest-worker-26.5.0.tgz#87deee86dbbc5f98d9919e0dadf2c40e3152fa30"
-  integrity sha512-kTw66Dn4ZX7WpjZ7T/SUDgRhapFRKWmisVAF0Rv4Fu8SLFD7eLbqpLvbxVqYhSgaWa7I+bW7pHnbyfNsH6stug==
-  dependencies:
-    "@types/node" "*"
-    merge-stream "^2.0.0"
-    supports-color "^7.0.0"
-
-jest-worker@^26.6.1:
+jest-worker@^26.5.0, jest-worker@^26.6.1:
   version "26.6.1"
   resolved "https://registry.yarnpkg.com/jest-worker/-/jest-worker-26.6.1.tgz#c2ae8cde6802cc14056043f997469ec170d9c32a"
   integrity sha512-R5IE3qSGz+QynJx8y+ICEkdI2OJ3RJjRQVEyCcFAd3yVhQSEtquziPO29Mlzgn07LOVE8u8jhJ1FqcwegiXWOw==
