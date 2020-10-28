@@ -38,6 +38,7 @@
     "assemblyscript": "^0.17.0",
     "axios": "^0.21.0",
     "ethers": "^5.0.19",
+    "ethers-eip712": "^0.2.0",
     "glob": "^7.1.6",
     "graphql-request": "^3.3.0",
     "handlebars": "^4.7.6",
