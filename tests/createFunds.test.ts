@@ -20,8 +20,6 @@ describe('Walkthrough', () => {
 
   const testnetEndpoint = 'https://testnet.avantgarde.finance/graphql';
   const jsonRpcProvider = 'https://testnet.avantgarde.finance';
-  const subgraphStatusEndpoint = 'https://status.thegraph.testnet.avantgarde.finance/graphql';
-  const subgraphApi = 'https://thegraph.testnet.avantgarde.finance/subgraphs/name/melonproject/melon';
 
   beforeAll(async () => {
     const account = await createAccount(testnetEndpoint);
@@ -58,9 +56,9 @@ describe('Walkthrough', () => {
         fundOwner: signer.address,
         denominationAsset: deployment.wethToken,
         sharesActionTimelock: 1,
+        allowedBuySharesCallers: [],
         fundName: `WETH Fund with Trade (${new Date().toLocaleTimeString()})`,
         feeManagerConfigData,
-        // TODO: fix policyManagerConfigData
         policyManagerConfigData: '0x',
       };
 

@@ -56,7 +56,7 @@ export interface MockKyberPriceSource extends Contract<MockKyberPriceSource> {
 }
 
 // prettier-ignore
-export const MockKyberPriceSource = contract.fromSignatures<MockKyberPriceSource, MockKyberPriceSourceArgs>`
+export const MockKyberPriceSource = contract<MockKyberPriceSource, MockKyberPriceSourceArgs>()`
   constructor(address[] _defaultRateAssets, address _wethAddress)
   function ETH_ADDRESS() view returns (address)
   function MOCK_SLIPPAGE_RATE() view returns (uint256)
