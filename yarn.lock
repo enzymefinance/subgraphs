@@ -1067,46 +1067,25 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@melonproject/melonjs@^2.0.1-dev.533+d8e1d084":
-  version "2.0.1-dev.533"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_262kV3/%40melonproject%2Fmelonjs-2.0.1-dev.533.tgz#7739c10ab9046ec3edc54d93d85434ce0854b41c"
-  integrity sha1-dznBCrkEbsPtxU2T2FQ0zghUtBw=
-  dependencies:
-    "@melonproject/persistent" "^2.0.1-dev.4975+5d4ece4c"
-    "@melonproject/release" "^2.0.1-dev.4975+5d4ece4c"
-    "@melonproject/utils" "^2.0.1-dev.4975+5d4ece4c"
-
-"@melonproject/persistent@^2.0.1-dev.4975+5d4ece4c":
-  version "2.0.1-dev.4975"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_jVgtn/%40melonproject%2Fpersistent-2.0.1-dev.4975.tgz#c1178ea83c495613ec32e9bf0d3203b6ca5c4be2"
-  integrity sha1-wReOqDxJVhPsMum/DTIDtspcS+I=
-  dependencies:
-    "@melonproject/utils" "^2.0.1-dev.4975+5d4ece4c"
-
-"@melonproject/protocol@^2.0.0-dev.4983+6025b9fe":
-  version "2.0.0-dev.4983"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_1qKONx/%40melonproject%2Fprotocol-2.0.0-dev.4983.tgz#e74a3181103c723a11ec82cbf84f5188ae4cddf1"
-  integrity sha1-50oxgRA8cjoR7ILL+E9RiK5M3fE=
-
-"@melonproject/release@^2.0.1-dev.4975+5d4ece4c":
-  version "2.0.1-dev.4975"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_hAnEQ/%40melonproject%2Frelease-2.0.1-dev.4975.tgz#44db25d1850c570e8189914678b9a46da26c9fbb"
-  integrity sha1-RNsl0YUMVw6BiZFGeLmkbaJsn7s=
-  dependencies:
-    "@melonproject/persistent" "^2.0.1-dev.4975+5d4ece4c"
-    "@melonproject/utils" "^2.0.1-dev.4975+5d4ece4c"
-
-"@melonproject/testutils@^2.0.0-dev.4983+6025b9fe":
-  version "2.0.0-dev.4983"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_20r5cu/%40melonproject%2Ftestutils-2.0.0-dev.4983.tgz#0641858de1951ee2c88eab9f26fe6a45cb9cb1ae"
-  integrity sha1-BkGFjeGVHuLIjqufJv5qRcucsa4=
+"@melonproject/melonjs@^2.0.1-dev.534+1200ca25":
+  version "2.0.1-dev.534"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_1kfn3G/%40melonproject%2Fmelonjs-2.0.1-dev.534.tgz#1f9c1a55b01ad88762c016223dac5ebb8307fc50"
+  integrity sha1-H5waVbAa2IdiwBYiPaxeu4MH/FA=
   dependencies:
     "@melonproject/protocol" "^2.0.0-dev.4983+6025b9fe"
+    "@melonproject/testutils" "^2.0.0-dev.4983+6025b9fe"
 
-"@melonproject/utils@^2.0.1-dev.4975+5d4ece4c":
-  version "2.0.1-dev.4975"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_25zSnU/%40melonproject%2Futils-2.0.1-dev.4975.tgz#340d452ec5369ca4afdea0c36b945822eaacd154"
-  integrity sha1-NA1FLsU2nKSv3qDDa5RYIuqs0VQ=
+"@melonproject/protocol@^2.0.0-dev.4979+6ecd09af", "@melonproject/protocol@^2.0.0-dev.4983+6025b9fe":
+  version "2.0.0-dev.4979"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_2h5lz0/%40melonproject%2Fprotocol-2.0.0-dev.4979.tgz#9226f57dd49bd454f929ce1fbed09d2f63869406"
+  integrity sha1-kib1fdSb1FT5Kc4fvtCdL2OGlAY=
+
+"@melonproject/testutils@^2.0.0-dev.4979+6ecd09af", "@melonproject/testutils@^2.0.0-dev.4983+6025b9fe":
+  version "2.0.0-dev.4979"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_tKvQJ/%40melonproject%2Ftestutils-2.0.0-dev.4979.tgz#0391f1c939e6db1a1c358260cf929b7442d6a45a"
+  integrity sha1-A5HxyTnm2xocNYJgz5KbdELWpFo=
+  dependencies:
+    "@melonproject/protocol" "^2.0.0-dev.4979+6ecd09af"
 
 "@openzeppelin/contracts@^3.2.0":
   version "3.2.0"
