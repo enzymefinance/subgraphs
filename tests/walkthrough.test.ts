@@ -1,4 +1,4 @@
-import { randomAddress, resolveAddress } from '@crestproject/crestproject';
+import { AddressLike, Call, contract, Contract, randomAddress, resolveAddress, Send } from '@crestproject/crestproject';
 import {
   approveInvestmentAmount,
   buyShares,
@@ -9,7 +9,7 @@ import {
   KyberAdapter,
   redeemShares,
 } from '@melonproject/melonjs';
-import { BigNumber, providers, utils, Wallet } from 'ethers';
+import { BigNumber, BigNumberish, providers, utils, Wallet } from 'ethers';
 import { createAccount, Deployment, fetchDeployment } from './utils/deployment';
 import { kyberTakeOrderArgs } from './utils/kyberTakeOrderArgs';
 import { waitForSubgraph } from './utils/subgraph';
@@ -19,6 +19,54 @@ import { fetchInvestment } from './utils/subgraph-queries/fetchInvestment';
 import { fetchRedemption } from './utils/subgraph-queries/fetchRedemption';
 import { callOnIntegrationArgs, integrationManagerActionIds, takeOrderSelector } from './utils/trading';
 
+export type MockKyberPriceSourceArgs = [_defaultRateAssets: AddressLike[], _wethAddress: AddressLike];
+
+export interface MockKyberPriceSource extends Contract<MockKyberPriceSource> {
+  // Shortcuts (using function name of first overload)
+  ETH_ADDRESS: Call<() => string, MockKyberPriceSource>;
+  MOCK_SLIPPAGE_RATE: Call<() => BigNumber, MockKyberPriceSource>;
+  RATE_PRECISION: Call<() => BigNumber, MockKyberPriceSource>;
+  WETH_ADDRESS: Call<() => string, MockKyberPriceSource>;
+  assetToAssetRate: Call<($$0: AddressLike, $$1: AddressLike) => BigNumber, MockKyberPriceSource>;
+  getExpectedRate: Call<
+    (_baseAsset: AddressLike, _quoteAsset: AddressLike, $$2: BigNumberish) => any[],
+    MockKyberPriceSource
+  >;
+  setRates: Send<
+    (_baseAssets: AddressLike[], _quoteAssets: AddressLike[], _rates: BigNumberish[]) => void,
+    MockKyberPriceSource
+  >;
+  specialAssetToDecimals: Call<($$0: AddressLike) => BigNumber, MockKyberPriceSource>;
+
+  // Explicit accessors (using full function signature)
+  'ETH_ADDRESS()': Call<() => string, MockKyberPriceSource>;
+  'MOCK_SLIPPAGE_RATE()': Call<() => BigNumber, MockKyberPriceSource>;
+  'RATE_PRECISION()': Call<() => BigNumber, MockKyberPriceSource>;
+  'WETH_ADDRESS()': Call<() => string, MockKyberPriceSource>;
+  'assetToAssetRate(address,address)': Call<($$0: AddressLike, $$1: AddressLike) => BigNumber, MockKyberPriceSource>;
+  'getExpectedRate(address,address,uint256)': Call<
+    (_baseAsset: AddressLike, _quoteAsset: AddressLike, $$2: BigNumberish) => any[],
+    MockKyberPriceSource
+  >;
+  'setRates(address[],address[],uint256[])': Send<
+    (_baseAssets: AddressLike[], _quoteAssets: AddressLike[], _rates: BigNumberish[]) => void,
+    MockKyberPriceSource
+  >;
+  'specialAssetToDecimals(address)': Call<($$0: AddressLike) => BigNumber, MockKyberPriceSource>;
+}
+
+// prettier-ignore
+export const MockKyberPriceSource = contract.fromSignatures<MockKyberPriceSource, MockKyberPriceSourceArgs>`
+  constructor(address[] _defaultRateAssets, address _wethAddress)
+  function ETH_ADDRESS() view returns (address)
+  function MOCK_SLIPPAGE_RATE() view returns (uint256)
+  function RATE_PRECISION() view returns (uint256)
+  function WETH_ADDRESS() view returns (address)
+  function assetToAssetRate(address, address) view returns (uint256)
+  function getExpectedRate(address _baseAsset, address _quoteAsset, uint256) view returns (uint256, uint256)
+  function setRates(address[] _baseAssets, address[] _quoteAssets, uint256[] _rates)
+  function specialAssetToDecimals(address) view returns (uint8)
+`;
 describe('Walkthrough', () => {
   let deployment: Deployment;
   let provider: providers.Provider;
@@ -136,7 +184,7 @@ describe('Walkthrough', () => {
 
     expect(sharePrice).toEqual(utils.parseEther('1'));
 
-    // // redeem shares
+    // redeem shares
     const redeemSharesArgs = {
       signer,
       comptrollerProxy: fund.comptrollerProxy,
@@ -172,6 +220,24 @@ describe('Walkthrough', () => {
       if (!token) {
         continue;
       }
+
+      const kyberEthAddress = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE';
+
+      // // set price
+      const kyberIntegratee = new MockKyberPriceSource(deployment.kyberIntegratee, signer);
+      const setRatesTx = await kyberIntegratee.setRates
+        .args(
+          [token.id, kyberEthAddress],
+          [kyberEthAddress, token.id],
+          [utils.parseEther('0.5'), utils.parseEther('2')],
+        )
+        .send(false);
+
+      await expect(setRatesTx.wait()).resolves.toBeReceipt();
+
+      // const rate = await kyberIntegratee.assetToAssetRate(deployment.wethToken, token.id);
+
+      // console.log(utils.formatEther(rate));
 
       const takeOrderArgs = await kyberTakeOrderArgs({
         incomingAsset: token.id,
