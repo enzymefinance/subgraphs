@@ -1,22 +1,22 @@
-import { randomAddress, resolveAddress } from '@crestproject/crestproject';
+import { resolveAddress } from '@crestproject/crestproject';
 import {
-  redeemShares,
-  approveInvestmentAmount,
-  buyShares,
   ComptrollerLib,
-  createNewFund,
-  encodeArgs,
-  kyberTakeOrderArgs,
-  callOnIntegrationArgs,
-  takeOrderSelector,
-  integrationManagerActionIds,
-  KyberAdapter,
   Dispatcher,
   FundDeployer,
+  KyberAdapter,
   MockKyberPriceSource,
-} from '@melonproject/melonjs';
+  StandardToken,
+} from '@melonproject/protocol';
+import {
+  callOnIntegrationArgs,
+  createNewFund,
+  encodeArgs,
+  integrationManagerActionIds,
+  kyberTakeOrderArgs,
+  takeOrderSelector,
+} from '@melonproject/testutils';
 import { BigNumber, providers, utils, Wallet } from 'ethers';
-import { createAccount, fetchDeployment, Deployment } from './utils/deployment';
+import { createAccount, Deployment, fetchDeployment } from './utils/deployment';
 import { waitForSubgraph } from './utils/subgraph';
 import { fetchAssets } from './utils/subgraph-queries/fetchAssets';
 import { fetchFund } from './utils/subgraph-queries/fetchFund';
@@ -43,7 +43,8 @@ describe('Walkthrough', () => {
   it("should walkthrough a fund's lifecycle", async () => {
     const dispatcher = new Dispatcher(deployment.dispatcher, provider);
     const fundDeployerAddress = await dispatcher.getCurrentFundDeployer();
-    const fundDeployer = new FundDeployer(fundDeployerAddress);
+    const fundDeployer = new FundDeployer(fundDeployerAddress, signer);
+    const denominationAsset = new StandardToken(deployment.wethToken, signer);
 
     // create fund with fees
 
@@ -72,93 +73,84 @@ describe('Walkthrough', () => {
     const newFundArgs = {
       signer,
       fundDeployer,
-      fundOwner: signer.address,
-      denominationAsset: deployment.wethToken,
+      denominationAsset,
       sharesActionTimelock: 1,
+      fundOwner: signer.address,
       allowedBuySharesCallers: [],
       fundName: 'My Super Fund',
       feeManagerConfigData,
       policyManagerConfigData,
     };
 
-    const createNewFundTx = await createNewFund(newFundArgs);
-    const fund = await createNewFundTx();
-    expect(fund.fundName).toBe(newFundArgs.fundName);
+    const { comptrollerProxy, newFundTx, vaultProxy } = await createNewFund(newFundArgs);
 
-    await waitForSubgraph(subgraphStatusEndpoint, fund.__receipt.blockNumber);
-    const subgraphFund = await fetchFund(subgraphApi, fund.vaultProxy.toLowerCase(), fund.__receipt.blockNumber);
+    await waitForSubgraph(subgraphStatusEndpoint, (await newFundTx).blockNumber);
+    const subgraphFund = await fetchFund(subgraphApi, vaultProxy.address.toLowerCase(), (await newFundTx).blockNumber);
 
     expect(subgraphFund.name).toBe(newFundArgs.fundName);
 
-    // approve ERC20 for contract
-    const approveArgs = {
-      signer,
-      comptrollerProxy: fund.comptrollerProxy,
-      denominationAsset: deployment.wethToken,
-      investmentAmount: utils.parseEther('20'),
-    };
-
-    const approveInvestmentTx = await approveInvestmentAmount(approveArgs);
-    const approved = await approveInvestmentTx();
-
-    // owner: '0x2225FaD5893A95CCa25D4a001c3336851246ca88',
-    // spender: '0x6E9C3A9cC1Cc1F7464D8C66a121699224E0d8323',
-    // value: BigNumber { _hex: '0x0de0b6b3a7640000', _isBigNumber: true },
-    expect(approved.owner).toBe(await resolveAddress(signer));
-    expect(approved.spender).toBe(await resolveAddress(approveArgs.comptrollerProxy));
-    expect(BigNumber.from(approved.value)).toEqual(approveArgs.investmentAmount);
+    const comptroller = new ComptrollerLib(comptrollerProxy.address, signer);
 
     // buy shares
+    const approveAmount = 10;
     const sharesToBuy = 1;
     const buySharesArgs = {
+      comptroller,
       signer,
-      comptrollerProxy: fund.comptrollerProxy,
       buyer: signer.address,
-      denominationAsset: deployment.wethToken,
+      denominationAsset,
       investmentAmount: utils.parseEther(sharesToBuy.toString()),
-      minSharesQuantity: utils.parseEther(sharesToBuy.toString()),
+      amguValue: utils.parseEther('1'),
+      minSharesAmount: utils.parseEther(sharesToBuy.toString()),
     };
 
-    const buySharesTx = await buyShares(buySharesArgs);
-    const bought = await buySharesTx();
+    await denominationAsset.approve.args(comptrollerProxy, utils.parseEther(approveAmount.toString())).send();
 
-    await waitForSubgraph(subgraphStatusEndpoint, bought.__receipt.blockNumber);
+    const bought = await comptroller.buyShares
+      .args(buySharesArgs.buyer, buySharesArgs.investmentAmount, buySharesArgs.minSharesAmount)
+      .value(buySharesArgs.amguValue)
+      .send();
 
-    const investmentId = `${fund.vaultProxy.toLowerCase()}/${buySharesArgs.buyer.toLowerCase()}`;
-    const subgraphInvestment = await fetchInvestment(subgraphApi, investmentId, bought.__receipt.blockNumber);
+    await waitForSubgraph(subgraphStatusEndpoint, bought.blockNumber);
+
+    const investmentId = `${vaultProxy.address.toLowerCase()}/${buySharesArgs.buyer.toLowerCase()}`;
+    const subgraphInvestment = await fetchInvestment(subgraphApi, investmentId, bought.blockNumber);
 
     expect(subgraphInvestment.shares).toEqual(sharesToBuy.toString());
     expect(subgraphInvestment.investor.investor).toBe(true);
 
     // get share price
-    const ct = new ComptrollerLib(fund.comptrollerProxy, provider);
-    const sharePrice = await ct.buyShares
-      .args(randomAddress(), utils.parseEther('1'), utils.parseEther('1'))
-      .from(signer.address)
-      .call();
 
-    expect(sharePrice).toEqual(utils.parseEther('1'));
+    // const sharePrice = await comptroller.buyShares
+    //   .args(signer.address, utils.parseEther('1'), utils.parseEther('1'))
+    //   .from(signer.address)
+    //   .call();
+
+    // expect(sharePrice).toEqual(utils.parseEther('1'));
 
     // redeem shares
     const redeemSharesArgs = {
       signer,
-      comptrollerProxy: fund.comptrollerProxy,
+      comptrollerProxy,
     };
 
-    const redeemSharesTx = await redeemShares(redeemSharesArgs);
-    const redeemed = await redeemSharesTx();
+    const redeemed = await comptroller.redeemShares.args().send();
 
-    await waitForSubgraph(subgraphStatusEndpoint, redeemed.__receipt.blockNumber);
+    await waitForSubgraph(subgraphStatusEndpoint, redeemed.blockNumber);
 
-    const transactionHash = redeemed.__receipt.transactionHash;
-    const subgraphRedemption = await fetchRedemption(subgraphApi, transactionHash, redeemed.__receipt.blockNumber);
+    const transactionHash = redeemed.transactionHash;
+    const subgraphRedemption = await fetchRedemption(subgraphApi, transactionHash, redeemed.blockNumber);
     expect(subgraphRedemption.transaction.id).toEqual(transactionHash);
 
     // buy more shares
-    const buyMoreSharesTx = await buyShares(buySharesArgs);
-    const boughtMoreShares = await buyMoreSharesTx();
+    await denominationAsset.approve.args(comptrollerProxy, buySharesArgs.investmentAmount).send();
 
-    await waitForSubgraph(subgraphStatusEndpoint, boughtMoreShares.__receipt.blockNumber);
+    const boughtMoreShares = await comptroller.buyShares
+      .args(buySharesArgs.buyer, buySharesArgs.investmentAmount, buySharesArgs.minSharesAmount)
+      .value(buySharesArgs.amguValue)
+      .send();
+
+    await waitForSubgraph(subgraphStatusEndpoint, boughtMoreShares.blockNumber);
 
     // trades
 
@@ -207,8 +199,7 @@ describe('Walkthrough', () => {
         encodedCallArgs: takeOrderArgs,
       });
 
-      const comptrollerProxy = new ComptrollerLib(await resolveAddress(fund.comptrollerProxy), signer);
-      const takeOrderTx = await comptrollerProxy.callOnExtension
+      const takeOrderTx = await comptroller.callOnExtension
         .args(
           await resolveAddress(deployment.integrationManager),
           integrationManagerActionIds.CallOnIntegration,

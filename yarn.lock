@@ -1067,26 +1067,17 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@melonproject/melonjs@^2.0.1-dev.537+84e4101f":
-  version "2.0.1-dev.537"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_zd808/%40melonproject%2Fmelonjs-2.0.1-dev.537.tgz#a1371b2f2eb4102980f06cfad56cc64df07d99bd"
-  integrity sha1-oTcbLy60ECmA8Gz61WzGTfB9mb0=
-  dependencies:
-    "@crestproject/crestproject" "^0.0.64"
-    "@melonproject/protocol" "^2.0.0-dev.4979+6ecd09af"
-    "@melonproject/testutils" "^2.0.0-dev.4979+6ecd09af"
+"@melonproject/protocol@^2.0.0-dev.4980+4c6bfbe7":
+  version "2.0.0-dev.4980"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_E5nQs/%40melonproject%2Fprotocol-2.0.0-dev.4980.tgz#68d8ba9cc92c07537a8bc723048b0c0a511d86a2"
+  integrity sha1-aNi6nMksB1N6i8cjBIsMClEdhqI=
 
-"@melonproject/protocol@^2.0.0-dev.4979+6ecd09af":
-  version "2.0.0-dev.4979"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_iW9qs/%40melonproject%2Fprotocol-2.0.0-dev.4979.tgz#d06211f4eff7a5aeecec4cd515f7946b1732247e"
-  integrity sha1-0GIR9O/3pa7s7EzVFfeUaxcyJH4=
-
-"@melonproject/testutils@^2.0.0-dev.4979+6ecd09af":
-  version "2.0.0-dev.4979"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_fU6Z1/%40melonproject%2Ftestutils-2.0.0-dev.4979.tgz#1018b467d4c4d867c386289054db7b0b06e83651"
-  integrity sha1-EBi0Z9TE2GfDhiiQVNt7CwboNlE=
+"@melonproject/testutils@^2.0.0-dev.4980+4c6bfbe7":
+  version "2.0.0-dev.4980"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_6DGLb/%40melonproject%2Ftestutils-2.0.0-dev.4980.tgz#a230818e5d613194e3842ea4a7b8bf49f276f2c0"
+  integrity sha1-ojCBjl1hMZTjhC6kp7i/SfJ28sA=
   dependencies:
-    "@melonproject/protocol" "^2.0.0-dev.4979+6ecd09af"
+    "@melonproject/protocol" "^2.0.0-dev.4980+4c6bfbe7"
 
 "@openzeppelin/contracts@^3.2.0":
   version "3.2.0"
@@ -1387,10 +1378,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.12.62.tgz#733923d73669188d35950253dd18a21570085d2b"
   integrity sha512-qAfo81CsD7yQIM9mVyh6B/U47li5g7cfpVQEDMfQeF8pSZVwzbhwU3crc0qG4DmpsebpJPR49AKOExQyJ05Cpg==
 
-"@types/node@^14.14.5":
-  version "14.14.5"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.5.tgz#e92d3b8f76583efa26c1a63a21c9d3c1143daa29"
-  integrity sha512-H5Wn24s/ZOukBmDn03nnGTp18A60ny9AmCwnEcgJiTgSGsCO7k+NWP7zjCCbhlcnVCoI+co52dUAt9GMhOSULw==
+"@types/node@^14.14.6":
+  version "14.14.6"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.6.tgz#146d3da57b3c636cc0d1769396ce1cfa8991147f"
+  integrity sha512-6QlRuqsQ/Ox/aJEQWBEJG7A9+u7oSYl3mem/K8IzxXG/kAGbV1YPD9Bg9Zw3vyxC/YP+zONKwy8hGkSt1jxFMw==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"
@@ -1711,12 +1702,12 @@ asn1@~0.2.3:
   dependencies:
     safer-buffer "~2.1.0"
 
-assemblyscript@^0.17.0:
-  version "0.17.0"
-  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.17.0.tgz#a812184a43796baec2613616ddd61f0eeb224be4"
-  integrity sha512-XHk/O25pUyX/XMvwiOVFJ/YAXrGCk6O090+KiDvVim9Ltl3s2+c5l4XGny1TrAa2Wf9nW44f0iEjgAwDfsct0Q==
+assemblyscript@^0.17.1:
+  version "0.17.1"
+  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.17.1.tgz#0eb10389846ff592d3893c816d5460d735392473"
+  integrity sha512-0cBGno+GYlY871s82WXhA5peRJxktGchJ7mdBDhf7mwoe4bPNuBrYYl2jRcXs8nQA/eQHNUiCJQ5dL61zQMXjw==
   dependencies:
-    binaryen "98.0.0-nightly.20201025"
+    binaryen "98.0.0-nightly.20201027"
     long "^4.0.0"
 
 "assemblyscript@https://github.com/AssemblyScript/assemblyscript#36040d5b5312f19a025782b5e36663823494c2f3":
@@ -1918,10 +1909,10 @@ binaryen@77.0.0-nightly.20190407:
   resolved "https://registry.yarnpkg.com/binaryen/-/binaryen-77.0.0-nightly.20190407.tgz#fbe4f8ba0d6bd0809a84eb519d2d5b5ddff3a7d1"
   integrity sha512-1mxYNvQ0xywMe582K7V6Vo2zzhZZxMTeGHH8aE/+/AND8f64D8Q1GThVY3RVRwGY/4p+p95ccw9Xbw2ovFXRIg==
 
-binaryen@98.0.0-nightly.20201025:
-  version "98.0.0-nightly.20201025"
-  resolved "https://registry.yarnpkg.com/binaryen/-/binaryen-98.0.0-nightly.20201025.tgz#2ab9aa7dd248f3fca3e26ac617626dd6407ec5fe"
-  integrity sha512-jS6VMHF2mRKMBy79DhMDX+j1ph+TahHhLazkybvr90WkXBa80ydWgLTZLe3mxms1iOHJYqFv84TrKCrlFiwzjA==
+binaryen@98.0.0-nightly.20201027:
+  version "98.0.0-nightly.20201027"
+  resolved "https://registry.yarnpkg.com/binaryen/-/binaryen-98.0.0-nightly.20201027.tgz#51ac7b46ee8a4cec9564b3699eadfba83e8b65fe"
+  integrity sha512-00/IHlumty/5XzJsdaMudayXofJiDb3Ytqqdn7OJBM0L9SuVg0o0xu4l93NVf+hO6jkgXNE1t+LdB0gOdeLdjA==
 
 bindings@^1.5.0:
   version "1.5.0"

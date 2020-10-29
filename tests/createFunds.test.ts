@@ -1,18 +1,13 @@
 import { resolveAddress } from '@crestproject/ethers';
+import { ComptrollerLib, Dispatcher, FundDeployer, KyberAdapter, StandardToken } from '@melonproject/protocol';
 import {
-  approveInvestmentAmount,
-  buyShares,
-  ComptrollerLib,
+  callOnIntegrationArgs,
   createNewFund,
   encodeArgs,
-  kyberTakeOrderArgs,
-  callOnIntegrationArgs,
-  takeOrderSelector,
   integrationManagerActionIds,
-  Dispatcher,
-  FundDeployer,
-  KyberAdapter,
-} from '@melonproject/melonjs';
+  kyberTakeOrderArgs,
+  takeOrderSelector,
+} from '@melonproject/testutils';
 import { BigNumber, providers, utils, Wallet } from 'ethers';
 import { createAccount, Deployment, fetchDeployment } from './utils/deployment';
 
@@ -35,6 +30,7 @@ describe('Walkthrough', () => {
     const dispatcher = new Dispatcher(deployment.dispatcher, provider);
     const fundDeployerAddress = await dispatcher.getCurrentFundDeployer();
     const fundDeployer = new FundDeployer(fundDeployerAddress, provider);
+    const denominationAsset = new StandardToken(deployment.wethToken, signer);
 
     // create fund with fees
 
@@ -56,7 +52,7 @@ describe('Walkthrough', () => {
         signer,
         fundDeployer,
         fundOwner: signer.address,
-        denominationAsset: deployment.wethToken,
+        denominationAsset,
         sharesActionTimelock: 1,
         allowedBuySharesCallers: [],
         fundName: `WETH Fund with Trade (${new Date().toLocaleTimeString()})`,
@@ -64,38 +60,31 @@ describe('Walkthrough', () => {
         policyManagerConfigData: '0x',
       };
 
-      const createNewFundTx = await createNewFund(newFundArgs);
-      const fund = await createNewFundTx();
-      expect(fund.fundName).toBe(newFundArgs.fundName);
+      const createNewFundResult = await createNewFund(newFundArgs);
+      await expect(createNewFundResult.newFundTx).resolves.toBeReceipt();
+
+      const comptroller = new ComptrollerLib(createNewFundResult.comptrollerProxy.address, signer);
 
       // approve ERC20 for contract
-      const approveArgs = {
-        signer,
-        comptrollerProxy: fund.comptrollerProxy,
-        denominationAsset: deployment.wethToken,
-        investmentAmount: utils.parseEther('20'),
-      };
-
-      const approveInvestmentTx = await approveInvestmentAmount(approveArgs);
-      const approved = await approveInvestmentTx();
-
-      expect(approved.owner).toBe(await resolveAddress(signer));
-      expect(approved.spender).toBe(await resolveAddress(approveArgs.comptrollerProxy));
-      expect(BigNumber.from(approved.value)).toEqual(approveArgs.investmentAmount);
+      await denominationAsset.approve.args(comptroller.address, utils.parseEther('20')).send();
 
       // buy shares
       const sharesToBuy = 1;
       const buySharesArgs = {
         signer,
-        comptrollerProxy: fund.comptrollerProxy,
+        comptrollerProxy: comptroller,
         buyer: signer.address,
-        denominationAsset: deployment.wethToken,
+        denominationAsset,
         investmentAmount: utils.parseEther(sharesToBuy.toString()),
-        minSharesQuantity: utils.parseEther(sharesToBuy.toString()),
+        minSharesAmount: utils.parseEther(sharesToBuy.toString()),
+        amguValue: utils.parseEther('1'),
       };
 
-      const buySharesTx = await buyShares(buySharesArgs);
-      const bought = await buySharesTx();
+      const bought = await comptroller.buyShares
+        .args(buySharesArgs.buyer, buySharesArgs.investmentAmount, buySharesArgs.minSharesAmount)
+        .value(buySharesArgs.amguValue)
+        .send();
+      await expect(bought).toBeReceipt();
 
       // trade
       const takeOrderArgs = await kyberTakeOrderArgs({
@@ -111,7 +100,7 @@ describe('Walkthrough', () => {
         encodedCallArgs: takeOrderArgs,
       });
 
-      const comptrollerProxy = new ComptrollerLib(await resolveAddress(fund.comptrollerProxy), signer);
+      const comptrollerProxy = new ComptrollerLib(comptroller.address, signer);
       const takeOrderTx = await comptrollerProxy.callOnExtension
         .args(
           await resolveAddress(deployment.integrationManager),
