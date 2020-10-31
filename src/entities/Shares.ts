@@ -1,6 +1,6 @@
 import { Address, BigDecimal, Entity, ethereum } from '@graphprotocol/graph-ts';
 import { Fund, Share } from '../generated/schema';
-import { ERC20Contract } from '../generated/ERC20Contract';
+import { StandardERC20Contract } from '../generated/StandardERC20Contract';
 import { arrayUnique } from '../utils/arrayUnique';
 import { logCritical } from '../utils/logCritical';
 import { toBigDecimal } from '../utils/toBigDecimal';
@@ -59,7 +59,7 @@ export function useShares(id: string): Share {
 
 export function trackFundShares(fund: Fund, event: ethereum.Event, cause: Entity): Share {
   let fundAddress = Address.fromString(fund.id);
-  let contract = ERC20Contract.bind(fundAddress);
+  let contract = StandardERC20Contract.bind(fundAddress);
   let totalSupply = contract.totalSupply();
   let outstanding = contract.balanceOf(fundAddress);
 

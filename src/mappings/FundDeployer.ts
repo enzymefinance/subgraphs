@@ -84,8 +84,8 @@ export function handleComptrollerProxyDeployed(event: ComptrollerProxyDeployed):
   comptrollerProxyDeployment.allowedBuySharesCallers = event.params.allowedBuySharesCallers.map<string>((caller) =>
     caller.toHex(),
   );
-  comptrollerProxyDeployment.feeManagerConfigData = event.params.feeManagerConfigData.toString();
-  comptrollerProxyDeployment.policyManagerConfigData = event.params.policyManagerConfigData.toString();
+  comptrollerProxyDeployment.feeManagerConfigData = event.params.feeManagerConfigData.toHexString();
+  comptrollerProxyDeployment.policyManagerConfigData = event.params.policyManagerConfigData.toHexString();
   comptrollerProxyDeployment.forMigration = event.params.forMigration;
   comptrollerProxyDeployment.save();
 }

@@ -70,6 +70,11 @@ export function trackUsdQuotedAssetPrices(timestamp: BigInt): void {
 }
 
 export function fetchAssetPrice(asset: Asset): BigDecimal {
+  // TODO: Fix this. Currently failing (probably because of missing Compound token prices)
+  if (asset.type == 'DERIVATIVE' && asset.symbol == '') {
+    return BigDecimal.fromString('1');
+  }
+
   // Whenever a new (derivative) asset is registered, we need to fetch its current price immediately.
   let contract = ValueInterpreterContract.bind(valueInterpreterAddress);
 

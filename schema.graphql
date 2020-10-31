@@ -855,16 +855,14 @@ type PriceFeedSetEvent implements Event & NetworkEvent @entity {
   prevPriceFeed: String!
 }
 
-type PrimitiveSetEvent implements Event & NetworkEvent @entity {
+type AggregatorUpdatedEvent implements Event & NetworkEvent @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
   primitive: Asset!
-  nextPriceFeed: String!
-  nextRateAsset: Int!
-  prevPriceFeed: String!
-  prevRateAsset: Int!
+  prevAggregator: String!
+  nextAggregator: String!
 }
 
 type EthUsdAggregatorSetEvent implements Event & NetworkEvent @entity {
@@ -874,6 +872,24 @@ type EthUsdAggregatorSetEvent implements Event & NetworkEvent @entity {
   transaction: Transaction!
   prevEthUsdAggregator: String!
   nextEthUsdAggregator: String!
+}
+
+type PrimitiveAddedEvent implements Event & NetworkEvent @entity {
+  id: ID!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  primitive: Asset!
+  priceFeed: String!
+  rateAsset: Int!
+}
+
+type PrimitiveRemovedEvent implements Event & NetworkEvent @entity {
+  id: ID!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  primitive: Asset!
 }
 
 type StaleRateThresholdSetEvent implements Event & NetworkEvent @entity {

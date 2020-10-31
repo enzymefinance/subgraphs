@@ -83,8 +83,8 @@ describe('Walkthrough', () => {
       const bought = await comptroller.buyShares
         .args(buySharesArgs.buyer, buySharesArgs.investmentAmount, buySharesArgs.minSharesAmount)
         .value(buySharesArgs.amguValue)
-        .send();
-      await expect(bought).toBeReceipt();
+        .send(false);
+      await expect(bought.wait()).resolves.toBeReceipt();
 
       // trade
       const takeOrderArgs = await kyberTakeOrderArgs({

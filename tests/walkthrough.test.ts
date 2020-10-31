@@ -1,4 +1,4 @@
-import { resolveAddress } from '@crestproject/crestproject';
+import { randomAddress, resolveAddress } from '@crestproject/crestproject';
 import {
   ComptrollerLib,
   Dispatcher,
@@ -8,8 +8,8 @@ import {
   StandardToken,
 } from '@melonproject/protocol';
 import {
+  assertEvent,
   callOnIntegrationArgs,
-  createNewFund,
   encodeArgs,
   integrationManagerActionIds,
   kyberTakeOrderArgs,
@@ -64,32 +64,86 @@ describe('Walkthrough', () => {
     const maxConcentration = deployment.maxConcentration;
     const maxConcentrationSettings = await encodeArgs(['uint256'], [utils.parseEther('1')]);
 
-    const policies = [maxConcentration];
-    const policiesSettingsData = [maxConcentrationSettings];
+    const adapterBlacklist = deployment.adapterBlacklist;
+    const adapterBlacklistSettings = await encodeArgs(['address[]'], [[deployment.chaiAdapter]]);
+
+    const adapterWhitelist = deployment.adapterWhitelist;
+    const adapterWhitelistSettings = await encodeArgs(['address[]'], [[deployment.kyberAdapter]]);
+
+    // const assetBlacklist = deployment.assetBlacklist;
+    // const assetBlacklistSettings = await encodeArgs(['address[]'], [[deployment.mlnToken]]);
+
+    // const assetWhitelist = deployment.assetWhitelist;
+    // const assetWhitelistSettings = await encodeArgs(['address[]'], [[deployment.wethToken, deployment.mlnToken]]);
+
+    const investorWhitelist = deployment.investorWhitelist;
+    const investorWhitelistSettings = await encodeArgs(
+      ['address[]', 'address[]'],
+      [[randomAddress(), signer.address], []],
+    );
+
+    const policies = [
+      maxConcentration,
+      adapterBlacklist,
+      adapterWhitelist,
+      // assetBlacklist,
+      // assetWhitelist,
+      investorWhitelist,
+    ];
+    const policiesSettingsData = [
+      maxConcentrationSettings,
+      adapterBlacklistSettings,
+      adapterWhitelistSettings,
+      // assetBlacklistSettings,
+      // assetWhitelistSettings,
+      investorWhitelistSettings,
+    ];
 
     const policyManagerConfigData = await encodeArgs(['address[]', 'bytes[]'], [policies, policiesSettingsData]);
 
     // create fund
     const newFundArgs = {
-      signer,
-      fundDeployer,
-      denominationAsset,
-      sharesActionTimelock: 1,
       fundOwner: signer.address,
-      allowedBuySharesCallers: [],
       fundName: 'My Super Fund',
+      denominationAsset,
+      sharesActionTimelock: 0,
+      allowedBuySharesCallers: [],
       feeManagerConfigData,
       policyManagerConfigData,
     };
 
-    const { comptrollerProxy, newFundTx, vaultProxy } = await createNewFund(newFundArgs);
+    const createFundTx = await fundDeployer.createNewFund
+      .args(
+        newFundArgs.fundOwner,
+        newFundArgs.fundName,
+        newFundArgs.denominationAsset,
+        newFundArgs.sharesActionTimelock,
+        newFundArgs.allowedBuySharesCallers,
+        newFundArgs.feeManagerConfigData,
+        newFundArgs.policyManagerConfigData,
+      )
+      .send();
 
-    await waitForSubgraph(subgraphStatusEndpoint, (await newFundTx).blockNumber);
-    const subgraphFund = await fetchFund(subgraphApi, vaultProxy.address.toLowerCase(), (await newFundTx).blockNumber);
+    expect(createFundTx).toBeReceipt();
+
+    const { vaultProxy, comptrollerProxy } = await assertEvent(createFundTx, 'NewFundCreated', {
+      comptrollerProxy: expect.any(String) as string,
+      vaultProxy: expect.any(String) as string,
+      fundOwner: newFundArgs.fundOwner,
+      fundName: newFundArgs.fundName,
+      denominationAsset: newFundArgs.denominationAsset.address,
+      sharesActionTimelock: BigNumber.from(newFundArgs.sharesActionTimelock),
+      allowedBuySharesCallers: newFundArgs.allowedBuySharesCallers,
+      feeManagerConfigData: utils.hexlify(feeManagerConfigData),
+      policyManagerConfigData: utils.hexlify(policyManagerConfigData),
+    });
+
+    await waitForSubgraph(subgraphStatusEndpoint, createFundTx.blockNumber);
+    const subgraphFund = await fetchFund(subgraphApi, vaultProxy.toLowerCase(), createFundTx.blockNumber);
 
     expect(subgraphFund.name).toBe(newFundArgs.fundName);
 
-    const comptroller = new ComptrollerLib(comptrollerProxy.address, signer);
+    const comptroller = new ComptrollerLib(comptrollerProxy, signer);
 
     // buy shares
     const approveAmount = 10;
@@ -113,7 +167,7 @@ describe('Walkthrough', () => {
 
     await waitForSubgraph(subgraphStatusEndpoint, bought.blockNumber);
 
-    const investmentId = `${vaultProxy.address.toLowerCase()}/${buySharesArgs.buyer.toLowerCase()}`;
+    const investmentId = `${vaultProxy.toLowerCase()}/${buySharesArgs.buyer.toLowerCase()}`;
     const subgraphInvestment = await fetchInvestment(subgraphApi, investmentId, bought.blockNumber);
 
     expect(subgraphInvestment.shares).toEqual(sharesToBuy.toString());
@@ -129,11 +183,6 @@ describe('Walkthrough', () => {
     // expect(sharePrice).toEqual(utils.parseEther('1'));
 
     // redeem shares
-    const redeemSharesArgs = {
-      signer,
-      comptrollerProxy,
-    };
-
     const redeemed = await comptroller.redeemShares.args().send();
 
     await waitForSubgraph(subgraphStatusEndpoint, redeemed.blockNumber);
@@ -194,20 +243,29 @@ describe('Walkthrough', () => {
       });
 
       const callArgs = await callOnIntegrationArgs({
-        adapter: new KyberAdapter(await resolveAddress(deployment.kyberAdapter), signer),
+        adapter: new KyberAdapter(resolveAddress(deployment.kyberAdapter), signer),
         selector: takeOrderSelector,
         encodedCallArgs: takeOrderArgs,
       });
 
       const takeOrderTx = await comptroller.callOnExtension
-        .args(
-          await resolveAddress(deployment.integrationManager),
-          integrationManagerActionIds.CallOnIntegration,
-          callArgs,
-        )
+        .args(resolveAddress(deployment.integrationManager), integrationManagerActionIds.CallOnIntegration, callArgs)
         .send(false);
 
       await expect(takeOrderTx.wait()).resolves.toBeReceipt();
     }
+
+    // investor whitelist
+    // const investorsToAdd = [randomAddress(), randomAddress()];
+    // const investorWhitelistConfig = await investorWhitelistArgs({
+    //   investorsToAdd,
+    // });
+
+    // const investorWhitelistContract = new InvestorWhitelist(deployment.investorWhitelist, signer);
+    // const updateFundSettingsTx = await investorWhitelistContract.updateFundSettings
+    //   .args(comptrollerProxy, randomAddress(), investorWhitelistConfig)
+    //   .send(false);
+
+    // await expect(updateFundSettingsTx.wait()).resolves.toBeReceipt();
   });
 });
