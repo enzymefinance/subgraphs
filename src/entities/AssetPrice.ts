@@ -71,7 +71,7 @@ export function trackUsdQuotedAssetPrices(timestamp: BigInt): void {
 
 export function fetchAssetPrice(asset: Asset): BigDecimal {
   // TODO: Fix this. Currently failing (probably because of missing Compound token prices)
-  if (asset.type == 'DERIVATIVE' && asset.symbol == '') {
+  if (asset.type == 'DERIVATIVE' && asset.name.startsWith('Compound')) {
     return BigDecimal.fromString('1');
   }
 

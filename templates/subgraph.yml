@@ -482,14 +482,14 @@ dataSources:
         - name: ValueInterpreterContract
           file: ./abis/ValueInterpreter.json  
       eventHandlers:
-        - event: AggregatorUpdated(indexed address,address,address)
-          handler: handleAggregatorUpdated
         - event: EthUsdAggregatorSet(address,address)
           handler: handleEthUsdAggregatorSet
         - event: PrimitiveAdded(indexed address,address,uint8)
           handler: handlePrimitiveAdded
         - event: PrimitiveRemoved(indexed address)
           handler: handlePrimitiveRemoved
+        - event: PrimitiveUpdated(indexed address,address,address)
+          handler: handlePrimitiveUpdated
         - event: StaleRateThresholdSet(uint256,uint256)
           handler: handleStaleRateThresholdSet
 
@@ -518,8 +518,12 @@ dataSources:
         - name: ValueInterpreterContract
           file: ./abis/ValueInterpreter.json
       eventHandlers:
-        - event: PriceFeedSet(indexed address,address,address)
-          handler: handlePriceFeedSet
+        - event: DerivativeAdded(indexed address,address)
+          handler: handleDerivativeAdded
+        - event: DerivativeRemoved(indexed address)
+          handler: handleDerivativeRemoved
+        - event: DerivativeUpdated(indexed address,address,address)
+          handler: handleDerivativeUpdated
 
 templates:
   - name: VaultLibDataSource

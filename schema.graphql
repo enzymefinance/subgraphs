@@ -845,14 +845,31 @@ type OwnershipTransferredEvent implements Event & NetworkEvent @entity {
   transaction: Transaction!
 }
 
-type PriceFeedSetEvent implements Event & NetworkEvent @entity {
+type DerivativeAddedEvent implements Event & NetworkEvent @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
   derivative: Asset!
-  nextPriceFeed: String!
+  priceFeed: String!
+}
+
+type DerivativeRemovedEvent implements Event & NetworkEvent @entity {
+  id: ID!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  derivative: Asset!
+}
+
+type DerivativeUpdatedEvent implements Event & NetworkEvent @entity {
+  id: ID!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  derivative: Asset!
   prevPriceFeed: String!
+  nextPriceFeed: String!
 }
 
 type AggregatorUpdatedEvent implements Event & NetworkEvent @entity {

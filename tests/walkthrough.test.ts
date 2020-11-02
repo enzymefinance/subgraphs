@@ -1,20 +1,18 @@
 import { randomAddress, resolveAddress } from '@crestproject/crestproject';
 import {
+  callOnIntegrationArgs,
   ComptrollerLib,
   Dispatcher,
+  encodeArgs,
   FundDeployer,
+  IntegrationManagerActionId,
   KyberAdapter,
+  kyberTakeOrderArgs,
   MockKyberPriceSource,
   StandardToken,
-} from '@melonproject/protocol';
-import {
-  assertEvent,
-  callOnIntegrationArgs,
-  encodeArgs,
-  integrationManagerActionIds,
-  kyberTakeOrderArgs,
   takeOrderSelector,
-} from '@melonproject/testutils';
+} from '@melonproject/protocol';
+import { assertEvent } from '@melonproject/testutils';
 import { BigNumber, providers, utils, Wallet } from 'ethers';
 import { createAccount, Deployment, fetchDeployment } from './utils/deployment';
 import { waitForSubgraph } from './utils/subgraph';
@@ -249,7 +247,7 @@ describe('Walkthrough', () => {
       });
 
       const takeOrderTx = await comptroller.callOnExtension
-        .args(resolveAddress(deployment.integrationManager), integrationManagerActionIds.CallOnIntegration, callArgs)
+        .args(resolveAddress(deployment.integrationManager), IntegrationManagerActionId.CallOnIntegration, callArgs)
         .send(false);
 
       await expect(takeOrderTx.wait()).resolves.toBeReceipt();
