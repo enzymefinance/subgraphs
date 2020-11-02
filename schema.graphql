@@ -1224,6 +1224,10 @@ type Asset @entity {
   decimals: Int!
   type: AssetType!
 
+  # Details for certain derivative assets
+  uniswapV2PoolAssetDetail: UniswapV2PoolAssetDetail
+  compoundAssetDetail: CompoundAssetDetails
+
   # Latest price and candles
   price: AssetPrice
   hourly: HourlyAssetPriceCandle
@@ -1237,6 +1241,17 @@ type Asset @entity {
   # Fund references
   denominatedFunds: [Fund!]! @derivedFrom(field: "denominationAsset")
   trackingFunds: [Fund!]! @derivedFrom(field: "trackedAssets")
+}
+
+type UniswapV2PoolAssetDetail @entity {
+  id: ID!
+  token0: Asset!
+  token1: Asset!
+}
+
+type CompoundAssetDetails @entity {
+  id: ID!
+  underlying: Asset!
 }
 
 type AssetPrice @entity {

@@ -517,6 +517,10 @@ dataSources:
           file: ./abis/StandardERC20.json
         - name: ValueInterpreterContract
           file: ./abis/ValueInterpreter.json
+        - name: IUniswapV2Pair
+          file: ./abis/IUniswapV2Pair.json
+        - name: ICERC20
+          file: ./abis/ICERC20.json         
       eventHandlers:
         - event: DerivativeAdded(indexed address,address)
           handler: handleDerivativeAdded
