@@ -46,9 +46,9 @@ describe('Walkthrough', () => {
 
     // create fund with fees
 
-    const managementFeeSettings = await encodeArgs(['uint256'], [BigNumber.from('100000000000000000')]);
+    const managementFeeSettings = encodeArgs(['uint256'], [BigNumber.from('100000000000000000')]);
 
-    const performanceFeeSettings = await encodeArgs(
+    const performanceFeeSettings = encodeArgs(
       ['uint256', 'uint256'],
       [BigNumber.from('100000000000000000'), BigNumber.from('1000000')],
     );
@@ -56,17 +56,17 @@ describe('Walkthrough', () => {
     const fees = [deployment.managementFee, deployment.performanceFee];
     const feesSettingsData = [managementFeeSettings, performanceFeeSettings];
 
-    const feeManagerConfigData = await encodeArgs(['address[]', 'bytes[]'], [fees, feesSettingsData]);
+    const feeManagerConfigData = encodeArgs(['address[]', 'bytes[]'], [fees, feesSettingsData]);
 
     // prepare policies
     const maxConcentration = deployment.maxConcentration;
-    const maxConcentrationSettings = await encodeArgs(['uint256'], [utils.parseEther('1')]);
+    const maxConcentrationSettings = encodeArgs(['uint256'], [utils.parseEther('1')]);
 
     const adapterBlacklist = deployment.adapterBlacklist;
-    const adapterBlacklistSettings = await encodeArgs(['address[]'], [[deployment.chaiAdapter]]);
+    const adapterBlacklistSettings = encodeArgs(['address[]'], [[deployment.chaiAdapter]]);
 
     const adapterWhitelist = deployment.adapterWhitelist;
-    const adapterWhitelistSettings = await encodeArgs(['address[]'], [[deployment.kyberAdapter]]);
+    const adapterWhitelistSettings = encodeArgs(['address[]'], [[deployment.kyberAdapter]]);
 
     // const assetBlacklist = deployment.assetBlacklist;
     // const assetBlacklistSettings = await encodeArgs(['address[]'], [[deployment.mlnToken]]);
@@ -75,10 +75,7 @@ describe('Walkthrough', () => {
     // const assetWhitelistSettings = await encodeArgs(['address[]'], [[deployment.wethToken, deployment.mlnToken]]);
 
     const investorWhitelist = deployment.investorWhitelist;
-    const investorWhitelistSettings = await encodeArgs(
-      ['address[]', 'address[]'],
-      [[randomAddress(), signer.address], []],
-    );
+    const investorWhitelistSettings = encodeArgs(['address[]', 'address[]'], [[randomAddress(), signer.address], []]);
 
     const policies = [
       maxConcentration,
@@ -97,7 +94,7 @@ describe('Walkthrough', () => {
       investorWhitelistSettings,
     ];
 
-    const policyManagerConfigData = await encodeArgs(['address[]', 'bytes[]'], [policies, policiesSettingsData]);
+    const policyManagerConfigData = encodeArgs(['address[]', 'bytes[]'], [policies, policiesSettingsData]);
 
     // create fund
     const newFundArgs = {
@@ -124,7 +121,7 @@ describe('Walkthrough', () => {
 
     expect(createFundTx).toBeReceipt();
 
-    const { vaultProxy, comptrollerProxy } = await assertEvent(createFundTx, 'NewFundCreated', {
+    const { vaultProxy, comptrollerProxy } = assertEvent(createFundTx, 'NewFundCreated', {
       comptrollerProxy: expect.any(String) as string,
       vaultProxy: expect.any(String) as string,
       fundOwner: newFundArgs.fundOwner,
@@ -163,11 +160,11 @@ describe('Walkthrough', () => {
       .value(buySharesArgs.amguValue)
       .send();
 
-    await waitForSubgraph(subgraphStatusEndpoint, bought.blockNumber);
+    expect(bought).toBeReceipt();
 
+    await waitForSubgraph(subgraphStatusEndpoint, bought.blockNumber);
     const investmentId = `${vaultProxy.toLowerCase()}/${buySharesArgs.buyer.toLowerCase()}`;
     const subgraphInvestment = await fetchInvestment(subgraphApi, investmentId, bought.blockNumber);
-
     expect(subgraphInvestment.shares).toEqual(sharesToBuy.toString());
     expect(subgraphInvestment.investor.investor).toBe(true);
 
@@ -183,6 +180,8 @@ describe('Walkthrough', () => {
     // redeem shares
     const redeemed = await comptroller.redeemShares.args().send();
 
+    expect(redeemed).toBeReceipt();
+
     await waitForSubgraph(subgraphStatusEndpoint, redeemed.blockNumber);
 
     const transactionHash = redeemed.transactionHash;
@@ -196,6 +195,8 @@ describe('Walkthrough', () => {
       .args(buySharesArgs.buyer, buySharesArgs.investmentAmount, buySharesArgs.minSharesAmount)
       .value(buySharesArgs.amguValue)
       .send();
+
+    expect(boughtMoreShares).toBeReceipt();
 
     await waitForSubgraph(subgraphStatusEndpoint, boughtMoreShares.blockNumber);
 
@@ -219,28 +220,28 @@ describe('Walkthrough', () => {
 
       // // set price
       const kyberIntegratee = new MockKyberPriceSource(deployment.kyberIntegratee, signer);
-      const setRatesTx = await kyberIntegratee.setRates
+      const setRatesTx = kyberIntegratee.setRates
         .args(
           [token.id, kyberEthAddress],
           [kyberEthAddress, token.id],
           [utils.parseEther('0.5'), utils.parseEther('2')],
         )
-        .send(false);
+        .send();
 
-      await expect(setRatesTx.wait()).resolves.toBeReceipt();
+      await expect(setRatesTx).resolves.toBeReceipt();
 
       // const rate = await kyberIntegratee.assetToAssetRate(deployment.wethToken, token.id);
 
       // console.log(utils.formatEther(rate));
 
-      const takeOrderArgs = await kyberTakeOrderArgs({
+      const takeOrderArgs = kyberTakeOrderArgs({
         incomingAsset: token.id,
         minIncomingAssetAmount: utils.parseEther('0.000000001'),
         outgoingAsset: deployment.wethToken,
         outgoingAssetAmount: utils.parseEther('0.1'),
       });
 
-      const callArgs = await callOnIntegrationArgs({
+      const callArgs = callOnIntegrationArgs({
         adapter: new KyberAdapter(resolveAddress(deployment.kyberAdapter), signer),
         selector: takeOrderSelector,
         encodedCallArgs: takeOrderArgs,

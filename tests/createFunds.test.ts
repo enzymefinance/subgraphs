@@ -1,13 +1,17 @@
 import { resolveAddress } from '@crestproject/ethers';
-import { ComptrollerLib, Dispatcher, FundDeployer, KyberAdapter, StandardToken } from '@melonproject/protocol';
 import {
   callOnIntegrationArgs,
-  createNewFund,
+  ComptrollerLib,
+  Dispatcher,
   encodeArgs,
-  integrationManagerActionIds,
+  FundDeployer,
+  IntegrationManagerActionId,
+  KyberAdapter,
   kyberTakeOrderArgs,
+  StandardToken,
   takeOrderSelector,
-} from '@melonproject/testutils';
+} from '@melonproject/protocol';
+import { assertEvent } from '@melonproject/testutils';
 import { BigNumber, providers, utils, Wallet } from 'ethers';
 import { createAccount, Deployment, fetchDeployment } from './utils/deployment';
 
@@ -34,9 +38,9 @@ describe('Walkthrough', () => {
 
     // create fund with fees
 
-    const managementFeeSettings = await encodeArgs(['uint256'], [BigNumber.from('100000000000000000')]);
+    const managementFeeSettings = encodeArgs(['uint256'], [BigNumber.from('100000000000000000')]);
 
-    const performanceFeeSettings = await encodeArgs(
+    const performanceFeeSettings = encodeArgs(
       ['uint256', 'uint256'],
       [BigNumber.from('100000000000000000'), BigNumber.from('1000000')],
     );
@@ -44,26 +48,48 @@ describe('Walkthrough', () => {
     const fees = [deployment.managementFee, deployment.performanceFee];
     const feesSettingsData = [managementFeeSettings, performanceFeeSettings];
 
-    const feeManagerConfigData = await encodeArgs(['address[]', 'bytes[]'], [fees, feesSettingsData]);
+    const feeManagerConfigData = encodeArgs(['address[]', 'bytes[]'], [fees, feesSettingsData]);
 
     // create funds
     for (let i = 0; i < 100; i++) {
+      // create fund
       const newFundArgs = {
-        signer,
-        fundDeployer,
         fundOwner: signer.address,
-        denominationAsset,
-        sharesActionTimelock: 1,
-        allowedBuySharesCallers: [],
         fundName: `WETH Fund with Trade (${new Date().toLocaleTimeString()})`,
+        denominationAsset,
+        sharesActionTimelock: 0,
+        allowedBuySharesCallers: [],
         feeManagerConfigData,
-        policyManagerConfigData: '0x',
+        policyManagerConfigData: 'Ox',
       };
 
-      const createNewFundResult = await createNewFund(newFundArgs);
-      await expect(createNewFundResult.newFundTx).resolves.toBeReceipt();
+      const createFundTx = await fundDeployer.createNewFund
+        .args(
+          newFundArgs.fundOwner,
+          newFundArgs.fundName,
+          newFundArgs.denominationAsset,
+          newFundArgs.sharesActionTimelock,
+          newFundArgs.allowedBuySharesCallers,
+          newFundArgs.feeManagerConfigData,
+          newFundArgs.policyManagerConfigData,
+        )
+        .send();
 
-      const comptroller = new ComptrollerLib(createNewFundResult.comptrollerProxy.address, signer);
+      expect(createFundTx).toBeReceipt();
+
+      const { comptrollerProxy } = assertEvent(createFundTx, 'NewFundCreated', {
+        comptrollerProxy: expect.any(String) as string,
+        vaultProxy: expect.any(String) as string,
+        fundOwner: newFundArgs.fundOwner,
+        fundName: newFundArgs.fundName,
+        denominationAsset: newFundArgs.denominationAsset.address,
+        sharesActionTimelock: BigNumber.from(newFundArgs.sharesActionTimelock),
+        allowedBuySharesCallers: newFundArgs.allowedBuySharesCallers,
+        feeManagerConfigData: utils.hexlify(feeManagerConfigData),
+        policyManagerConfigData: utils.hexlify('0x'),
+      });
+
+      const comptroller = new ComptrollerLib(comptrollerProxy, signer);
 
       // approve ERC20 for contract
       await denominationAsset.approve.args(comptroller.address, utils.parseEther('20')).send();
@@ -95,18 +121,13 @@ describe('Walkthrough', () => {
       });
 
       const callArgs = await callOnIntegrationArgs({
-        adapter: new KyberAdapter(await resolveAddress(deployment.kyberAdapter), signer),
+        adapter: new KyberAdapter(resolveAddress(deployment.kyberAdapter), signer),
         selector: takeOrderSelector,
         encodedCallArgs: takeOrderArgs,
       });
 
-      const comptrollerProxy = new ComptrollerLib(comptroller.address, signer);
-      const takeOrderTx = await comptrollerProxy.callOnExtension
-        .args(
-          await resolveAddress(deployment.integrationManager),
-          integrationManagerActionIds.CallOnIntegration,
-          callArgs,
-        )
+      const takeOrderTx = await comptroller.callOnExtension
+        .args(resolveAddress(deployment.integrationManager), IntegrationManagerActionId.CallOnIntegration, callArgs)
         .send(false);
 
       await expect(takeOrderTx.wait()).resolves.toBeReceipt();
