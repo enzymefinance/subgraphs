@@ -30,7 +30,7 @@ describe('Walkthrough', () => {
     signer = new Wallet(account.privateKey, provider);
   });
 
-  it("should walkthrough a fund's lifecycle", async () => {
+  xit('should create a number of funds', async () => {
     const dispatcher = new Dispatcher(deployment.dispatcher, provider);
     const fundDeployerAddress = await dispatcher.getCurrentFundDeployer();
     const fundDeployer = new FundDeployer(fundDeployerAddress, provider);
