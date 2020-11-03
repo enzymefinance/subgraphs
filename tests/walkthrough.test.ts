@@ -49,7 +49,7 @@ describe("Walkthrough a fund's lifecycle", () => {
     denominationAsset = new StandardToken(deployment.wethToken, manager);
   });
 
-  it('should create a fund with policies', async () => {
+  it('should create a fund', async () => {
     const fundDeployer = new FundDeployer(deployment.fundDeployer, manager);
 
     // fees
@@ -99,7 +99,7 @@ describe("Walkthrough a fund's lifecycle", () => {
     // create fund
     const newFundArgs = {
       fundOwner: manager.address,
-      fundName: 'Walkthrough Fund',
+      fundName: 'Walkthrough Test Fund',
       denominationAsset,
       sharesActionTimelock: 0,
       allowedBuySharesCallers: [],
