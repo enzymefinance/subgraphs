@@ -293,60 +293,57 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@crestproject/codegen@^0.1.1":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@crestproject/codegen/-/codegen-0.1.1.tgz#0f6c0fb5c29d956a2745a8161a1b78a96eda0a48"
-  integrity sha512-/vVy4p2lV5Jk3VIxEBBVmLCGl/k5UGvGeP61W1QmbeAz7WI3CKzLEQqxeUVunR/rIylRGpvs1i4yf8j2NQUKtw==
+"@crestproject/codegen@^0.1.5":
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@crestproject/codegen/-/codegen-0.1.5.tgz#814a7ba833bb4d0cdac045b35d02bb72f25a7372"
+  integrity sha512-xYWvLoECN+wdL57P6Z0mIaNFAQqXAEDtMTzPlZjM49r7I5CJkc1umkF7PUpykjOFt5n6ypmOnRWuMfApiPBLqg==
   dependencies:
     "@babel/runtime" "^7.12.1"
   optionalDependencies:
     prettier "^2.1.2"
 
-"@crestproject/crestproject@^0.1.1":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@crestproject/crestproject/-/crestproject-0.1.1.tgz#a614e851f1f59c678ff937958824dd4e01969a37"
-  integrity sha512-JmpvOAlsMQo+eS0UwWJY+amHnCq0q6Lf+kF/mPrtHN0/YTBNeCKSEfuXrj860YaXZETz6y2FBLjis0nC0n9N8A==
+"@crestproject/crestproject@^0.1.5":
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@crestproject/crestproject/-/crestproject-0.1.5.tgz#c6ace408472c7dfa646feabf1020994c2c9ba23f"
+  integrity sha512-g/Z+aFLaa8rsOEXQvTG2kZ+4ipt/kwtFFANdKehTL7iw043xKeGcC62kRXyFXtIpsrpoQKhs735QBKbe2dLsfw==
   dependencies:
     "@babel/runtime" "^7.12.1"
-    "@crestproject/codegen" "^0.1.1"
-    "@crestproject/ethers" "^0.1.1"
-    "@crestproject/evm" "^0.0.82"
-    "@crestproject/jest" "^0.1.1"
+    "@crestproject/codegen" "^0.1.5"
+    "@crestproject/ethers" "^0.1.5"
+    "@crestproject/hardhat" "^0.1.5"
+    "@crestproject/jest" "^0.1.5"
     glob "^7.1.6"
     jest-worker "^26.6.1"
     throat "^5.0.0"
     yargs "^16.1.0"
 
-"@crestproject/ethers@^0.0.82":
-  version "0.0.82"
-  resolved "https://registry.yarnpkg.com/@crestproject/ethers/-/ethers-0.0.82.tgz#d06059899e34d7b8bcab2f417811212d7c7e0ed8"
-  integrity sha512-wpDT/6fZFFIg2A1Ylln1jvej3vTVX5Ze0qyHxi8AFU0kkNKJTKhjnjfmjMn3s6pmdHF/FlAGhbuKTDFMWWd5OQ==
+"@crestproject/ethers@^0.1.5":
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@crestproject/ethers/-/ethers-0.1.5.tgz#f3c68e7bfb5c02d7eb564a853683a17af90a49bc"
+  integrity sha512-oBC8LAdUZy+aME3UnOiXNXTfXp9/32hQ1W7O3COV1XUAnTlXpNT0VzK+SrYBwA9tec8mVPRXY/xeEteOvX34Sw==
   dependencies:
     "@babel/runtime" "^7.12.1"
 
-"@crestproject/ethers@^0.1.1":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@crestproject/ethers/-/ethers-0.1.1.tgz#ce3d855c75d53067efef16f0ba0b4da7295c34d3"
-  integrity sha512-+Tk9mW8dEyiEdgBSE9yUypRZl3CjEV0+ukSR4IFu7ba6Y5I2YaFbtcVAs6EpLOQ7Da7tqK6mLM/00L93DVJOxg==
+"@crestproject/hardhat@^0.1.5":
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@crestproject/hardhat/-/hardhat-0.1.5.tgz#69414453fb6c85ea7a300047c8d1db20fbc0ff93"
+  integrity sha512-neScjQbShA3sbicijsGrfZS/elIIux/96FPMHtNBTGy8VwGJay+wff4h8/4hxUPYM8MMza6uKDOUGcT3J3KwmA==
   dependencies:
     "@babel/runtime" "^7.12.1"
+    "@crestproject/codegen" "^0.1.5"
+    "@crestproject/ethers" "^0.1.5"
+    deepmerge "^4.2.2"
+    fs-extra "^9.0.1"
+    jest-environment-node "^26.6.1"
 
-"@crestproject/evm@^0.0.82":
-  version "0.0.82"
-  resolved "https://registry.yarnpkg.com/@crestproject/evm/-/evm-0.0.82.tgz#1f831755625762e71e37fff7c32db7b7fe1a7d2e"
-  integrity sha512-IxhMvPogMkixti3TDJ6i3IqwUw5rUIFjr45I2x/HOjlSHKBPrdbtaRiRiQ1AcdCG+8mnznhmpuYMNsJ8z81EAA==
+"@crestproject/jest@^0.1.5":
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@crestproject/jest/-/jest-0.1.5.tgz#3ec7ab8e227b8c738f54d05f0401770b07c6944a"
+  integrity sha512-1QZ8psaeKiZNGowBnTzGnNBftTvxhEpnbKUT0j66JaVaAoE8YwkyW6P2TmhMjPp1GvmzrdPIELR3UT0Qjn6Ylg==
   dependencies:
     "@babel/runtime" "^7.12.1"
-    "@crestproject/ethers" "^0.0.82"
-
-"@crestproject/jest@^0.1.1":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@crestproject/jest/-/jest-0.1.1.tgz#7a631c739b7379ab0d70b0487750b744cd144dc7"
-  integrity sha512-67O9O4wzKzauI2W18olVW4qN7fWQfQyWgrY3UeyGKeZKi17YWP5D4h3eQ/Ej+43APenPO2DQYm3159imsXJbYQ==
-  dependencies:
-    "@babel/runtime" "^7.12.1"
-    "@crestproject/ethers" "^0.1.1"
-    "@crestproject/evm" "^0.0.82"
+    "@crestproject/ethers" "^0.1.5"
+    "@crestproject/hardhat" "^0.1.5"
     jest-diff "^26.6.1"
     jest-matcher-utils "^26.6.1"
     jest-snapshot "^26.6.1"
@@ -1109,20 +1106,20 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@melonproject/protocol@^2.0.0-dev.5005+91012655":
-  version "2.0.0-dev.5005"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_ROI6v/%40melonproject%2Fprotocol-2.0.0-dev.5005.tgz#f4fdee0cf8b5192930dcc90785ec71d5813bb490"
-  integrity sha1-9P3uDPi1GSkw3MkHhexx1YE7tJA=
+"@melonproject/protocol@^2.0.0-dev.5006+38b2d1e4":
+  version "2.0.0-dev.5006"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_1GHpiq/%40melonproject%2Fprotocol-2.0.0-dev.5006.tgz#539ae5698806c0f22a2e5e516dd7bcb1565790c1"
+  integrity sha1-U5rlaYgGwPIqLl5Rbde8sVZXkME=
   dependencies:
     "@babel/runtime" "^7.12.1"
 
-"@melonproject/testutils@^2.0.0-dev.5005+91012655":
-  version "2.0.0-dev.5005"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_UHGZW/%40melonproject%2Ftestutils-2.0.0-dev.5005.tgz#9170d0dec1c34e6adf75638a39226b708d0dc2b8"
-  integrity sha1-kXDQ3sHDTmrfdWOKOSJrcI0Nwrg=
+"@melonproject/testutils@^2.0.0-dev.5006+38b2d1e4":
+  version "2.0.0-dev.5006"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_18HTsH/%40melonproject%2Ftestutils-2.0.0-dev.5006.tgz#285615916dfe926b8d5b00a01b5d73cf76e626c3"
+  integrity sha1-KFYVkW3+kmuNWwCgG11zz3bmJsM=
   dependencies:
     "@babel/runtime" "^7.12.1"
-    "@melonproject/protocol" "^2.0.0-dev.5005+91012655"
+    "@melonproject/protocol" "^2.0.0-dev.5006+38b2d1e4"
 
 "@openzeppelin/contracts@^3.2.0":
   version "3.2.0"
@@ -3891,7 +3888,7 @@ fs-extra@^4.0.2:
     jsonfile "^4.0.0"
     universalify "^0.1.0"
 
-fs-extra@^9.0.0:
+fs-extra@^9.0.0, fs-extra@^9.0.1:
   version "9.0.1"
   resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-9.0.1.tgz#910da0062437ba4c39fedd863f1675ccfefcb9fc"
   integrity sha512-h2iAoN838FqAFJY2/qVpzFXy+EBxfVE220PalAqQLDVsFOHLJrZvut5puAbCdNv6WJk+B8ihI+k0c7JK5erwqQ==
@@ -5090,7 +5087,7 @@ jest-environment-jsdom@^26.6.2:
     jest-util "^26.6.2"
     jsdom "^16.4.0"
 
-jest-environment-node@^26.6.2:
+jest-environment-node@^26.6.1, jest-environment-node@^26.6.2:
   version "26.6.2"
   resolved "https://registry.yarnpkg.com/jest-environment-node/-/jest-environment-node-26.6.2.tgz#824e4c7fb4944646356f11ac75b229b0035f2b0c"
   integrity sha512-zhtMio3Exty18dy8ee8eJ9kjnRyZC1N4C1Nt/VShN1apyXc8rWGtJ9lI7vqiWcyyXS4BVSEn9lxAM2D+07/Tag==

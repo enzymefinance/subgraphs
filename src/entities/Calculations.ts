@@ -56,22 +56,30 @@ export function trackFundCalculations(fund: Fund, event: ethereum.Event, cause: 
   let calculator = FundCalculatorContract.bind(fundCalculatorAddress);
   let vault = VaultLibContract.bind(Address.fromString(fund.id));
 
-  let gav = comptroller.try_calcGav(true);
+  let gav = comptroller.try_calcGav();
   let totalSupply = vault.try_totalSupply();
   let grossShareValue = comptroller.try_calcGrossShareValue();
   let netShareValue = calculator.try_calcNetShareValue(Address.fromString(fund.accessor));
 
-  if (gav.reverted || totalSupply.reverted || grossShareValue.reverted || netShareValue.reverted) {
+  if (
+    gav.reverted ||
+    !gav.value.value1 ||
+    totalSupply.reverted ||
+    grossShareValue.reverted ||
+    !grossShareValue.value.value1 ||
+    netShareValue.reverted ||
+    !netShareValue.value.value1
+  ) {
     return;
   }
 
   let denominationAsset = useAsset(fund.denominationAsset);
 
   let calculations = ensureCalculations(fund, event, cause);
-  calculations.gav = toBigDecimal(gav.value, denominationAsset.decimals);
+  calculations.gav = toBigDecimal(gav.value.value0, denominationAsset.decimals);
   calculations.totalSupply = toBigDecimal(totalSupply.value);
-  calculations.grossSharePrice = toBigDecimal(grossShareValue.value);
-  calculations.netSharePrice = toBigDecimal(netShareValue.value);
+  calculations.grossSharePrice = toBigDecimal(grossShareValue.value.value0);
+  calculations.netSharePrice = toBigDecimal(netShareValue.value.value0);
   calculations.save();
 
   let state = ensureState(fund, event);

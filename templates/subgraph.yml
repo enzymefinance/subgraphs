@@ -476,9 +476,9 @@ dataSources:
         - name: StandardERC20Contract
           file: ./abis/StandardERC20.json
         - name: ChainlinkAggregatorContract
-          file: ./abis/AggregatorInterface.json
+          file: ./node_modules/@chainlink/contracts/abi/v0.6/AggregatorInterface.json
         - name: ChainlinkAggregatorProxyContract
-          file: ./abis/AggregatorProxy.json
+          file: ./node_modules/@chainlink/contracts/abi/v0.6/AggregatorProxy.json
         - name: ValueInterpreterContract
           file: ./abis/ValueInterpreter.json  
       eventHandlers:
