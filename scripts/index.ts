@@ -47,7 +47,6 @@ interface Result {
     vaultLib: string;
     fundDeployer: string;
     valueInterpreter: string;
-    engine: string;
     comptrollerLib: string;
     fundCalculator: string;
     feeManager: string;
