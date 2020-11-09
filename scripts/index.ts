@@ -16,7 +16,6 @@ const query = gql`
       vaultLib
       fundDeployer
       valueInterpreter
-      engine
       comptrollerLib
       fundCalculator
       feeManager

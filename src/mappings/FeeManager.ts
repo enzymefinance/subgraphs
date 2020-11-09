@@ -77,7 +77,10 @@ export function handleFeeRegistered(event: FeeRegistered): void {
   registered.transaction = ensureTransaction(event).id;
   registered.fee = ensureFee(event.params.fee).id;
   registered.identifier = event.params.identifier.toHex();
-  registered.implementedHooks = event.params.implementedHooks.map<string>((hook) => getFeeHook(hook));
+  registered.implementedHooksForSettle = event.params.implementedHooksForSettle.map<string>((hook) => getFeeHook(hook));
+  registered.implementedHooksForUpdate = event.params.implementedHooksForUpdate.map<string>((hook) => getFeeHook(hook));
+  registered.usesGavOnSettle = event.params.usesGavOnSettle;
+  registered.usesGavOnUpdate = event.params.usesGavOnUpdate;
   registered.save();
 }
 

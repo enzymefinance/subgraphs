@@ -5,21 +5,10 @@ import { ensureContract } from '../entities/Contract';
 import { createFund } from '../entities/Fund';
 import { ensureTransaction } from '../entities/Transaction';
 import { ComptrollerLibContract } from '../generated/ComptrollerLibContract';
-import {
-  AmguPaid,
-  ComptrollerLibSet,
-  ComptrollerProxyDeployed,
-  NewFundCreated,
-} from '../generated/FundDeployerContract';
-import {
-  AmguPaidEvent,
-  ComptrollerLibSetEvent,
-  ComptrollerProxyDeployedEvent,
-  NewFundCreatedEvent,
-} from '../generated/schema';
+import { ComptrollerLibSet, ComptrollerProxyDeployed, NewFundCreated } from '../generated/FundDeployerContract';
+import { ComptrollerLibSetEvent, ComptrollerProxyDeployedEvent, NewFundCreatedEvent } from '../generated/schema';
 import { ComptrollerLibDataSource, VaultLibDataSource } from '../generated/templates';
 import { genericId } from '../utils/genericId';
-import { toBigDecimal } from '../utils/toBigDecimal';
 
 export function handleNewFundCreated(event: NewFundCreated): void {
   let fundCreation = new NewFundCreatedEvent(genericId(event));
@@ -47,16 +36,6 @@ export function handleNewFundCreated(event: NewFundCreated): void {
 
   VaultLibDataSource.create(event.params.vaultProxy);
   ComptrollerLibDataSource.createWithContext(event.params.comptrollerProxy, comptrollerContext);
-}
-
-export function handleAmguPaid(event: AmguPaid): void {
-  let amguPaid = new AmguPaidEvent(genericId(event));
-  amguPaid.amount = toBigDecimal(event.params.ethPaid);
-  amguPaid.payer = ensureAccount(event.params.payer, event).id;
-  amguPaid.gas = event.params.gasUsed.toI32();
-  amguPaid.timestamp = event.block.timestamp;
-  amguPaid.transaction = ensureTransaction(event).id;
-  amguPaid.save();
 }
 
 export function handleComptrollerLibSet(event: ComptrollerLibSet): void {

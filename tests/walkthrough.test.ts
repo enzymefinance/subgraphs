@@ -126,6 +126,7 @@ describe("Walkthrough a fund's lifecycle", () => {
       vaultProxy: expect.any(String) as string,
       fundOwner: newFundArgs.fundOwner,
       fundName: newFundArgs.fundName,
+      creator: fundDeployer,
       denominationAsset: newFundArgs.denominationAsset.address,
       sharesActionTimelock: BigNumber.from(newFundArgs.sharesActionTimelock),
       allowedBuySharesCallers: newFundArgs.allowedBuySharesCallers,
@@ -173,12 +174,12 @@ describe("Walkthrough a fund's lifecycle", () => {
   });
 
   it('should get the share price of the fund', async () => {
-    const sharePrice = await comptroller.buyShares
+    const sharesToBeReceived = await comptroller.buyShares
       .args(investor, utils.parseEther('1'), utils.parseEther('1'))
       .from(investor)
       .call();
 
-    expect(sharePrice).toEqual(utils.parseEther('1'));
+    expect(sharesToBeReceived).toEqual(utils.parseEther('1'));
   });
 
   it('should redeem shares of the fund', async () => {

@@ -34,56 +34,73 @@ dataSources:
           handler: handleMigrationExecuted
         - event: MigrationSignaled(indexed address,indexed address,indexed address,address,address)
           handler: handleMigrationSignaled
-        - event: PostCancelMigrationOriginHookFailed(bytes,indexed address,indexed address,indexed address,address,address,uint256)
-          handler: handlePostCancelMigrationOriginHookFailed
-        - event: PostCancelMigrationTargetHookFailed(bytes,indexed address,indexed address,indexed address,address,address,uint256)
-          handler: handlePostCancelMigrationTargetHookFailed
-        - event: PostMigrateOriginHookFailed(bytes,indexed address,indexed address,indexed address,address,address,uint256)
-          handler: handlePostMigrateOriginHookFailed
-        - event: PostSignalMigrationOriginHookFailed(bytes,indexed address,indexed address,indexed address,address,address)
-          handler: handlePostSignalMigrationOriginHookFailed
-        - event: PreMigrateOriginHookFailed(bytes,indexed address,indexed address,indexed address,address,address,uint256)
-          handler: handlePreMigrateOriginHookFailed
-        - event: PreSignalMigrationOriginHookFailed(bytes,indexed address,indexed address,indexed address,address,address)
-          handler: handlePreSignalMigrationOriginHookFailed
-        - event: VaultProxyDeployed(indexed address,indexed address,address,address,address,string)
+
+        # - event: PostCancelMigrationOriginHookFailed(bytes,indexed address,indexed address,indexed address,address,address,uint256)
+        #   handler: handlePostCancelMigrationOriginHookFailed
+        # - event: PostCancelMigrationTargetHookFailed(bytes,indexed address,indexed address,indexed address,address,address,uint256)
+        #   handler: handlePostCancelMigrationTargetHookFailed
+        # - event: PostMigrateOriginHookFailed(bytes,indexed address,indexed address,indexed address,address,address,uint256)
+        #   handler: handlePostMigrateOriginHookFailed
+        # - event: PostSignalMigrationOriginHookFailed(bytes,indexed address,indexed address,indexed address,address,address)
+        #   handler: handlePostSignalMigrationOriginHookFailed
+        # - event: PreMigrateOriginHookFailed(bytes,indexed address,indexed address,indexed address,address,address,uint256)
+        #   handler: handlePreMigrateOriginHookFailed
+        # - event: PreSignalMigrationOriginHookFailed(bytes,indexed address,indexed address,indexed address,address,address)
+        #   handler: handlePreSignalMigrationOriginHookFailed
+
+        - event: MigrationInCancelHookFailed(bytes,indexed address,indexed address,indexed address,address,address)
+          handler: handleMigrationInCancelHookFailed
+        - event: MigrationOutHookFailed(bytes,uint8,indexed address,indexed address,indexed address,address,address)
+          handler: handleMigrationOutHookFailed
+        - event: MigrationTimelockSet(uint256,uint256)
+          handler: handleMigrationTimelockSet
+        - event: NominatedOwnerRemoved(indexed address)
+          handler: handleNominatedOwnerRemoved
+        - event: NominatedOwnerSet(indexed address)
+          handler: handleNominatedOwnerSet
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: SharesTokenSymbolSet(string)
+          handler: handleSharesTokenSymbolSet
+
+        - event: VaultProxyDeployed(indexed address,indexed address,address,indexed address,address,string)
           handler: handleVaultProxyDeployed
 
-  - name: EngineSource
-    kind: ethereum/contract
-    network: mainnet
-    source:
-      address: '{{engine}}'
-      abi: EngineContract
-      startBlock: 0
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.4
-      language: wasm/assemblyscript
-      file: ./src/mappings/Engine.ts
-      entities: []
-      abis:
-        - name: EngineContract
-          file: ./abis/Engine.json
-        - name: VaultLibContract
-          file: ./abis/VaultLib.json
-        - name: StandardERC20Contract
-          file: ./abis/StandardERC20.json
-      eventHandlers:
-        - event: AmguPaidInEther(uint256)
-          handler: handleAmguPaidInEther
-        - event: AmguPriceSet(uint256,uint256)
-          handler: handleAmguPriceSet
-        - event: EtherTakerAdded(address)
-          handler: handleEtherTakerAdded
-        - event: EtherTakerRemoved(address)
-          handler: handleEtherTakerRemoved
-        - event: FrozenEtherThawed(uint256)
-          handler: handleFrozenEtherThawed
-        - event: MlnSoldAndBurned(uint256,uint256)
-          handler: handleMlnSoldAndBurned
-        - event: ValueInterpreterSet(address,address)
-          handler: handleValueInterpreterSet
+  # - name: EngineSource
+  #   kind: ethereum/contract
+  #   network: mainnet
+  #   source:
+  #     address: '{{engine}}'
+  #     abi: EngineContract
+  #     startBlock: 0
+  #   mapping:
+  #     kind: ethereum/events
+  #     apiVersion: 0.0.4
+  #     language: wasm/assemblyscript
+  #     file: ./src/mappings/Engine.ts
+  #     entities: []
+  #     abis:
+  #       - name: EngineContract
+  #         file: ./abis/Engine.json
+  #       - name: VaultLibContract
+  #         file: ./abis/VaultLib.json
+  #       - name: MockTokenContract
+  #         file: ./abis/MockToken.json
+  #     eventHandlers:
+  #       - event: AmguPaidInEther(uint256)
+  #         handler: handleAmguPaidInEther
+  #       - event: AmguPriceSet(uint256,uint256)
+  #         handler: handleAmguPriceSet
+  #       - event: EtherTakerAdded(address)
+  #         handler: handleEtherTakerAdded
+  #       - event: EtherTakerRemoved(address)
+  #         handler: handleEtherTakerRemoved
+  #       - event: FrozenEtherThawed(uint256)
+  #         handler: handleFrozenEtherThawed
+  #       - event: MlnSoldAndBurned(uint256,uint256)
+  #         handler: handleMlnSoldAndBurned
+  #       - event: ValueInterpreterSet(address,address)
+  #         handler: handleValueInterpreterSet
 
   - name: FundDeployerDataSource
     kind: ethereum/contract
@@ -105,11 +122,9 @@ dataSources:
           file: ./abis/VaultLib.json
         - name: ComptrollerLibContract
           file: ./abis/ComptrollerLib.json
-        - name: StandardERC20Contract
-          file: ./abis/StandardERC20.json
+        - name: MockTokenContract
+          file: ./abis/MockToken.json
       eventHandlers:
-        - event: AmguPaid(indexed address,uint256,uint256)
-          handler: handleAmguPaid
         - event: ComptrollerLibSet(address)
           handler: handleComptrollerLibSet
         - event: ComptrollerProxyDeployed(indexed address,address,indexed address,uint256,address[],bytes,bytes,indexed bool)
@@ -143,8 +158,8 @@ dataSources:
           file: ./abis/VaultLib.json
         - name: ComptrollerLibContract
           file: ./abis/ComptrollerLib.json
-        - name: StandardERC20Contract
-          file: ./abis/StandardERC20.json
+        - name: MockTokenContract
+          file: ./abis/MockToken.json
         - name: IFeeInterface
           file: ./abis/IFee.json
         - name: PerformanceFeeContract
@@ -158,13 +173,13 @@ dataSources:
           handler: handleFeeDeregistered
         - event: FeeEnabledForFund(indexed address,indexed address,bytes)
           handler: handleFeeEnabledForFund
-        - event: FeeRegistered(indexed address,indexed string,uint8[])
+        - event: FeeRegistered(indexed address,indexed string,uint8[],uint8[],bool,bool)
           handler: handleFeeRegistered
         - event: FeeSettledForFund(indexed address,indexed address,indexed uint8,address,address,uint256)
           handler: handleFeeSettledForFund
         - event: FeesRecipientSetForFund(indexed address,address,address)
           handler: handleFeesRecipientSet
-        - event: SharesOutstandingPaidForFund(indexed address,indexed address,address,uint256)
+        - event: SharesOutstandingPaidForFund(indexed address,indexed address,uint256)
           handler: handleSharesOutstandingPaidForFee
 
   - name: ManagementFeeDataSource
@@ -189,8 +204,8 @@ dataSources:
           file: ./abis/VaultLib.json
         - name: ComptrollerLibContract
           file: ./abis/ComptrollerLib.json
-        - name: StandardERC20Contract
-          file: ./abis/StandardERC20.json
+        - name: MockTokenContract
+          file: ./abis/MockToken.json
         - name: IFeeInterface
           file: ./abis/IFee.json
       eventHandlers:
@@ -226,9 +241,11 @@ dataSources:
           handler: handleActivatedForFund
         - event: FundSettingsAdded(indexed address,uint256,uint256)
           handler: handleFundSettingsAdded
-        - event: PaidOut(indexed address,uint256,uint256)
+        - event: LastSharePriceUpdated(indexed address,uint256,uint256)
+          handler: handleLastSharePriceUpdated
+        - event: PaidOut(indexed address,uint256,uint256,uint256)
           handler: handlePaidOut
-        - event: PerformanceUpdated(indexed address,uint256,uint256,uint256,uint256,int256)
+        - event: PerformanceUpdated(indexed address,uint256,uint256,int256)
           handler: handlePerformanceUpdated
 
   - name: PolicyManagerDataSource
@@ -251,8 +268,8 @@ dataSources:
           file: ./abis/VaultLib.json
         - name: ComptrollerLibContract
           file: ./abis/ComptrollerLib.json
-        - name: StandardERC20Contract
-          file: ./abis/StandardERC20.json
+        - name: MockTokenContract
+          file: ./abis/MockToken.json
         - name: IPolicyInterface
           file: ./abis/IPolicy.json
       eventHandlers:
@@ -439,8 +456,8 @@ dataSources:
           file: ./abis/VaultLib.json
         - name: ComptrollerLibContract
           file: ./abis/ComptrollerLib.json
-        - name: StandardERC20Contract
-          file: ./abis/StandardERC20.json
+        - name: MockTokenContract
+          file: ./abis/MockToken.json
         - name: IIntegrationAdapterInterface
           file: ./abis/IIntegrationAdapter.json
         - name: FundCalculatorContract
@@ -473,8 +490,8 @@ dataSources:
           file: ./abis/VaultLib.json
         - name: ComptrollerLibContract
           file: ./abis/ComptrollerLib.json
-        - name: StandardERC20Contract
-          file: ./abis/StandardERC20.json
+        - name: MockTokenContract
+          file: ./abis/MockToken.json
         - name: ChainlinkAggregatorContract
           file: ./node_modules/@chainlink/contracts/abi/v0.6/AggregatorInterface.json
         - name: ChainlinkAggregatorProxyContract
@@ -513,8 +530,8 @@ dataSources:
           file: ./abis/VaultLib.json
         - name: ComptrollerLibContract
           file: ./abis/ComptrollerLib.json
-        - name: StandardERC20Contract
-          file: ./abis/StandardERC20.json
+        - name: MockTokenContract
+          file: ./abis/MockToken.json
         - name: ValueInterpreterContract
           file: ./abis/ValueInterpreter.json
         - name: IUniswapV2Pair
@@ -546,8 +563,8 @@ templates:
           file: ./abis/ComptrollerLib.json
         - name: VaultLibContract
           file: ./abis/VaultLib.json
-        - name: StandardERC20Contract
-          file: ./abis/StandardERC20.json
+        - name: MockTokenContract
+          file: ./abis/MockToken.json
       eventHandlers:
         - event: AccessorSet(address,address)
           handler: handleAccessorSet
@@ -584,13 +601,11 @@ templates:
           file: ./abis/ComptrollerLib.json
         - name: VaultLibContract
           file: ./abis/VaultLib.json
-        - name: StandardERC20Contract
-          file: ./abis/StandardERC20.json
+        - name: MockTokenContract
+          file: ./abis/MockToken.json
         - name: FundCalculatorContract
           file: ./abis/FundCalculator.json
       eventHandlers:
-        - event: AmguPaid(indexed address,uint256,uint256)
-          handler: handleAmguPaid
         - event: MigratedSharesDuePaid(uint256)
           handler: handleMigratedSharesDuePaid
         - event: OverridePauseSet(indexed bool)

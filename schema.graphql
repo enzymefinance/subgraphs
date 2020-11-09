@@ -270,77 +270,107 @@ type MigrationExecutedEvent implements Event & FundEvent @entity {
   signalTimestamp: BigInt!
 }
 
-type PostCancelMigrationOriginHookFailedEvent implements Event & FundEvent @entity {
+type MigrationInCancelHookFailedEvent implements Event & FundEvent @entity {
   id: ID!
   fund: Fund!
   account: Account!
   contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  migration: Migration!
-  signalTimestamp: BigInt!
-  failureData: Bytes!
+  vaultProxy: String!
+  prevFundDeployer: String!
+  nextFundDeployer: String!
+  nextVaultLib: String!
+  nextVaultAccessor: String!
+  failureReturnData: String!
 }
 
-type PostCancelMigrationTargetHookFailedEvent implements Event & FundEvent @entity {
+type MigrationOutHookFailedEvent implements Event & FundEvent @entity {
   id: ID!
   fund: Fund!
   account: Account!
   contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  migration: Migration!
-  signalTimestamp: BigInt!
-  failureData: Bytes!
+  vaultProxy: String!
+  prevFundDeployer: String!
+  nextFundDeployer: String!
+  nextVaultLib: String!
+  nextVaultAccessor: String!
+  failureReturnData: String!
 }
 
-type PreMigrateOriginHookFailedEvent implements Event & FundEvent @entity {
-  id: ID!
-  fund: Fund!
-  account: Account!
-  contract: Contract!
-  timestamp: BigInt!
-  transaction: Transaction!
-  migration: Migration!
-  signalTimestamp: BigInt!
-  failureData: Bytes!
-}
+# type PostCancelMigrationOriginHookFailedEvent implements Event & FundEvent @entity {
+#   id: ID!
+#   fund: Fund!
+#   account: Account!
+#   contract: Contract!
+#   timestamp: BigInt!
+#   transaction: Transaction!
+#   migration: Migration!
+#   signalTimestamp: BigInt!
+#   failureData: Bytes!
+# }
 
-type PostMigrateOriginHookFailedEvent implements Event & FundEvent @entity {
-  id: ID!
-  fund: Fund!
-  account: Account!
-  contract: Contract!
-  timestamp: BigInt!
-  transaction: Transaction!
-  migration: Migration!
-  signalTimestamp: BigInt!
-  failureData: Bytes!
-}
+# type PostCancelMigrationTargetHookFailedEvent implements Event & FundEvent @entity {
+#   id: ID!
+#   fund: Fund!
+#   account: Account!
+#   contract: Contract!
+#   timestamp: BigInt!
+#   transaction: Transaction!
+#   migration: Migration!
+#   signalTimestamp: BigInt!
+#   failureData: Bytes!
+# }
 
-type PreSignalMigrationOriginHookFailedEvent implements Event & FundEvent @entity {
-  id: ID!
-  fund: Fund!
-  account: Account!
-  contract: Contract!
-  timestamp: BigInt!
-  transaction: Transaction!
-  migration: Migration!
-  signalTimestamp: BigInt!
-  failureData: Bytes!
-}
+# type PreMigrateOriginHookFailedEvent implements Event & FundEvent @entity {
+#   id: ID!
+#   fund: Fund!
+#   account: Account!
+#   contract: Contract!
+#   timestamp: BigInt!
+#   transaction: Transaction!
+#   migration: Migration!
+#   signalTimestamp: BigInt!
+#   failureData: Bytes!
+# }
 
-type PostSignalMigrationOriginHookFailedEvent implements Event & FundEvent @entity {
-  id: ID!
-  fund: Fund!
-  account: Account!
-  contract: Contract!
-  timestamp: BigInt!
-  transaction: Transaction!
-  migration: Migration!
-  signalTimestamp: BigInt!
-  failureData: Bytes!
-}
+# type PostMigrateOriginHookFailedEvent implements Event & FundEvent @entity {
+#   id: ID!
+#   fund: Fund!
+#   account: Account!
+#   contract: Contract!
+#   timestamp: BigInt!
+#   transaction: Transaction!
+#   migration: Migration!
+#   signalTimestamp: BigInt!
+#   failureData: Bytes!
+# }
+
+# type PreSignalMigrationOriginHookFailedEvent implements Event & FundEvent @entity {
+#   id: ID!
+#   fund: Fund!
+#   account: Account!
+#   contract: Contract!
+#   timestamp: BigInt!
+#   transaction: Transaction!
+#   migration: Migration!
+#   signalTimestamp: BigInt!
+#   failureData: Bytes!
+# }
+
+# type PostSignalMigrationOriginHookFailedEvent implements Event & FundEvent @entity {
+#   id: ID!
+#   fund: Fund!
+#   account: Account!
+#   contract: Contract!
+#   timestamp: BigInt!
+#   transaction: Transaction!
+#   migration: Migration!
+#   signalTimestamp: BigInt!
+#   failureData: Bytes!
+# }
 
 type FeeEnabledForFundEvent implements Event & FundEvent @entity {
   id: ID!
@@ -658,6 +688,18 @@ type PerformanceFeeActivatedForFundEvent implements Event & FundEvent @entity {
   highWaterMark: BigDecimal!
 }
 
+type PerformanceFeeSharePriceUpdatedEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: Contract!
+  prevSharePrice: BigDecimal!
+  nextSharePrice: BigDecimal!
+}
+
 type PerformanceFeePaidOutEvent implements Event & FundEvent @entity {
   id: ID!
   fund: Fund!
@@ -680,8 +722,6 @@ type PerformanceFeePerformanceUpdatedEvent implements Event & FundEvent @entity 
   comptrollerProxy: Contract!
   prevAggregateValueDue: BigDecimal!
   nextAggregateValueDue: BigDecimal!
-  prevSharePrice: BigDecimal!
-  nextSharePrice: BigDecimal!
   sharesOutstandingDiff: BigDecimal!
 }
 
@@ -925,7 +965,10 @@ type FeeRegisteredEvent implements Event & NetworkEvent @entity {
   transaction: Transaction!
   fee: Fee!
   identifier: String!
-  implementedHooks: [FeeHook!]!
+  implementedHooksForSettle: [FeeHook!]!
+  implementedHooksForUpdate: [FeeHook!]!
+  usesGavOnSettle: Boolean!
+  usesGavOnUpdate: Boolean!
 }
 
 type FeeDeregisteredEvent implements Event & NetworkEvent @entity {
@@ -947,6 +990,48 @@ type ChainlinkAggregatorAnswerUpdatedEvent implements Event & NetworkEvent @enti
   current: BigDecimal!
   roundId: BigInt!
   updatedAt: BigInt!
+}
+
+type MigrationTimelockSetEvent implements Event & NetworkEvent @entity {
+  id: ID!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  prevTimelock: BigInt!
+  nextTimelock: BigInt!
+}
+
+type NominatedOwnerRemovedEvent implements Event & NetworkEvent @entity {
+  id: ID!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  nominatedOwner: String!
+}
+
+type NominatedOwnerSetEvent implements Event & NetworkEvent @entity {
+  id: ID!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  nominatedOwner: String!
+}
+
+type DispatcherOwnershipTransferredEvent implements Event & NetworkEvent @entity {
+  id: ID!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  prevOwner: String!
+  nextOwner: String!
+}
+
+type SharesTokenSymbolSetEvent implements Event & NetworkEvent @entity {
+  id: ID!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  sharesTokenSymbol: String!
 }
 
 #################################################

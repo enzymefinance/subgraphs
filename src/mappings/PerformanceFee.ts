@@ -7,12 +7,19 @@ import { ensurePerformanceFeeSetting, usePerformanceFeeSetting } from '../entiti
 import { performanceFeeStateId, usePerformanceFeeState } from '../entities/PerformanceFeeState';
 import { ensureTransaction } from '../entities/Transaction';
 import { ComptrollerLibContract } from '../generated/ComptrollerLibContract';
-import { ActivatedForFund, FundSettingsAdded, PaidOut, PerformanceUpdated } from '../generated/PerformanceFeeContract';
+import {
+  ActivatedForFund,
+  FundSettingsAdded,
+  LastSharePriceUpdated,
+  PaidOut,
+  PerformanceUpdated,
+} from '../generated/PerformanceFeeContract';
 import {
   PerformanceFeeActivatedForFundEvent,
   PerformanceFeePaidOutEvent,
   PerformanceFeePerformanceUpdatedEvent,
   PerformanceFeeSettingsAddedEvent,
+  PerformanceFeeSharePriceUpdatedEvent,
 } from '../generated/schema';
 import { arrayUnique } from '../utils/arrayUnique';
 import { genericId } from '../utils/genericId';
@@ -63,6 +70,28 @@ export function handleActivatedForFund(event: ActivatedForFund): void {
   setting.save();
 }
 
+export function handleLastSharePriceUpdated(event: LastSharePriceUpdated): void {
+  let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
+  let fund = useFund(comptroller.getVaultProxy().toHex());
+  let fee = useFee(event.address.toHex());
+
+  let sharePriceUpdate = new PerformanceFeeSharePriceUpdatedEvent(genericId(event));
+  sharePriceUpdate.fund = fund.id;
+  sharePriceUpdate.account = ensureManager(event.transaction.from, event).id;
+  sharePriceUpdate.contract = ensureContract(event.address, 'PerformanceFee').id;
+  sharePriceUpdate.timestamp = event.block.timestamp;
+  sharePriceUpdate.transaction = ensureTransaction(event).id;
+  sharePriceUpdate.comptrollerProxy = event.params.comptrollerProxy.toHex();
+  sharePriceUpdate.prevSharePrice = toBigDecimal(event.params.prevSharePrice);
+  sharePriceUpdate.nextSharePrice = toBigDecimal(event.params.nextSharePrice);
+  sharePriceUpdate.save();
+
+  let performanceFeeState = usePerformanceFeeState(performanceFeeStateId(fund, event));
+  performanceFeeState.grossSharePrice = toBigDecimal(event.params.nextSharePrice);
+  performanceFeeState.lastPaid = event.block.timestamp;
+  performanceFeeState.save();
+}
+
 export function handlePaidOut(event: PaidOut): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let fund = useFund(comptroller.getVaultProxy().toHex());
@@ -101,8 +130,6 @@ export function handlePerformanceUpdated(event: PerformanceUpdated): void {
   updated.comptrollerProxy = event.params.comptrollerProxy.toHex();
   updated.prevAggregateValueDue = toBigDecimal(event.params.prevAggregateValueDue);
   updated.nextAggregateValueDue = toBigDecimal(event.params.nextAggregateValueDue);
-  updated.prevSharePrice = toBigDecimal(event.params.prevSharePrice);
-  updated.nextSharePrice = toBigDecimal(event.params.nextSharePrice);
   updated.sharesOutstandingDiff = toBigDecimal(event.params.sharesOutstandingDiff);
   updated.save();
 
@@ -110,7 +137,6 @@ export function handlePerformanceUpdated(event: PerformanceUpdated): void {
 
   let performanceFeeState = usePerformanceFeeState(performanceFeeStateId(fund, event));
   performanceFeeState.aggregateValueDue = toBigDecimal(event.params.nextAggregateValueDue);
-  performanceFeeState.grossSharePrice = toBigDecimal(event.params.nextSharePrice);
   performanceFeeState.sharesOutstanding = performanceFeeState.sharesOutstanding.plus(
     toBigDecimal(event.params.sharesOutstandingDiff),
   );

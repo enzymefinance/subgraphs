@@ -1,5 +1,5 @@
 import { BigDecimal, dataSource } from '@graphprotocol/graph-ts';
-import { ensureAccount, ensureInvestor, useAccount } from '../entities/Account';
+import { ensureInvestor, useAccount } from '../entities/Account';
 import { useAsset } from '../entities/Asset';
 import { trackFundCalculations } from '../entities/Calculations';
 import { ensureContract, useContract } from '../entities/Contract';
@@ -9,7 +9,6 @@ import { trackFundPortfolio } from '../entities/Portfolio';
 import { trackFundShares } from '../entities/Shares';
 import { ensureTransaction } from '../entities/Transaction';
 import {
-  AmguPaid,
   MigratedSharesDuePaid,
   OverridePauseSet,
   SharesBought,
@@ -17,7 +16,6 @@ import {
   VaultProxySet,
 } from '../generated/ComptrollerLibContract';
 import {
-  AmguPaidEvent,
   Asset,
   MigratedSharesDuePaidEvent,
   OverridePauseSetEvent,
@@ -27,16 +25,6 @@ import {
 } from '../generated/schema';
 import { genericId } from '../utils/genericId';
 import { toBigDecimal } from '../utils/toBigDecimal';
-
-export function handleAmguPaid(event: AmguPaid): void {
-  let amguPaid = new AmguPaidEvent(genericId(event));
-  amguPaid.amount = toBigDecimal(event.params.ethPaid);
-  amguPaid.payer = ensureAccount(event.params.payer, event).id;
-  amguPaid.gas = event.params.gasUsed.toI32();
-  amguPaid.timestamp = event.block.timestamp;
-  amguPaid.transaction = ensureTransaction(event).id;
-  amguPaid.save();
-}
 
 export function handleSharesBought(event: SharesBought): void {
   let fund = useFund(dataSource.context().getString('vaultProxy'));

@@ -10,7 +10,6 @@ export interface Deployment {
   vaultLib: string;
   fundDeployer: string;
   valueInterpreter: string;
-  engine: string;
   comptrollerLib: string;
   feeManager: string;
   integrationManager: string;
@@ -42,7 +41,6 @@ const deploymentQuery = gql`
       vaultLib
       fundDeployer
       valueInterpreter
-      engine
       comptrollerLib
       feeManager
       integrationManager
@@ -76,7 +74,6 @@ const createDeploymentMutation = gql`
       vaultLib
       fundDeployer
       valueInterpreter
-      engine
       comptrollerLib
       feeManager
       integrationManager
