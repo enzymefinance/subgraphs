@@ -18,9 +18,14 @@ export interface Deployment {
   chaiPriceFeed: string;
   aggregatedDerivativePriceFeed: string;
   chaiAdapter: string;
+  compoundAdapter: string;
+  uniswapV2Adapter: string;
+  trackedAssetsAdapter: string;
   kyberAdapter: string;
   managementFee: string;
   performanceFee: string;
+  entranceRateBurnFee: string;
+  entranceRateDirectFee: string;
   adapterBlacklist: string;
   adapterWhitelist: string;
   assetBlacklist: string;
@@ -49,9 +54,14 @@ const deploymentQuery = gql`
       chaiPriceFeed
       aggregatedDerivativePriceFeed
       chaiAdapter
+      compoundAdapter
       kyberAdapter
+      uniswapV2Adapter
+      trackedAssetsAdapter
       managementFee
       performanceFee
+      entranceRateBurnFee
+      entranceRateDirectFee
       adapterBlacklist
       adapterWhitelist
       assetBlacklist
@@ -82,9 +92,14 @@ const createDeploymentMutation = gql`
       chaiPriceFeed
       aggregatedDerivativePriceFeed
       chaiAdapter
+      compoundAdapter
       kyberAdapter
+      uniswapV2Adapter
+      trackedAssetsAdapter
       managementFee
       performanceFee
+      entranceRateBurnFee
+      entranceRateDirectFee
       adapterBlacklist
       adapterWhitelist
       assetBlacklist

@@ -86,6 +86,8 @@ export function handleLastSharePriceUpdated(event: LastSharePriceUpdated): void 
   sharePriceUpdate.nextSharePrice = toBigDecimal(event.params.nextSharePrice);
   sharePriceUpdate.save();
 
+  trackFeeState(fund, fee, event, sharePriceUpdate);
+
   let performanceFeeState = usePerformanceFeeState(performanceFeeStateId(fund, event));
   performanceFeeState.grossSharePrice = toBigDecimal(event.params.nextSharePrice);
   performanceFeeState.lastPaid = event.block.timestamp;

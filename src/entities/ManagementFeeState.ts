@@ -68,9 +68,7 @@ export function ensureManagementFeeState(
     } else {
       let contract = ManagementFeeContract.bind(Address.fromString(fee.id));
       let feeInfo = contract.getFeeInfoForFund(Address.fromString(fund.accessor));
-
       managementFeeState = createManagementFeeState(fund, fee, { lastSettled: feeInfo.lastSettled }, event, cause);
-
       let feeState = useFeeState(feeStateId(fund, event));
       feeState.feeStates = feeState.feeStates.concat([managementFeeState.id]);
       feeState.save();

@@ -1,6 +1,6 @@
 import { Address, BigDecimal, Entity, ethereum } from '@graphprotocol/graph-ts';
-import { MockTokenContract } from '../generated/MockTokenContract';
 import { Fund, Share } from '../generated/schema';
+import { VaultLibContract } from '../generated/VaultLibContract';
 import { arrayUnique } from '../utils/arrayUnique';
 import { logCritical } from '../utils/logCritical';
 import { toBigDecimal } from '../utils/toBigDecimal';
@@ -59,7 +59,7 @@ export function useShares(id: string): Share {
 
 export function trackFundShares(fund: Fund, event: ethereum.Event, cause: Entity): Share {
   let fundAddress = Address.fromString(fund.id);
-  let contract = MockTokenContract.bind(fundAddress);
+  let contract = VaultLibContract.bind(fundAddress);
   let totalSupply = contract.totalSupply();
   let outstanding = contract.balanceOf(fundAddress);
 

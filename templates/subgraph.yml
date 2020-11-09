@@ -20,11 +20,11 @@ dataSources:
       entities: []
       abis:
         - name: DispatcherContract
-          file: ./abis/Dispatcher.json
+          file: ./node_modules/@melonproject/protocol/artifacts/Dispatcher.json
         - name: FundDeployerContract
-          file: ./abis/FundDeployer.json
+          file: ./node_modules/@melonproject/protocol/artifacts/FundDeployer.json
         - name: ComptrollerLibContract
-          file: ./abis/ComptrollerLib.json
+          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
       eventHandlers:
         - event: CurrentFundDeployerSet(address,address)
           handler: handleCurrentFundDeployerSet
@@ -34,20 +34,6 @@ dataSources:
           handler: handleMigrationExecuted
         - event: MigrationSignaled(indexed address,indexed address,indexed address,address,address)
           handler: handleMigrationSignaled
-
-        # - event: PostCancelMigrationOriginHookFailed(bytes,indexed address,indexed address,indexed address,address,address,uint256)
-        #   handler: handlePostCancelMigrationOriginHookFailed
-        # - event: PostCancelMigrationTargetHookFailed(bytes,indexed address,indexed address,indexed address,address,address,uint256)
-        #   handler: handlePostCancelMigrationTargetHookFailed
-        # - event: PostMigrateOriginHookFailed(bytes,indexed address,indexed address,indexed address,address,address,uint256)
-        #   handler: handlePostMigrateOriginHookFailed
-        # - event: PostSignalMigrationOriginHookFailed(bytes,indexed address,indexed address,indexed address,address,address)
-        #   handler: handlePostSignalMigrationOriginHookFailed
-        # - event: PreMigrateOriginHookFailed(bytes,indexed address,indexed address,indexed address,address,address,uint256)
-        #   handler: handlePreMigrateOriginHookFailed
-        # - event: PreSignalMigrationOriginHookFailed(bytes,indexed address,indexed address,indexed address,address,address)
-        #   handler: handlePreSignalMigrationOriginHookFailed
-
         - event: MigrationInCancelHookFailed(bytes,indexed address,indexed address,indexed address,address,address)
           handler: handleMigrationInCancelHookFailed
         - event: MigrationOutHookFailed(bytes,uint8,indexed address,indexed address,indexed address,address,address)
@@ -66,42 +52,6 @@ dataSources:
         - event: VaultProxyDeployed(indexed address,indexed address,address,indexed address,address,string)
           handler: handleVaultProxyDeployed
 
-  # - name: EngineSource
-  #   kind: ethereum/contract
-  #   network: mainnet
-  #   source:
-  #     address: '{{engine}}'
-  #     abi: EngineContract
-  #     startBlock: 0
-  #   mapping:
-  #     kind: ethereum/events
-  #     apiVersion: 0.0.4
-  #     language: wasm/assemblyscript
-  #     file: ./src/mappings/Engine.ts
-  #     entities: []
-  #     abis:
-  #       - name: EngineContract
-  #         file: ./abis/Engine.json
-  #       - name: VaultLibContract
-  #         file: ./abis/VaultLib.json
-  #       - name: MockTokenContract
-  #         file: ./abis/MockToken.json
-  #     eventHandlers:
-  #       - event: AmguPaidInEther(uint256)
-  #         handler: handleAmguPaidInEther
-  #       - event: AmguPriceSet(uint256,uint256)
-  #         handler: handleAmguPriceSet
-  #       - event: EtherTakerAdded(address)
-  #         handler: handleEtherTakerAdded
-  #       - event: EtherTakerRemoved(address)
-  #         handler: handleEtherTakerRemoved
-  #       - event: FrozenEtherThawed(uint256)
-  #         handler: handleFrozenEtherThawed
-  #       - event: MlnSoldAndBurned(uint256,uint256)
-  #         handler: handleMlnSoldAndBurned
-  #       - event: ValueInterpreterSet(address,address)
-  #         handler: handleValueInterpreterSet
-
   - name: FundDeployerDataSource
     kind: ethereum/contract
     network: mainnet
@@ -117,13 +67,13 @@ dataSources:
       entities: []
       abis:
         - name: FundDeployerContract
-          file: ./abis/FundDeployer.json
+          file: ./node_modules/@melonproject/protocol/artifacts/FundDeployer.json
         - name: VaultLibContract
-          file: ./abis/VaultLib.json
+          file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
         - name: ComptrollerLibContract
-          file: ./abis/ComptrollerLib.json
-        - name: MockTokenContract
-          file: ./abis/MockToken.json
+          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
+        - name: ERC20Contract
+          file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json
       eventHandlers:
         - event: ComptrollerLibSet(address)
           handler: handleComptrollerLibSet
@@ -153,19 +103,19 @@ dataSources:
       entities: []
       abis:
         - name: FeeManagerContract
-          file: ./abis/FeeManager.json
+          file: ./node_modules/@melonproject/protocol/artifacts/FeeManager.json
         - name: VaultLibContract
-          file: ./abis/VaultLib.json
+          file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
         - name: ComptrollerLibContract
-          file: ./abis/ComptrollerLib.json
-        - name: MockTokenContract
-          file: ./abis/MockToken.json
+          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
+        - name: ERC20Contract
+          file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json
         - name: IFeeInterface
-          file: ./abis/IFee.json
+          file: ./node_modules/@melonproject/protocol/artifacts/IFee.json
         - name: PerformanceFeeContract
-          file: ./abis/PerformanceFee.json
+          file: ./node_modules/@melonproject/protocol/artifacts/PerformanceFee.json
         - name: FundCalculatorContract
-          file: ./abis/FundCalculator.json
+          file: ./node_modules/@melonproject/protocol/artifacts/FundCalculator.json
       eventHandlers:
         - event: AllSharesOutstandingForcePaidForFund(indexed address,address,uint256)
           handler: handleAllSharesOutstandingForcePaidForFund
@@ -197,17 +147,17 @@ dataSources:
       entities: []
       abis:
         - name: ManagementFeeContract
-          file: ./abis/ManagementFee.json
+          file: ./node_modules/@melonproject/protocol/artifacts/ManagementFee.json
         - name: FeeManagerContract
-          file: ./abis/FeeManager.json
+          file: ./node_modules/@melonproject/protocol/artifacts/FeeManager.json
         - name: VaultLibContract
-          file: ./abis/VaultLib.json
+          file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
         - name: ComptrollerLibContract
-          file: ./abis/ComptrollerLib.json
-        - name: MockTokenContract
-          file: ./abis/MockToken.json
+          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
+        - name: ERC20Contract
+          file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json
         - name: IFeeInterface
-          file: ./abis/IFee.json
+          file: ./node_modules/@melonproject/protocol/artifacts/IFee.json
       eventHandlers:
         - event: FundSettingsAdded(indexed address,uint256)
           handler: handleFundSettingsAdded
@@ -229,13 +179,13 @@ dataSources:
       entities: []
       abis:
         - name: PerformanceFeeContract
-          file: ./abis/PerformanceFee.json
+          file: ./node_modules/@melonproject/protocol/artifacts/PerformanceFee.json
         - name: FeeManagerContract
-          file: ./abis/FeeManager.json
+          file: ./node_modules/@melonproject/protocol/artifacts/FeeManager.json
         - name: VaultLibContract
-          file: ./abis/VaultLib.json
+          file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
         - name: ComptrollerLibContract
-          file: ./abis/ComptrollerLib.json
+          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
       eventHandlers:
         - event: ActivatedForFund(indexed address,uint256)
           handler: handleActivatedForFund
@@ -263,15 +213,15 @@ dataSources:
       entities: []
       abis:
         - name: PolicyManagerContract
-          file: ./abis/PolicyManager.json
+          file: ./node_modules/@melonproject/protocol/artifacts/PolicyManager.json
         - name: VaultLibContract
-          file: ./abis/VaultLib.json
+          file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
         - name: ComptrollerLibContract
-          file: ./abis/ComptrollerLib.json
-        - name: MockTokenContract
-          file: ./abis/MockToken.json
+          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
+        - name: ERC20Contract
+          file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json
         - name: IPolicyInterface
-          file: ./abis/IPolicy.json
+          file: ./node_modules/@melonproject/protocol/artifacts/IPolicy.json
       eventHandlers:
         - event: PolicyDeregistered(indexed address,indexed string)
           handler: handlePolicyDeregistered
@@ -295,11 +245,11 @@ dataSources:
       entities: []
       abis:
         - name: AdapterBlacklistContract
-          file: ./abis/AdapterBlacklist.json
+          file: ./node_modules/@melonproject/protocol/artifacts/AdapterBlacklist.json
         - name: VaultLibContract
-          file: ./abis/VaultLib.json
+          file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
         - name: ComptrollerLibContract
-          file: ./abis/ComptrollerLib.json
+          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
       eventHandlers:
         - event: AddressesAdded(indexed address,address[])
           handler: handleAddressesAdded
@@ -321,13 +271,13 @@ dataSources:
       entities: []
       abis:
         - name: AdapterWhitelistContract
-          file: ./abis/AdapterWhitelist.json
+          file: ./node_modules/@melonproject/protocol/artifacts/AdapterWhitelist.json
         - name: FeeManagerContract
-          file: ./abis/FeeManager.json
+          file: ./node_modules/@melonproject/protocol/artifacts/FeeManager.json
         - name: VaultLibContract
-          file: ./abis/VaultLib.json
+          file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
         - name: ComptrollerLibContract
-          file: ./abis/ComptrollerLib.json
+          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
       eventHandlers:
         - event: AddressesAdded(indexed address,address[])
           handler: handleAddressesAdded
@@ -349,11 +299,11 @@ dataSources:
       entities: []
       abis:
         - name: AssetWhitelistContract
-          file: ./abis/AssetWhitelist.json
+          file: ./node_modules/@melonproject/protocol/artifacts/AssetWhitelist.json
         - name: VaultLibContract
-          file: ./abis/VaultLib.json
+          file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
         - name: ComptrollerLibContract
-          file: ./abis/ComptrollerLib.json
+          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
       eventHandlers:
         - event: AddressesAdded(indexed address,address[])
           handler: handleAddressesAdded
@@ -375,11 +325,11 @@ dataSources:
       entities: []
       abis:
         - name: AssetBlacklistContract
-          file: ./abis/AssetBlacklist.json
+          file: ./node_modules/@melonproject/protocol/artifacts/AssetBlacklist.json
         - name: VaultLibContract
-          file: ./abis/VaultLib.json
+          file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
         - name: ComptrollerLibContract
-          file: ./abis/ComptrollerLib.json
+          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
       eventHandlers:
         - event: AddressesAdded(indexed address,address[])
           handler: handleAddressesAdded
@@ -401,11 +351,11 @@ dataSources:
       entities: []
       abis:
         - name: InvestorWhitelistContract
-          file: ./abis/InvestorWhitelist.json
+          file: ./node_modules/@melonproject/protocol/artifacts/InvestorWhitelist.json
         - name: VaultLibContract
-          file: ./abis/VaultLib.json
+          file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
         - name: ComptrollerLibContract
-          file: ./abis/ComptrollerLib.json
+          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
       eventHandlers:
         - event: AddressesAdded(indexed address,address[])
           handler: handleAddressesAdded
@@ -427,11 +377,11 @@ dataSources:
       entities: []
       abis:
         - name: MaxConcentrationContract
-          file: ./abis/MaxConcentration.json
+          file: ./node_modules/@melonproject/protocol/artifacts/MaxConcentration.json
         - name: VaultLibContract
-          file: ./abis/VaultLib.json
+          file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
         - name: ComptrollerLibContract
-          file: ./abis/ComptrollerLib.json
+          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
       eventHandlers:
         - event: MaxConcentrationSet(address,uint256)
           handler: handleMaxConcentrationSet
@@ -451,17 +401,17 @@ dataSources:
       entities: []
       abis:
         - name: IntegrationManagerContract
-          file: ./abis/IntegrationManager.json
+          file: ./node_modules/@melonproject/protocol/artifacts/IntegrationManager.json
         - name: VaultLibContract
-          file: ./abis/VaultLib.json
+          file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
         - name: ComptrollerLibContract
-          file: ./abis/ComptrollerLib.json
-        - name: MockTokenContract
-          file: ./abis/MockToken.json
+          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
+        - name: ERC20Contract
+          file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json
         - name: IIntegrationAdapterInterface
-          file: ./abis/IIntegrationAdapter.json
+          file: ./node_modules/@melonproject/protocol/artifacts/IIntegrationAdapter.json
         - name: FundCalculatorContract
-          file: ./abis/FundCalculator.json
+          file: ./node_modules/@melonproject/protocol/artifacts/FundCalculator.json
       eventHandlers:
         - event: AdapterDeregistered(indexed address,indexed string)
           handler: handleAdapterDeregistered
@@ -485,19 +435,19 @@ dataSources:
       entities: []
       abis:
         - name: ChainlinkPriceFeedContract
-          file: ./abis/ChainlinkPriceFeed.json
+          file: ./node_modules/@melonproject/protocol/artifacts/ChainlinkPriceFeed.json
         - name: VaultLibContract
-          file: ./abis/VaultLib.json
+          file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
         - name: ComptrollerLibContract
-          file: ./abis/ComptrollerLib.json
-        - name: MockTokenContract
-          file: ./abis/MockToken.json
+          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
+        - name: ERC20Contract
+          file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json
         - name: ChainlinkAggregatorContract
           file: ./node_modules/@chainlink/contracts/abi/v0.6/AggregatorInterface.json
         - name: ChainlinkAggregatorProxyContract
           file: ./node_modules/@chainlink/contracts/abi/v0.6/AggregatorProxy.json
         - name: ValueInterpreterContract
-          file: ./abis/ValueInterpreter.json  
+          file: ./node_modules/@melonproject/protocol/artifacts/ValueInterpreter.json  
       eventHandlers:
         - event: EthUsdAggregatorSet(address,address)
           handler: handleEthUsdAggregatorSet
@@ -525,19 +475,19 @@ dataSources:
       entities: []
       abis:
         - name: AggregatedDerivativePriceFeedContract
-          file: ./abis/AggregatedDerivativePriceFeed.json
+          file: ./node_modules/@melonproject/protocol/artifacts/AggregatedDerivativePriceFeed.json
         - name: VaultLibContract
-          file: ./abis/VaultLib.json
+          file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
         - name: ComptrollerLibContract
-          file: ./abis/ComptrollerLib.json
-        - name: MockTokenContract
-          file: ./abis/MockToken.json
+          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
+        - name: ERC20Contract
+          file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json
         - name: ValueInterpreterContract
-          file: ./abis/ValueInterpreter.json
+          file: ./node_modules/@melonproject/protocol/artifacts/ValueInterpreter.json
         - name: IUniswapV2Pair
-          file: ./abis/IUniswapV2Pair.json
+          file: ./node_modules/@melonproject/protocol/artifacts/IUniswapV2Pair.json
         - name: ICERC20
-          file: ./abis/ICERC20.json         
+          file: ./node_modules/@melonproject/protocol/artifacts/ICERC20.json         
       eventHandlers:
         - event: DerivativeAdded(indexed address,address)
           handler: handleDerivativeAdded
@@ -560,11 +510,11 @@ templates:
       entities: []
       abis:
         - name: ComptrollerLibContract
-          file: ./abis/ComptrollerLib.json
+          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
         - name: VaultLibContract
-          file: ./abis/VaultLib.json
-        - name: MockTokenContract
-          file: ./abis/MockToken.json
+          file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
+        - name: ERC20Contract
+          file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json
       eventHandlers:
         - event: AccessorSet(address,address)
           handler: handleAccessorSet
@@ -598,13 +548,13 @@ templates:
       entities: []
       abis:
         - name: ComptrollerLibContract
-          file: ./abis/ComptrollerLib.json
+          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
         - name: VaultLibContract
-          file: ./abis/VaultLib.json
-        - name: MockTokenContract
-          file: ./abis/MockToken.json
+          file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
+        - name: ERC20Contract
+          file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json
         - name: FundCalculatorContract
-          file: ./abis/FundCalculator.json
+          file: ./node_modules/@melonproject/protocol/artifacts/FundCalculator.json
       eventHandlers:
         - event: MigratedSharesDuePaid(uint256)
           handler: handleMigratedSharesDuePaid
@@ -630,7 +580,7 @@ templates:
       file: ./src/mappings/ChainlinkAggregator.ts
       abis:
         - name: ValueInterpreterContract
-          file: ./abis/ValueInterpreter.json
+          file: ./node_modules/@melonproject/protocol/artifacts/ValueInterpreter.json
         - name: ChainlinkAggregatorContract
           file: ./node_modules/@chainlink/contracts/abi/v0.6/AggregatorInterface.json
       eventHandlers:

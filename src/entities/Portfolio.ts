@@ -1,5 +1,5 @@
 import { Address, BigDecimal, Entity, ethereum } from '@graphprotocol/graph-ts';
-import { MockTokenContract } from '../generated/MockTokenContract';
+import { ERC20Contract } from '../generated/ERC20Contract';
 import { Asset, Fund, Holding, Portfolio } from '../generated/schema';
 import { VaultLibContract } from '../generated/VaultLibContract';
 import { arrayUnique } from '../utils/arrayUnique';
@@ -101,7 +101,7 @@ export function trackFundPortfolio(fund: Fund, event: ethereum.Event, cause: Ent
 
   for (let i: i32 = 0; i < trackedAssets.length; i++) {
     let assetAddress = trackedAssets[i];
-    let assetContract = MockTokenContract.bind(assetAddress);
+    let assetContract = ERC20Contract.bind(assetAddress);
     let assetBalance = assetContract.balanceOf(vaultProxyAddress);
 
     let asset = useAsset(assetAddress.toHex());

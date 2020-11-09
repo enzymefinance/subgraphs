@@ -1,5 +1,5 @@
 import { Address } from '@graphprotocol/graph-ts';
-import { MockTokenContract } from '../generated/MockTokenContract';
+import { ERC20Contract } from '../generated/ERC20Contract';
 import { Asset } from '../generated/schema';
 import { getMainnetTokenAddress } from '../utils/getMainnetTokenAddress';
 import { logCritical } from '../utils/logCritical';
@@ -19,7 +19,7 @@ export function ensureAsset(address: Address): Asset {
     return asset;
   }
 
-  let contract = MockTokenContract.bind(address);
+  let contract = ERC20Contract.bind(address);
   let name = !contract.try_name().reverted ? contract.try_name().value : '';
   let symbol = !contract.try_symbol().reverted ? contract.try_symbol().value : '';
   let decimals = !contract.try_decimals().reverted ? contract.try_decimals().value : 18;
