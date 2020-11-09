@@ -1,4 +1,4 @@
-import { Address, BigInt, Entity, ethereum } from '@graphprotocol/graph-ts';
+import { Address, BigDecimal, BigInt, Entity, ethereum } from '@graphprotocol/graph-ts';
 import { ManagementFeeContract } from '../generated/ManagementFeeContract';
 import { Fee, Fund, ManagementFeeState } from '../generated/schema';
 import { arrayDiff } from '../utils/arrayDiff';
@@ -9,6 +9,7 @@ import { useState } from './State';
 
 class ManagementFeeStateArgs {
   lastSettled: BigInt;
+  shares: BigDecimal;
 }
 
 export function managementFeeStateId(fund: Fund, event: ethereum.Event): string {
@@ -27,6 +28,7 @@ export function createManagementFeeState(
   feeState.fund = fund.id;
   feeState.fee = fee.id;
   feeState.lastSettled = args.lastSettled;
+  feeState.totalSharesPaidOut = args.shares;
   feeState.events = [cause.getString('id')];
   feeState.save();
 
@@ -46,6 +48,7 @@ function findManagementFeeState(feeStates: string[]): ManagementFeeState | null 
 export function ensureManagementFeeState(
   fund: Fund,
   fee: Fee,
+  shares: BigDecimal,
   event: ethereum.Event,
   cause: Entity,
 ): ManagementFeeState {
@@ -57,7 +60,13 @@ export function ensureManagementFeeState(
 
     let previous = findManagementFeeState(previousFeeState.feeStates);
     if (previous) {
-      managementFeeState = createManagementFeeState(fund, fee, { lastSettled: previous.lastSettled }, event, cause);
+      managementFeeState = createManagementFeeState(
+        fund,
+        fee,
+        { lastSettled: previous.lastSettled, shares: previous.totalSharesPaidOut.plus(shares) },
+        event,
+        cause,
+      );
 
       let ids = arrayDiff<string>(previousFeeState.feeStates, [previous.id]);
       ids = arrayUnique<string>(ids.concat([managementFeeState.id]));
@@ -68,7 +77,13 @@ export function ensureManagementFeeState(
     } else {
       let contract = ManagementFeeContract.bind(Address.fromString(fee.id));
       let feeInfo = contract.getFeeInfoForFund(Address.fromString(fund.accessor));
-      managementFeeState = createManagementFeeState(fund, fee, { lastSettled: feeInfo.lastSettled }, event, cause);
+      managementFeeState = createManagementFeeState(
+        fund,
+        fee,
+        { lastSettled: feeInfo.lastSettled, shares: shares },
+        event,
+        cause,
+      );
       let feeState = useFeeState(feeStateId(fund, event));
       feeState.feeStates = feeState.feeStates.concat([managementFeeState.id]);
       feeState.save();

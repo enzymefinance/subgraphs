@@ -28,6 +28,8 @@ const query = gql`
       kyberAdapter
       managementFee
       performanceFee
+      entranceRateDirectFee
+      entranceRateBurnFee
       adapterBlacklist
       adapterWhitelist
       assetBlacklist
@@ -59,6 +61,8 @@ interface Result {
     kyberAdapter: string;
     managementFee: string;
     performanceFee: string;
+    entranceRateDirectFee: string;
+    entranceRateBurnFee: string;
     adapterBlacklist: string;
     adapterWhitelist: string;
     assetBlacklist: string;

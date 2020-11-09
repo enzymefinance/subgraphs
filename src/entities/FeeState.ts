@@ -1,7 +1,9 @@
-import { Entity, ethereum } from '@graphprotocol/graph-ts';
+import { BigDecimal, Entity, ethereum } from '@graphprotocol/graph-ts';
 import { Fee, FeeState, Fund } from '../generated/schema';
 import { arrayUnique } from '../utils/arrayUnique';
 import { logCritical } from '../utils/logCritical';
+import { ensureEntranceRateBurnFeeState } from './EntranceRateBurnFeeState';
+import { ensureEntranceRateDirectFeeState } from './EntranceRateDirectFeeState';
 import { ensureManagementFeeState } from './ManagementFeeState';
 import { ensurePerformanceFeeState } from './PerformanceFeeState';
 import { ensureState, useState } from './State';
@@ -51,13 +53,23 @@ export function useFeeState(id: string): FeeState {
   return feeState;
 }
 
-export function trackFeeState(fund: Fund, fee: Fee, event: ethereum.Event, cause: Entity): FeeState {
+export function trackFeeState(
+  fund: Fund,
+  fee: Fee,
+  shares: BigDecimal,
+  event: ethereum.Event,
+  cause: Entity,
+): FeeState {
   let feeState = ensureFeeState(fund, event, cause);
 
   if (fee.identifier == 'MANAGEMENT') {
-    ensureManagementFeeState(fund, fee, event, cause);
+    ensureManagementFeeState(fund, fee, shares, event, cause);
   } else if (fee.identifier == 'PERFORMANCE') {
     ensurePerformanceFeeState(fund, fee, event, cause);
+  } else if (fee.identifier == 'ENTRANCE_RATE_DIRECT') {
+    ensureEntranceRateDirectFeeState(fund, fee, event, cause);
+  } else if (fee.identifier == 'ENTRANCE_RATE_BURN') {
+    ensureEntranceRateBurnFeeState(fund, fee, event, cause);
   } else {
     return feeState;
   }

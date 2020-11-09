@@ -725,6 +725,52 @@ type PerformanceFeePerformanceUpdatedEvent implements Event & FundEvent @entity 
   sharesOutstandingDiff: BigDecimal!
 }
 
+type EntranceRateDirectFeeSettingsAddedEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: Contract!
+  rate: BigDecimal!
+}
+
+type EntranceRateDirectFeeSettledEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: Contract!
+  sharesQuantity: BigDecimal!
+  payer: Account!
+}
+
+type EntranceRateBurnFeeSettingsAddedEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: Contract!
+  rate: BigDecimal!
+}
+
+type EntranceRateBurnFeeSettledEvent implements Event & FundEvent @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: Contract!
+  sharesQuantity: BigDecimal!
+  payer: Account!
+}
+
 type OverridePauseSetEvent implements Event & FundEvent @entity {
   id: ID!
   fund: Fund!
@@ -1078,7 +1124,7 @@ type Fund @entity {
   sharesHistory: [Share!]! @derivedFrom(field: "fund")
   portfolio: Portfolio!
   portfolioHistory: [Portfolio!]! @derivedFrom(field: "fund")
-  feeState: Fee!
+  feeState: FeeState!
   feeStateHistory: [FeeState!]! @derivedFrom(field: "fund")
   calculations: Calculation!
   calculationsHistory: [Calculation!]! @derivedFrom(field: "fund")
@@ -1148,6 +1194,24 @@ type PerformanceFeeSetting implements FeeSetting @entity {
   rate: BigDecimal!
   period: BigInt!
   activated: BigInt!
+  timestamp: BigInt!
+  events: [FundEvent!]!
+}
+
+type EntranceRateDirectFeeSetting implements FeeSetting @entity {
+  id: ID!
+  fee: Fee!
+  fund: Fund!
+  rate: BigDecimal!
+  timestamp: BigInt!
+  events: [FundEvent!]!
+}
+
+type EntranceRateBurnFeeSetting implements FeeSetting @entity {
+  id: ID!
+  fee: Fee!
+  fund: Fund!
+  rate: BigDecimal!
   timestamp: BigInt!
   events: [FundEvent!]!
 }
@@ -1281,6 +1345,7 @@ type ManagementFeeState implements Metric & IndividualFeeState @entity {
   timestamp: BigInt!
   fee: Fee!
   lastSettled: BigInt!
+  totalSharesPaidOut: BigDecimal!
   events: [FundEvent!]!
 }
 
@@ -1294,6 +1359,24 @@ type PerformanceFeeState implements Metric & IndividualFeeState @entity {
   aggregateValueDue: BigDecimal!
   highWaterMark: BigDecimal!
   sharesOutstanding: BigDecimal!
+  events: [FundEvent!]!
+}
+
+type EntranceRateDirectFeeState implements Metric & IndividualFeeState @entity {
+  id: ID!
+  fund: Fund!
+  timestamp: BigInt!
+  fee: Fee!
+  lastSettled: BigInt!
+  events: [FundEvent!]!
+}
+
+type EntranceRateBurnFeeState implements Metric & IndividualFeeState @entity {
+  id: ID!
+  fund: Fund!
+  timestamp: BigInt!
+  fee: Fee!
+  lastSettled: BigInt!
   events: [FundEvent!]!
 }
 

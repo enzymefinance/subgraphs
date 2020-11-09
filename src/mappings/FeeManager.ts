@@ -1,4 +1,4 @@
-import { Address } from '@graphprotocol/graph-ts';
+import { Address, BigDecimal } from '@graphprotocol/graph-ts';
 import { ensureInvestor, useManager } from '../entities/Account';
 import { trackFundCalculations } from '../entities/Calculations';
 import { ensureContract } from '../entities/Contract';
@@ -130,7 +130,7 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
   settled.save();
 
   trackFundShares(fund, event, settled);
-  trackFeeState(fund, fee, event, settled);
+  trackFeeState(fund, fee, BigDecimal.fromString('0'), event, settled);
   trackFundCalculations(fund, event, settled);
 }
 
@@ -158,7 +158,7 @@ export function handleSharesOutstandingPaidForFund(event: SharesOutstandingPaidF
   sharesPaid.save();
 
   trackFundShares(fund, event, sharesPaid);
-  trackFeeState(fund, fee, event, sharesPaid);
+  trackFeeState(fund, fee, BigDecimal.fromString('0'), event, sharesPaid);
   trackFundCalculations(fund, event, sharesPaid);
 }
 

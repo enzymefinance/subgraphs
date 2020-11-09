@@ -4,6 +4,7 @@ import {
   adapterWhitelistArgs,
   callOnIntegrationArgs,
   ComptrollerLib,
+  entranceRateFeeConfigArgs,
   feeManagerConfigArgs,
   FundDeployer,
   IntegrationManagerActionId,
@@ -64,11 +65,11 @@ describe("Walkthrough a fund's lifecycle", () => {
       period: 365 * 24 * 60 * 60,
     });
     // TODO: add entranceRateFees to handlers
-    // const entranceRateFeeSettings = entranceRateFeeConfigArgs(utils.parseEther('0.05'));
+    const entranceRateFeeSettings = entranceRateFeeConfigArgs(utils.parseEther('0.05'));
 
     const feeManagerConfig = feeManagerConfigArgs({
-      fees: [deployment.managementFee, deployment.performanceFee],
-      settings: [managementFeeSettings, performanceFeeSettings],
+      fees: [deployment.managementFee, deployment.performanceFee, deployment.entranceRateDirectFee],
+      settings: [managementFeeSettings, performanceFeeSettings, entranceRateFeeSettings],
     });
 
     // policies
@@ -214,4 +215,25 @@ describe("Walkthrough a fund's lifecycle", () => {
       await expect(takeOrderTx).resolves.toBeReceipt();
     }
   });
+
+  // it('trades on Uniswap', async () => {
+  //   const outgoingAssetAmount = utils.parseEther('0.1');
+
+  //   const path = [deployment.wethToken, deployment.];
+  //   const routerContract = new IUniswapV2Router2(config.integratees.uniswapV2.router, provider);
+  //   const amountsOut = await routerContract.getAmountsOut(outgoingAssetAmount, path);
+
+  //   const takeOrder = await uniswapV2TakeOrder({
+  //     comptrollerProxy,
+  //     vaultProxy,
+  //     integrationManager: new IntegrationManager(deployment.integrationManager, provider),
+  //     fundOwner: manager,
+  //     uniswapV2Adapter: deployment.uniswapV2Adapter,
+  //     path,
+  //     minIncomingAssetAmount: amountsOut[1],
+  //     outgoingAssetAmount,
+  //   });
+
+  //   expect(takeOrder).toCostLessThan(`630000`);
+  // });
 });

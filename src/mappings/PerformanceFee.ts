@@ -1,3 +1,4 @@
+import { BigDecimal } from '@graphprotocol/graph-ts';
 import { ensureManager } from '../entities/Account';
 import { ensureContract } from '../entities/Contract';
 import { useFee } from '../entities/Fee';
@@ -86,7 +87,7 @@ export function handleLastSharePriceUpdated(event: LastSharePriceUpdated): void 
   sharePriceUpdate.nextSharePrice = toBigDecimal(event.params.nextSharePrice);
   sharePriceUpdate.save();
 
-  trackFeeState(fund, fee, event, sharePriceUpdate);
+  trackFeeState(fund, fee, BigDecimal.fromString('0'), event, sharePriceUpdate);
 
   let performanceFeeState = usePerformanceFeeState(performanceFeeStateId(fund, event));
   performanceFeeState.grossSharePrice = toBigDecimal(event.params.nextSharePrice);
@@ -110,7 +111,7 @@ export function handlePaidOut(event: PaidOut): void {
   paidOut.nextHighWaterMark = toBigDecimal(event.params.nextHighWaterMark);
   paidOut.save();
 
-  trackFeeState(fund, fee, event, paidOut);
+  trackFeeState(fund, fee, BigDecimal.fromString('0'), event, paidOut);
 
   let performanceFeeState = usePerformanceFeeState(performanceFeeStateId(fund, event));
   performanceFeeState.highWaterMark = toBigDecimal(event.params.nextHighWaterMark);
@@ -135,7 +136,7 @@ export function handlePerformanceUpdated(event: PerformanceUpdated): void {
   updated.sharesOutstandingDiff = toBigDecimal(event.params.sharesOutstandingDiff);
   updated.save();
 
-  trackFeeState(fund, fee, event, updated);
+  trackFeeState(fund, fee, BigDecimal.fromString('0'), event, updated);
 
   let performanceFeeState = usePerformanceFeeState(performanceFeeStateId(fund, event));
   performanceFeeState.aggregateValueDue = toBigDecimal(event.params.nextAggregateValueDue);

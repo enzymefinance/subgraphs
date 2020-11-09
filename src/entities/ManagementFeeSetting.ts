@@ -1,10 +1,10 @@
 import { BigDecimal, BigInt } from '@graphprotocol/graph-ts';
-import { ManagementFeeSetting, Fund, Policy, Fee } from '../generated/schema';
+import { Fee, Fund, ManagementFeeSetting } from '../generated/schema';
 import { feeSettingId } from '../utils/feeSettingId';
 import { logCritical } from '../utils/logCritical';
 
-export function useManagementFeeSetting(fund: Fund, policy: Policy): ManagementFeeSetting {
-  let id = feeSettingId(fund.id, policy);
+export function useManagementFeeSetting(fund: Fund, fee: Fee): ManagementFeeSetting {
+  let id = feeSettingId(fund.id, fee);
   let setting = ManagementFeeSetting.load(id) as ManagementFeeSetting;
 
   if (setting == null) {

@@ -198,6 +198,70 @@ dataSources:
         - event: PerformanceUpdated(indexed address,uint256,uint256,int256)
           handler: handlePerformanceUpdated
 
+  - name: EntranceRateDirectFeeDataSource
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      address: '{{entranceRateDirectFee}}'
+      abi: EntranceRateDirectFeeContract
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/EntranceRateDirectFee.ts
+      entities: []
+      abis:
+        - name: EntranceRateDirectFeeContract
+          file: ./node_modules/@melonproject/protocol/artifacts/EntranceRateDirectFee.json
+        - name: FeeManagerContract
+          file: ./node_modules/@melonproject/protocol/artifacts/FeeManager.json
+        - name: VaultLibContract
+          file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
+        - name: ComptrollerLibContract
+          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
+        - name: ERC20Contract
+          file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json
+        - name: IFeeInterface
+          file: ./node_modules/@melonproject/protocol/artifacts/IFee.json
+      eventHandlers:
+        - event: FundSettingsAdded(indexed address,uint256)
+          handler: handleFundSettingsAdded
+        - event: Settled(indexed address,indexed address,uint256)
+          handler: handleSettled
+
+  - name: EntranceRateBurnFeeDataSource
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      address: '{{entranceRateBurnFee}}'
+      abi: EntranceRateBurnFeeContract
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/EntranceRateBurnFee.ts
+      entities: []
+      abis:
+        - name: EntranceRateBurnFeeContract
+          file: ./node_modules/@melonproject/protocol/artifacts/EntranceRateBurnFee.json
+        - name: FeeManagerContract
+          file: ./node_modules/@melonproject/protocol/artifacts/FeeManager.json
+        - name: VaultLibContract
+          file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
+        - name: ComptrollerLibContract
+          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
+        - name: ERC20Contract
+          file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json
+        - name: IFeeInterface
+          file: ./node_modules/@melonproject/protocol/artifacts/IFee.json
+      eventHandlers:
+        - event: FundSettingsAdded(indexed address,uint256)
+          handler: handleFundSettingsAdded
+        - event: Settled(indexed address,indexed address,uint256)
+          handler: handleSettled
+
   - name: PolicyManagerDataSource
     kind: ethereum/contract
     network: mainnet
