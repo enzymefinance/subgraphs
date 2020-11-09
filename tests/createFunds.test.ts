@@ -1,133 +1,119 @@
-import { resolveAddress } from '@crestproject/ethers';
+import { SignerWithAddress } from '@crestproject/crestproject';
 import {
   callOnIntegrationArgs,
-  ComptrollerLib,
-  Dispatcher,
-  encodeArgs,
+  feeManagerConfigArgs,
   FundDeployer,
   IntegrationManagerActionId,
   KyberAdapter,
   kyberTakeOrderArgs,
+  managementFeeConfigArgs,
+  maxConcentrationArgs,
+  performanceFeeConfigArgs,
+  policyManagerConfigArgs,
   StandardToken,
   takeOrderSelector,
 } from '@melonproject/protocol';
-import { assertEvent } from '@melonproject/testutils';
-import { BigNumber, providers, utils, Wallet } from 'ethers';
+import { buyShares, createNewFund } from '@melonproject/testutils';
+import { providers, utils, Wallet } from 'ethers';
 import { createAccount, Deployment, fetchDeployment } from './utils/deployment';
 
 describe('Walkthrough', () => {
   let deployment: Deployment;
   let provider: providers.Provider;
-  let signer: Wallet;
+  let manager: SignerWithAddress;
+  let investor: SignerWithAddress;
 
   const testnetEndpoint = 'https://testnet.avantgarde.finance/graphql';
   const jsonRpcProvider = 'https://testnet.avantgarde.finance';
 
   beforeAll(async () => {
-    const account = await createAccount(testnetEndpoint);
     deployment = await fetchDeployment(testnetEndpoint);
     provider = new providers.JsonRpcProvider(jsonRpcProvider);
-    signer = new Wallet(account.privateKey, provider);
+
+    const [managerAddress, investorAddress] = await Promise.all([
+      createAccount(testnetEndpoint),
+      createAccount(testnetEndpoint),
+    ]);
+
+    manager = await SignerWithAddress.create(new Wallet(managerAddress.privateKey, provider));
+    investor = await SignerWithAddress.create(new Wallet(investorAddress.privateKey, provider));
   });
 
-  xit('should create a number of funds', async () => {
-    const dispatcher = new Dispatcher(deployment.dispatcher, provider);
-    const fundDeployerAddress = await dispatcher.getCurrentFundDeployer();
-    const fundDeployer = new FundDeployer(fundDeployerAddress, provider);
-    const denominationAsset = new StandardToken(deployment.wethToken, signer);
-
-    // create fund with fees
-
-    const managementFeeSettings = encodeArgs(['uint256'], [BigNumber.from('100000000000000000')]);
-
-    const performanceFeeSettings = encodeArgs(
-      ['uint256', 'uint256'],
-      [BigNumber.from('100000000000000000'), BigNumber.from('1000000')],
-    );
-
-    const fees = [deployment.managementFee, deployment.performanceFee];
-    const feesSettingsData = [managementFeeSettings, performanceFeeSettings];
-
-    const feeManagerConfigData = encodeArgs(['address[]', 'bytes[]'], [fees, feesSettingsData]);
+  it('should create a number of funds', async () => {
+    const denominationAsset = new StandardToken(deployment.wethToken, provider);
 
     // create funds
     for (let i = 0; i < 100; i++) {
-      // create fund
-      const newFundArgs = {
-        fundOwner: signer.address,
-        fundName: `WETH Fund with Trade (${new Date().toLocaleTimeString()})`,
-        denominationAsset,
-        sharesActionTimelock: 0,
-        allowedBuySharesCallers: [],
-        feeManagerConfigData,
-        policyManagerConfigData: 'Ox',
-      };
+      const fundDeployer = new FundDeployer(deployment.fundDeployer, manager);
 
-      const createFundTx = await fundDeployer.createNewFund
-        .args(
-          newFundArgs.fundOwner,
-          newFundArgs.fundName,
-          newFundArgs.denominationAsset,
-          newFundArgs.sharesActionTimelock,
-          newFundArgs.allowedBuySharesCallers,
-          newFundArgs.feeManagerConfigData,
-          newFundArgs.policyManagerConfigData,
-        )
-        .send();
-
-      expect(createFundTx).toBeReceipt();
-
-      const { comptrollerProxy } = assertEvent(createFundTx, 'NewFundCreated', {
-        comptrollerProxy: expect.any(String) as string,
-        vaultProxy: expect.any(String) as string,
-        fundOwner: newFundArgs.fundOwner,
-        fundName: newFundArgs.fundName,
-        denominationAsset: newFundArgs.denominationAsset.address,
-        sharesActionTimelock: BigNumber.from(newFundArgs.sharesActionTimelock),
-        allowedBuySharesCallers: newFundArgs.allowedBuySharesCallers,
-        feeManagerConfigData: utils.hexlify(feeManagerConfigData),
-        policyManagerConfigData: utils.hexlify('0x'),
+      // fees
+      const managementFeeSettings = managementFeeConfigArgs(utils.parseEther('0.01'));
+      const performanceFeeSettings = performanceFeeConfigArgs({
+        rate: utils.parseEther('0.1'),
+        period: 365 * 24 * 60 * 60,
       });
 
-      const comptroller = new ComptrollerLib(comptrollerProxy, signer);
+      const feeManagerConfig = feeManagerConfigArgs({
+        fees: [deployment.managementFee, deployment.performanceFee],
+        settings: [managementFeeSettings, performanceFeeSettings],
+      });
 
-      // approve ERC20 for contract
-      await denominationAsset.approve.args(comptroller.address, utils.parseEther('20')).send();
+      // policies
+      const maxConcentrationSettings = maxConcentrationArgs(utils.parseEther('1'));
+
+      const policyManagerConfig = policyManagerConfigArgs({
+        policies: [deployment.maxConcentration],
+        settings: [maxConcentrationSettings],
+      });
+
+      const createNewFundTx = await createNewFund({
+        signer: manager,
+        fundDeployer,
+        fundName: `AutoCreate Fund (${new Date().toLocaleTimeString()})`,
+        fundOwner: manager,
+        denominationAsset,
+        feeManagerConfig,
+        policyManagerConfig,
+      });
+
+      const comptrollerProxy = createNewFundTx.comptrollerProxy;
 
       // buy shares
-      const sharesToBuy = 1;
+      const investmentAmount = utils.parseEther('1');
+      const minSharesAmount = utils.parseEther('0.00000000001');
+
       const buySharesArgs = {
-        signer,
-        comptrollerProxy: comptroller,
-        buyer: signer.address,
-        denominationAsset,
-        investmentAmount: utils.parseEther(sharesToBuy.toString()),
-        minSharesAmount: utils.parseEther(sharesToBuy.toString()),
-        amguValue: utils.parseEther('1'),
+        investmentAmount,
+        amguValue: investmentAmount,
+        minSharesAmount,
       };
 
-      const bought = await comptroller.buyShares
-        .args(buySharesArgs.buyer, buySharesArgs.investmentAmount, buySharesArgs.minSharesAmount)
-        .value(buySharesArgs.amguValue)
-        .send(false);
-      await expect(bought.wait()).resolves.toBeReceipt();
+      const buySharesTx = await buyShares({
+        comptrollerProxy,
+        signer: investor,
+        buyer: investor,
+        denominationAsset,
+        ...buySharesArgs,
+      });
+
+      expect(buySharesTx).toBeReceipt();
 
       // trade
-      const takeOrderArgs = await kyberTakeOrderArgs({
+      const takeOrderArgs = kyberTakeOrderArgs({
         incomingAsset: deployment.mlnToken,
         minIncomingAssetAmount: utils.parseEther('0.000000001'),
         outgoingAsset: deployment.wethToken,
         outgoingAssetAmount: utils.parseEther('1'),
       });
 
-      const callArgs = await callOnIntegrationArgs({
-        adapter: new KyberAdapter(resolveAddress(deployment.kyberAdapter), signer),
+      const callArgs = callOnIntegrationArgs({
+        adapter: new KyberAdapter(deployment.kyberAdapter, manager),
         selector: takeOrderSelector,
         encodedCallArgs: takeOrderArgs,
       });
 
-      const takeOrderTx = await comptroller.callOnExtension
-        .args(resolveAddress(deployment.integrationManager), IntegrationManagerActionId.CallOnIntegration, callArgs)
+      const takeOrderTx = await comptrollerProxy.callOnExtension
+        .args(deployment.integrationManager, IntegrationManagerActionId.CallOnIntegration, callArgs)
         .send(false);
 
       await expect(takeOrderTx.wait()).resolves.toBeReceipt();
