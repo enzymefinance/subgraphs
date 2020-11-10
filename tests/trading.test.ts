@@ -31,4 +31,20 @@ describe('Walkthrough', () => {
       expect(1).toBe(1);
     }
   });
+
+  fit('should check Kyber rates', async () => {
+    const kyberIntegratee = new MockKyberIntegratee(deployment.kyberIntegratee, signer);
+
+    console.log(deployment.kyberIntegratee);
+
+    const assets = await fetchAssets(subgraphApi);
+
+    for (let asset of assets) {
+      // await kyberIntegratee.setRates([asset.id], [deployment.wethToken], [utils.parseEther('0.5')]);
+
+      const rate = await kyberIntegratee.getExpectedRate(asset.id, deployment.wethToken, utils.parseEther('0.001'));
+      console.log(`${asset.symbol} rate: `, utils.formatEther(rate.expectedRate));
+      expect(1).toBe(1);
+    }
+  });
 });

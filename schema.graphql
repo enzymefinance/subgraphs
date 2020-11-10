@@ -1109,6 +1109,7 @@ type Fund @entity {
   accessor: String!
   name: String!
   inception: BigInt!
+  creator: Account!
   firstInvestment: BigInt
   release: Release!
   manager: Account!
@@ -1130,8 +1131,8 @@ type Fund @entity {
   calculationsHistory: [Calculation!]! @derivedFrom(field: "fund")
   state: State!
   stateHistory: [State!]! @derivedFrom(field: "fund")
+  trades: [Trade!]! @derivedFrom(field: "fund")
   events: [FundEvent!]! @derivedFrom(field: "fund")
-  creator: Account!
   migrations: [Migration!] @derivedFrom(field: "fund")
 }
 
@@ -1378,6 +1379,18 @@ type EntranceRateBurnFeeState implements Metric & IndividualFeeState @entity {
   fee: Fee!
   lastSettled: BigInt!
   events: [FundEvent!]!
+}
+
+type Trade @entity {
+  id: ID!
+  fund: Fund!
+  adapter: IntegrationAdapter!
+  incomingAssets: [Asset!]!
+  incomingAssetAmounts: [BigDecimal!]!
+  outgoingAssets: [Asset!]!
+  outgoingAssetAmounts: [BigDecimal!]!
+  timestamp: BigInt!
+  transaction: Transaction!
 }
 
 #################################################

@@ -16,6 +16,7 @@ import {
   AdapterDeregisteredEvent,
   AdapterRegisteredEvent,
   CallOnIntegrationExecutedForFundEvent,
+  Trade,
 } from '../generated/schema';
 import { genericId } from '../utils/genericId';
 import { toBigDecimal } from '../utils/toBigDecimal';
@@ -55,6 +56,17 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
   execution.timestamp = event.block.timestamp;
   execution.transaction = ensureTransaction(event).id;
   execution.save();
+
+  let trade = new Trade(genericId(event));
+  trade.fund = fund.id;
+  trade.adapter = useIntegrationAdapter(event.params.adapter.toHex()).id;
+  trade.incomingAssets = event.params.incomingAssets.map<string>((asset) => useAsset(asset.toHex()).id);
+  trade.incomingAssetAmounts = event.params.incomingAssetAmounts.map<BigDecimal>((amount) => toBigDecimal(amount));
+  trade.outgoingAssets = event.params.outgoingAssets.map<string>((asset) => useAsset(asset.toHex()).id);
+  trade.outgoingAssetAmounts = event.params.outgoingAssetAmounts.map<BigDecimal>((amount) => toBigDecimal(amount));
+  trade.timestamp = event.block.timestamp;
+  trade.transaction = ensureTransaction(event).id;
+  trade.save();
 
   trackFundPortfolio(fund, event, execution);
   trackFundCalculations(fund, event, execution);

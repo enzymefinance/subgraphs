@@ -12,7 +12,7 @@ import {
   kyberTakeOrderArgs,
   managementFeeConfigArgs,
   maxConcentrationArgs,
-  MockKyberPriceSource,
+  MockKyberIntegratee,
   performanceFeeConfigArgs,
   policyManagerConfigArgs,
   StandardToken,
@@ -176,19 +176,10 @@ describe("Walkthrough a fund's lifecycle", () => {
         continue;
       }
 
-      const kyberEthAddress = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE';
+      const kyberIntegratee = new MockKyberIntegratee(deployment.kyberIntegratee, manager);
 
-      // // set price
-      const kyberIntegratee = new MockKyberPriceSource(deployment.kyberIntegratee, manager);
-      const setRatesTx = kyberIntegratee.setRates
-        .args(
-          [token.id, kyberEthAddress],
-          [kyberEthAddress, token.id],
-          [utils.parseEther('0.5'), utils.parseEther('2')],
-        )
-        .send();
-
-      await expect(setRatesTx).resolves.toBeReceipt();
+      const rate = await kyberIntegratee.getExpectedRate(token.id, deployment.wethToken, utils.parseEther('0.1'));
+      console.log(utils.formatEther(rate.expectedRate));
 
       const takeOrderArgs = kyberTakeOrderArgs({
         incomingAsset: token.id,
@@ -219,7 +210,10 @@ describe("Walkthrough a fund's lifecycle", () => {
   // it('trades on Uniswap', async () => {
   //   const outgoingAssetAmount = utils.parseEther('0.1');
 
-  //   const path = [deployment.wethToken, deployment.];
+  //   const outgoingToken = new StandardToken(deployment.wethToken, provider);
+  //   const incomingToken = new StandardToken(deployment.)
+
+  //   const path = [deployment.wethToken, deployment.mlnToken];
   //   const routerContract = new IUniswapV2Router2(config.integratees.uniswapV2.router, provider);
   //   const amountsOut = await routerContract.getAmountsOut(outgoingAssetAmount, path);
 
@@ -228,7 +222,7 @@ describe("Walkthrough a fund's lifecycle", () => {
   //     vaultProxy,
   //     integrationManager: new IntegrationManager(deployment.integrationManager, provider),
   //     fundOwner: manager,
-  //     uniswapV2Adapter: deployment.uniswapV2Adapter,
+  //     uniswapV2Adapter: new UniswapV2Adapter(deployment.uniswapV2Adapter, provider),
   //     path,
   //     minIncomingAssetAmount: amountsOut[1],
   //     outgoingAssetAmount,

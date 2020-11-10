@@ -2,6 +2,7 @@
   "private": true,
   "scripts": {
     "script": "ts-node scripts",
+    "create-funds": "ts-node scripts/create-funds",
     "precodegen": "rimraf src/generated && yarn script template --deployment https://testnet.avantgarde.finance/graphql",
     "precodegen:local": "rimraf src/generated && yarn script template --deployment http://localhost:4000/graphql",
     "codegen": "graph codegen subgraph.yaml --output-dir src/generated",
