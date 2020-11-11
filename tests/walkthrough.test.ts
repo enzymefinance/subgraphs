@@ -12,7 +12,6 @@ import {
   kyberTakeOrderArgs,
   managementFeeConfigArgs,
   maxConcentrationArgs,
-  MockKyberIntegratee,
   performanceFeeConfigArgs,
   policyManagerConfigArgs,
   StandardToken,
@@ -26,6 +25,8 @@ import { waitForSubgraph } from './utils/subgraph';
 import { fetchAssets } from './utils/subgraph-queries/fetchAssets';
 import { fetchFund } from './utils/subgraph-queries/fetchFund';
 import { fetchInvestment } from './utils/subgraph-queries/fetchInvestment';
+
+// const kyberEth = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE';
 
 describe("Walkthrough a fund's lifecycle", () => {
   let deployment: Deployment;
@@ -176,10 +177,14 @@ describe("Walkthrough a fund's lifecycle", () => {
         continue;
       }
 
-      const kyberIntegratee = new MockKyberIntegratee(deployment.kyberIntegratee, manager);
+      // const kyberIntegratee = new MockKyberIntegratee(deployment.kyberIntegratee, manager);
 
-      const rate = await kyberIntegratee.getExpectedRate(token.id, deployment.wethToken, utils.parseEther('0.1'));
-      console.log(utils.formatEther(rate.expectedRate));
+      // const rate = await kyberIntegratee.getExpectedRate(token.id, kyberEth, utils.parseEther('0.1'));
+      // console.log(utils.formatEther(rate.expectedRate));
+
+      // const uniswapIntegratee = new MockUniswapV2Integratee(deployment.uniswapV2Integratee, manager);
+      // const urate = await uniswapIntegratee.getAmountsOut(utils.parseEther('0.1'), [token.id, deployment.wethToken]);
+      // console.log(utils.formatEther(urate[1]));
 
       const takeOrderArgs = kyberTakeOrderArgs({
         incomingAsset: token.id,

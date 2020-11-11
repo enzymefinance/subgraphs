@@ -1,8 +1,24 @@
 import { zeroAddress } from '../constants';
 
 export function getMainnetTokenAddress(symbol: string): string {
+  if (symbol == 'BAT') {
+    return '0x0d8775f648430679a709e98d2b0cb6250d2887ef';
+  }
+
+  if (symbol == 'BNB') {
+    return '0xb8c77482e45f1f44de1745f52c74426c631bdd52';
+  }
+
+  if (symbol == 'BNT') {
+    return '0x1f573d6fb3f13d689ff844b4ce37794d79a7ff1c';
+  }
+
   if (symbol == 'CHAI') {
     return '0x06af07097c9eeb7fd685c692751d5c66db49c215';
+  }
+
+  if (symbol == 'COMP') {
+    return '0xc00e94cb662c3520282e6f5717214004a7f26888';
   }
 
   if (symbol == 'DAI') {
@@ -13,16 +29,36 @@ export function getMainnetTokenAddress(symbol: string): string {
     return '0xdd974d5c2e2928dea5f71b9825b8b646686bd200';
   }
 
+  if (symbol == 'LINK') {
+    return '0x514910771af9ca656af840dff83e8264ecf986ca';
+  }
+
+  if (symbol == 'MANA') {
+    return '0x0f5d2fb29fb7d3cfee444a200298f468908cc942';
+  }
+
   if (symbol == 'MLN') {
     return '0xec67005c4e498ec7f55e092bd1d35cbc47c91892';
+  }
+
+  if (symbol == 'REP') {
+    return '0x221657776846890989a759ba2973e427dff5c9bb';
   }
 
   if (symbol == 'REN') {
     return '0x408e41876cccdc0f92210600ef50372656052a38';
   }
 
-  if (symbol == 'REP') {
-    return '0x221657776846890989a759ba2973e427dff5c9bb';
+  if (symbol == 'UNI') {
+    return '0x1f9840a85d5af5bf1d1762f925bdaddc4201f984';
+  }
+
+  if (symbol == 'USDC') {
+    return '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48';
+  }
+
+  if (symbol == 'USDT') {
+    return '0xdac17f958d2ee523a2206206994597c13d831ec7';
   }
 
   if (symbol == 'WETH') {

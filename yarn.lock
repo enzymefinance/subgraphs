@@ -1100,20 +1100,20 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@melonproject/protocol@^2.0.0-dev.5008+9a8da6ab":
-  version "2.0.0-dev.5008"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_1Yvicf/%40melonproject%2Fprotocol-2.0.0-dev.5008.tgz#c4b099bba780ab591ccc4327c20d0d314c4b3c0e"
-  integrity sha1-xLCZu6eAq1kczEMnwg0NMUxLPA4=
+"@melonproject/protocol@^2.0.0-dev.5014+00b6de36":
+  version "2.0.0-dev.5014"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_BgOBE/%40melonproject%2Fprotocol-2.0.0-dev.5014.tgz#a50c0c4e803d863639366d59c97d134e71b40e89"
+  integrity sha1-pQwMToA9hjY5Nm1ZyX0TTnG0Dok=
   dependencies:
     "@babel/runtime" "^7.12.5"
 
-"@melonproject/testutils@^2.0.0-dev.5008+9a8da6ab":
-  version "2.0.0-dev.5008"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_1oObA0/%40melonproject%2Ftestutils-2.0.0-dev.5008.tgz#196a4c54f8149fa2a48be00abfe85b57cb02417d"
-  integrity sha1-GWpMVPgUn6Kki+AKv+hbV8sCQX0=
+"@melonproject/testutils@^2.0.0-dev.5014+00b6de36":
+  version "2.0.0-dev.5014"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_1J0YKt/%40melonproject%2Ftestutils-2.0.0-dev.5014.tgz#f78d5004ea51fac69a7bc25611186c07e869b0d2"
+  integrity sha1-941QBOpR+saae8JWERhsB+hpsNI=
   dependencies:
     "@babel/runtime" "^7.12.5"
-    "@melonproject/protocol" "^2.0.0-dev.5008+9a8da6ab"
+    "@melonproject/protocol" "^2.0.0-dev.5014+00b6de36"
 
 "@openzeppelin/contracts@^3.2.0":
   version "3.2.0"
@@ -1419,10 +1419,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.12.62.tgz#733923d73669188d35950253dd18a21570085d2b"
   integrity sha512-qAfo81CsD7yQIM9mVyh6B/U47li5g7cfpVQEDMfQeF8pSZVwzbhwU3crc0qG4DmpsebpJPR49AKOExQyJ05Cpg==
 
-"@types/node@^14.14.6":
-  version "14.14.6"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.6.tgz#146d3da57b3c636cc0d1769396ce1cfa8991147f"
-  integrity sha512-6QlRuqsQ/Ox/aJEQWBEJG7A9+u7oSYl3mem/K8IzxXG/kAGbV1YPD9Bg9Zw3vyxC/YP+zONKwy8hGkSt1jxFMw==
+"@types/node@^14.14.7":
+  version "14.14.7"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.7.tgz#8ea1e8f8eae2430cf440564b98c6dfce1ec5945d"
+  integrity sha512-Zw1vhUSQZYw+7u5dAwNbIA9TuTotpzY/OF7sJM9FqPOF3SPjKnxrjoTktXDZgUjybf4cWVBP7O8wvKdSaGHweg==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"
@@ -1743,12 +1743,12 @@ asn1@~0.2.3:
   dependencies:
     safer-buffer "~2.1.0"
 
-assemblyscript@^0.17.1:
-  version "0.17.1"
-  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.17.1.tgz#0eb10389846ff592d3893c816d5460d735392473"
-  integrity sha512-0cBGno+GYlY871s82WXhA5peRJxktGchJ7mdBDhf7mwoe4bPNuBrYYl2jRcXs8nQA/eQHNUiCJQ5dL61zQMXjw==
+assemblyscript@^0.17.2:
+  version "0.17.2"
+  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.17.2.tgz#48438adfb5afd353c6abc5233b5a8e05bfcc5ea9"
+  integrity sha512-QpHROlgiNLdqTrJCnPAwU61uStFCJ7PSW2IDYkiRbWlcHG9lNUaw/SwivCAQCEh+3GjSqZH8Q1mehSmhNDtFtA==
   dependencies:
-    binaryen "98.0.0-nightly.20201027"
+    binaryen "98.0.0-nightly.20201109"
     long "^4.0.0"
 
 "assemblyscript@https://github.com/AssemblyScript/assemblyscript#36040d5b5312f19a025782b5e36663823494c2f3":
@@ -1951,10 +1951,10 @@ binaryen@77.0.0-nightly.20190407:
   resolved "https://registry.yarnpkg.com/binaryen/-/binaryen-77.0.0-nightly.20190407.tgz#fbe4f8ba0d6bd0809a84eb519d2d5b5ddff3a7d1"
   integrity sha512-1mxYNvQ0xywMe582K7V6Vo2zzhZZxMTeGHH8aE/+/AND8f64D8Q1GThVY3RVRwGY/4p+p95ccw9Xbw2ovFXRIg==
 
-binaryen@98.0.0-nightly.20201027:
-  version "98.0.0-nightly.20201027"
-  resolved "https://registry.yarnpkg.com/binaryen/-/binaryen-98.0.0-nightly.20201027.tgz#51ac7b46ee8a4cec9564b3699eadfba83e8b65fe"
-  integrity sha512-00/IHlumty/5XzJsdaMudayXofJiDb3Ytqqdn7OJBM0L9SuVg0o0xu4l93NVf+hO6jkgXNE1t+LdB0gOdeLdjA==
+binaryen@98.0.0-nightly.20201109:
+  version "98.0.0-nightly.20201109"
+  resolved "https://registry.yarnpkg.com/binaryen/-/binaryen-98.0.0-nightly.20201109.tgz#512bf6ca15c67bf7402144734a4836e63993aa05"
+  integrity sha512-iRarAqdH5lMWlMBzrDuJgLYJR2g4QXk93iYE2zpr6gEZkb/jCgDpPUXdhuN11Ge1zZ/6By4DwA1mmifcx7FWaw==
 
 bindings@^1.5.0:
   version "1.5.0"

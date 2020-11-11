@@ -9,7 +9,6 @@ import {
   kyberTakeOrderArgs,
   managementFeeConfigArgs,
   maxConcentrationArgs,
-  MockKyberIntegratee,
   performanceFeeConfigArgs,
   policyManagerConfigArgs,
   StandardToken,
@@ -17,18 +16,23 @@ import {
 } from '@melonproject/protocol';
 import { providers, utils, Wallet } from 'ethers';
 import { createAccount, Deployment, fetchDeployment } from '../tests/utils/deployment';
+import { Asset, fetchAssets } from '../tests/utils/subgraph-queries/fetchAssets';
 
 (async () => {
   let deployment: Deployment;
+  let assets: Asset[];
   let provider: providers.Provider;
   let manager: SignerWithAddress;
   let investor: SignerWithAddress;
 
   const testnetEndpoint = 'https://testnet.avantgarde.finance/graphql';
   const jsonRpcProvider = 'https://testnet.avantgarde.finance';
+  const subgraphApi = 'https://thegraph.testnet.avantgarde.finance/subgraphs/name/melonproject/melon';
 
-  deployment = await fetchDeployment(testnetEndpoint);
+  [deployment, assets] = await Promise.all([fetchDeployment(testnetEndpoint), fetchAssets(subgraphApi)]);
   provider = new providers.JsonRpcProvider(jsonRpcProvider);
+
+  const tokens = ['DAI', 'ZRX', 'KNC'].map((symbol) => assets.find((asset) => asset.symbol === symbol));
 
   const [managerAddress, investorAddress] = await Promise.all([
     createAccount(testnetEndpoint),
@@ -95,17 +99,8 @@ import { createAccount, Deployment, fetchDeployment } from '../tests/utils/deplo
     await comptrollerProxy.connect(investor).buyShares(investor, investmentAmount, minSharesAmount);
 
     // trade
-    const kyberNetworkProxy = new MockKyberIntegratee(deployment.kyberIntegratee, provider);
-    const rate = await kyberNetworkProxy.getExpectedRate(
-      deployment.wethToken,
-      deployment.mlnToken,
-      utils.parseEther('0.5'),
-    );
-
-    console.log(utils.formatEther(rate.expectedRate));
-
     const takeOrderArgs = kyberTakeOrderArgs({
-      incomingAsset: deployment.mlnToken,
+      incomingAsset: tokens[Math.floor(Math.random() * 3)]!.id,
       minIncomingAssetAmount: utils.parseEther('0.000000001'),
       outgoingAsset: deployment.wethToken,
       outgoingAssetAmount: utils.parseEther('0.5'),

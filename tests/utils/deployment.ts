@@ -6,6 +6,7 @@ export interface Deployment {
   chaiPriceSource: string;
   chaiIntegratee: string;
   kyberIntegratee: string;
+  uniswapV2Integratee: string;
   dispatcher: string;
   vaultLib: string;
   fundDeployer: string;
@@ -42,6 +43,7 @@ const deploymentQuery = gql`
       chaiPriceSource
       chaiIntegratee
       kyberIntegratee
+      uniswapV2Integratee
       dispatcher
       vaultLib
       fundDeployer
@@ -80,6 +82,7 @@ const createDeploymentMutation = gql`
       chaiPriceSource
       chaiIntegratee
       kyberIntegratee
+      uniswapV2Integratee
       dispatcher
       vaultLib
       fundDeployer
