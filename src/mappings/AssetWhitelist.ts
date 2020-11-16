@@ -1,5 +1,4 @@
 import { ensureManager, useManager } from '../entities/Account';
-import { useAsset } from '../entities/Asset';
 import { ensureAssetWhitelistSetting, useAssetWhitelistSetting } from '../entities/AssetWhitelistSetting';
 import { ensureContract } from '../entities/Contract';
 import { useFund } from '../entities/Fund';
@@ -16,7 +15,7 @@ export function handleAddressesAdded(event: AddressesAdded): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let vault = comptroller.getVaultProxy();
   let policy = usePolicy(event.address.toHex());
-  let items = event.params.items.map<string>((item) => useAsset(item.toHex()).id);
+  let items = event.params.items.map<string>((item) => item.toHex());
 
   let addressesAdded = new AssetWhitelistAddressesAddedEvent(genericId(event));
   addressesAdded.fund = vault.toHex(); // fund does not exist yet
@@ -40,7 +39,7 @@ export function handleAddressesRemoved(event: AddressesRemoved): void {
   let vault = comptroller.getVaultProxy();
   let fund = useFund(vault.toHex());
   let policy = usePolicy(event.address.toHex());
-  let items = event.params.items.map<string>((item) => useAsset(item.toHex()).id);
+  let items = event.params.items.map<string>((item) => item.toHex());
 
   let addressesRemoved = new AssetWhitelistAddressesRemovedEvent(genericId(event));
   addressesRemoved.fund = fund.id;

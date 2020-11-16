@@ -23,12 +23,12 @@
   },
   "devDependencies": {
     "@chainlink/contracts": "^0.0.11",
-    "@crestproject/crestproject": "^0.1.18",
-    "@crestproject/jest": "^0.1.18",
+    "@crestproject/crestproject": "^0.1.19",
+    "@crestproject/jest": "^0.1.19",
     "@graphprotocol/graph-cli": "^0.19.0",
     "@graphprotocol/graph-ts": "^0.19.0",
-    "@melonproject/protocol": "^2.0.0-dev.5014+00b6de36",
-    "@melonproject/testutils": "^2.0.0-dev.5014+00b6de36",
+    "@melonproject/protocol": "^2.0.0-dev.5016+e26adfb6",
+    "@melonproject/testutils": "^2.0.0-dev.5016+e26adfb6",
     "@types/jest": "^26.0.15",
     "@types/mustache": "^4.0.1",
     "@types/node": "^14.14.7",
@@ -48,7 +48,7 @@
     "ts-jest": "^26.4.4",
     "ts-node": "^9.0.0",
     "typescript": "^4.0.5",
-    "yargs": "^16.1.0"
+    "yargs": "^16.1.1"
   },
   "jest": {
     "preset": "@crestproject/jest",

@@ -2,7 +2,6 @@ import { ensureManager, useManager } from '../entities/Account';
 import { ensureAdapterWhitelistSetting, useAdapterWhitelistSetting } from '../entities/AdapterWhitelistSetting';
 import { ensureContract } from '../entities/Contract';
 import { useFund } from '../entities/Fund';
-import { useIntegrationAdapter } from '../entities/IntegrationAdapter';
 import { usePolicy } from '../entities/Policy';
 import { ensureTransaction } from '../entities/Transaction';
 import { AddressesAdded, AddressesRemoved } from '../generated/AdapterWhitelistContract';
@@ -16,7 +15,7 @@ export function handleAddressesAdded(event: AddressesAdded): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let vault = comptroller.getVaultProxy();
   let policy = usePolicy(event.address.toHex());
-  let items = event.params.items.map<string>((item) => useIntegrationAdapter(item.toHex()).id);
+  let items = event.params.items.map<string>((item) => item.toHex());
 
   let addressesAdded = new AdapterWhitelistAddressesAddedEvent(genericId(event));
   addressesAdded.fund = vault.toHex(); // fund does not exist yet
@@ -40,7 +39,7 @@ export function handleAddressesRemoved(event: AddressesRemoved): void {
   let vault = comptroller.getVaultProxy();
   let fund = useFund(vault.toHex());
   let policy = usePolicy(event.address.toHex());
-  let items = event.params.items.map<string>((item) => useIntegrationAdapter(item.toHex()).id);
+  let items = event.params.items.map<string>((item) => item.toHex());
 
   let addressesRemoved = new AdapterWhitelistAddressesRemovedEvent(genericId(event));
   addressesRemoved.fund = fund.id;

@@ -1233,7 +1233,7 @@ type AdapterBlacklistSetting implements PolicySetting @entity {
   id: ID!
   policy: Policy!
   fund: Fund!
-  listed: [IntegrationAdapter!]!
+  listed: [String!]!
   timestamp: BigInt!
   events: [FundEvent!]!
 }
@@ -1242,7 +1242,7 @@ type AdapterWhitelistSetting implements PolicySetting @entity {
   id: ID!
   policy: Policy!
   fund: Fund!
-  listed: [IntegrationAdapter!]!
+  listed: [String!]!
   timestamp: BigInt!
   events: [FundEvent!]!
 }
@@ -1251,7 +1251,7 @@ type AssetBlacklistSetting implements PolicySetting @entity {
   id: ID!
   policy: Policy!
   fund: Fund!
-  listed: [Asset!]!
+  listed: [String!]!
   timestamp: BigInt!
   events: [FundEvent!]!
 }
@@ -1260,7 +1260,7 @@ type AssetWhitelistSetting implements PolicySetting @entity {
   id: ID!
   policy: Policy!
   fund: Fund!
-  listed: [Asset!]!
+  listed: [String!]!
   timestamp: BigInt!
   events: [FundEvent!]!
 }

@@ -10,6 +10,7 @@ export interface Deployment {
   dispatcher: string;
   vaultLib: string;
   fundDeployer: string;
+  fundActionsWrapper: string;
   valueInterpreter: string;
   comptrollerLib: string;
   feeManager: string;
@@ -47,6 +48,7 @@ const deploymentQuery = gql`
       dispatcher
       vaultLib
       fundDeployer
+      fundActionsWrapper
       valueInterpreter
       comptrollerLib
       feeManager
@@ -86,6 +88,7 @@ const createDeploymentMutation = gql`
       dispatcher
       vaultLib
       fundDeployer
+      fundActionsWrapper
       valueInterpreter
       comptrollerLib
       feeManager

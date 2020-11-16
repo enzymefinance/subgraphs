@@ -6,6 +6,7 @@ import {
   ComptrollerLib,
   entranceRateFeeConfigArgs,
   feeManagerConfigArgs,
+  FundActionsWrapper,
   FundDeployer,
   IntegrationManagerActionId,
   KyberAdapter,
@@ -109,6 +110,14 @@ describe("Walkthrough a fund's lifecycle", () => {
     );
 
     expect(subgraphFund.name).toBe('Walkthrough Fund');
+  });
+
+  it('should calculate the net share value of an empty fund', async () => {
+    const fundActionsWrapper = new FundActionsWrapper(deployment.fundActionsWrapper, provider);
+
+    const netShareValue = await fundActionsWrapper.calcNetShareValueForFund.args(comptrollerProxy).call();
+
+    expect(netShareValue.netShareValue_).toEqBigNumber(utils.parseEther('1'));
   });
 
   it('should buy shares of the fund', async () => {

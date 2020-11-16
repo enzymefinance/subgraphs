@@ -17,7 +17,7 @@ const query = gql`
       fundDeployer
       valueInterpreter
       comptrollerLib
-      fundCalculator
+      fundActionsWrapper
       feeManager
       integrationManager
       policyManager
@@ -50,7 +50,7 @@ interface Result {
     fundDeployer: string;
     valueInterpreter: string;
     comptrollerLib: string;
-    fundCalculator: string;
+    fundActionsWrapper: string;
     feeManager: string;
     integrationManager: string;
     policyManager: string;
