@@ -25,7 +25,7 @@ export function getMainnetTokenAddress(symbol: string): string {
     return '0x4fabb145d64652a948d72533023f6e7a623c7c53';
   }
 
-  if (symbol == 'BUSD') {
+  if (symbol == 'BZRX') {
     return '0x56d811088235f11c8920698a204a5010a788f4b3';
   }
 

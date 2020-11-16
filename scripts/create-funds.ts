@@ -32,7 +32,7 @@ import { Asset, fetchAssets } from '../tests/utils/subgraph-queries/fetchAssets'
   [deployment, assets] = await Promise.all([fetchDeployment(testnetEndpoint), fetchAssets(subgraphApi)]);
   provider = new providers.JsonRpcProvider(jsonRpcProvider);
 
-  const tokens = ['DAI', 'ZRX', 'KNC'].map((symbol) => assets.find((asset) => asset.symbol === symbol));
+  const tokens = ['DAI', 'ZRX', 'KNC', 'BAT', 'ANT'].map((symbol) => assets.find((asset) => asset.symbol === symbol));
 
   const [managerAddress, investorAddress] = await Promise.all([
     createAccount(testnetEndpoint),
