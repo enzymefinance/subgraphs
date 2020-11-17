@@ -1100,20 +1100,20 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@melonproject/protocol@^2.0.0-dev.5016+e26adfb6":
-  version "2.0.0-dev.5016"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_2irGHs/%40melonproject%2Fprotocol-2.0.0-dev.5016.tgz#00e09950d1d618375cbadd813a37e10ec4615ade"
-  integrity sha1-AOCZUNHWGDdcut2BOjfhDsRhWt4=
+"@melonproject/protocol@^2.0.0-dev.5018+e3d0e883":
+  version "2.0.0-dev.5018"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_1BCrAV/%40melonproject%2Fprotocol-2.0.0-dev.5018.tgz#938b74074dd2c698c6996d0f4d5cced6d822f95a"
+  integrity sha1-k4t0B03SxpjGmW0PTVzO1tgi+Vo=
   dependencies:
     "@babel/runtime" "^7.12.5"
 
-"@melonproject/testutils@^2.0.0-dev.5016+e26adfb6":
-  version "2.0.0-dev.5016"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_1KrTNF/%40melonproject%2Ftestutils-2.0.0-dev.5016.tgz#1d9de4808208219a7abd5a46a790ef49f610615a"
-  integrity sha1-HZ3kgIIIIZp6vVpGp5DvSfYQYVo=
+"@melonproject/testutils@^2.0.0-dev.5018+e3d0e883":
+  version "2.0.0-dev.5018"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_13CEr8/%40melonproject%2Ftestutils-2.0.0-dev.5018.tgz#dc1364e3aa6e0df22944ba050b48bc6deb2fc514"
+  integrity sha1-3BNk46puDfIpRLoFC0i8besvxRQ=
   dependencies:
     "@babel/runtime" "^7.12.5"
-    "@melonproject/protocol" "^2.0.0-dev.5016+e26adfb6"
+    "@melonproject/protocol" "^2.0.0-dev.5018+e3d0e883"
 
 "@openzeppelin/contracts@^3.2.0":
   version "3.2.0"
