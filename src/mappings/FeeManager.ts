@@ -108,10 +108,12 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
 
   let fund = useFund(comptroller.getVaultProxy().toHex());
-  let investor = ensureInvestor(Address.fromString(fund.manager), event);
+  let investor = ensureInvestor(event.params.payee, event);
   let investment = ensureInvestment(investor, fund);
   let fee = useFee(event.params.fee.toHex());
   let shares = toBigDecimal(event.params.sharesDue);
+
+  let settlementType = getSettlementType(event.params.settlementType);
 
   let settled = new FeeSettledForFundEvent(genericId(event));
   settled.contract = event.address.toHex();
@@ -124,10 +126,16 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
   settled.comptrollerProxy = event.params.comptrollerProxy.toHex();
   settled.fee = fee.id;
   settled.payer = event.params.payer.toHex();
-  settled.payee = event.params.payee.toHex();
+  settled.payee = investor.id;
   settled.settlementType = getSettlementType(event.params.settlementType);
   settled.sharesDue = shares;
   settled.save();
+
+  // only update shares if shares have actually been paid out
+  if (settlementType == 'Direct' || settlementType == 'Mint') {
+    investment.shares = investment.shares.plus(shares);
+    investment.save();
+  }
 
   trackFundShares(fund, event, settled);
   trackFeeState(fund, fee, BigDecimal.fromString('0'), event, settled);
@@ -156,6 +164,9 @@ export function handleSharesOutstandingPaidForFund(event: SharesOutstandingPaidF
   sharesPaid.sharesDue = toBigDecimal(event.params.sharesDue);
   sharesPaid.payee = useManager(fund.manager).id;
   sharesPaid.save();
+
+  investment.shares = investment.shares.plus(shares);
+  investment.save();
 
   trackFundShares(fund, event, sharesPaid);
   trackFeeState(fund, fee, BigDecimal.fromString('0'), event, sharesPaid);
