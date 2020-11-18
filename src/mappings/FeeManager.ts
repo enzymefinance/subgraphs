@@ -1,11 +1,12 @@
 import { Address, BigDecimal } from '@graphprotocol/graph-ts';
-import { ensureInvestor, useManager } from '../entities/Account';
+import { ensureInvestor, useAccount, useManager } from '../entities/Account';
 import { trackCalculationState } from '../entities/CalculationState';
 import { ensureContract } from '../entities/Contract';
 import { ensureFee, useFee } from '../entities/Fee';
 import { trackFeeState } from '../entities/FeeState';
 import { useFund } from '../entities/Fund';
-import { ensureInvestment } from '../entities/Investment';
+import { useInvestment } from '../entities/Investment';
+import { ensureInvestmentState } from '../entities/InvestmentState';
 import { trackShareState } from '../entities/ShareState';
 import { ensureTransaction } from '../entities/Transaction';
 import { ComptrollerLibContract } from '../generated/ComptrollerLibContract';
@@ -38,23 +39,30 @@ export function handleAllSharesOutstandingForcePaidForFund(event: AllSharesOutst
 
   let fund = useFund(comptroller.getVaultProxy().toHex());
   let investor = ensureInvestor(Address.fromString(fund.manager), event);
-  let investment = ensureInvestment(investor, fund);
+  let investmentState = ensureInvestmentState(investor, fund, event);
+  let investment = useInvestment(investor, fund);
   let shares = toBigDecimal(event.params.sharesDue);
 
   let settled = new AllSharesOutstandingForcePaidForFundEvent(genericId(event));
   settled.contract = event.address.toHex();
   settled.fund = fund.id;
-  settled.account = useManager(event.transaction.from.toHex()).id;
+  settled.account = useAccount(event.transaction.from.toHex()).id;
   settled.timestamp = event.block.timestamp;
   settled.transaction = ensureTransaction(event).id;
-  settled.investment = investment.id;
+  settled.investmentState = investmentState.id;
   settled.shares = shares;
   settled.comptrollerProxy = event.params.comptrollerProxy.toHex();
   settled.payee = event.params.payee.toHex();
   settled.sharesDue = shares;
   settled.save();
 
-  trackShareState(fund, [investor], event, settled);
+  investmentState.shares = investmentState.shares.plus(shares);
+  investmentState.save();
+
+  investment.shares = investment.shares.plus(shares);
+  investment.save();
+
+  trackShareState(fund, event, settled);
   // TODO: what do we need to do for fees here (if anything)?
   // trackFeeState(fund, fee, event, settled);
   trackCalculationState(fund, event, settled);
@@ -109,7 +117,8 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
 
   let fund = useFund(comptroller.getVaultProxy().toHex());
   let investor = ensureInvestor(event.params.payee, event);
-  let investment = ensureInvestment(investor, fund);
+  let investmentState = ensureInvestmentState(investor, fund, event);
+  let investment = useInvestment(investor, fund);
   let fee = useFee(event.params.fee.toHex());
   let shares = toBigDecimal(event.params.sharesDue);
 
@@ -118,10 +127,10 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
   let settled = new FeeSettledForFundEvent(genericId(event));
   settled.contract = event.address.toHex();
   settled.fund = fund.id;
-  settled.account = useManager(event.transaction.from.toHex()).id;
+  settled.account = useAccount(event.transaction.from.toHex()).id;
   settled.timestamp = event.block.timestamp;
   settled.transaction = ensureTransaction(event).id;
-  settled.investment = investment.id;
+  settled.investmentState = investmentState.id;
   settled.shares = shares;
   settled.comptrollerProxy = event.params.comptrollerProxy.toHex();
   settled.fee = fee.id;
@@ -133,11 +142,14 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
 
   // only update shares if shares have actually been paid out
   if (settlementType == 'Direct' || settlementType == 'Mint') {
+    investmentState.shares = investmentState.shares.plus(shares);
+    investmentState.save();
+
     investment.shares = investment.shares.plus(shares);
     investment.save();
   }
 
-  trackShareState(fund, [investor], event, settled);
+  trackShareState(fund, event, settled);
   trackFeeState(fund, fee, BigDecimal.fromString('0'), event, settled);
   trackCalculationState(fund, event, settled);
 }
@@ -146,17 +158,18 @@ export function handleSharesOutstandingPaidForFund(event: SharesOutstandingPaidF
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let fund = useFund(comptroller.getVaultProxy().toHex());
   let investor = ensureInvestor(Address.fromString(fund.manager), event);
-  let investment = ensureInvestment(investor, fund);
+  let investmentState = ensureInvestmentState(investor, fund, event);
+  let investment = useInvestment(investor, fund);
   let fee = useFee(event.params.fee.toHex());
   let shares = toBigDecimal(event.params.sharesDue);
 
   let sharesPaid = new SharesOutstandingPaidForFundEvent(genericId(event));
   sharesPaid.contract = event.address.toHex();
   sharesPaid.fund = fund.id;
-  sharesPaid.account = useManager(event.transaction.from.toHex()).id;
+  sharesPaid.account = useAccount(event.transaction.from.toHex()).id;
   sharesPaid.timestamp = event.block.timestamp;
   sharesPaid.transaction = ensureTransaction(event).id;
-  sharesPaid.investment = investment.id;
+  sharesPaid.investmentState = investmentState.id;
   sharesPaid.shares = shares;
   sharesPaid.comptrollerProxy = event.params.comptrollerProxy.toHex();
   sharesPaid.fee = fee.id;
@@ -165,10 +178,13 @@ export function handleSharesOutstandingPaidForFund(event: SharesOutstandingPaidF
   sharesPaid.payee = useManager(fund.manager).id;
   sharesPaid.save();
 
+  investmentState.shares = investmentState.shares.plus(shares);
+  investmentState.save();
+
   investment.shares = investment.shares.plus(shares);
   investment.save();
 
-  trackShareState(fund, [investor], event, sharesPaid);
+  trackShareState(fund, event, sharesPaid);
   trackFeeState(fund, fee, BigDecimal.fromString('0'), event, sharesPaid);
   trackCalculationState(fund, event, sharesPaid);
 }

@@ -1,5 +1,5 @@
 import { BigDecimal } from '@graphprotocol/graph-ts';
-import { ensureManager } from '../entities/Account';
+import { ensureAccount, ensureManager } from '../entities/Account';
 import { ensureContract } from '../entities/Contract';
 import { useFee } from '../entities/Fee';
 import { trackFeeState } from '../entities/FeeState';
@@ -78,7 +78,7 @@ export function handleLastSharePriceUpdated(event: LastSharePriceUpdated): void 
 
   let sharePriceUpdate = new PerformanceFeeSharePriceUpdatedEvent(genericId(event));
   sharePriceUpdate.fund = fund.id;
-  sharePriceUpdate.account = ensureManager(event.transaction.from, event).id;
+  sharePriceUpdate.account = ensureAccount(event.transaction.from, event).id;
   sharePriceUpdate.contract = ensureContract(event.address, 'PerformanceFee').id;
   sharePriceUpdate.timestamp = event.block.timestamp;
   sharePriceUpdate.transaction = ensureTransaction(event).id;
@@ -102,7 +102,7 @@ export function handlePaidOut(event: PaidOut): void {
 
   let paidOut = new PerformanceFeePaidOutEvent(genericId(event));
   paidOut.fund = fund.id;
-  paidOut.account = ensureManager(event.transaction.from, event).id;
+  paidOut.account = ensureAccount(event.transaction.from, event).id;
   paidOut.contract = ensureContract(event.address, 'PerformanceFee').id;
   paidOut.timestamp = event.block.timestamp;
   paidOut.transaction = ensureTransaction(event).id;
@@ -126,7 +126,7 @@ export function handlePerformanceUpdated(event: PerformanceUpdated): void {
 
   let updated = new PerformanceFeePerformanceUpdatedEvent(genericId(event));
   updated.fund = fund.id;
-  updated.account = ensureManager(event.transaction.from, event).id;
+  updated.account = ensureAccount(event.transaction.from, event).id;
   updated.contract = ensureContract(event.address, 'PerformanceFee').id;
   updated.timestamp = event.block.timestamp;
   updated.transaction = ensureTransaction(event).id;

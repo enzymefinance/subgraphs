@@ -29,7 +29,7 @@ interface ISharesChange {
   id: ID!
   fund: Fund!
   timestamp: BigInt!
-  investment: Investment!
+  investmentState: InvestmentState!
   shares: BigDecimal!
   transaction: Transaction!
 }
@@ -63,6 +63,15 @@ interface IIndividualFeeState {
   timestamp: BigInt!
   fee: Fee!
   events: [IFundEvent!]!
+}
+
+interface IPeriodicFundState {
+  id: ID!
+  fund: Fund!
+  start: BigInt!
+  end: BigInt!
+  first: FundState!
+  last: FundState!
 }
 
 #################################################
@@ -157,7 +166,7 @@ type SharesBoughtEvent implements IEvent & IFundEvent & ISharesChange @entity {
   account: Account!
   contract: Contract!
   investor: Account!
-  investment: Investment!
+  investmentState: InvestmentState!
   shares: BigDecimal!
   asset: Asset!
   investmentAmount: BigDecimal!
@@ -172,7 +181,7 @@ type SharesRedeemedEvent implements IEvent & IFundEvent & ISharesChange @entity 
   account: Account!
   contract: Contract!
   investor: Account!
-  investment: Investment!
+  investmentState: InvestmentState!
   shares: BigDecimal!
   payoutAssets: [Asset!]!
   payoutQuantities: [BigDecimal!]!
@@ -331,7 +340,7 @@ type FeeSettledForFundEvent implements IEvent & IFundEvent & ISharesChange @enti
   account: Account!
   timestamp: BigInt!
   transaction: Transaction!
-  investment: Investment!
+  investmentState: InvestmentState!
   shares: BigDecimal!
   comptrollerProxy: Contract!
   fee: Fee!
@@ -348,7 +357,7 @@ type AllSharesOutstandingForcePaidForFundEvent implements IEvent & IFundEvent & 
   account: Account!
   timestamp: BigInt!
   transaction: Transaction!
-  investment: Investment!
+  investmentState: InvestmentState!
   shares: BigDecimal!
   comptrollerProxy: Contract!
   payee: Account!
@@ -362,7 +371,7 @@ type SharesOutstandingPaidForFundEvent implements IEvent & IFundEvent & ISharesC
   account: Account!
   timestamp: BigInt!
   transaction: Transaction!
-  investment: Investment!
+  investmentState: InvestmentState!
   shares: BigDecimal!
   comptrollerProxy: Contract!
   fee: Fee!
@@ -1064,8 +1073,30 @@ type Fund @entity {
   state: FundState!
   stateHistory: [FundState!]! @derivedFrom(field: "fund")
 
+  # periodic states
+  hourlyState: [HourlyFundState!]! @derivedFrom(field: "fund")
+  dailyState: [DailyFundState!]! @derivedFrom(field: "fund")
+
   events: [IFundEvent!]! @derivedFrom(field: "fund")
   migrations: [Migration!] @derivedFrom(field: "fund")
+}
+
+type HourlyFundState implements IPeriodicFundState @entity {
+  id: ID! # fund id + start
+  fund: Fund!
+  start: BigInt!
+  end: BigInt!
+  first: FundState!
+  last: FundState!
+}
+
+type DailyFundState implements IPeriodicFundState @entity {
+  id: ID! # fund id + start
+  fund: Fund!
+  start: BigInt!
+  end: BigInt!
+  first: FundState!
+  last: FundState!
 }
 
 type Migration @entity {
@@ -1094,7 +1125,6 @@ type Account @entity {
   managements: [Fund!]! @derivedFrom(field: "manager")
   investor: Boolean!
   investments: [Investment!]! @derivedFrom(field: "investor")
-  shareholderStates: [ShareholderState!]! @derivedFrom(field: "account")
   events: [IFundEvent!]! @derivedFrom(field: "account")
 }
 
@@ -1102,8 +1132,19 @@ type Investment @entity {
   id: ID!
   fund: Fund!
   investor: Account!
-  changes: [ISharesChange!]! @derivedFrom(field: "investment")
   shares: BigDecimal!
+  state: InvestmentState!
+  stateHistory: [InvestmentState!]! @derivedFrom(field: "investment")
+}
+
+type InvestmentState @entity {
+  id: ID!
+  timestamp: BigInt!
+  fund: Fund!
+  investor: Account!
+  investment: Investment!
+  shares: BigDecimal!
+  changes: [ISharesChange!]! @derivedFrom(field: "investmentState")
 }
 
 type Fee @entity {
@@ -1222,17 +1263,6 @@ type ShareState implements IFundState @entity {
   timestamp: BigInt!
   totalSupply: BigDecimal!
   outstandingForFees: BigDecimal!
-  shareholders: [ShareholderState!]!
-  events: [IFundEvent!]!
-}
-
-type ShareholderState implements IFundState @entity {
-  id: ID!
-  fund: Fund!
-  timestamp: BigInt!
-  shareState: ShareState!
-  account: Account!
-  shares: BigDecimal!
   events: [IFundEvent!]!
 }
 

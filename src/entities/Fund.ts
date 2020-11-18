@@ -26,7 +26,7 @@ export function createFund(event: NewFundCreated): Fund {
   let fund = new Fund(id);
   let shares = createShareState(
     fund,
-    { totalSupply: BigDecimal.fromString('0'), outstandingForFees: BigDecimal.fromString('0'), shareholders: [] },
+    { totalSupply: BigDecimal.fromString('0'), outstandingForFees: BigDecimal.fromString('0') },
     event,
     null,
   );

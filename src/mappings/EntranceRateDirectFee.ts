@@ -1,5 +1,5 @@
 import { BigDecimal } from '@graphprotocol/graph-ts';
-import { ensureManager } from '../entities/Account';
+import { ensureAccount, ensureManager } from '../entities/Account';
 import { ensureContract } from '../entities/Contract';
 import { ensureEntranceRateDirectFeeSetting } from '../entities/EntranceRateDirectFeeSetting';
 import { entranceRateDirectFeeStateId, useEntranceRateDirectFeeState } from '../entities/EntranceRateDirectFeeState';
@@ -45,7 +45,7 @@ export function handleSettled(event: Settled): void {
 
   let settled = new EntranceRateDirectFeeSettledEvent(genericId(event));
   settled.fund = fund.id;
-  settled.account = ensureManager(event.transaction.from, event).id;
+  settled.account = ensureAccount(event.transaction.from, event).id;
   settled.contract = event.address.toHex();
   settled.timestamp = event.block.timestamp;
   settled.transaction = ensureTransaction(event).id;

@@ -1,4 +1,4 @@
-import { ensureManager } from '../entities/Account';
+import { ensureAccount, ensureManager } from '../entities/Account';
 import { ensureContract } from '../entities/Contract';
 import { useFee } from '../entities/Fee';
 import { trackFeeState } from '../entities/FeeState';
@@ -44,7 +44,7 @@ export function handleSettled(event: Settled): void {
 
   let settled = new ManagementFeeSettledEvent(genericId(event));
   settled.fund = fund.id;
-  settled.account = ensureManager(event.transaction.from, event).id;
+  settled.account = ensureAccount(event.transaction.from, event).id;
   settled.contract = event.address.toHex();
   settled.timestamp = event.block.timestamp;
   settled.transaction = ensureTransaction(event).id;

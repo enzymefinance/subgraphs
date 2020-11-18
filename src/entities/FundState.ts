@@ -3,6 +3,7 @@ import { CalculationState, FeeState, Fund, FundState, PortfolioState, ShareState
 import { logCritical } from '../utils/logCritical';
 import { useCalculationState } from './CalculationState';
 import { useFeeState } from './FeeState';
+import { trackDailyFundState, trackHourlyFundState } from './PeriodicFundState';
 import { usePortfolioState } from './PortfolioState';
 import { useShareState } from './ShareState';
 
@@ -28,7 +29,9 @@ export function createFundState(
   state.events = new Array<string>();
   state.save();
 
-  // load additional infos
+  // link fund states to period states
+  trackHourlyFundState(fund, state, event);
+  trackDailyFundState(fund, state, event);
 
   return state;
 }

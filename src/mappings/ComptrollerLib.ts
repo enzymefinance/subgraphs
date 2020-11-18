@@ -4,7 +4,8 @@ import { useAsset } from '../entities/Asset';
 import { trackCalculationState } from '../entities/CalculationState';
 import { ensureContract, useContract } from '../entities/Contract';
 import { useFund } from '../entities/Fund';
-import { ensureInvestment } from '../entities/Investment';
+import { useInvestment } from '../entities/Investment';
+import { ensureInvestmentState } from '../entities/InvestmentState';
 import { trackPortfolioState } from '../entities/PortfolioState';
 import { trackShareState } from '../entities/ShareState';
 import { ensureTransaction } from '../entities/Transaction';
@@ -29,7 +30,8 @@ import { toBigDecimal } from '../utils/toBigDecimal';
 export function handleSharesBought(event: SharesBought): void {
   let fund = useFund(dataSource.context().getString('vaultProxy'));
   let investor = ensureInvestor(event.params.buyer, event);
-  let investment = ensureInvestment(investor, fund);
+  let investmentState = ensureInvestmentState(investor, fund, event);
+  let investment = useInvestment(investor, fund);
   let asset = useAsset(fund.denominationAsset);
   let shares = toBigDecimal(event.params.sharesReceived);
 
@@ -38,7 +40,7 @@ export function handleSharesBought(event: SharesBought): void {
   addition.investor = investment.investor;
   addition.fund = investment.fund;
   addition.contract = ensureContract(event.address, 'ComptrollerLib').id;
-  addition.investment = investment.id;
+  addition.investmentState = investmentState.id;
   addition.asset = asset.id;
   addition.investmentAmount = toBigDecimal(event.params.investmentAmount, asset.decimals);
   addition.sharesBought = toBigDecimal(event.params.sharesBought);
@@ -47,18 +49,22 @@ export function handleSharesBought(event: SharesBought): void {
   addition.transaction = ensureTransaction(event).id;
   addition.save();
 
-  investment.shares = investment.shares.plus(shares);
+  investmentState.shares = investmentState.shares.plus(shares);
+  investment.save();
+
+  investmentState.shares = investmentState.shares.plus(shares);
   investment.save();
 
   trackPortfolioState(fund, event, addition);
-  trackShareState(fund, [investor], event, addition);
+  trackShareState(fund, event, addition);
   trackCalculationState(fund, event, addition);
 }
 
 export function handleSharesRedeemed(event: SharesRedeemed): void {
   let fund = useFund(dataSource.context().getString('vaultProxy'));
   let investor = ensureInvestor(event.params.redeemer, event);
-  let investment = ensureInvestment(investor, fund);
+  let investmentState = ensureInvestmentState(investor, fund, event);
+  let investment = useInvestment(investor, fund);
   let shares = toBigDecimal(event.params.sharesQuantity);
   let assets = event.params.receivedAssets.map<Asset>((id) => useAsset(id.toHex()));
   let qtys = event.params.receivedAssetQuantities;
@@ -73,7 +79,7 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
   redemption.investor = investor.id;
   redemption.fund = investment.fund;
   redemption.contract = ensureContract(event.address, 'ComptrollerLib').id;
-  redemption.investment = investment.id;
+  redemption.investmentState = investmentState.id;
   redemption.shares = shares;
   redemption.payoutAssets = assets.map<string>((item) => item.id);
   redemption.payoutQuantities = quantities;
@@ -81,11 +87,14 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
   redemption.transaction = ensureTransaction(event).id;
   redemption.save();
 
+  investmentState.shares = investmentState.shares.minus(shares);
+  investmentState.save();
+
   investment.shares = investment.shares.minus(shares);
   investment.save();
 
   trackPortfolioState(fund, event, redemption);
-  trackShareState(fund, [investor], event, redemption);
+  trackShareState(fund, event, redemption);
   trackCalculationState(fund, event, redemption);
 }
 

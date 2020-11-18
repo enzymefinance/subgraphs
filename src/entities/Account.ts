@@ -1,4 +1,5 @@
-import { Address, ethereum } from '@graphprotocol/graph-ts';
+import { Address, ethereum, log } from '@graphprotocol/graph-ts';
+import { zeroAddress } from '../constants';
 import { Account } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
 
@@ -59,6 +60,10 @@ export function useAccount(id: string): Account {
 
 export function ensureAccount(accountAddress: Address, event: ethereum.Event): Account {
   let account = Account.load(accountAddress.toHex()) as Account;
+
+  if (accountAddress == zeroAddress) {
+    log.warning('XXXXXXXXXXXXXXXXXXXXXXXXXXXXX', []);
+  }
 
   if (account) {
     return account;

@@ -36,7 +36,7 @@ export function handleAccessorSet(event: AccessorSet): void {
   let accessorSet = new AccessorSetEvent(genericId(event));
   accessorSet.contract = ensureContract(event.address, 'VaultLib').id;
   accessorSet.fund = useFund(event.address.toHex()).id;
-  accessorSet.account = ensureManager(Address.fromString(ensureTransaction(event).from), event).id;
+  accessorSet.account = ensureAccount(Address.fromString(ensureTransaction(event).from), event).id;
   accessorSet.prevAccessor = event.params.prevAccessor.toHex();
   accessorSet.nextAccessor = event.params.nextAccessor.toHex();
   accessorSet.transaction = ensureTransaction(event).id;
@@ -48,7 +48,7 @@ export function handleAssetWithdrawn(event: AssetWithdrawn): void {
   let withdrawal = new AssetWithdrawnEvent(genericId(event));
   withdrawal.asset = useAsset(event.params.asset.toHex()).id;
   withdrawal.fund = useFund(event.address.toHex()).id;
-  withdrawal.account = ensureManager(event.transaction.from, event).id;
+  withdrawal.account = ensureAccount(event.transaction.from, event).id;
   withdrawal.timestamp = event.block.timestamp;
   withdrawal.transaction = ensureTransaction(event).id;
   withdrawal.target = event.params.target.toHex();
@@ -72,16 +72,16 @@ export function handleMigratorSet(event: MigratorSet): void {
 export function handleOwnerSet(event: OwnerSet): void {
   let ownerSet = new OwnerSetEvent(genericId(event));
   ownerSet.fund = useFund(event.address.toHex()).id;
-  ownerSet.account = ensureAccount(event.transaction.from, event).id;
+  ownerSet.account = ensureManager(event.transaction.from, event).id;
   ownerSet.contract = ensureContract(event.address, 'VaultLib').id;
   ownerSet.timestamp = event.block.timestamp;
   ownerSet.transaction = ensureTransaction(event).id;
 
-  if (event.params.prevOwner.equals(zeroAddress)) {
-    ownerSet.prevOwner = ensureAccount(event.params.prevOwner, event).id;
+  if (!event.params.prevOwner.equals(zeroAddress)) {
+    ownerSet.prevOwner = ensureManager(event.params.prevOwner, event).id;
   }
 
-  ownerSet.nextOwner = ensureAccount(event.params.nextOwner, event).id;
+  ownerSet.nextOwner = ensureManager(event.params.nextOwner, event).id;
   ownerSet.save();
 }
 
@@ -122,7 +122,7 @@ export function handleTrackedAssetRemoved(event: TrackedAssetRemoved): void {
 export function handleVaultLibSet(event: VaultLibSet): void {
   let vaultLibSet = new VaultLibSetEvent(genericId(event));
   vaultLibSet.fund = useFund(event.address.toHex()).id;
-  vaultLibSet.account = ensureAccount(Address.fromString(ensureTransaction(event).from), event).id;
+  vaultLibSet.account = ensureManager(Address.fromString(ensureTransaction(event).from), event).id;
   vaultLibSet.contract = ensureContract(event.address, 'VaultLib').id;
   vaultLibSet.timestamp = event.block.timestamp;
   vaultLibSet.transaction = ensureTransaction(event).id;
