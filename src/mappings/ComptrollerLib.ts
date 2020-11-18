@@ -1,12 +1,12 @@
 import { BigDecimal, dataSource } from '@graphprotocol/graph-ts';
 import { ensureInvestor, useAccount } from '../entities/Account';
 import { useAsset } from '../entities/Asset';
-import { trackFundCalculations } from '../entities/Calculations';
+import { trackCalculationState } from '../entities/CalculationState';
 import { ensureContract, useContract } from '../entities/Contract';
 import { useFund } from '../entities/Fund';
 import { ensureInvestment } from '../entities/Investment';
-import { trackFundPortfolio } from '../entities/Portfolio';
-import { trackFundShares } from '../entities/Shares';
+import { trackPortfolioState } from '../entities/PortfolioState';
+import { trackShareState } from '../entities/ShareState';
 import { ensureTransaction } from '../entities/Transaction';
 import {
   MigratedSharesDuePaid,
@@ -50,15 +50,15 @@ export function handleSharesBought(event: SharesBought): void {
   investment.shares = investment.shares.plus(shares);
   investment.save();
 
-  trackFundPortfolio(fund, event, addition);
-  trackFundShares(fund, event, addition);
-  trackFundCalculations(fund, event, addition);
+  trackPortfolioState(fund, event, addition);
+  trackShareState(fund, [investor], event, addition);
+  trackCalculationState(fund, event, addition);
 }
 
 export function handleSharesRedeemed(event: SharesRedeemed): void {
   let fund = useFund(dataSource.context().getString('vaultProxy'));
-  let account = ensureInvestor(event.params.redeemer, event);
-  let investment = ensureInvestment(account, fund);
+  let investor = ensureInvestor(event.params.redeemer, event);
+  let investment = ensureInvestment(investor, fund);
   let shares = toBigDecimal(event.params.sharesQuantity);
   let assets = event.params.receivedAssets.map<Asset>((id) => useAsset(id.toHex()));
   let qtys = event.params.receivedAssetQuantities;
@@ -69,8 +69,8 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
   }
 
   let redemption = new SharesRedeemedEvent(genericId(event));
-  redemption.account = investment.investor;
-  redemption.investor = investment.investor;
+  redemption.account = investor.id;
+  redemption.investor = investor.id;
   redemption.fund = investment.fund;
   redemption.contract = ensureContract(event.address, 'ComptrollerLib').id;
   redemption.investment = investment.id;
@@ -84,9 +84,9 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
   investment.shares = investment.shares.minus(shares);
   investment.save();
 
-  trackFundPortfolio(fund, event, redemption);
-  trackFundShares(fund, event, redemption);
-  trackFundCalculations(fund, event, redemption);
+  trackPortfolioState(fund, event, redemption);
+  trackShareState(fund, [investor], event, redemption);
+  trackCalculationState(fund, event, redemption);
 }
 
 export function handleVaultProxySet(event: VaultProxySet): void {

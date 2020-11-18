@@ -1,12 +1,12 @@
 import { Address, BigDecimal } from '@graphprotocol/graph-ts';
 import { ensureInvestor, useManager } from '../entities/Account';
-import { trackFundCalculations } from '../entities/Calculations';
+import { trackCalculationState } from '../entities/CalculationState';
 import { ensureContract } from '../entities/Contract';
 import { ensureFee, useFee } from '../entities/Fee';
 import { trackFeeState } from '../entities/FeeState';
 import { useFund } from '../entities/Fund';
 import { ensureInvestment } from '../entities/Investment';
-import { trackFundShares } from '../entities/Shares';
+import { trackShareState } from '../entities/ShareState';
 import { ensureTransaction } from '../entities/Transaction';
 import { ComptrollerLibContract } from '../generated/ComptrollerLibContract';
 import {
@@ -54,10 +54,10 @@ export function handleAllSharesOutstandingForcePaidForFund(event: AllSharesOutst
   settled.sharesDue = shares;
   settled.save();
 
-  trackFundShares(fund, event, settled);
+  trackShareState(fund, [investor], event, settled);
   // TODO: what do we need to do for fees here (if anything)?
   // trackFeeState(fund, fee, event, settled);
-  trackFundCalculations(fund, event, settled);
+  trackCalculationState(fund, event, settled);
 }
 
 export function handleFeeDeregistered(event: FeeDeregistered): void {
@@ -137,9 +137,9 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
     investment.save();
   }
 
-  trackFundShares(fund, event, settled);
+  trackShareState(fund, [investor], event, settled);
   trackFeeState(fund, fee, BigDecimal.fromString('0'), event, settled);
-  trackFundCalculations(fund, event, settled);
+  trackCalculationState(fund, event, settled);
 }
 
 export function handleSharesOutstandingPaidForFund(event: SharesOutstandingPaidForFund): void {
@@ -168,9 +168,9 @@ export function handleSharesOutstandingPaidForFund(event: SharesOutstandingPaidF
   investment.shares = investment.shares.plus(shares);
   investment.save();
 
-  trackFundShares(fund, event, sharesPaid);
+  trackShareState(fund, [investor], event, sharesPaid);
   trackFeeState(fund, fee, BigDecimal.fromString('0'), event, sharesPaid);
-  trackFundCalculations(fund, event, sharesPaid);
+  trackCalculationState(fund, event, sharesPaid);
 }
 
 export function handleFeesRecipientSetForFund(event: FeesRecipientSetForFund): void {

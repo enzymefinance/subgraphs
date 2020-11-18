@@ -34,6 +34,7 @@ describe("Walkthrough a fund's lifecycle", () => {
   let provider: providers.Provider;
   let manager: SignerWithAddress;
   let investor: SignerWithAddress;
+  let secondInvestor: SignerWithAddress;
   let denominationAsset: StandardToken;
   let comptrollerProxy: ComptrollerLib;
   let vaultProxy: VaultLib;
@@ -47,12 +48,14 @@ describe("Walkthrough a fund's lifecycle", () => {
     deployment = await fetchDeployment(testnetEndpoint);
     provider = new providers.JsonRpcProvider(jsonRpcProvider);
 
-    const [managerAddress, investorAddress] = await Promise.all([
+    const [managerAddress, investorAddress, secondInvestorAddress] = await Promise.all([
+      createAccount(testnetEndpoint),
       createAccount(testnetEndpoint),
       createAccount(testnetEndpoint),
     ]);
     manager = await SignerWithAddress.create(new Wallet(managerAddress.privateKey, provider));
     investor = await SignerWithAddress.create(new Wallet(investorAddress.privateKey, provider));
+    secondInvestor = await SignerWithAddress.create(new Wallet(secondInvestorAddress.privateKey, provider));
 
     denominationAsset = new StandardToken(deployment.wethToken, manager);
   });
@@ -148,7 +151,7 @@ describe("Walkthrough a fund's lifecycle", () => {
     expect(subgraphInvestment.investor.investor).toBe(true);
   });
 
-  it('should buy more shares of the fund', async () => {
+  it('should buy more shares of the fund as another investor', async () => {
     const investmentAmount = utils.parseEther('1');
     const minSharesAmount = utils.parseEther('0.00000000001');
 
@@ -160,8 +163,8 @@ describe("Walkthrough a fund's lifecycle", () => {
 
     const buySharesTx = await buyShares({
       comptrollerProxy,
-      signer: investor,
-      buyer: investor,
+      signer: secondInvestor,
+      buyer: secondInvestor,
       denominationAsset,
       ...buySharesArgs,
     });

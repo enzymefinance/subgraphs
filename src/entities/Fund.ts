@@ -4,12 +4,12 @@ import { Fund } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
 import { ensureAccount, ensureManager } from './Account';
 import { useAsset } from './Asset';
-import { createCalculations } from './Calculations';
+import { createCalculationState } from './CalculationState';
 import { createFeeState } from './FeeState';
-import { createPortfolio } from './Portfolio';
+import { createFundState } from './FundState';
+import { createPortfolioState } from './PortfolioState';
 import { useRelease } from './Release';
-import { createShares } from './Shares';
-import { createState } from './State';
+import { createShareState } from './ShareState';
 
 export function useFund(id: string): Fund {
   let fund = Fund.load(id) as Fund;
@@ -24,17 +24,17 @@ export function createFund(event: NewFundCreated): Fund {
   let id = event.params.vaultProxy.toHex();
 
   let fund = new Fund(id);
-  let shares = createShares(
+  let shares = createShareState(
     fund,
-    { totalSupply: BigDecimal.fromString('0'), outstandingForFees: BigDecimal.fromString('0') },
+    { totalSupply: BigDecimal.fromString('0'), outstandingForFees: BigDecimal.fromString('0'), shareholders: [] },
     event,
     null,
   );
-  let portfolio = createPortfolio([], fund, event, null);
+  let portfolio = createPortfolioState([], fund, event, null);
 
   let feeState = createFeeState([], fund, event, null);
-  let calculations = createCalculations(fund, event, null);
-  let state = createState(shares, portfolio, feeState, calculations, fund, event);
+  let calculations = createCalculationState(fund, event, null);
+  let state = createFundState(shares, portfolio, feeState, calculations, fund, event);
 
   fund.name = event.params.fundName;
   fund.inception = event.block.timestamp;

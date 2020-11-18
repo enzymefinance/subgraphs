@@ -4,7 +4,7 @@ import { arrayDiff } from '../utils/arrayDiff';
 import { arrayUnique } from '../utils/arrayUnique';
 import { logCritical } from '../utils/logCritical';
 import { feeStateId, useFeeState } from './FeeState';
-import { useState } from './State';
+import { useFundState } from './FundState';
 
 class EntranceRateDirectFeeStateArgs {
   lastSettled: BigInt;
@@ -53,7 +53,7 @@ export function ensureEntranceRateDirectFeeState(
   ) as EntranceRateDirectFeeState;
 
   if (!entranceRateDirectFeeState) {
-    let state = useState(fund.state);
+    let state = useFundState(fund.state);
     let previousFeeState = useFeeState(state.feeState);
 
     let previous = findEntranceRateDirectFeeState(previousFeeState.feeStates);

@@ -2,20 +2,20 @@ import { Address, BigDecimal, Entity, ethereum } from '@graphprotocol/graph-ts';
 import { fundActionsWrapperAddress } from '../addresses';
 import { ComptrollerLibContract } from '../generated/ComptrollerLibContract';
 import { FundActionsWrapperContract } from '../generated/FundActionsWrapperContract';
-import { Calculation, Fund } from '../generated/schema';
+import { CalculationState, Fund } from '../generated/schema';
 import { VaultLibContract } from '../generated/VaultLibContract';
 import { arrayUnique } from '../utils/arrayUnique';
 import { logCritical } from '../utils/logCritical';
 import { toBigDecimal } from '../utils/toBigDecimal';
 import { useAsset } from './Asset';
-import { ensureState } from './State';
+import { ensureFundState } from './FundState';
 
-export function calculationsId(fund: Fund, event: ethereum.Event): string {
+export function calculationStateId(fund: Fund, event: ethereum.Event): string {
   return fund.id + '/' + event.block.timestamp.toString() + '/calculations';
 }
 
-export function createCalculations(fund: Fund, event: ethereum.Event, cause: Entity | null): Calculation {
-  let calculations = new Calculation(calculationsId(fund, event));
+export function createCalculationState(fund: Fund, event: ethereum.Event, cause: Entity | null): CalculationState {
+  let calculations = new CalculationState(calculationStateId(fund, event));
   calculations.timestamp = event.block.timestamp;
   calculations.fund = fund.id;
   calculations.gav = BigDecimal.fromString('0');
@@ -28,11 +28,11 @@ export function createCalculations(fund: Fund, event: ethereum.Event, cause: Ent
   return calculations;
 }
 
-export function ensureCalculations(fund: Fund, event: ethereum.Event, cause: Entity): Calculation {
-  let calculations = Calculation.load(calculationsId(fund, event)) as Calculation;
+export function ensureCalculationState(fund: Fund, event: ethereum.Event, cause: Entity): CalculationState {
+  let calculations = CalculationState.load(calculationStateId(fund, event)) as CalculationState;
 
   if (!calculations) {
-    calculations = createCalculations(fund, event, cause);
+    calculations = createCalculationState(fund, event, cause);
   } else {
     let events = calculations.events;
     calculations.events = arrayUnique<string>(events.concat([cause.getString('id')]));
@@ -42,8 +42,8 @@ export function ensureCalculations(fund: Fund, event: ethereum.Event, cause: Ent
   return calculations;
 }
 
-export function useCalculations(id: string): Calculation {
-  let calculations = Calculation.load(id) as Calculation;
+export function useCalculationState(id: string): CalculationState {
+  let calculations = CalculationState.load(id) as CalculationState;
   if (calculations == null) {
     logCritical('Failed to load fund calculations {}.', [id]);
   }
@@ -51,7 +51,7 @@ export function useCalculations(id: string): Calculation {
   return calculations;
 }
 
-export function trackFundCalculations(fund: Fund, event: ethereum.Event, cause: Entity): void {
+export function trackCalculationState(fund: Fund, event: ethereum.Event, cause: Entity): void {
   let comptroller = ComptrollerLibContract.bind(Address.fromString(fund.accessor));
   let wrapper = FundActionsWrapperContract.bind(fundActionsWrapperAddress);
   let vault = VaultLibContract.bind(Address.fromString(fund.id));
@@ -75,14 +75,14 @@ export function trackFundCalculations(fund: Fund, event: ethereum.Event, cause: 
 
   let denominationAsset = useAsset(fund.denominationAsset);
 
-  let calculations = ensureCalculations(fund, event, cause);
+  let calculations = ensureCalculationState(fund, event, cause);
   calculations.gav = toBigDecimal(gav.value.value0, denominationAsset.decimals);
   calculations.totalSupply = toBigDecimal(totalSupply.value);
   calculations.grossSharePrice = toBigDecimal(grossShareValue.value.value0);
   calculations.netSharePrice = toBigDecimal(netShareValue.value.value0);
   calculations.save();
 
-  let state = ensureState(fund, event);
+  let state = ensureFundState(fund, event);
   let events = state.events;
   state.events = arrayUnique<string>(events.concat(calculations.events));
   state.calculations = calculations.id;

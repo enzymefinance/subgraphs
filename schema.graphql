@@ -34,7 +34,7 @@ interface SharesChange {
   transaction: Transaction!
 }
 
-interface Metric {
+interface IFundState {
   id: ID!
   fund: Fund!
   timestamp: BigInt!
@@ -299,78 +299,6 @@ type MigrationOutHookFailedEvent implements Event & FundEvent @entity {
   nextVaultAccessor: String!
   failureReturnData: String!
 }
-
-# type PostCancelMigrationOriginHookFailedEvent implements Event & FundEvent @entity {
-#   id: ID!
-#   fund: Fund!
-#   account: Account!
-#   contract: Contract!
-#   timestamp: BigInt!
-#   transaction: Transaction!
-#   migration: Migration!
-#   signalTimestamp: BigInt!
-#   failureData: Bytes!
-# }
-
-# type PostCancelMigrationTargetHookFailedEvent implements Event & FundEvent @entity {
-#   id: ID!
-#   fund: Fund!
-#   account: Account!
-#   contract: Contract!
-#   timestamp: BigInt!
-#   transaction: Transaction!
-#   migration: Migration!
-#   signalTimestamp: BigInt!
-#   failureData: Bytes!
-# }
-
-# type PreMigrateOriginHookFailedEvent implements Event & FundEvent @entity {
-#   id: ID!
-#   fund: Fund!
-#   account: Account!
-#   contract: Contract!
-#   timestamp: BigInt!
-#   transaction: Transaction!
-#   migration: Migration!
-#   signalTimestamp: BigInt!
-#   failureData: Bytes!
-# }
-
-# type PostMigrateOriginHookFailedEvent implements Event & FundEvent @entity {
-#   id: ID!
-#   fund: Fund!
-#   account: Account!
-#   contract: Contract!
-#   timestamp: BigInt!
-#   transaction: Transaction!
-#   migration: Migration!
-#   signalTimestamp: BigInt!
-#   failureData: Bytes!
-# }
-
-# type PreSignalMigrationOriginHookFailedEvent implements Event & FundEvent @entity {
-#   id: ID!
-#   fund: Fund!
-#   account: Account!
-#   contract: Contract!
-#   timestamp: BigInt!
-#   transaction: Transaction!
-#   migration: Migration!
-#   signalTimestamp: BigInt!
-#   failureData: Bytes!
-# }
-
-# type PostSignalMigrationOriginHookFailedEvent implements Event & FundEvent @entity {
-#   id: ID!
-#   fund: Fund!
-#   account: Account!
-#   contract: Contract!
-#   timestamp: BigInt!
-#   transaction: Transaction!
-#   migration: Migration!
-#   signalTimestamp: BigInt!
-#   failureData: Bytes!
-# }
 
 type FeeEnabledForFundEvent implements Event & FundEvent @entity {
   id: ID!
@@ -1118,20 +1046,24 @@ type Fund @entity {
   sharesActionTimelock: BigInt!
   allowedBuySharesCallers: [String!]!
   trackedAssets: [Asset!]!
+
   policies: [PolicySetting!]! @derivedFrom(field: "fund")
   fees: [FeeSetting!]! @derivedFrom(field: "fund")
+  trades: [Trade!]! @derivedFrom(field: "fund")
   investments: [Investment!]! @derivedFrom(field: "fund")
-  shares: Share!
-  sharesHistory: [Share!]! @derivedFrom(field: "fund")
-  portfolio: Portfolio!
-  portfolioHistory: [Portfolio!]! @derivedFrom(field: "fund")
+
+  # Fund State
+  shares: ShareState!
+  sharesHistory: [ShareState!]! @derivedFrom(field: "fund")
+  portfolio: PortfolioState!
+  portfolioHistory: [PortfolioState!]! @derivedFrom(field: "fund")
   feeState: FeeState!
   feeStateHistory: [FeeState!]! @derivedFrom(field: "fund")
-  calculations: Calculation!
-  calculationsHistory: [Calculation!]! @derivedFrom(field: "fund")
-  state: State!
-  stateHistory: [State!]! @derivedFrom(field: "fund")
-  trades: [Trade!]! @derivedFrom(field: "fund")
+  calculations: CalculationState!
+  calculationsHistory: [CalculationState!]! @derivedFrom(field: "fund")
+  state: FundState!
+  stateHistory: [FundState!]! @derivedFrom(field: "fund")
+
   events: [FundEvent!]! @derivedFrom(field: "fund")
   migrations: [Migration!] @derivedFrom(field: "fund")
 }
@@ -1162,6 +1094,7 @@ type Account @entity {
   managements: [Fund!]! @derivedFrom(field: "manager")
   investor: Boolean!
   investments: [Investment!]! @derivedFrom(field: "investor")
+  shareholderStates: [ShareholderState!]! @derivedFrom(field: "account")
   events: [FundEvent!]! @derivedFrom(field: "account")
 }
 
@@ -1283,16 +1216,35 @@ type MaxConcentrationSetting implements PolicySetting @entity {
   events: [FundEvent!]!
 }
 
-type Share implements Metric @entity {
+type ShareState implements IFundState @entity {
   id: ID!
   fund: Fund!
   timestamp: BigInt!
   totalSupply: BigDecimal!
   outstandingForFees: BigDecimal!
+  shareholders: [ShareholderState!]!
   events: [FundEvent!]!
 }
 
-type Holding implements Metric @entity {
+type ShareholderState implements IFundState @entity {
+  id: ID!
+  fund: Fund!
+  timestamp: BigInt!
+  shareState: ShareState!
+  account: Account!
+  shares: BigDecimal!
+  events: [FundEvent!]!
+}
+
+type PortfolioState implements IFundState @entity {
+  id: ID!
+  fund: Fund!
+  timestamp: BigInt!
+  holdings: [HoldingState!]!
+  events: [FundEvent!]!
+}
+
+type HoldingState implements IFundState @entity {
   id: ID!
   fund: Fund!
   timestamp: BigInt!
@@ -1302,15 +1254,7 @@ type Holding implements Metric @entity {
   events: [FundEvent!]!
 }
 
-type Portfolio implements Metric @entity {
-  id: ID!
-  fund: Fund!
-  timestamp: BigInt!
-  holdings: [Holding!]!
-  events: [FundEvent!]!
-}
-
-type Calculation implements Metric @entity {
+type CalculationState implements IFundState @entity {
   id: ID!
   fund: Fund!
   timestamp: BigInt!
@@ -1321,18 +1265,18 @@ type Calculation implements Metric @entity {
   events: [FundEvent!]!
 }
 
-type State implements Metric @entity {
+type FundState implements IFundState @entity {
   id: ID!
   fund: Fund!
   timestamp: BigInt!
-  shares: Share!
-  portfolio: Portfolio!
+  shares: ShareState!
+  portfolio: PortfolioState!
   feeState: FeeState!
-  calculations: Calculation!
+  calculations: CalculationState!
   events: [FundEvent!]!
 }
 
-type FeeState implements Metric @entity {
+type FeeState implements IFundState @entity {
   id: ID!
   fund: Fund!
   timestamp: BigInt!
@@ -1340,7 +1284,7 @@ type FeeState implements Metric @entity {
   events: [FundEvent!]!
 }
 
-type ManagementFeeState implements Metric & IndividualFeeState @entity {
+type ManagementFeeState implements IFundState & IndividualFeeState @entity {
   id: ID!
   fund: Fund!
   timestamp: BigInt!
@@ -1350,7 +1294,7 @@ type ManagementFeeState implements Metric & IndividualFeeState @entity {
   events: [FundEvent!]!
 }
 
-type PerformanceFeeState implements Metric & IndividualFeeState @entity {
+type PerformanceFeeState implements IFundState & IndividualFeeState @entity {
   id: ID!
   fund: Fund!
   timestamp: BigInt!
@@ -1363,7 +1307,7 @@ type PerformanceFeeState implements Metric & IndividualFeeState @entity {
   events: [FundEvent!]!
 }
 
-type EntranceRateDirectFeeState implements Metric & IndividualFeeState @entity {
+type EntranceRateDirectFeeState implements IFundState & IndividualFeeState @entity {
   id: ID!
   fund: Fund!
   timestamp: BigInt!
@@ -1372,7 +1316,7 @@ type EntranceRateDirectFeeState implements Metric & IndividualFeeState @entity {
   events: [FundEvent!]!
 }
 
-type EntranceRateBurnFeeState implements Metric & IndividualFeeState @entity {
+type EntranceRateBurnFeeState implements IFundState & IndividualFeeState @entity {
   id: ID!
   fund: Fund!
   timestamp: BigInt!

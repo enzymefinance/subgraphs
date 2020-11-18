@@ -1,11 +1,11 @@
 import { BigDecimal } from '@graphprotocol/graph-ts';
 import { useAccount } from '../entities/Account';
 import { useAsset } from '../entities/Asset';
-import { trackFundCalculations } from '../entities/Calculations';
+import { trackCalculationState } from '../entities/CalculationState';
 import { ensureContract } from '../entities/Contract';
 import { useFund } from '../entities/Fund';
 import { ensureIntegrationAdapter, useIntegrationAdapter } from '../entities/IntegrationAdapter';
-import { trackFundPortfolio } from '../entities/Portfolio';
+import { trackPortfolioState } from '../entities/PortfolioState';
 import { ensureTransaction } from '../entities/Transaction';
 import {
   AdapterDeregistered,
@@ -68,6 +68,6 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
   trade.transaction = ensureTransaction(event).id;
   trade.save();
 
-  trackFundPortfolio(fund, event, execution);
-  trackFundCalculations(fund, event, execution);
+  trackPortfolioState(fund, event, execution);
+  trackCalculationState(fund, event, execution);
 }

@@ -4,9 +4,9 @@ import { arrayUnique } from '../utils/arrayUnique';
 import { logCritical } from '../utils/logCritical';
 import { ensureEntranceRateBurnFeeState } from './EntranceRateBurnFeeState';
 import { ensureEntranceRateDirectFeeState } from './EntranceRateDirectFeeState';
+import { ensureFundState, useFundState } from './FundState';
 import { ensureManagementFeeState } from './ManagementFeeState';
 import { ensurePerformanceFeeState } from './PerformanceFeeState';
-import { ensureState, useState } from './State';
 
 export function feeStateId(fund: Fund, event: ethereum.Event): string {
   return fund.id + '/' + event.block.timestamp.toString() + '/feeState';
@@ -32,7 +32,7 @@ export function ensureFeeState(fund: Fund, event: ethereum.Event, cause: Entity)
   let feeState = FeeState.load(feeStateId(fund, event)) as FeeState;
 
   if (!feeState) {
-    let state = useState(fund.state);
+    let state = useFundState(fund.state);
     let previous = useFeeState(state.feeState);
     feeState = createFeeState(previous.feeStates, fund, event, cause);
   } else {
@@ -74,7 +74,7 @@ export function trackFeeState(
     return feeState;
   }
 
-  let state = ensureState(fund, event);
+  let state = ensureFundState(fund, event);
   let events = state.events;
   state.events = arrayUnique<string>(events.concat(feeState.events));
   state.feeState = feeState.id;

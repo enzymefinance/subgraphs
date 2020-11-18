@@ -5,7 +5,7 @@ import { arrayDiff } from '../utils/arrayDiff';
 import { arrayUnique } from '../utils/arrayUnique';
 import { logCritical } from '../utils/logCritical';
 import { feeStateId, useFeeState } from './FeeState';
-import { useState } from './State';
+import { useFundState } from './FundState';
 
 class ManagementFeeStateArgs {
   lastSettled: BigInt;
@@ -55,7 +55,7 @@ export function ensureManagementFeeState(
   let managementFeeState = ManagementFeeState.load(managementFeeStateId(fund, event)) as ManagementFeeState;
 
   if (!managementFeeState) {
-    let state = useState(fund.state);
+    let state = useFundState(fund.state);
     let previousFeeState = useFeeState(state.feeState);
 
     let previous = findManagementFeeState(previousFeeState.feeStates);
