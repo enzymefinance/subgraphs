@@ -41,7 +41,7 @@ interface IFundState {
   events: [IFundEvent!]!
 }
 
-interface FeeSetting {
+interface IFeeSetting {
   id: ID!
   fee: Fee!
   fund: Fund!
@@ -49,7 +49,7 @@ interface FeeSetting {
   events: [IFundEvent!]!
 }
 
-interface PolicySetting {
+interface IPolicySetting {
   id: ID!
   policy: Policy!
   fund: Fund!
@@ -1047,8 +1047,8 @@ type Fund @entity {
   allowedBuySharesCallers: [String!]!
   trackedAssets: [Asset!]!
 
-  policies: [PolicySetting!]! @derivedFrom(field: "fund")
-  fees: [FeeSetting!]! @derivedFrom(field: "fund")
+  policies: [IPolicySetting!]! @derivedFrom(field: "fund")
+  fees: [IFeeSetting!]! @derivedFrom(field: "fund")
   trades: [Trade!]! @derivedFrom(field: "fund")
   investments: [Investment!]! @derivedFrom(field: "fund")
 
@@ -1112,7 +1112,7 @@ type Fee @entity {
   funds: [Fund!]!
 }
 
-type ManagementFeeSetting implements FeeSetting @entity {
+type ManagementFeeSetting implements IFeeSetting @entity {
   id: ID!
   fee: Fee!
   fund: Fund!
@@ -1121,7 +1121,7 @@ type ManagementFeeSetting implements FeeSetting @entity {
   events: [IFundEvent!]!
 }
 
-type PerformanceFeeSetting implements FeeSetting @entity {
+type PerformanceFeeSetting implements IFeeSetting @entity {
   id: ID!
   fee: Fee!
   fund: Fund!
@@ -1132,7 +1132,7 @@ type PerformanceFeeSetting implements FeeSetting @entity {
   events: [IFundEvent!]!
 }
 
-type EntranceRateDirectFeeSetting implements FeeSetting @entity {
+type EntranceRateDirectFeeSetting implements IFeeSetting @entity {
   id: ID!
   fee: Fee!
   fund: Fund!
@@ -1141,7 +1141,7 @@ type EntranceRateDirectFeeSetting implements FeeSetting @entity {
   events: [IFundEvent!]!
 }
 
-type EntranceRateBurnFeeSetting implements FeeSetting @entity {
+type EntranceRateBurnFeeSetting implements IFeeSetting @entity {
   id: ID!
   fee: Fee!
   fund: Fund!
@@ -1159,10 +1159,10 @@ type Policy @entity {
   id: ID!
   identifier: String!
   funds: [Fund!]!
-  settings: [PolicySetting!]! @derivedFrom(field: "policy")
+  settings: [IPolicySetting!]! @derivedFrom(field: "policy")
 }
 
-type AdapterBlacklistSetting implements PolicySetting @entity {
+type AdapterBlacklistSetting implements IPolicySetting @entity {
   id: ID!
   policy: Policy!
   fund: Fund!
@@ -1171,7 +1171,7 @@ type AdapterBlacklistSetting implements PolicySetting @entity {
   events: [IFundEvent!]!
 }
 
-type AdapterWhitelistSetting implements PolicySetting @entity {
+type AdapterWhitelistSetting implements IPolicySetting @entity {
   id: ID!
   policy: Policy!
   fund: Fund!
@@ -1180,7 +1180,7 @@ type AdapterWhitelistSetting implements PolicySetting @entity {
   events: [IFundEvent!]!
 }
 
-type AssetBlacklistSetting implements PolicySetting @entity {
+type AssetBlacklistSetting implements IPolicySetting @entity {
   id: ID!
   policy: Policy!
   fund: Fund!
@@ -1189,7 +1189,7 @@ type AssetBlacklistSetting implements PolicySetting @entity {
   events: [IFundEvent!]!
 }
 
-type AssetWhitelistSetting implements PolicySetting @entity {
+type AssetWhitelistSetting implements IPolicySetting @entity {
   id: ID!
   policy: Policy!
   fund: Fund!
@@ -1198,7 +1198,7 @@ type AssetWhitelistSetting implements PolicySetting @entity {
   events: [IFundEvent!]!
 }
 
-type InvestorWhitelistSetting implements PolicySetting @entity {
+type InvestorWhitelistSetting implements IPolicySetting @entity {
   id: ID!
   policy: Policy!
   fund: Fund!
@@ -1207,7 +1207,7 @@ type InvestorWhitelistSetting implements PolicySetting @entity {
   events: [IFundEvent!]!
 }
 
-type MaxConcentrationSetting implements PolicySetting @entity {
+type MaxConcentrationSetting implements IPolicySetting @entity {
   id: ID!
   policy: Policy!
   fund: Fund!
