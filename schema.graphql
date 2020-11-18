@@ -28,6 +28,7 @@ interface FundEventInterface {
 interface SharesChangeInterface {
   id: ID!
   fund: Fund!
+  investor: Account!
   timestamp: BigInt!
   investmentState: InvestmentState!
   shares: BigDecimal!
@@ -164,8 +165,8 @@ type SharesBoughtEvent implements EventInterface & FundEventInterface & SharesCh
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   investor: Account!
+  contract: Contract!
   investmentState: InvestmentState!
   shares: BigDecimal!
   asset: Asset!
@@ -179,8 +180,8 @@ type SharesRedeemedEvent implements EventInterface & FundEventInterface & Shares
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   investor: Account!
+  contract: Contract!
   investmentState: InvestmentState!
   shares: BigDecimal!
   payoutAssets: [Asset!]!
@@ -338,6 +339,7 @@ type FeeSettledForFundEvent implements EventInterface & FundEventInterface & Sha
   contract: Contract!
   fund: Fund!
   account: Account!
+  investor: Account!
   timestamp: BigInt!
   transaction: Transaction!
   investmentState: InvestmentState!
@@ -356,6 +358,7 @@ type AllSharesOutstandingForcePaidForFundEvent implements EventInterface & FundE
   contract: Contract!
   fund: Fund!
   account: Account!
+  investor: Account!
   timestamp: BigInt!
   transaction: Transaction!
   investmentState: InvestmentState!
@@ -370,6 +373,7 @@ type SharesOutstandingPaidForFundEvent implements EventInterface & FundEventInte
   contract: Contract!
   fund: Fund!
   account: Account!
+  investor: Account!
   timestamp: BigInt!
   transaction: Transaction!
   investmentState: InvestmentState!
@@ -1126,6 +1130,7 @@ type Account @entity {
   managements: [Fund!]! @derivedFrom(field: "manager")
   investor: Boolean!
   investments: [Investment!]! @derivedFrom(field: "investor")
+  investmentChanges: [SharesChangeInterface!]! @derivedFrom(field: "investor")
   events: [FundEventInterface!]! @derivedFrom(field: "account")
 }
 

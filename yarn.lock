@@ -1100,20 +1100,20 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@melonproject/protocol@^2.0.0-dev.5018+e3d0e883":
-  version "2.0.0-dev.5018"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_1BCrAV/%40melonproject%2Fprotocol-2.0.0-dev.5018.tgz#938b74074dd2c698c6996d0f4d5cced6d822f95a"
-  integrity sha1-k4t0B03SxpjGmW0PTVzO1tgi+Vo=
+"@melonproject/protocol@^2.0.0-dev.5019+e3d0e883":
+  version "2.0.0-dev.5019"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_28vMYD/%40melonproject%2Fprotocol-2.0.0-dev.5019.tgz#9cd6a8cadee903ecc303434cf012cf13d49b4cd7"
+  integrity sha1-nNaoyt7pA+zDA0NM8BLPE9SbTNc=
   dependencies:
     "@babel/runtime" "^7.12.5"
 
-"@melonproject/testutils@^2.0.0-dev.5018+e3d0e883":
-  version "2.0.0-dev.5018"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_13CEr8/%40melonproject%2Ftestutils-2.0.0-dev.5018.tgz#dc1364e3aa6e0df22944ba050b48bc6deb2fc514"
-  integrity sha1-3BNk46puDfIpRLoFC0i8besvxRQ=
+"@melonproject/testutils@^2.0.0-dev.5019+e3d0e883":
+  version "2.0.0-dev.5019"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_kCRcm/%40melonproject%2Ftestutils-2.0.0-dev.5019.tgz#5fd86b31edefefc6cf055f57e5858dc803fe3bb8"
+  integrity sha1-X9hrMe3v78bPBV9X5YWNyAP+O7g=
   dependencies:
     "@babel/runtime" "^7.12.5"
-    "@melonproject/protocol" "^2.0.0-dev.5018+e3d0e883"
+    "@melonproject/protocol" "^2.0.0-dev.5019+e3d0e883"
 
 "@openzeppelin/contracts@^3.2.0":
   version "3.2.0"
@@ -1419,10 +1419,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.12.62.tgz#733923d73669188d35950253dd18a21570085d2b"
   integrity sha512-qAfo81CsD7yQIM9mVyh6B/U47li5g7cfpVQEDMfQeF8pSZVwzbhwU3crc0qG4DmpsebpJPR49AKOExQyJ05Cpg==
 
-"@types/node@^14.14.7":
-  version "14.14.7"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.7.tgz#8ea1e8f8eae2430cf440564b98c6dfce1ec5945d"
-  integrity sha512-Zw1vhUSQZYw+7u5dAwNbIA9TuTotpzY/OF7sJM9FqPOF3SPjKnxrjoTktXDZgUjybf4cWVBP7O8wvKdSaGHweg==
+"@types/node@^14.14.8":
+  version "14.14.8"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.8.tgz#2127bd81949a95c8b7d3240f3254352d72563aec"
+  integrity sha512-z/5Yd59dCKI5kbxauAJgw6dLPzW+TNOItNE00PkpzNwUIEwdj/Lsqwq94H5DdYBX7C13aRA0CY32BK76+neEUA==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"
@@ -1493,10 +1493,10 @@
   dependencies:
     "@types/yargs-parser" "*"
 
-"@types/yargs@^15.0.9":
-  version "15.0.9"
-  resolved "https://registry.yarnpkg.com/@types/yargs/-/yargs-15.0.9.tgz#524cd7998fe810cdb02f26101b699cccd156ff19"
-  integrity sha512-HmU8SeIRhZCWcnRskCs36Q1Q00KBV6Cqh/ora8WN1+22dY07AZdn6Gel8QZ3t26XYPImtcL8WV/eqjhVmMEw4g==
+"@types/yargs@^15.0.10":
+  version "15.0.10"
+  resolved "https://registry.yarnpkg.com/@types/yargs/-/yargs-15.0.10.tgz#0fe3c8173a0d5c3e780b389050140c3f5ea6ea74"
+  integrity sha512-z8PNtlhrj7eJNLmrAivM7rjBESG6JwC5xP3RVk12i/8HVP7Xnx/sEmERnRImyEuUaJfO942X0qMOYsoupaJbZQ==
   dependencies:
     "@types/yargs-parser" "*"
 
