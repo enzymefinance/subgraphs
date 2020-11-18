@@ -5,8 +5,7 @@ import { ensureContract } from '../entities/Contract';
 import { ensureFee, useFee } from '../entities/Fee';
 import { trackFeeState } from '../entities/FeeState';
 import { useFund } from '../entities/Fund';
-import { useInvestment } from '../entities/Investment';
-import { ensureInvestmentState } from '../entities/InvestmentState';
+import { trackInvestmentState } from '../entities/InvestmentState';
 import { trackShareState } from '../entities/ShareState';
 import { ensureTransaction } from '../entities/Transaction';
 import { ComptrollerLibContract } from '../generated/ComptrollerLibContract';
@@ -39,8 +38,7 @@ export function handleAllSharesOutstandingForcePaidForFund(event: AllSharesOutst
 
   let fund = useFund(comptroller.getVaultProxy().toHex());
   let investor = ensureInvestor(Address.fromString(fund.manager), event);
-  let investmentState = ensureInvestmentState(investor, fund, event);
-  let investment = useInvestment(investor, fund);
+  let investmentState = trackInvestmentState(investor, fund, event);
   let shares = toBigDecimal(event.params.sharesDue);
 
   let settled = new AllSharesOutstandingForcePaidForFundEvent(genericId(event));
@@ -55,12 +53,6 @@ export function handleAllSharesOutstandingForcePaidForFund(event: AllSharesOutst
   settled.payee = event.params.payee.toHex();
   settled.sharesDue = shares;
   settled.save();
-
-  investmentState.shares = investmentState.shares.plus(shares);
-  investmentState.save();
-
-  investment.shares = investment.shares.plus(shares);
-  investment.save();
 
   trackShareState(fund, event, settled);
   // TODO: what do we need to do for fees here (if anything)?
@@ -117,12 +109,9 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
 
   let fund = useFund(comptroller.getVaultProxy().toHex());
   let investor = ensureInvestor(event.params.payee, event);
-  let investmentState = ensureInvestmentState(investor, fund, event);
-  let investment = useInvestment(investor, fund);
+  let investmentState = trackInvestmentState(investor, fund, event);
   let fee = useFee(event.params.fee.toHex());
   let shares = toBigDecimal(event.params.sharesDue);
-
-  let settlementType = getSettlementType(event.params.settlementType);
 
   let settled = new FeeSettledForFundEvent(genericId(event));
   settled.contract = event.address.toHex();
@@ -140,15 +129,6 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
   settled.sharesDue = shares;
   settled.save();
 
-  // only update shares if shares have actually been paid out
-  if (settlementType == 'Direct' || settlementType == 'Mint') {
-    investmentState.shares = investmentState.shares.plus(shares);
-    investmentState.save();
-
-    investment.shares = investment.shares.plus(shares);
-    investment.save();
-  }
-
   trackShareState(fund, event, settled);
   trackFeeState(fund, fee, BigDecimal.fromString('0'), event, settled);
   trackCalculationState(fund, event, settled);
@@ -158,8 +138,7 @@ export function handleSharesOutstandingPaidForFund(event: SharesOutstandingPaidF
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let fund = useFund(comptroller.getVaultProxy().toHex());
   let investor = ensureInvestor(Address.fromString(fund.manager), event);
-  let investmentState = ensureInvestmentState(investor, fund, event);
-  let investment = useInvestment(investor, fund);
+  let investmentState = trackInvestmentState(investor, fund, event);
   let fee = useFee(event.params.fee.toHex());
   let shares = toBigDecimal(event.params.sharesDue);
 
@@ -177,12 +156,6 @@ export function handleSharesOutstandingPaidForFund(event: SharesOutstandingPaidF
   sharesPaid.sharesDue = toBigDecimal(event.params.sharesDue);
   sharesPaid.payee = useManager(fund.manager).id;
   sharesPaid.save();
-
-  investmentState.shares = investmentState.shares.plus(shares);
-  investmentState.save();
-
-  investment.shares = investment.shares.plus(shares);
-  investment.save();
 
   trackShareState(fund, event, sharesPaid);
   trackFeeState(fund, fee, BigDecimal.fromString('0'), event, sharesPaid);

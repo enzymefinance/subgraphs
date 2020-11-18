@@ -2,21 +2,21 @@
 # Interfaces
 #################################################
 
-interface IEvent {
+interface EventInterface {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
 }
 
-interface INetworkEvent {
+interface NetworkEventInterface {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
 }
 
-interface IFundEvent {
+interface FundEventInterface {
   id: ID!
   fund: Fund!
   account: Account!
@@ -25,7 +25,7 @@ interface IFundEvent {
   transaction: Transaction!
 }
 
-interface ISharesChange {
+interface SharesChangeInterface {
   id: ID!
   fund: Fund!
   timestamp: BigInt!
@@ -34,38 +34,38 @@ interface ISharesChange {
   transaction: Transaction!
 }
 
-interface IFundState {
+interface FundStateInterface {
   id: ID!
   fund: Fund!
   timestamp: BigInt!
-  events: [IFundEvent!]!
+  events: [FundEventInterface!]!
 }
 
-interface IFeeSetting {
+interface FeeSettingInterface {
   id: ID!
   fee: Fee!
   fund: Fund!
   timestamp: BigInt!
-  events: [IFundEvent!]!
+  events: [FundEventInterface!]!
 }
 
-interface IPolicySetting {
+interface PolicySettingInterface {
   id: ID!
   policy: Policy!
   fund: Fund!
   timestamp: BigInt!
-  events: [IFundEvent!]!
+  events: [FundEventInterface!]!
 }
 
-interface IIndividualFeeState {
+interface IndividualFeeStateInterface {
   id: ID!
   fund: Fund!
   timestamp: BigInt!
   fee: Fee!
-  events: [IFundEvent!]!
+  events: [FundEventInterface!]!
 }
 
-interface IPeriodicFundState {
+interface PeriodicFundStateInterface {
   id: ID!
   fund: Fund!
   start: BigInt!
@@ -115,7 +115,7 @@ enum SettlementType {
 # Low-level fund event entities
 #################################################
 
-type NewFundCreatedEvent implements IEvent & IFundEvent @entity {
+type NewFundCreatedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -134,7 +134,7 @@ type NewFundCreatedEvent implements IEvent & IFundEvent @entity {
   transaction: Transaction!
 }
 
-type ComptrollerProxyDeployedEvent implements IEvent & IFundEvent @entity {
+type ComptrollerProxyDeployedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -150,7 +150,7 @@ type ComptrollerProxyDeployedEvent implements IEvent & IFundEvent @entity {
   forMigration: Boolean!
 }
 
-type VaultProxySetEvent implements IEvent & IFundEvent @entity {
+type VaultProxySetEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -160,7 +160,7 @@ type VaultProxySetEvent implements IEvent & IFundEvent @entity {
   vaultProxy: String!
 }
 
-type SharesBoughtEvent implements IEvent & IFundEvent & ISharesChange @entity {
+type SharesBoughtEvent implements EventInterface & FundEventInterface & SharesChangeInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -175,7 +175,7 @@ type SharesBoughtEvent implements IEvent & IFundEvent & ISharesChange @entity {
   transaction: Transaction!
 }
 
-type SharesRedeemedEvent implements IEvent & IFundEvent & ISharesChange @entity {
+type SharesRedeemedEvent implements EventInterface & FundEventInterface & SharesChangeInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -189,7 +189,7 @@ type SharesRedeemedEvent implements IEvent & IFundEvent & ISharesChange @entity 
   transaction: Transaction!
 }
 
-type AmguPaidEvent implements IEvent & IFundEvent @entity {
+type AmguPaidEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -201,7 +201,7 @@ type AmguPaidEvent implements IEvent & IFundEvent @entity {
   transaction: Transaction!
 }
 
-type AssetWithdrawnEvent implements IEvent & IFundEvent @entity {
+type AssetWithdrawnEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   asset: Asset!
   fund: Fund!
@@ -213,7 +213,7 @@ type AssetWithdrawnEvent implements IEvent & IFundEvent @entity {
   amount: BigDecimal!
 }
 
-type TrackedAssetAddedEvent implements IEvent & IFundEvent @entity {
+type TrackedAssetAddedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -223,7 +223,7 @@ type TrackedAssetAddedEvent implements IEvent & IFundEvent @entity {
   transaction: Transaction!
 }
 
-type TrackedAssetRemovedEvent implements IEvent & IFundEvent @entity {
+type TrackedAssetRemovedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -233,7 +233,7 @@ type TrackedAssetRemovedEvent implements IEvent & IFundEvent @entity {
   transaction: Transaction!
 }
 
-type CallOnIntegrationExecutedForFundEvent implements IEvent & IFundEvent @entity {
+type CallOnIntegrationExecutedForFundEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -247,7 +247,7 @@ type CallOnIntegrationExecutedForFundEvent implements IEvent & IFundEvent @entit
   transaction: Transaction!
 }
 
-type MigrationSignaledEvent implements IEvent & IFundEvent @entity {
+type MigrationSignaledEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -257,18 +257,7 @@ type MigrationSignaledEvent implements IEvent & IFundEvent @entity {
   migration: Migration!
 }
 
-type MigrationCancelledEvent implements IEvent & IFundEvent @entity {
-  id: ID!
-  fund: Fund!
-  account: Account!
-  contract: Contract!
-  timestamp: BigInt!
-  transaction: Transaction!
-  migration: Migration!
-  signalTimestamp: BigInt!
-}
-
-type MigrationExecutedEvent implements IEvent & IFundEvent @entity {
+type MigrationCancelledEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -279,7 +268,18 @@ type MigrationExecutedEvent implements IEvent & IFundEvent @entity {
   signalTimestamp: BigInt!
 }
 
-type MigrationInCancelHookFailedEvent implements IEvent & IFundEvent @entity {
+type MigrationExecutedEvent implements EventInterface & FundEventInterface @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  migration: Migration!
+  signalTimestamp: BigInt!
+}
+
+type MigrationInCancelHookFailedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -294,7 +294,7 @@ type MigrationInCancelHookFailedEvent implements IEvent & IFundEvent @entity {
   failureReturnData: String!
 }
 
-type MigrationOutHookFailedEvent implements IEvent & IFundEvent @entity {
+type MigrationOutHookFailedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -309,7 +309,7 @@ type MigrationOutHookFailedEvent implements IEvent & IFundEvent @entity {
   failureReturnData: String!
 }
 
-type FeeEnabledForFundEvent implements IEvent & IFundEvent @entity {
+type FeeEnabledForFundEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   contract: Contract!
   fund: Fund!
@@ -321,7 +321,7 @@ type FeeEnabledForFundEvent implements IEvent & IFundEvent @entity {
   settingsData: Bytes!
 }
 
-type FeesRecipientSetForFundEvent implements IEvent & IFundEvent @entity {
+type FeesRecipientSetForFundEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   contract: Contract!
   fund: Fund!
@@ -333,7 +333,7 @@ type FeesRecipientSetForFundEvent implements IEvent & IFundEvent @entity {
   nextFeesRecipient: String!
 }
 
-type FeeSettledForFundEvent implements IEvent & IFundEvent & ISharesChange @entity {
+type FeeSettledForFundEvent implements EventInterface & FundEventInterface & SharesChangeInterface @entity {
   id: ID!
   contract: Contract!
   fund: Fund!
@@ -350,7 +350,8 @@ type FeeSettledForFundEvent implements IEvent & IFundEvent & ISharesChange @enti
   sharesDue: BigDecimal!
 }
 
-type AllSharesOutstandingForcePaidForFundEvent implements IEvent & IFundEvent & ISharesChange @entity {
+type AllSharesOutstandingForcePaidForFundEvent implements EventInterface & FundEventInterface & SharesChangeInterface
+  @entity {
   id: ID!
   contract: Contract!
   fund: Fund!
@@ -364,7 +365,7 @@ type AllSharesOutstandingForcePaidForFundEvent implements IEvent & IFundEvent & 
   sharesDue: BigDecimal!
 }
 
-type SharesOutstandingPaidForFundEvent implements IEvent & IFundEvent & ISharesChange @entity {
+type SharesOutstandingPaidForFundEvent implements EventInterface & FundEventInterface & SharesChangeInterface @entity {
   id: ID!
   contract: Contract!
   fund: Fund!
@@ -380,7 +381,7 @@ type SharesOutstandingPaidForFundEvent implements IEvent & IFundEvent & ISharesC
   sharesDue: BigDecimal!
 }
 
-type PolicyEnabledForFundEvent implements IEvent & IFundEvent @entity {
+type PolicyEnabledForFundEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   contract: Contract!
   fund: Fund!
@@ -390,7 +391,7 @@ type PolicyEnabledForFundEvent implements IEvent & IFundEvent @entity {
   transaction: Transaction!
 }
 
-type AccessorSetEvent implements IEvent & IFundEvent @entity {
+type AccessorSetEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   contract: Contract!
   fund: Fund!
@@ -401,7 +402,7 @@ type AccessorSetEvent implements IEvent & IFundEvent @entity {
   timestamp: BigInt!
 }
 
-type OwnerSetEvent implements IEvent & IFundEvent @entity {
+type OwnerSetEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -412,7 +413,7 @@ type OwnerSetEvent implements IEvent & IFundEvent @entity {
   nextOwner: Account!
 }
 
-type MigratorSetEvent implements IEvent & IFundEvent @entity {
+type MigratorSetEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -423,7 +424,7 @@ type MigratorSetEvent implements IEvent & IFundEvent @entity {
   nextMigrator: Account!
 }
 
-type VaultLibSetEvent implements IEvent & IFundEvent @entity {
+type VaultLibSetEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -434,7 +435,7 @@ type VaultLibSetEvent implements IEvent & IFundEvent @entity {
   nextVaultLib: Contract!
 }
 
-type ApprovalEvent implements IEvent & IFundEvent @entity {
+type ApprovalEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -446,7 +447,7 @@ type ApprovalEvent implements IEvent & IFundEvent @entity {
   value: BigDecimal!
 }
 
-type TransferEvent implements IEvent & IFundEvent @entity {
+type TransferEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -458,7 +459,7 @@ type TransferEvent implements IEvent & IFundEvent @entity {
   amount: BigDecimal!
 }
 
-type AdapterBlacklistAddressesAddedEvent implements IEvent & IFundEvent @entity {
+type AdapterBlacklistAddressesAddedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -469,7 +470,7 @@ type AdapterBlacklistAddressesAddedEvent implements IEvent & IFundEvent @entity 
   items: [IntegrationAdapter!]!
 }
 
-type AdapterBlacklistAddressesRemovedEvent implements IEvent & IFundEvent @entity {
+type AdapterBlacklistAddressesRemovedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -480,7 +481,7 @@ type AdapterBlacklistAddressesRemovedEvent implements IEvent & IFundEvent @entit
   items: [IntegrationAdapter!]!
 }
 
-type AdapterWhitelistAddressesAddedEvent implements IEvent & IFundEvent @entity {
+type AdapterWhitelistAddressesAddedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -491,7 +492,7 @@ type AdapterWhitelistAddressesAddedEvent implements IEvent & IFundEvent @entity 
   items: [IntegrationAdapter!]!
 }
 
-type AdapterWhitelistAddressesRemovedEvent implements IEvent & IFundEvent @entity {
+type AdapterWhitelistAddressesRemovedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -502,7 +503,7 @@ type AdapterWhitelistAddressesRemovedEvent implements IEvent & IFundEvent @entit
   items: [IntegrationAdapter!]!
 }
 
-type AssetBlacklistAddressesAddedEvent implements IEvent & IFundEvent @entity {
+type AssetBlacklistAddressesAddedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -513,7 +514,7 @@ type AssetBlacklistAddressesAddedEvent implements IEvent & IFundEvent @entity {
   items: [Asset!]!
 }
 
-type AssetBlacklistAddressesRemovedEvent implements IEvent & IFundEvent @entity {
+type AssetBlacklistAddressesRemovedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -524,7 +525,7 @@ type AssetBlacklistAddressesRemovedEvent implements IEvent & IFundEvent @entity 
   items: [Asset!]!
 }
 
-type AssetWhitelistAddressesAddedEvent implements IEvent & IFundEvent @entity {
+type AssetWhitelistAddressesAddedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -535,7 +536,7 @@ type AssetWhitelistAddressesAddedEvent implements IEvent & IFundEvent @entity {
   items: [Asset!]!
 }
 
-type AssetWhitelistAddressesRemovedEvent implements IEvent & IFundEvent @entity {
+type AssetWhitelistAddressesRemovedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -546,7 +547,7 @@ type AssetWhitelistAddressesRemovedEvent implements IEvent & IFundEvent @entity 
   items: [Asset!]!
 }
 
-type InvestorWhitelistAddressesAddedEvent implements IEvent & IFundEvent @entity {
+type InvestorWhitelistAddressesAddedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -557,7 +558,7 @@ type InvestorWhitelistAddressesAddedEvent implements IEvent & IFundEvent @entity
   items: [Account!]!
 }
 
-type InvestorWhitelistAddressesRemovedEvent implements IEvent & IFundEvent @entity {
+type InvestorWhitelistAddressesRemovedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -568,7 +569,7 @@ type InvestorWhitelistAddressesRemovedEvent implements IEvent & IFundEvent @enti
   items: [Account!]!
 }
 
-type MaxConcentrationSetEvent implements IEvent & IFundEvent @entity {
+type MaxConcentrationSetEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -579,7 +580,7 @@ type MaxConcentrationSetEvent implements IEvent & IFundEvent @entity {
   value: BigDecimal!
 }
 
-type ManagementFeeSettingsAddedEvent implements IEvent & IFundEvent @entity {
+type ManagementFeeSettingsAddedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -590,7 +591,7 @@ type ManagementFeeSettingsAddedEvent implements IEvent & IFundEvent @entity {
   rate: BigDecimal!
 }
 
-type ManagementFeeSettledEvent implements IEvent & IFundEvent @entity {
+type ManagementFeeSettledEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -602,7 +603,7 @@ type ManagementFeeSettledEvent implements IEvent & IFundEvent @entity {
   prevSettled: BigInt!
 }
 
-type PerformanceFeeSettingsAddedEvent implements IEvent & IFundEvent @entity {
+type PerformanceFeeSettingsAddedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -614,7 +615,7 @@ type PerformanceFeeSettingsAddedEvent implements IEvent & IFundEvent @entity {
   period: BigInt!
 }
 
-type PerformanceFeeActivatedForFundEvent implements IEvent & IFundEvent @entity {
+type PerformanceFeeActivatedForFundEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -625,7 +626,7 @@ type PerformanceFeeActivatedForFundEvent implements IEvent & IFundEvent @entity 
   highWaterMark: BigDecimal!
 }
 
-type PerformanceFeeSharePriceUpdatedEvent implements IEvent & IFundEvent @entity {
+type PerformanceFeeSharePriceUpdatedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -637,7 +638,7 @@ type PerformanceFeeSharePriceUpdatedEvent implements IEvent & IFundEvent @entity
   nextSharePrice: BigDecimal!
 }
 
-type PerformanceFeePaidOutEvent implements IEvent & IFundEvent @entity {
+type PerformanceFeePaidOutEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -649,7 +650,7 @@ type PerformanceFeePaidOutEvent implements IEvent & IFundEvent @entity {
   nextHighWaterMark: BigDecimal!
 }
 
-type PerformanceFeePerformanceUpdatedEvent implements IEvent & IFundEvent @entity {
+type PerformanceFeePerformanceUpdatedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -662,7 +663,7 @@ type PerformanceFeePerformanceUpdatedEvent implements IEvent & IFundEvent @entit
   sharesOutstandingDiff: BigDecimal!
 }
 
-type EntranceRateDirectFeeSettingsAddedEvent implements IEvent & IFundEvent @entity {
+type EntranceRateDirectFeeSettingsAddedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -673,7 +674,7 @@ type EntranceRateDirectFeeSettingsAddedEvent implements IEvent & IFundEvent @ent
   rate: BigDecimal!
 }
 
-type EntranceRateDirectFeeSettledEvent implements IEvent & IFundEvent @entity {
+type EntranceRateDirectFeeSettledEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -685,7 +686,7 @@ type EntranceRateDirectFeeSettledEvent implements IEvent & IFundEvent @entity {
   payer: Account!
 }
 
-type EntranceRateBurnFeeSettingsAddedEvent implements IEvent & IFundEvent @entity {
+type EntranceRateBurnFeeSettingsAddedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -696,7 +697,7 @@ type EntranceRateBurnFeeSettingsAddedEvent implements IEvent & IFundEvent @entit
   rate: BigDecimal!
 }
 
-type EntranceRateBurnFeeSettledEvent implements IEvent & IFundEvent @entity {
+type EntranceRateBurnFeeSettledEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -708,7 +709,7 @@ type EntranceRateBurnFeeSettledEvent implements IEvent & IFundEvent @entity {
   payer: Account!
 }
 
-type OverridePauseSetEvent implements IEvent & IFundEvent @entity {
+type OverridePauseSetEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -718,7 +719,7 @@ type OverridePauseSetEvent implements IEvent & IFundEvent @entity {
   overridePause: Boolean!
 }
 
-type MigratedSharesDuePaidEvent implements IEvent & IFundEvent @entity {
+type MigratedSharesDuePaidEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -733,7 +734,7 @@ type MigratedSharesDuePaidEvent implements IEvent & IFundEvent @entity {
 #################################################
 
 # VaultProxyDeployedEvent is both a fund event and a network event
-type VaultProxyDeployedEvent implements IEvent & IFundEvent & INetworkEvent @entity {
+type VaultProxyDeployedEvent implements EventInterface & FundEventInterface & NetworkEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
@@ -747,7 +748,7 @@ type VaultProxyDeployedEvent implements IEvent & IFundEvent & INetworkEvent @ent
   fundName: String!
 }
 
-type ComptrollerLibSetEvent implements IEvent & INetworkEvent @entity {
+type ComptrollerLibSetEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
@@ -755,7 +756,7 @@ type ComptrollerLibSetEvent implements IEvent & INetworkEvent @entity {
   comptrollerLib: String!
 }
 
-type AdapterRegisteredEvent implements IEvent & INetworkEvent @entity {
+type AdapterRegisteredEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
   identifier: String!
   contract: Contract!
@@ -764,7 +765,7 @@ type AdapterRegisteredEvent implements IEvent & INetworkEvent @entity {
   integrationAdapter: IntegrationAdapter!
 }
 
-type AdapterDeregisteredEvent implements IEvent & INetworkEvent @entity {
+type AdapterDeregisteredEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
   identifier: String!
   contract: Contract!
@@ -773,7 +774,7 @@ type AdapterDeregisteredEvent implements IEvent & INetworkEvent @entity {
   integrationAdapter: IntegrationAdapter!
 }
 
-type PolicyRegisteredEvent implements IEvent & INetworkEvent @entity {
+type PolicyRegisteredEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
   identifier: String!
   contract: Contract!
@@ -783,7 +784,7 @@ type PolicyRegisteredEvent implements IEvent & INetworkEvent @entity {
   implementedHooks: [PolicyHook!]!
 }
 
-type PolicyDeregisteredEvent implements IEvent & INetworkEvent @entity {
+type PolicyDeregisteredEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
   identifier: String!
   contract: Contract!
@@ -792,7 +793,7 @@ type PolicyDeregisteredEvent implements IEvent & INetworkEvent @entity {
   policy: Policy!
 }
 
-type FundDeployerSetEvent implements IEvent & INetworkEvent @entity {
+type FundDeployerSetEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
@@ -801,7 +802,7 @@ type FundDeployerSetEvent implements IEvent & INetworkEvent @entity {
   transaction: Transaction!
 }
 
-type AmguPriceSetEvent implements IEvent & INetworkEvent @entity {
+type AmguPriceSetEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
@@ -809,7 +810,7 @@ type AmguPriceSetEvent implements IEvent & INetworkEvent @entity {
   transaction: Transaction!
 }
 
-type MlnSoldAndBurnedEvent implements IEvent & INetworkEvent @entity {
+type MlnSoldAndBurnedEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
@@ -818,7 +819,7 @@ type MlnSoldAndBurnedEvent implements IEvent & INetworkEvent @entity {
   transaction: Transaction!
 }
 
-type ValueInterpreterSetEvent implements IEvent & INetworkEvent @entity {
+type ValueInterpreterSetEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
@@ -827,7 +828,7 @@ type ValueInterpreterSetEvent implements IEvent & INetworkEvent @entity {
   transaction: Transaction!
 }
 
-type FrozenEtherThawedEvent implements IEvent & INetworkEvent @entity {
+type FrozenEtherThawedEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
@@ -835,7 +836,7 @@ type FrozenEtherThawedEvent implements IEvent & INetworkEvent @entity {
   transaction: Transaction!
 }
 
-type AmguPaidInEtherEvent implements IEvent & INetworkEvent @entity {
+type AmguPaidInEtherEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
@@ -843,7 +844,7 @@ type AmguPaidInEtherEvent implements IEvent & INetworkEvent @entity {
   transaction: Transaction!
 }
 
-type EtherTakerAddedEvent implements IEvent & INetworkEvent @entity {
+type EtherTakerAddedEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
@@ -851,7 +852,7 @@ type EtherTakerAddedEvent implements IEvent & INetworkEvent @entity {
   transaction: Transaction!
 }
 
-type EtherTakerRemovedEvent implements IEvent & INetworkEvent @entity {
+type EtherTakerRemovedEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
@@ -859,7 +860,7 @@ type EtherTakerRemovedEvent implements IEvent & INetworkEvent @entity {
   transaction: Transaction!
 }
 
-type OwnershipTransferredEvent implements IEvent & INetworkEvent @entity {
+type OwnershipTransferredEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
   contract: Contract!
   previousOwner: String!
@@ -868,7 +869,7 @@ type OwnershipTransferredEvent implements IEvent & INetworkEvent @entity {
   transaction: Transaction!
 }
 
-type DerivativeAddedEvent implements IEvent & INetworkEvent @entity {
+type DerivativeAddedEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
@@ -877,7 +878,7 @@ type DerivativeAddedEvent implements IEvent & INetworkEvent @entity {
   priceFeed: String!
 }
 
-type DerivativeRemovedEvent implements IEvent & INetworkEvent @entity {
+type DerivativeRemovedEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
@@ -885,7 +886,7 @@ type DerivativeRemovedEvent implements IEvent & INetworkEvent @entity {
   derivative: Asset!
 }
 
-type DerivativeUpdatedEvent implements IEvent & INetworkEvent @entity {
+type DerivativeUpdatedEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
@@ -895,7 +896,7 @@ type DerivativeUpdatedEvent implements IEvent & INetworkEvent @entity {
   nextPriceFeed: String!
 }
 
-type AggregatorUpdatedEvent implements IEvent & INetworkEvent @entity {
+type AggregatorUpdatedEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
@@ -905,7 +906,7 @@ type AggregatorUpdatedEvent implements IEvent & INetworkEvent @entity {
   nextAggregator: String!
 }
 
-type EthUsdAggregatorSetEvent implements IEvent & INetworkEvent @entity {
+type EthUsdAggregatorSetEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
@@ -914,7 +915,7 @@ type EthUsdAggregatorSetEvent implements IEvent & INetworkEvent @entity {
   nextEthUsdAggregator: String!
 }
 
-type PrimitiveAddedEvent implements IEvent & INetworkEvent @entity {
+type PrimitiveAddedEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
@@ -924,7 +925,7 @@ type PrimitiveAddedEvent implements IEvent & INetworkEvent @entity {
   rateAsset: Int!
 }
 
-type PrimitiveRemovedEvent implements IEvent & INetworkEvent @entity {
+type PrimitiveRemovedEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
@@ -932,7 +933,7 @@ type PrimitiveRemovedEvent implements IEvent & INetworkEvent @entity {
   primitive: Asset!
 }
 
-type StaleRateThresholdSetEvent implements IEvent & INetworkEvent @entity {
+type StaleRateThresholdSetEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
@@ -941,7 +942,7 @@ type StaleRateThresholdSetEvent implements IEvent & INetworkEvent @entity {
   prevStaleRateThreshold: BigInt!
 }
 
-type FeeRegisteredEvent implements IEvent & INetworkEvent @entity {
+type FeeRegisteredEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
@@ -954,7 +955,7 @@ type FeeRegisteredEvent implements IEvent & INetworkEvent @entity {
   usesGavOnUpdate: Boolean!
 }
 
-type FeeDeregisteredEvent implements IEvent & INetworkEvent @entity {
+type FeeDeregisteredEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
@@ -963,7 +964,7 @@ type FeeDeregisteredEvent implements IEvent & INetworkEvent @entity {
   identifier: String!
 }
 
-type ChainlinkAggregatorAnswerUpdatedEvent implements IEvent & INetworkEvent @entity {
+type ChainlinkAggregatorAnswerUpdatedEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
   contract: Contract!
   aggregator: ChainlinkAggregator!
@@ -975,7 +976,7 @@ type ChainlinkAggregatorAnswerUpdatedEvent implements IEvent & INetworkEvent @en
   updatedAt: BigInt!
 }
 
-type MigrationTimelockSetEvent implements IEvent & INetworkEvent @entity {
+type MigrationTimelockSetEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
@@ -984,7 +985,7 @@ type MigrationTimelockSetEvent implements IEvent & INetworkEvent @entity {
   nextTimelock: BigInt!
 }
 
-type NominatedOwnerRemovedEvent implements IEvent & INetworkEvent @entity {
+type NominatedOwnerRemovedEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
@@ -992,7 +993,7 @@ type NominatedOwnerRemovedEvent implements IEvent & INetworkEvent @entity {
   nominatedOwner: String!
 }
 
-type NominatedOwnerSetEvent implements IEvent & INetworkEvent @entity {
+type NominatedOwnerSetEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
@@ -1000,7 +1001,7 @@ type NominatedOwnerSetEvent implements IEvent & INetworkEvent @entity {
   nominatedOwner: String!
 }
 
-type DispatcherOwnershipTransferredEvent implements IEvent & INetworkEvent @entity {
+type DispatcherOwnershipTransferredEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
@@ -1009,7 +1010,7 @@ type DispatcherOwnershipTransferredEvent implements IEvent & INetworkEvent @enti
   nextOwner: String!
 }
 
-type SharesTokenSymbolSetEvent implements IEvent & INetworkEvent @entity {
+type SharesTokenSymbolSetEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
@@ -1032,13 +1033,13 @@ type Transaction @entity {
   gasUsed: Int!
   gasPrice: BigDecimal!
   input: String!
-  events: [IEvent!]! @derivedFrom(field: "transaction")
+  events: [EventInterface!]! @derivedFrom(field: "transaction")
 }
 
 type Contract @entity {
   id: ID!
   name: String!
-  events: [IEvent!]! @derivedFrom(field: "contract")
+  events: [EventInterface!]! @derivedFrom(field: "contract")
 }
 
 type Fund @entity {
@@ -1056,8 +1057,8 @@ type Fund @entity {
   allowedBuySharesCallers: [String!]!
   trackedAssets: [Asset!]!
 
-  policies: [IPolicySetting!]! @derivedFrom(field: "fund")
-  fees: [IFeeSetting!]! @derivedFrom(field: "fund")
+  policies: [PolicySettingInterface!]! @derivedFrom(field: "fund")
+  fees: [FeeSettingInterface!]! @derivedFrom(field: "fund")
   trades: [Trade!]! @derivedFrom(field: "fund")
   investments: [Investment!]! @derivedFrom(field: "fund")
 
@@ -1077,11 +1078,11 @@ type Fund @entity {
   hourlyState: [HourlyFundState!]! @derivedFrom(field: "fund")
   dailyState: [DailyFundState!]! @derivedFrom(field: "fund")
 
-  events: [IFundEvent!]! @derivedFrom(field: "fund")
+  events: [FundEventInterface!]! @derivedFrom(field: "fund")
   migrations: [Migration!] @derivedFrom(field: "fund")
 }
 
-type HourlyFundState implements IPeriodicFundState @entity {
+type HourlyFundState implements PeriodicFundStateInterface @entity {
   id: ID! # fund id + start
   fund: Fund!
   start: BigInt!
@@ -1090,7 +1091,7 @@ type HourlyFundState implements IPeriodicFundState @entity {
   last: FundState!
 }
 
-type DailyFundState implements IPeriodicFundState @entity {
+type DailyFundState implements PeriodicFundStateInterface @entity {
   id: ID! # fund id + start
   fund: Fund!
   start: BigInt!
@@ -1125,7 +1126,7 @@ type Account @entity {
   managements: [Fund!]! @derivedFrom(field: "manager")
   investor: Boolean!
   investments: [Investment!]! @derivedFrom(field: "investor")
-  events: [IFundEvent!]! @derivedFrom(field: "account")
+  events: [FundEventInterface!]! @derivedFrom(field: "account")
 }
 
 type Investment @entity {
@@ -1144,7 +1145,7 @@ type InvestmentState @entity {
   investor: Account!
   investment: Investment!
   shares: BigDecimal!
-  changes: [ISharesChange!]! @derivedFrom(field: "investmentState")
+  changes: [SharesChangeInterface!]! @derivedFrom(field: "investmentState")
 }
 
 type Fee @entity {
@@ -1153,16 +1154,16 @@ type Fee @entity {
   funds: [Fund!]!
 }
 
-type ManagementFeeSetting implements IFeeSetting @entity {
+type ManagementFeeSetting implements FeeSettingInterface @entity {
   id: ID!
   fee: Fee!
   fund: Fund!
   rate: BigDecimal!
   timestamp: BigInt!
-  events: [IFundEvent!]!
+  events: [FundEventInterface!]!
 }
 
-type PerformanceFeeSetting implements IFeeSetting @entity {
+type PerformanceFeeSetting implements FeeSettingInterface @entity {
   id: ID!
   fee: Fee!
   fund: Fund!
@@ -1170,25 +1171,25 @@ type PerformanceFeeSetting implements IFeeSetting @entity {
   period: BigInt!
   activated: BigInt!
   timestamp: BigInt!
-  events: [IFundEvent!]!
+  events: [FundEventInterface!]!
 }
 
-type EntranceRateDirectFeeSetting implements IFeeSetting @entity {
+type EntranceRateDirectFeeSetting implements FeeSettingInterface @entity {
   id: ID!
   fee: Fee!
   fund: Fund!
   rate: BigDecimal!
   timestamp: BigInt!
-  events: [IFundEvent!]!
+  events: [FundEventInterface!]!
 }
 
-type EntranceRateBurnFeeSetting implements IFeeSetting @entity {
+type EntranceRateBurnFeeSetting implements FeeSettingInterface @entity {
   id: ID!
   fee: Fee!
   fund: Fund!
   rate: BigDecimal!
   timestamp: BigInt!
-  events: [IFundEvent!]!
+  events: [FundEventInterface!]!
 }
 
 type IntegrationAdapter @entity {
@@ -1200,91 +1201,91 @@ type Policy @entity {
   id: ID!
   identifier: String!
   funds: [Fund!]!
-  settings: [IPolicySetting!]! @derivedFrom(field: "policy")
+  settings: [PolicySettingInterface!]! @derivedFrom(field: "policy")
 }
 
-type AdapterBlacklistSetting implements IPolicySetting @entity {
+type AdapterBlacklistSetting implements PolicySettingInterface @entity {
   id: ID!
   policy: Policy!
   fund: Fund!
   listed: [String!]!
   timestamp: BigInt!
-  events: [IFundEvent!]!
+  events: [FundEventInterface!]!
 }
 
-type AdapterWhitelistSetting implements IPolicySetting @entity {
+type AdapterWhitelistSetting implements PolicySettingInterface @entity {
   id: ID!
   policy: Policy!
   fund: Fund!
   listed: [String!]!
   timestamp: BigInt!
-  events: [IFundEvent!]!
+  events: [FundEventInterface!]!
 }
 
-type AssetBlacklistSetting implements IPolicySetting @entity {
+type AssetBlacklistSetting implements PolicySettingInterface @entity {
   id: ID!
   policy: Policy!
   fund: Fund!
   listed: [String!]!
   timestamp: BigInt!
-  events: [IFundEvent!]!
+  events: [FundEventInterface!]!
 }
 
-type AssetWhitelistSetting implements IPolicySetting @entity {
+type AssetWhitelistSetting implements PolicySettingInterface @entity {
   id: ID!
   policy: Policy!
   fund: Fund!
   listed: [String!]!
   timestamp: BigInt!
-  events: [IFundEvent!]!
+  events: [FundEventInterface!]!
 }
 
-type InvestorWhitelistSetting implements IPolicySetting @entity {
+type InvestorWhitelistSetting implements PolicySettingInterface @entity {
   id: ID!
   policy: Policy!
   fund: Fund!
   listed: [Account!]!
   timestamp: BigInt!
-  events: [IFundEvent!]!
+  events: [FundEventInterface!]!
 }
 
-type MaxConcentrationSetting implements IPolicySetting @entity {
+type MaxConcentrationSetting implements PolicySettingInterface @entity {
   id: ID!
   policy: Policy!
   fund: Fund!
   maxConcentration: BigDecimal!
   timestamp: BigInt!
-  events: [IFundEvent!]!
+  events: [FundEventInterface!]!
 }
 
-type ShareState implements IFundState @entity {
+type ShareState implements FundStateInterface @entity {
   id: ID!
   fund: Fund!
   timestamp: BigInt!
   totalSupply: BigDecimal!
   outstandingForFees: BigDecimal!
-  events: [IFundEvent!]!
+  events: [FundEventInterface!]!
 }
 
-type PortfolioState implements IFundState @entity {
+type PortfolioState implements FundStateInterface @entity {
   id: ID!
   fund: Fund!
   timestamp: BigInt!
   holdings: [HoldingState!]!
-  events: [IFundEvent!]!
+  events: [FundEventInterface!]!
 }
 
-type HoldingState implements IFundState @entity {
+type HoldingState implements FundStateInterface @entity {
   id: ID!
   fund: Fund!
   timestamp: BigInt!
   asset: Asset!
   price: AssetPrice
   quantity: BigDecimal!
-  events: [IFundEvent!]!
+  events: [FundEventInterface!]!
 }
 
-type CalculationState implements IFundState @entity {
+type CalculationState implements FundStateInterface @entity {
   id: ID!
   fund: Fund!
   timestamp: BigInt!
@@ -1292,10 +1293,10 @@ type CalculationState implements IFundState @entity {
   totalSupply: BigDecimal!
   grossSharePrice: BigDecimal!
   netSharePrice: BigDecimal!
-  events: [IFundEvent!]!
+  events: [FundEventInterface!]!
 }
 
-type FundState implements IFundState @entity {
+type FundState implements FundStateInterface @entity {
   id: ID!
   fund: Fund!
   timestamp: BigInt!
@@ -1303,28 +1304,28 @@ type FundState implements IFundState @entity {
   portfolio: PortfolioState!
   feeState: FeeState!
   calculations: CalculationState!
-  events: [IFundEvent!]!
+  events: [FundEventInterface!]!
 }
 
-type FeeState implements IFundState @entity {
+type FeeState implements FundStateInterface @entity {
   id: ID!
   fund: Fund!
   timestamp: BigInt!
-  feeStates: [IIndividualFeeState!]!
-  events: [IFundEvent!]!
+  feeStates: [IndividualFeeStateInterface!]!
+  events: [FundEventInterface!]!
 }
 
-type ManagementFeeState implements IFundState & IIndividualFeeState @entity {
+type ManagementFeeState implements FundStateInterface & IndividualFeeStateInterface @entity {
   id: ID!
   fund: Fund!
   timestamp: BigInt!
   fee: Fee!
   lastSettled: BigInt!
   totalSharesPaidOut: BigDecimal!
-  events: [IFundEvent!]!
+  events: [FundEventInterface!]!
 }
 
-type PerformanceFeeState implements IFundState & IIndividualFeeState @entity {
+type PerformanceFeeState implements FundStateInterface & IndividualFeeStateInterface @entity {
   id: ID!
   fund: Fund!
   timestamp: BigInt!
@@ -1334,25 +1335,25 @@ type PerformanceFeeState implements IFundState & IIndividualFeeState @entity {
   aggregateValueDue: BigDecimal!
   highWaterMark: BigDecimal!
   sharesOutstanding: BigDecimal!
-  events: [IFundEvent!]!
+  events: [FundEventInterface!]!
 }
 
-type EntranceRateDirectFeeState implements IFundState & IIndividualFeeState @entity {
+type EntranceRateDirectFeeState implements FundStateInterface & IndividualFeeStateInterface @entity {
   id: ID!
   fund: Fund!
   timestamp: BigInt!
   fee: Fee!
   lastSettled: BigInt!
-  events: [IFundEvent!]!
+  events: [FundEventInterface!]!
 }
 
-type EntranceRateBurnFeeState implements IFundState & IIndividualFeeState @entity {
+type EntranceRateBurnFeeState implements FundStateInterface & IndividualFeeStateInterface @entity {
   id: ID!
   fund: Fund!
   timestamp: BigInt!
   fee: Fee!
   lastSettled: BigInt!
-  events: [IFundEvent!]!
+  events: [FundEventInterface!]!
 }
 
 type Trade @entity {
