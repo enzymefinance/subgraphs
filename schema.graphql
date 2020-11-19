@@ -592,7 +592,7 @@ type ManagementFeeSettingsAddedEvent implements EventInterface & FundEventInterf
   timestamp: BigInt!
   transaction: Transaction!
   comptrollerProxy: Contract!
-  rate: BigDecimal!
+  scaledPerSecondRate: BigInt!
 }
 
 type ManagementFeeSettledEvent implements EventInterface & FundEventInterface @entity {
@@ -604,7 +604,7 @@ type ManagementFeeSettledEvent implements EventInterface & FundEventInterface @e
   transaction: Transaction!
   comptrollerProxy: Contract!
   sharesDue: BigDecimal!
-  prevSettled: BigInt!
+  secondsSinceSettlement: BigInt!
 }
 
 type PerformanceFeeSettingsAddedEvent implements EventInterface & FundEventInterface @entity {
@@ -1081,13 +1081,14 @@ type Fund @entity {
   # periodic states
   hourlyState: [HourlyFundState!]! @derivedFrom(field: "fund")
   dailyState: [DailyFundState!]! @derivedFrom(field: "fund")
+  monthlyState: [MonthlyFundState!]! @derivedFrom(field: "fund")
 
   events: [FundEventInterface!]! @derivedFrom(field: "fund")
   migrations: [Migration!] @derivedFrom(field: "fund")
 }
 
 type HourlyFundState implements PeriodicFundStateInterface @entity {
-  id: ID! # fund id + start
+  id: ID!
   fund: Fund!
   start: BigInt!
   end: BigInt!
@@ -1096,7 +1097,16 @@ type HourlyFundState implements PeriodicFundStateInterface @entity {
 }
 
 type DailyFundState implements PeriodicFundStateInterface @entity {
-  id: ID! # fund id + start
+  id: ID!
+  fund: Fund!
+  start: BigInt!
+  end: BigInt!
+  first: FundState!
+  last: FundState!
+}
+
+type MonthlyFundState implements PeriodicFundStateInterface @entity {
+  id: ID!
   fund: Fund!
   start: BigInt!
   end: BigInt!
@@ -1163,7 +1173,7 @@ type ManagementFeeSetting implements FeeSettingInterface @entity {
   id: ID!
   fee: Fee!
   fund: Fund!
-  rate: BigDecimal!
+  scaledPerSecondRate: BigInt!
   timestamp: BigInt!
   events: [FundEventInterface!]!
 }

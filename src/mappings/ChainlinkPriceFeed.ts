@@ -56,6 +56,10 @@ export function handleEthUsdAggregatorSet(event: EthUsdAggregatorSet): void {
   weth.type = 'ETH';
   weth.save();
 
+  let cron = ensureCron();
+  cron.primitives = arrayUnique<string>(cron.primitives.concat([weth.id]));
+  cron.save();
+
   // It's important that we run cron last.
   triggerCron(event.block.timestamp);
 }

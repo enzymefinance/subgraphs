@@ -3,6 +3,7 @@
   "scripts": {
     "script": "ts-node scripts",
     "create-funds": "ts-node scripts/create-funds",
+    "create-months": "ts-node scripts/create-months",
     "precodegen": "rimraf src/generated && yarn script template --deployment https://testnet.avantgarde.finance/graphql",
     "precodegen:local": "rimraf src/generated && yarn script template --deployment http://localhost:4000/graphql",
     "codegen": "graph codegen subgraph.yaml --output-dir src/generated",
@@ -27,8 +28,9 @@
     "@crestproject/jest": "^0.1.19",
     "@graphprotocol/graph-cli": "^0.19.0",
     "@graphprotocol/graph-ts": "^0.19.0",
-    "@melonproject/protocol": "^2.0.0-dev.5019+e3d0e883",
-    "@melonproject/testutils": "^2.0.0-dev.5019+e3d0e883",
+    "@melonproject/protocol": "^2.0.0-dev.5020+d2008e87",
+    "@melonproject/testutils": "^2.0.0-dev.5020+d2008e87",
+    "@openzeppelin/contracts": "^3.2.0",
     "@types/jest": "^26.0.15",
     "@types/mustache": "^4.0.1",
     "@types/node": "^14.14.8",
@@ -37,12 +39,13 @@
     "@types/yargs": "^15.0.10",
     "assemblyscript": "^0.17.2",
     "axios": "^0.21.0",
-    "ethers": "^5.0.19",
+    "ethers": "^5.0.20",
     "ethers-eip712": "^0.2.0",
     "glob": "^7.1.6",
     "graphql-request": "^3.3.0",
     "handlebars": "^4.7.6",
     "jest": "^26.6.3",
+    "moment": "^2.29.1",
     "prettier": "^2.1.2",
     "rimraf": "^3.0.2",
     "ts-jest": "^26.4.4",
@@ -55,7 +58,5 @@
     "testTimeout": 300000,
     "testEnvironment": "node"
   },
-  "dependencies": {
-    "@openzeppelin/contracts": "^3.2.0"
-  }
+  "dependencies": {}
 }

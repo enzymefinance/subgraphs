@@ -3,7 +3,7 @@ import { CalculationState, FeeState, Fund, FundState, PortfolioState, ShareState
 import { logCritical } from '../utils/logCritical';
 import { useCalculationState } from './CalculationState';
 import { useFeeState } from './FeeState';
-import { trackDailyFundState, trackHourlyFundState } from './PeriodicFundState';
+import { trackDailyFundState, trackHourlyFundState, trackMonthlyFundState } from './PeriodicFundState';
 import { usePortfolioState } from './PortfolioState';
 import { useShareState } from './ShareState';
 
@@ -32,6 +32,7 @@ export function createFundState(
   // link fund states to period states
   trackHourlyFundState(fund, state, event);
   trackDailyFundState(fund, state, event);
+  trackMonthlyFundState(fund, state, event);
 
   return state;
 }

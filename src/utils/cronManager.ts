@@ -1,4 +1,5 @@
-import { BigInt } from '@graphprotocol/graph-ts';
+import { BigDecimal, BigInt } from '@graphprotocol/graph-ts';
+import { wethTokenAddress } from '../addresses';
 import { useAsset } from '../entities/Asset';
 import { fetchAssetPrice, trackAssetPrice, useAssetPrice } from '../entities/AssetPrice';
 import { ensureDailyAssetPriceCandleGroup, ensureHourlyAssetPriceCandleGroup } from '../entities/AssetPriceCandleGroup';
@@ -28,11 +29,26 @@ export function triggerCron(timestamp: BigInt): void {
     return;
   }
 
+  cronWeth(cron, timestamp);
   cronDerivatives(cron, timestamp);
   cronCandles(cron, timestamp);
 
   cron.cron = timestamp;
   cron.save();
+}
+
+function cronWeth(cron: Cron, timestamp: BigInt): void {
+  let previousWindow = getHourOpenTime(cron.cron);
+  let currentWindow = getHourOpenTime(timestamp);
+
+  // Only update the weth once per hour.
+  if (!currentWindow.gt(previousWindow)) {
+    return;
+  }
+
+  let asset = useAsset(wethTokenAddress.toHex());
+  let current = BigDecimal.fromString('1');
+  trackAssetPrice(asset, timestamp, current);
 }
 
 function cronDerivatives(cron: Cron, timestamp: BigInt): void {

@@ -106,7 +106,7 @@ yargs
       });
     },
     async (args) => {
-      const deploymentJson = await (await request<Result>(args.deployment, query)).deployment;
+      const deploymentJson = (await request<Result>(args.deployment, query)).deployment;
 
       {
         const templateFile = path.join(__dirname, '../templates/subgraph.yml');

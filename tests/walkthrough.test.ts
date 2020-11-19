@@ -4,6 +4,7 @@ import {
   adapterWhitelistArgs,
   callOnIntegrationArgs,
   ComptrollerLib,
+  convertRateToScaledPerSecondRate,
   entranceRateFeeConfigArgs,
   feeManagerConfigArgs,
   FundActionsWrapper,
@@ -64,7 +65,11 @@ describe("Walkthrough a fund's lifecycle", () => {
     const fundDeployer = new FundDeployer(deployment.fundDeployer, manager);
 
     // fees
-    const managementFeeSettings = managementFeeConfigArgs(utils.parseEther('0.01'));
+
+    const managementFeeRate = 0.01;
+    const scaledPerSecondRate = convertRateToScaledPerSecondRate(managementFeeRate);
+
+    const managementFeeSettings = managementFeeConfigArgs(scaledPerSecondRate);
     const performanceFeeSettings = performanceFeeConfigArgs({
       rate: utils.parseEther('0.1'),
       period: 365 * 24 * 60 * 60,
