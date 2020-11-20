@@ -42,8 +42,10 @@ describe('Walkthrough', () => {
     for (let asset of assets) {
       // await kyberIntegratee.setRates([asset.id], [deployment.wethToken], [utils.parseEther('0.5')]);
 
-      const rate = await kyberIntegratee.getExpectedRate(asset.id, deployment.wethToken, utils.parseEther('0.001'));
-      console.log(`${asset.symbol} rate: `, utils.formatEther(rate.expectedRate));
+      const rate = await kyberIntegratee.getExpectedRate
+        .args(asset.id, deployment.wethToken, utils.parseEther('0.001'))
+        .call();
+      console.log(`${asset.symbol} rate: `, utils.formatEther(rate.rate_));
       expect(1).toBe(1);
     }
   });
