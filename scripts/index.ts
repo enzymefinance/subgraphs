@@ -36,6 +36,9 @@ const query = gql`
       assetWhitelist
       maxConcentration
       investorWhitelist
+      eurChainlinkAggregator
+      chfChainlinkAggregator
+      jpyChainlinkAggregator
     }
   }
 `;
@@ -69,6 +72,9 @@ interface Result {
     assetWhitelist: string;
     maxConcentration: string;
     investorWhitelist: string;
+    eurChainlinkAggregator: string;
+    chfChainlinkAggregator: string;
+    jpyChainlinkAggregator: string;
   };
 }
 

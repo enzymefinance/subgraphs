@@ -20,11 +20,16 @@ export function chainlinkEthUsdAggregatorId(aggregatorAddress: string): string {
   return aggregatorAddress + '/ethusd';
 }
 
+export function chainlinkCurrencyAggregatorId(aggregatorAddress: string, identifier: string): string {
+  return aggregatorAddress + '/' + identifier;
+}
+
 function enableChainlinkAggregator(
   address: Address,
   id: string,
   type: string,
   asset: Asset | null = null,
+  currency: string | null = null,
 ): ChainlinkAggregator {
   let aggregator = ChainlinkAggregator.load(id) as ChainlinkAggregator;
 
@@ -32,6 +37,7 @@ function enableChainlinkAggregator(
     aggregator = new ChainlinkAggregator(id);
     aggregator.type = type;
     aggregator.asset = asset != null ? asset.id : null;
+    aggregator.currency = currency != null ? currency : null;
     aggregator.active = true;
     aggregator.save();
 
@@ -54,11 +60,6 @@ export function enableChainlinkAssetAggregator(address: Address, asset: Asset): 
   return enableChainlinkAggregator(address, id, 'ASSET', asset);
 }
 
-export function enableChainlinkEthUsdAggregator(address: Address): ChainlinkAggregator {
-  let id = chainlinkEthUsdAggregatorId(address.toHex());
-  return enableChainlinkAggregator(address, id, 'ETHUSD', null);
-}
-
 export function disableChainlinkAssetAggregator(address: Address, asset: Asset): ChainlinkAggregator {
   let id = chainlinkAssetAggregatorId(address.toHex(), asset.id);
   let aggregator = useChainlinkAggregator(id);
@@ -71,8 +72,30 @@ export function disableChainlinkAssetAggregator(address: Address, asset: Asset):
   return aggregator;
 }
 
+export function enableChainlinkEthUsdAggregator(address: Address): ChainlinkAggregator {
+  let id = chainlinkEthUsdAggregatorId(address.toHex());
+  return enableChainlinkAggregator(address, id, 'ETHUSD', null);
+}
+
 export function disableChainlinkEthUsdAggregator(address: Address): ChainlinkAggregator {
   let id = chainlinkEthUsdAggregatorId(address.toHex());
+  let aggregator = useChainlinkAggregator(id);
+
+  if (aggregator.active) {
+    aggregator.active = false;
+    aggregator.save();
+  }
+
+  return aggregator;
+}
+
+export function enableChainlinkCurrencyAggregator(address: Address, currency: string): ChainlinkAggregator {
+  let id = chainlinkCurrencyAggregatorId(address.toHex(), currency);
+  return enableChainlinkAggregator(address, id, 'CURRENCY', null, currency);
+}
+
+export function disableChainlinkCurrencyAggregator(address: Address, identifier: string): ChainlinkAggregator {
+  let id = chainlinkCurrencyAggregatorId(address.toHex(), identifier);
   let aggregator = useChainlinkAggregator(id);
 
   if (aggregator.active) {

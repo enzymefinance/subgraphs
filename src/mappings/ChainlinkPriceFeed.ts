@@ -1,4 +1,4 @@
-import { wethTokenAddress } from '../addresses';
+import { chfChainlinkAggregator, eurChainlinkAggregator, jpyChainlinkAggregator, wethTokenAddress } from '../addresses';
 import { zeroAddress } from '../constants';
 import { ensureAsset } from '../entities/Asset';
 import { trackAssetPrice } from '../entities/AssetPrice';
@@ -6,6 +6,7 @@ import {
   disableChainlinkAssetAggregator,
   disableChainlinkEthUsdAggregator,
   enableChainlinkAssetAggregator,
+  enableChainlinkCurrencyAggregator,
   enableChainlinkEthUsdAggregator,
 } from '../entities/ChainlinkAggregator';
 import { ensureContract, useContract } from '../entities/Contract';
@@ -55,6 +56,19 @@ export function handleEthUsdAggregatorSet(event: EthUsdAggregatorSet): void {
   let weth = ensureAsset(wethTokenAddress);
   weth.type = 'ETH';
   weth.save();
+
+  // Aggragators for currencies
+  let eurProxy = ChainlinkAggregatorProxyContract.bind(eurChainlinkAggregator);
+  let eurAggregator = eurProxy.aggregator();
+  enableChainlinkCurrencyAggregator(eurAggregator, 'eurusd');
+
+  let chfProxy = ChainlinkAggregatorProxyContract.bind(chfChainlinkAggregator);
+  let chfAggregator = chfProxy.aggregator();
+  enableChainlinkCurrencyAggregator(chfAggregator, 'chfusd');
+
+  let jpyProxy = ChainlinkAggregatorProxyContract.bind(jpyChainlinkAggregator);
+  let jpyAggregator = jpyProxy.aggregator();
+  enableChainlinkCurrencyAggregator(jpyAggregator, 'jpyusd');
 
   let cron = ensureCron();
   cron.primitives = arrayUnique<string>(cron.primitives.concat([weth.id]));

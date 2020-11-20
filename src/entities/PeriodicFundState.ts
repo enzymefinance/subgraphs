@@ -2,15 +2,15 @@ import { BigInt, ethereum } from '@graphprotocol/graph-ts';
 import { DailyFundState, Fund, FundState, HourlyFundState, MonthlyFundState } from '../generated/schema';
 import { day, getDayOpenTime, getHourOpenTime, getMonthStartAndEnd, hour } from '../utils/timeHelpers';
 
-export function periodicFundStateId(fund: Fund, start: BigInt): string {
-  return fund.id + '/' + start.toString();
+export function periodicFundStateId(fund: Fund, start: BigInt, type: string): string {
+  return fund.id + '/' + start.toString() + '/' + type;
 }
 
 export function trackHourlyFundState(fund: Fund, fundState: FundState, event: ethereum.Event): HourlyFundState {
   let start = getHourOpenTime(event.block.timestamp);
   let end = start.plus(hour);
 
-  let id = periodicFundStateId(fund, start);
+  let id = periodicFundStateId(fund, start, 'hourly');
   let hourlyFundState = HourlyFundState.load(id) as HourlyFundState;
 
   if (!hourlyFundState) {
@@ -31,7 +31,7 @@ export function trackDailyFundState(fund: Fund, fundState: FundState, event: eth
   let start = getDayOpenTime(event.block.timestamp);
   let end = start.plus(day);
 
-  let id = periodicFundStateId(fund, start);
+  let id = periodicFundStateId(fund, start, 'daily');
   let dailyFundState = DailyFundState.load(id) as DailyFundState;
 
   if (!dailyFundState) {
@@ -54,7 +54,7 @@ export function trackMonthlyFundState(fund: Fund, fundState: FundState, event: e
   let start = monthStartAndEnd[0];
   let end = monthStartAndEnd[1];
 
-  let id = periodicFundStateId(fund, start);
+  let id = periodicFundStateId(fund, start, 'monthly');
   let monthlyFundState = MonthlyFundState.load(id) as MonthlyFundState;
 
   if (!monthlyFundState) {

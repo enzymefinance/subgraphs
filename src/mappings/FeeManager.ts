@@ -1,6 +1,6 @@
 import { Address, BigDecimal } from '@graphprotocol/graph-ts';
 import { ensureInvestor, useAccount, useManager } from '../entities/Account';
-import { trackCalculationState } from '../entities/CalculationState';
+import { calculationStateId, trackCalculationState } from '../entities/CalculationState';
 import { ensureContract } from '../entities/Contract';
 import { ensureFee, useFee } from '../entities/Fee';
 import { trackFeeState } from '../entities/FeeState';
@@ -53,6 +53,7 @@ export function handleAllSharesOutstandingForcePaidForFund(event: AllSharesOutst
   settled.comptrollerProxy = event.params.comptrollerProxy.toHex();
   settled.payee = event.params.payee.toHex();
   settled.sharesDue = shares;
+  settled.calculations = calculationStateId(fund, event);
   settled.save();
 
   trackShareState(fund, event, settled);
@@ -129,6 +130,7 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
   settled.payee = investor.id;
   settled.settlementType = getSettlementType(event.params.settlementType);
   settled.sharesDue = shares;
+  settled.calculations = calculationStateId(fund, event);
   settled.save();
 
   trackShareState(fund, event, settled);
@@ -158,6 +160,7 @@ export function handleSharesOutstandingPaidForFund(event: SharesOutstandingPaidF
   sharesPaid.payer = fund.id;
   sharesPaid.sharesDue = toBigDecimal(event.params.sharesDue);
   sharesPaid.payee = useManager(fund.manager).id;
+  sharesPaid.calculations = calculationStateId(fund, event);
   sharesPaid.save();
 
   trackShareState(fund, event, sharesPaid);

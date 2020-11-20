@@ -33,3 +33,7 @@ export let assetBlacklistAddress = Address.fromString('{{assetBlacklist}}');
 export let assetWhitelistAddress = Address.fromString('{{assetWhitelist}}');
 export let maxConcentrationAddress = Address.fromString('{{maxConcentration}}');
 export let investorWhitelistAddress = Address.fromString('{{investorWhitelist}}');
+
+export let eurChainlinkAggregator = Address.fromString('{{eurChainlinkAggregator}}');
+export let chfChainlinkAggregator = Address.fromString('{{chfChainlinkAggregator}}');
+export let jpyChainlinkAggregator = Address.fromString('{{jpyChainlinkAggregator}}');

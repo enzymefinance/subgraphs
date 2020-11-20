@@ -33,6 +33,7 @@ interface SharesChangeInterface {
   investmentState: InvestmentState!
   shares: BigDecimal!
   transaction: Transaction!
+  calculations: CalculationState!
 }
 
 interface FundStateInterface {
@@ -88,6 +89,7 @@ enum AssetType {
 enum ChainlinkAggregatorType {
   ASSET
   ETHUSD
+  CURRENCY
 }
 
 enum FeeHook {
@@ -174,6 +176,7 @@ type SharesBoughtEvent implements EventInterface & FundEventInterface & SharesCh
   sharesBought: BigDecimal!
   timestamp: BigInt!
   transaction: Transaction!
+  calculations: CalculationState!
 }
 
 type SharesRedeemedEvent implements EventInterface & FundEventInterface & SharesChangeInterface @entity {
@@ -188,6 +191,7 @@ type SharesRedeemedEvent implements EventInterface & FundEventInterface & Shares
   payoutQuantities: [BigDecimal!]!
   timestamp: BigInt!
   transaction: Transaction!
+  calculations: CalculationState!
 }
 
 type AmguPaidEvent implements EventInterface & FundEventInterface @entity {
@@ -350,6 +354,7 @@ type FeeSettledForFundEvent implements EventInterface & FundEventInterface & Sha
   payee: Account!
   settlementType: SettlementType!
   sharesDue: BigDecimal!
+  calculations: CalculationState!
 }
 
 type AllSharesOutstandingForcePaidForFundEvent implements EventInterface & FundEventInterface & SharesChangeInterface
@@ -366,6 +371,7 @@ type AllSharesOutstandingForcePaidForFundEvent implements EventInterface & FundE
   comptrollerProxy: Contract!
   payee: Account!
   sharesDue: BigDecimal!
+  calculations: CalculationState!
 }
 
 type SharesOutstandingPaidForFundEvent implements EventInterface & FundEventInterface & SharesChangeInterface @entity {
@@ -383,6 +389,7 @@ type SharesOutstandingPaidForFundEvent implements EventInterface & FundEventInte
   payer: Fund!
   payee: Account!
   sharesDue: BigDecimal!
+  calculations: CalculationState!
 }
 
 type PolicyEnabledForFundEvent implements EventInterface & FundEventInterface @entity {
@@ -1065,6 +1072,7 @@ type Fund @entity {
   fees: [FeeSettingInterface!]! @derivedFrom(field: "fund")
   trades: [Trade!]! @derivedFrom(field: "fund")
   investments: [Investment!]! @derivedFrom(field: "fund")
+  investmentChanges: [SharesChangeInterface!]! @derivedFrom(field: "fund")
 
   # Fund State
   shares: ShareState!
@@ -1482,6 +1490,7 @@ type ChainlinkAggregator @entity {
   id: ID!
   type: ChainlinkAggregatorType!
   asset: Asset
+  currency: String
   active: Boolean!
   updates: [ChainlinkAggregatorAnswerUpdatedEvent!]! @derivedFrom(field: "aggregator")
 }
@@ -1509,4 +1518,6 @@ type Cron @entity {
   # to fetch prices for (as a side effect, because they don't have a dedicated
   # price oracle that emits events on their behalf) and to update their candles.
   derivatives: [Asset!]!
+
+  #
 }
