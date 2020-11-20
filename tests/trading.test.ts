@@ -1,4 +1,4 @@
-import { MockKyberIntegratee, StandardToken } from '@melonproject/protocol';
+import { KyberAdapter, MockKyberIntegratee, StandardToken } from '@melonproject/protocol';
 import { providers, utils, Wallet } from 'ethers';
 import { createAccount, Deployment, fetchDeployment } from './utils/deployment';
 import { fetchAssets } from './utils/subgraph-queries/fetchAssets';
@@ -19,6 +19,17 @@ describe('Walkthrough', () => {
     signer = new Wallet(account.privateKey, provider);
   });
 
+  fit('should get the selectors', async () => {
+    const kyberAdapter = new KyberAdapter(deployment.kyberAdapter, provider);
+
+    console.log(
+      await kyberAdapter.ADD_TRACKED_ASSETS_SELECTOR(),
+      await kyberAdapter.TAKE_ORDER_SELECTOR(),
+      await kyberAdapter.LEND_SELECTOR(),
+      await kyberAdapter.REDEEM_SELECTOR(),
+    );
+  });
+
   it('should check the amounts in the integratees', async () => {
     const kyberIntegratee = new MockKyberIntegratee(deployment.kyberIntegratee, provider);
 
@@ -32,7 +43,7 @@ describe('Walkthrough', () => {
     }
   });
 
-  fit('should check Kyber rates', async () => {
+  it('should check Kyber rates', async () => {
     const kyberIntegratee = new MockKyberIntegratee(deployment.kyberIntegratee, signer);
 
     console.log(deployment.kyberIntegratee);

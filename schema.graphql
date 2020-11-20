@@ -76,6 +76,14 @@ interface PeriodicFundStateInterface {
   last: FundState!
 }
 
+interface Trade {
+  id: ID!
+  fund: Fund!
+  adapter: IntegrationAdapter!
+  method: IntegrationMethod!
+  timestamp: BigInt!
+}
+
 #################################################
 # Enums
 #################################################
@@ -112,6 +120,13 @@ enum SettlementType {
   Mint
   MintSharesOutstanding
   BurnSharesOutstanding
+}
+
+enum IntegrationMethod {
+  ADD_TRACKED_ASSETS
+  TAKE_ORDER
+  LEND
+  REDEEM
 }
 
 #################################################
@@ -243,7 +258,9 @@ type CallOnIntegrationExecutedForFundEvent implements EventInterface & FundEvent
   fund: Fund!
   account: Account!
   contract: Contract!
-  adapter: String!
+  adapter: IntegrationAdapter!
+  selector: String!
+  integrationData: String!
   incomingAssets: [Asset!]!
   incomingAssetAmounts: [BigDecimal!]!
   outgoingAssets: [Asset!]!
@@ -1379,16 +1396,87 @@ type EntranceRateBurnFeeState implements FundStateInterface & IndividualFeeState
   events: [FundEventInterface!]!
 }
 
-type Trade @entity {
+type TokenSwapTrade implements Trade @entity {
   id: ID!
   fund: Fund!
   adapter: IntegrationAdapter!
+  method: IntegrationMethod!
+  incomingAsset: Asset!
+  incomingAssetAmount: BigDecimal!
+  outgoingAsset: Asset!
+  outgoingAssetAmount: BigDecimal!
+  price: BigDecimal!
+  timestamp: BigInt!
+}
+
+type MultiTokenSwapTrade implements Trade @entity {
+  id: ID!
+  fund: Fund!
+  adapter: IntegrationAdapter!
+  method: IntegrationMethod!
   incomingAssets: [Asset!]!
   incomingAssetAmounts: [BigDecimal!]!
   outgoingAssets: [Asset!]!
   outgoingAssetAmounts: [BigDecimal!]!
   timestamp: BigInt!
-  transaction: Transaction!
+}
+
+type LendTrade implements Trade @entity {
+  id: ID!
+  fund: Fund!
+  adapter: IntegrationAdapter!
+  method: IntegrationMethod!
+  incomingAsset: Asset!
+  incomingAssetAmount: BigDecimal!
+  outgoingAsset: Asset!
+  outgoingAssetAmount: BigDecimal!
+  price: BigDecimal!
+  timestamp: BigInt!
+}
+
+type MultiLendTrade implements Trade @entity {
+  id: ID!
+  fund: Fund!
+  adapter: IntegrationAdapter!
+  method: IntegrationMethod!
+  incomingAssets: [Asset!]!
+  incomingAssetAmounts: [BigDecimal!]!
+  outgoingAssets: [Asset!]!
+  outgoingAssetAmounts: [BigDecimal!]!
+  timestamp: BigInt!
+}
+
+type RedeemTrade implements Trade @entity {
+  id: ID!
+  fund: Fund!
+  adapter: IntegrationAdapter!
+  method: IntegrationMethod!
+  incomingAssets: [Asset!]!
+  incomingAssetAmounts: [BigDecimal!]!
+  outgoingAssets: [Asset!]!
+  outgoingAssetAmounts: [BigDecimal!]!
+  timestamp: BigInt!
+}
+
+type MultiRedeemTrade implements Trade @entity {
+  id: ID!
+  fund: Fund!
+  adapter: IntegrationAdapter!
+  method: IntegrationMethod!
+  incomingAssets: [Asset!]!
+  incomingAssetAmounts: [BigDecimal!]!
+  outgoingAssets: [Asset!]!
+  outgoingAssetAmounts: [BigDecimal!]!
+  timestamp: BigInt!
+}
+
+type AddTrackedAssetsTrade implements Trade @entity {
+  id: ID!
+  fund: Fund!
+  adapter: IntegrationAdapter!
+  method: IntegrationMethod!
+  trackedAssets: [Asset!]!
+  timestamp: BigInt!
 }
 
 #################################################
