@@ -1121,7 +1121,7 @@ type Fund @entity {
   fees: [FeeSettingInterface!]! @derivedFrom(field: "fund")
   trades: [Trade!]! @derivedFrom(field: "fund")
   investments: [Investment!]! @derivedFrom(field: "fund")
-  investmentChanges: [SharesChangeInterface!]! @derivedFrom(field: "fund")
+  shareChanges: [SharesChangeInterface!]! @derivedFrom(field: "fund")
 
   # Fund State
   shares: ShareState!
@@ -1197,7 +1197,7 @@ type Account @entity {
   managements: [Fund!]! @derivedFrom(field: "manager")
   investor: Boolean!
   investments: [Investment!]! @derivedFrom(field: "investor")
-  investmentChanges: [SharesChangeInterface!]! @derivedFrom(field: "investor")
+  shareChanges: [SharesChangeInterface!]! @derivedFrom(field: "investor")
   events: [FundEventInterface!]! @derivedFrom(field: "account")
 }
 
