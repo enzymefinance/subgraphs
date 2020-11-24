@@ -30,6 +30,7 @@ interface SharesChangeInterface {
   fund: Fund!
   investor: Account!
   timestamp: BigInt!
+  type: ShareChangeType!
   investmentState: InvestmentState!
   shares: BigDecimal!
   transaction: Transaction!
@@ -122,6 +123,14 @@ enum SettlementType {
   BurnSharesOutstanding
 }
 
+enum ShareChangeType {
+  SharesBought
+  SharesRedeemed
+  FeeSettledForFund
+  AllSharesOutstandingForcePaidForFund
+  SharesOutstandingPaidForFund
+}
+
 enum IntegrationMethod {
   ADD_TRACKED_ASSETS
   TAKE_ORDER
@@ -181,6 +190,7 @@ type VaultProxySetEvent implements EventInterface & FundEventInterface @entity {
 type SharesBoughtEvent implements EventInterface & FundEventInterface & SharesChangeInterface @entity {
   id: ID!
   fund: Fund!
+  type: ShareChangeType!
   account: Account!
   investor: Account!
   contract: Contract!
@@ -197,6 +207,7 @@ type SharesBoughtEvent implements EventInterface & FundEventInterface & SharesCh
 type SharesRedeemedEvent implements EventInterface & FundEventInterface & SharesChangeInterface @entity {
   id: ID!
   fund: Fund!
+  type: ShareChangeType!
   account: Account!
   investor: Account!
   contract: Contract!
@@ -359,6 +370,7 @@ type FeeSettledForFundEvent implements EventInterface & FundEventInterface & Sha
   id: ID!
   contract: Contract!
   fund: Fund!
+  type: ShareChangeType!
   account: Account!
   investor: Account!
   timestamp: BigInt!
@@ -379,6 +391,7 @@ type AllSharesOutstandingForcePaidForFundEvent implements EventInterface & FundE
   id: ID!
   contract: Contract!
   fund: Fund!
+  type: ShareChangeType!
   account: Account!
   investor: Account!
   timestamp: BigInt!
@@ -395,6 +408,7 @@ type SharesOutstandingPaidForFundEvent implements EventInterface & FundEventInte
   id: ID!
   contract: Contract!
   fund: Fund!
+  type: ShareChangeType!
   account: Account!
   investor: Account!
   timestamp: BigInt!

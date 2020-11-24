@@ -44,6 +44,7 @@ export function handleAllSharesOutstandingForcePaidForFund(event: AllSharesOutst
   let settled = new AllSharesOutstandingForcePaidForFundEvent(genericId(event));
   settled.contract = event.address.toHex();
   settled.fund = fund.id;
+  settled.type = 'AllSharesOutstandingForcePaidForFund';
   settled.account = useAccount(event.transaction.from.toHex()).id;
   settled.investor = investor.id;
   settled.timestamp = event.block.timestamp;
@@ -118,6 +119,7 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
   let settled = new FeeSettledForFundEvent(genericId(event));
   settled.contract = event.address.toHex();
   settled.fund = fund.id;
+  settled.type = 'FeeSettledForFund';
   settled.account = useAccount(event.transaction.from.toHex()).id;
   settled.investor = investor.id;
   settled.timestamp = event.block.timestamp;
@@ -149,6 +151,7 @@ export function handleSharesOutstandingPaidForFund(event: SharesOutstandingPaidF
   let sharesPaid = new SharesOutstandingPaidForFundEvent(genericId(event));
   sharesPaid.contract = event.address.toHex();
   sharesPaid.fund = fund.id;
+  sharesPaid.type = 'SharesOutstandingPaidForFund';
   sharesPaid.account = useAccount(event.transaction.from.toHex()).id;
   sharesPaid.investor = investor.id;
   sharesPaid.timestamp = event.block.timestamp;

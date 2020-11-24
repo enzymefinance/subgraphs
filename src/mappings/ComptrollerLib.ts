@@ -39,6 +39,7 @@ export function handleSharesBought(event: SharesBought): void {
   addition.account = investment.investor;
   addition.investor = investment.investor;
   addition.fund = investment.fund;
+  addition.type = 'SharesBought';
   addition.contract = ensureContract(event.address, 'ComptrollerLib').id;
   addition.investmentState = investmentState.id;
   addition.asset = asset.id;
@@ -73,6 +74,7 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
   redemption.account = investor.id;
   redemption.investor = investor.id;
   redemption.fund = investment.fund;
+  redemption.type = 'SharesRedeemed';
   redemption.contract = ensureContract(event.address, 'ComptrollerLib').id;
   redemption.investmentState = investmentState.id;
   redemption.shares = shares;

@@ -50,7 +50,7 @@ import { Asset, fetchAssets } from '../tests/utils/subgraph-queries/fetchAssets'
     const fundDeployer = new FundDeployer(deployment.fundDeployer, manager);
 
     // fees
-    const managementFeeRate = 0.01;
+    const managementFeeRate = utils.parseEther('0.01');
     const scaledPerSecondRate = convertRateToScaledPerSecondRate(managementFeeRate);
 
     const managementFeeSettings = managementFeeConfigArgs(scaledPerSecondRate);
