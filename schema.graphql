@@ -1093,6 +1093,7 @@ type Transaction @entity {
   gasUsed: Int!
   gasPrice: BigDecimal!
   input: String!
+  account: Account
   events: [EventInterface!]! @derivedFrom(field: "transaction")
 }
 
@@ -1121,7 +1122,7 @@ type Fund @entity {
   fees: [FeeSettingInterface!]! @derivedFrom(field: "fund")
   trades: [Trade!]! @derivedFrom(field: "fund")
   investments: [Investment!]! @derivedFrom(field: "fund")
-  shareChanges: [SharesChangeInterface!]! @derivedFrom(field: "fund")
+  sharesChanges: [SharesChangeInterface!]! @derivedFrom(field: "fund")
 
   # Fund State
   shares: ShareState!
@@ -1197,8 +1198,9 @@ type Account @entity {
   managements: [Fund!]! @derivedFrom(field: "manager")
   investor: Boolean!
   investments: [Investment!]! @derivedFrom(field: "investor")
-  shareChanges: [SharesChangeInterface!]! @derivedFrom(field: "investor")
+  sharesChanges: [SharesChangeInterface!]! @derivedFrom(field: "investor")
   events: [FundEventInterface!]! @derivedFrom(field: "account")
+  transactions: [Transaction!]! @derivedFrom(field: "account")
 }
 
 type Investment @entity {
