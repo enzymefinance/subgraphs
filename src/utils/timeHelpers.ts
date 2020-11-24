@@ -25,6 +25,11 @@ export function getDayOpenTime(timestamp: BigInt): BigInt {
   return getOpenTime(timestamp, interval);
 }
 
+export function getMonthOpenTime(timestamp: BigInt): BigInt {
+  let currentMonth = getMonthStartAndEnd(timestamp);
+  return currentMonth[0];
+}
+
 export function getOpenTime(timestamp: BigInt, interval: BigInt): BigInt {
   let excess = timestamp.mod(interval);
   return timestamp.minus(excess);

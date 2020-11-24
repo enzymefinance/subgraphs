@@ -29,11 +29,6 @@ export function createFundState(
   state.events = new Array<string>();
   state.save();
 
-  // link fund states to period states
-  trackHourlyFundState(fund, state, event);
-  trackDailyFundState(fund, state, event);
-  trackMonthlyFundState(fund, state, event);
-
   return state;
 }
 
@@ -52,6 +47,11 @@ export function ensureFundState(fund: Fund, event: ethereum.Event): FundState {
 
   fund.state = state.id;
   fund.save();
+
+  // link fund states to period states
+  trackHourlyFundState(fund, state, event);
+  trackDailyFundState(fund, state, event);
+  trackMonthlyFundState(fund, state, event);
 
   return state;
 }

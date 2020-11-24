@@ -1046,6 +1046,24 @@ type SharesTokenSymbolSetEvent implements EventInterface & NetworkEventInterface
   sharesTokenSymbol: String!
 }
 
+type VaultCallRegisteredEvent implements EventInterface & NetworkEventInterface @entity {
+  id: ID!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  contractAddress: String!
+  selector: String!
+}
+
+type VaultCallDeregisteredEvent implements EventInterface & NetworkEventInterface @entity {
+  id: ID!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  contractAddress: String!
+  selector: String!
+}
+
 #################################################
 # High-level entities
 #################################################
@@ -1104,9 +1122,9 @@ type Fund @entity {
   stateHistory: [FundState!]! @derivedFrom(field: "fund")
 
   # periodic states
-  hourlyState: [HourlyFundState!]! @derivedFrom(field: "fund")
-  dailyState: [DailyFundState!]! @derivedFrom(field: "fund")
-  monthlyState: [MonthlyFundState!]! @derivedFrom(field: "fund")
+  hourlyStates: [HourlyFundState!]! @derivedFrom(field: "fund")
+  dailyStates: [DailyFundState!]! @derivedFrom(field: "fund")
+  monthlyStates: [MonthlyFundState!]! @derivedFrom(field: "fund")
 
   events: [FundEventInterface!]! @derivedFrom(field: "fund")
   migrations: [Migration!] @derivedFrom(field: "fund")
@@ -1499,11 +1517,13 @@ type Asset @entity {
   price: AssetPrice
   hourly: HourlyAssetPriceCandle
   daily: DailyAssetPriceCandle
+  monthly: MonthlyAssetPriceCandle
 
   # Historical prices and candles
   priceHistory: [AssetPrice!]! @derivedFrom(field: "asset")
   hourlyHistory: [HourlyAssetPriceCandle!]! @derivedFrom(field: "asset")
   dailyHistory: [DailyAssetPriceCandle!]! @derivedFrom(field: "asset")
+  monthlyHistory: [MonthlyAssetPriceCandle!]! @derivedFrom(field: "asset")
 
   # Fund references
   denominatedFunds: [Fund!]! @derivedFrom(field: "denominationAsset")
@@ -1560,6 +1580,22 @@ type DailyAssetPriceCandle @entity {
   highRef: AssetPrice!
 }
 
+type MonthlyAssetPriceCandle @entity {
+  id: ID!
+  asset: Asset!
+  group: MonthlyAssetPriceCandleGroup!
+  from: BigInt!
+  to: BigInt!
+  open: BigDecimal!
+  openRef: AssetPrice!
+  close: BigDecimal!
+  closeRef: AssetPrice!
+  low: BigDecimal!
+  lowRef: AssetPrice!
+  high: BigDecimal!
+  highRef: AssetPrice!
+}
+
 type HourlyAssetPriceCandleGroup @entity {
   id: ID!
   from: BigInt!
@@ -1572,6 +1608,13 @@ type DailyAssetPriceCandleGroup @entity {
   from: BigInt!
   to: BigInt!
   candles: [DailyAssetPriceCandle!]! @derivedFrom(field: "group")
+}
+
+type MonthlyAssetPriceCandleGroup @entity {
+  id: ID!
+  from: BigInt!
+  to: BigInt!
+  candles: [MonthlyAssetPriceCandle!]! @derivedFrom(field: "group")
 }
 
 type ChainlinkAggregator @entity {

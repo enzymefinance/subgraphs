@@ -66,7 +66,7 @@ describe("Walkthrough a fund's lifecycle", () => {
 
     // fees
 
-    const managementFeeRate = 0.01;
+    const managementFeeRate = utils.parseEther('0.01');
     const scaledPerSecondRate = convertRateToScaledPerSecondRate(managementFeeRate);
 
     const managementFeeSettings = managementFeeConfigArgs(scaledPerSecondRate);

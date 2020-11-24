@@ -449,6 +449,36 @@ dataSources:
       eventHandlers:
         - event: MaxConcentrationSet(address,uint256)
           handler: handleMaxConcentrationSet
+  
+  - name: GuaranteedRedemptionDataSource
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      address: '{{guaranteedRedemption}}'
+      abi: GuaranteedRedemptionContract
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/GuaranteedRedemption.ts
+      entities: []
+      abis:
+        - name: GuaranteedRedemptionContract
+          file: ./node_modules/@melonproject/protocol/artifacts/GuaranteedRedemption.json
+        - name: VaultLibContract
+          file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
+        - name: ComptrollerLibContract
+          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
+      eventHandlers:
+        - event: AdapterAdded(address)
+          handler: handleAdapterAdded
+        - event: AdapterRemoved(address)
+          handler: handleAdapterRemoved
+        - event: FundSettingsSet(indexed address,uint256,uint256)
+          handler: handleFundSettingsSet
+        - event: RedemptionWindowBufferSet(uint256,uint256)
+          handler: handleRedemptionWindowBufferSet
 
   - name: IntegrationManagerDataSource
     kind: ethereum/contract

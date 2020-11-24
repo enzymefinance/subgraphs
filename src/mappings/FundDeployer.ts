@@ -5,8 +5,20 @@ import { ensureContract } from '../entities/Contract';
 import { createFund } from '../entities/Fund';
 import { ensureTransaction } from '../entities/Transaction';
 import { ComptrollerLibContract } from '../generated/ComptrollerLibContract';
-import { ComptrollerLibSet, ComptrollerProxyDeployed, NewFundCreated } from '../generated/FundDeployerContract';
-import { ComptrollerLibSetEvent, ComptrollerProxyDeployedEvent, NewFundCreatedEvent } from '../generated/schema';
+import {
+  ComptrollerLibSet,
+  ComptrollerProxyDeployed,
+  NewFundCreated,
+  VaultCallDeregistered,
+  VaultCallRegistered,
+} from '../generated/FundDeployerContract';
+import {
+  ComptrollerLibSetEvent,
+  ComptrollerProxyDeployedEvent,
+  NewFundCreatedEvent,
+  VaultCallDeregisteredEvent,
+  VaultCallRegisteredEvent,
+} from '../generated/schema';
 import { ComptrollerLibDataSource, VaultLibDataSource } from '../generated/templates';
 import { genericId } from '../utils/genericId';
 
@@ -67,4 +79,23 @@ export function handleComptrollerProxyDeployed(event: ComptrollerProxyDeployed):
   comptrollerProxyDeployment.policyManagerConfigData = event.params.policyManagerConfigData.toHexString();
   comptrollerProxyDeployment.forMigration = event.params.forMigration;
   comptrollerProxyDeployment.save();
+}
+
+export function handleVaultCallDeregistered(event: VaultCallDeregistered): void {
+  let deregistered = new VaultCallDeregisteredEvent(genericId(event));
+  deregistered.timestamp = event.block.timestamp;
+  deregistered.contract = ensureContract(event.address, 'FundDeployer').id;
+  deregistered.transaction = ensureTransaction(event).id;
+  deregistered.contractAddress = event.params.contractAddress.toHex();
+  deregistered.selector = event.params.selector.toHexString();
+  deregistered.save();
+}
+export function handleVaultCallRegistered(event: VaultCallRegistered): void {
+  let registered = new VaultCallRegisteredEvent(genericId(event));
+  registered.timestamp = event.block.timestamp;
+  registered.contract = ensureContract(event.address, 'FundDeployer').id;
+  registered.transaction = ensureTransaction(event).id;
+  registered.contractAddress = event.params.contractAddress.toHex();
+  registered.selector = event.params.selector.toHexString();
+  registered.save();
 }
