@@ -1,4 +1,4 @@
-import { resolveAddress, SignerWithAddress } from '@crestproject/crestproject';
+import { randomAddress, resolveAddress, SignerWithAddress } from '@crestproject/crestproject';
 import {
   adapterBlacklistArgs,
   adapterWhitelistArgs,
@@ -84,12 +84,13 @@ describe("Walkthrough a fund's lifecycle", () => {
 
     // policies
     const maxConcentrationSettings = maxConcentrationArgs(utils.parseEther('1'));
-    const adapterBlacklistSettings = adapterBlacklistArgs([deployment.compoundAdapter]);
+    const adapterBlacklistSettings = adapterBlacklistArgs([deployment.compoundAdapter, randomAddress()]);
     const adapterWhitelistSettings = adapterWhitelistArgs([
       deployment.kyberAdapter,
       deployment.uniswapV2Adapter,
       deployment.trackedAssetsAdapter,
       deployment.chaiAdapter,
+      randomAddress(),
     ]);
 
     const policyManagerConfig = policyManagerConfigArgs({

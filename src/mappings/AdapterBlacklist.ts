@@ -2,7 +2,6 @@ import { ensureManager, useManager } from '../entities/Account';
 import { ensureAdapterBlacklistSetting, useAdapterBlacklistSetting } from '../entities/AdapterBlacklistSetting';
 import { ensureContract } from '../entities/Contract';
 import { useFund } from '../entities/Fund';
-import { extractIntegrationAdapters } from '../entities/IntegrationAdapter';
 import { usePolicy } from '../entities/Policy';
 import { ensureTransaction } from '../entities/Transaction';
 import { AddressesAdded, AddressesRemoved } from '../generated/AdapterBlacklistContract';
@@ -28,11 +27,9 @@ export function handleAddressesAdded(event: AddressesAdded): void {
   addressesAdded.items = items;
   addressesAdded.save();
 
-  let adapterIds = extractIntegrationAdapters(items).map<string>((adapter) => adapter.id);
-
   let setting = ensureAdapterBlacklistSetting(vault.toHex(), policy);
   setting.listed = arrayUnique<string>(setting.listed.concat(items));
-  setting.adapters = arrayUnique<string>(setting.adapters.concat(adapterIds));
+  setting.adapters = setting.listed;
   setting.events = arrayUnique<string>(setting.events.concat([addressesAdded.id]));
   setting.timestamp = event.block.timestamp;
   setting.save();
@@ -55,11 +52,9 @@ export function handleAddressesRemoved(event: AddressesRemoved): void {
   addressesRemoved.items = items;
   addressesRemoved.save();
 
-  let adapterIds = extractIntegrationAdapters(items).map<string>((adapter) => adapter.id);
-
   let setting = useAdapterBlacklistSetting(fund, policy);
   setting.listed = arrayDiff<string>(setting.listed, items);
-  setting.adapters = arrayDiff<string>(setting.adapters, adapterIds);
+  setting.adapters = setting.listed;
   setting.events = arrayUnique<string>(setting.events.concat([addressesRemoved.id]));
   setting.timestamp = event.block.timestamp;
   setting.save();

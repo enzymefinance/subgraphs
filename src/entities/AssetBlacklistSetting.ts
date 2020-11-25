@@ -26,6 +26,7 @@ export function ensureAssetBlacklistSetting(fundId: string, policy: Policy): Ass
   setting.policy = policy.id;
   setting.fund = fundId;
   setting.listed = new Array<string>();
+  setting.assets = new Array<string>();
   setting.events = new Array<string>();
   setting.timestamp = BigInt.fromI32(0);
   setting.save();

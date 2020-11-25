@@ -1284,7 +1284,7 @@ type AdapterBlacklistSetting implements PolicySettingInterface @entity {
   policy: Policy!
   fund: Fund!
   listed: [String!]!
-  adapters: [IntegrationAdapter!]!
+  adapters: [IntegrationAdapter]!
   timestamp: BigInt!
   events: [FundEventInterface!]!
 }
@@ -1294,7 +1294,7 @@ type AdapterWhitelistSetting implements PolicySettingInterface @entity {
   policy: Policy!
   fund: Fund!
   listed: [String!]!
-  adapters: [IntegrationAdapter!]!
+  adapters: [IntegrationAdapter]!
   timestamp: BigInt!
   events: [FundEventInterface!]!
 }
@@ -1304,7 +1304,7 @@ type AssetBlacklistSetting implements PolicySettingInterface @entity {
   policy: Policy!
   fund: Fund!
   listed: [String!]!
-  assets: [Asset!]!
+  assets: [Asset]!
   timestamp: BigInt!
   events: [FundEventInterface!]!
 }
@@ -1314,7 +1314,7 @@ type AssetWhitelistSetting implements PolicySettingInterface @entity {
   policy: Policy!
   fund: Fund!
   listed: [String!]!
-  assets: [Asset!]!
+  assets: [Asset]!
   timestamp: BigInt!
   events: [FundEventInterface!]!
 }

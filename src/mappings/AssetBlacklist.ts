@@ -32,7 +32,7 @@ export function handleAddressesAdded(event: AddressesAdded): void {
 
   let setting = ensureAssetBlacklistSetting(vault.toHex(), policy);
   setting.listed = arrayUnique<string>(setting.listed.concat(items));
-  setting.assets = arrayUnique<string>(setting.assets.concat(assetIds));
+  setting.assets = setting.listed;
   setting.events = arrayUnique<string>(setting.events.concat([addressesAdded.id]));
   setting.timestamp = event.block.timestamp;
   setting.save();
@@ -55,11 +55,9 @@ export function handleAddressesRemoved(event: AddressesRemoved): void {
   addressesRemoved.items = items;
   addressesRemoved.save();
 
-  let assetIds = extractAssets(items).map<string>((asset) => asset.id);
-
   let setting = useAssetBlacklistSetting(fund, policy);
   setting.listed = arrayDiff<string>(setting.listed, items);
-  setting.assets = arrayDiff<string>(setting.assets, assetIds);
+  setting.assets = setting.listed;
   setting.events = arrayUnique<string>(setting.events.concat([addressesRemoved.id]));
   setting.timestamp = event.block.timestamp;
   setting.save();
