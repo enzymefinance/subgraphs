@@ -83,8 +83,11 @@ export function trackShareState(fund: Fund, event: ethereum.Event, cause: Entity
   fundState.save();
 
   fund.shares = shareState.id;
-  if (fund.firstInvestment == null && !totalSupply.isZero()) {
-    fund.firstInvestment = event.block.timestamp;
+
+  // first investment state is needed for performance calculations
+  // (initial state for asset prices, etc.)
+  if (fund.firstInvestmentState == null && !totalSupply.isZero()) {
+    fund.firstInvestmentState = fundState.id;
   }
   fund.save();
 

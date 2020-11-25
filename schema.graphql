@@ -1110,7 +1110,7 @@ type Fund @entity {
   name: String!
   inception: BigInt!
   creator: Account!
-  firstInvestment: BigInt
+  firstInvestmentState: FundState
   release: Release!
   manager: Account!
   migrator: String
@@ -1122,7 +1122,9 @@ type Fund @entity {
   policies: [PolicySettingInterface!]! @derivedFrom(field: "fund")
   fees: [FeeSettingInterface!]! @derivedFrom(field: "fund")
   trades: [Trade!]! @derivedFrom(field: "fund")
-  investments: [Investment!]! @derivedFrom(field: "fund")
+
+  investments: [Investment!]!
+  investmentCount: Int!
   sharesChanges: [SharesChangeInterface!]! @derivedFrom(field: "fund")
 
   # Fund State
@@ -1144,6 +1146,15 @@ type Fund @entity {
 
   events: [FundEventInterface!]! @derivedFrom(field: "fund")
   migrations: [Migration!] @derivedFrom(field: "fund")
+}
+
+type FirstInvestmentState @entity {
+  id: ID!
+  fund: Fund!
+  timestamp: BigInt!
+  assetPrices: [AssetPrice!]!
+  currencyPrices: [CurrencyPrice!]!
+  fundState: FundState!
 }
 
 type HourlyFundState implements PeriodicFundStateInterface @entity {
@@ -1202,6 +1213,7 @@ type Account @entity {
   sharesChanges: [SharesChangeInterface!]! @derivedFrom(field: "investor")
   events: [FundEventInterface!]! @derivedFrom(field: "account")
   transactions: [Transaction!]! @derivedFrom(field: "account")
+  whitelisted: [InvestorWhitelistSetting!]! @derivedFrom(field: "listed")
 }
 
 type Investment @entity {
@@ -1270,6 +1282,8 @@ type EntranceRateBurnFeeSetting implements FeeSettingInterface @entity {
 type IntegrationAdapter @entity {
   id: ID!
   identifier: String!
+  blacklisted: [AdapterBlacklistSetting!]! @derivedFrom(field: "adapters")
+  whitelisted: [AdapterWhitelistSetting!]! @derivedFrom(field: "adapters")
 }
 
 type Policy @entity {
@@ -1383,6 +1397,7 @@ type FundState implements FundStateInterface @entity {
   portfolio: PortfolioState!
   feeState: FeeState!
   calculations: CalculationState!
+  currencyPrices: [CurrencyPrice!]!
   events: [FundEventInterface!]!
 }
 
@@ -1549,6 +1564,8 @@ type Asset @entity {
   # Fund references
   denominatedFunds: [Fund!]! @derivedFrom(field: "denominationAsset")
   trackingFunds: [Fund!]! @derivedFrom(field: "trackedAssets")
+  blacklisted: [AssetBlacklistSetting!]! @derivedFrom(field: "assets")
+  whitelisted: [AssetWhitelistSetting!]! @derivedFrom(field: "assets")
 }
 
 type Currency @entity {

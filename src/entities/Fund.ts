@@ -43,6 +43,8 @@ export function createFund(event: NewFundCreated): Fund {
   fund.manager = ensureManager(event.params.fundOwner, event).id;
   fund.creator = ensureAccount(event.params.creator, event).id;
   fund.trackedAssets = new Array<string>();
+  fund.investments = new Array<string>();
+  fund.investmentCount = 0;
   fund.shares = shares.id;
   fund.portfolio = portfolio.id;
   fund.feeState = feeState.id;

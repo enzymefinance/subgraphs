@@ -1,5 +1,6 @@
 import { BigDecimal } from '@graphprotocol/graph-ts';
 import { Account, Fund, Investment } from '../generated/schema';
+import { arrayUnique } from '../utils/arrayUnique';
 import { logCritical } from '../utils/logCritical';
 
 function investmentId(investor: Account, fund: Fund): string {
@@ -20,6 +21,10 @@ export function ensureInvestment(investor: Account, fund: Fund, stateId: string)
   investment.shares = BigDecimal.fromString('0');
   investment.state = stateId;
   investment.save();
+
+  fund.investments = arrayUnique<string>(fund.investments.concat([id]));
+  fund.investmentCount = fund.investments.length;
+  fund.save();
 
   return investment;
 }

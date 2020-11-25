@@ -49,7 +49,7 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
   let integrationSelector = event.params.selector.toHexString();
 
   let incomingAssets = event.params.incomingAssets.map<Asset>((asset) => useAsset(asset.toHex()));
-  let incomingAssetAmounts: BigDecimal[] = [];
+  let incomingAssetAmounts: BigDecimal[] = new Array<BigDecimal>();
   for (let i = 0; i < event.params.incomingAssetAmounts.length; i++) {
     let entry = event.params.incomingAssetAmounts;
     let amount = toBigDecimal(entry[i], incomingAssets[i].decimals);
@@ -57,7 +57,7 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
   }
 
   let outgoingAssets = event.params.outgoingAssets.map<Asset>((asset) => useAsset(asset.toHex()));
-  let outgoingAssetAmounts: BigDecimal[] = [];
+  let outgoingAssetAmounts: BigDecimal[] = new Array<BigDecimal>();
   for (let i = 0; i < event.params.outgoingAssetAmounts.length; i++) {
     let entry = event.params.outgoingAssetAmounts;
     let amount = toBigDecimal(entry[i], outgoingAssets[i].decimals);
