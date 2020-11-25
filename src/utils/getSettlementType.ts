@@ -10,10 +10,13 @@ export function getSettlementType(type: number): string {
     return 'Mint';
   }
   if (type == 3) {
+    return 'Burn';
+  }
+  if (type == 4) {
     return 'MintSharesOutstanding';
   }
 
-  if (type == 4) {
+  if (type == 5) {
     return 'BurnSharesOutstanding';
   }
 
