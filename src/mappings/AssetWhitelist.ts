@@ -1,4 +1,5 @@
 import { ensureManager, useManager } from '../entities/Account';
+import { extractAssets } from '../entities/Asset';
 import { ensureAssetWhitelistSetting, useAssetWhitelistSetting } from '../entities/AssetWhitelistSetting';
 import { ensureContract } from '../entities/Contract';
 import { useFund } from '../entities/Fund';
@@ -27,8 +28,11 @@ export function handleAddressesAdded(event: AddressesAdded): void {
   addressesAdded.items = items;
   addressesAdded.save();
 
+  let assetIds = extractAssets(items).map<string>((asset) => asset.id);
+
   let setting = ensureAssetWhitelistSetting(vault.toHex(), policy);
   setting.listed = arrayUnique<string>(setting.listed.concat(items));
+  setting.assets = arrayUnique<string>(setting.assets.concat(assetIds));
   setting.events = arrayUnique<string>(setting.events.concat([addressesAdded.id]));
   setting.timestamp = event.block.timestamp;
   setting.save();
@@ -51,8 +55,11 @@ export function handleAddressesRemoved(event: AddressesRemoved): void {
   addressesRemoved.items = items;
   addressesRemoved.save();
 
+  let assetIds = extractAssets(items).map<string>((asset) => asset.id);
+
   let setting = useAssetWhitelistSetting(fund, policy);
   setting.listed = arrayDiff<string>(setting.listed, items);
+  setting.assets = arrayDiff<string>(setting.assets, assetIds);
   setting.events = arrayUnique<string>(setting.events.concat([addressesRemoved.id]));
   setting.timestamp = event.block.timestamp;
   setting.save();

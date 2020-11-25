@@ -47,3 +47,15 @@ export function ensureAssets(addresses: Address[]): Asset[] {
 
   return assets;
 }
+
+export function extractAssets(ids: string[]): Asset[] {
+  let assets: Asset[] = new Array<Asset>();
+  for (let i = 0; i < ids.length; i++) {
+    let asset = Asset.load(ids[i]) as Asset;
+    if (asset) {
+      assets = assets.concat([asset]);
+    }
+  }
+
+  return assets;
+}
