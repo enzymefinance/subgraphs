@@ -1013,6 +1013,7 @@ type ChainlinkAggregatorAnswerUpdatedEvent implements EventInterface & NetworkEv
   timestamp: BigInt!
   transaction: Transaction!
   asset: Asset
+  currency: Currency
   current: BigDecimal!
   roundId: BigInt!
   updatedAt: BigInt!
@@ -1546,6 +1547,22 @@ type Asset @entity {
   trackingFunds: [Fund!]! @derivedFrom(field: "trackedAssets")
 }
 
+type Currency @entity {
+  id: ID!
+
+  # Latest price and candles
+  price: CurrencyPrice
+  hourly: HourlyCurrencyPriceCandle
+  daily: DailyCurrencyPriceCandle
+  monthly: MonthlyCurrencyPriceCandle
+
+  # Historical prices and candles
+  priceHistory: [CurrencyPrice!]! @derivedFrom(field: "currency")
+  hourlyHistory: [HourlyCurrencyPriceCandle!]! @derivedFrom(field: "currency")
+  dailyHistory: [DailyCurrencyPriceCandle!]! @derivedFrom(field: "currency")
+  monthlyHistory: [MonthlyCurrencyPriceCandle!]! @derivedFrom(field: "currency")
+}
+
 type UniswapV2PoolAssetDetail @entity {
   id: ID!
   token0: Asset!
@@ -1564,10 +1581,17 @@ type AssetPrice @entity {
   timestamp: BigInt!
 }
 
+type CurrencyPrice @entity {
+  id: ID!
+  currency: Currency!
+  price: BigDecimal!
+  timestamp: BigInt!
+}
+
 type HourlyAssetPriceCandle @entity {
   id: ID!
   asset: Asset!
-  group: HourlyAssetPriceCandleGroup!
+  group: HourlyPriceCandleGroup!
   from: BigInt!
   to: BigInt!
   open: BigDecimal!
@@ -1583,7 +1607,7 @@ type HourlyAssetPriceCandle @entity {
 type DailyAssetPriceCandle @entity {
   id: ID!
   asset: Asset!
-  group: DailyAssetPriceCandleGroup!
+  group: DailyPriceCandleGroup!
   from: BigInt!
   to: BigInt!
   open: BigDecimal!
@@ -1599,7 +1623,7 @@ type DailyAssetPriceCandle @entity {
 type MonthlyAssetPriceCandle @entity {
   id: ID!
   asset: Asset!
-  group: MonthlyAssetPriceCandleGroup!
+  group: MonthlyPriceCandleGroup!
   from: BigInt!
   to: BigInt!
   open: BigDecimal!
@@ -1612,32 +1636,83 @@ type MonthlyAssetPriceCandle @entity {
   highRef: AssetPrice!
 }
 
-type HourlyAssetPriceCandleGroup @entity {
+type HourlyCurrencyPriceCandle @entity {
   id: ID!
+  currency: Currency!
+  group: HourlyPriceCandleGroup!
   from: BigInt!
   to: BigInt!
-  candles: [HourlyAssetPriceCandle!]! @derivedFrom(field: "group")
+  open: BigDecimal!
+  openRef: CurrencyPrice!
+  close: BigDecimal!
+  closeRef: CurrencyPrice!
+  low: BigDecimal!
+  lowRef: CurrencyPrice!
+  high: BigDecimal!
+  highRef: CurrencyPrice!
 }
 
-type DailyAssetPriceCandleGroup @entity {
+type DailyCurrencyPriceCandle @entity {
   id: ID!
+  currency: Currency!
+  group: DailyPriceCandleGroup!
   from: BigInt!
   to: BigInt!
-  candles: [DailyAssetPriceCandle!]! @derivedFrom(field: "group")
+  open: BigDecimal!
+  openRef: CurrencyPrice!
+  close: BigDecimal!
+  closeRef: CurrencyPrice!
+  low: BigDecimal!
+  lowRef: CurrencyPrice!
+  high: BigDecimal!
+  highRef: CurrencyPrice!
 }
 
-type MonthlyAssetPriceCandleGroup @entity {
+type MonthlyCurrencyPriceCandle @entity {
+  id: ID!
+  currency: Currency!
+  group: MonthlyPriceCandleGroup!
+  from: BigInt!
+  to: BigInt!
+  open: BigDecimal!
+  openRef: CurrencyPrice!
+  close: BigDecimal!
+  closeRef: CurrencyPrice!
+  low: BigDecimal!
+  lowRef: CurrencyPrice!
+  high: BigDecimal!
+  highRef: CurrencyPrice!
+}
+
+type HourlyPriceCandleGroup @entity {
   id: ID!
   from: BigInt!
   to: BigInt!
-  candles: [MonthlyAssetPriceCandle!]! @derivedFrom(field: "group")
+  assetCandles: [HourlyAssetPriceCandle!]! @derivedFrom(field: "group")
+  currencyCandles: [HourlyCurrencyPriceCandle!]! @derivedFrom(field: "group")
+}
+
+type DailyPriceCandleGroup @entity {
+  id: ID!
+  from: BigInt!
+  to: BigInt!
+  assetCandles: [DailyAssetPriceCandle!]! @derivedFrom(field: "group")
+  currencyCandles: [DailyCurrencyPriceCandle!]! @derivedFrom(field: "group")
+}
+
+type MonthlyPriceCandleGroup @entity {
+  id: ID!
+  from: BigInt!
+  to: BigInt!
+  assetCandles: [MonthlyAssetPriceCandle!]! @derivedFrom(field: "group")
+  currencyCandles: [MonthlyCurrencyPriceCandle!]! @derivedFrom(field: "group")
 }
 
 type ChainlinkAggregator @entity {
   id: ID!
   type: ChainlinkAggregatorType!
   asset: Asset
-  currency: String
+  currency: Currency
   active: Boolean!
   updates: [ChainlinkAggregatorAnswerUpdatedEvent!]! @derivedFrom(field: "aggregator")
 }
@@ -1667,4 +1742,5 @@ type Cron @entity {
   derivatives: [Asset!]!
 
   #
+  currencies: [Currency!]!
 }

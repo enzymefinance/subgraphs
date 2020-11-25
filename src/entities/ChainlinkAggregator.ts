@@ -1,5 +1,5 @@
 import { Address, DataSourceContext } from '@graphprotocol/graph-ts';
-import { Asset, ChainlinkAggregator } from '../generated/schema';
+import { Asset, ChainlinkAggregator, Currency } from '../generated/schema';
 import { ChainlinkAggregatorDataSource } from '../generated/templates';
 import { logCritical } from '../utils/logCritical';
 
@@ -21,7 +21,7 @@ export function chainlinkEthUsdAggregatorId(aggregatorAddress: string): string {
 }
 
 export function chainlinkCurrencyAggregatorId(aggregatorAddress: string, identifier: string): string {
-  return aggregatorAddress + '/' + identifier;
+  return aggregatorAddress + '/currency/' + identifier;
 }
 
 function enableChainlinkAggregator(
@@ -29,7 +29,7 @@ function enableChainlinkAggregator(
   id: string,
   type: string,
   asset: Asset | null = null,
-  currency: string | null = null,
+  currency: Currency | null = null,
 ): ChainlinkAggregator {
   let aggregator = ChainlinkAggregator.load(id) as ChainlinkAggregator;
 
@@ -37,7 +37,7 @@ function enableChainlinkAggregator(
     aggregator = new ChainlinkAggregator(id);
     aggregator.type = type;
     aggregator.asset = asset != null ? asset.id : null;
-    aggregator.currency = currency != null ? currency : null;
+    aggregator.currency = currency != null ? currency.id : null;
     aggregator.active = true;
     aggregator.save();
 
@@ -72,9 +72,9 @@ export function disableChainlinkAssetAggregator(address: Address, asset: Asset):
   return aggregator;
 }
 
-export function enableChainlinkEthUsdAggregator(address: Address): ChainlinkAggregator {
+export function enableChainlinkEthUsdAggregator(address: Address, currency: Currency): ChainlinkAggregator {
   let id = chainlinkEthUsdAggregatorId(address.toHex());
-  return enableChainlinkAggregator(address, id, 'ETHUSD', null);
+  return enableChainlinkAggregator(address, id, 'ETHUSD', null, currency);
 }
 
 export function disableChainlinkEthUsdAggregator(address: Address): ChainlinkAggregator {
@@ -89,13 +89,13 @@ export function disableChainlinkEthUsdAggregator(address: Address): ChainlinkAgg
   return aggregator;
 }
 
-export function enableChainlinkCurrencyAggregator(address: Address, currency: string): ChainlinkAggregator {
-  let id = chainlinkCurrencyAggregatorId(address.toHex(), currency);
+export function enableChainlinkCurrencyAggregator(address: Address, currency: Currency): ChainlinkAggregator {
+  let id = chainlinkCurrencyAggregatorId(address.toHex(), currency.id);
   return enableChainlinkAggregator(address, id, 'CURRENCY', null, currency);
 }
 
-export function disableChainlinkCurrencyAggregator(address: Address, identifier: string): ChainlinkAggregator {
-  let id = chainlinkCurrencyAggregatorId(address.toHex(), identifier);
+export function disableChainlinkCurrencyAggregator(address: Address, currency: Currency): ChainlinkAggregator {
+  let id = chainlinkCurrencyAggregatorId(address.toHex(), currency.id);
   let aggregator = useChainlinkAggregator(id);
 
   if (aggregator.active) {

@@ -10,6 +10,7 @@ import {
   enableChainlinkEthUsdAggregator,
 } from '../entities/ChainlinkAggregator';
 import { ensureContract, useContract } from '../entities/Contract';
+import { ensureCurrency } from '../entities/Currency';
 import { ensureTransaction } from '../entities/Transaction';
 import { ChainlinkAggregatorContract } from '../generated/ChainlinkAggregatorContract';
 import { ChainlinkAggregatorProxyContract } from '../generated/ChainlinkAggregatorProxyContract';
@@ -50,7 +51,8 @@ export function handleEthUsdAggregatorSet(event: EthUsdAggregatorSet): void {
 
   let proxy = ChainlinkAggregatorProxyContract.bind(event.params.nextEthUsdAggregator);
   let aggregator = proxy.aggregator();
-  enableChainlinkEthUsdAggregator(aggregator);
+  let eth = ensureCurrency('ETH');
+  enableChainlinkEthUsdAggregator(aggregator, eth);
 
   // We need to create WETH manually
   let weth = ensureAsset(wethTokenAddress);
@@ -60,18 +62,22 @@ export function handleEthUsdAggregatorSet(event: EthUsdAggregatorSet): void {
   // Aggragators for currencies
   let eurProxy = ChainlinkAggregatorProxyContract.bind(eurChainlinkAggregator);
   let eurAggregator = eurProxy.aggregator();
-  enableChainlinkCurrencyAggregator(eurAggregator, 'eurusd');
+  let eur = ensureCurrency('EUR');
+  enableChainlinkCurrencyAggregator(eurAggregator, eur);
 
   let chfProxy = ChainlinkAggregatorProxyContract.bind(chfChainlinkAggregator);
   let chfAggregator = chfProxy.aggregator();
-  enableChainlinkCurrencyAggregator(chfAggregator, 'chfusd');
+  let chf = ensureCurrency('CHF');
+  enableChainlinkCurrencyAggregator(chfAggregator, chf);
 
   let jpyProxy = ChainlinkAggregatorProxyContract.bind(jpyChainlinkAggregator);
   let jpyAggregator = jpyProxy.aggregator();
-  enableChainlinkCurrencyAggregator(jpyAggregator, 'jpyusd');
+  let jpy = ensureCurrency('JPY');
+  enableChainlinkCurrencyAggregator(jpyAggregator, jpy);
 
   let cron = ensureCron();
   cron.primitives = arrayUnique<string>(cron.primitives.concat([weth.id]));
+  cron.currencies = arrayUnique<string>(cron.currencies.concat([eth.id, eur.id, chf.id, jpy.id]));
   cron.save();
 
   // It's important that we run cron last.

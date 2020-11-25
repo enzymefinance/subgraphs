@@ -3,6 +3,8 @@ import { useAsset } from '../entities/Asset';
 import { trackAssetPrice } from '../entities/AssetPrice';
 import { useChainlinkAggregator } from '../entities/ChainlinkAggregator';
 import { ensureContract } from '../entities/Contract';
+import { useCurrency } from '../entities/Currency';
+import { trackCurrencyPrice } from '../entities/CurrencyPrice';
 import { ensureTransaction } from '../entities/Transaction';
 import { AnswerUpdated } from '../generated/ChainlinkAggregatorContract';
 import { Asset, ChainlinkAggregatorAnswerUpdatedEvent } from '../generated/schema';
@@ -27,20 +29,32 @@ export function handleAnswerUpdated(event: AnswerUpdated): void {
   answerUpdated.roundId = event.params.roundId;
   answerUpdated.updatedAt = event.params.updatedAt;
   answerUpdated.save();
+
   if (aggregator.type == 'ASSET') {
     let asset = useAsset(aggregator.asset as string);
     answerUpdated.asset = asset.id;
     answerUpdated.save();
     // NOTE: We use the block timestamp here on purpose (instead of event.params.updatedAt).
     trackAssetPrice(asset, event.block.timestamp, current);
-  } else if (aggregator.type === 'ETHUSD') {
+  } else if (aggregator.type == 'ETHUSD') {
+    let currency = useCurrency(aggregator.currency as string);
+    answerUpdated.currency = currency.id;
+    answerUpdated.save();
+    trackCurrencyPrice(currency, event.block.timestamp, current);
+
     let cron = ensureCron();
     let assets = cron.usdQuotedPrimitives.map<Asset>((primitive) => useAsset(primitive));
     for (let i: i32 = 0; i < assets.length; i++) {
       let asset = assets[i];
       trackAssetPrice(asset, event.block.timestamp);
     }
+  } else if (aggregator.type == 'CURRENCY') {
+    let currency = useCurrency(aggregator.currency as string);
+    answerUpdated.currency = currency.id;
+    answerUpdated.save();
+    trackCurrencyPrice(currency, event.block.timestamp, current);
   }
+
   // NOTE: We might want to add this to other mappings in our code base too. We'll need to do some
   // fine tuning to find the right balance (consider performance penalty of using this too
   // frequently). The chainlink aggregators are a great spot for this because they run fairly

@@ -3,10 +3,10 @@ import { wethTokenAddress } from '../addresses';
 import { useAsset } from '../entities/Asset';
 import { fetchAssetPrice, trackAssetPrice, useAssetPrice } from '../entities/AssetPrice';
 import {
-  ensureDailyAssetPriceCandleGroup,
-  ensureHourlyAssetPriceCandleGroup,
-  ensureMonthlyAssetPriceCandleGroup,
-} from '../entities/AssetPriceCandleGroup';
+  ensureDailyPriceCandleGroup,
+  ensureHourlyPriceCandleGroup,
+  ensureMonthlyPriceCandleGroup,
+} from '../entities/PriceCandleGroup';
 import { Cron } from '../generated/schema';
 import { arrayUnique } from './arrayUnique';
 import { logCritical } from './logCritical';
@@ -20,6 +20,7 @@ export function ensureCron(): Cron {
     cron.primitives = new Array<string>();
     cron.derivatives = new Array<string>();
     cron.usdQuotedPrimitives = new Array<string>();
+    cron.currencies = new Array<string>();
     cron.save();
   }
 
@@ -79,17 +80,17 @@ function cronCandles(cron: Cron, timestamp: BigInt): void {
     return;
   }
 
-  ensureHourlyAssetPriceCandleGroup(currentHour);
+  ensureHourlyPriceCandleGroup(currentHour);
 
   let currentDay = getDayOpenTime(timestamp);
   if (currentDay.gt(getDayOpenTime(cron.cron))) {
-    ensureDailyAssetPriceCandleGroup(currentDay);
+    ensureDailyPriceCandleGroup(currentDay);
   }
 
   let currentMonthStartEnd = getMonthStartAndEnd(timestamp);
   let currentCronStartEnd = getMonthStartAndEnd(cron.cron);
   if (currentMonthStartEnd[0].gt(currentCronStartEnd[0])) {
-    ensureMonthlyAssetPriceCandleGroup(currentMonthStartEnd[0], currentMonthStartEnd[1]);
+    ensureMonthlyPriceCandleGroup(currentMonthStartEnd[0], currentMonthStartEnd[1]);
   }
 
   let ids = arrayUnique<string>(cron.primitives.concat(cron.derivatives));

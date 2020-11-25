@@ -43,3 +43,21 @@ export function getMonthStartAndEnd(timestamp: BigInt): BigInt[] {
   }
   return [BigInt.fromI32(0), BigInt.fromI32(0)];
 }
+
+export function getMonthStart(timestamp: BigInt): BigInt {
+  for (let i = 0; i < startsOfMonths.length - 1; i++) {
+    if (timestamp.lt(startsOfMonths[i + 1]) && timestamp.ge(startsOfMonths[i])) {
+      return startsOfMonths[i];
+    }
+  }
+  return BigInt.fromI32(0);
+}
+
+export function getMonthEnd(timestamp: BigInt): BigInt {
+  for (let i = 0; i < startsOfMonths.length - 1; i++) {
+    if (timestamp.lt(startsOfMonths[i + 1]) && timestamp.ge(startsOfMonths[i])) {
+      return startsOfMonths[i + 1];
+    }
+  }
+  return BigInt.fromI32(0);
+}

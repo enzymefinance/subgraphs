@@ -1,17 +1,17 @@
 import { BigDecimal, BigInt, Entity, store, Value } from '@graphprotocol/graph-ts';
 
-export class AssetPriceCandle extends Entity {
+export class CurrencyPriceCandle extends Entity {
   constructor(id: string) {
     super();
     this.set('id', Value.fromString(id));
   }
 
   save(type: string): void {
-    store.set(type + 'AssetPriceCandle', this.get('id').toString(), this);
+    store.set(type + 'CurrencyPriceCandle', this.get('id').toString(), this);
   }
 
-  static load(type: string, id: string): AssetPriceCandle | null {
-    return store.get(type + 'AssetPriceCandle', id) as AssetPriceCandle | null;
+  static load(type: string, id: string): CurrencyPriceCandle | null {
+    return store.get(type + 'CurrencyPriceCandle', id) as CurrencyPriceCandle | null;
   }
 
   get id(): string {
@@ -32,13 +32,13 @@ export class AssetPriceCandle extends Entity {
     this.set('group', Value.fromString(value));
   }
 
-  get asset(): string {
-    let value = this.get('asset');
+  get currency(): string {
+    let value = this.get('currency');
     return value.toString();
   }
 
-  set asset(value: string) {
-    this.set('asset', Value.fromString(value));
+  set currency(value: string) {
+    this.set('currency', Value.fromString(value));
   }
 
   get from(): BigInt {

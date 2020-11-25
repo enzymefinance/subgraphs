@@ -1,6 +1,6 @@
 import { BigInt } from '@graphprotocol/graph-ts';
 import { Asset, AssetPrice, DailyAssetPriceCandle, HourlyAssetPriceCandle } from '../generated/schema';
-import { day, hour } from '../utils/timeHelpers';
+import { day, getDayOpenTime, getHourOpenTime, getMonthStartAndEnd, hour } from '../utils/timeHelpers';
 import { useAssetPrice } from './AssetPrice';
 import { AssetPriceCandle } from './AssetPriceEntity';
 
@@ -10,26 +10,31 @@ export function assetPriceCandleId(assetId: string, type: string, open: BigInt):
 
 export function updateHourlyAssetPriceCandle(asset: Asset, current: AssetPrice): HourlyAssetPriceCandle {
   let type = 'Hourly';
-  let interval = hour;
-  return maintainAssetPriceCandle(type, interval, asset, current) as HourlyAssetPriceCandle;
+  let from = getHourOpenTime(current.timestamp);
+  let to = from.plus(hour);
+  return maintainAssetPriceCandle(type, from, to, asset, current) as HourlyAssetPriceCandle;
 }
 
 export function updateDailyAssetPriceCandle(asset: Asset, current: AssetPrice): DailyAssetPriceCandle {
   let type = 'Daily';
-  let interval = day;
-  return maintainAssetPriceCandle(type, interval, asset, current) as DailyAssetPriceCandle;
+  let from = getDayOpenTime(current.timestamp);
+  let to = from.plus(day);
+  return maintainAssetPriceCandle(type, from, to, asset, current) as DailyAssetPriceCandle;
+}
+
+export function updateMonthlyAssetPriceCandle(asset: Asset, current: AssetPrice): DailyAssetPriceCandle {
+  let type = 'Monthly';
+  let startAndEnd = getMonthStartAndEnd(current.timestamp);
+  return maintainAssetPriceCandle(type, startAndEnd[0], startAndEnd[1], asset, current) as DailyAssetPriceCandle;
 }
 
 export function maintainAssetPriceCandle(
   type: string,
-  interval: BigInt,
+  from: BigInt,
+  to: BigInt,
   asset: Asset,
   current: AssetPrice,
 ): AssetPriceCandle {
-  let excess = current.timestamp.mod(interval);
-  let from = current.timestamp.minus(excess);
-  let to = from.plus(interval);
-
   let id = assetPriceCandleId(current.asset, type, from);
   let candle = AssetPriceCandle.load(type, id) as AssetPriceCandle;
   if (!candle) {
