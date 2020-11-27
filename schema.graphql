@@ -37,6 +37,30 @@ interface SharesChangeInterface {
   calculations: CalculationState!
 }
 
+interface FeeSharesChangeInterface {
+  id: ID!
+  fund: Fund!
+  investor: Account!
+  timestamp: BigInt!
+  type: ShareChangeType!
+  investmentState: InvestmentState!
+  shares: BigDecimal!
+  transaction: Transaction!
+  calculations: CalculationState!
+}
+
+interface InvestmentSharesChangeInterface {
+  id: ID!
+  fund: Fund!
+  investor: Account!
+  timestamp: BigInt!
+  type: ShareChangeType!
+  investmentState: InvestmentState!
+  shares: BigDecimal!
+  transaction: Transaction!
+  calculations: CalculationState!
+}
+
 interface FundStateInterface {
   id: ID!
   fund: Fund!
@@ -187,7 +211,8 @@ type VaultProxySetEvent implements EventInterface & FundEventInterface @entity {
   vaultProxy: String!
 }
 
-type SharesBoughtEvent implements EventInterface & FundEventInterface & SharesChangeInterface @entity {
+type SharesBoughtEvent implements EventInterface & FundEventInterface & SharesChangeInterface & InvestmentSharesChangeInterface
+  @entity {
   id: ID!
   fund: Fund!
   type: ShareChangeType!
@@ -204,7 +229,8 @@ type SharesBoughtEvent implements EventInterface & FundEventInterface & SharesCh
   calculations: CalculationState!
 }
 
-type SharesRedeemedEvent implements EventInterface & FundEventInterface & SharesChangeInterface @entity {
+type SharesRedeemedEvent implements EventInterface & FundEventInterface & SharesChangeInterface & InvestmentSharesChangeInterface
+  @entity {
   id: ID!
   fund: Fund!
   type: ShareChangeType!
@@ -366,7 +392,8 @@ type FeesRecipientSetForFundEvent implements EventInterface & FundEventInterface
   nextFeesRecipient: String!
 }
 
-type FeeSettledForFundEvent implements EventInterface & FundEventInterface & SharesChangeInterface @entity {
+type FeeSettledForFundEvent implements EventInterface & FundEventInterface & SharesChangeInterface & FeeSharesChangeInterface
+  @entity {
   id: ID!
   contract: Contract!
   fund: Fund!
@@ -386,7 +413,7 @@ type FeeSettledForFundEvent implements EventInterface & FundEventInterface & Sha
   calculations: CalculationState!
 }
 
-type AllSharesOutstandingForcePaidForFundEvent implements EventInterface & FundEventInterface & SharesChangeInterface
+type AllSharesOutstandingForcePaidForFundEvent implements EventInterface & FundEventInterface & SharesChangeInterface & FeeSharesChangeInterface
   @entity {
   id: ID!
   contract: Contract!
@@ -404,7 +431,8 @@ type AllSharesOutstandingForcePaidForFundEvent implements EventInterface & FundE
   calculations: CalculationState!
 }
 
-type SharesOutstandingPaidForFundEvent implements EventInterface & FundEventInterface & SharesChangeInterface @entity {
+type SharesOutstandingPaidForFundEvent implements EventInterface & FundEventInterface & SharesChangeInterface & FeeSharesChangeInterface
+  @entity {
   id: ID!
   contract: Contract!
   fund: Fund!
@@ -1126,6 +1154,8 @@ type Fund @entity {
   investments: [Investment!]!
   investmentCount: Int!
   sharesChanges: [SharesChangeInterface!]! @derivedFrom(field: "fund")
+  feeSharesChanges: [FeeSharesChangeInterface!]! @derivedFrom(field: "fund")
+  investmentSharesChanges: [InvestmentSharesChangeInterface!]! @derivedFrom(field: "fund")
 
   # Fund State
   shares: ShareState!
@@ -1210,7 +1240,10 @@ type Account @entity {
   managements: [Fund!]! @derivedFrom(field: "manager")
   investor: Boolean!
   investments: [Investment!]! @derivedFrom(field: "investor")
+
   sharesChanges: [SharesChangeInterface!]! @derivedFrom(field: "investor")
+  feeSharesChanges: [FeeSharesChangeInterface!]! @derivedFrom(field: "investor")
+  investmentSharesChanges: [InvestmentSharesChangeInterface!]! @derivedFrom(field: "investor")
   events: [FundEventInterface!]! @derivedFrom(field: "account")
   transactions: [Transaction!]! @derivedFrom(field: "account")
   whitelisted: [InvestorWhitelistSetting!]! @derivedFrom(field: "listed")

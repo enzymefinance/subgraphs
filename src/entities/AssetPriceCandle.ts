@@ -1,6 +1,12 @@
 import { BigInt } from '@graphprotocol/graph-ts';
 import { Asset, AssetPrice, DailyAssetPriceCandle, HourlyAssetPriceCandle } from '../generated/schema';
-import { day, getDayOpenTime, getHourOpenTime, getMonthStartAndEnd, hour } from '../utils/timeHelpers';
+import {
+  getDayCloseTime,
+  getDayOpenTime,
+  getHourCloseTime,
+  getHourOpenTime,
+  getMonthOpenAndClose,
+} from '../utils/timeHelpers';
 import { useAssetPrice } from './AssetPrice';
 import { AssetPriceCandle } from './AssetPriceEntity';
 
@@ -11,21 +17,21 @@ export function assetPriceCandleId(assetId: string, type: string, open: BigInt):
 export function updateHourlyAssetPriceCandle(asset: Asset, current: AssetPrice): HourlyAssetPriceCandle {
   let type = 'Hourly';
   let from = getHourOpenTime(current.timestamp);
-  let to = from.plus(hour);
+  let to = getHourCloseTime(current.timestamp);
   return maintainAssetPriceCandle(type, from, to, asset, current) as HourlyAssetPriceCandle;
 }
 
 export function updateDailyAssetPriceCandle(asset: Asset, current: AssetPrice): DailyAssetPriceCandle {
   let type = 'Daily';
   let from = getDayOpenTime(current.timestamp);
-  let to = from.plus(day);
+  let to = getDayCloseTime(current.timestamp);
   return maintainAssetPriceCandle(type, from, to, asset, current) as DailyAssetPriceCandle;
 }
 
 export function updateMonthlyAssetPriceCandle(asset: Asset, current: AssetPrice): DailyAssetPriceCandle {
   let type = 'Monthly';
-  let startAndEnd = getMonthStartAndEnd(current.timestamp);
-  return maintainAssetPriceCandle(type, startAndEnd[0], startAndEnd[1], asset, current) as DailyAssetPriceCandle;
+  let openAndClose = getMonthOpenAndClose(current.timestamp);
+  return maintainAssetPriceCandle(type, openAndClose[0], openAndClose[1], asset, current) as DailyAssetPriceCandle;
 }
 
 export function maintainAssetPriceCandle(

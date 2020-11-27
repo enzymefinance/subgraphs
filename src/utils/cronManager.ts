@@ -10,7 +10,7 @@ import {
 import { Cron } from '../generated/schema';
 import { arrayUnique } from './arrayUnique';
 import { logCritical } from './logCritical';
-import { getDayOpenTime, getHourOpenTime, getMonthStartAndEnd, getTenMinuteOpenTime } from './timeHelpers';
+import { getDayOpenTime, getHourOpenTime, getMonthOpenAndClose, getTenMinuteOpenTime } from './timeHelpers';
 
 export function ensureCron(): Cron {
   let cron = Cron.load('SINGLETON') as Cron;
@@ -87,8 +87,8 @@ function cronCandles(cron: Cron, timestamp: BigInt): void {
     ensureDailyPriceCandleGroup(currentDay);
   }
 
-  let currentMonthStartEnd = getMonthStartAndEnd(timestamp);
-  let currentCronStartEnd = getMonthStartAndEnd(cron.cron);
+  let currentMonthStartEnd = getMonthOpenAndClose(timestamp);
+  let currentCronStartEnd = getMonthOpenAndClose(cron.cron);
   if (currentMonthStartEnd[0].gt(currentCronStartEnd[0])) {
     ensureMonthlyPriceCandleGroup(currentMonthStartEnd[0], currentMonthStartEnd[1]);
   }

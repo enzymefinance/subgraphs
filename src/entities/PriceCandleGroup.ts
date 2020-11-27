@@ -1,15 +1,15 @@
 import { BigInt } from '@graphprotocol/graph-ts';
 import { DailyPriceCandleGroup, HourlyPriceCandleGroup, MonthlyPriceCandleGroup } from '../generated/schema';
-import { day, hour } from '../utils/timeHelpers';
+import { getDayCloseTime, getHourCloseTime } from '../utils/timeHelpers';
 import { PriceCandleGroup } from './PriceCandleGroupEntity';
 
 export function ensureHourlyPriceCandleGroup(from: BigInt): HourlyPriceCandleGroup {
-  let to = from.plus(hour);
+  let to = getHourCloseTime(from);
   return ensurePriceCandleGroup('Hourly', from, to) as HourlyPriceCandleGroup;
 }
 
 export function ensureDailyPriceCandleGroup(from: BigInt): DailyPriceCandleGroup {
-  let to = from.plus(day);
+  let to = getDayCloseTime(from);
   return ensurePriceCandleGroup('Daily', from, to) as DailyPriceCandleGroup;
 }
 

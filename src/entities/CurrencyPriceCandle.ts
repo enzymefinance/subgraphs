@@ -1,6 +1,12 @@
 import { BigInt } from '@graphprotocol/graph-ts';
 import { Currency, CurrencyPrice, DailyCurrencyPriceCandle, HourlyCurrencyPriceCandle } from '../generated/schema';
-import { day, getDayOpenTime, getHourOpenTime, getMonthStartAndEnd, hour } from '../utils/timeHelpers';
+import {
+  getDayCloseTime,
+  getDayOpenTime,
+  getHourCloseTime,
+  getHourOpenTime,
+  getMonthOpenAndClose,
+} from '../utils/timeHelpers';
 import { useCurrencyPrice } from './CurrencyPrice';
 import { CurrencyPriceCandle } from './CurrencyPriceEntity';
 
@@ -11,24 +17,24 @@ export function currencyPriceCandleId(currencyId: string, type: string, open: Bi
 export function updateHourlyCurrencyPriceCandle(currency: Currency, current: CurrencyPrice): HourlyCurrencyPriceCandle {
   let type = 'Hourly';
   let from = getHourOpenTime(current.timestamp);
-  let to = from.plus(hour);
+  let to = getHourCloseTime(current.timestamp);
   return maintainCurrencyPriceCandle(type, from, to, currency, current) as HourlyCurrencyPriceCandle;
 }
 
 export function updateDailyCurrencyPriceCandle(currency: Currency, current: CurrencyPrice): DailyCurrencyPriceCandle {
   let type = 'Daily';
   let from = getDayOpenTime(current.timestamp);
-  let to = from.plus(day);
+  let to = getDayCloseTime(current.timestamp);
   return maintainCurrencyPriceCandle(type, from, to, currency, current) as DailyCurrencyPriceCandle;
 }
 
 export function updateMonthlyCurrencyPriceCandle(currency: Currency, current: CurrencyPrice): DailyCurrencyPriceCandle {
   let type = 'Monthly';
-  let startAndEnd = getMonthStartAndEnd(current.timestamp);
+  let openAndClose = getMonthOpenAndClose(current.timestamp);
   return maintainCurrencyPriceCandle(
     type,
-    startAndEnd[0],
-    startAndEnd[1],
+    openAndClose[0],
+    openAndClose[1],
     currency,
     current,
   ) as DailyCurrencyPriceCandle;
