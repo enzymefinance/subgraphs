@@ -119,6 +119,13 @@ enum AssetType {
   USD
 }
 
+enum DerivativeType {
+  Compound
+  Chai
+  UniswapV2Pool
+  Synthetix
+}
+
 enum ChainlinkAggregatorType {
   ASSET
   ETHUSD
@@ -143,6 +150,7 @@ enum SettlementType {
   None
   Direct
   Mint
+  Burn
   MintSharesOutstanding
   BurnSharesOutstanding
 }
@@ -1579,6 +1587,7 @@ type Asset @entity {
   type: AssetType!
 
   # Details for certain derivative assets
+  derivativeType: DerivativeType
   uniswapV2PoolAssetDetail: UniswapV2PoolAssetDetail
   compoundAssetDetail: CompoundAssetDetails
 

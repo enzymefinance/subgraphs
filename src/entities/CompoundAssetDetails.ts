@@ -13,6 +13,7 @@ export function checkCompoundAssetDetail(derivative: Asset): void {
   details.underlying = compound.underlying().toHex();
   details.save();
 
+  derivative.derivativeType = 'Compound';
   derivative.compoundAssetDetail = details.id;
   derivative.save();
 }

@@ -1,5 +1,6 @@
-import { ensureAsset } from '../entities/Asset';
+import { checkChai, checkSynthetix, ensureAsset } from '../entities/Asset';
 import { fetchAssetPrice, trackAssetPrice } from '../entities/AssetPrice';
+import { checkCompoundAssetDetail } from '../entities/CompoundAssetDetails';
 import { ensureContract } from '../entities/Contract';
 import { ensureTransaction } from '../entities/Transaction';
 import { checkUniswapV2PoolAssetDetail } from '../entities/UniswapV2PoolAssetDetails';
@@ -19,8 +20,10 @@ export function handleDerivativeAdded(event: DerivativeAdded): void {
   derivative.type = 'DERIVATIVE';
   derivative.save();
 
-  // checkCompoundAssetDetail(derivative);
+  checkChai(derivative);
+  checkCompoundAssetDetail(derivative);
   checkUniswapV2PoolAssetDetail(derivative);
+  checkSynthetix(derivative);
 
   let derivativeAdded = new DerivativeAddedEvent(genericId(event));
   derivativeAdded.derivative = derivative.id;

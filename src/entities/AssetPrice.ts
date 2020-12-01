@@ -84,6 +84,10 @@ export function fetchAssetPrice(asset: Asset): BigDecimal {
     return BigDecimal.fromString('0');
   }
 
+  if (asset.symbol.startsWith('s') || asset.symbol.startsWith('i')) {
+    return BigDecimal.fromString('0');
+  }
+
   // NOTE: Because we are using one "unit" of the given derivative as the amount when
   // calculating the value with the value interpreter, this is also the rate.
   let one = BigInt.fromI32(10).pow(asset.decimals as u8);

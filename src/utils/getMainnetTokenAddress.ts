@@ -125,5 +125,181 @@ export function getMainnetTokenAddress(symbol: string): string {
     return '0xe41d2489571d322189246dafa5ebde1f4699f498';
   }
 
+  if ((symbol = 'sAUD')) {
+    return '0xf48e200eaf9906362bb1442fca31e0835773b8b4';
+  }
+
+  if ((symbol = 'sBNB')) {
+    return '0x617aecb6137b5108d1e7d4918e3725c8cebdb848';
+  }
+
+  if ((symbol = 'sBTC')) {
+    return '0xfe18be6b3bd88a2d2a7f928d00292e7a9963cfc6';
+  }
+
+  if ((symbol = 'sBCH')) {
+    return '0x36a2422a863d5b950882190ff5433e513413343a';
+  }
+
+  if ((symbol = 'sADA')) {
+    return '0xe36e2d3c7c34281fa3bc737950a68571736880a1';
+  }
+
+  if ((symbol = 'sCEX')) {
+    return '0xeabacd844a196d7faf3ce596edebf9900341b420';
+  }
+
+  if ((symbol = 'sLINK')) {
+    return '0xbbc455cb4f1b9e4bfc4b73970d360c8f032efee6';
+  }
+
+  if ((symbol = 'sDASH')) {
+    return '0xfe33ae95a9f0da8a845af33516edc240dcd711d6';
+  }
+
+  if ((symbol = 'sDEFI')) {
+    return '0xe1afe1fd76fd88f78cbf599ea1846231b8ba3b6b';
+  }
+
+  if ((symbol = 'sEOS')) {
+    return '0x88c8cf3a212c0369698d13fe98fcb76620389841';
+  }
+
+  if ((symbol = 'sETH')) {
+    return '0x5e74c9036fb86bd7ecdcb084a0673efc32ea31cb';
+  }
+
+  if ((symbol = 'sETC')) {
+    return '0x22602469d704bffb0936c7a7cfcd18f7aa269375';
+  }
+
+  if ((symbol = 'sEUR')) {
+    return '0xd71ecff9342a5ced620049e616c5035f1db98620';
+  }
+
+  if ((symbol = 'sFTSE')) {
+    return '0x23348160d7f5aca21195df2b70f28fce2b0be9fc';
+  }
+
+  if ((symbol = 'sXAU')) {
+    return '0x261efcdd24cea98652b9700800a13dfbca4103ff';
+  }
+
+  if ((symbol = 'iBNB')) {
+    return '0xafd870f32ce54efdbf677466b612bf8ad164454b';
+  }
+
+  if ((symbol = 'iBTC')) {
+    return '0xd6014ea05bde904448b743833ddf07c3c7837481';
+  }
+
+  if ((symbol = 'iBCH')) {
+    return '0xf6e9b246319ea30e8c2fa2d1540aaebf6f9e1b89';
+  }
+
+  if ((symbol = 'iADA')) {
+    return '0x8a8079c7149b8a1611e5c5d978dca3be16545f83';
+  }
+
+  if ((symbol = 'iCEX')) {
+    return '0x336213e1ddfc69f4701fc3f86f4ef4a160c1159d';
+  }
+
+  if ((symbol = 'iLINK')) {
+    return '0x2d7ac061fc3db53c39fe1607fb8cec1b2c162b01';
+  }
+
+  if ((symbol = 'iDASH')) {
+    return '0xcb98f42221b2c251a4e74a1609722ee09f0cc08e';
+  }
+
+  if ((symbol = 'iDEFI')) {
+    return '0x14d10003807ac60d07bb0ba82caeac8d2087c157';
+  }
+
+  if ((symbol = 'iEOS')) {
+    return '0xf4eebdd0704021ef2a6bbe993fdf93030cd784b4';
+  }
+
+  if ((symbol = 'iETH')) {
+    return '0xa9859874e1743a32409f75bb11549892138bba1e';
+  }
+
+  if ((symbol = 'iETC')) {
+    return '0xd50c1746d835d2770dda3703b69187bffeb14126';
+  }
+
+  if ((symbol = 'iLTC')) {
+    return '0x79da1431150c9b82d2e5dfc1c68b33216846851e';
+  }
+
+  if ((symbol = 'iXMR')) {
+    return '0x4adf728e2df4945082cdd6053869f51278fae196';
+  }
+
+  if ((symbol = 'iOIL')) {
+    return '0xa5a5df41883cdc00c4ccc6e8097130535399d9a3';
+  }
+
+  if ((symbol = 'iXRP')) {
+    return '0x27269b3e45a4d3e79a3d6bfee0c8fb13d0d711a6';
+  }
+
+  if ((symbol = 'iTRX')) {
+    return '0xc5807183a9661a533cb08cbc297594a0b864dc12';
+  }
+
+  if ((symbol = 'iXTZ')) {
+    return '0x8deef89058090ac5655a99eeb451a4f9183d1678';
+  }
+
+  if ((symbol = 'sJPY')) {
+    return '0xf6b1c627e95bfc3c1b4c9b825a032ff0fbf3e07d';
+  }
+
+  if ((symbol = 'sLTC')) {
+    return '0xc14103c2141e842e228fbac594579e798616ce7a';
+  }
+
+  if ((symbol = 'sXMR')) {
+    return '0x5299d6f7472dcc137d7f3c4bcfbbb514babf341a';
+  }
+
+  if ((symbol = 'sNIKKEI')) {
+    return '0x757de3ac6b830a931ef178c6634c5c551773155c';
+  }
+
+  if ((symbol = 'sOIL')) {
+    return '0x6d16cf3ec5f763d4d99cb0b0b110eefd93b11b56';
+  }
+
+  if ((symbol = 'sGBP')) {
+    return '0x97fe22e7341a0cd8db6f6c021a24dc8f4dad855f';
+  }
+
+  if ((symbol = 'sXRP')) {
+    return '0xa2b0fde6d710e201d0d608e924a484d1a5fed57c';
+  }
+
+  if ((symbol = 'sXAG')) {
+    return '0x6a22e5e94388464181578aa7a6b869e00fe27846';
+  }
+
+  if ((symbol = 'sCHF')) {
+    return '0x0f83287ff768d1c1e17a42f44d644d7f22e8ee1d';
+  }
+
+  if ((symbol = 'sTRX')) {
+    return '0xf2e08356588ec5cd9e437552da87c0076b4970b0';
+  }
+
+  if ((symbol = 'sXTZ')) {
+    return '0x2e59005c5c0f0a4d77cca82653d48b46322ee5cd';
+  }
+
+  if ((symbol = 'sUSD')) {
+    return '0x57ab1ec28d129707052df4df418d58a2d46d5f51';
+  }
+
   return zeroAddress.toHex();
 }

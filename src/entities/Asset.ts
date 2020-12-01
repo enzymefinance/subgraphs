@@ -59,3 +59,21 @@ export function extractAssets(ids: string[]): Asset[] {
 
   return assets;
 }
+
+export function checkChai(derivative: Asset): void {
+  if (derivative.symbol != 'CHAI') {
+    return;
+  }
+
+  derivative.derivativeType = 'Chai';
+  derivative.save();
+}
+
+export function checkSynthetix(derivative: Asset): void {
+  if (!(derivative.symbol.startsWith('s') || derivative.symbol.startsWith('i'))) {
+    return;
+  }
+
+  derivative.derivativeType = 'Synthetix';
+  derivative.save();
+}

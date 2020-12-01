@@ -14,6 +14,7 @@ export function checkUniswapV2PoolAssetDetail(derivative: Asset): void {
   details.token1 = uniswapPair.token1().toHex();
   details.save();
 
+  derivative.derivativeType = 'UniswapV2Pool';
   derivative.uniswapV2PoolAssetDetail = details.id;
   derivative.save();
 }
