@@ -414,8 +414,8 @@ type FeeSettledForFundEvent implements EventInterface & FundEventInterface & Sha
   shares: BigDecimal!
   comptrollerProxy: Contract!
   fee: Fee!
-  payer: Fund!
-  payee: Account!
+  payer: String!
+  payee: String!
   settlementType: SettlementType!
   sharesDue: BigDecimal!
   calculations: CalculationState!
@@ -434,7 +434,7 @@ type AllSharesOutstandingForcePaidForFundEvent implements EventInterface & FundE
   investmentState: InvestmentState!
   shares: BigDecimal!
   comptrollerProxy: Contract!
-  payee: Account!
+  payee: String!
   sharesDue: BigDecimal!
   calculations: CalculationState!
 }
@@ -453,8 +453,6 @@ type SharesOutstandingPaidForFundEvent implements EventInterface & FundEventInte
   shares: BigDecimal!
   comptrollerProxy: Contract!
   fee: Fee!
-  payer: Fund!
-  payee: Account!
   sharesDue: BigDecimal!
   calculations: CalculationState!
 }

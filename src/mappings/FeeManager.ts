@@ -1,4 +1,5 @@
 import { Address, BigDecimal } from '@graphprotocol/graph-ts';
+import { zeroAddress } from '../constants';
 import { ensureInvestor, useAccount, useManager } from '../entities/Account';
 import { calculationStateId, trackCalculationState } from '../entities/CalculationState';
 import { ensureContract } from '../entities/Contract';
@@ -110,8 +111,11 @@ export function handleFeeEnabledForFund(event: FeeEnabledForFund): void {
 export function handleFeeSettledForFund(event: FeeSettledForFund): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
 
+  let payer = ensureInvestor(event.params.payer, event);
+  let payee = ensureInvestor(event.params.payee, event);
+
   let fund = useFund(comptroller.getVaultProxy().toHex());
-  let investor = ensureInvestor(event.params.payee, event);
+  let investor = payer.id != zeroAddress.toHex() ? payer : payee;
   let investmentState = trackInvestmentState(investor, fund, event);
   let fee = useFee(event.params.fee.toHex());
   let shares = toBigDecimal(event.params.sharesDue);
@@ -129,7 +133,7 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
   settled.comptrollerProxy = event.params.comptrollerProxy.toHex();
   settled.fee = fee.id;
   settled.payer = event.params.payer.toHex();
-  settled.payee = investor.id;
+  settled.payee = event.params.payee.toHex();
   settled.settlementType = getSettlementType(event.params.settlementType);
   settled.sharesDue = shares;
   settled.calculations = calculationStateId(fund, event);
@@ -160,9 +164,7 @@ export function handleSharesOutstandingPaidForFund(event: SharesOutstandingPaidF
   sharesPaid.shares = shares;
   sharesPaid.comptrollerProxy = event.params.comptrollerProxy.toHex();
   sharesPaid.fee = fee.id;
-  sharesPaid.payer = fund.id;
   sharesPaid.sharesDue = toBigDecimal(event.params.sharesDue);
-  sharesPaid.payee = useManager(fund.manager).id;
   sharesPaid.calculations = calculationStateId(fund, event);
   sharesPaid.save();
 
