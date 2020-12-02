@@ -107,6 +107,7 @@ interface Trade {
   adapter: IntegrationAdapter!
   method: IntegrationMethod!
   timestamp: BigInt!
+  fundState: FundState!
 }
 
 #################################################
@@ -1579,6 +1580,7 @@ type TokenSwapTrade implements Trade @entity {
   outgoingAssetAmount: BigDecimal!
   price: BigDecimal!
   timestamp: BigInt!
+  fundState: FundState!
 }
 
 type MultiTokenSwapTrade implements Trade @entity {
@@ -1591,6 +1593,7 @@ type MultiTokenSwapTrade implements Trade @entity {
   outgoingAssets: [Asset!]!
   outgoingAssetAmounts: [BigDecimal!]!
   timestamp: BigInt!
+  fundState: FundState!
 }
 
 type LendTrade implements Trade @entity {
@@ -1604,6 +1607,7 @@ type LendTrade implements Trade @entity {
   outgoingAssetAmount: BigDecimal!
   price: BigDecimal!
   timestamp: BigInt!
+  fundState: FundState!
 }
 
 type MultiLendTrade implements Trade @entity {
@@ -1616,6 +1620,7 @@ type MultiLendTrade implements Trade @entity {
   outgoingAssets: [Asset!]!
   outgoingAssetAmounts: [BigDecimal!]!
   timestamp: BigInt!
+  fundState: FundState!
 }
 
 type RedeemTrade implements Trade @entity {
@@ -1628,6 +1633,7 @@ type RedeemTrade implements Trade @entity {
   outgoingAssets: [Asset!]!
   outgoingAssetAmounts: [BigDecimal!]!
   timestamp: BigInt!
+  fundState: FundState!
 }
 
 type MultiRedeemTrade implements Trade @entity {
@@ -1640,6 +1646,7 @@ type MultiRedeemTrade implements Trade @entity {
   outgoingAssets: [Asset!]!
   outgoingAssetAmounts: [BigDecimal!]!
   timestamp: BigInt!
+  fundState: FundState!
 }
 
 type AddTrackedAssetsTrade implements Trade @entity {
@@ -1649,6 +1656,7 @@ type AddTrackedAssetsTrade implements Trade @entity {
   method: IntegrationMethod!
   trackedAssets: [Asset!]!
   timestamp: BigInt!
+  fundState: FundState!
 }
 
 #################################################

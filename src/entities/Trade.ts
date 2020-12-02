@@ -28,6 +28,7 @@ export function trackTrade(
     trade.outgoingAssetAmount = outgoingAssetAmounts[0];
     trade.price = outgoingAssetAmounts[0].div(incomingAssetAmounts[0]);
     trade.timestamp = event.block.timestamp;
+    trade.fundState = fund.state;
     trade.save();
 
     return;
@@ -44,6 +45,7 @@ export function trackTrade(
     trade.outgoingAssets = outgoingAssets.map<string>((asset) => asset.id);
     trade.outgoingAssetAmounts = outgoingAssetAmounts;
     trade.timestamp = event.block.timestamp;
+    trade.fundState = fund.state;
     trade.save();
 
     return;

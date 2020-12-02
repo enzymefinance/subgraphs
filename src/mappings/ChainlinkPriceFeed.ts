@@ -52,7 +52,7 @@ export function handleEthUsdAggregatorSet(event: EthUsdAggregatorSet): void {
   let eth = ensureCurrency('ETH');
   enableChainlinkEthUsdAggregator(aggregator, eth);
 
-  // We need to create WETH manually
+  // Create WETH manually
   let weth = ensureAsset(wethTokenAddress);
   weth.type = 'ETH';
   weth.save();
@@ -73,9 +73,12 @@ export function handleEthUsdAggregatorSet(event: EthUsdAggregatorSet): void {
   let jpy = ensureCurrency('JPY');
   enableChainlinkCurrencyAggregator(jpyAggregator, jpy);
 
+  // USD has not chainlink price source, USD / USD is always 1
+  let usd = ensureCurrency('USD');
+
   let cron = ensureCron();
   cron.primitives = arrayUnique<string>(cron.primitives.concat([weth.id]));
-  cron.currencies = arrayUnique<string>(cron.currencies.concat([eth.id, eur.id, chf.id, jpy.id]));
+  cron.currencies = arrayUnique<string>(cron.currencies.concat([eth.id, eur.id, chf.id, jpy.id, usd.id]));
   cron.save();
 
   // It's important that we run cron last.
