@@ -131,19 +131,18 @@ describe("Walkthrough a fund's lifecycle", () => {
 
   it('should buy shares of the fund', async () => {
     // buy shares
-    const investmentAmount = utils.parseEther('1');
-    const minSharesAmount = utils.parseEther('0.00000000001');
+    const investmentAmounts = [utils.parseEther('1')];
+    const minSharesAmounts = [utils.parseEther('0.00000000001')];
 
     const buySharesArgs = {
-      investmentAmount,
-      amguValue: investmentAmount,
-      minSharesAmount,
+      investmentAmounts,
+      minSharesAmounts,
     };
 
     const buySharesTx = await buyShares({
       comptrollerProxy,
       signer: investor,
-      buyer: investor,
+      buyers: [investor],
       denominationAsset,
       ...buySharesArgs,
     });
@@ -158,19 +157,18 @@ describe("Walkthrough a fund's lifecycle", () => {
   });
 
   it('should buy more shares of the fund as another investor', async () => {
-    const investmentAmount = utils.parseEther('1');
-    const minSharesAmount = utils.parseEther('0.00000000001');
+    const investmentAmounts = [utils.parseEther('1')];
+    const minSharesAmounts = [utils.parseEther('0.00000000001')];
 
     const buySharesArgs = {
-      investmentAmount,
-      amguValue: investmentAmount,
-      minSharesAmount,
+      investmentAmounts,
+      minSharesAmounts,
     };
 
     const buySharesTx = await buyShares({
       comptrollerProxy,
       signer: secondInvestor,
-      buyer: secondInvestor,
+      buyers: [secondInvestor],
       denominationAsset,
       ...buySharesArgs,
     });

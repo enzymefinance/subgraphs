@@ -79,7 +79,6 @@ import { Asset, fetchAssets } from '../tests/utils/subgraph-queries/fetchAssets'
         `AutoCreate Fund (${new Date().toLocaleTimeString()})`,
         denominationAsset,
         0,
-        [],
         feeManagerConfig,
         policyManagerConfig,
       );
@@ -93,14 +92,8 @@ import { Asset, fetchAssets } from '../tests/utils/subgraph-queries/fetchAssets'
     const investmentAmount = utils.parseEther('1');
     const minSharesAmount = utils.parseEther('0.00000000001');
 
-    const buySharesArgs = {
-      investmentAmount,
-      amguValue: investmentAmount,
-      minSharesAmount,
-    };
-
     await denominationAsset.connect(investor).approve(comptrollerProxy, investmentAmount);
-    await comptrollerProxy.connect(investor).buyShares(investor, investmentAmount, minSharesAmount);
+    await comptrollerProxy.connect(investor).buyShares([investor], [investmentAmount], [minSharesAmount]);
 
     // trade
     const takeOrderArgs = kyberTakeOrderArgs({

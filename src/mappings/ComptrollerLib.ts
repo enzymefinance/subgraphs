@@ -44,7 +44,7 @@ export function handleSharesBought(event: SharesBought): void {
   addition.investmentState = investmentState.id;
   addition.asset = asset.id;
   addition.investmentAmount = toBigDecimal(event.params.investmentAmount, asset.decimals);
-  addition.sharesBought = toBigDecimal(event.params.sharesBought);
+  addition.sharesIssued = toBigDecimal(event.params.sharesIssued);
   addition.shares = shares;
   addition.timestamp = event.block.timestamp;
   addition.transaction = ensureTransaction(event).id;

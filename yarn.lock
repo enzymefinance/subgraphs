@@ -1324,21 +1324,21 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@melonproject/protocol@^2.0.0-dev.5028+8082342a":
-  version "2.0.0-dev.5028"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_11moLL/%40melonproject%2Fprotocol-2.0.0-dev.5028.tgz#ccc015780085e9613d3c8365186adc909a2fdb40"
-  integrity sha1-zMAVeACF6WE9PINlGGrckJov20A=
+"@melonproject/protocol@^2.0.0-dev.5029+5f905c28":
+  version "2.0.0-dev.5029"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_wNFmN/%40melonproject%2Fprotocol-2.0.0-dev.5029.tgz#2d4de71704e5d6e834e0d763988b1d03938c5643"
+  integrity sha1-LU3nFwTl1ug04NdjmIsdA5OMVkM=
   dependencies:
     "@babel/runtime" "^7.12.5"
     decimal.js "^10.2.1"
 
-"@melonproject/testutils@^2.0.0-dev.5028+8082342a":
-  version "2.0.0-dev.5028"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_rEbWu/%40melonproject%2Ftestutils-2.0.0-dev.5028.tgz#10f53a3375813f9bd90e5fe382f6899138d4ae55"
-  integrity sha1-EPU6M3WBP5vZDl/jgvaJkTjUrlU=
+"@melonproject/testutils@^2.0.0-dev.5029+5f905c28":
+  version "2.0.0-dev.5029"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_14da4k/%40melonproject%2Ftestutils-2.0.0-dev.5029.tgz#70e87fca6471c5a89a5b281e6f0afcc2a17e605f"
+  integrity sha1-cOh/ymRxxaiaWygebwr8wqF+YF8=
   dependencies:
     "@babel/runtime" "^7.12.5"
-    "@melonproject/protocol" "^2.0.0-dev.5028+8082342a"
+    "@melonproject/protocol" "^2.0.0-dev.5029+5f905c28"
 
 "@openzeppelin/contracts@^3.3.0":
   version "3.3.0"
@@ -1601,10 +1601,10 @@
     jest-diff "^25.2.1"
     pretty-format "^25.2.1"
 
-"@types/jest@^26.0.15":
-  version "26.0.15"
-  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-26.0.15.tgz#12e02c0372ad0548e07b9f4e19132b834cb1effe"
-  integrity sha512-s2VMReFXRg9XXxV+CW9e5Nz8fH2K1aEhwgjUqPPbQd7g95T0laAcvLv032EhFHIa5GHsZ8W7iJEQVaJq6k3Gog==
+"@types/jest@^26.0.16":
+  version "26.0.16"
+  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-26.0.16.tgz#b47abd50f6ed0503f589db8e126fc8eb470cf87c"
+  integrity sha512-Gp12+7tmKCgv9JjtltxUXokohCAEZfpJaEW5tn871SGRp8I+bRWBonQO7vW5NHwnAHe5dd50+Q4zyKuN35i09g==
   dependencies:
     jest-diff "^26.0.0"
     pretty-format "^26.0.0"

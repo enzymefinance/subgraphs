@@ -56,9 +56,9 @@ export function trackCalculationState(fund: Fund, event: ethereum.Event, cause: 
   let wrapper = FundActionsWrapperContract.bind(fundActionsWrapperAddress);
   let vault = VaultLibContract.bind(Address.fromString(fund.id));
 
-  let gav = comptroller.try_calcGav();
+  let gav = comptroller.try_calcGav(true);
   let totalSupply = vault.try_totalSupply();
-  let grossShareValue = comptroller.try_calcGrossShareValue();
+  let grossShareValue = comptroller.try_calcGrossShareValue(true);
   let netShareValue = wrapper.try_calcNetShareValueForFund(Address.fromString(fund.accessor));
 
   if (

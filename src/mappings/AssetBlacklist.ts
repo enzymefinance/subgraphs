@@ -1,5 +1,4 @@
 import { ensureManager, useManager } from '../entities/Account';
-import { extractAssets } from '../entities/Asset';
 import { ensureAssetBlacklistSetting, useAssetBlacklistSetting } from '../entities/AssetBlacklistSetting';
 import { ensureContract } from '../entities/Contract';
 import { useFund } from '../entities/Fund';
@@ -27,8 +26,6 @@ export function handleAddressesAdded(event: AddressesAdded): void {
   addressesAdded.comptrollerProxy = event.params.comptrollerProxy.toHex();
   addressesAdded.items = items;
   addressesAdded.save();
-
-  let assetIds = extractAssets(items).map<string>((asset) => asset.id);
 
   let setting = ensureAssetBlacklistSetting(vault.toHex(), policy);
   setting.listed = arrayUnique<string>(setting.listed.concat(items));

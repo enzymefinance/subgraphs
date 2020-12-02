@@ -1,17 +1,25 @@
 export function getPolicyHook(hook: number): string {
   if (hook == 0) {
-    return 'PreBuyShares';
+    return 'BuySharesSetup';
   }
 
   if (hook == 1) {
-    return 'PostBuyShares';
+    return 'PreBuyShares';
   }
 
   if (hook == 2) {
-    return 'PreCallOnIntegration';
+    return 'PostBuyShares';
   }
 
   if (hook == 3) {
+    return 'BuySharesCompleted';
+  }
+
+  if (hook == 4) {
+    return 'PreCallOnIntegration';
+  }
+
+  if (hook == 5) {
     return 'PostCallOnIntegration';
   }
 

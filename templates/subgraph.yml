@@ -48,7 +48,6 @@ dataSources:
           handler: handleOwnershipTransferred
         - event: SharesTokenSymbolSet(string)
           handler: handleSharesTokenSymbolSet
-
         - event: VaultProxyDeployed(indexed address,indexed address,address,indexed address,address,string)
           handler: handleVaultProxyDeployed
 
@@ -77,9 +76,9 @@ dataSources:
       eventHandlers:
         - event: ComptrollerLibSet(address)
           handler: handleComptrollerLibSet
-        - event: ComptrollerProxyDeployed(indexed address,address,indexed address,uint256,address[],bytes,bytes,indexed bool)
+        - event: ComptrollerProxyDeployed(indexed address,address,indexed address,uint256,bytes,bytes,indexed bool)
           handler: handleComptrollerProxyDeployed
-        - event: NewFundCreated(indexed address,address,address,indexed address,string,indexed address,uint256,address[],bytes,bytes)
+        - event: NewFundCreated(indexed address,address,address,indexed address,string,indexed address,uint256,bytes,bytes)
           handler: handleNewFundCreated
         - event: ReleaseStatusSet(indexed uint8,indexed uint8)
           handler: handleReleaseStatusSet
@@ -449,6 +448,32 @@ dataSources:
       eventHandlers:
         - event: MaxConcentrationSet(address,uint256)
           handler: handleMaxConcentrationSet
+
+  - name: BuySharesCallerWhitelistDataSource
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      address: '{{buySharesCallerWhitelist}}'
+      abi: BuySharesCallerWhitelistContract
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/BuySharesCallerWhitelist.ts
+      entities: []
+      abis:
+        - name: BuySharesCallerWhitelistContract
+          file: ./node_modules/@melonproject/protocol/artifacts/BuySharesCallerWhitelist.json
+        - name: VaultLibContract
+          file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
+        - name: ComptrollerLibContract
+          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
+      eventHandlers:
+        - event: AddressesAdded(indexed address,address[])
+          handler: handleAddressesAdded
+        - event: AddressesRemoved(indexed address,address[])
+          handler: handleAddressesRemoved
   
   - name: GuaranteedRedemptionDataSource
     kind: ethereum/contract
@@ -551,8 +576,7 @@ dataSources:
           handler: handlePrimitiveRemoved
         - event: PrimitiveUpdated(indexed address,address,address)
           handler: handlePrimitiveUpdated
-        - event: StaleRateThresholdSet(uint256,uint256)
-          handler: handleStaleRateThresholdSet
+
 
   - name: AggregatedDerivativePriceFeedDataSource
     kind: ethereum/contract

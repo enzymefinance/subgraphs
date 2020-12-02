@@ -4,14 +4,22 @@ export function getFeeHook(hook: number): string {
   }
 
   if (hook == 1) {
-    return 'PreBuyShares';
+    return 'BuySharesSetup';
   }
 
   if (hook == 2) {
-    return 'PostBuyShares';
+    return 'PreBuyShares';
   }
 
   if (hook == 3) {
+    return 'PostBuyShares';
+  }
+
+  if (hook == 4) {
+    return 'BuySharesCompleted';
+  }
+
+  if (hook == 5) {
     return 'PreRedeemShares';
   }
 

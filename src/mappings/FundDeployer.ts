@@ -35,7 +35,6 @@ export function handleNewFundCreated(event: NewFundCreated): void {
   fundCreation.creator = ensureAccount(event.params.creator, event).id;
   fundCreation.denominationAsset = useAsset(event.params.denominationAsset.toHex()).id;
   fundCreation.sharesActionTimelock = event.params.sharesActionTimelock;
-  fundCreation.allowedBuySharesCallers = event.params.allowedBuySharesCallers.map<string>((caller) => caller.toHex());
   fundCreation.feeManagerConfigData = event.params.feeManagerConfigData.toHex();
   fundCreation.policyManagerConfigData = event.params.policyManagerConfigData.toHex();
   fundCreation.transaction = ensureTransaction(event).id;
@@ -72,9 +71,6 @@ export function handleComptrollerProxyDeployed(event: ComptrollerProxyDeployed):
   comptrollerProxyDeployment.transaction = ensureTransaction(event).id;
   comptrollerProxyDeployment.denominationAsset = useAsset(event.params.denominationAsset.toHex()).id;
   comptrollerProxyDeployment.sharesActionTimelock = event.params.sharesActionTimelock;
-  comptrollerProxyDeployment.allowedBuySharesCallers = event.params.allowedBuySharesCallers.map<string>((caller) =>
-    caller.toHex(),
-  );
   comptrollerProxyDeployment.feeManagerConfigData = event.params.feeManagerConfigData.toHexString();
   comptrollerProxyDeployment.policyManagerConfigData = event.params.policyManagerConfigData.toHexString();
   comptrollerProxyDeployment.forMigration = event.params.forMigration;

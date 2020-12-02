@@ -35,6 +35,7 @@ const query = gql`
       assetBlacklist
       assetWhitelist
       maxConcentration
+      buySharesCallerWhitelist
       guaranteedRedemption
       investorWhitelist
       eurChainlinkAggregator
@@ -72,6 +73,7 @@ interface Result {
     assetBlacklist: string;
     assetWhitelist: string;
     maxConcentration: string;
+    buySharesCallerWhitelist: string;
     guaranteedRedemption: string;
     investorWhitelist: string;
     eurChainlinkAggregator: string;

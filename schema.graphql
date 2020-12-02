@@ -134,14 +134,18 @@ enum ChainlinkAggregatorType {
 
 enum FeeHook {
   Continuous
+  BuySharesSetup
   PreBuyShares
   PostBuyShares
+  BuySharesCompleted
   PreRedeemShares
 }
 
 enum PolicyHook {
+  BuySharesSetup
   PreBuyShares
   PostBuyShares
+  BuySharesCompleted
   PreCallOnIntegration
   PostCallOnIntegration
 }
@@ -187,7 +191,6 @@ type NewFundCreatedEvent implements EventInterface & FundEventInterface @entity 
   fundName: String!
   denominationAsset: Asset!
   sharesActionTimelock: BigInt!
-  allowedBuySharesCallers: [String!]!
   feeManagerConfigData: String!
   policyManagerConfigData: String!
   transaction: Transaction!
@@ -203,7 +206,6 @@ type ComptrollerProxyDeployedEvent implements EventInterface & FundEventInterfac
   transaction: Transaction!
   denominationAsset: Asset!
   sharesActionTimelock: BigInt!
-  allowedBuySharesCallers: [String!]!
   feeManagerConfigData: String!
   policyManagerConfigData: String!
   forMigration: Boolean!
@@ -231,7 +233,7 @@ type SharesBoughtEvent implements EventInterface & FundEventInterface & SharesCh
   shares: BigDecimal!
   asset: Asset!
   investmentAmount: BigDecimal!
-  sharesBought: BigDecimal!
+  sharesIssued: BigDecimal!
   timestamp: BigInt!
   transaction: Transaction!
   calculations: CalculationState!
@@ -623,6 +625,28 @@ type AssetWhitelistAddressesRemovedEvent implements EventInterface & FundEventIn
   items: [Asset!]!
 }
 
+type BuySharesCallerWhitelistAddressesAddedEvent implements EventInterface & FundEventInterface @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: Contract!
+  items: [String!]!
+}
+
+type BuySharesCallerWhitelistAddressesRemovedEvent implements EventInterface & FundEventInterface @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: Contract!
+  items: [String!]!
+}
+
 type InvestorWhitelistAddressesAddedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
@@ -1009,15 +1033,6 @@ type PrimitiveRemovedEvent implements EventInterface & NetworkEventInterface @en
   primitive: Asset!
 }
 
-type StaleRateThresholdSetEvent implements EventInterface & NetworkEventInterface @entity {
-  id: ID!
-  contract: Contract!
-  timestamp: BigInt!
-  transaction: Transaction!
-  nextStaleRateThreshold: BigInt!
-  prevStaleRateThreshold: BigInt!
-}
-
 type FeeRegisteredEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
   contract: Contract!
@@ -1150,7 +1165,6 @@ type Fund @entity {
   migrator: String
   denominationAsset: Asset!
   sharesActionTimelock: BigInt!
-  allowedBuySharesCallers: [String!]!
   trackedAssets: [Asset!]!
 
   policies: [PolicySettingInterface!]! @derivedFrom(field: "fund")
@@ -1368,6 +1382,15 @@ type AssetWhitelistSetting implements PolicySettingInterface @entity {
   fund: Fund!
   listed: [String!]!
   assets: [Asset]!
+  timestamp: BigInt!
+  events: [FundEventInterface!]!
+}
+
+type BuySharesCallerWhitelistSetting implements PolicySettingInterface @entity {
+  id: ID!
+  policy: Policy!
+  fund: Fund!
+  listed: [String!]!
   timestamp: BigInt!
   events: [FundEventInterface!]!
 }

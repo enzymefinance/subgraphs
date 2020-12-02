@@ -19,14 +19,12 @@ import {
   PrimitiveAdded,
   PrimitiveRemoved,
   PrimitiveUpdated,
-  StaleRateThresholdSet,
 } from '../generated/ChainlinkPriceFeedContract';
 import {
   AggregatorUpdatedEvent,
   EthUsdAggregatorSetEvent,
   PrimitiveAddedEvent,
   PrimitiveRemovedEvent,
-  StaleRateThresholdSetEvent,
 } from '../generated/schema';
 import { arrayDiff } from '../utils/arrayDiff';
 import { arrayUnique } from '../utils/arrayUnique';
@@ -180,14 +178,4 @@ export function handlePrimitiveUpdated(event: PrimitiveUpdated): void {
 
   // Keep tracking this asset using the registered chainlink aggregator.
   enableChainlinkAssetAggregator(aggregator, primitive);
-}
-
-export function handleStaleRateThresholdSet(event: StaleRateThresholdSet): void {
-  let rateSet = new StaleRateThresholdSetEvent(genericId(event));
-  rateSet.contract = ensureContract(event.address, 'ChainlinkPriceFeed').id;
-  rateSet.timestamp = event.block.timestamp;
-  rateSet.transaction = ensureTransaction(event).id;
-  rateSet.nextStaleRateThreshold = event.params.nextStaleRateThreshold;
-  rateSet.prevStaleRateThreshold = event.params.prevStaleRateThreshold;
-  rateSet.save();
 }
