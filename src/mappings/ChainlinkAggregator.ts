@@ -61,3 +61,5 @@ export function handleAnswerUpdated(event: AnswerUpdated): void {
   // regularly so this should scale well here.
   triggerCron(event.block.timestamp);
 }
+
+// There is no need to observe the `NewRound` event

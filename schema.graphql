@@ -300,6 +300,24 @@ type TrackedAssetRemovedEvent implements EventInterface & FundEventInterface @en
   transaction: Transaction!
 }
 
+type AuthUserAddedForFundEvent implements EventInterface & FundEventInterface @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+}
+
+type AuthUserRemovedForFundEvent implements EventInterface & FundEventInterface @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+}
+
 type CallOnIntegrationExecutedForFundEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
@@ -460,6 +478,17 @@ type SharesOutstandingPaidForFundEvent implements EventInterface & FundEventInte
 }
 
 type PolicyEnabledForFundEvent implements EventInterface & FundEventInterface @entity {
+  id: ID!
+  contract: Contract!
+  fund: Fund!
+  account: Account!
+  policy: Policy!
+  settingsData: String!
+  timestamp: BigInt!
+  transaction: Transaction!
+}
+
+type PolicyDisabledForFundEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   contract: Contract!
   fund: Fund!
@@ -829,6 +858,18 @@ type MigratedSharesDuePaidEvent implements EventInterface & FundEventInterface @
   sharesDue: BigDecimal!
 }
 
+type PreRedeemSharesHookFailedEvent implements EventInterface & FundEventInterface @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  sharesQuantity: BigDecimal!
+  redeemer: Account!
+  failureReturnData: String!
+  transaction: Transaction!
+}
+
 #################################################
 # Low-level network event entities
 #################################################
@@ -872,6 +913,15 @@ type AdapterDeregisteredEvent implements EventInterface & NetworkEventInterface 
   timestamp: BigInt!
   transaction: Transaction!
   integrationAdapter: IntegrationAdapter!
+}
+
+type TrackedAssetsLimitSetEvent implements EventInterface & NetworkEventInterface @entity {
+  id: ID!
+  fund: Fund!
+  contract: Contract!
+  timestamp: BigInt!
+  nextTrackedAssetsLimit: BigInt!
+  transaction: Transaction!
 }
 
 type PolicyRegisteredEvent implements EventInterface & NetworkEventInterface @entity {
@@ -1159,17 +1209,22 @@ type Fund @entity {
   name: String!
   inception: BigInt!
   creator: Account!
-  firstInvestmentState: FundState
   release: Release!
   manager: Account!
   migrator: String
   denominationAsset: Asset!
   sharesActionTimelock: BigInt!
-  trackedAssets: [Asset!]!
 
+  # policies
   policies: [PolicySettingInterface!]! @derivedFrom(field: "fund")
+
+  # fees
   fees: [FeeSettingInterface!]! @derivedFrom(field: "fund")
+
+  # trading
+  trackedAssets: [Asset!]!
   trades: [Trade!]! @derivedFrom(field: "fund")
+  authUsers: [Account!]!
 
   investments: [Investment!]!
   investmentCount: Int!
@@ -1177,7 +1232,7 @@ type Fund @entity {
   feeSharesChanges: [FeeSharesChangeInterface!]! @derivedFrom(field: "fund")
   investmentSharesChanges: [InvestmentSharesChangeInterface!]! @derivedFrom(field: "fund")
 
-  # Fund State
+  # fund state
   shares: ShareState!
   sharesHistory: [ShareState!]! @derivedFrom(field: "fund")
   portfolio: PortfolioState!
@@ -1188,6 +1243,7 @@ type Fund @entity {
   calculationsHistory: [CalculationState!]! @derivedFrom(field: "fund")
   state: FundState!
   stateHistory: [FundState!]! @derivedFrom(field: "fund")
+  firstInvestmentState: FundState
 
   # periodic states
   hourlyStates: [HourlyFundState!]! @derivedFrom(field: "fund")

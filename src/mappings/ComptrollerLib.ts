@@ -12,6 +12,7 @@ import { ensureTransaction } from '../entities/Transaction';
 import {
   MigratedSharesDuePaid,
   OverridePauseSet,
+  PreRedeemSharesHookFailed,
   SharesBought,
   SharesRedeemed,
   VaultProxySet,
@@ -20,6 +21,7 @@ import {
   Asset,
   MigratedSharesDuePaidEvent,
   OverridePauseSetEvent,
+  PreRedeemSharesHookFailedEvent,
   SharesBoughtEvent,
   SharesRedeemedEvent,
   VaultProxySetEvent,
@@ -127,4 +129,20 @@ export function handleMigratedSharesDuePaid(event: MigratedSharesDuePaid): void 
   paid.transaction = ensureTransaction(event).id;
   paid.sharesDue = toBigDecimal(event.params.sharesDue);
   paid.save();
+}
+
+export function handlePreRedeemSharesHookFailed(event: PreRedeemSharesHookFailed): void {
+  let fund = useFund(dataSource.context().getString('vaultProxy'));
+  let account = ensureInvestor(event.transaction.from, event);
+
+  let hookFailed = new PreRedeemSharesHookFailedEvent(genericId(event));
+  hookFailed.fund = fund.id;
+  hookFailed.account = account.id;
+  hookFailed.contract = useContract(event.address.toHex()).id;
+  hookFailed.timestamp = event.block.timestamp;
+  hookFailed.sharesQuantity = toBigDecimal(event.params.sharesQuantity);
+  hookFailed.redeemer = ensureInvestor(event.params.redeemer, event).id;
+  hookFailed.failureReturnData = event.params.failureReturnData.toHexString();
+  hookFailed.transaction = ensureTransaction(event).id;
+  hookFailed.save();
 }

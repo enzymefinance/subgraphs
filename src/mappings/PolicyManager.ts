@@ -3,8 +3,19 @@ import { ensureContract } from '../entities/Contract';
 import { ensurePolicy, usePolicy } from '../entities/Policy';
 import { ensureTransaction } from '../entities/Transaction';
 import { ComptrollerLibContract } from '../generated/ComptrollerLibContract';
-import { PolicyDeregistered, PolicyEnabledForFund, PolicyRegistered } from '../generated/PolicyManagerContract';
-import { PolicyDeregisteredEvent, PolicyEnabledForFundEvent, PolicyRegisteredEvent } from '../generated/schema';
+import {
+  PolicyDeregistered,
+  PolicyDisabledForFund,
+  PolicyEnabledForFund,
+  PolicyRegistered,
+} from '../generated/PolicyManagerContract';
+import {
+  PolicyDeregisteredEvent,
+  PolicyDisabledForFundEvent,
+  PolicyEnabledForFundEvent,
+  PolicyRegisteredEvent,
+} from '../generated/schema';
+import { arrayDiff } from '../utils/arrayDiff';
 import { arrayUnique } from '../utils/arrayUnique';
 import { genericId } from '../utils/genericId';
 import { getPolicyHook } from '../utils/getPolicyHook';
@@ -42,8 +53,27 @@ export function handlePolicyEnabledForFund(event: PolicyEnabledForFund): void {
   enabled.transaction = ensureTransaction(event).id;
   enabled.contract = event.address.toHex();
   enabled.policy = policy.id;
+  enabled.settingsData = event.params.settingsData.toHexString();
   enabled.save();
 
   policy.funds = arrayUnique<string>(policy.funds.concat([fundId]));
+  policy.save();
+}
+
+export function handlePolicyDisabledForFund(event: PolicyDisabledForFund): void {
+  let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
+  let fundId = comptroller.getVaultProxy().toHex();
+  let policy = usePolicy(event.params.policy.toHex());
+
+  let enabled = new PolicyDisabledForFundEvent(genericId(event));
+  enabled.fund = fundId;
+  enabled.account = useManager(event.transaction.from.toHex()).id;
+  enabled.timestamp = event.block.timestamp;
+  enabled.transaction = ensureTransaction(event).id;
+  enabled.contract = event.address.toHex();
+  enabled.policy = policy.id;
+  enabled.save();
+
+  policy.funds = arrayDiff<string>(policy.funds, [fundId]);
   policy.save();
 }

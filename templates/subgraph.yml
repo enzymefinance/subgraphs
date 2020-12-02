@@ -288,6 +288,8 @@ dataSources:
       eventHandlers:
         - event: PolicyDeregistered(indexed address,indexed string)
           handler: handlePolicyDeregistered
+        - event: PolicyDisabledForFund(indexed address,indexed address)
+          handler: handlePolicyDisabledForFund
         - event: PolicyEnabledForFund(indexed address,indexed address,bytes)
           handler: handlePolicyEnabledForFund
         - event: PolicyRegistered(indexed address,indexed string,uint8[])
@@ -536,8 +538,14 @@ dataSources:
           handler: handleAdapterDeregistered
         - event: AdapterRegistered(indexed address,indexed string)
           handler: handleAdapterRegistered
+        - event: AuthUserAddedForFund(indexed address,indexed address)
+          handler: handleAuthUserAddedForFund
+        - event: AuthUserRemovedForFund(indexed address,indexed address)
+          handler: handleAuthUserRemovedForFund
         - event: CallOnIntegrationExecutedForFund(indexed address,address,address,indexed address,indexed bytes4,bytes,address[],uint256[],address[],uint256[])
           handler: handleCallOnIntegrationExecutedForFund
+        - event: TrackedAssetsLimitSet(uint256)
+          handler: handleTrackedAssetsLimitSet
 
   - name: ChainlinkPriceFeedDataSource
     kind: ethereum/contract
@@ -576,7 +584,6 @@ dataSources:
           handler: handlePrimitiveRemoved
         - event: PrimitiveUpdated(indexed address,address,address)
           handler: handlePrimitiveUpdated
-
 
   - name: AggregatedDerivativePriceFeedDataSource
     kind: ethereum/contract
@@ -678,6 +685,8 @@ templates:
           handler: handleMigratedSharesDuePaid
         - event: OverridePauseSet(indexed bool)
           handler: handleOverridePauseSet
+        - event: PreRedeemSharesHookFailed(bytes,address,uint256)
+          handler: handlePreRedeemSharesHookFailed
         - event: SharesBought(indexed address,indexed address,uint256,uint256,uint256)
           handler: handleSharesBought
         - event: SharesRedeemed(indexed address,uint256,address[],uint256[])
@@ -704,3 +713,4 @@ templates:
       eventHandlers:
         - event: AnswerUpdated(indexed int256,indexed uint256,uint256)
           handler: handleAnswerUpdated
+
