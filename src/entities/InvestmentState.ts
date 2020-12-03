@@ -23,6 +23,7 @@ export function ensureInvestmentState(investor: Account, fund: Fund, event: ethe
   investmentState.investor = investor.id;
   investmentState.shares = BigDecimal.fromString('0');
   investmentState.investment = ensureInvestment(investor, fund, id).id;
+  investmentState.fundState = fund.state;
   investmentState.save();
 
   return investmentState;
@@ -45,6 +46,7 @@ export function trackInvestmentState(investor: Account, fund: Fund, event: ether
 
   let investmentState = ensureInvestmentState(investor, fund, event);
   investmentState.shares = toBigDecimal(balance);
+  investmentState.fundState = fund.state;
   investmentState.save();
 
   let investment = useInvestment(investor, fund);

@@ -33,6 +33,7 @@ interface SharesChangeInterface {
   type: ShareChangeType!
   investmentState: InvestmentState!
   shares: BigDecimal!
+  fundState: FundState!
   transaction: Transaction!
   calculations: CalculationState!
 }
@@ -45,6 +46,7 @@ interface FeeSharesChangeInterface {
   type: ShareChangeType!
   investmentState: InvestmentState!
   shares: BigDecimal!
+  fundState: FundState!
   transaction: Transaction!
   calculations: CalculationState!
 }
@@ -57,6 +59,7 @@ interface InvestmentSharesChangeInterface {
   type: ShareChangeType!
   investmentState: InvestmentState!
   shares: BigDecimal!
+  fundState: FundState!
   transaction: Transaction!
   calculations: CalculationState!
 }
@@ -236,6 +239,7 @@ type SharesBoughtEvent implements EventInterface & FundEventInterface & SharesCh
   investmentAmount: BigDecimal!
   sharesIssued: BigDecimal!
   timestamp: BigInt!
+  fundState: FundState!
   transaction: Transaction!
   calculations: CalculationState!
 }
@@ -253,6 +257,7 @@ type SharesRedeemedEvent implements EventInterface & FundEventInterface & Shares
   payoutAssets: [Asset!]!
   payoutQuantities: [BigDecimal!]!
   timestamp: BigInt!
+  fundState: FundState!
   transaction: Transaction!
   calculations: CalculationState!
 }
@@ -440,6 +445,7 @@ type FeeSettledForFundEvent implements EventInterface & FundEventInterface & Sha
   settlementType: SettlementType!
   sharesDue: BigDecimal!
   calculations: CalculationState!
+  fundState: FundState!
 }
 
 type AllSharesOutstandingForcePaidForFundEvent implements EventInterface & FundEventInterface & SharesChangeInterface & FeeSharesChangeInterface
@@ -458,6 +464,7 @@ type AllSharesOutstandingForcePaidForFundEvent implements EventInterface & FundE
   payee: String!
   sharesDue: BigDecimal!
   calculations: CalculationState!
+  fundState: FundState!
 }
 
 type SharesOutstandingPaidForFundEvent implements EventInterface & FundEventInterface & SharesChangeInterface & FeeSharesChangeInterface
@@ -476,6 +483,7 @@ type SharesOutstandingPaidForFundEvent implements EventInterface & FundEventInte
   fee: Fee!
   sharesDue: BigDecimal!
   calculations: CalculationState!
+  fundState: FundState!
 }
 
 type PolicyEnabledForFundEvent implements EventInterface & FundEventInterface @entity {
@@ -1343,6 +1351,7 @@ type InvestmentState @entity {
   investment: Investment!
   shares: BigDecimal!
   changes: [SharesChangeInterface!]! @derivedFrom(field: "investmentState")
+  fundState: FundState!
 }
 
 type Fee @entity {

@@ -51,6 +51,7 @@ export function handleSharesBought(event: SharesBought): void {
   addition.timestamp = event.block.timestamp;
   addition.transaction = ensureTransaction(event).id;
   addition.calculations = calculationStateId(fund, event);
+  addition.fundState = fund.state;
   addition.save();
 
   trackPortfolioState(fund, event, addition);
@@ -85,6 +86,7 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
   redemption.timestamp = event.block.timestamp;
   redemption.transaction = ensureTransaction(event).id;
   redemption.calculations = calculationStateId(fund, event);
+  redemption.fundState = fund.state;
   redemption.save();
 
   trackPortfolioState(fund, event, redemption);

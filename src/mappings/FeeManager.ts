@@ -56,6 +56,7 @@ export function handleAllSharesOutstandingForcePaidForFund(event: AllSharesOutst
   settled.payee = event.params.payee.toHex();
   settled.sharesDue = shares;
   settled.calculations = calculationStateId(fund, event);
+  settled.fundState = fund.state;
   settled.save();
 
   trackShareState(fund, event, settled);
@@ -137,6 +138,7 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
   settled.settlementType = getSettlementType(event.params.settlementType);
   settled.sharesDue = shares;
   settled.calculations = calculationStateId(fund, event);
+  settled.fundState = fund.state;
   settled.save();
 
   trackShareState(fund, event, settled);
