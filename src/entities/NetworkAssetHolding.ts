@@ -118,14 +118,3 @@ export function trackNetworkAssetHoldings(prev: HoldingState[], next: HoldingSta
   network.state = state.id;
   network.save();
 }
-
-export function findNetworkAssetHolding(assetHoldingIds: string[], asset: Asset): NetworkAssetHolding | null {
-  for (let i: i32 = 0; i < assetHoldingIds.length; i++) {
-    let assetHolding = useNetworkAssetHolding(assetHoldingIds[i]);
-    if (assetHolding.asset == asset.id) {
-      return assetHolding;
-    }
-  }
-
-  return null;
-}

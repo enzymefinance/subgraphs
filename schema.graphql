@@ -1922,7 +1922,7 @@ type NetworkState @entity {
   network: Network!
   timestamp: BigInt!
   assetHoldings: [NetworkAssetHolding!]!
-  # numberOfFunds: BigInt!
+  numberOfFunds: BigInt!
   # numberOfInvestors: BigInt!
   # numberOfInvestments: BigInt!
   # numberOfManagers: BigInt!
