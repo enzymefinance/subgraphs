@@ -88,3 +88,10 @@ export function getMonthEnd(timestamp: BigInt): BigInt {
   }
   return BigInt.fromI32(0);
 }
+
+export function isSameDay(t1: BigInt, t2: BigInt): boolean {
+  let startOfDay1 = getDayOpenTime(t1);
+  let startOfDay2 = getDayOpenTime(t2);
+
+  return startOfDay1.equals(startOfDay2);
+}

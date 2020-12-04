@@ -1901,3 +1901,32 @@ type Cron @entity {
   #
   currencies: [Currency!]!
 }
+
+#################################################
+# Network stats
+#################################################
+
+type Network @entity {
+  id: ID!
+  timestamp: BigInt!
+  state: NetworkState!
+  stateHistory: [NetworkState!]! @derivedFrom(field: "network")
+}
+
+type NetworkState @entity {
+  id: ID!
+  network: Network!
+  timestamp: BigInt!
+  assetHoldings: [NetworkAssetHolding!]!
+  # numberOfFunds: BigInt!
+  # numberOfInvestors: BigInt!
+  # numberOfInvestments: BigInt!
+  # numberOfManagers: BigInt!
+}
+
+type NetworkAssetHolding @entity {
+  id: ID!
+  timestamp: BigInt!
+  asset: Asset!
+  quantity: BigDecimal!
+}
