@@ -1702,6 +1702,10 @@ type Asset @entity {
   trackingFunds: [Fund!]! @derivedFrom(field: "trackedAssets")
   blacklisted: [AssetBlacklistSetting!]! @derivedFrom(field: "assets")
   whitelisted: [AssetWhitelistSetting!]! @derivedFrom(field: "assets")
+
+  # network-wide values
+  networkAssetHolding: NetworkAssetHolding
+  networkAssetHoldingHistory: [NetworkAssetHolding!]! @derivedFrom(field: "asset")
 }
 
 type Currency @entity {

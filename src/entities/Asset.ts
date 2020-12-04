@@ -30,6 +30,7 @@ export function ensureAsset(address: Address): Asset {
   asset.symbol = symbol;
   asset.decimals = decimals;
   asset.type = '';
+  asset.networkAssetHolding = '';
   asset.save();
 
   return asset;

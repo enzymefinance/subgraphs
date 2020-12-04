@@ -46,28 +46,31 @@ export function trackNetworkAssetHoldings(prev: HoldingState[], next: HoldingSta
   for (let i = 0; i < prev.length; i++) {
     let holdingState = prev[i];
     let asset = useAsset(holdingState.asset);
-    let match = findNetworkAssetHolding(nextAssetHoldings, asset);
+    let currentNetworkAssetHolding = NetworkAssetHolding.load(asset.networkAssetHolding || '');
 
     // no match: this should not happen
-    if (match == null) {
+    if (currentNetworkAssetHolding == null) {
       logCritical('NetworkAssetHolding for asset {} not found.', [asset.id]);
       continue;
     }
 
-    let quantity = match.quantity.minus(holdingState.quantity);
+    let quantity = currentNetworkAssetHolding.quantity.minus(holdingState.quantity);
 
     // match from today: update current record
-    if (isSameDay(match.timestamp, event.block.timestamp)) {
-      match.timestamp = event.block.timestamp;
-      match.quantity = quantity;
-      match.save();
+    if (isSameDay(currentNetworkAssetHolding.timestamp, event.block.timestamp)) {
+      currentNetworkAssetHolding.timestamp = event.block.timestamp;
+      currentNetworkAssetHolding.quantity = quantity;
+      currentNetworkAssetHolding.save();
       continue;
     }
 
     // match from previous day: copy and update
     let newRecord = createNetworkAssetHolding(asset, quantity, event);
 
-    nextAssetHoldings = arrayDiff<string>(nextAssetHoldings, [match.id]);
+    asset.networkAssetHolding = newRecord.id;
+    asset.save();
+
+    nextAssetHoldings = arrayDiff<string>(nextAssetHoldings, [currentNetworkAssetHolding.id]);
     nextAssetHoldings = arrayUnique<string>(nextAssetHoldings.concat([newRecord.id]));
   }
 
@@ -75,30 +78,36 @@ export function trackNetworkAssetHoldings(prev: HoldingState[], next: HoldingSta
   for (let i = 0; i < next.length; i++) {
     let holdingState = next[i];
     let asset = useAsset(holdingState.asset);
-    let match = findNetworkAssetHolding(nextAssetHoldings, asset);
+    let currentNetworkAssetHolding = NetworkAssetHolding.load(asset.networkAssetHolding || '');
 
     // no match: create new record
-    if (match == null) {
+    if (currentNetworkAssetHolding == null) {
       let newRecord = createNetworkAssetHolding(asset, holdingState.quantity, event);
+
+      asset.networkAssetHolding = newRecord.id;
+      asset.save();
 
       nextAssetHoldings = arrayUnique<string>(nextAssetHoldings.concat([newRecord.id]));
       continue;
     }
 
-    let quantity = match.quantity.plus(holdingState.quantity);
+    let quantity = currentNetworkAssetHolding.quantity.plus(holdingState.quantity);
 
     // match from today: update current record
-    if (isSameDay(match.timestamp, event.block.timestamp)) {
-      match.timestamp = event.block.timestamp;
-      match.quantity = quantity;
-      match.save();
+    if (isSameDay(currentNetworkAssetHolding.timestamp, event.block.timestamp)) {
+      currentNetworkAssetHolding.timestamp = event.block.timestamp;
+      currentNetworkAssetHolding.quantity = quantity;
+      currentNetworkAssetHolding.save();
       continue;
     }
 
     // match from previous day: copy and update
     let newRecord = createNetworkAssetHolding(asset, quantity, event);
 
-    nextAssetHoldings = arrayDiff<string>(nextAssetHoldings, [match.id]);
+    asset.networkAssetHolding = newRecord.id;
+    asset.save();
+
+    nextAssetHoldings = arrayDiff<string>(nextAssetHoldings, [currentNetworkAssetHolding.id]);
     nextAssetHoldings = arrayUnique<string>(nextAssetHoldings.concat([newRecord.id]));
   }
 
