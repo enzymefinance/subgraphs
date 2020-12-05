@@ -6,7 +6,7 @@ import { createNetworkState } from './NetworkState';
 export let networkId = 'ENZYME';
 
 export function createNetwork(event: ethereum.Event): Network {
-  let state = createNetworkState([], BigInt.fromI32(0), event);
+  let state = createNetworkState([], BigInt.fromI32(0), BigInt.fromI32(0), BigInt.fromI32(0), BigInt.fromI32(0), event);
 
   let network = new Network(networkId);
   network.timestamp = event.block.timestamp;

@@ -7,7 +7,7 @@ import { useAsset } from './Asset';
 import { createCalculationState } from './CalculationState';
 import { createFeeState } from './FeeState';
 import { createFundState } from './FundState';
-import { trackNetworkNumberOfFunds } from './NetworkState';
+import { trackNetworkFunds } from './NetworkState';
 import { createPortfolioState } from './PortfolioState';
 import { useRelease } from './Release';
 import { createShareState } from './ShareState';
@@ -56,7 +56,7 @@ export function createFund(event: NewFundCreated): Fund {
   fund.sharesActionTimelock = event.params.sharesActionTimelock;
   fund.save();
 
-  trackNetworkNumberOfFunds(event);
+  trackNetworkFunds(event);
 
   return fund;
 }

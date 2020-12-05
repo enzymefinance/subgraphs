@@ -1,6 +1,7 @@
 import { Address, ethereum } from '@graphprotocol/graph-ts';
 import { Account } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
+import { trackNetworkInvestors, trackNetworkManagers } from './NetworkState';
 
 export function useManager(id: string): Account {
   let manager = Account.load(id) as Account;
@@ -20,6 +21,8 @@ export function ensureManager(managerAddress: Address, event: ethereum.Event): A
   if (!account.manager) {
     account.manager = true;
     account.save();
+
+    trackNetworkManagers(event);
   }
 
   return account;
@@ -43,6 +46,8 @@ export function ensureInvestor(investorAddress: Address, event: ethereum.Event):
   if (!account.investor) {
     account.investor = true;
     account.save();
+
+    trackNetworkInvestors(event);
   }
 
   return account;

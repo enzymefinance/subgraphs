@@ -22,7 +22,7 @@ export function ensureInvestmentState(investor: Account, fund: Fund, event: ethe
   investmentState.fund = fund.id;
   investmentState.investor = investor.id;
   investmentState.shares = BigDecimal.fromString('0');
-  investmentState.investment = ensureInvestment(investor, fund, id).id;
+  investmentState.investment = ensureInvestment(investor, fund, id, event).id;
   investmentState.fundState = fund.state;
   investmentState.save();
 

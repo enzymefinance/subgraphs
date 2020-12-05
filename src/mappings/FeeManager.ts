@@ -1,6 +1,6 @@
 import { Address, BigDecimal } from '@graphprotocol/graph-ts';
 import { zeroAddress } from '../constants';
-import { ensureInvestor, useAccount, useManager } from '../entities/Account';
+import { ensureAccount, useAccount, useManager } from '../entities/Account';
 import { calculationStateId, trackCalculationState } from '../entities/CalculationState';
 import { ensureContract } from '../entities/Contract';
 import { ensureFee, useFee } from '../entities/Fee';
@@ -38,7 +38,7 @@ export function handleAllSharesOutstandingForcePaidForFund(event: AllSharesOutst
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
 
   let fund = useFund(comptroller.getVaultProxy().toHex());
-  let investor = ensureInvestor(Address.fromString(fund.manager), event);
+  let investor = ensureAccount(Address.fromString(fund.manager), event);
   let investmentState = trackInvestmentState(investor, fund, event);
   let shares = toBigDecimal(event.params.sharesDue);
 
@@ -112,8 +112,8 @@ export function handleFeeEnabledForFund(event: FeeEnabledForFund): void {
 export function handleFeeSettledForFund(event: FeeSettledForFund): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
 
-  let payer = ensureInvestor(event.params.payer, event);
-  let payee = ensureInvestor(event.params.payee, event);
+  let payer = ensureAccount(event.params.payer, event);
+  let payee = ensureAccount(event.params.payee, event);
 
   let fund = useFund(comptroller.getVaultProxy().toHex());
   let investor = payer.id != zeroAddress.toHex() ? payer : payee;
@@ -149,7 +149,7 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
 export function handleSharesOutstandingPaidForFund(event: SharesOutstandingPaidForFund): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let fund = useFund(comptroller.getVaultProxy().toHex());
-  let investor = ensureInvestor(Address.fromString(fund.manager), event);
+  let investor = ensureAccount(Address.fromString(fund.manager), event);
   let investmentState = trackInvestmentState(investor, fund, event);
   let fee = useFee(event.params.fee.toHex());
   let shares = toBigDecimal(event.params.sharesDue);

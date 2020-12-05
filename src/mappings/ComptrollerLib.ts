@@ -1,5 +1,5 @@
 import { BigDecimal, dataSource } from '@graphprotocol/graph-ts';
-import { ensureInvestor, useAccount } from '../entities/Account';
+import { ensureAccount, ensureInvestor, useAccount } from '../entities/Account';
 import { useAsset } from '../entities/Asset';
 import { calculationStateId, trackCalculationState } from '../entities/CalculationState';
 import { ensureContract, useContract } from '../entities/Contract';
@@ -107,7 +107,7 @@ export function handleVaultProxySet(event: VaultProxySet): void {
 
 export function handleOverridePauseSet(event: OverridePauseSet): void {
   let fund = useFund(dataSource.context().getString('vaultProxy'));
-  let account = ensureInvestor(event.transaction.from, event);
+  let account = ensureAccount(event.transaction.from, event);
 
   let overridePauseSet = new OverridePauseSetEvent(genericId(event));
   overridePauseSet.fund = fund.id;
@@ -121,7 +121,7 @@ export function handleOverridePauseSet(event: OverridePauseSet): void {
 
 export function handleMigratedSharesDuePaid(event: MigratedSharesDuePaid): void {
   let fund = useFund(dataSource.context().getString('vaultProxy'));
-  let account = ensureInvestor(event.transaction.from, event);
+  let account = ensureAccount(event.transaction.from, event);
 
   let paid = new MigratedSharesDuePaidEvent(genericId(event));
   paid.fund = fund.id;
@@ -135,7 +135,7 @@ export function handleMigratedSharesDuePaid(event: MigratedSharesDuePaid): void 
 
 export function handlePreRedeemSharesHookFailed(event: PreRedeemSharesHookFailed): void {
   let fund = useFund(dataSource.context().getString('vaultProxy'));
-  let account = ensureInvestor(event.transaction.from, event);
+  let account = ensureAccount(event.transaction.from, event);
 
   let hookFailed = new PreRedeemSharesHookFailedEvent(genericId(event));
   hookFailed.fund = fund.id;
@@ -143,7 +143,7 @@ export function handlePreRedeemSharesHookFailed(event: PreRedeemSharesHookFailed
   hookFailed.contract = useContract(event.address.toHex()).id;
   hookFailed.timestamp = event.block.timestamp;
   hookFailed.sharesQuantity = toBigDecimal(event.params.sharesQuantity);
-  hookFailed.redeemer = ensureInvestor(event.params.redeemer, event).id;
+  hookFailed.redeemer = ensureAccount(event.params.redeemer, event).id;
   hookFailed.failureReturnData = event.params.failureReturnData.toHexString();
   hookFailed.transaction = ensureTransaction(event).id;
   hookFailed.save();

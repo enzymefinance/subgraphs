@@ -33,7 +33,9 @@ import { Asset, fetchAssets } from '../tests/utils/subgraph-queries/fetchAssets'
   [deployment, assets] = await Promise.all([fetchDeployment(testnetEndpoint), fetchAssets(subgraphApi)]);
   provider = new providers.JsonRpcProvider(jsonRpcProvider);
 
-  const tokens = ['DAI', 'ZRX', 'KNC', 'BAT', 'ANT'].map((symbol) => assets.find((asset) => asset.symbol === symbol));
+  const tradeTokenSymbols = ['DAI', 'ZRX', 'KNC', 'BAT', 'ANT'];
+
+  const tokens = assets.filter((asset) => tradeTokenSymbols.some((symbol) => symbol === asset.symbol));
 
   const [managerAddress, investorAddress] = await Promise.all([
     createAccount(testnetEndpoint),
@@ -97,7 +99,7 @@ import { Asset, fetchAssets } from '../tests/utils/subgraph-queries/fetchAssets'
 
     // trade
     const takeOrderArgs = kyberTakeOrderArgs({
-      incomingAsset: tokens[Math.floor(Math.random() * 3)]!.id,
+      incomingAsset: tokens[Math.floor(Math.random() * tokens.length)].id,
       minIncomingAssetAmount: utils.parseEther('0.000000001'),
       outgoingAsset: deployment.wethToken,
       outgoingAssetAmount: utils.parseEther('0.5'),
