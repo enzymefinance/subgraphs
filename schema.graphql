@@ -685,6 +685,18 @@ type BuySharesCallerWhitelistAddressesRemovedEvent implements EventInterface & F
   items: [String!]!
 }
 
+type GuaranteedRedemptionFundSettingsSetEvent implements EventInterface & FundEventInterface @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: Contract!
+  startTimestamp: BigInt!
+  duration: BigInt!
+}
+
 type InvestorWhitelistAddressesAddedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
@@ -716,6 +728,18 @@ type MaxConcentrationSetEvent implements EventInterface & FundEventInterface @en
   transaction: Transaction!
   comptrollerProxy: Contract!
   value: BigDecimal!
+}
+
+type MinMaxInvestmentFundSettingsSetEvent implements EventInterface & FundEventInterface @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: Contract!
+  minInvestmentAmount: BigDecimal!
+  maxInvestmentAmount: BigDecimal!
 }
 
 type ManagementFeeSettingsAddedEvent implements EventInterface & FundEventInterface @entity {
@@ -926,7 +950,6 @@ type AdapterDeregisteredEvent implements EventInterface & NetworkEventInterface 
 
 type TrackedAssetsLimitSetEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
-  fund: Fund!
   contract: Contract!
   timestamp: BigInt!
   nextTrackedAssetsLimit: BigInt!
@@ -952,6 +975,32 @@ type PolicyDeregisteredEvent implements EventInterface & NetworkEventInterface @
   policy: Policy!
 }
 
+type GuaranteedRedemptionAdapterAddedEvent implements EventInterface & NetworkEventInterface @entity {
+  id: ID!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  adapter: IntegrationAdapter!
+}
+
+type GuaranteedRedemptionAdapterRemovedEvent implements EventInterface & NetworkEventInterface @entity {
+  id: ID!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  adapter: IntegrationAdapter!
+}
+
+type GuaranteedRedemptionRedemptionWindowBufferSetEvent implements EventInterface & NetworkEventInterface @entity {
+  id: ID!
+  contract: Contract!
+  timestamp: BigInt!
+  transaction: Transaction!
+  adapter: IntegrationAdapter!
+  prevBuffer: BigInt!
+  nextBuffer: BigInt!
+}
+
 type FundDeployerSetEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
   contract: Contract!
@@ -961,61 +1010,12 @@ type FundDeployerSetEvent implements EventInterface & NetworkEventInterface @ent
   transaction: Transaction!
 }
 
-type AmguPriceSetEvent implements EventInterface & NetworkEventInterface @entity {
-  id: ID!
-  contract: Contract!
-  timestamp: BigInt!
-  price: BigDecimal!
-  transaction: Transaction!
-}
-
-type MlnSoldAndBurnedEvent implements EventInterface & NetworkEventInterface @entity {
-  id: ID!
-  contract: Contract!
-  timestamp: BigInt!
-  ethAmount: BigDecimal!
-  mlnAmount: BigDecimal!
-  transaction: Transaction!
-}
-
 type ValueInterpreterSetEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
   prevValueInterpreter: Contract
   nextValueInterpreter: Contract!
-  transaction: Transaction!
-}
-
-type FrozenEtherThawedEvent implements EventInterface & NetworkEventInterface @entity {
-  id: ID!
-  contract: Contract!
-  timestamp: BigInt!
-  amount: BigDecimal!
-  transaction: Transaction!
-}
-
-type AmguPaidInEtherEvent implements EventInterface & NetworkEventInterface @entity {
-  id: ID!
-  contract: Contract!
-  timestamp: BigInt!
-  amount: BigDecimal!
-  transaction: Transaction!
-}
-
-type EtherTakerAddedEvent implements EventInterface & NetworkEventInterface @entity {
-  id: ID!
-  contract: Contract!
-  timestamp: BigInt!
-  etherTaker: String!
-  transaction: Transaction!
-}
-
-type EtherTakerRemovedEvent implements EventInterface & NetworkEventInterface @entity {
-  id: ID!
-  contract: Contract!
-  timestamp: BigInt!
-  etherTaker: String!
   transaction: Transaction!
 }
 
@@ -1212,6 +1212,28 @@ type Contract @entity {
   events: [EventInterface!]! @derivedFrom(field: "contract")
 }
 
+type IntegrationManager @entity {
+  id: ID!
+  trackedAssetsLimit: BigInt!
+  adapters: [IntegrationAdapter!]! @derivedFrom(field: "integrationManager")
+}
+
+type PolicyManager @entity {
+  id: ID!
+  policies: [Policy!]! @derivedFrom(field: "policyManager")
+}
+
+type FeeManager @entity {
+  id: ID!
+  fees: [Fee!]! @derivedFrom(field: "feeManager")
+}
+
+type GuaranteedRedemption @entity {
+  id: ID!
+  adapters: [IntegrationAdapter!]!
+  buffer: BigInt!
+}
+
 type Fund @entity {
   id: ID!
   accessor: String!
@@ -1356,6 +1378,7 @@ type InvestmentState @entity {
 
 type Fee @entity {
   id: ID!
+  feeManager: FeeManager!
   identifier: String!
   funds: [Fund!]!
 }
@@ -1400,6 +1423,7 @@ type EntranceRateBurnFeeSetting implements FeeSettingInterface @entity {
 
 type IntegrationAdapter @entity {
   id: ID!
+  integrationManager: IntegrationManager!
   identifier: String!
   blacklisted: [AdapterBlacklistSetting!]! @derivedFrom(field: "adapters")
   whitelisted: [AdapterWhitelistSetting!]! @derivedFrom(field: "adapters")
@@ -1407,6 +1431,7 @@ type IntegrationAdapter @entity {
 
 type Policy @entity {
   id: ID!
+  policyManager: PolicyManager!
   identifier: String!
   funds: [Fund!]!
   settings: [PolicySettingInterface!]! @derivedFrom(field: "policy")
@@ -1461,6 +1486,16 @@ type BuySharesCallerWhitelistSetting implements PolicySettingInterface @entity {
   events: [FundEventInterface!]!
 }
 
+type GuaranteedRedemptionSetting implements PolicySettingInterface @entity {
+  id: ID!
+  policy: Policy!
+  fund: Fund!
+  startTimestamp: BigInt!
+  duration: BigInt!
+  timestamp: BigInt!
+  events: [FundEventInterface!]!
+}
+
 type InvestorWhitelistSetting implements PolicySettingInterface @entity {
   id: ID!
   policy: Policy!
@@ -1475,6 +1510,16 @@ type MaxConcentrationSetting implements PolicySettingInterface @entity {
   policy: Policy!
   fund: Fund!
   maxConcentration: BigDecimal!
+  timestamp: BigInt!
+  events: [FundEventInterface!]!
+}
+
+type MinMaxInvestmentSetting implements PolicySettingInterface @entity {
+  id: ID!
+  policy: Policy!
+  fund: Fund!
+  minInvestmentAmount: BigDecimal!
+  maxInvestmentAmount: BigDecimal!
   timestamp: BigInt!
   events: [FundEventInterface!]!
 }

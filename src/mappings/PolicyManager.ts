@@ -21,11 +21,13 @@ import { genericId } from '../utils/genericId';
 import { getPolicyHook } from '../utils/getPolicyHook';
 
 export function handlePolicyRegistered(event: PolicyRegistered): void {
+  let policy = ensurePolicy(event.params.policy, event.address);
+
   let registration = new PolicyRegisteredEvent(genericId(event));
   registration.timestamp = event.block.timestamp;
   registration.transaction = ensureTransaction(event).id;
   registration.contract = ensureContract(event.address, 'PolicyManager').id;
-  registration.policy = ensurePolicy(event.params.policy).id;
+  registration.policy = policy.id;
   registration.identifier = event.params.identifier.toHex();
   registration.implementedHooks = event.params.implementedHooks.map<string>((hook) => getPolicyHook(hook));
   registration.save();

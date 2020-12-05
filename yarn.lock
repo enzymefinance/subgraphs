@@ -1324,21 +1324,21 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@melonproject/protocol@^2.0.0-dev.5029+5f905c28":
-  version "2.0.0-dev.5029"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_wNFmN/%40melonproject%2Fprotocol-2.0.0-dev.5029.tgz#2d4de71704e5d6e834e0d763988b1d03938c5643"
-  integrity sha1-LU3nFwTl1ug04NdjmIsdA5OMVkM=
+"@melonproject/protocol@^2.0.0-dev.5030+18cd2a90":
+  version "2.0.0-dev.5030"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_1BqO1e/%40melonproject%2Fprotocol-2.0.0-dev.5030.tgz#331af60df7c5b1bc28740b3846c1fe0c1beae918"
+  integrity sha1-Mxr2DffFsbwodAs4RsH+DBvq6Rg=
   dependencies:
     "@babel/runtime" "^7.12.5"
     decimal.js "^10.2.1"
 
-"@melonproject/testutils@^2.0.0-dev.5029+5f905c28":
-  version "2.0.0-dev.5029"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_14da4k/%40melonproject%2Ftestutils-2.0.0-dev.5029.tgz#70e87fca6471c5a89a5b281e6f0afcc2a17e605f"
-  integrity sha1-cOh/ymRxxaiaWygebwr8wqF+YF8=
+"@melonproject/testutils@^2.0.0-dev.5030+18cd2a90":
+  version "2.0.0-dev.5030"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_11R7HX/%40melonproject%2Ftestutils-2.0.0-dev.5030.tgz#d84204b4575cf14484aa8e8aa679e2530b3e95a8"
+  integrity sha1-2EIEtFdc8USEqo6KpnniUws+lag=
   dependencies:
     "@babel/runtime" "^7.12.5"
-    "@melonproject/protocol" "^2.0.0-dev.5029+5f905c28"
+    "@melonproject/protocol" "^2.0.0-dev.5030+18cd2a90"
 
 "@openzeppelin/contracts@^3.3.0":
   version "3.3.0"
@@ -1718,10 +1718,10 @@
   dependencies:
     "@types/yargs-parser" "*"
 
-"@types/yargs@^15.0.10":
-  version "15.0.10"
-  resolved "https://registry.yarnpkg.com/@types/yargs/-/yargs-15.0.10.tgz#0fe3c8173a0d5c3e780b389050140c3f5ea6ea74"
-  integrity sha512-z8PNtlhrj7eJNLmrAivM7rjBESG6JwC5xP3RVk12i/8HVP7Xnx/sEmERnRImyEuUaJfO942X0qMOYsoupaJbZQ==
+"@types/yargs@^15.0.11":
+  version "15.0.11"
+  resolved "https://registry.yarnpkg.com/@types/yargs/-/yargs-15.0.11.tgz#361d7579ecdac1527687bcebf9946621c12ab78c"
+  integrity sha512-jfcNBxHFYJ4nPIacsi3woz1+kvUO6s1CyeEhtnDHBjHUMNj5UlW2GynmnSgiJJEdNg9yW5C8lfoNRZrHGv5EqA==
   dependencies:
     "@types/yargs-parser" "*"
 
@@ -1968,10 +1968,10 @@ asn1@~0.2.3:
   dependencies:
     safer-buffer "~2.1.0"
 
-assemblyscript@^0.17.3:
-  version "0.17.3"
-  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.17.3.tgz#bd9876ea2b177664abb8ed2aeccf259c212a12b8"
-  integrity sha512-PeouwsA+ayYCcLCSt1QUs4SkqiR0DBtX9pLjsm8hHQa/e132tzRN36hjkfk7htJGLQDtimnRlQ3gcA61ciO9gw==
+assemblyscript@^0.17.4:
+  version "0.17.4"
+  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.17.4.tgz#d4611db89a4294335ad47ec3c6661a26a4428771"
+  integrity sha512-4ZXY40CuB4kDYgUJr02oI0d201fvOkbRipcubplLd1U2mUC8LHdVKE/SJZw8MoRjU189GSGAEK25lkHmf6LiHw==
   dependencies:
     binaryen "98.0.0-nightly.20201109"
     long "^4.0.0"
@@ -2903,6 +2903,11 @@ create-hmac@^1.1.0, create-hmac@^1.1.4, create-hmac@^1.1.7:
     ripemd160 "^2.0.0"
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
+
+create-require@^1.1.0:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/create-require/-/create-require-1.1.1.tgz#c1d7e8f1e5f6cfc9ff65f9cd352d37348756c333"
+  integrity sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==
 
 cross-fetch@^3.0.6:
   version "3.0.6"
@@ -8349,12 +8354,13 @@ ts-jest@^26.4.4:
     semver "7.x"
     yargs-parser "20.x"
 
-ts-node@^9.0.0:
-  version "9.0.0"
-  resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-9.0.0.tgz#e7699d2a110cc8c0d3b831715e417688683460b3"
-  integrity sha512-/TqB4SnererCDR/vb4S/QvSZvzQMJN8daAslg7MeaiHvD8rDZsSfXmNeNumyZZzMned72Xoq/isQljYSt8Ynfg==
+ts-node@^9.1.0:
+  version "9.1.0"
+  resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-9.1.0.tgz#95eae4c6d0f94f2545884078e1eb1b14d2155639"
+  integrity sha512-0yqcL4sgruCvM+w64LiAfNJo6+lHfCYc5Ajj4yiLNkJ9oZ2HWaa+Kso7htYOOxVQ7+csAjdUjffOe9PIqC4pMg==
   dependencies:
     arg "^4.1.0"
+    create-require "^1.1.0"
     diff "^4.0.1"
     make-error "^1.1.1"
     source-map-support "^0.5.17"

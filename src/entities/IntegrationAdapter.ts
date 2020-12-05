@@ -2,6 +2,7 @@ import { Address } from '@graphprotocol/graph-ts';
 import { IIntegrationAdapterInterface } from '../generated/IIntegrationAdapterInterface';
 import { IntegrationAdapter } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
+import { ensureIntegrationManager } from './IntegrationManager';
 
 export function useIntegrationAdapter(id: string): IntegrationAdapter {
   let integrationAdapter = IntegrationAdapter.load(id) as IntegrationAdapter;
@@ -12,7 +13,7 @@ export function useIntegrationAdapter(id: string): IntegrationAdapter {
   return integrationAdapter;
 }
 
-export function ensureIntegrationAdapter(address: Address): IntegrationAdapter {
+export function ensureIntegrationAdapter(address: Address, integrationManager: Address): IntegrationAdapter {
   let integrationAdapter = IntegrationAdapter.load(address.toHex()) as IntegrationAdapter;
   if (integrationAdapter) {
     return integrationAdapter;
@@ -22,20 +23,9 @@ export function ensureIntegrationAdapter(address: Address): IntegrationAdapter {
   let identifier = contract.identifier();
 
   integrationAdapter = new IntegrationAdapter(address.toHex());
+  integrationAdapter.integrationManager = ensureIntegrationManager(integrationManager).id;
   integrationAdapter.identifier = identifier;
   integrationAdapter.save();
 
   return integrationAdapter;
-}
-
-export function extractIntegrationAdapters(ids: string[]): IntegrationAdapter[] {
-  let adapters: IntegrationAdapter[] = new Array<IntegrationAdapter>();
-  for (let i = 0; i < ids.length; i++) {
-    let adapter = IntegrationAdapter.load(ids[i]) as IntegrationAdapter;
-    if (adapter) {
-      adapters = adapters.concat([adapter]);
-    }
-  }
-
-  return adapters;
 }

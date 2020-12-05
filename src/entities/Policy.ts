@@ -2,6 +2,7 @@ import { Address } from '@graphprotocol/graph-ts';
 import { IPolicyInterface } from '../generated/IPolicyInterface';
 import { Policy } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
+import { ensurePolicyManager } from './PolicyManager';
 
 export function usePolicy(id: string): Policy {
   let policy = Policy.load(id) as Policy;
@@ -12,7 +13,7 @@ export function usePolicy(id: string): Policy {
   return policy;
 }
 
-export function ensurePolicy(address: Address): Policy {
+export function ensurePolicy(address: Address, policyManager: Address): Policy {
   let policy = Policy.load(address.toHex()) as Policy;
   if (policy) {
     return policy;
@@ -22,6 +23,7 @@ export function ensurePolicy(address: Address): Policy {
   let identifier = contract.identifier();
 
   policy = new Policy(address.toHex());
+  policy.policyManager = ensurePolicyManager(policyManager).id;
   policy.identifier = identifier;
   policy.funds = new Array<string>();
   policy.save();

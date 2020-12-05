@@ -34,10 +34,11 @@ const query = gql`
       adapterWhitelist
       assetBlacklist
       assetWhitelist
-      maxConcentration
       buySharesCallerWhitelist
       guaranteedRedemption
       investorWhitelist
+      maxConcentration
+      minMaxInvestment
       eurChainlinkAggregator
       chfChainlinkAggregator
       jpyChainlinkAggregator
@@ -72,10 +73,11 @@ interface Result {
     adapterWhitelist: string;
     assetBlacklist: string;
     assetWhitelist: string;
-    maxConcentration: string;
     buySharesCallerWhitelist: string;
     guaranteedRedemption: string;
     investorWhitelist: string;
+    maxConcentration: string;
+    minMaxInvestment: string;
     eurChainlinkAggregator: string;
     chfChainlinkAggregator: string;
     jpyChainlinkAggregator: string;

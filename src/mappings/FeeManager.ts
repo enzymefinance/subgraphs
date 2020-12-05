@@ -76,11 +76,13 @@ export function handleFeeDeregistered(event: FeeDeregistered): void {
 }
 
 export function handleFeeRegistered(event: FeeRegistered): void {
+  let fee = ensureFee(event.params.fee, event.address);
+
   let registered = new FeeRegisteredEvent(genericId(event));
   registered.contract = ensureContract(event.address, 'FeeManager').id;
   registered.timestamp = event.block.timestamp;
   registered.transaction = ensureTransaction(event).id;
-  registered.fee = ensureFee(event.params.fee).id;
+  registered.fee = fee.id;
   registered.identifier = event.params.identifier.toHex();
   registered.implementedHooksForSettle = event.params.implementedHooksForSettle.map<string>((hook) => getFeeHook(hook));
   registered.implementedHooksForUpdate = event.params.implementedHooksForUpdate.map<string>((hook) => getFeeHook(hook));

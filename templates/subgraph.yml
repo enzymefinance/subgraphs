@@ -401,6 +401,62 @@ dataSources:
         - event: AddressesRemoved(indexed address,address[])
           handler: handleAddressesRemoved
 
+  - name: BuySharesCallerWhitelistDataSource
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      address: '{{buySharesCallerWhitelist}}'
+      abi: BuySharesCallerWhitelistContract
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/BuySharesCallerWhitelist.ts
+      entities: []
+      abis:
+        - name: BuySharesCallerWhitelistContract
+          file: ./node_modules/@melonproject/protocol/artifacts/BuySharesCallerWhitelist.json
+        - name: VaultLibContract
+          file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
+        - name: ComptrollerLibContract
+          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
+      eventHandlers:
+        - event: AddressesAdded(indexed address,address[])
+          handler: handleAddressesAdded
+        - event: AddressesRemoved(indexed address,address[])
+          handler: handleAddressesRemoved
+
+  - name: GuaranteedRedemptionDataSource
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      address: '{{guaranteedRedemption}}'
+      abi: GuaranteedRedemptionContract
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/GuaranteedRedemption.ts
+      entities: []
+      abis:
+        - name: GuaranteedRedemptionContract
+          file: ./node_modules/@melonproject/protocol/artifacts/GuaranteedRedemption.json
+        - name: VaultLibContract
+          file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
+        - name: ComptrollerLibContract
+          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
+      eventHandlers:
+        - event: AdapterAdded(address)
+          handler: handleAdapterAdded
+        - event: AdapterRemoved(address)
+          handler: handleAdapterRemoved
+        - event: FundSettingsSet(indexed address,uint256,uint256)
+          handler: handleFundSettingsSet
+        - event: RedemptionWindowBufferSet(uint256,uint256)
+          handler: handleRedemptionWindowBufferSet
+
   - name: InvestorWhitelistDataSource
     kind: ethereum/contract
     network: mainnet
@@ -450,62 +506,30 @@ dataSources:
       eventHandlers:
         - event: MaxConcentrationSet(address,uint256)
           handler: handleMaxConcentrationSet
-
-  - name: BuySharesCallerWhitelistDataSource
-    kind: ethereum/contract
-    network: mainnet
-    source:
-      address: '{{buySharesCallerWhitelist}}'
-      abi: BuySharesCallerWhitelistContract
-      startBlock: 0
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.4
-      language: wasm/assemblyscript
-      file: ./src/mappings/BuySharesCallerWhitelist.ts
-      entities: []
-      abis:
-        - name: BuySharesCallerWhitelistContract
-          file: ./node_modules/@melonproject/protocol/artifacts/BuySharesCallerWhitelist.json
-        - name: VaultLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
-        - name: ComptrollerLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
-      eventHandlers:
-        - event: AddressesAdded(indexed address,address[])
-          handler: handleAddressesAdded
-        - event: AddressesRemoved(indexed address,address[])
-          handler: handleAddressesRemoved
   
-  - name: GuaranteedRedemptionDataSource
+  - name: MinMaxInvestmentDataSource
     kind: ethereum/contract
     network: mainnet
     source:
-      address: '{{guaranteedRedemption}}'
-      abi: GuaranteedRedemptionContract
+      address: '{{minMaxInvestment}}'
+      abi: MinMaxInvestmentContract
       startBlock: 0
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
-      file: ./src/mappings/GuaranteedRedemption.ts
+      file: ./src/mappings/MinMaxInvestment.ts
       entities: []
       abis:
-        - name: GuaranteedRedemptionContract
-          file: ./node_modules/@melonproject/protocol/artifacts/GuaranteedRedemption.json
+        - name: MinMaxInvestmentContract
+          file: ./node_modules/@melonproject/protocol/artifacts/MinMaxInvestment.json
         - name: VaultLibContract
           file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
         - name: ComptrollerLibContract
           file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
       eventHandlers:
-        - event: AdapterAdded(address)
-          handler: handleAdapterAdded
-        - event: AdapterRemoved(address)
-          handler: handleAdapterRemoved
         - event: FundSettingsSet(indexed address,uint256,uint256)
           handler: handleFundSettingsSet
-        - event: RedemptionWindowBufferSet(uint256,uint256)
-          handler: handleRedemptionWindowBufferSet
 
   - name: IntegrationManagerDataSource
     kind: ethereum/contract

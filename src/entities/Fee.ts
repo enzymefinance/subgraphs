@@ -2,6 +2,7 @@ import { Address } from '@graphprotocol/graph-ts';
 import { IFeeInterface } from '../generated/IFeeInterface';
 import { Fee } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
+import { ensureFeeManager } from './FeeManager';
 
 export function useFee(id: string): Fee {
   let fee = Fee.load(id) as Fee;
@@ -12,7 +13,7 @@ export function useFee(id: string): Fee {
   return fee;
 }
 
-export function ensureFee(address: Address): Fee {
+export function ensureFee(address: Address, feeManager: Address): Fee {
   let fee = Fee.load(address.toHex()) as Fee;
   if (fee) {
     return fee;
@@ -22,6 +23,7 @@ export function ensureFee(address: Address): Fee {
   let identifier = contract.identifier();
 
   fee = new Fee(address.toHex());
+  fee.feeManager = ensureFeeManager(feeManager).id;
   fee.identifier = identifier;
   fee.funds = new Array<string>();
   fee.save();
