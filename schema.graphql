@@ -1559,6 +1559,7 @@ type CalculationState implements FundStateInterface @entity {
   totalSupply: BigDecimal!
   grossSharePrice: BigDecimal!
   netSharePrice: BigDecimal!
+  investmentCount: Int!
   events: [FundEventInterface!]!
 }
 
@@ -1967,10 +1968,10 @@ type NetworkState @entity {
   network: Network!
   timestamp: BigInt!
   assetHoldings: [NetworkAssetHolding!]!
-  funds: BigInt!
-  managers: BigInt!
-  investors: BigInt!
-  investments: BigInt!
+  funds: Int!
+  managers: Int!
+  investors: Int!
+  investments: Int!
 }
 
 type NetworkAssetHolding @entity {

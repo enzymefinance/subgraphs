@@ -4,14 +4,28 @@ export interface Asset {
   id: string;
   name: string;
   symbol: string;
+  uniswapV2PoolAssetDetail: {
+    token0: Asset;
+    token1: Asset;
+  };
 }
 
 const assetsQuery = gql`
   query Fund {
-    assets {
+    assets(first: 1000) {
       id
       name
       symbol
+      uniswapV2PoolAssetDetail {
+        token0 {
+          id
+          symbol
+        }
+        token1 {
+          id
+          symbol
+        }
+      }
     }
   }
 `;

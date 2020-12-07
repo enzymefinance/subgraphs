@@ -1,4 +1,4 @@
-import { BigInt, ethereum } from '@graphprotocol/graph-ts';
+import { ethereum } from '@graphprotocol/graph-ts';
 import { NetworkState } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
 import { getDayOpenTime } from '../utils/timeHelpers';
@@ -11,20 +11,20 @@ export function networkStateId(event: ethereum.Event): string {
 
 export function createNetworkState(
   assetHoldings: string[],
-  funds: BigInt,
-  managers: BigInt,
-  investors: BigInt,
-  investments: BigInt,
+  funds: number,
+  managers: number,
+  investors: number,
+  investments: number,
   event: ethereum.Event,
 ): NetworkState {
   let state = new NetworkState(networkStateId(event));
   state.timestamp = event.block.timestamp;
   state.network = networkId;
   state.assetHoldings = assetHoldings;
-  state.funds = funds;
-  state.managers = managers;
-  state.investors = investors;
-  state.investments = investments;
+  state.funds = funds as i32;
+  state.managers = managers as i32;
+  state.investors = investors as i32;
+  state.investments = investments as i32;
   state.save();
 
   return state;
@@ -72,7 +72,7 @@ export function ensureNetworkState(event: ethereum.Event): NetworkState {
 export function trackNetworkFunds(event: ethereum.Event): void {
   let state = ensureNetworkState(event);
 
-  state.funds = state.funds.plus(BigInt.fromI32(1));
+  state.funds = state.funds + 1;
   state.save();
 
   let network = useNetwork();
@@ -83,7 +83,7 @@ export function trackNetworkFunds(event: ethereum.Event): void {
 export function trackNetworkManagers(event: ethereum.Event): void {
   let state = ensureNetworkState(event);
 
-  state.managers = state.managers.plus(BigInt.fromI32(1));
+  state.managers = state.managers + 1;
   state.save();
 
   let network = useNetwork();
@@ -94,7 +94,7 @@ export function trackNetworkManagers(event: ethereum.Event): void {
 export function trackNetworkInvestors(event: ethereum.Event): void {
   let state = ensureNetworkState(event);
 
-  state.investors = state.investors.plus(BigInt.fromI32(1));
+  state.investors = state.investors + 1;
   state.save();
 
   let network = useNetwork();
@@ -105,7 +105,7 @@ export function trackNetworkInvestors(event: ethereum.Event): void {
 export function trackNetworkInvestments(event: ethereum.Event): void {
   let state = ensureNetworkState(event);
 
-  state.investments = state.investments.plus(BigInt.fromI32(1));
+  state.investments = state.investments + 1;
   state.save();
 
   let network = useNetwork();

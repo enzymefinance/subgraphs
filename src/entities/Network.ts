@@ -1,4 +1,4 @@
-import { BigInt, ethereum } from '@graphprotocol/graph-ts';
+import { ethereum } from '@graphprotocol/graph-ts';
 import { Network } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
 import { createNetworkState } from './NetworkState';
@@ -6,7 +6,7 @@ import { createNetworkState } from './NetworkState';
 export let networkId = 'ENZYME';
 
 export function createNetwork(event: ethereum.Event): Network {
-  let state = createNetworkState([], BigInt.fromI32(0), BigInt.fromI32(0), BigInt.fromI32(0), BigInt.fromI32(0), event);
+  let state = createNetworkState([], 0, 0, 0, 0, event);
 
   let network = new Network(networkId);
   network.timestamp = event.block.timestamp;
