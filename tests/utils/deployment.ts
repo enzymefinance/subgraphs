@@ -7,6 +7,9 @@ export interface Deployment {
   chaiIntegratee: string;
   kyberIntegratee: string;
   uniswapV2Integratee: string;
+  synthetixAddressResolver: string;
+  synthetixDelegateApprovals: string;
+  synthetixExchanger: string;
   dispatcher: string;
   vaultLib: string;
   fundDeployer: string;
@@ -24,6 +27,7 @@ export interface Deployment {
   uniswapV2Adapter: string;
   trackedAssetsAdapter: string;
   kyberAdapter: string;
+  synthetixAdapter: string;
   managementFee: string;
   performanceFee: string;
   entranceRateBurnFee: string;
@@ -45,6 +49,9 @@ const deploymentQuery = gql`
       chaiIntegratee
       kyberIntegratee
       uniswapV2Integratee
+      synthetixAddressResolver
+      synthetixDelegateApprovals
+      synthetixExchanger
       dispatcher
       vaultLib
       fundDeployer
@@ -62,6 +69,7 @@ const deploymentQuery = gql`
       kyberAdapter
       uniswapV2Adapter
       trackedAssetsAdapter
+      synthetixAdapter
       managementFee
       performanceFee
       entranceRateBurnFee
@@ -85,6 +93,9 @@ const createDeploymentMutation = gql`
       chaiIntegratee
       kyberIntegratee
       uniswapV2Integratee
+      synthetixAddressResolver
+      synthetixDelegateApprovals
+      synthetixExchanger
       dispatcher
       vaultLib
       fundDeployer
@@ -102,6 +113,7 @@ const createDeploymentMutation = gql`
       kyberAdapter
       uniswapV2Adapter
       trackedAssetsAdapter
+      synthetixAdapter
       managementFee
       performanceFee
       entranceRateBurnFee
