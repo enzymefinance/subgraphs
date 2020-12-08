@@ -35,7 +35,7 @@ export function createFund(event: NewFundCreated): Fund {
 
   let feeState = createFeeState([], fund, event, null);
   let calculations = createCalculationState(fund, event, null);
-  let state = createFundState(shares, portfolio, feeState, calculations, fund, event);
+  let state = createFundState(shares, portfolio, feeState, calculations, 0, fund, event);
 
   fund.name = event.params.fundName;
   fund.inception = event.block.timestamp;

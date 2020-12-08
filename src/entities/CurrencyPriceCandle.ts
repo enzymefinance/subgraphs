@@ -8,7 +8,7 @@ import {
   getMonthOpenAndClose,
 } from '../utils/timeHelpers';
 import { useCurrencyPrice } from './CurrencyPrice';
-import { CurrencyPriceCandle } from './CurrencyPriceEntity';
+import { CurrencyPriceCandle } from './CurrencyPriceCandleEntity';
 
 export function currencyPriceCandleId(currencyId: string, type: string, open: BigInt): string {
   return currencyId + '/' + type + '/' + open.toString();

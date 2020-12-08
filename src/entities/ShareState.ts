@@ -80,6 +80,7 @@ export function trackShareState(fund: Fund, event: ethereum.Event, cause: Entity
   let events = fundState.events;
   fundState.events = arrayUnique<string>(events.concat(shareState.events));
   fundState.shares = shareState.id;
+  fundState.investmentCount = fund.investmentCount;
   fundState.save();
 
   fund.shares = shareState.id;

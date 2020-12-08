@@ -1559,7 +1559,6 @@ type CalculationState implements FundStateInterface @entity {
   totalSupply: BigDecimal!
   grossSharePrice: BigDecimal!
   netSharePrice: BigDecimal!
-  investmentCount: Int!
   events: [FundEventInterface!]!
 }
 
@@ -1572,6 +1571,7 @@ type FundState implements FundStateInterface @entity {
   feeState: FeeState!
   calculations: CalculationState!
   currencyPrices: [CurrencyPrice!]!
+  investmentCount: Int!
   events: [FundEventInterface!]!
 }
 

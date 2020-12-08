@@ -17,6 +17,7 @@ export function createFundState(
   portfolio: PortfolioState,
   feeState: FeeState,
   calculations: CalculationState,
+  investmentCount: number,
   fund: Fund,
   event: ethereum.Event,
 ): FundState {
@@ -28,6 +29,7 @@ export function createFundState(
   state.feeState = feeState.id;
   state.calculations = calculations.id;
   state.events = new Array<string>();
+  state.investmentCount = investmentCount as i32;
   state.currencyPrices = loadCurrentCurrencyPrices().map<string>((price) => price.id);
   state.save();
 
@@ -45,7 +47,8 @@ export function ensureFundState(fund: Fund, event: ethereum.Event): FundState {
   let holdings = usePortfolioState(previous.portfolio);
   let feeState = useFeeState(previous.feeState);
   let calculations = useCalculationState(previous.calculations);
-  let state = createFundState(shares, holdings, feeState, calculations, fund, event);
+  let investmentCount = previous.investmentCount;
+  let state = createFundState(shares, holdings, feeState, calculations, investmentCount, fund, event);
 
   fund.state = state.id;
   fund.save();

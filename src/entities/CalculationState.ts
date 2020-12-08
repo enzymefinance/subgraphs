@@ -22,7 +22,6 @@ export function createCalculationState(fund: Fund, event: ethereum.Event, cause:
   calculations.totalSupply = BigDecimal.fromString('0');
   calculations.grossSharePrice = BigDecimal.fromString('0');
   calculations.netSharePrice = BigDecimal.fromString('0');
-  calculations.investmentCount = 0;
   calculations.events = cause ? [cause.getString('id')] : new Array<string>();
   calculations.save();
 
@@ -81,7 +80,6 @@ export function trackCalculationState(fund: Fund, event: ethereum.Event, cause: 
   calculations.totalSupply = toBigDecimal(totalSupply.value);
   calculations.grossSharePrice = toBigDecimal(grossShareValue.value.value0);
   calculations.netSharePrice = toBigDecimal(netShareValue.value.value0);
-  calculations.investmentCount = fund.investmentCount;
   calculations.save();
 
   let state = ensureFundState(fund, event);

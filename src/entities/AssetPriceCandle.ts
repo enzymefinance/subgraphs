@@ -8,7 +8,7 @@ import {
   getMonthOpenAndClose,
 } from '../utils/timeHelpers';
 import { useAssetPrice } from './AssetPrice';
-import { AssetPriceCandle } from './AssetPriceEntity';
+import { AssetPriceCandle } from './AssetPriceCandleEntity';
 
 export function assetPriceCandleId(assetId: string, type: string, open: BigInt): string {
   return assetId + '/' + type + '/' + open.toString();

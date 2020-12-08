@@ -1,4 +1,4 @@
-import { useManager } from '../entities/Account';
+import { ensureManager } from '../entities/Account';
 import { useAsset } from '../entities/Asset';
 import { ensureMinMaxInvestmentSetting } from '../entities/MinMaxInvestmentSetting';
 import { usePolicy } from '../entities/Policy';
@@ -18,7 +18,7 @@ export function handleFundSettingsSet(event: FundSettingsSet): void {
 
   let settingsSet = new MinMaxInvestmentFundSettingsSetEvent(genericId(event));
   settingsSet.fund = fundId;
-  settingsSet.account = useManager(event.transaction.from.toHex()).id;
+  settingsSet.account = ensureManager(event.transaction.from, event).id;
   settingsSet.contract = event.address.toHex();
   settingsSet.timestamp = event.block.timestamp;
   settingsSet.transaction = ensureTransaction(event).id;
