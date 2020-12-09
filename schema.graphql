@@ -126,7 +126,7 @@ enum AssetType {
 enum DerivativeType {
   Compound
   Chai
-  UniswapV2Pool
+  UniswapPool
   Synthetix
 }
 
