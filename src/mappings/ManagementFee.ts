@@ -1,4 +1,4 @@
-import { ensureAccount, ensureManager } from '../entities/Account';
+import { ensureAccount } from '../entities/Account';
 import { ensureContract } from '../entities/Contract';
 import { useFee } from '../entities/Fee';
 import { trackFeeState } from '../entities/FeeState';
@@ -21,7 +21,7 @@ export function handleFundSettingsAdded(event: FundSettingsAdded): void {
 
   let feeSettings = new ManagementFeeSettingsAddedEvent(genericId(event));
   feeSettings.fund = vault.toHex(); // fund does not exist yet
-  feeSettings.account = ensureManager(event.transaction.from, event).id;
+  feeSettings.account = ensureAccount(event.transaction.from, event).id;
   feeSettings.contract = ensureContract(event.address, 'ManagementFee').id;
   feeSettings.timestamp = event.block.timestamp;
   feeSettings.transaction = ensureTransaction(event).id;

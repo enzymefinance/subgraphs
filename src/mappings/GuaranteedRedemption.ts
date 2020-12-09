@@ -1,4 +1,4 @@
-import { useManager } from '../entities/Account';
+import { ensureAccount } from '../entities/Account';
 import { ensureContract } from '../entities/Contract';
 import { ensureGuaranteedRedemption, useGuaranteedRedemption } from '../entities/GuaranteedRedemption';
 import { ensureGuaranteedRedemptionSetting } from '../entities/GuaranteedRedemptionSetting';
@@ -56,7 +56,7 @@ export function handleFundSettingsSet(event: FundSettingsSet): void {
 
   let settingsSet = new GuaranteedRedemptionFundSettingsSetEvent(genericId(event));
   settingsSet.fund = fundId;
-  settingsSet.account = useManager(event.transaction.from.toHex()).id;
+  settingsSet.account = ensureAccount(event.transaction.from, event).id;
   settingsSet.contract = ensureContract(event.address, 'GuaranteedRedemption').id;
   settingsSet.timestamp = event.block.timestamp;
   settingsSet.transaction = ensureTransaction(event).id;

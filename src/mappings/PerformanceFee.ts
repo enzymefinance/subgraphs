@@ -1,5 +1,5 @@
 import { BigDecimal } from '@graphprotocol/graph-ts';
-import { ensureAccount, ensureManager } from '../entities/Account';
+import { ensureAccount } from '../entities/Account';
 import { ensureContract } from '../entities/Contract';
 import { useFee } from '../entities/Fee';
 import { trackFeeState } from '../entities/FeeState';
@@ -34,7 +34,7 @@ export function handleFundSettingsAdded(event: FundSettingsAdded): void {
 
   let feeSettings = new PerformanceFeeSettingsAddedEvent(genericId(event));
   feeSettings.fund = vault.toHex(); // fund does not exist yet
-  feeSettings.account = ensureManager(event.transaction.from, event).id;
+  feeSettings.account = ensureAccount(event.transaction.from, event).id;
   feeSettings.contract = ensureContract(event.address, 'PerformanceFee').id;
   feeSettings.timestamp = event.block.timestamp;
   feeSettings.transaction = ensureTransaction(event).id;
@@ -58,7 +58,7 @@ export function handleActivatedForFund(event: ActivatedForFund): void {
 
   let feeActivation = new PerformanceFeeActivatedForFundEvent(genericId(event));
   feeActivation.fund = vault.toHex(); // fund does not exist yet
-  feeActivation.account = ensureManager(event.transaction.from, event).id;
+  feeActivation.account = ensureAccount(event.transaction.from, event).id;
   feeActivation.contract = ensureContract(event.address, 'PerformanceFee').id;
   feeActivation.timestamp = event.block.timestamp;
   feeActivation.transaction = ensureTransaction(event).id;

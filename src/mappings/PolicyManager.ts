@@ -1,4 +1,4 @@
-import { useManager } from '../entities/Account';
+import { useAccount } from '../entities/Account';
 import { ensureContract } from '../entities/Contract';
 import { ensurePolicy, usePolicy } from '../entities/Policy';
 import { ensureTransaction } from '../entities/Transaction';
@@ -50,7 +50,7 @@ export function handlePolicyEnabledForFund(event: PolicyEnabledForFund): void {
 
   let enabled = new PolicyEnabledForFundEvent(genericId(event));
   enabled.fund = fundId;
-  enabled.account = useManager(event.transaction.from.toHex()).id;
+  enabled.account = useAccount(event.transaction.from.toHex()).id;
   enabled.timestamp = event.block.timestamp;
   enabled.transaction = ensureTransaction(event).id;
   enabled.contract = event.address.toHex();
@@ -69,7 +69,7 @@ export function handlePolicyDisabledForFund(event: PolicyDisabledForFund): void 
 
   let enabled = new PolicyDisabledForFundEvent(genericId(event));
   enabled.fund = fundId;
-  enabled.account = useManager(event.transaction.from.toHex()).id;
+  enabled.account = useAccount(event.transaction.from.toHex()).id;
   enabled.timestamp = event.block.timestamp;
   enabled.transaction = ensureTransaction(event).id;
   enabled.contract = event.address.toHex();

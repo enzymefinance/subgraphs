@@ -1,6 +1,6 @@
 import { Address, BigDecimal } from '@graphprotocol/graph-ts';
 import { zeroAddress } from '../constants';
-import { ensureAccount, useAccount, useManager } from '../entities/Account';
+import { ensureAccount, useAccount } from '../entities/Account';
 import { calculationStateId, trackCalculationState } from '../entities/CalculationState';
 import { ensureContract } from '../entities/Contract';
 import { ensureFee, useFee } from '../entities/Fee';
@@ -99,7 +99,7 @@ export function handleFeeEnabledForFund(event: FeeEnabledForFund): void {
   let enabled = new FeeEnabledForFundEvent(genericId(event));
   enabled.fund = fundId;
   enabled.contract = ensureContract(event.address, 'FeeManager').id;
-  enabled.account = useManager(event.transaction.from.toHex()).id;
+  enabled.account = ensureAccount(event.transaction.from, event).id;
   enabled.timestamp = event.block.timestamp;
   enabled.transaction = ensureTransaction(event).id;
   enabled.fee = fee.id;
@@ -184,7 +184,7 @@ export function handleFeesRecipientSetForFund(event: FeesRecipientSetForFund): v
   let feeRecipientSet = new FeesRecipientSetForFundEvent(genericId(event));
   feeRecipientSet.contract = ensureContract(event.address, 'FeeManager').id;
   feeRecipientSet.fund = vaultProxy;
-  feeRecipientSet.account = useManager(event.transaction.from.toHex()).id;
+  feeRecipientSet.account = ensureAccount(event.transaction.from, event).id;
   feeRecipientSet.timestamp = event.block.timestamp;
   feeRecipientSet.transaction = ensureTransaction(event).id;
   feeRecipientSet.comptrollerProxy = event.params.comptrollerProxy.toHex();

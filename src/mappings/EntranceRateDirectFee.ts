@@ -1,5 +1,5 @@
 import { BigDecimal } from '@graphprotocol/graph-ts';
-import { ensureAccount, ensureManager } from '../entities/Account';
+import { ensureAccount } from '../entities/Account';
 import { ensureContract } from '../entities/Contract';
 import { ensureEntranceRateDirectFeeSetting } from '../entities/EntranceRateDirectFeeSetting';
 import { entranceRateDirectFeeStateId, useEntranceRateDirectFeeState } from '../entities/EntranceRateDirectFeeState';
@@ -22,7 +22,7 @@ export function handleFundSettingsAdded(event: FundSettingsAdded): void {
 
   let feeSettings = new EntranceRateDirectFeeSettingsAddedEvent(genericId(event));
   feeSettings.fund = vault.toHex(); // fund does not exist yet
-  feeSettings.account = ensureManager(event.transaction.from, event).id;
+  feeSettings.account = ensureAccount(event.transaction.from, event).id;
   feeSettings.contract = ensureContract(event.address, 'EntranceRateDirectFee').id;
   feeSettings.timestamp = event.block.timestamp;
   feeSettings.transaction = ensureTransaction(event).id;

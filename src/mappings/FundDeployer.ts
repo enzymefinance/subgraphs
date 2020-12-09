@@ -24,14 +24,16 @@ import { ComptrollerLibDataSource, VaultLibDataSource } from '../generated/templ
 import { genericId } from '../utils/genericId';
 
 export function handleNewFundCreated(event: NewFundCreated): void {
+  let manager = ensureManager(event.params.fundOwner, event);
+
   let fundCreation = new NewFundCreatedEvent(genericId(event));
   fundCreation.timestamp = event.block.timestamp;
   fundCreation.fund = event.params.vaultProxy.toHex();
-  fundCreation.account = ensureManager(event.params.fundOwner, event).id;
+  fundCreation.account = manager.id;
   fundCreation.contract = ensureContract(event.address, 'FundDeployer').id;
   fundCreation.comptrollerProxy = event.params.comptrollerProxy.toHex();
   fundCreation.vaultProxy = event.params.vaultProxy.toHex();
-  fundCreation.fundOwner = ensureManager(event.params.fundOwner, event).id;
+  fundCreation.fundOwner = manager.id;
   fundCreation.fundName = event.params.fundName;
   fundCreation.creator = ensureAccount(event.params.creator, event).id;
   fundCreation.denominationAsset = useAsset(event.params.denominationAsset.toHex()).id;
@@ -66,7 +68,7 @@ export function handleComptrollerProxyDeployed(event: ComptrollerProxyDeployed):
   let comptrollerProxyDeployment = new ComptrollerProxyDeployedEvent(genericId(event));
   comptrollerProxyDeployment.timestamp = event.block.timestamp;
   comptrollerProxyDeployment.fund = vaultProxy.toHex();
-  comptrollerProxyDeployment.account = ensureManager(event.transaction.from, event).id;
+  comptrollerProxyDeployment.account = ensureAccount(event.transaction.from, event).id;
   comptrollerProxyDeployment.contract = ensureContract(event.address, 'FundDeployer').id;
   comptrollerProxyDeployment.comptrollerProxy = event.params.comptrollerProxy.toHex();
   comptrollerProxyDeployment.transaction = ensureTransaction(event).id;

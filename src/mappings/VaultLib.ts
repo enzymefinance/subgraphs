@@ -60,7 +60,7 @@ export function handleAssetWithdrawn(event: AssetWithdrawn): void {
 export function handleMigratorSet(event: MigratorSet): void {
   let migratorSet = new MigratorSetEvent(genericId(event));
   migratorSet.fund = useFund(event.address.toHex()).id;
-  migratorSet.account = ensureManager(event.transaction.from, event).id;
+  migratorSet.account = ensureAccount(event.transaction.from, event).id;
   migratorSet.contract = event.address.toHex();
   migratorSet.timestamp = event.block.timestamp;
   migratorSet.transaction = ensureTransaction(event).id;
@@ -72,7 +72,7 @@ export function handleMigratorSet(event: MigratorSet): void {
 export function handleOwnerSet(event: OwnerSet): void {
   let ownerSet = new OwnerSetEvent(genericId(event));
   ownerSet.fund = useFund(event.address.toHex()).id;
-  ownerSet.account = ensureManager(event.transaction.from, event).id;
+  ownerSet.account = ensureAccount(event.transaction.from, event).id;
   ownerSet.contract = ensureContract(event.address, 'VaultLib').id;
   ownerSet.timestamp = event.block.timestamp;
   ownerSet.transaction = ensureTransaction(event).id;
@@ -122,7 +122,7 @@ export function handleTrackedAssetRemoved(event: TrackedAssetRemoved): void {
 export function handleVaultLibSet(event: VaultLibSet): void {
   let vaultLibSet = new VaultLibSetEvent(genericId(event));
   vaultLibSet.fund = useFund(event.address.toHex()).id;
-  vaultLibSet.account = ensureManager(Address.fromString(ensureTransaction(event).from), event).id;
+  vaultLibSet.account = ensureAccount(Address.fromString(ensureTransaction(event).from), event).id;
   vaultLibSet.contract = ensureContract(event.address, 'VaultLib').id;
   vaultLibSet.timestamp = event.block.timestamp;
   vaultLibSet.transaction = ensureTransaction(event).id;

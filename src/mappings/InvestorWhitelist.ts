@@ -1,4 +1,4 @@
-import { ensureAccount, ensureManager, useManager } from '../entities/Account';
+import { ensureAccount, useAccount } from '../entities/Account';
 import { ensureContract } from '../entities/Contract';
 import { useFund } from '../entities/Fund';
 import { ensureInvestorWhitelistSetting, useInvestorWhitelistSetting } from '../entities/InvestorWhitelistSetting';
@@ -24,7 +24,7 @@ export function handleAddressesAdded(event: AddressesAdded): void {
 
   let addressesAdded = new InvestorWhitelistAddressesAddedEvent(genericId(event));
   addressesAdded.fund = fundId; // fund may not exist yet
-  addressesAdded.account = ensureManager(event.transaction.from, event).id;
+  addressesAdded.account = ensureAccount(event.transaction.from, event).id;
   addressesAdded.contract = ensureContract(event.address, 'InvestorWhitelist').id;
   addressesAdded.timestamp = event.block.timestamp;
   addressesAdded.transaction = ensureTransaction(event).id;
@@ -48,7 +48,7 @@ export function handleAddressesRemoved(event: AddressesRemoved): void {
 
   let addressesRemoved = new InvestorWhitelistAddressesRemovedEvent(genericId(event));
   addressesRemoved.fund = fund.id;
-  addressesRemoved.account = useManager(event.transaction.from.toHex()).id;
+  addressesRemoved.account = useAccount(event.transaction.from.toHex()).id;
   addressesRemoved.contract = event.address.toHex();
   addressesRemoved.timestamp = event.block.timestamp;
   addressesRemoved.transaction = ensureTransaction(event).id;
