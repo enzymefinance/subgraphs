@@ -21,6 +21,7 @@ export function ensureInvestment(investor: Account, fund: Fund, stateId: string,
   investment.investor = investor.id;
   investment.shares = BigDecimal.fromString('0');
   investment.state = stateId;
+  investment.since = event.block.timestamp;
   investment.save();
 
   fund.investments = arrayUnique<string>(fund.investments.concat([id]));

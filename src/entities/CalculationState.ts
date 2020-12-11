@@ -8,6 +8,7 @@ import { arrayUnique } from '../utils/arrayUnique';
 import { logCritical } from '../utils/logCritical';
 import { toBigDecimal } from '../utils/toBigDecimal';
 import { useAsset } from './Asset';
+import { useAssetPrice } from './AssetPrice';
 import { ensureFundState } from './FundState';
 
 export function calculationStateId(fund: Fund, event: ethereum.Event): string {
@@ -87,6 +88,11 @@ export function trackCalculationState(fund: Fund, event: ethereum.Event, cause: 
   state.events = arrayUnique<string>(events.concat(calculations.events));
   state.calculations = calculations.id;
   state.save();
+
+  if (denominationAsset.price) {
+    let denominationAssetPrice = useAssetPrice(denominationAsset.price);
+    fund.lastKnowGavInEth = calculations.gav.times(denominationAssetPrice.price);
+  }
 
   fund.calculations = calculations.id;
   fund.save();

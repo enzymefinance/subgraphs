@@ -19,6 +19,8 @@ import {
   lendSelector,
   managementFeeConfigArgs,
   maxConcentrationArgs,
+  MockToken,
+  MockUniswapV2PriceSource,
   performanceFeeConfigArgs,
   policyManagerConfigArgs,
   StandardToken,
@@ -28,6 +30,8 @@ import {
   takeOrderSelector,
   UniswapV2Adapter,
   uniswapV2LendArgs,
+  uniswapV2TakeOrderArgs,
+  ValueInterpreter,
 } from '@melonproject/protocol';
 import { providers, utils, Wallet } from 'ethers';
 import faker from 'faker';
@@ -41,13 +45,13 @@ import { Asset, fetchAssets } from '../tests/utils/subgraph-queries/fetchAssets'
   let manager: SignerWithAddress;
   let investor: SignerWithAddress;
 
-  // const testnetEndpoint = 'http://localhost:4000/graphql';
-  // const jsonRpcProvider = 'http://localhost:8545';
-  // const subgraphApi = 'http://localhost:8000/subgraphs/name/melonproject/melon';
+  const testnetEndpoint = 'http://localhost:4000/graphql';
+  const jsonRpcProvider = 'http://localhost:8545';
+  const subgraphApi = 'http://localhost:8000/subgraphs/name/melonproject/melon';
 
-  const testnetEndpoint = 'https://testnet.avantgarde.finance/graphql';
-  const jsonRpcProvider = 'https://testnet.avantgarde.finance';
-  const subgraphApi = 'https://thegraph.testnet.avantgarde.finance/subgraphs/name/melonproject/melon';
+  // const testnetEndpoint = 'https://testnet.avantgarde.finance/graphql';
+  // const jsonRpcProvider = 'https://testnet.avantgarde.finance';
+  // const subgraphApi = 'https://thegraph.testnet.avantgarde.finance/subgraphs/name/melonproject/melon';
 
   [deployment, assets] = await Promise.all([fetchDeployment(testnetEndpoint), fetchAssets(subgraphApi)]);
   provider = new providers.JsonRpcProvider(jsonRpcProvider);
@@ -75,6 +79,14 @@ import { Asset, fetchAssets } from '../tests/utils/subgraph-queries/fetchAssets'
     assets.find((asset) => asset.symbol === symbol1),
   ) as Asset[];
 
+  const uniswapV2Pairs = uniswapV2PairUnderlyings.map(([symbol0, symbol1]) =>
+    assets.find(
+      (asset) =>
+        asset.uniswapV2PoolAssetDetail?.token0.symbol === symbol0 &&
+        asset.uniswapV2PoolAssetDetail?.token1.symbol === symbol1,
+    ),
+  ) as Asset[];
+
   const cTokens = cTokenSymbols.map((symbol) => assets.find((asset) => asset.symbol === symbol));
 
   const [managerAddress, investorAddress] = await Promise.all([
@@ -86,6 +98,8 @@ import { Asset, fetchAssets } from '../tests/utils/subgraph-queries/fetchAssets'
   investor = await SignerWithAddress.create(new Wallet(investorAddress.privateKey, provider));
 
   const denominationAsset = new StandardToken(deployment.wethToken, provider);
+
+  const valueInterpreter = new ValueInterpreter(deployment.valueInterpreter, provider);
 
   const kyberAdapter = new KyberAdapter(deployment.kyberAdapter, manager);
   const uniswapV2Adapter = new UniswapV2Adapter(deployment.uniswapV2Adapter, manager);
@@ -186,17 +200,48 @@ import { Asset, fetchAssets } from '../tests/utils/subgraph-queries/fetchAssets'
       callArgs,
     );
 
+    // trade for token
+    console.log(`\ttrading on Uniswap`);
+
+    const takeOrderUniswapArgs = uniswapV2TakeOrderArgs({
+      path: [deployment.wethToken, tokens[remainder].id],
+      outgoingAssetAmount: utils.parseEther('1'),
+      minIncomingAssetAmount: utils.parseEther('0.000000001'),
+    });
+
+    const callUniswapTakeOrderArgs = callOnIntegrationArgs({
+      adapter: uniswapV2Adapter,
+      selector: takeOrderSelector,
+      encodedCallArgs: takeOrderUniswapArgs,
+    });
+
+    await comptrollerProxy.callOnExtension(
+      deployment.integrationManager,
+      IntegrationManagerActionId.CallOnIntegration,
+      callUniswapTakeOrderArgs,
+    );
+
     // buy UniswapV2Pool
     console.log(`\tbuying uniswapV2Pool`);
+
+    const pair = new MockUniswapV2PriceSource(uniswapV2Pairs[remainder].id, manager);
+    const token0 = new MockToken(uniswapV2Tokens0[remainder].id, manager);
+    const token1 = new MockToken(uniswapV2Tokens1[remainder].id, manager);
+    const decimals0 = await token0.decimals();
+    const decimals1 = await token1.decimals();
+
+    const pairPrice = await valueInterpreter.calcCanonicalAssetValue
+      .args(pair, utils.parseEther('1'), deployment.wethToken)
+      .call();
 
     const uniswapV2Args = uniswapV2LendArgs({
       tokenA: uniswapV2Tokens0[remainder].id,
       tokenB: uniswapV2Tokens1[remainder].id,
-      amountADesired: utils.parseEther('1'),
-      amountBDesired: utils.parseEther('1'),
-      amountAMin: utils.parseEther('1'),
-      amountBMin: utils.parseEther('1'),
-      minPoolTokenAmount: utils.parseEther('0.0001'),
+      amountADesired: utils.parseUnits('0.000001', decimals0),
+      amountBDesired: utils.parseUnits('0.000001', decimals1),
+      amountAMin: 1,
+      amountBMin: 1,
+      minPoolTokenAmount: 1,
     });
 
     const uniswapV2CallArgs = callOnIntegrationArgs({

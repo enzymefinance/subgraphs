@@ -1245,6 +1245,7 @@ type Fund @entity {
   migrator: String
   denominationAsset: Asset!
   sharesActionTimelock: BigInt!
+  lastKnowGavInEth: BigDecimal
 
   # policies
   policies: [PolicySettingInterface!]! @derivedFrom(field: "fund")
@@ -1358,6 +1359,7 @@ type Account @entity {
 
 type Investment @entity {
   id: ID!
+  since: BigInt!
   fund: Fund!
   investor: Account!
   shares: BigDecimal!
