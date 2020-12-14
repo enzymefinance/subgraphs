@@ -20,6 +20,7 @@ export function ensureManager(managerAddress: Address, event: ethereum.Event): A
 
   if (!account.manager) {
     account.manager = true;
+    account.managerSince = event.block.timestamp;
     account.save();
 
     trackNetworkManagers(event);
@@ -45,6 +46,7 @@ export function ensureInvestor(investorAddress: Address, event: ethereum.Event):
 
   if (!account.investor) {
     account.investor = true;
+    account.investorSince = event.block.timestamp;
     account.save();
 
     trackNetworkInvestors(event);

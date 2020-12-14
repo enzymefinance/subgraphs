@@ -1,8 +1,11 @@
 import { extractEvent, SignerWithAddress } from '@crestproject/crestproject';
 import {
+  addTrackedAssetsArgs,
+  addTrackedAssetsSelector,
   callOnIntegrationArgs,
   ChaiAdapter,
   chaiLendArgs,
+  chaiRedeemArgs,
   CompoundAdapter,
   compoundArgs,
   ComptrollerLib,
@@ -23,15 +26,17 @@ import {
   MockUniswapV2PriceSource,
   performanceFeeConfigArgs,
   policyManagerConfigArgs,
+  redeemSelector,
   StandardToken,
   SynthetixAdapter,
   synthetixAssignExchangeDelegateSelector,
   synthetixTakeOrderArgs,
   takeOrderSelector,
+  TrackedAssetsAdapter,
   UniswapV2Adapter,
   uniswapV2LendArgs,
+  uniswapV2RedeemArgs,
   uniswapV2TakeOrderArgs,
-  ValueInterpreter,
 } from '@melonproject/protocol';
 import { providers, utils, Wallet } from 'ethers';
 import faker from 'faker';
@@ -45,13 +50,13 @@ import { Asset, fetchAssets } from '../tests/utils/subgraph-queries/fetchAssets'
   let manager: SignerWithAddress;
   let investor: SignerWithAddress;
 
-  const testnetEndpoint = 'http://localhost:4000/graphql';
-  const jsonRpcProvider = 'http://localhost:8545';
-  const subgraphApi = 'http://localhost:8000/subgraphs/name/melonproject/melon';
+  // const testnetEndpoint = 'http://localhost:4000/graphql';
+  // const jsonRpcProvider = 'http://localhost:8545';
+  // const subgraphApi = 'http://localhost:8000/subgraphs/name/melonproject/melon';
 
-  // const testnetEndpoint = 'https://testnet.avantgarde.finance/graphql';
-  // const jsonRpcProvider = 'https://testnet.avantgarde.finance';
-  // const subgraphApi = 'https://thegraph.testnet.avantgarde.finance/subgraphs/name/melonproject/melon';
+  const testnetEndpoint = 'https://testnet.avantgarde.finance/graphql';
+  const jsonRpcProvider = 'https://testnet.avantgarde.finance';
+  const subgraphApi = 'https://thegraph.testnet.avantgarde.finance/subgraphs/name/melonproject/melon';
 
   [deployment, assets] = await Promise.all([fetchDeployment(testnetEndpoint), fetchAssets(subgraphApi)]);
   provider = new providers.JsonRpcProvider(jsonRpcProvider);
@@ -89,6 +94,8 @@ import { Asset, fetchAssets } from '../tests/utils/subgraph-queries/fetchAssets'
 
   const cTokens = cTokenSymbols.map((symbol) => assets.find((asset) => asset.symbol === symbol));
 
+  const chaiToken = assets.find((asset) => asset.symbol == 'CHAI') as Asset;
+
   const [managerAddress, investorAddress] = await Promise.all([
     createAccount(testnetEndpoint),
     createAccount(testnetEndpoint),
@@ -98,8 +105,6 @@ import { Asset, fetchAssets } from '../tests/utils/subgraph-queries/fetchAssets'
   investor = await SignerWithAddress.create(new Wallet(investorAddress.privateKey, provider));
 
   const denominationAsset = new StandardToken(deployment.wethToken, provider);
-
-  const valueInterpreter = new ValueInterpreter(deployment.valueInterpreter, provider);
 
   const kyberAdapter = new KyberAdapter(deployment.kyberAdapter, manager);
   const uniswapV2Adapter = new UniswapV2Adapter(deployment.uniswapV2Adapter, manager);
@@ -119,6 +124,8 @@ import { Asset, fetchAssets } from '../tests/utils/subgraph-queries/fetchAssets'
   const synthetixExchanger = new ISynthetixExchanger(exchanger, manager);
   const synthetixDelegateApprovals = new ISynthetixDelegateApprovals(delegateApprovals, manager);
   const synthetixAdapter = new SynthetixAdapter(deployment.synthetixAdapter, manager);
+
+  const addTrackedAssetsAdapter = new TrackedAssetsAdapter(deployment.trackedAssetsAdapter, manager);
 
   // create funds
   for (let i = 0; i < 100; i++) {
@@ -224,15 +231,10 @@ import { Asset, fetchAssets } from '../tests/utils/subgraph-queries/fetchAssets'
     // buy UniswapV2Pool
     console.log(`\tbuying uniswapV2Pool`);
 
-    const pair = new MockUniswapV2PriceSource(uniswapV2Pairs[remainder].id, manager);
     const token0 = new MockToken(uniswapV2Tokens0[remainder].id, manager);
     const token1 = new MockToken(uniswapV2Tokens1[remainder].id, manager);
     const decimals0 = await token0.decimals();
     const decimals1 = await token1.decimals();
-
-    const pairPrice = await valueInterpreter.calcCanonicalAssetValue
-      .args(pair, utils.parseEther('1'), deployment.wethToken)
-      .call();
 
     const uniswapV2Args = uniswapV2LendArgs({
       tokenA: uniswapV2Tokens0[remainder].id,
@@ -256,25 +258,74 @@ import { Asset, fetchAssets } from '../tests/utils/subgraph-queries/fetchAssets'
       uniswapV2CallArgs,
     );
 
+    // sell UniswapV2Pool
+    console.log(`\tselling uniswapV2Pool`);
+
+    const pair = new MockUniswapV2PriceSource(uniswapV2Pairs[remainder].id, manager);
+    const balance = await pair.balanceOf(vaultProxy);
+
+    const usV2RedeemArgs = uniswapV2RedeemArgs({
+      poolTokenAmount: balance.div(2),
+      tokenA: uniswapV2Tokens0[remainder].id,
+      tokenB: uniswapV2Tokens1[remainder].id,
+      amountAMin: 1,
+      amountBMin: 1,
+    });
+
+    const usV2RedeemCallArgs = callOnIntegrationArgs({
+      adapter: uniswapV2Adapter,
+      selector: redeemSelector,
+      encodedCallArgs: usV2RedeemArgs,
+    });
+
+    await comptrollerProxy.callOnExtension(
+      deployment.integrationManager,
+      IntegrationManagerActionId.CallOnIntegration,
+      usV2RedeemCallArgs,
+    );
+
     // chai lending
     console.log(`\tlending Chai`);
 
     if (remainder === 0) {
-      const chaiArgs = chaiLendArgs({
+      const chaiLArgs = chaiLendArgs({
         outgoingDaiAmount: utils.parseEther('1'),
         expectedIncomingChaiAmount: utils.parseEther('0.00000001'),
       });
 
-      const chaiCallArgs = callOnIntegrationArgs({
+      const chaiLCallArgs = callOnIntegrationArgs({
         adapter: chaiAdapter,
         selector: lendSelector,
-        encodedCallArgs: chaiArgs,
+        encodedCallArgs: chaiLArgs,
       });
 
       await comptrollerProxy.callOnExtension(
         deployment.integrationManager,
         IntegrationManagerActionId.CallOnIntegration,
-        chaiCallArgs,
+        chaiLCallArgs,
+      );
+
+      // chai redemption
+      console.log(`\tredeeming Chai`);
+
+      const chai = new StandardToken(chaiToken.id, manager);
+      const chaiBalance = await chai.balanceOf(vaultProxy);
+
+      const chaiRArgs = chaiRedeemArgs({
+        outgoingChaiAmount: chaiBalance.div(2),
+        expectedIncomingDaiAmount: 1,
+      });
+
+      const chaiRCallArgs = callOnIntegrationArgs({
+        adapter: chaiAdapter,
+        selector: redeemSelector,
+        encodedCallArgs: chaiRArgs,
+      });
+
+      await comptrollerProxy.callOnExtension(
+        deployment.integrationManager,
+        IntegrationManagerActionId.CallOnIntegration,
+        chaiRCallArgs,
       );
     }
 
@@ -299,6 +350,31 @@ import { Asset, fetchAssets } from '../tests/utils/subgraph-queries/fetchAssets'
         IntegrationManagerActionId.CallOnIntegration,
         callArgs,
       );
+
+      // compound redeeming
+      // console.log(`\tredeeming Compound`);
+
+      // const cToken = new StandardToken((cTokens[remainder] as Asset).id, manager);
+
+      // const cTokenBalance = await cToken.balanceOf(vaultProxy);
+
+      // const redeemArgs = await compoundArgs({
+      //   cToken: (cTokens[remainder] as Asset).id,
+      //   outgoingAssetAmount: cTokenBalance.div(10),
+      //   minIncomingAssetAmount: 1,
+      // });
+
+      // const callCompoundArgs = callOnIntegrationArgs({
+      //   adapter: compoundAdapter,
+      //   selector: redeemSelector,
+      //   encodedCallArgs: redeemArgs,
+      // });
+
+      // await comptrollerProxy.callOnExtension(
+      //   deployment.integrationManager,
+      //   IntegrationManagerActionId.CallOnIntegration,
+      //   callCompoundArgs,
+      // );
     }
 
     // buy sUSD on Kyber
@@ -356,6 +432,32 @@ import { Asset, fetchAssets } from '../tests/utils/subgraph-queries/fetchAssets'
       deployment.integrationManager,
       IntegrationManagerActionId.CallOnIntegration,
       synthetixCallArgs,
+    );
+
+    // transfer assets to vault, and call tracked assets
+    console.log(`\tadding tracked assets`);
+
+    const uni = assets.find((asset) => asset.symbol === 'UNI') as Asset;
+    const uniToken = new MockToken(uni.id, manager);
+
+    const yfi = assets.find((asset) => asset.symbol === 'YFI') as Asset;
+    const yfiToken = new MockToken(yfi.id, manager);
+
+    await uniToken.mintFor(vaultProxy, utils.parseEther('2'));
+    await yfiToken.mintFor(vaultProxy, utils.parseEther('2'));
+
+    const trackedAssetsArgs = addTrackedAssetsArgs([uniToken, yfiToken]);
+
+    const trackedAssetsCallArgs = callOnIntegrationArgs({
+      adapter: addTrackedAssetsAdapter,
+      selector: addTrackedAssetsSelector,
+      encodedCallArgs: trackedAssetsArgs,
+    });
+
+    await comptrollerProxy.callOnExtension(
+      deployment.integrationManager,
+      IntegrationManagerActionId.CallOnIntegration,
+      trackedAssetsCallArgs,
     );
 
     console.log(`Created fund #${i}`);

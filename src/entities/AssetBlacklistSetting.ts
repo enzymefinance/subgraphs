@@ -1,7 +1,7 @@
 import { BigInt } from '@graphprotocol/graph-ts';
 import { AssetBlacklistSetting, Fund, Policy } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
-import { policySettingId } from '../utils/policySettingId';
+import { policySettingId } from './PolicySetting';
 
 export function useAssetBlacklistSetting(fund: Fund, policy: Policy): AssetBlacklistSetting {
   let id = policySettingId(fund.id, policy);
@@ -29,6 +29,7 @@ export function ensureAssetBlacklistSetting(fundId: string, policy: Policy): Ass
   setting.assets = new Array<string>();
   setting.events = new Array<string>();
   setting.timestamp = BigInt.fromI32(0);
+  setting.enabled = true;
   setting.save();
 
   return setting;

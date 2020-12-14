@@ -1,6 +1,7 @@
 import { useAccount } from '../entities/Account';
 import { ensureContract } from '../entities/Contract';
 import { ensurePolicy, usePolicy } from '../entities/Policy';
+import { trackPolicySettingDisabled, trackPolicySettingEnabled } from '../entities/PolicySetting';
 import { ensureTransaction } from '../entities/Transaction';
 import { ComptrollerLibContract } from '../generated/ComptrollerLibContract';
 import {
@@ -15,8 +16,6 @@ import {
   PolicyEnabledForFundEvent,
   PolicyRegisteredEvent,
 } from '../generated/schema';
-import { arrayDiff } from '../utils/arrayDiff';
-import { arrayUnique } from '../utils/arrayUnique';
 import { genericId } from '../utils/genericId';
 import { getPolicyHook } from '../utils/getPolicyHook';
 
@@ -58,8 +57,7 @@ export function handlePolicyEnabledForFund(event: PolicyEnabledForFund): void {
   enabled.settingsData = event.params.settingsData.toHexString();
   enabled.save();
 
-  policy.funds = arrayUnique<string>(policy.funds.concat([fundId]));
-  policy.save();
+  trackPolicySettingEnabled(fundId, policy);
 }
 
 export function handlePolicyDisabledForFund(event: PolicyDisabledForFund): void {
@@ -76,6 +74,5 @@ export function handlePolicyDisabledForFund(event: PolicyDisabledForFund): void 
   enabled.policy = policy.id;
   enabled.save();
 
-  policy.funds = arrayDiff<string>(policy.funds, [fundId]);
-  policy.save();
+  trackPolicySettingDisabled(fundId, policy);
 }

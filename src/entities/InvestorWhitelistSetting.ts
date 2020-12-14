@@ -1,7 +1,7 @@
 import { BigInt } from '@graphprotocol/graph-ts';
-import { InvestorWhitelistSetting, Fund, Policy } from '../generated/schema';
+import { Fund, InvestorWhitelistSetting, Policy } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
-import { policySettingId } from '../utils/policySettingId';
+import { policySettingId } from './PolicySetting';
 
 export function useInvestorWhitelistSetting(fund: Fund, policy: Policy): InvestorWhitelistSetting {
   let id = policySettingId(fund.id, policy);
@@ -28,6 +28,7 @@ export function ensureInvestorWhitelistSetting(fundId: string, policy: Policy): 
   setting.listed = new Array<string>();
   setting.events = new Array<string>();
   setting.timestamp = BigInt.fromI32(0);
+  setting.enabled = true;
   setting.save();
 
   return setting;
