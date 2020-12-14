@@ -67,7 +67,7 @@ export function getPolicySettingEntity(identifier: string): string {
   }
 
   if (identifier == 'MIN_MAX_INVESTMENT') {
-    return 'MinMaxInvestmentSettin';
+    return 'MinMaxInvestmentSetting';
   }
 
   return 'Policy Entity not found';
