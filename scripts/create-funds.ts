@@ -74,7 +74,7 @@ import { Asset, fetchAssets } from '../tests/utils/subgraph-queries/fetchAssets'
   const tokens = tradeTokenSymbols.map((symbol) => assets.find((asset) => asset.symbol === symbol)) as Asset[];
   const sUsd = assets.find((asset) => asset.symbol == 'sUSD') as Asset;
 
-  const synthTokenSymbols = ['sBTC', 'iETH', 'iOIL', 'sFTSE', 'iDEFI'];
+  const synthTokenSymbols = ['', '', 'sOIL', '', 'sDEFI'];
   const synthTokens = synthTokenSymbols.map((symbol) => assets.find((asset) => asset.symbol === symbol)) as Asset[];
 
   const uniswapV2Tokens0 = uniswapV2PairUnderlyings.map(([symbol0]) =>
@@ -352,29 +352,29 @@ import { Asset, fetchAssets } from '../tests/utils/subgraph-queries/fetchAssets'
       );
 
       // compound redeeming
-      // console.log(`\tredeeming Compound`);
+      console.log(`\tredeeming Compound`);
 
-      // const cToken = new StandardToken((cTokens[remainder] as Asset).id, manager);
+      const cToken = new StandardToken((cTokens[remainder] as Asset).id, manager);
 
-      // const cTokenBalance = await cToken.balanceOf(vaultProxy);
+      const cTokenBalance = await cToken.balanceOf(vaultProxy);
 
-      // const redeemArgs = await compoundArgs({
-      //   cToken: (cTokens[remainder] as Asset).id,
-      //   outgoingAssetAmount: cTokenBalance.div(10),
-      //   minIncomingAssetAmount: 1,
-      // });
+      const redeemArgs = await compoundArgs({
+        cToken: (cTokens[remainder] as Asset).id,
+        outgoingAssetAmount: cTokenBalance.div(10),
+        minIncomingAssetAmount: 1,
+      });
 
-      // const callCompoundArgs = callOnIntegrationArgs({
-      //   adapter: compoundAdapter,
-      //   selector: redeemSelector,
-      //   encodedCallArgs: redeemArgs,
-      // });
+      const callCompoundArgs = callOnIntegrationArgs({
+        adapter: compoundAdapter,
+        selector: redeemSelector,
+        encodedCallArgs: redeemArgs,
+      });
 
-      // await comptrollerProxy.callOnExtension(
-      //   deployment.integrationManager,
-      //   IntegrationManagerActionId.CallOnIntegration,
-      //   callCompoundArgs,
-      // );
+      await comptrollerProxy.callOnExtension(
+        deployment.integrationManager,
+        IntegrationManagerActionId.CallOnIntegration,
+        callCompoundArgs,
+      );
     }
 
     // buy sUSD on Kyber
@@ -400,39 +400,41 @@ import { Asset, fetchAssets } from '../tests/utils/subgraph-queries/fetchAssets'
     );
 
     // trade sUSD into another synth
-    console.log(`\ttrading sUSD for another synth`);
+    if (synthTokens[remainder]) {
+      console.log(`\ttrading sUSD for another synth`);
 
-    await comptrollerProxy.vaultCallOnContract(
-      synthetixDelegateApprovals,
-      synthetixAssignExchangeDelegateSelector,
-      encodeArgs(['address'], [synthetixAdapter]),
-    );
+      await comptrollerProxy.vaultCallOnContract(
+        synthetixDelegateApprovals,
+        synthetixAssignExchangeDelegateSelector,
+        encodeArgs(['address'], [synthetixAdapter]),
+      );
 
-    const outgoingAssetAmount = utils.parseEther('1');
-    const { 0: minIncomingAssetAmount } = await synthetixExchanger.getAmountsForExchange(
-      outgoingAssetAmount,
-      utils.formatBytes32String('sUSD'),
-      utils.formatBytes32String(synthTokens[remainder].symbol),
-    );
+      const outgoingAssetAmount = utils.parseEther('1');
+      const { 0: minIncomingAssetAmount } = await synthetixExchanger.getAmountsForExchange(
+        outgoingAssetAmount,
+        utils.formatBytes32String('sUSD'),
+        utils.formatBytes32String(synthTokens[remainder].symbol),
+      );
 
-    const synthetixArgs = synthetixTakeOrderArgs({
-      outgoingAsset: sUsd.id,
-      outgoingAssetAmount,
-      incomingAsset: synthTokens[remainder].id,
-      minIncomingAssetAmount,
-    });
+      const synthetixArgs = synthetixTakeOrderArgs({
+        outgoingAsset: sUsd.id,
+        outgoingAssetAmount,
+        incomingAsset: synthTokens[remainder].id,
+        minIncomingAssetAmount,
+      });
 
-    const synthetixCallArgs = callOnIntegrationArgs({
-      adapter: synthetixAdapter,
-      selector: takeOrderSelector,
-      encodedCallArgs: synthetixArgs,
-    });
+      const synthetixCallArgs = callOnIntegrationArgs({
+        adapter: synthetixAdapter,
+        selector: takeOrderSelector,
+        encodedCallArgs: synthetixArgs,
+      });
 
-    await comptrollerProxy.callOnExtension(
-      deployment.integrationManager,
-      IntegrationManagerActionId.CallOnIntegration,
-      synthetixCallArgs,
-    );
+      await comptrollerProxy.callOnExtension(
+        deployment.integrationManager,
+        IntegrationManagerActionId.CallOnIntegration,
+        synthetixCallArgs,
+      );
+    }
 
     // transfer assets to vault, and call tracked assets
     console.log(`\tadding tracked assets`);
