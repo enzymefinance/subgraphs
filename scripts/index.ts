@@ -120,7 +120,7 @@ yargs
     (yargs) => {
       return yargs.option('deployment', {
         type: 'string',
-        default: 'https://testnet.avantgarde.finance/graphql',
+        default: 'https://evm.testnet.enzyme.finance/graphql',
       });
     },
     async (args) => {
