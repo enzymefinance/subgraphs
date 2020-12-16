@@ -43,7 +43,7 @@ describe("Walkthrough a fund's lifecycle", () => {
   const testnetEndpoint = 'http://localhost:4000/graphql';
   const jsonRpcProvider = 'http://localhost:8545';
   const subgraphStatusEndpoint = 'http://localhost:8030/graphql';
-  const subgraphApi = 'http://localhost:8000/subgraphs/name/melonproject/melon';
+  const subgraphApi = 'http://localhost:8000/subgraphs/name/enzymefinance/enzyme';
 
   beforeAll(async () => {
     deployment = await fetchDeployment(testnetEndpoint);

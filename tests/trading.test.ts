@@ -10,7 +10,7 @@ describe('Walkthrough', () => {
 
   const testnetEndpoint = 'http://localhost:4000/graphql';
   const jsonRpcProvider = 'http://localhost:8545';
-  const subgraphApi = 'http://localhost:8000/subgraphs/name/melonproject/melon';
+  const subgraphApi = 'http://localhost:8000/subgraphs/name/enzymefinance/enzyme';
 
   beforeAll(async () => {
     const account = await createAccount(testnetEndpoint);

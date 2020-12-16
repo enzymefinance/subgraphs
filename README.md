@@ -39,4 +39,4 @@ Please note that all repositories hosted under this organization follow our [Cod
 [yarn]: https://yarnpkg.com
 [node]: https://nodejs.org
 [docker]: https://www.docker.com/
-[coc]: https://github.com/melonproject/melonjs/blob/master/CODE_OF_CONDUCT.md
+[coc]: https://github.com/enzymefinance/enzymejs/blob/master/CODE_OF_CONDUCT.md

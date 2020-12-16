@@ -37,7 +37,7 @@ export async function getSubgraphIndexingStatus(endpoint: string) {
   const result = await request<{
     indexingStatusForCurrentVersion: SubgraphIndexingStatus;
   }>(endpoint, statusQuery, {
-    name: 'melonproject/melon',
+    name: 'enzymefinance/enzyme',
   });
 
   return result.indexingStatusForCurrentVersion;

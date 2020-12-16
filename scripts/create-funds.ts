@@ -52,11 +52,11 @@ import { Asset, fetchAssets } from '../tests/utils/subgraph-queries/fetchAssets'
 
   // const testnetEndpoint = 'http://localhost:4000/graphql';
   // const jsonRpcProvider = 'http://localhost:8545';
-  // const subgraphApi = 'http://localhost:8000/subgraphs/name/melonproject/melon';
+  // const subgraphApi = 'http://localhost:8000/subgraphs/name/enzymefinance/enzyme';
 
   const testnetEndpoint = 'https://evm.testnet.enzyme.finance/graphql';
   const jsonRpcProvider = 'https://evm.testnet.enzyme.finance';
-  const subgraphApi = 'https://thegraph.testnet.enzyme.finance/subgraphs/name/melonproject/melon';
+  const subgraphApi = 'https://thegraph.testnet.enzyme.finance/subgraphs/name/enzymefinance/enzyme';
 
   [deployment, assets] = await Promise.all([fetchDeployment(testnetEndpoint), fetchAssets(subgraphApi)]);
   provider = new providers.JsonRpcProvider(jsonRpcProvider);
