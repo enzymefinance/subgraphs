@@ -1324,21 +1324,21 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@melonproject/protocol@^2.0.0-dev.5036+af61cfa0":
-  version "2.0.0-dev.5036"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_30Mub/%40melonproject%2Fprotocol-2.0.0-dev.5036.tgz#fa2e0ee6fd27817ab8bc399d39a7baadd69de627"
-  integrity sha1-+i4O5v0ngXq4vDmdOae6rdad5ic=
+"@melonproject/protocol@^2.0.0-dev.5037+02383f95":
+  version "2.0.0-dev.5037"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_12nF6X/%40melonproject%2Fprotocol-2.0.0-dev.5037.tgz#f1fde73f9a888ac9355a1077a8efecd621498baa"
+  integrity sha1-8f3nP5qIisk1WhB3qO/s1iFJi6o=
   dependencies:
     "@babel/runtime" "^7.12.5"
     decimal.js "^10.2.1"
 
-"@melonproject/testutils@^2.0.0-dev.5036+af61cfa0":
-  version "2.0.0-dev.5036"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_1TbBtW/%40melonproject%2Ftestutils-2.0.0-dev.5036.tgz#fb1a4108946233ac2a8ab237b4e17109bced8ff1"
-  integrity sha1-+xpBCJRiM6wqirI3tOFxCbztj/E=
+"@melonproject/testutils@^2.0.0-dev.5037+02383f95":
+  version "2.0.0-dev.5037"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_upfbG/%40melonproject%2Ftestutils-2.0.0-dev.5037.tgz#418ad0d0e0b25dbb30a10ec2a6ecbbd5400ca9ce"
+  integrity sha1-QYrQ0OCyXbswoQ7Cpuy71UAMqc4=
   dependencies:
     "@babel/runtime" "^7.12.5"
-    "@melonproject/protocol" "^2.0.0-dev.5036+af61cfa0"
+    "@melonproject/protocol" "^2.0.0-dev.5037+02383f95"
 
 "@openzeppelin/contracts@^3.3.0":
   version "3.3.0"
@@ -1973,10 +1973,10 @@ asn1@~0.2.3:
   dependencies:
     safer-buffer "~2.1.0"
 
-assemblyscript@^0.17.7:
-  version "0.17.7"
-  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.17.7.tgz#8e142a26102cacc88e1b11f73e257fddadfc9987"
-  integrity sha512-HyFy/9FAXO/Q1HclibD6OsTleMfHJd3+gQRQtjLd9CbFmNeINxaxFHYlmzES2nqeSk9Jqxs29OOQaq13yboG4A==
+assemblyscript@^0.17.8:
+  version "0.17.8"
+  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.17.8.tgz#436712c15e143938b71e2fddbdf21bf965f0d286"
+  integrity sha512-O8Xl0JIQ4gG25roiGVQ/hPQaZiza2BI1eHKlNEVwJ3mtM/2xInqZRKieZMl6nuRKjuPUmioEgr5wkVds/YGIJA==
   dependencies:
     binaryen "98.0.0-nightly.20201109"
     long "^4.0.0"
@@ -4344,10 +4344,10 @@ graceful-fs@^4.1.10, graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.2.0,
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.4.tgz#2256bde14d3632958c465ebc96dc467ca07a29fb"
   integrity sha512-WjKPNJF79dtJAVniUlGGWHYGz2jWxT6VhN/4m1NdkbZ2nOsEF+cI1Edgql5zCRhs/VsQYRvrXctxktVXZUkixw==
 
-graphql-request@^3.3.0:
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/graphql-request/-/graphql-request-3.3.0.tgz#1b9003f34b73cd40d691803d2d422fde5c713af3"
-  integrity sha512-NHj65WSIUh8j7TBYgzWU0fqvLfxrqFDrLG8nZUh+IREZw50ljR6JXlXRkr52/fL/46wpItiQNLDrG+UZI+KmzA==
+graphql-request@^3.4.0:
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/graphql-request/-/graphql-request-3.4.0.tgz#3a400cd5511eb3c064b1873afb059196bbea9c2b"
+  integrity sha512-acrTzidSlwAj8wBNO7Q/UQHS8T+z5qRGquCQRv9J1InwR01BBWV9ObnoE+JS5nCCEj8wSGS0yrDXVDoRiKZuOg==
   dependencies:
     cross-fetch "^3.0.6"
     extract-files "^9.0.0"

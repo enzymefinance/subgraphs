@@ -50,13 +50,13 @@ import { Asset, fetchAssets } from '../tests/utils/subgraph-queries/fetchAssets'
   let manager: SignerWithAddress;
   let investor: SignerWithAddress;
 
-  // const testnetEndpoint = 'http://localhost:4000/graphql';
-  // const jsonRpcProvider = 'http://localhost:8545';
-  // const subgraphApi = 'http://localhost:8000/subgraphs/name/enzymefinance/enzyme';
+  const testnetEndpoint = 'http://localhost:4000/graphql';
+  const jsonRpcProvider = 'http://localhost:8545';
+  const subgraphApi = 'http://localhost:8000/subgraphs/name/enzymefinance/enzyme';
 
-  const testnetEndpoint = 'https://evm.testnet.enzyme.finance/graphql';
-  const jsonRpcProvider = 'https://evm.testnet.enzyme.finance';
-  const subgraphApi = 'https://thegraph.testnet.enzyme.finance/subgraphs/name/enzymefinance/enzyme';
+  // const testnetEndpoint = 'https://evm.testnet.enzyme.finance/graphql';
+  // const jsonRpcProvider = 'https://evm.testnet.enzyme.finance';
+  // const subgraphApi = 'https://thegraph.testnet.enzyme.finance/subgraphs/name/enzymefinance/enzyme';
 
   [deployment, assets] = await Promise.all([fetchDeployment(testnetEndpoint), fetchAssets(subgraphApi)]);
   provider = new providers.JsonRpcProvider(jsonRpcProvider);
@@ -352,29 +352,34 @@ import { Asset, fetchAssets } from '../tests/utils/subgraph-queries/fetchAssets'
       );
 
       // compound redeeming
-      console.log(`\tredeeming Compound`);
+      // console.log(`\tredeeming Compound`);
 
-      const cToken = new StandardToken((cTokens[remainder] as Asset).id, manager);
+      // const cToken = new StandardToken((cTokens[remainder] as Asset).id, manager);
 
-      const cTokenBalance = await cToken.balanceOf(vaultProxy);
+      // const cTokenBalance = await cToken.balanceOf(vaultProxy);
+      // console.log(utils.formatUnits(cTokenBalance, 8));
 
-      const redeemArgs = await compoundArgs({
-        cToken: (cTokens[remainder] as Asset).id,
-        outgoingAssetAmount: cTokenBalance.div(10),
-        minIncomingAssetAmount: 1,
-      });
+      // const token = new StandardToken(tokens[remainder].id, manager);
+      // const balance = await token.balanceOf(cToken);
+      // console.log(utils.formatEther(balance));
 
-      const callCompoundArgs = callOnIntegrationArgs({
-        adapter: compoundAdapter,
-        selector: redeemSelector,
-        encodedCallArgs: redeemArgs,
-      });
+      // const redeemArgs = await compoundArgs({
+      //   cToken: (cTokens[remainder] as Asset).id,
+      //   outgoingAssetAmount: '1',
+      //   minIncomingAssetAmount: '1',
+      // });
 
-      await comptrollerProxy.callOnExtension(
-        deployment.integrationManager,
-        IntegrationManagerActionId.CallOnIntegration,
-        callCompoundArgs,
-      );
+      // const callCompoundArgs = callOnIntegrationArgs({
+      //   adapter: compoundAdapter,
+      //   selector: redeemSelector,
+      //   encodedCallArgs: redeemArgs,
+      // });
+
+      // await comptrollerProxy.callOnExtension(
+      //   deployment.integrationManager,
+      //   IntegrationManagerActionId.CallOnIntegration,
+      //   callCompoundArgs,
+      // );
     }
 
     // buy sUSD on Kyber
