@@ -79,8 +79,8 @@ export function trackCalculationState(fund: Fund, event: ethereum.Event, cause: 
   let calculations = ensureCalculationState(fund, event, cause);
   calculations.gav = toBigDecimal(gav.value.value0, denominationAsset.decimals);
   calculations.totalSupply = toBigDecimal(totalSupply.value);
-  calculations.grossSharePrice = toBigDecimal(grossShareValue.value.value0);
-  calculations.netSharePrice = toBigDecimal(netShareValue.value.value0);
+  calculations.grossSharePrice = toBigDecimal(grossShareValue.value.value0, denominationAsset.decimals);
+  calculations.netSharePrice = toBigDecimal(netShareValue.value.value0, denominationAsset.decimals);
   calculations.save();
 
   let state = ensureFundState(fund, event);
