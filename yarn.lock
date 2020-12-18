@@ -1324,21 +1324,21 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@melonproject/protocol@^2.0.0-dev.5037+02383f95":
-  version "2.0.0-dev.5037"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_12nF6X/%40melonproject%2Fprotocol-2.0.0-dev.5037.tgz#f1fde73f9a888ac9355a1077a8efecd621498baa"
-  integrity sha1-8f3nP5qIisk1WhB3qO/s1iFJi6o=
+"@melonproject/protocol@^2.0.0-dev.5038+9717d494":
+  version "2.0.0-dev.5038"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_1wAnlO/%40melonproject%2Fprotocol-2.0.0-dev.5038.tgz#8f2415d0a21ca0f6f44bf6ab968461cddaa73bb4"
+  integrity sha1-jyQV0KIcoPb0S/arloRhzdqnO7Q=
   dependencies:
     "@babel/runtime" "^7.12.5"
     decimal.js "^10.2.1"
 
-"@melonproject/testutils@^2.0.0-dev.5037+02383f95":
-  version "2.0.0-dev.5037"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_upfbG/%40melonproject%2Ftestutils-2.0.0-dev.5037.tgz#418ad0d0e0b25dbb30a10ec2a6ecbbd5400ca9ce"
-  integrity sha1-QYrQ0OCyXbswoQ7Cpuy71UAMqc4=
+"@melonproject/testutils@^2.0.0-dev.5038+9717d494":
+  version "2.0.0-dev.5038"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_Z8Ggx/%40melonproject%2Ftestutils-2.0.0-dev.5038.tgz#526780f45d2e04da9b9c06c767cf50aed3baa86d"
+  integrity sha1-UmeA9F0uBNqbnAbHZ89QrtO6qG0=
   dependencies:
     "@babel/runtime" "^7.12.5"
-    "@melonproject/protocol" "^2.0.0-dev.5037+02383f95"
+    "@melonproject/protocol" "^2.0.0-dev.5038+9717d494"
 
 "@openzeppelin/contracts@^3.3.0":
   version "3.3.0"
@@ -1973,10 +1973,10 @@ asn1@~0.2.3:
   dependencies:
     safer-buffer "~2.1.0"
 
-assemblyscript@^0.17.8:
-  version "0.17.8"
-  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.17.8.tgz#436712c15e143938b71e2fddbdf21bf965f0d286"
-  integrity sha512-O8Xl0JIQ4gG25roiGVQ/hPQaZiza2BI1eHKlNEVwJ3mtM/2xInqZRKieZMl6nuRKjuPUmioEgr5wkVds/YGIJA==
+assemblyscript@^0.17.9:
+  version "0.17.9"
+  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.17.9.tgz#b43bbf797b424a12f411c96f7f488549aab7f821"
+  integrity sha512-uy7c2+f0d2v8OJDrTJbyFPrNxtAwwzmw/1EcckSi75QnUlPqQhZhYPPSRpPIyWCfi94DRoRwsU389FszdrEZtw==
   dependencies:
     binaryen "98.0.0-nightly.20201109"
     long "^4.0.0"

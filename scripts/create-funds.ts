@@ -352,34 +352,29 @@ import { Asset, fetchAssets } from '../tests/utils/subgraph-queries/fetchAssets'
       );
 
       // compound redeeming
-      // console.log(`\tredeeming Compound`);
+      console.log(`\tredeeming Compound`);
 
-      // const cToken = new StandardToken((cTokens[remainder] as Asset).id, manager);
+      const cToken = new StandardToken((cTokens[remainder] as Asset).id, manager);
 
-      // const cTokenBalance = await cToken.balanceOf(vaultProxy);
-      // console.log(utils.formatUnits(cTokenBalance, 8));
+      const cTokenBalance = await cToken.balanceOf(vaultProxy);
 
-      // const token = new StandardToken(tokens[remainder].id, manager);
-      // const balance = await token.balanceOf(cToken);
-      // console.log(utils.formatEther(balance));
+      const redeemArgs = await compoundArgs({
+        cToken: (cTokens[remainder] as Asset).id,
+        outgoingAssetAmount: cTokenBalance.div(2),
+        minIncomingAssetAmount: '1',
+      });
 
-      // const redeemArgs = await compoundArgs({
-      //   cToken: (cTokens[remainder] as Asset).id,
-      //   outgoingAssetAmount: '1',
-      //   minIncomingAssetAmount: '1',
-      // });
+      const callCompoundArgs = callOnIntegrationArgs({
+        adapter: compoundAdapter,
+        selector: redeemSelector,
+        encodedCallArgs: redeemArgs,
+      });
 
-      // const callCompoundArgs = callOnIntegrationArgs({
-      //   adapter: compoundAdapter,
-      //   selector: redeemSelector,
-      //   encodedCallArgs: redeemArgs,
-      // });
-
-      // await comptrollerProxy.callOnExtension(
-      //   deployment.integrationManager,
-      //   IntegrationManagerActionId.CallOnIntegration,
-      //   callCompoundArgs,
-      // );
+      await comptrollerProxy.callOnExtension(
+        deployment.integrationManager,
+        IntegrationManagerActionId.CallOnIntegration,
+        callCompoundArgs,
+      );
     }
 
     // buy sUSD on Kyber
