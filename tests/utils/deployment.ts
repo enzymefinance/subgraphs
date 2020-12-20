@@ -9,7 +9,6 @@ export interface Deployment {
   uniswapV2Integratee: string;
   synthetixAddressResolver: string;
   synthetixDelegateApprovals: string;
-  synthetixExchanger: string;
   dispatcher: string;
   vaultLib: string;
   fundDeployer: string;
@@ -51,7 +50,6 @@ const deploymentQuery = gql`
       uniswapV2Integratee
       synthetixAddressResolver
       synthetixDelegateApprovals
-      synthetixExchanger
       dispatcher
       vaultLib
       fundDeployer

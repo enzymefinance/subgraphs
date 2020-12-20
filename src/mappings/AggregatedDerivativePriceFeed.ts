@@ -17,6 +17,13 @@ import { genericId } from '../utils/genericId';
 
 export function handleDerivativeAdded(event: DerivativeAdded): void {
   let derivative = ensureAsset(event.params.derivative);
+
+  // this is for sUSD, which is both a
+  if (derivative.symbol == 'sUSD') {
+    checkSynthetix(derivative);
+    return;
+  }
+
   derivative.type = 'DERIVATIVE';
   derivative.save();
 

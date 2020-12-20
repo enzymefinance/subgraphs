@@ -14,7 +14,6 @@ const query = gql`
       kyberIntegratee
       synthetixAddressResolver
       synthetixDelegateApprovals
-      synthetixExchanger
       dispatcher
       vaultLib
       fundDeployer
@@ -56,7 +55,6 @@ interface Result {
     kyberIntegratee: string;
     synthetixAddressResolver: string;
     synthetixDelegateApprovals: string;
-    synthetixExchanger: string;
     dispatcher: string;
     vaultLib: string;
     fundDeployer: string;
