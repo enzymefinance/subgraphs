@@ -1536,6 +1536,15 @@ type MinMaxInvestmentSetting implements PolicySettingInterface @entity {
   events: [FundEventInterface!]!
 }
 
+type UnknownPolicySetting implements PolicySettingInterface @entity {
+  id: ID!
+  policy: Policy!
+  fund: Fund!
+  timestamp: BigInt!
+  enabled: Boolean!
+  events: [FundEventInterface!]!
+}
+
 type ShareState implements FundStateInterface @entity {
   id: ID!
   fund: Fund!

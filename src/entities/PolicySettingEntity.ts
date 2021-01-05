@@ -70,5 +70,5 @@ export function getPolicySettingEntity(identifier: string): string {
     return 'MinMaxInvestmentSetting';
   }
 
-  return 'Policy Entity not found';
+  return 'UnknownPolicySetting';
 }

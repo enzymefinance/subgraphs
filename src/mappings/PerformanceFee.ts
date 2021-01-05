@@ -138,10 +138,10 @@ export function handlePerformanceUpdated(event: PerformanceUpdated): void {
 
   trackFeeState(fund, fee, BigDecimal.fromString('0'), event, updated);
 
-  // let performanceFeeState = usePerformanceFeeState(performanceFeeStateId(fund, event));
-  // performanceFeeState.aggregateValueDue = toBigDecimal(event.params.nextAggregateValueDue);
-  // performanceFeeState.sharesOutstanding = performanceFeeState.sharesOutstanding.plus(
-  //   toBigDecimal(event.params.sharesOutstandingDiff),
-  // );
-  // performanceFeeState.save();
+  let performanceFeeState = usePerformanceFeeState(performanceFeeStateId(fund, event));
+  performanceFeeState.aggregateValueDue = toBigDecimal(event.params.nextAggregateValueDue);
+  performanceFeeState.sharesOutstanding = performanceFeeState.sharesOutstanding.plus(
+    toBigDecimal(event.params.sharesOutstandingDiff),
+  );
+  performanceFeeState.save();
 }
