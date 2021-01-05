@@ -21,7 +21,6 @@ export function ensureIntegrationManager(address: Address): IntegrationManager {
   let contract = IntegrationManagerContract.bind(address);
 
   integrationManager = new IntegrationManager(address.toHex());
-  integrationManager.trackedAssetsLimit = contract.getTrackedAssetsLimit();
   integrationManager.save();
 
   return integrationManager;

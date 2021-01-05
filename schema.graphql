@@ -1213,7 +1213,6 @@ type Contract @entity {
 
 type IntegrationManager @entity {
   id: ID!
-  trackedAssetsLimit: BigInt!
   adapters: [IntegrationAdapter!]! @derivedFrom(field: "integrationManager")
 }
 

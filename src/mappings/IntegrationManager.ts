@@ -131,16 +131,3 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
   trackPortfolioState(fund, event, execution);
   trackCalculationState(fund, event, execution);
 }
-
-export function handleTrackedAssetsLimitSet(event: TrackedAssetsLimitSet): void {
-  let trackedAssetsLimit = new TrackedAssetsLimitSetEvent(genericId(event));
-  trackedAssetsLimit.contract = useContract(event.address.toHex()).id;
-  trackedAssetsLimit.timestamp = event.block.timestamp;
-  trackedAssetsLimit.transaction = ensureTransaction(event).id;
-  trackedAssetsLimit.nextTrackedAssetsLimit = event.params.nextTrackedAssetsLimit;
-  trackedAssetsLimit.save();
-
-  let integrationManager = useIntegrationManager(event.address.toHex());
-  integrationManager.trackedAssetsLimit = event.params.nextTrackedAssetsLimit;
-  integrationManager.save();
-}
