@@ -995,7 +995,6 @@ type GuaranteedRedemptionRedemptionWindowBufferSetEvent implements EventInterfac
   contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  adapter: IntegrationAdapter!
   prevBuffer: BigInt!
   nextBuffer: BigInt!
 }
@@ -1004,27 +1003,27 @@ type FundDeployerSetEvent implements EventInterface & NetworkEventInterface @ent
   id: ID!
   contract: Contract!
   timestamp: BigInt!
+  transaction: Transaction!
   nextFundDeployer: Contract!
   prevFundDeployer: Contract
-  transaction: Transaction!
 }
 
 type ValueInterpreterSetEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
   contract: Contract!
   timestamp: BigInt!
+  transaction: Transaction!
   prevValueInterpreter: Contract
   nextValueInterpreter: Contract!
-  transaction: Transaction!
 }
 
 type OwnershipTransferredEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
   contract: Contract!
-  previousOwner: String!
-  newOwner: String!
   timestamp: BigInt!
   transaction: Transaction!
+  previousOwner: String!
+  newOwner: String!
 }
 
 type DerivativeAddedEvent implements EventInterface & NetworkEventInterface @entity {
