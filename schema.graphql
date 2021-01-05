@@ -119,6 +119,7 @@ interface Trade {
 #################################################
 
 enum AssetType {
+  UNKNOWN
   DERIVATIVE
   ETH
   USD

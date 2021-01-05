@@ -1,6 +1,6 @@
 specVersion: 0.0.2
-description: Melon protocol
-repository: https://github.com/melonproject/subgraph
+description: Enzyme Finance
+repository: https://github.com/enzymefinance/subgraph
 schema:
   file: ./schema.graphql
 

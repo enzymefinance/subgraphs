@@ -29,7 +29,7 @@ export function ensureAsset(address: Address): Asset {
   asset.name = name;
   asset.symbol = symbol;
   asset.decimals = decimals;
-  asset.type = '';
+  asset.type = 'UNKNOWN';
   asset.networkAssetHolding = '';
   asset.save();
 

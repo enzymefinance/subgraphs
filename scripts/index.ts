@@ -88,7 +88,7 @@ interface DeploymentWithMetadata extends Deployment {
 // TODO: Derive this from the deployment output instead of hard-coding it.
 const kovan: DeploymentWithMetadata = {
   networkName: 'kovan',
-  startBlock: 22890838,
+  startBlock: 22890826,
   wethToken: '0x17DfFC200037e3544402F21b294061AF3929E86A',
   dispatcher: '0x80cE90D11AEA9cDdD27b5a3cAa5857BBd7a3bD26',
   vaultLib: '0x9c176c4eBD67a5A1C6cC750A298161931638eBF0',
