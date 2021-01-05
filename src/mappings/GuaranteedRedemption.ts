@@ -81,7 +81,7 @@ export function handleRedemptionWindowBufferSet(event: RedemptionWindowBufferSet
   windowBufferSet.transaction = ensureTransaction(event).id;
   windowBufferSet.save();
 
-  let guaranteedRedemption = useGuaranteedRedemption(event.address.toHex());
+  let guaranteedRedemption = ensureGuaranteedRedemption(event.address);
   guaranteedRedemption.buffer = event.params.nextBuffer;
   guaranteedRedemption.save();
 }
