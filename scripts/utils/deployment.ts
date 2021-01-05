@@ -136,7 +136,6 @@ export async function fetchDeployment(endpoint: string) {
 
 export async function createDeployment(endpoint: string) {
   const result = await request<{ createDeployment: Deployment }>(endpoint, createDeploymentMutation);
-
   return result.createDeployment;
 }
 

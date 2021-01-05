@@ -71,10 +71,6 @@ export function trackAssetPrice(asset: Asset, timestamp: BigInt, price: BigDecim
   return current;
 }
 
-// export function trackUsdQuotedAssetPrices(timestamp: BigInt): void {
-//   // loop through all
-// }
-
 export function fetchAssetPrice(asset: Asset): BigDecimal {
   // Whenever a new (derivative) asset is registered, we need to fetch its current price immediately.
   let contract = ValueInterpreterContract.bind(valueInterpreterAddress);

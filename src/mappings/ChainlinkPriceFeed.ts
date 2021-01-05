@@ -57,7 +57,7 @@ export function handleEthUsdAggregatorSet(event: EthUsdAggregatorSet): void {
   weth.type = 'ETH';
   weth.save();
 
-  // Aggragators for currencies
+  // Aggregators for currencies
   let eurProxy = ChainlinkAggregatorProxyContract.bind(eurChainlinkAggregator);
   let eurAggregator = eurProxy.aggregator();
   let eur = ensureCurrency('EUR');

@@ -7,11 +7,11 @@ schema:
 dataSources:
   - name: DispatcherDataSource
     kind: ethereum/contract
-    network: mainnet
+    network: {{networkName}}
     source:
       address: '{{dispatcher}}'
       abi: DispatcherContract
-      startBlock: 0
+      startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -53,11 +53,11 @@ dataSources:
 
   - name: FundDeployerDataSource
     kind: ethereum/contract
-    network: mainnet
+    network: {{networkName}}
     source:
       address: '{{fundDeployer}}'
       abi: FundDeployerContract
-      startBlock: 0
+      startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -89,11 +89,11 @@ dataSources:
 
   - name: FeeManagerDataSource
     kind: ethereum/contract
-    network: mainnet
+    network: {{networkName}}
     source:
       address: '{{feeManager}}'
       abi: FeeManagerContract
-      startBlock: 0
+      startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -133,11 +133,11 @@ dataSources:
 
   - name: ManagementFeeDataSource
     kind: ethereum/contract
-    network: mainnet
+    network: {{networkName}}
     source:
       address: '{{managementFee}}'
       abi: ManagementFeeContract
-      startBlock: 0
+      startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -165,11 +165,11 @@ dataSources:
 
   - name: PerformanceFeeDataSource
     kind: ethereum/contract
-    network: mainnet
+    network: {{networkName}}
     source:
       address: '{{performanceFee}}'
       abi: PerformanceFeeContract
-      startBlock: 0
+      startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -199,11 +199,11 @@ dataSources:
 
   - name: EntranceRateDirectFeeDataSource
     kind: ethereum/contract
-    network: mainnet
+    network: {{networkName}}
     source:
       address: '{{entranceRateDirectFee}}'
       abi: EntranceRateDirectFeeContract
-      startBlock: 0
+      startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -231,11 +231,11 @@ dataSources:
 
   - name: EntranceRateBurnFeeDataSource
     kind: ethereum/contract
-    network: mainnet
+    network: {{networkName}}
     source:
       address: '{{entranceRateBurnFee}}'
       abi: EntranceRateBurnFeeContract
-      startBlock: 0
+      startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -263,11 +263,11 @@ dataSources:
 
   - name: PolicyManagerDataSource
     kind: ethereum/contract
-    network: mainnet
+    network: {{networkName}}
     source:
       address: '{{policyManager}}'
       abi: PolicyManagerContract
-      startBlock: 0
+      startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -297,11 +297,11 @@ dataSources:
 
   - name: AdapterBlacklistDataSource
     kind: ethereum/contract
-    network: mainnet
+    network: {{networkName}}
     source:
       address: '{{adapterBlacklist}}'
       abi: AdapterBlacklistContract
-      startBlock: 0
+      startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -323,11 +323,11 @@ dataSources:
 
   - name: AdapterWhitelistDataSource
     kind: ethereum/contract
-    network: mainnet
+    network: {{networkName}}
     source:
       address: '{{adapterWhitelist}}'
       abi: AdapterWhitelistContract
-      startBlock: 0
+      startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -351,11 +351,11 @@ dataSources:
 
   - name: AssetWhitelistDataSource
     kind: ethereum/contract
-    network: mainnet
+    network: {{networkName}}
     source:
       address: '{{assetWhitelist}}'
       abi: AssetWhitelistContract
-      startBlock: 0
+      startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -377,11 +377,11 @@ dataSources:
 
   - name: AssetBlacklistDataSource
     kind: ethereum/contract
-    network: mainnet
+    network: {{networkName}}
     source:
       address: '{{assetBlacklist}}'
       abi: AssetBlacklistContract
-      startBlock: 0
+      startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -403,11 +403,11 @@ dataSources:
 
   - name: BuySharesCallerWhitelistDataSource
     kind: ethereum/contract
-    network: mainnet
+    network: {{networkName}}
     source:
       address: '{{buySharesCallerWhitelist}}'
       abi: BuySharesCallerWhitelistContract
-      startBlock: 0
+      startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -429,11 +429,11 @@ dataSources:
 
   - name: GuaranteedRedemptionDataSource
     kind: ethereum/contract
-    network: mainnet
+    network: {{networkName}}
     source:
       address: '{{guaranteedRedemption}}'
       abi: GuaranteedRedemptionContract
-      startBlock: 0
+      startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -459,11 +459,11 @@ dataSources:
 
   - name: InvestorWhitelistDataSource
     kind: ethereum/contract
-    network: mainnet
+    network: {{networkName}}
     source:
       address: '{{investorWhitelist}}'
       abi: InvestorWhitelistContract
-      startBlock: 0
+      startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -485,11 +485,11 @@ dataSources:
 
   - name: MaxConcentrationDataSource
     kind: ethereum/contract
-    network: mainnet
+    network: {{networkName}}
     source:
       address: '{{maxConcentration}}'
       abi: MaxConcentrationContract
-      startBlock: 0
+      startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -506,14 +506,14 @@ dataSources:
       eventHandlers:
         - event: MaxConcentrationSet(address,uint256)
           handler: handleMaxConcentrationSet
-  
+
   - name: MinMaxInvestmentDataSource
     kind: ethereum/contract
-    network: mainnet
+    network: {{networkName}}
     source:
       address: '{{minMaxInvestment}}'
       abi: MinMaxInvestmentContract
-      startBlock: 0
+      startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -533,11 +533,11 @@ dataSources:
 
   - name: IntegrationManagerDataSource
     kind: ethereum/contract
-    network: mainnet
+    network: {{networkName}}
     source:
       address: '{{integrationManager}}'
       abi: IntegrationManagerContract
-      startBlock: 0
+      startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -573,11 +573,11 @@ dataSources:
 
   - name: ChainlinkPriceFeedDataSource
     kind: ethereum/contract
-    network: mainnet
+    network: {{networkName}}
     source:
       address: '{{chainlinkPriceFeed}}'
       abi: ChainlinkPriceFeedContract
-      startBlock: 0
+      startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -598,7 +598,7 @@ dataSources:
         - name: ChainlinkAggregatorProxyContract
           file: ./node_modules/@chainlink/contracts/abi/v0.6/AggregatorProxy.json
         - name: ValueInterpreterContract
-          file: ./node_modules/@melonproject/protocol/artifacts/ValueInterpreter.json  
+          file: ./node_modules/@melonproject/protocol/artifacts/ValueInterpreter.json
       eventHandlers:
         - event: EthUsdAggregatorSet(address,address)
           handler: handleEthUsdAggregatorSet
@@ -611,11 +611,11 @@ dataSources:
 
   - name: AggregatedDerivativePriceFeedDataSource
     kind: ethereum/contract
-    network: mainnet
+    network: {{networkName}}
     source:
       address: '{{aggregatedDerivativePriceFeed}}'
       abi: AggregatedDerivativePriceFeedContract
-      startBlock: 0
+      startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -636,7 +636,7 @@ dataSources:
         - name: IUniswapV2Pair
           file: ./node_modules/@melonproject/protocol/artifacts/IUniswapV2Pair.json
         - name: ICERC20
-          file: ./node_modules/@melonproject/protocol/artifacts/ICERC20.json         
+          file: ./node_modules/@melonproject/protocol/artifacts/ICERC20.json
       eventHandlers:
         - event: DerivativeAdded(indexed address,address)
           handler: handleDerivativeAdded
@@ -648,7 +648,7 @@ dataSources:
 templates:
   - name: VaultLibDataSource
     kind: ethereum/contract
-    network: 'mainnet'
+    network: {{networkName}}
     source:
       abi: VaultLibContract
     mapping:
@@ -686,7 +686,7 @@ templates:
 
   - name: ComptrollerLibDataSource
     kind: ethereum/contract
-    network: 'mainnet'
+    network: {{networkName}}
     source:
       abi: ComptrollerLibContract
     mapping:
@@ -720,7 +720,7 @@ templates:
 
   - name: ChainlinkAggregatorDataSource
     kind: ethereum/contract
-    network: mainnet
+    network: {{networkName}}
     source:
       abi: ChainlinkAggregatorContract
     mapping:
@@ -737,4 +737,3 @@ templates:
       eventHandlers:
         - event: AnswerUpdated(indexed int256,indexed uint256,uint256)
           handler: handleAnswerUpdated
-

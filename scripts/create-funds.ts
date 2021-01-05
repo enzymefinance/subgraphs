@@ -40,8 +40,8 @@ import {
 } from '@melonproject/protocol';
 import { providers, utils, Wallet } from 'ethers';
 import faker from 'faker';
-import { createAccount, Deployment, fetchDeployment } from '../tests/utils/deployment';
-import { Asset, fetchAssets } from '../tests/utils/subgraph-queries/fetchAssets';
+import { createAccount, Deployment, fetchDeployment } from './utils/deployment';
+import { Asset, fetchAssets } from './utils/queries/fetchAssets';
 
 (async () => {
   let deployment: Deployment;
