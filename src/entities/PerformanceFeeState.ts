@@ -6,7 +6,7 @@ import { arrayUnique } from '../utils/arrayUnique';
 import { logCritical } from '../utils/logCritical';
 import { toBigDecimal } from '../utils/toBigDecimal';
 import { feeStateId, useFeeState } from './FeeState';
-import { fundStateId, useFundState } from './FundState';
+import { useFundState } from './FundState';
 
 class PerformanceFeeStateArgs {
   grossSharePrice: BigDecimal;
@@ -61,7 +61,7 @@ export function ensurePerformanceFeeState(
   let performanceFeeState = PerformanceFeeState.load(performanceFeeStateId(fund, event)) as PerformanceFeeState;
 
   if (!performanceFeeState) {
-    let state = useFundState(fundStateId(fund, event));
+    let state = useFundState(fund.state);
     let previousFeeState = useFeeState(state.feeState);
 
     let previous = findPerformanceFeeState(previousFeeState.feeStates);
