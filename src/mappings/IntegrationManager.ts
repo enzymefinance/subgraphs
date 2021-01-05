@@ -109,7 +109,7 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
   let outgoingAmounts = event.params.outgoingAssetAmounts;
   for (let i = 0; i < outgoingAmounts.length; i++) {
     let amount = toBigDecimal(outgoingAmounts[i], outgoingAssets[i].decimals);
-    let assetAmount = createAssetAmount(incomingAssets[i], amount, 'trade/outgoing', event);
+    let assetAmount = createAssetAmount(outgoingAssets[i], amount, 'trade/outgoing', event);
     outgoingAssetAmounts = outgoingAssetAmounts.concat([assetAmount]);
   }
 
