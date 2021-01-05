@@ -15,13 +15,13 @@ function networkAssetHoldingId(asset: Asset, event: ethereum.Event): string {
 
 export function createNetworkAssetHolding(
   asset: Asset,
-  quantity: BigDecimal,
+  amount: BigDecimal,
   event: ethereum.Event,
 ): NetworkAssetHolding {
   let holding = new NetworkAssetHolding(networkAssetHoldingId(asset, event));
   holding.timestamp = event.block.timestamp;
   holding.asset = asset.id;
-  holding.quantity = quantity;
+  holding.amount = amount;
   holding.save();
 
   return holding;
@@ -54,18 +54,18 @@ export function trackNetworkAssetHoldings(prev: HoldingState[], next: HoldingSta
       continue;
     }
 
-    let quantity = currentNetworkAssetHolding.quantity.minus(holdingState.quantity);
+    let amount = currentNetworkAssetHolding.amount.minus(holdingState.amount);
 
     // match from today: update current record
     if (isSameDay(currentNetworkAssetHolding.timestamp, event.block.timestamp)) {
       currentNetworkAssetHolding.timestamp = event.block.timestamp;
-      currentNetworkAssetHolding.quantity = quantity;
+      currentNetworkAssetHolding.amount = amount;
       currentNetworkAssetHolding.save();
       continue;
     }
 
     // match from previous day: copy and update
-    let newRecord = createNetworkAssetHolding(asset, quantity, event);
+    let newRecord = createNetworkAssetHolding(asset, amount, event);
 
     asset.networkAssetHolding = newRecord.id;
     asset.save();
@@ -82,7 +82,7 @@ export function trackNetworkAssetHoldings(prev: HoldingState[], next: HoldingSta
 
     // no match: create new record
     if (currentNetworkAssetHolding == null) {
-      let newRecord = createNetworkAssetHolding(asset, holdingState.quantity, event);
+      let newRecord = createNetworkAssetHolding(asset, holdingState.amount, event);
 
       asset.networkAssetHolding = newRecord.id;
       asset.save();
@@ -91,18 +91,18 @@ export function trackNetworkAssetHoldings(prev: HoldingState[], next: HoldingSta
       continue;
     }
 
-    let quantity = currentNetworkAssetHolding.quantity.plus(holdingState.quantity);
+    let amount = currentNetworkAssetHolding.amount.plus(holdingState.amount);
 
     // match from today: update current record
     if (isSameDay(currentNetworkAssetHolding.timestamp, event.block.timestamp)) {
       currentNetworkAssetHolding.timestamp = event.block.timestamp;
-      currentNetworkAssetHolding.quantity = quantity;
+      currentNetworkAssetHolding.amount = amount;
       currentNetworkAssetHolding.save();
       continue;
     }
 
     // match from previous day: copy and update
-    let newRecord = createNetworkAssetHolding(asset, quantity, event);
+    let newRecord = createNetworkAssetHolding(asset, amount, event);
 
     asset.networkAssetHolding = newRecord.id;
     asset.save();

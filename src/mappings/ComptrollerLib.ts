@@ -1,6 +1,7 @@
-import { BigDecimal, dataSource } from '@graphprotocol/graph-ts';
+import { dataSource } from '@graphprotocol/graph-ts';
 import { ensureAccount, ensureInvestor, useAccount } from '../entities/Account';
 import { useAsset } from '../entities/Asset';
+import { createAssetAmount } from '../entities/AssetAmount';
 import { calculationStateId, trackCalculationState } from '../entities/CalculationState';
 import { ensureContract, useContract } from '../entities/Contract';
 import { useFund } from '../entities/Fund';
@@ -19,6 +20,7 @@ import {
 } from '../generated/ComptrollerLibContract';
 import {
   Asset,
+  AssetAmount,
   MigratedSharesDuePaidEvent,
   OverridePauseSetEvent,
   PreRedeemSharesHookFailedEvent,
@@ -68,9 +70,11 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
   let assets = event.params.receivedAssets.map<Asset>((id) => useAsset(id.toHex()));
   let qtys = event.params.receivedAssetQuantities;
 
-  let quantities: BigDecimal[] = new Array<BigDecimal>();
+  let assetAmounts: AssetAmount[] = new Array<AssetAmount>();
   for (let i: i32 = 0; i < assets.length; i++) {
-    quantities = quantities.concat([toBigDecimal(qtys[i], assets[i].decimals)]);
+    let amount = toBigDecimal(qtys[i], assets[i].decimals);
+    let assetAmount = createAssetAmount(assets[i], amount, 'redemption', event);
+    assetAmounts = assetAmounts.concat([assetAmount]);
   }
 
   let redemption = new SharesRedeemedEvent(genericId(event));
@@ -81,8 +85,7 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
   redemption.contract = ensureContract(event.address, 'ComptrollerLib').id;
   redemption.investmentState = investmentState.id;
   redemption.shares = shares;
-  redemption.payoutAssets = assets.map<string>((item) => item.id);
-  redemption.payoutQuantities = quantities;
+  redemption.payoutAssetAmounts = assetAmounts.map<string>((assetAmount) => assetAmount.id);
   redemption.timestamp = event.block.timestamp;
   redemption.transaction = ensureTransaction(event).id;
   redemption.calculations = calculationStateId(fund, event);

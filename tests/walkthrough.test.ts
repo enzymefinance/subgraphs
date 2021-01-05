@@ -92,10 +92,21 @@ describe("Walkthrough a fund's lifecycle", () => {
       deployment.chaiAdapter,
       randomAddress(),
     ]);
+    // const investorWhitelistSettings = investorWhitelistArgs({ investorsToAdd: [] });
 
     const policyManagerConfig = policyManagerConfigArgs({
-      policies: [deployment.maxConcentration, deployment.adapterBlacklist, deployment.adapterWhitelist],
-      settings: [maxConcentrationSettings, adapterBlacklistSettings, adapterWhitelistSettings],
+      policies: [
+        deployment.maxConcentration,
+        deployment.adapterBlacklist,
+        deployment.adapterWhitelist,
+        // deployment.investorWhitelist,
+      ],
+      settings: [
+        maxConcentrationSettings,
+        adapterBlacklistSettings,
+        adapterWhitelistSettings,
+        // investorWhitelistSettings,
+      ],
     });
 
     const createNewFundTx = await createNewFund({

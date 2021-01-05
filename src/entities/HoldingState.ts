@@ -8,7 +8,7 @@ function holdingStateId(asset: Asset, fund: Fund, event: ethereum.Event): string
 
 export function createHoldingState(
   asset: Asset,
-  quantity: BigDecimal,
+  amount: BigDecimal,
   fund: Fund,
   event: ethereum.Event,
   cause: Entity,
@@ -18,7 +18,7 @@ export function createHoldingState(
   holding.fund = fund.id;
   holding.asset = asset.id;
   holding.price = asset.price;
-  holding.quantity = quantity;
+  holding.amount = amount;
   holding.events = [cause.getString('id')];
   holding.save();
 

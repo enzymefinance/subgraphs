@@ -79,7 +79,7 @@ export function trackPortfolioState(fund: Fund, event: ethereum.Event, cause: En
       let match = findHoldingState(previousHoldings, asset) as HoldingState;
 
       // Re-use the previous holding entry unless it has changed.
-      if (match != null && match.quantity == quantity) {
+      if (match != null && match.amount == quantity) {
         nextHoldings = nextHoldings.concat([match]);
       } else {
         nextHoldings = nextHoldings.concat([createHoldingState(asset, quantity, fund, event, cause)]);

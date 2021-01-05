@@ -1,6 +1,6 @@
-import { BigDecimal } from '@graphprotocol/graph-ts';
 import { ensureAccount, useAccount } from '../entities/Account';
 import { useAsset } from '../entities/Asset';
+import { createAssetAmount } from '../entities/AssetAmount';
 import { trackCalculationState } from '../entities/CalculationState';
 import { ensureContract, useContract } from '../entities/Contract';
 import { useFund } from '../entities/Fund';
@@ -22,6 +22,7 @@ import {
   AdapterDeregisteredEvent,
   AdapterRegisteredEvent,
   Asset,
+  AssetAmount,
   AuthUserAddedForFundEvent,
   AuthUserRemovedForFundEvent,
   CallOnIntegrationExecutedForFundEvent,
@@ -95,19 +96,21 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
   let integrationSelector = event.params.selector.toHexString();
 
   let incomingAssets = event.params.incomingAssets.map<Asset>((asset) => useAsset(asset.toHex()));
-  let incomingAssetAmounts: BigDecimal[] = new Array<BigDecimal>();
-  for (let i = 0; i < event.params.incomingAssetAmounts.length; i++) {
-    let entry = event.params.incomingAssetAmounts;
-    let amount = toBigDecimal(entry[i], incomingAssets[i].decimals);
-    incomingAssetAmounts = incomingAssetAmounts.concat([amount]);
+  let incomingAssetAmounts: AssetAmount[] = new Array<AssetAmount>();
+  let incomingAmounts = event.params.incomingAssetAmounts;
+  for (let i = 0; i < incomingAmounts.length; i++) {
+    let amount = toBigDecimal(incomingAmounts[i], incomingAssets[i].decimals);
+    let assetAmount = createAssetAmount(incomingAssets[i], amount, 'trade/incoming', event);
+    incomingAssetAmounts = incomingAssetAmounts.concat([assetAmount]);
   }
 
   let outgoingAssets = event.params.outgoingAssets.map<Asset>((asset) => useAsset(asset.toHex()));
-  let outgoingAssetAmounts: BigDecimal[] = new Array<BigDecimal>();
-  for (let i = 0; i < event.params.outgoingAssetAmounts.length; i++) {
-    let entry = event.params.outgoingAssetAmounts;
-    let amount = toBigDecimal(entry[i], outgoingAssets[i].decimals);
-    outgoingAssetAmounts = outgoingAssetAmounts.concat([amount]);
+  let outgoingAssetAmounts: AssetAmount[] = new Array<AssetAmount>();
+  let outgoingAmounts = event.params.outgoingAssetAmounts;
+  for (let i = 0; i < outgoingAmounts.length; i++) {
+    let amount = toBigDecimal(outgoingAmounts[i], outgoingAssets[i].decimals);
+    let assetAmount = createAssetAmount(incomingAssets[i], amount, 'trade/outgoing', event);
+    outgoingAssetAmounts = outgoingAssetAmounts.concat([assetAmount]);
   }
 
   let execution = new CallOnIntegrationExecutedForFundEvent(genericId(event));
@@ -117,24 +120,13 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
   execution.adapter = adapter.id;
   execution.selector = integrationSelector;
   execution.integrationData = event.params.integrationData.toHexString();
-  execution.incomingAssets = incomingAssets.map<string>((asset) => asset.id);
-  execution.incomingAssetAmounts = incomingAssetAmounts;
-  execution.outgoingAssets = outgoingAssets.map<string>((asset) => asset.id);
-  execution.outgoingAssetAmounts = outgoingAssetAmounts;
+  execution.incomingAssetAmounts = incomingAssetAmounts.map<string>((assetAmount) => assetAmount.id);
+  execution.outgoingAssetAmounts = outgoingAssetAmounts.map<string>((assetAmount) => assetAmount.id);
   execution.timestamp = event.block.timestamp;
   execution.transaction = ensureTransaction(event).id;
   execution.save();
 
-  trackTrade(
-    fund,
-    adapter,
-    integrationSelector,
-    incomingAssets,
-    incomingAssetAmounts,
-    outgoingAssets,
-    outgoingAssetAmounts,
-    event,
-  );
+  trackTrade(fund, adapter, integrationSelector, incomingAssetAmounts, outgoingAssetAmounts, event);
 
   trackPortfolioState(fund, event, execution);
   trackCalculationState(fund, event, execution);

@@ -1,8 +1,7 @@
-import { BigDecimal } from '@graphprotocol/graph-ts';
 import { CallOnIntegrationExecutedForFund } from '../generated/IntegrationManagerContract';
 import {
   AddTrackedAssetsTrade,
-  Asset,
+  AssetAmount,
   Fund,
   IntegrationAdapter,
   LendTrade,
@@ -25,25 +24,21 @@ export function trackTrade(
   fund: Fund,
   adapter: IntegrationAdapter,
   selector: string,
-  incomingAssets: Asset[],
-  incomingAssetAmounts: BigDecimal[],
-  outgoingAssets: Asset[],
-  outgoingAssetAmounts: BigDecimal[],
+  incomingAssetAmounts: AssetAmount[],
+  outgoingAssetAmounts: AssetAmount[],
   event: CallOnIntegrationExecutedForFund,
 ): void {
   let tradeType = convertSelectorToType(selector);
 
   // TokenSwap (one to one)
-  if (tradeType == takeOrderType && outgoingAssets.length == 1 && incomingAssets.length == 1) {
+  if (tradeType == takeOrderType && outgoingAssetAmounts.length == 1 && incomingAssetAmounts.length == 1) {
     let trade = new TokenSwapTrade(genericId(event));
     trade.fund = fund.id;
     trade.adapter = adapter.id;
     trade.method = convertSelectorToType(selector);
-    trade.incomingAsset = incomingAssets[0].id;
-    trade.incomingAssetAmount = incomingAssetAmounts[0];
-    trade.outgoingAsset = outgoingAssets[0].id;
-    trade.outgoingAssetAmount = outgoingAssetAmounts[0];
-    trade.price = outgoingAssetAmounts[0].div(incomingAssetAmounts[0]);
+    trade.incomingAssetAmount = incomingAssetAmounts[0].id;
+    trade.outgoingAssetAmount = outgoingAssetAmounts[0].id;
+    trade.price = outgoingAssetAmounts[0].amount.div(incomingAssetAmounts[0].amount);
     trade.timestamp = event.block.timestamp;
     trade.fundState = fund.state;
     trade.save();
@@ -57,10 +52,8 @@ export function trackTrade(
     trade.fund = fund.id;
     trade.adapter = adapter.id;
     trade.method = convertSelectorToType(selector);
-    trade.incomingAssets = incomingAssets.map<string>((asset) => asset.id);
-    trade.incomingAssetAmounts = incomingAssetAmounts;
-    trade.outgoingAssets = outgoingAssets.map<string>((asset) => asset.id);
-    trade.outgoingAssetAmounts = outgoingAssetAmounts;
+    trade.incomingAssetAmounts = incomingAssetAmounts.map<string>((assetAmount) => assetAmount.id);
+    trade.outgoingAssetAmounts = outgoingAssetAmounts.map<string>((assetAmount) => assetAmount.id);
     trade.timestamp = event.block.timestamp;
     trade.fundState = fund.state;
     trade.save();
@@ -68,16 +61,14 @@ export function trackTrade(
     return;
   }
 
-  if (tradeType == lendType && outgoingAssets.length == 1 && incomingAssets.length == 1) {
+  if (tradeType == lendType && outgoingAssetAmounts.length == 1 && incomingAssetAmounts.length == 1) {
     let trade = new LendTrade(genericId(event));
     trade.fund = fund.id;
     trade.adapter = adapter.id;
     trade.method = convertSelectorToType(selector);
-    trade.incomingAsset = incomingAssets[0].id;
-    trade.incomingAssetAmount = incomingAssetAmounts[0];
-    trade.outgoingAsset = outgoingAssets[0].id;
-    trade.outgoingAssetAmount = outgoingAssetAmounts[0];
-    trade.price = outgoingAssetAmounts[0].div(incomingAssetAmounts[0]);
+    trade.incomingAssetAmount = incomingAssetAmounts[0].id;
+    trade.outgoingAssetAmount = outgoingAssetAmounts[0].id;
+    trade.price = outgoingAssetAmounts[0].amount.div(incomingAssetAmounts[0].amount);
     trade.timestamp = event.block.timestamp;
     trade.fundState = fund.state;
     trade.save();
@@ -90,10 +81,8 @@ export function trackTrade(
     trade.fund = fund.id;
     trade.adapter = adapter.id;
     trade.method = convertSelectorToType(selector);
-    trade.incomingAssets = incomingAssets.map<string>((asset) => asset.id);
-    trade.incomingAssetAmounts = incomingAssetAmounts;
-    trade.outgoingAssets = outgoingAssets.map<string>((asset) => asset.id);
-    trade.outgoingAssetAmounts = outgoingAssetAmounts;
+    trade.incomingAssetAmounts = incomingAssetAmounts.map<string>((assetAmount) => assetAmount.id);
+    trade.outgoingAssetAmounts = outgoingAssetAmounts.map<string>((assetAmount) => assetAmount.id);
     trade.timestamp = event.block.timestamp;
     trade.fundState = fund.state;
     trade.save();
@@ -101,16 +90,14 @@ export function trackTrade(
     return;
   }
 
-  if (tradeType == redeemType && outgoingAssets.length == 1 && incomingAssets.length == 1) {
+  if (tradeType == redeemType && outgoingAssetAmounts.length == 1 && incomingAssetAmounts.length == 1) {
     let trade = new RedeemTrade(genericId(event));
     trade.fund = fund.id;
     trade.adapter = adapter.id;
     trade.method = convertSelectorToType(selector);
-    trade.incomingAsset = incomingAssets[0].id;
-    trade.incomingAssetAmount = incomingAssetAmounts[0];
-    trade.outgoingAsset = outgoingAssets[0].id;
-    trade.outgoingAssetAmount = outgoingAssetAmounts[0];
-    trade.price = outgoingAssetAmounts[0].div(incomingAssetAmounts[0]);
+    trade.incomingAssetAmount = incomingAssetAmounts[0].id;
+    trade.outgoingAssetAmount = outgoingAssetAmounts[0].id;
+    trade.price = outgoingAssetAmounts[0].amount.div(incomingAssetAmounts[0].amount);
     trade.timestamp = event.block.timestamp;
     trade.fundState = fund.state;
     trade.save();
@@ -123,10 +110,8 @@ export function trackTrade(
     trade.fund = fund.id;
     trade.adapter = adapter.id;
     trade.method = convertSelectorToType(selector);
-    trade.incomingAssets = incomingAssets.map<string>((asset) => asset.id);
-    trade.incomingAssetAmounts = incomingAssetAmounts;
-    trade.outgoingAssets = outgoingAssets.map<string>((asset) => asset.id);
-    trade.outgoingAssetAmounts = outgoingAssetAmounts;
+    trade.incomingAssetAmounts = incomingAssetAmounts.map<string>((assetAmount) => assetAmount.id);
+    trade.outgoingAssetAmounts = outgoingAssetAmounts.map<string>((assetAmount) => assetAmount.id);
     trade.timestamp = event.block.timestamp;
     trade.fundState = fund.state;
     trade.save();
@@ -139,8 +124,7 @@ export function trackTrade(
     trade.fund = fund.id;
     trade.adapter = adapter.id;
     trade.method = convertSelectorToType(selector);
-    trade.incomingAssets = incomingAssets.map<string>((asset) => asset.id);
-    trade.incomingAssetAmounts = incomingAssetAmounts;
+    trade.incomingAssetAmounts = incomingAssetAmounts.map<string>((assetAmount) => assetAmount.id);
     trade.timestamp = event.block.timestamp;
     trade.fundState = fund.state;
     trade.save();

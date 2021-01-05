@@ -255,8 +255,7 @@ type SharesRedeemedEvent implements EventInterface & FundEventInterface & Shares
   contract: Contract!
   investmentState: InvestmentState!
   shares: BigDecimal!
-  payoutAssets: [Asset!]!
-  payoutQuantities: [BigDecimal!]!
+  payoutAssetAmounts: [AssetAmount!]!
   timestamp: BigInt!
   fundState: FundState!
   transaction: Transaction!
@@ -333,10 +332,8 @@ type CallOnIntegrationExecutedForFundEvent implements EventInterface & FundEvent
   adapter: IntegrationAdapter!
   selector: String!
   integrationData: String!
-  incomingAssets: [Asset!]!
-  incomingAssetAmounts: [BigDecimal!]!
-  outgoingAssets: [Asset!]!
-  outgoingAssetAmounts: [BigDecimal!]!
+  incomingAssetAmounts: [AssetAmount!]!
+  outgoingAssetAmounts: [AssetAmount!]!
   timestamp: BigInt!
   transaction: Transaction!
 }
@@ -1562,7 +1559,7 @@ type HoldingState implements FundStateInterface @entity {
   timestamp: BigInt!
   asset: Asset!
   price: AssetPrice
-  quantity: BigDecimal!
+  amount: BigDecimal!
   events: [FundEventInterface!]!
 }
 
@@ -1644,10 +1641,8 @@ type TokenSwapTrade implements Trade @entity {
   fund: Fund!
   adapter: IntegrationAdapter!
   method: IntegrationMethod!
-  incomingAsset: Asset!
-  incomingAssetAmount: BigDecimal!
-  outgoingAsset: Asset!
-  outgoingAssetAmount: BigDecimal!
+  incomingAssetAmount: AssetAmount!
+  outgoingAssetAmount: AssetAmount!
   price: BigDecimal!
   timestamp: BigInt!
   fundState: FundState!
@@ -1658,10 +1653,8 @@ type MultiTokenSwapTrade implements Trade @entity {
   fund: Fund!
   adapter: IntegrationAdapter!
   method: IntegrationMethod!
-  incomingAssets: [Asset!]!
-  incomingAssetAmounts: [BigDecimal!]!
-  outgoingAssets: [Asset!]!
-  outgoingAssetAmounts: [BigDecimal!]!
+  incomingAssetAmounts: [AssetAmount!]!
+  outgoingAssetAmounts: [AssetAmount!]!
   timestamp: BigInt!
   fundState: FundState!
 }
@@ -1671,10 +1664,8 @@ type LendTrade implements Trade @entity {
   fund: Fund!
   adapter: IntegrationAdapter!
   method: IntegrationMethod!
-  incomingAsset: Asset!
-  incomingAssetAmount: BigDecimal!
-  outgoingAsset: Asset!
-  outgoingAssetAmount: BigDecimal!
+  incomingAssetAmount: AssetAmount!
+  outgoingAssetAmount: AssetAmount!
   price: BigDecimal!
   timestamp: BigInt!
   fundState: FundState!
@@ -1685,10 +1676,8 @@ type MultiLendTrade implements Trade @entity {
   fund: Fund!
   adapter: IntegrationAdapter!
   method: IntegrationMethod!
-  incomingAssets: [Asset!]!
-  incomingAssetAmounts: [BigDecimal!]!
-  outgoingAssets: [Asset!]!
-  outgoingAssetAmounts: [BigDecimal!]!
+  incomingAssetAmounts: [AssetAmount!]!
+  outgoingAssetAmounts: [AssetAmount!]!
   timestamp: BigInt!
   fundState: FundState!
 }
@@ -1698,10 +1687,8 @@ type RedeemTrade implements Trade @entity {
   fund: Fund!
   adapter: IntegrationAdapter!
   method: IntegrationMethod!
-  incomingAsset: Asset!
-  incomingAssetAmount: BigDecimal!
-  outgoingAsset: Asset!
-  outgoingAssetAmount: BigDecimal!
+  incomingAssetAmount: AssetAmount!
+  outgoingAssetAmount: AssetAmount!
   price: BigDecimal!
   timestamp: BigInt!
   fundState: FundState!
@@ -1712,10 +1699,8 @@ type MultiRedeemTrade implements Trade @entity {
   fund: Fund!
   adapter: IntegrationAdapter!
   method: IntegrationMethod!
-  incomingAssets: [Asset!]!
-  incomingAssetAmounts: [BigDecimal!]!
-  outgoingAssets: [Asset!]!
-  outgoingAssetAmounts: [BigDecimal!]!
+  incomingAssetAmounts: [AssetAmount!]!
+  outgoingAssetAmounts: [AssetAmount!]!
   timestamp: BigInt!
   fundState: FundState!
 }
@@ -1725,8 +1710,7 @@ type AddTrackedAssetsTrade implements Trade @entity {
   fund: Fund!
   adapter: IntegrationAdapter!
   method: IntegrationMethod!
-  incomingAssets: [Asset!]!
-  incomingAssetAmounts: [BigDecimal!]!
+  incomingAssetAmounts: [AssetAmount!]!
   timestamp: BigInt!
   fundState: FundState!
 }
@@ -1796,6 +1780,13 @@ type UniswapV2PoolAssetDetail @entity {
 type CompoundAssetDetails @entity {
   id: ID!
   underlying: Asset!
+}
+
+type AssetAmount @entity {
+  id: ID!
+  asset: Asset!
+  amount: BigDecimal!
+  price: AssetPrice
 }
 
 type AssetPrice @entity {
@@ -1995,5 +1986,5 @@ type NetworkAssetHolding @entity {
   id: ID!
   timestamp: BigInt!
   asset: Asset!
-  quantity: BigDecimal!
+  amount: BigDecimal!
 }
