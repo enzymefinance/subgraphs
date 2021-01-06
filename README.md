@@ -1,6 +1,6 @@
-# Melon Subgraph
+# Enzyme Subgraph
 
-> The official subgraph (thegraph.com) for the Melon Protocol.
+> The official subgraph (thegraph.com) for Enzyme Finance.
 
 ## Development
 
