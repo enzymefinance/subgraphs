@@ -1,5 +1,3 @@
-import { deploy } from '@crestproject/crestproject';
-import { constants } from 'ethers';
 import fs from 'fs';
 import glob from 'glob';
 import request, { gql } from 'graphql-request';
@@ -124,7 +122,7 @@ const kovan: DeploymentWithMetadata = {
 };
 
 async function fetchDeployment(source: string): Promise<DeploymentWithMetadata> {
-  if (source.startsWith('http://' || source.startsWith('https://'))) {
+  if (source.startsWith('http://') || source.startsWith('https://')) {
     const deployment = (await request<{ deployment: Deployment }>(source, query)).deployment;
     return { ...deployment, networkName: 'mainnet', startBlock: 0 };
   }
