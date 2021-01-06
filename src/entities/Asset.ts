@@ -1,7 +1,6 @@
 import { Address } from '@graphprotocol/graph-ts';
 import { ERC20Contract } from '../generated/ERC20Contract';
 import { Asset } from '../generated/schema';
-import { getMainnetTokenAddress } from '../utils/getMainnetTokenAddress';
 import { logCritical } from '../utils/logCritical';
 
 export function useAsset(id: string): Asset {
@@ -25,7 +24,6 @@ export function ensureAsset(address: Address): Asset {
   let decimals = !contract.try_decimals().reverted ? contract.try_decimals().value : 18;
 
   asset = new Asset(address.toHex());
-  asset.ref = getMainnetTokenAddress(symbol);
   asset.name = name;
   asset.symbol = symbol;
   asset.decimals = decimals;
