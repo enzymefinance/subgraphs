@@ -357,7 +357,7 @@ type MigrationCancelledEvent implements EventInterface & FundEventInterface @ent
   timestamp: BigInt!
   transaction: Transaction!
   migration: Migration!
-  signalTimestamp: BigInt!
+  executableTimestamp: BigInt!
 }
 
 type MigrationExecutedEvent implements EventInterface & FundEventInterface @entity {
@@ -368,7 +368,7 @@ type MigrationExecutedEvent implements EventInterface & FundEventInterface @enti
   timestamp: BigInt!
   transaction: Transaction!
   migration: Migration!
-  signalTimestamp: BigInt!
+  executableTimestamp: BigInt!
 }
 
 type MigrationInCancelHookFailedEvent implements EventInterface & FundEventInterface @entity {
@@ -1324,7 +1324,7 @@ type Migration @entity {
   prevRelease: Release!
   nextRelease: Release!
   fund: Fund!
-  signalTimestamp: BigInt!
+  executableTimestamp: BigInt!
   executed: Boolean!
   cancelled: Boolean!
   nextAccessor: String!

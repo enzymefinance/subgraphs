@@ -18,11 +18,11 @@ import { genericId } from '../utils/genericId';
 export function handleDerivativeAdded(event: DerivativeAdded): void {
   let derivative = ensureAsset(event.params.derivative);
 
-  // this is for sUSD, which is both a
-  if (derivative.symbol == 'sUSD') {
-    checkSynthetix(derivative);
-    return;
-  }
+  // TODO: On testnet (private evm) we used to register sUSD both as primitive and derivative.
+  // if (derivative.symbol == 'sUSD') {
+  //   checkSynthetix(derivative);
+  //   return;
+  // }
 
   derivative.type = 'DERIVATIVE';
   derivative.save();
@@ -41,8 +41,8 @@ export function handleDerivativeAdded(event: DerivativeAdded): void {
   derivativeAdded.save();
 
   // Whenever a new asset is registered, we need to fetch its current price immediately.
-  // let current = fetchAssetPrice(derivative);
-  // trackAssetPrice(derivative, event.block.timestamp, current);
+  let current = fetchAssetPrice(derivative);
+  trackAssetPrice(derivative, event.block.timestamp, current);
 
   let cron = ensureCron();
   cron.derivatives = arrayUnique<string>(cron.derivatives.concat([derivative.id]));

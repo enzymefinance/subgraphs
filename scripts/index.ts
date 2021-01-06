@@ -55,10 +55,7 @@ interface Deployment {
   integrationManager: string;
   policyManager: string;
   chainlinkPriceFeed: string;
-  chaiPriceFeed: string;
   aggregatedDerivativePriceFeed: string;
-  chaiAdapter: string;
-  kyberAdapter: string;
   managementFee: string;
   performanceFee: string;
   entranceRateDirectFee: string;
@@ -86,35 +83,32 @@ interface DeploymentWithMetadata extends Deployment {
 // TODO: Derive this from the deployment output instead of hard-coding it.
 const kovan: DeploymentWithMetadata = {
   networkName: 'kovan',
-  startBlock: 22905845,
-  wethToken: '0xa83037c0F46879E6d1fbddbcBDCf99E3037EA85E',
-  dispatcher: '0xDf9BC49a9f0227FF8586CA4c5AB4F86DBF96225a',
-  vaultLib: '0xaD1dAed5B0073a6002be78CF06284D8dF9884045',
-  fundDeployer: '0xAC3F5203596478504B743bdfa9468E8721d9890b',
-  valueInterpreter: '0xA8dEd3F33E43948a5Dcbe76293760708e52EBB55',
-  comptrollerLib: '0x2c5d8b6Fe7b40B7085f04F4799Cb1c98411B02dc',
-  fundActionsWrapper: '0xFa3f64498987649258cF78D77357E474Db03636D',
-  feeManager: '0xC2A10e039722405d19008790bfFBd8B6A3F2Afab',
-  integrationManager: '0xfB6B92Ca2d2760C3FCe631D9E18201f838405d46',
-  policyManager: '0xaA801f2862f0E075E67Dfff5b028e29932092bAF',
-  chainlinkPriceFeed: '0x2934E2883D959D3fBDB41D5868BA20e23404d6a6',
-  chaiPriceFeed: '0xc4E8A24a9b485bEBfA8393EB78C647A23C2Ba8DB',
-  aggregatedDerivativePriceFeed: '0xe273a6dba1d0D551Cb5C7c345327F11ce1075b73',
-  chaiAdapter: '0x83d5c74c91035D23A971FC36f79fC7593807Af8c',
-  kyberAdapter: '0x1d80B7416474a12EAD364bea951a3477427E4e39',
-  managementFee: '0xdA8aaf3C77c5435C64AFF2694441df461898c1f0',
-  performanceFee: '0xEF0e9cb527b89d4aDdd74d2A18b54c97B2a52B5a',
-  entranceRateDirectFee: '0x685fc4CE8a71Ccd87F64279185EF738Ab83FBeD3',
-  entranceRateBurnFee: '0x7Fe4999f1eA34520E7455FEec81A5342372a0283',
-  adapterBlacklist: '0x92d9f8912Ccc7d5cDBeF5416C05C7d11002D12FC',
-  adapterWhitelist: '0xaF9aC29964fFC1fA8F0B44952390B343fb75C9Dd',
-  assetBlacklist: '0x0778956c3aDfF12a4029B18287FC7CB671CDbDaE',
-  assetWhitelist: '0xbf2AB06613850B181acd51335681a5EA68E4466e',
-  buySharesCallerWhitelist: '0x922A486939842D5957d1edFe595061a59841085D',
-  guaranteedRedemption: '0xe86311fE83E8a4c049269aFE22dba1a012b25CA2',
-  investorWhitelist: '0x14363039d242B4A3f0fd50722BdE60b1F58C6EbC',
-  maxConcentration: '0xa8Dece0e28Ff28FF578703Db2aEF49F8784bdCE1',
-  minMaxInvestment: '0xB8f54849B0C6D8cf86C2Fd965F6502480bc675b1',
+  startBlock: 22906438,
+  wethToken: '0x80A49144D966d52D0A4C63eCF5864515889c05C1',
+  dispatcher: '0xcE5d84E2c1B0e1D1CA374D5c390B21015d86FaD0',
+  vaultLib: '0x46973df07D5eEdE62aA59Ff026d47d9b039f607a',
+  fundDeployer: '0x30642589b962496171EAb59d5d26E4De53cF2487',
+  valueInterpreter: '0x09E8B5922cE2ef90aF2F6fda8d16ffE91867fF5C',
+  comptrollerLib: '0xc884f978d444d20db604C6C75d29221010Fe1E2a',
+  fundActionsWrapper: '0xf49B04171335016688583cd06232d58F87FaF3B8',
+  feeManager: '0x7cDe94405c40c0A5E50b649f71961a6B4130b7eF',
+  integrationManager: '0xe887484F965339B8179f3606D4cDE8fD40d464ed',
+  policyManager: '0x02c795F24933504177C59ce54969B7ff4D7aC2b5',
+  chainlinkPriceFeed: '0x2287a3686DE192d61009F495F66B941FB096f948',
+  aggregatedDerivativePriceFeed: '0x4988113e9bcECD6047e9155ac4416cdAe732a2EC',
+  managementFee: '0x6022B6d79136A990B1f49f523699e8Eab821eaC3',
+  performanceFee: '0x572fbedf3c866128aBb5b48265D5863036c424DE',
+  entranceRateDirectFee: '0x2CB798978A2ED64Bc6b40E37dDE3bc6270563357',
+  entranceRateBurnFee: '0xe84E21F2450Aed2034BA76B1Dd918609C09C51d2',
+  adapterBlacklist: '0x4f595F0CaE38212c2A5467e56F7c833dd0F558c7',
+  adapterWhitelist: '0xF2a043A0FFfb70309094330172c663FCe7A58d79',
+  assetBlacklist: '0x040d3065B7E9FBFC0948110AcF3737928e92143E',
+  assetWhitelist: '0x26f948CA5a9ceCf907933100f6a32A282E38C40f',
+  buySharesCallerWhitelist: '0xE16e8710EE40147958670CFc52a0eFe01A279480',
+  guaranteedRedemption: '0xdAb2718Cf6A24a58BF7c3d073D1c91ffaCA8C8a7',
+  investorWhitelist: '0xcBC83e027066FF6162A4A9fEE191881CF34EbEc9',
+  maxConcentration: '0x8A32eE2750Ad2D7213C87E6881666B6eFA4C059A',
+  minMaxInvestment: '0x93A44b4F4f3D754F491bAd61DE55bd7D98FbED8a',
   // NOTE: These are the official kovan aggregators from chainlink.
   eurChainlinkAggregator: '0x0c15Ab9A0DB086e062194c273CC79f41597Bbf13',
   chfChainlinkAggregator: '0xed0616BeF04D374969f302a34AE4A63882490A8C',

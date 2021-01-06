@@ -19,7 +19,6 @@ export interface Deployment {
   integrationManager: string;
   policyManager: string;
   chainlinkPriceFeed: string;
-  chaiPriceFeed: string;
   aggregatedDerivativePriceFeed: string;
   chaiAdapter: string;
   compoundAdapter: string;
@@ -60,7 +59,6 @@ const deploymentQuery = gql`
       integrationManager
       policyManager
       chainlinkPriceFeed
-      chaiPriceFeed
       aggregatedDerivativePriceFeed
       chaiAdapter
       compoundAdapter
@@ -104,7 +102,6 @@ const createDeploymentMutation = gql`
       integrationManager
       policyManager
       chainlinkPriceFeed
-      chaiPriceFeed
       aggregatedDerivativePriceFeed
       chaiAdapter
       compoundAdapter

@@ -54,8 +54,10 @@ export function handleEthUsdAggregatorSet(event: EthUsdAggregatorSet): void {
 
   // Create WETH manually
   let weth = ensureAsset(wethTokenAddress);
-  weth.type = 'ETH';
-  weth.save();
+  if (weth.type != 'ETH') {
+    weth.type = 'ETH';
+    weth.save();
+  }
 
   // Aggregators for currencies
   let eurProxy = ChainlinkAggregatorProxyContract.bind(eurChainlinkAggregator);

@@ -55,51 +55,51 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@crestproject/codegen@^0.1.20":
-  version "0.1.20"
-  resolved "https://registry.yarnpkg.com/@crestproject/codegen/-/codegen-0.1.20.tgz#a8fd4bd2cadcaeadaae220018fc5772f3ec4d8d4"
-  integrity sha512-eAhbid26MiaURk9higQRDWcvyNjadqYDGR4vG7tqeM+SrtPwqj3KlEO+LwmfFrEF+DoCIkYGF4XrB6fVKQBizw==
+"@crestproject/codegen@^0.1.21":
+  version "0.1.21"
+  resolved "https://registry.yarnpkg.com/@crestproject/codegen/-/codegen-0.1.21.tgz#677ed97d6612f0d05e8f272dc467f90fd2df1635"
+  integrity sha512-KnvZ3+Y6g1js+HVe36no2KfuQBATYmC+lC8vbm5UkPz2As3t8+LubpkrAhQ8JoULxAfgz5m15v+BbOgAVTli/w==
   dependencies:
     "@babel/runtime" "^7.12.5"
   optionalDependencies:
     prettier "^2.1.2"
 
-"@crestproject/coverage@^0.1.20":
-  version "0.1.20"
-  resolved "https://registry.yarnpkg.com/@crestproject/coverage/-/coverage-0.1.20.tgz#cd3bb68c18e709d5dcde17388e4e340d8a3acd6b"
-  integrity sha512-h5hOZm9KtdHL13Ew5VgOCqKmt50hhYGdethGdB7y6pdgIVY0oiI6kzYLDF5cdNdLO2xqbqot49NH+hGCQ/KZgw==
+"@crestproject/coverage@^0.1.21":
+  version "0.1.21"
+  resolved "https://registry.yarnpkg.com/@crestproject/coverage/-/coverage-0.1.21.tgz#aa5b91b381972a41267c9db2b13410ee1908b783"
+  integrity sha512-v4B+r9jUhPgVZxIL4Sc1dzqhpXTwve1KcBuUZwx6RvDzg//aaVS3iBdoWXXBGG/TBBD3Ebw5MRy6m62a+wAKhg==
   dependencies:
     "@babel/runtime" "^7.12.5"
     "@solidity-parser/parser" "^0.8.1"
     istanbul-lib-coverage "^3.0.0"
     uuid "^8.3.1"
 
-"@crestproject/crestproject@^0.1.20":
-  version "0.1.20"
-  resolved "https://registry.yarnpkg.com/@crestproject/crestproject/-/crestproject-0.1.20.tgz#dc3c688448ce2bb308eb9eb2bff0e6d2e3d75782"
-  integrity sha512-zws5JwGAJjBFNB1DEqvyrMNLwGDGPN7/0lgbp4eRDt88wS0sPEWvBVcxdPnh9XD8tm8nlOsmIj/EXTA+DsmtFA==
+"@crestproject/crestproject@^0.1.21":
+  version "0.1.21"
+  resolved "https://registry.yarnpkg.com/@crestproject/crestproject/-/crestproject-0.1.21.tgz#229e3bb7e39c4f45b2173334a02f31b71b8842e7"
+  integrity sha512-cxaQfAm6UN/JjhsgoVf5Wv/TBLTz+/NSgpu8Gt8KQOW5s/BqP+2yL++RBriJcA6K4vmQFwdPDnvz8/DF5/VZ8A==
   dependencies:
     "@babel/runtime" "^7.12.5"
-    "@crestproject/ethers" "^0.1.20"
-    "@crestproject/hardhat" "^0.1.20"
+    "@crestproject/ethers" "^0.1.21"
+    "@crestproject/hardhat" "^0.1.21"
 
-"@crestproject/ethers@^0.1.20":
-  version "0.1.20"
-  resolved "https://registry.yarnpkg.com/@crestproject/ethers/-/ethers-0.1.20.tgz#f36e6664f459e274c3246910f01118334162f357"
-  integrity sha512-gJWQ/k7+SvpAGBYeexdw5Vu5EqUZEhTONISiRhlEnQRiGIlxrRdSMAo4jGvFsWUps/Wzz/XFoSQyHvn9t3tIdw==
+"@crestproject/ethers@^0.1.21":
+  version "0.1.21"
+  resolved "https://registry.yarnpkg.com/@crestproject/ethers/-/ethers-0.1.21.tgz#3188da1d6b5a751f0698c15e1b56ec756b8ede31"
+  integrity sha512-r+rppdX39Ybs1+/tzEqU4Eb/JLQObSwSB3Q+aLoHxrxdI2z31lspriVQg1H9gOfvW6CUnWnjtmWHWMuZ1Wg6KA==
   dependencies:
     "@babel/runtime" "^7.12.5"
 
-"@crestproject/hardhat@^0.1.20":
-  version "0.1.20"
-  resolved "https://registry.yarnpkg.com/@crestproject/hardhat/-/hardhat-0.1.20.tgz#ebd96c264d0b2322d5dc94a4541f69ae72a606e9"
-  integrity sha512-ek90FcHi+DO3bLngVIyMs4lOiAe4XR5WzFzhxip7wyVdvrmAs+RWMN/pq6srcIraeYFT1Fj8eHC/B1naRmpM0A==
+"@crestproject/hardhat@^0.1.21":
+  version "0.1.21"
+  resolved "https://registry.yarnpkg.com/@crestproject/hardhat/-/hardhat-0.1.21.tgz#1ab25ed3d2756569ece19880e10cf47628928ae2"
+  integrity sha512-PAT6ZkRwOcXWgET51d1fXqh9xtzHKVxOX9Z7U/h5wdIerCsHnp1+F9MyjNn6DJa2uRcv5jJmDpSrYYAGRs7guQ==
   dependencies:
     "@babel/runtime" "^7.12.5"
-    "@crestproject/codegen" "^0.1.20"
-    "@crestproject/coverage" "^0.1.20"
-    "@crestproject/ethers" "^0.1.20"
-    "@crestproject/jest" "^0.1.20"
+    "@crestproject/codegen" "^0.1.21"
+    "@crestproject/coverage" "^0.1.21"
+    "@crestproject/ethers" "^0.1.21"
+    "@crestproject/jest" "^0.1.21"
     deepmerge "^4.2.2"
     fs-extra "^9.0.1"
     glob "^7.1.6"
@@ -108,14 +108,14 @@
     jest-environment-node "^26.6.2"
     uuid "^8.3.1"
 
-"@crestproject/jest@^0.1.20":
-  version "0.1.20"
-  resolved "https://registry.yarnpkg.com/@crestproject/jest/-/jest-0.1.20.tgz#5b8e12a1fd22eabdc470edbb5267e729a44f635a"
-  integrity sha512-g4BG+p5gWTQePefj78IhLiMN9tAr+fLjXhVu/mPYT9dTmRcl1TY5YaVVVKdX0RkUxv0ZMXKTHH7QbwVR9tB2kw==
+"@crestproject/jest@^0.1.21":
+  version "0.1.21"
+  resolved "https://registry.yarnpkg.com/@crestproject/jest/-/jest-0.1.21.tgz#e5b603919031a4ff920da9383e1e4a9303943d5a"
+  integrity sha512-n2+QmaVm/FvaoE9doMOK+2LnCXaCTj4LqUl5u6vXdhHlt+SNpBuydu65QdZht2rMMiJEuInU1PbUOhuecOBtoQ==
   dependencies:
     "@babel/runtime" "^7.12.5"
-    "@crestproject/ethers" "^0.1.20"
-    "@crestproject/hardhat" "^0.1.20"
+    "@crestproject/ethers" "^0.1.21"
+    "@crestproject/hardhat" "^0.1.21"
     jest-diff "^26.6.2"
     jest-matcher-utils "^26.6.2"
     jest-snapshot "^26.6.2"
@@ -900,21 +900,21 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@melonproject/protocol@^2.0.0-dev.5040+f9c29b46":
-  version "2.0.0-dev.5040"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_1zCyWq/%40melonproject%2Fprotocol-2.0.0-dev.5040.tgz#7f98b055345f8e79ccd1c9869dd5450cfe9eec3b"
-  integrity sha1-f5iwVTRfjnnM0cmGndVFDP6e7Ds=
+"@melonproject/protocol@^2.0.0-dev.5043+4199e832":
+  version "2.0.0-dev.5043"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_ZSDKh/%40melonproject%2Fprotocol-2.0.0-dev.5043.tgz#ccd81caf4be9f352141f78766d8cb0951552165d"
+  integrity sha1-zNgcr0vp81IUH3h2bYywlRVSFl0=
   dependencies:
     "@babel/runtime" "^7.12.5"
     decimal.js "^10.2.1"
 
-"@melonproject/testutils@^2.0.0-dev.5040+f9c29b46":
-  version "2.0.0-dev.5040"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_ZkSxZ/%40melonproject%2Ftestutils-2.0.0-dev.5040.tgz#5338e90edf232be1c99ab4a2602829a1c898efa4"
-  integrity sha1-UzjpDt8jK+HJmrSiYCgpociY76Q=
+"@melonproject/testutils@^2.0.0-dev.5043+4199e832":
+  version "2.0.0-dev.5043"
+  resolved "https://npm.fury.io/melonproject/~/up/ver_uJWlg/%40melonproject%2Ftestutils-2.0.0-dev.5043.tgz#4a7e75eeabcc2c669ae107c00b462c2bd947c23a"
+  integrity sha1-Sn517qvMLGaa4QfAC0YsK9lHwjo=
   dependencies:
     "@babel/runtime" "^7.12.5"
-    "@melonproject/protocol" "^2.0.0-dev.5040+f9c29b46"
+    "@melonproject/protocol" "^2.0.0-dev.5043+4199e832"
 
 "@openzeppelin/contracts@^3.3.0":
   version "3.3.0"
@@ -1168,10 +1168,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.12.62.tgz#733923d73669188d35950253dd18a21570085d2b"
   integrity sha512-qAfo81CsD7yQIM9mVyh6B/U47li5g7cfpVQEDMfQeF8pSZVwzbhwU3crc0qG4DmpsebpJPR49AKOExQyJ05Cpg==
 
-"@types/node@^14.14.14":
-  version "14.14.14"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.14.tgz#f7fd5f3cc8521301119f63910f0fb965c7d761ae"
-  integrity sha512-UHnOPWVWV1z+VV8k6L1HhG7UbGBgIdghqF3l9Ny9ApPghbjICXkUJSd/b9gOgQfjM1r+37cipdw/HJ3F6ICEnQ==
+"@types/node@^14.14.20":
+  version "14.14.20"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.20.tgz#f7974863edd21d1f8a494a73e8e2b3658615c340"
+  integrity sha512-Y93R97Ouif9JEOWPIUyU+eyIdyRqQR0I8Ez1dzku4hDx34NWh4HbtIc3WNzwB1Y9ULvNGeu5B8h8bVL5cAk4/A==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"
@@ -1195,10 +1195,10 @@
   resolved "https://registry.yarnpkg.com/@types/prettier/-/prettier-2.1.0.tgz#5f96562c1075ee715a5b138f0b7f591c1f40f6b8"
   integrity sha512-hiYA88aHiEIgDmeKlsyVsuQdcFn3Z2VuFd/Xm/HCnGnPD8UFU5BM128uzzRVVGEzKDKYUrRsRH9S2o+NUy/3IA==
 
-"@types/prettier@^2.1.5":
-  version "2.1.5"
-  resolved "https://registry.yarnpkg.com/@types/prettier/-/prettier-2.1.5.tgz#b6ab3bba29e16b821d84e09ecfaded462b816b00"
-  integrity sha512-UEyp8LwZ4Dg30kVU2Q3amHHyTn1jEdhCIE59ANed76GaT1Vp76DD3ZWSAxgCrw6wJ0TqeoBpqmfUHiUDPs//HQ==
+"@types/prettier@^2.1.6":
+  version "2.1.6"
+  resolved "https://registry.yarnpkg.com/@types/prettier/-/prettier-2.1.6.tgz#f4b1efa784e8db479cdb8b14403e2144b1e9ff03"
+  integrity sha512-6gOkRe7OIioWAXfnO/2lFiv+SJichKVSys1mSsgyrYHSEjk8Ctv4tSR/Odvnu+HWlH2C8j53dahU03XmQdd5fA==
 
 "@types/qs@*":
   version "6.9.4"
@@ -1462,10 +1462,10 @@ asn1@~0.2.3:
   dependencies:
     safer-buffer "~2.1.0"
 
-assemblyscript@^0.17.9:
-  version "0.17.9"
-  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.17.9.tgz#b43bbf797b424a12f411c96f7f488549aab7f821"
-  integrity sha512-uy7c2+f0d2v8OJDrTJbyFPrNxtAwwzmw/1EcckSi75QnUlPqQhZhYPPSRpPIyWCfi94DRoRwsU389FszdrEZtw==
+assemblyscript@^0.17.13:
+  version "0.17.13"
+  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.17.13.tgz#2006601985beca63018a5f76933066de060ddda5"
+  integrity sha512-ok34czSbqkmoooaYA7j6S29QEBCgDu6DIQMN3A4AP9K8PjOilRPPxLkHYvbtyvrFr9bmscrlwPJDKF9LgcwXRw==
   dependencies:
     binaryen "98.0.0-nightly.20201109"
     long "^4.0.0"

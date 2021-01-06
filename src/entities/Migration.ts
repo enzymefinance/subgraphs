@@ -30,7 +30,7 @@ export function ensureMigration(event: MigrationSignaled): Migration {
   migration.prevRelease = useRelease(event.params.prevFundDeployer.toHex()).id;
   migration.nextRelease = useRelease(event.params.nextFundDeployer.toHex()).id;
   migration.fund = useFund(event.params.vaultProxy.toHex()).id;
-  migration.signalTimestamp = event.block.timestamp;
+  migration.executableTimestamp = event.block.timestamp;
   migration.cancelled = false;
   migration.executed = false;
   migration.nextAccessor = event.params.nextVaultAccessor.toHex();

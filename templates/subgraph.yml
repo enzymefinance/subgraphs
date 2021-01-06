@@ -32,7 +32,7 @@ dataSources:
           handler: handleMigrationCancelled
         - event: MigrationExecuted(indexed address,indexed address,indexed address,address,address,uint256)
           handler: handleMigrationExecuted
-        - event: MigrationSignaled(indexed address,indexed address,indexed address,address,address)
+        - event: MigrationSignaled(indexed address,indexed address,indexed address,address,address,uint256)
           handler: handleMigrationSignaled
         - event: MigrationInCancelHookFailed(bytes,indexed address,indexed address,indexed address,address,address)
           handler: handleMigrationInCancelHookFailed
@@ -568,8 +568,6 @@ dataSources:
           handler: handleAuthUserRemovedForFund
         - event: CallOnIntegrationExecutedForFund(indexed address,address,address,indexed address,indexed bytes4,bytes,address[],uint256[],address[],uint256[])
           handler: handleCallOnIntegrationExecutedForFund
-        - event: TrackedAssetsLimitSet(uint256)
-          handler: handleTrackedAssetsLimitSet
 
   - name: ChainlinkPriceFeedDataSource
     kind: ethereum/contract
@@ -602,7 +600,7 @@ dataSources:
       eventHandlers:
         - event: EthUsdAggregatorSet(address,address)
           handler: handleEthUsdAggregatorSet
-        - event: PrimitiveAdded(indexed address,address,uint8)
+        - event: PrimitiveAdded(indexed address,address,uint8,uint256)
           handler: handlePrimitiveAdded
         - event: PrimitiveRemoved(indexed address)
           handler: handlePrimitiveRemoved

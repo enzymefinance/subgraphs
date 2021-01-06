@@ -16,7 +16,6 @@ import {
   AuthUserAddedForFund,
   AuthUserRemovedForFund,
   CallOnIntegrationExecutedForFund,
-  TrackedAssetsLimitSet,
 } from '../generated/IntegrationManagerContract';
 import {
   AdapterDeregisteredEvent,
@@ -26,7 +25,6 @@ import {
   AuthUserAddedForFundEvent,
   AuthUserRemovedForFundEvent,
   CallOnIntegrationExecutedForFundEvent,
-  TrackedAssetsLimitSetEvent,
 } from '../generated/schema';
 import { arrayDiff } from '../utils/arrayDiff';
 import { arrayUnique } from '../utils/arrayUnique';

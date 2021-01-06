@@ -62,7 +62,7 @@ export function handleMigrationCancelled(event: MigrationCancelled): void {
     event.params.vaultProxy.toHex(),
     event.params.prevFundDeployer.toHex(),
     event.params.nextFundDeployer.toHex(),
-    event.params.signalTimestamp.toString(),
+    event.params.executableTimestamp.toString(),
   );
 
   let migration = useMigration(migrationId);
@@ -73,7 +73,7 @@ export function handleMigrationCancelled(event: MigrationCancelled): void {
   migrationCancellation.timestamp = event.block.timestamp;
   migrationCancellation.transaction = ensureTransaction(event).id;
   migrationCancellation.migration = migration.id;
-  migrationCancellation.signalTimestamp = event.params.signalTimestamp;
+  migrationCancellation.executableTimestamp = event.params.executableTimestamp;
   migrationCancellation.save();
 
   migration.cancelled = true;
@@ -85,7 +85,7 @@ export function handleMigrationExecuted(event: MigrationExecuted): void {
     event.params.vaultProxy.toHex(),
     event.params.prevFundDeployer.toHex(),
     event.params.nextFundDeployer.toHex(),
-    event.params.signalTimestamp.toString(),
+    event.params.executableTimestamp.toString(),
   );
 
   let migration = useMigration(migrationId);
@@ -96,7 +96,7 @@ export function handleMigrationExecuted(event: MigrationExecuted): void {
   migrationExecution.transaction = ensureTransaction(event).id;
   migrationExecution.contract = event.address.toHex();
   migrationExecution.migration = migration.id;
-  migrationExecution.signalTimestamp = event.params.signalTimestamp;
+  migrationExecution.executableTimestamp = event.params.executableTimestamp;
   migrationExecution.save();
 
   let fund = useFund(event.params.vaultProxy.toHex());
