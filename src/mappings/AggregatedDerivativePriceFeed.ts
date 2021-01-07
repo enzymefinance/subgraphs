@@ -19,10 +19,10 @@ export function handleDerivativeAdded(event: DerivativeAdded): void {
   let derivative = ensureAsset(event.params.derivative);
 
   // TODO: On testnet (private evm) we used to register sUSD both as primitive and derivative.
-  // if (derivative.symbol == 'sUSD') {
-  //   checkSynthetix(derivative);
-  //   return;
-  // }
+  if (derivative.symbol == 'sUSD') {
+    checkSynthetix(derivative);
+    return;
+  }
 
   derivative.type = 'DERIVATIVE';
   derivative.save();

@@ -10,6 +10,9 @@ export let wethTokenAddress = Address.fromString('{{wethToken}}');
 export let valueInterpreterAddress = Address.fromString('{{valueInterpreter}}');
 export let fundActionsWrapperAddress = Address.fromString('{{fundActionsWrapper}}');
 
-export let eurChainlinkAggregator = Address.fromString('{{eurChainlinkAggregator}}');
+export let audChainlinkAggregator = Address.fromString('{{audChainlinkAggregator}}');
+export let btcChainlinkAggregator = Address.fromString('{{btcChainlinkAggregator}}');
 export let chfChainlinkAggregator = Address.fromString('{{chfChainlinkAggregator}}');
+export let eurChainlinkAggregator = Address.fromString('{{eurChainlinkAggregator}}');
+export let gbpChainlinkAggregator = Address.fromString('{{gbpChainlinkAggregator}}');
 export let jpyChainlinkAggregator = Address.fromString('{{jpyChainlinkAggregator}}');

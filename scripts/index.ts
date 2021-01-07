@@ -36,8 +36,11 @@ const query = gql`
       investorWhitelist
       maxConcentration
       minMaxInvestment
-      eurChainlinkAggregator
+      audChainlinkAggregator
+      btcChainlinkAggregator
       chfChainlinkAggregator
+      eurChainlinkAggregator
+      gbpChainlinkAggregator
       jpyChainlinkAggregator
     }
   }
@@ -70,8 +73,11 @@ interface Deployment {
   maxConcentration: string;
   minMaxInvestment: string;
   // Aggregators for currency calculations.
-  eurChainlinkAggregator: string;
+  audChainlinkAggregator: string;
+  btcChainlinkAggregator: string;
   chfChainlinkAggregator: string;
+  eurChainlinkAggregator: string;
+  gbpChainlinkAggregator: string;
   jpyChainlinkAggregator: string;
 }
 
@@ -110,8 +116,11 @@ const kovan: DeploymentWithMetadata = {
   maxConcentration: '0x8A32eE2750Ad2D7213C87E6881666B6eFA4C059A',
   minMaxInvestment: '0x93A44b4F4f3D754F491bAd61DE55bd7D98FbED8a',
   // NOTE: These are the official kovan aggregators from chainlink.
-  eurChainlinkAggregator: '0x0c15Ab9A0DB086e062194c273CC79f41597Bbf13',
+  audChainlinkAggregator: '0x5813A90f826e16dB392abd2aF7966313fc1fd5B8',
+  btcChainlinkAggregator: '0xF7904a295A029a3aBDFFB6F12755974a958C7C25',
   chfChainlinkAggregator: '0xed0616BeF04D374969f302a34AE4A63882490A8C',
+  eurChainlinkAggregator: '0x0c15Ab9A0DB086e062194c273CC79f41597Bbf13',
+  gbpChainlinkAggregator: '0x28b0061f44E6A9780224AA61BEc8C3Fcb0d37de9',
   jpyChainlinkAggregator: '0xD627B1eF3AC23F1d3e576FA6206126F3c1Bd0942',
 };
 
