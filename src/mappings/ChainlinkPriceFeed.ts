@@ -1,4 +1,12 @@
-import { chfChainlinkAggregator, eurChainlinkAggregator, jpyChainlinkAggregator, wethTokenAddress } from '../addresses';
+import {
+  audChainlinkAggregator,
+  btcChainlinkAggregator,
+  chfChainlinkAggregator,
+  eurChainlinkAggregator,
+  gbpChainlinkAggregator,
+  jpyChainlinkAggregator,
+  wethTokenAddress,
+} from '../addresses';
 import { zeroAddress } from '../constants';
 import { ensureAsset } from '../entities/Asset';
 import { trackAssetPrice } from '../entities/AssetPrice';
@@ -60,15 +68,30 @@ export function handleEthUsdAggregatorSet(event: EthUsdAggregatorSet): void {
   }
 
   // Aggregators for currencies
-  let eurProxy = ChainlinkAggregatorProxyContract.bind(eurChainlinkAggregator);
-  let eurAggregator = eurProxy.aggregator();
-  let eur = ensureCurrency('EUR');
-  enableChainlinkCurrencyAggregator(eurAggregator, eur);
+  let audProxy = ChainlinkAggregatorProxyContract.bind(audChainlinkAggregator);
+  let audAggregator = audProxy.aggregator();
+  let aud = ensureCurrency('AUD');
+  enableChainlinkCurrencyAggregator(audAggregator, aud);
+
+  let btcProxy = ChainlinkAggregatorProxyContract.bind(btcChainlinkAggregator);
+  let btcAggregator = btcProxy.aggregator();
+  let btc = ensureCurrency('BTC');
+  enableChainlinkCurrencyAggregator(btcAggregator, btc);
 
   let chfProxy = ChainlinkAggregatorProxyContract.bind(chfChainlinkAggregator);
   let chfAggregator = chfProxy.aggregator();
   let chf = ensureCurrency('CHF');
   enableChainlinkCurrencyAggregator(chfAggregator, chf);
+
+  let eurProxy = ChainlinkAggregatorProxyContract.bind(eurChainlinkAggregator);
+  let eurAggregator = eurProxy.aggregator();
+  let eur = ensureCurrency('EUR');
+  enableChainlinkCurrencyAggregator(eurAggregator, eur);
+
+  let gbpProxy = ChainlinkAggregatorProxyContract.bind(gbpChainlinkAggregator);
+  let gbpAggregator = gbpProxy.aggregator();
+  let gbp = ensureCurrency('GBP');
+  enableChainlinkCurrencyAggregator(gbpAggregator, gbp);
 
   let jpyProxy = ChainlinkAggregatorProxyContract.bind(jpyChainlinkAggregator);
   let jpyAggregator = jpyProxy.aggregator();
@@ -80,7 +103,9 @@ export function handleEthUsdAggregatorSet(event: EthUsdAggregatorSet): void {
 
   let cron = ensureCron();
   cron.primitives = arrayUnique<string>(cron.primitives.concat([weth.id]));
-  cron.currencies = arrayUnique<string>(cron.currencies.concat([eth.id, eur.id, chf.id, jpy.id, usd.id]));
+  cron.currencies = arrayUnique<string>(
+    cron.currencies.concat([aud.id, btc.id, chf.id, eth.id, eur.id, gbp.id, jpy.id, usd.id]),
+  );
   cron.save();
 
   // It's important that we run cron last.
