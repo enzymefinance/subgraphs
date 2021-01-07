@@ -7416,7 +7416,7 @@
           "xauusd": "0xc8fb5684f2707C82f28595dEaC017Bfdf44EE9c5"
         },
         "synthetix": {
-          "snx": "0x8a2E41f58468b6A31521C165ef558aC53bc33c73",
+          "snx": "0x415E0bDF9FC95c2971047a7260E41cbB25D9Ba3a",
           "susd": "0x00e071bd51C75A0cE9A6158588a66F8f94dcD941",
           "synths": [
             "0xBDaee77b072da5ab959663961a407874E7E3F73B"
@@ -9490,7 +9490,7 @@
       ]
     },
     "SynthetixAdapter": {
-      "address": "0x66b567b1C56812aaA513A16b27FDd86c18b62A20",
+      "address": "0xCD59DfeF4c97994588C72D82C644a23A6199b813",
       "abi": [
         {
           "inputs": [
