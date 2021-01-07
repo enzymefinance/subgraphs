@@ -10,6 +10,7 @@ import {
   ComptrollerLibSet,
   ComptrollerProxyDeployed,
   NewFundCreated,
+  ReleaseStatusSet,
   VaultCallDeregistered,
   VaultCallRegistered,
 } from '../generated/FundDeployerContract';
@@ -17,6 +18,7 @@ import {
   ComptrollerLibSetEvent,
   ComptrollerProxyDeployedEvent,
   NewFundCreatedEvent,
+  ReleaseStatusSetEvent,
   VaultCallDeregisteredEvent,
   VaultCallRegisteredEvent,
 } from '../generated/schema';
@@ -78,6 +80,16 @@ export function handleComptrollerProxyDeployed(event: ComptrollerProxyDeployed):
   comptrollerProxyDeployment.policyManagerConfigData = event.params.policyManagerConfigData.toHexString();
   comptrollerProxyDeployment.forMigration = event.params.forMigration;
   comptrollerProxyDeployment.save();
+}
+
+export function handleReleaseStatusSet(event: ReleaseStatusSet): void {
+  let statusSet = new ReleaseStatusSetEvent(genericId(event));
+  statusSet.timestamp = event.block.timestamp;
+  statusSet.contract = ensureContract(event.address, 'FundDeployer').id;
+  statusSet.transaction = ensureTransaction(event).id;
+  statusSet.prevStatus = event.params.prevStatus;
+  statusSet.nextStatus = event.params.nextStatus;
+  statusSet.save();
 }
 
 export function handleVaultCallDeregistered(event: VaultCallDeregistered): void {
