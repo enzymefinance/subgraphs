@@ -44,8 +44,8 @@ import { Contract } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
 import { useNetwork } from './Network';
 
-export function useContract(id: string): Contract {
-  let contract = Contract.load(id) as Contract;
+export function useContract(id: string, name: string): Contract {
+  let contract = Contract.load(name + '/' + id) as Contract;
   if (contract == null) {
     logCritical('Failed to load contract {}.', [id]);
   }
@@ -55,14 +55,15 @@ export function useContract(id: string): Contract {
 
 // TODO: pass Release as a parameter
 export function ensureContract(address: Address, name: string): Contract {
-  let contract = Contract.load(address.toHex()) as Contract;
+  let id = name + '/' + address.toHex();
+  let contract = Contract.load(id) as Contract;
   if (contract) {
     return contract;
   }
 
   let network = useNetwork();
 
-  contract = new Contract(address.toHex());
+  contract = new Contract(id);
   contract.name = name;
   contract.release = network.currentRelease;
   contract.save();

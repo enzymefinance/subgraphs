@@ -134,7 +134,7 @@ export function handleMigrationInCancelHookFailed(event: MigrationInCancelHookFa
   cancelHookFailed.account = useAccount(event.address.toHex()).id;
   cancelHookFailed.timestamp = event.block.timestamp;
   cancelHookFailed.transaction = ensureTransaction(event).id;
-  cancelHookFailed.contract = useContract(event.address.toHex()).id;
+  cancelHookFailed.contract = useContract(event.address.toHex(), 'Dispatcher').id;
 
   cancelHookFailed.prevFundDeployer = event.params.prevFundDeployer.toHex();
   cancelHookFailed.nextFundDeployer = event.params.nextFundDeployer.toHex();
@@ -149,7 +149,7 @@ export function handleMigrationOutHookFailed(event: MigrationOutHookFailed): voi
   outHookFailed.account = useAccount(event.address.toHex()).id;
   outHookFailed.timestamp = event.block.timestamp;
   outHookFailed.transaction = ensureTransaction(event).id;
-  outHookFailed.contract = useContract(event.address.toHex()).id;
+  outHookFailed.contract = useContract(event.address.toHex(), 'Dispatcher').id;
 
   outHookFailed.prevFundDeployer = event.params.prevFundDeployer.toHex();
   outHookFailed.nextFundDeployer = event.params.nextFundDeployer.toHex();
@@ -160,7 +160,7 @@ export function handleMigrationOutHookFailed(event: MigrationOutHookFailed): voi
 
 export function handleMigrationTimelockSet(event: MigrationTimelockSet): void {
   let timelockSet = new MigrationTimelockSetEvent(genericId(event));
-  timelockSet.contract = useContract(event.address.toHex()).id;
+  timelockSet.contract = useContract(event.address.toHex(), 'Dispatcher').id;
   timelockSet.transaction = ensureTransaction(event).id;
   timelockSet.timestamp = event.block.timestamp;
   timelockSet.prevTimelock = event.params.prevTimelock;
@@ -170,7 +170,7 @@ export function handleMigrationTimelockSet(event: MigrationTimelockSet): void {
 
 export function handleSharesTokenSymbolSet(event: SharesTokenSymbolSet): void {
   let symbolSet = new SharesTokenSymbolSetEvent(genericId(event));
-  symbolSet.contract = useContract(event.address.toHex()).id;
+  symbolSet.contract = useContract(event.address.toHex(), 'Dispatcher').id;
   symbolSet.transaction = ensureTransaction(event).id;
   symbolSet.timestamp = event.block.timestamp;
   symbolSet.sharesTokenSymbol = event.params._nextSymbol;
@@ -179,7 +179,7 @@ export function handleSharesTokenSymbolSet(event: SharesTokenSymbolSet): void {
 
 export function handleNominatedOwnerRemoved(event: NominatedOwnerRemoved): void {
   let ownerRemoved = new NominatedOwnerRemovedEvent(genericId(event));
-  ownerRemoved.contract = useContract(event.address.toHex()).id;
+  ownerRemoved.contract = useContract(event.address.toHex(), 'Dispatcher').id;
   ownerRemoved.transaction = ensureTransaction(event).id;
   ownerRemoved.timestamp = event.block.timestamp;
   ownerRemoved.nominatedOwner = event.params.nominatedOwner.toHex();
@@ -187,7 +187,7 @@ export function handleNominatedOwnerRemoved(event: NominatedOwnerRemoved): void 
 }
 export function handleNominatedOwnerSet(event: NominatedOwnerSet): void {
   let ownerSet = new NominatedOwnerSetEvent(genericId(event));
-  ownerSet.contract = useContract(event.address.toHex()).id;
+  ownerSet.contract = useContract(event.address.toHex(), 'Dispatcher').id;
   ownerSet.transaction = ensureTransaction(event).id;
   ownerSet.timestamp = event.block.timestamp;
   ownerSet.nominatedOwner = event.params.nominatedOwner.toHex();
@@ -195,7 +195,7 @@ export function handleNominatedOwnerSet(event: NominatedOwnerSet): void {
 }
 export function handleOwnershipTransferred(event: OwnershipTransferred): void {
   let transferred = new DispatcherOwnershipTransferredEvent(genericId(event));
-  transferred.contract = useContract(event.address.toHex()).id;
+  transferred.contract = useContract(event.address.toHex(), 'Dispatcher').id;
   transferred.transaction = ensureTransaction(event).id;
   transferred.timestamp = event.block.timestamp;
   transferred.prevOwner = event.params.prevOwner.toHex();

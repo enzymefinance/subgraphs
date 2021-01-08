@@ -115,7 +115,7 @@ export function handleOverridePauseSet(event: OverridePauseSet): void {
   let overridePauseSet = new OverridePauseSetEvent(genericId(event));
   overridePauseSet.fund = fund.id;
   overridePauseSet.account = account.id;
-  overridePauseSet.contract = useContract(event.address.toHex()).id;
+  overridePauseSet.contract = useContract(event.address.toHex(), 'ComptrollerLib').id;
   overridePauseSet.timestamp = event.block.timestamp;
   overridePauseSet.transaction = ensureTransaction(event).id;
   overridePauseSet.overridePause = event.params.overridePause;
@@ -129,7 +129,7 @@ export function handleMigratedSharesDuePaid(event: MigratedSharesDuePaid): void 
   let paid = new MigratedSharesDuePaidEvent(genericId(event));
   paid.fund = fund.id;
   paid.account = account.id;
-  paid.contract = useContract(event.address.toHex()).id;
+  paid.contract = useContract(event.address.toHex(), 'ComptrollerLib').id;
   paid.timestamp = event.block.timestamp;
   paid.transaction = ensureTransaction(event).id;
   paid.sharesDue = toBigDecimal(event.params.sharesDue);
@@ -143,7 +143,7 @@ export function handlePreRedeemSharesHookFailed(event: PreRedeemSharesHookFailed
   let hookFailed = new PreRedeemSharesHookFailedEvent(genericId(event));
   hookFailed.fund = fund.id;
   hookFailed.account = account.id;
-  hookFailed.contract = useContract(event.address.toHex()).id;
+  hookFailed.contract = useContract(event.address.toHex(), 'ComptrollerLib').id;
   hookFailed.timestamp = event.block.timestamp;
   hookFailed.sharesQuantity = toBigDecimal(event.params.sharesQuantity);
   hookFailed.redeemer = ensureAccount(event.params.redeemer, event).id;

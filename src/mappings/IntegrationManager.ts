@@ -45,7 +45,7 @@ export function handleAdapterRegistered(event: AdapterRegistered): void {
 
 export function handleAdapterDeregistered(event: AdapterDeregistered): void {
   let deregistration = new AdapterDeregisteredEvent(genericId(event));
-  deregistration.contract = useContract(event.address.toHex()).id;
+  deregistration.contract = useContract(event.address.toHex(), 'IntegrationManager').id;
   deregistration.timestamp = event.block.timestamp;
   deregistration.transaction = ensureTransaction(event).id;
   deregistration.integrationAdapter = useIntegrationAdapter(event.params.adapter.toHex()).id;
@@ -60,7 +60,7 @@ export function handleAuthUserAddedForFund(event: AuthUserAddedForFund): void {
 
   let userAdded = new AuthUserAddedForFundEvent(genericId(event));
   userAdded.fund = fund.id;
-  userAdded.contract = useContract(event.address.toHex()).id;
+  userAdded.contract = useContract(event.address.toHex(), 'IntegrationManager').id;
   userAdded.timestamp = event.block.timestamp;
   userAdded.transaction = ensureTransaction(event).id;
   userAdded.account = account.id;
@@ -77,7 +77,7 @@ export function handleAuthUserRemovedForFund(event: AuthUserRemovedForFund): voi
 
   let userRemoved = new AuthUserRemovedForFundEvent(genericId(event));
   userRemoved.fund = fund.id;
-  userRemoved.contract = useContract(event.address.toHex()).id;
+  userRemoved.contract = useContract(event.address.toHex(), 'IntegrationManager').id;
   userRemoved.timestamp = event.block.timestamp;
   userRemoved.transaction = ensureTransaction(event).id;
   userRemoved.account = account.id;
