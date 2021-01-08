@@ -1216,6 +1216,7 @@ type Transaction @entity {
 type Contract @entity {
   id: ID!
   name: String!
+  release: Release
   events: [EventInterface!]! @derivedFrom(field: "contract")
 }
 
@@ -1344,7 +1345,9 @@ type Release @entity {
   current: Boolean!
   open: BigInt!
   close: BigInt
+  contracts: [Contract!] @derivedFrom(field: "release")
   funds: [Fund!] @derivedFrom(field: "release")
+  network: Network!
 }
 
 type Account @entity {
@@ -1983,6 +1986,8 @@ type Cron @entity {
 type Network @entity {
   id: ID!
   timestamp: BigInt!
+  currentRelease: Release
+  releases: [Release!] @derivedFrom(field: "network")
   state: NetworkState!
   stateHistory: [NetworkState!]! @derivedFrom(field: "network")
 }

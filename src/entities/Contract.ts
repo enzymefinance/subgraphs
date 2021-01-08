@@ -1,4 +1,4 @@
-import { Address, ethereum } from '@graphprotocol/graph-ts';
+import { Address } from '@graphprotocol/graph-ts';
 import {
   adapterBlacklistAddress,
   adapterWhitelistAddress,
@@ -25,6 +25,7 @@ import {
 } from '../addresses';
 import { Contract } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
+import { useNetwork } from './Network';
 
 export function useContract(id: string): Contract {
   let contract = Contract.load(id) as Contract;
@@ -35,20 +36,25 @@ export function useContract(id: string): Contract {
   return contract;
 }
 
+// TODO: pass Release as a parameter
 export function ensureContract(address: Address, name: string): Contract {
   let contract = Contract.load(address.toHex()) as Contract;
   if (contract) {
     return contract;
   }
 
+  let network = useNetwork();
+
   contract = new Contract(address.toHex());
   contract.name = name;
+  contract.release = network.currentRelease;
   contract.save();
 
   return contract;
 }
 
-export function registerContracts(event: ethereum.Event): void {
+// TODO: pass Release as a parameter
+export function registerContracts(): void {
   let names: Array<string> = [
     'AdapterBlacklist',
     'AdapterWhitelist',
@@ -99,7 +105,11 @@ export function registerContracts(event: ethereum.Event): void {
     wethTokenAddress,
   ];
 
+  let network = useNetwork();
+
   for (let i = 0; i < names.length; i++) {
-    ensureContract(addresses[i], names[i]);
+    let contract = ensureContract(addresses[i], names[i]);
+    contract.release = network.currentRelease;
+    contract.save();
   }
 }

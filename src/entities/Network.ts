@@ -24,3 +24,13 @@ export function useNetwork(): Network {
 
   return network as Network;
 }
+
+export function ensureNetwork(event: ethereum.Event): Network {
+  let network = Network.load(networkId) as Network;
+
+  if (network != null) {
+    return network;
+  }
+
+  return createNetwork(event);
+}

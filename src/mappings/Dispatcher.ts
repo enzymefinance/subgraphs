@@ -3,7 +3,7 @@ import { ensureManager, useAccount } from '../entities/Account';
 import { ensureContract, registerContracts, useContract } from '../entities/Contract';
 import { useFund } from '../entities/Fund';
 import { ensureMigration, generateMigrationId, useMigration } from '../entities/Migration';
-import { createNetwork } from '../entities/Network';
+import { ensureNetwork } from '../entities/Network';
 import { createRelease, useRelease } from '../entities/Release';
 import { ensureTransaction } from '../entities/Transaction';
 import {
@@ -37,6 +37,18 @@ import {
 import { genericId } from '../utils/genericId';
 
 export function handleCurrentFundDeployerSet(event: CurrentFundDeployerSet): void {
+  // Set up system wide tracking
+  let network = ensureNetwork(event);
+
+  // Set up release (each new fund deployer is a release)
+  let release = createRelease(event, network);
+
+  network.currentRelease = release.id;
+  network.save();
+
+  // Register contracts for the current release
+  registerContracts();
+
   let fundDeployerSet = new FundDeployerSetEvent(genericId(event));
   fundDeployerSet.contract = ensureContract(event.address, 'Dispatcher').id;
   fundDeployerSet.timestamp = event.block.timestamp;
@@ -53,10 +65,6 @@ export function handleCurrentFundDeployerSet(event: CurrentFundDeployerSet): voi
     prevRelease.close = event.block.timestamp;
     prevRelease.save();
   }
-
-  createRelease(event);
-  createNetwork(event);
-  registerContracts(event);
 }
 
 export function handleMigrationCancelled(event: MigrationCancelled): void {

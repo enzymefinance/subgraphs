@@ -1,6 +1,6 @@
-import { Release } from '../generated/schema';
-import { logCritical } from '../utils/logCritical';
 import { CurrentFundDeployerSet } from '../generated/DispatcherContract';
+import { Network, Release } from '../generated/schema';
+import { logCritical } from '../utils/logCritical';
 
 export function useRelease(id: string): Release {
   let release = Release.load(id) as Release;
@@ -11,10 +11,11 @@ export function useRelease(id: string): Release {
   return release;
 }
 
-export function createRelease(event: CurrentFundDeployerSet): Release {
+export function createRelease(event: CurrentFundDeployerSet, network: Network): Release {
   let release = new Release(event.params.nextFundDeployer.toHex());
   release.current = true;
   release.open = event.block.timestamp;
+  release.network = network.id;
   release.save();
 
   return release;

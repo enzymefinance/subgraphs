@@ -34,7 +34,7 @@ import { toBigDecimal } from '../utils/toBigDecimal';
 
 export function handleAccessorSet(event: AccessorSet): void {
   let accessorSet = new AccessorSetEvent(genericId(event));
-  accessorSet.contract = ensureContract(event.address, 'VaultLib').id;
+  accessorSet.contract = ensureContract(event.address, 'VaultProxy').id;
   accessorSet.fund = useFund(event.address.toHex()).id;
   accessorSet.account = ensureAccount(Address.fromString(ensureTransaction(event).from), event).id;
   accessorSet.prevAccessor = event.params.prevAccessor.toHex();
@@ -53,7 +53,7 @@ export function handleAssetWithdrawn(event: AssetWithdrawn): void {
   withdrawal.transaction = ensureTransaction(event).id;
   withdrawal.target = event.params.target.toHex();
   withdrawal.amount = toBigDecimal(event.params.amount);
-  withdrawal.contract = event.address.toHex();
+  withdrawal.contract = ensureContract(event.address, 'VaultProxy').id;
   withdrawal.save();
 }
 
@@ -61,7 +61,7 @@ export function handleMigratorSet(event: MigratorSet): void {
   let migratorSet = new MigratorSetEvent(genericId(event));
   migratorSet.fund = useFund(event.address.toHex()).id;
   migratorSet.account = ensureAccount(event.transaction.from, event).id;
-  migratorSet.contract = event.address.toHex();
+  migratorSet.contract = ensureContract(event.address, 'VaultProxy').id;
   migratorSet.timestamp = event.block.timestamp;
   migratorSet.transaction = ensureTransaction(event).id;
   migratorSet.prevMigrator = ensureAccount(event.params.prevMigrator, event).id;
@@ -73,7 +73,7 @@ export function handleOwnerSet(event: OwnerSet): void {
   let ownerSet = new OwnerSetEvent(genericId(event));
   ownerSet.fund = useFund(event.address.toHex()).id;
   ownerSet.account = ensureAccount(event.transaction.from, event).id;
-  ownerSet.contract = ensureContract(event.address, 'VaultLib').id;
+  ownerSet.contract = ensureContract(event.address, 'VaultProxy').id;
   ownerSet.timestamp = event.block.timestamp;
   ownerSet.transaction = ensureTransaction(event).id;
 
@@ -93,7 +93,7 @@ export function handleTrackedAssetAdded(event: TrackedAssetAdded): void {
   trackedAssetAddition.asset = asset.id;
   trackedAssetAddition.fund = fund.id;
   trackedAssetAddition.account = ensureAccount(Address.fromString(fund.manager), event).id;
-  trackedAssetAddition.contract = event.address.toHex();
+  trackedAssetAddition.contract = ensureContract(event.address, 'VaultProxy').id;
   trackedAssetAddition.timestamp = event.block.timestamp;
   trackedAssetAddition.transaction = ensureTransaction(event).id;
   trackedAssetAddition.save();
@@ -111,7 +111,7 @@ export function handleTrackedAssetRemoved(event: TrackedAssetRemoved): void {
   trackedAssetRemoval.fund = fund.id;
   trackedAssetRemoval.timestamp = event.block.timestamp;
   trackedAssetRemoval.account = useAccount(fund.manager).id;
-  trackedAssetRemoval.contract = event.address.toHex();
+  trackedAssetRemoval.contract = ensureContract(event.address, 'VaultProxy').id;
   trackedAssetRemoval.transaction = ensureTransaction(event).id;
   trackedAssetRemoval.save();
 
@@ -123,7 +123,7 @@ export function handleVaultLibSet(event: VaultLibSet): void {
   let vaultLibSet = new VaultLibSetEvent(genericId(event));
   vaultLibSet.fund = useFund(event.address.toHex()).id;
   vaultLibSet.account = ensureAccount(Address.fromString(ensureTransaction(event).from), event).id;
-  vaultLibSet.contract = ensureContract(event.address, 'VaultLib').id;
+  vaultLibSet.contract = ensureContract(event.address, 'VaultProxy').id;
   vaultLibSet.timestamp = event.block.timestamp;
   vaultLibSet.transaction = ensureTransaction(event).id;
   vaultLibSet.prevVaultLib = event.params.prevVaultLib.toHex();
@@ -135,7 +135,7 @@ export function handleApproval(event: Approval): void {
   let approval = new ApprovalEvent(genericId(event));
   approval.fund = useFund(event.address.toHex()).id;
   approval.account = ensureAccount(event.transaction.from, event).id;
-  approval.contract = event.address.toHex();
+  approval.contract = ensureContract(event.address, 'VaultProxy').id;
   approval.timestamp = event.block.timestamp;
   approval.transaction = ensureTransaction(event).id;
   approval.owner = event.params.owner.toHex();
@@ -148,7 +148,7 @@ export function handleTransfer(event: Transfer): void {
   let transfer = new TransferEvent(genericId(event));
   transfer.fund = useFund(event.address.toHex()).id;
   transfer.account = ensureAccount(event.transaction.from, event).id;
-  transfer.contract = event.address.toHex();
+  transfer.contract = ensureContract(event.address, 'VaultProxy').id;
   transfer.timestamp = event.block.timestamp;
   transfer.transaction = ensureTransaction(event).id;
   transfer.from = event.params.from.toHex();

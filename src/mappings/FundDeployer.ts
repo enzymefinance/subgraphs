@@ -3,6 +3,7 @@ import { ensureAccount, ensureManager } from '../entities/Account';
 import { useAsset } from '../entities/Asset';
 import { ensureContract } from '../entities/Contract';
 import { createFund } from '../entities/Fund';
+import { ensureNetwork } from '../entities/Network';
 import { ensureTransaction } from '../entities/Transaction';
 import { ComptrollerLibContract } from '../generated/ComptrollerLibContract';
 import {
@@ -89,6 +90,8 @@ export function handleReleaseStatusSet(event: ReleaseStatusSet): void {
   statusSet.prevStatus = event.params.prevStatus;
   statusSet.nextStatus = event.params.nextStatus;
   statusSet.save();
+
+  // TODO: set release status in entity
 }
 
 export function handleVaultCallDeregistered(event: VaultCallDeregistered): void {
@@ -101,6 +104,10 @@ export function handleVaultCallDeregistered(event: VaultCallDeregistered): void 
   deregistered.save();
 }
 export function handleVaultCallRegistered(event: VaultCallRegistered): void {
+  // TODO: remove this, once testnet is no longer active
+  // Testnet emits this as the first event, on Kovan, the first event is "FundDeployerSet"
+  ensureNetwork(event);
+
   let registered = new VaultCallRegisteredEvent(genericId(event));
   registered.timestamp = event.block.timestamp;
   registered.contract = ensureContract(event.address, 'FundDeployer').id;
