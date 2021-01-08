@@ -1,27 +1,44 @@
 import { Address } from '@graphprotocol/graph-ts';
 import {
+  dispatcherAddress,
+  fundDeployerAddress,
+  vaultLibAddress,
+  comptrollerLibAddress,
+  valueInterpreterAddress,
+  integrationManagerAddress,
+  policyManagerAddress,
+  feeManagerAddress,
+  aggregatedDerivativePriceFeedAddress,
+  chainlinkPriceFeedAddress,
+  fundActionsWrapperAddress,
+  managementFeeAddress,
+  performanceFeeAddress,
+  entranceRateBurnFeeAddress,
+  entranceRateDirectFeeAddress,
   adapterBlacklistAddress,
   adapterWhitelistAddress,
-  aggregatedDerivativePriceFeedAddress,
   assetBlacklistAddress,
   assetWhitelistAddress,
-  buySharesCallerWhitelistAddress,
-  chainlinkPriceFeedAddress,
-  comptrollerLibAddress,
-  dispatcherAddress,
-  feeManagerAddress,
-  fundActionsWrapperAddress,
-  fundDeployerAddress,
-  guaranteedRedemptionAddress,
-  integrationManagerAddress,
   investorWhitelistAddress,
-  managementFeeAddress,
+  guaranteedRedemptionAddress,
   maxConcentrationAddress,
-  performanceFeeAddress,
-  policyManagerAddress,
-  valueInterpreterAddress,
-  vaultLibAddress,
+  minMaxInvestmentAddress,
+  buySharesCallerWhitelistAddress,
+  trackedAssetsAdapterAddress,
+  compoundAdapterAddress,
+  chaiAdapterAddress,
+  kyberAdapterAddress,
+  uniswapV2AdapterAddress,
+  paraSwapAdapterAddress,
+  zeroExV2AdapterAddress,
+  synthetixAdapterAddress,
   wethTokenAddress,
+  chaiIntegrateeAddress,
+  kyberIntegrateeAddress,
+  uniswapV2IntegrateeAddress,
+  synthetixIntegrateeAddress,
+  synthetixAddressResolverAddress,
+  synthetixDelegateApprovalsAddress,
 } from '../addresses';
 import { Contract } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
@@ -56,53 +73,111 @@ export function ensureContract(address: Address, name: string): Contract {
 // TODO: pass Release as a parameter
 export function registerContracts(): void {
   let names: Array<string> = [
+    'Dispatcher',
+    'FundDeployer',
+    'VaultLib',
+    'ComptrollerLib',
+    'ValueInterpreter',
+    'IntegrationManager',
+    'PolicyManager',
+    'FeeManager',
+
+    // Prices
+    'AggregatedDerivativePriceFeed',
+    'ChainlinkPriceFeed',
+
+    // Peripheral
+    'FundActionsWrapper',
+
+    // Fees
+    'ManagementFee',
+    'PerformanceFee',
+    'EntranceRateBurnFee',
+    'EntranceRateDirectFee',
+
+    // Policies
     'AdapterBlacklist',
     'AdapterWhitelist',
-    'AggregatedDerivativePriceFeed',
     'AssetBlacklist',
     'AssetWhitelist',
-    'BuySharesCallerWhitelist',
-    'ChainlinkPriceFeed',
-    'ComptrollerLib',
-    'Dispatcher',
-    'FeeManager',
-    'FundActionsWrapper',
-    'FundDeployer',
-    'GuaranteedRedemption',
-    'IntegrationManager',
     'InvestorWhitelist',
-    'ManagementFee',
+    'GuaranteedRedemption',
     'MaxConcentration',
-    'PerformanceFee',
-    'PolicyManager',
-    'ValueInterpreter',
-    'VaultLib',
+    'MinMaxInvestment',
+    'BuySharesCallerWhitelist',
+
+    // Adapters
+    'TrackedAssetsAdapter',
+    'CompoundAdapter',
+    'ChaiAdapter',
+    'KyberAdapter',
+    'UniswapV2Adapter',
+    'ParaSwapAdapter',
+    'ZeroExV2Adapter',
+    'SynthetixAdapter',
+
+    // External
     'WethToken',
+    'ChaiIntegratee',
+    'KyberIntegratee',
+    'UniswapV2Integratee',
+    'SynthetixIntegratee',
+    'SynthetixAddressResolver',
+    'SynthetixDelegateApprovals',
   ];
 
   let addresses: Array<Address> = [
+    dispatcherAddress,
+    fundDeployerAddress,
+    vaultLibAddress,
+    comptrollerLibAddress,
+    valueInterpreterAddress,
+    integrationManagerAddress,
+    policyManagerAddress,
+    feeManagerAddress,
+
+    // Prices
+    aggregatedDerivativePriceFeedAddress,
+    chainlinkPriceFeedAddress,
+
+    // Peripheral
+    fundActionsWrapperAddress,
+
+    // Fees
+    managementFeeAddress,
+    performanceFeeAddress,
+    entranceRateBurnFeeAddress,
+    entranceRateDirectFeeAddress,
+
+    // Policies
     adapterBlacklistAddress,
     adapterWhitelistAddress,
-    aggregatedDerivativePriceFeedAddress,
     assetBlacklistAddress,
     assetWhitelistAddress,
-    buySharesCallerWhitelistAddress,
-    chainlinkPriceFeedAddress,
-    comptrollerLibAddress,
-    dispatcherAddress,
-    feeManagerAddress,
-    fundActionsWrapperAddress,
-    fundDeployerAddress,
-    guaranteedRedemptionAddress,
-    integrationManagerAddress,
     investorWhitelistAddress,
-    managementFeeAddress,
+    guaranteedRedemptionAddress,
     maxConcentrationAddress,
-    performanceFeeAddress,
-    policyManagerAddress,
-    valueInterpreterAddress,
-    vaultLibAddress,
+    minMaxInvestmentAddress,
+    buySharesCallerWhitelistAddress,
+
+    // Adapters
+    trackedAssetsAdapterAddress,
+    compoundAdapterAddress,
+    chaiAdapterAddress,
+    kyberAdapterAddress,
+    uniswapV2AdapterAddress,
+    paraSwapAdapterAddress,
+    zeroExV2AdapterAddress,
+    synthetixAdapterAddress,
+
+    // External
     wethTokenAddress,
+    chaiIntegrateeAddress,
+    kyberIntegrateeAddress,
+    uniswapV2IntegrateeAddress,
+    synthetixIntegrateeAddress,
+    synthetixAddressResolverAddress,
+    synthetixDelegateApprovalsAddress,
   ];
 
   let network = useNetwork();

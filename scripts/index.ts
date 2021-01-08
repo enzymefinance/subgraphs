@@ -9,34 +9,60 @@ import kovan from './deployments/kovan.json';
 const query = gql`
   {
     deployment {
-      wethToken
+      # Core
       dispatcher
-      vaultLib
       fundDeployer
-      valueInterpreter
+      vaultLib
       comptrollerLib
-      fundActionsWrapper
-      feeManager
+      valueInterpreter
       integrationManager
       policyManager
-      chainlinkPriceFeed
-      chaiPriceFeed
+      feeManager
+
+      # Prices
       aggregatedDerivativePriceFeed
-      chaiAdapter
-      kyberAdapter
+      chainlinkPriceFeed
+
+      # Peripheral
+      fundActionsWrapper
+
+      # Fees
       managementFee
       performanceFee
-      entranceRateDirectFee
       entranceRateBurnFee
+      entranceRateDirectFee
+
+      # Policies
       adapterBlacklist
       adapterWhitelist
       assetBlacklist
       assetWhitelist
-      buySharesCallerWhitelist
-      guaranteedRedemption
       investorWhitelist
+      guaranteedRedemption
       maxConcentration
       minMaxInvestment
+      buySharesCallerWhitelist
+
+      # Adapters
+      trackedAssetsAdapter
+      compoundAdapter
+      chaiAdapter
+      kyberAdapter
+      uniswapV2Adapter
+      paraSwapAdapter
+      zeroExV2Adapter
+      synthetixAdapter
+
+      # External
+      wethToken
+      chaiIntegratee
+      kyberIntegratee
+      uniswapV2Integratee
+      synthetixIntegratee
+      synthetixAddressResolver
+      synthetixDelegateApprovals
+
+      # Currencies
       audChainlinkAggregator
       btcChainlinkAggregator
       chfChainlinkAggregator
@@ -48,32 +74,60 @@ const query = gql`
 `;
 
 interface Deployment {
-  wethToken: string;
+  // Core
   dispatcher: string;
-  vaultLib: string;
   fundDeployer: string;
-  valueInterpreter: string;
+  vaultLib: string;
   comptrollerLib: string;
-  fundActionsWrapper: string;
-  feeManager: string;
+  valueInterpreter: string;
   integrationManager: string;
   policyManager: string;
-  chainlinkPriceFeed: string;
+  feeManager: string;
+
+  // Prices
   aggregatedDerivativePriceFeed: string;
+  chainlinkPriceFeed: string;
+
+  // Peripheral
+  fundActionsWrapper: string;
+
+  // Fees
   managementFee: string;
   performanceFee: string;
-  entranceRateDirectFee: string;
   entranceRateBurnFee: string;
+  entranceRateDirectFee: string;
+
+  // Policies
   adapterBlacklist: string;
   adapterWhitelist: string;
   assetBlacklist: string;
   assetWhitelist: string;
-  buySharesCallerWhitelist: string;
-  guaranteedRedemption: string;
   investorWhitelist: string;
+  guaranteedRedemption: string;
   maxConcentration: string;
   minMaxInvestment: string;
-  // Aggregators for currency calculations.
+  buySharesCallerWhitelist: string;
+
+  // Adapters
+  trackedAssetsAdapter: string;
+  compoundAdapter: string;
+  chaiAdapter: string;
+  kyberAdapter: string;
+  uniswapV2Adapter: string;
+  paraSwapAdapter: string;
+  zeroExV2Adapter: string;
+  synthetixAdapter: string;
+
+  // External
+  wethToken: string;
+  chaiIntegratee: string;
+  kyberIntegratee: string;
+  uniswapV2Integratee: string;
+  synthetixIntegratee: string;
+  synthetixAddressResolver: string;
+  synthetixDelegateApprovals: string;
+
+  // Currencies
   audChainlinkAggregator: string;
   btcChainlinkAggregator: string;
   chfChainlinkAggregator: string;
@@ -94,47 +148,70 @@ async function fetchDeployment(source: string): Promise<DeploymentWithMetadata> 
   }
 
   if (source === 'kovan') {
-    const kovanAddresses = {
-      // NOTE: These are the official weth kovan address and aggregator addresses from chainlink.
+    return {
+      networkName: 'kovan',
+      startBlock: 22906438,
+
+      // Core
+      dispatcher: kovan.contracts.Dispatcher.address,
+      fundDeployer: kovan.contracts.FundDeployer.address,
+      vaultLib: kovan.contracts.VaultLib.address,
+      comptrollerLib: kovan.contracts.ComptrollerLib.address,
+      valueInterpreter: kovan.contracts.ValueInterpreter.address,
+      integrationManager: kovan.contracts.IntegrationManager.address,
+      policyManager: kovan.contracts.PolicyManager.address,
+      feeManager: kovan.contracts.FeeManager.address,
+
+      // Prices
+      aggregatedDerivativePriceFeed: kovan.contracts.AggregatedDerivativePriceFeed.address,
+      chainlinkPriceFeed: kovan.contracts.ChainlinkPriceFeed.address,
+
+      // Peripheral
+      fundActionsWrapper: kovan.contracts.FundActionsWrapper.address,
+
+      // Fees
+      managementFee: kovan.contracts.ManagementFee.address,
+      performanceFee: kovan.contracts.PerformanceFee.address,
+      entranceRateBurnFee: kovan.contracts.EntranceRateBurnFee.address,
+      entranceRateDirectFee: kovan.contracts.EntranceRateDirectFee.address,
+
+      // Policies
+      adapterBlacklist: kovan.contracts.AdapterBlacklist.address,
+      adapterWhitelist: kovan.contracts.AdapterWhitelist.address,
+      assetBlacklist: kovan.contracts.AssetBlacklist.address,
+      assetWhitelist: kovan.contracts.AssetWhitelist.address,
+      investorWhitelist: kovan.contracts.InvestorWhitelist.address,
+      guaranteedRedemption: kovan.contracts.GuaranteedRedemption.address,
+      maxConcentration: kovan.contracts.MaxConcentration.address,
+      minMaxInvestment: kovan.contracts.MinMaxInvestment.address,
+      buySharesCallerWhitelist: kovan.contracts.BuySharesCallerWhitelist.address,
+
+      // Adapters
+      trackedAssetsAdapter: kovan.contracts.TrackedAssetsAdapter.address,
+      compoundAdapter: kovan.contracts.CompoundAdapter.address,
+      chaiAdapter: kovan.contracts.ChaiAdapter.address,
+      kyberAdapter: kovan.contracts.KyberAdapter.address,
+      uniswapV2Adapter: kovan.contracts.UniswapV2Adapter.address,
+      paraSwapAdapter: kovan.contracts.ParaSwapAdapter.address,
+      zeroExV2Adapter: kovan.contracts.ZeroExV2Adapter.address,
+      synthetixAdapter: kovan.contracts.SynthetixAdapter.address,
+
+      // External
       wethToken: '0xd0a1e359811322d97991e03f863a0c30c2cf029c',
+      chaiIntegratee: kovan.contracts['mocks/MockChaiIntegratee'].address,
+      kyberIntegratee: kovan.contracts['mocks/MockKyberIntegratee'].address,
+      uniswapV2Integratee: kovan.contracts['mocks/MockUniswapV2Integratee'].address,
+      synthetixIntegratee: kovan.contracts['mocks/MockSynthetixIntegratee'].address,
+      synthetixAddressResolver: kovan.contracts['mocks/MockSynthetixIntegratee'].address,
+      synthetixDelegateApprovals: kovan.contracts['mocks/MockSynthetixIntegratee'].address,
+
+      // Currencies
       audChainlinkAggregator: '0x5813A90f826e16dB392abd2aF7966313fc1fd5B8',
       btcChainlinkAggregator: '0xF7904a295A029a3aBDFFB6F12755974a958C7C25',
       chfChainlinkAggregator: '0xed0616BeF04D374969f302a34AE4A63882490A8C',
       eurChainlinkAggregator: '0x0c15Ab9A0DB086e062194c273CC79f41597Bbf13',
       gbpChainlinkAggregator: '0x28b0061f44E6A9780224AA61BEc8C3Fcb0d37de9',
       jpyChainlinkAggregator: '0xD627B1eF3AC23F1d3e576FA6206126F3c1Bd0942',
-    };
-
-    return {
-      networkName: 'kovan',
-      startBlock: 22906438,
-      ...kovanAddresses,
-
-      // Addresses derived from the deployment output.
-      dispatcher: kovan.contracts.Dispatcher.address,
-      vaultLib: kovan.contracts.VaultLib.address,
-      fundDeployer: kovan.contracts.FundDeployer.address,
-      valueInterpreter: kovan.contracts.ValueInterpreter.address,
-      comptrollerLib: kovan.contracts.ComptrollerLib.address,
-      fundActionsWrapper: kovan.contracts.FundActionsWrapper.address,
-      feeManager: kovan.contracts.FeeManager.address,
-      integrationManager: kovan.contracts.IntegrationManager.address,
-      policyManager: kovan.contracts.PolicyManager.address,
-      chainlinkPriceFeed: kovan.contracts.ChainlinkPriceFeed.address,
-      aggregatedDerivativePriceFeed: kovan.contracts.AggregatedDerivativePriceFeed.address,
-      managementFee: kovan.contracts.ManagementFee.address,
-      performanceFee: kovan.contracts.PerformanceFee.address,
-      entranceRateDirectFee: kovan.contracts.EntranceRateDirectFee.address,
-      entranceRateBurnFee: kovan.contracts.EntranceRateBurnFee.address,
-      adapterBlacklist: kovan.contracts.AdapterBlacklist.address,
-      adapterWhitelist: kovan.contracts.AdapterWhitelist.address,
-      assetBlacklist: kovan.contracts.AssetBlacklist.address,
-      assetWhitelist: kovan.contracts.AssetWhitelist.address,
-      buySharesCallerWhitelist: kovan.contracts.BuySharesCallerWhitelist.address,
-      guaranteedRedemption: kovan.contracts.GuaranteedRedemption.address,
-      investorWhitelist: kovan.contracts.InvestorWhitelist.address,
-      maxConcentration: kovan.contracts.MaxConcentration.address,
-      minMaxInvestment: kovan.contracts.MinMaxInvestment.address,
     };
   }
 
