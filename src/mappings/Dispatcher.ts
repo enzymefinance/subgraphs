@@ -1,8 +1,9 @@
 import { zeroAddress } from '../constants';
 import { ensureManager, useAccount } from '../entities/Account';
-import { ensureContract, useContract } from '../entities/Contract';
+import { ensureContract, registerContracts, useContract } from '../entities/Contract';
 import { useFund } from '../entities/Fund';
 import { ensureMigration, generateMigrationId, useMigration } from '../entities/Migration';
+import { createNetwork } from '../entities/Network';
 import { createRelease, useRelease } from '../entities/Release';
 import { ensureTransaction } from '../entities/Transaction';
 import {
@@ -54,6 +55,8 @@ export function handleCurrentFundDeployerSet(event: CurrentFundDeployerSet): voi
   }
 
   createRelease(event);
+  createNetwork(event);
+  registerContracts(event);
 }
 
 export function handleMigrationCancelled(event: MigrationCancelled): void {

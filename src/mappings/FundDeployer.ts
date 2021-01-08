@@ -3,7 +3,6 @@ import { ensureAccount, ensureManager } from '../entities/Account';
 import { useAsset } from '../entities/Asset';
 import { ensureContract } from '../entities/Contract';
 import { createFund } from '../entities/Fund';
-import { createNetwork } from '../entities/Network';
 import { ensureTransaction } from '../entities/Transaction';
 import { ComptrollerLibContract } from '../generated/ComptrollerLibContract';
 import {
@@ -109,7 +108,4 @@ export function handleVaultCallRegistered(event: VaultCallRegistered): void {
   registered.contractAddress = event.params.contractAddress.toHex();
   registered.selector = event.params.selector.toHexString();
   registered.save();
-
-  // VaultCallRegistered is the first event emitted, so we (mis)use that to create the network entity
-  createNetwork(event);
 }
