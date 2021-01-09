@@ -64,6 +64,7 @@ export function ensureContract(address: Address, name: string): Contract {
   let network = useNetwork();
 
   contract = new Contract(id);
+  contract.address = address.toHex();
   contract.name = name;
   contract.release = network.currentRelease;
   contract.save();

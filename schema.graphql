@@ -1215,6 +1215,7 @@ type Transaction @entity {
 
 type Contract @entity {
   id: ID!
+  address: String!
   name: String!
   release: Release
   events: [EventInterface!]! @derivedFrom(field: "contract")
