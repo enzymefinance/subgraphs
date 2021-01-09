@@ -2,8 +2,10 @@ import { Address } from '@graphprotocol/graph-ts';
 import { zeroAddress } from '../constants';
 import { ensureAccount, ensureManager, useAccount } from '../entities/Account';
 import { useAsset } from '../entities/Asset';
+import { trackCalculationState } from '../entities/CalculationState';
 import { ensureContract } from '../entities/Contract';
 import { useFund } from '../entities/Fund';
+import { trackPortfolioState } from '../entities/PortfolioState';
 import { ensureTransaction } from '../entities/Transaction';
 import {
   AccessorSetEvent,
@@ -100,6 +102,9 @@ export function handleTrackedAssetAdded(event: TrackedAssetAdded): void {
 
   fund.trackedAssets = arrayUnique<string>(fund.trackedAssets.concat([asset.id]));
   fund.save();
+
+  trackPortfolioState(fund, event, trackedAssetAddition);
+  trackCalculationState(fund, event, trackedAssetAddition);
 }
 
 export function handleTrackedAssetRemoved(event: TrackedAssetRemoved): void {
@@ -117,6 +122,9 @@ export function handleTrackedAssetRemoved(event: TrackedAssetRemoved): void {
 
   fund.trackedAssets = arrayDiff<string>(fund.trackedAssets, [asset.id]);
   fund.save();
+
+  trackPortfolioState(fund, event, trackedAssetRemoval);
+  trackCalculationState(fund, event, trackedAssetRemoval);
 }
 
 export function handleVaultLibSet(event: VaultLibSet): void {
