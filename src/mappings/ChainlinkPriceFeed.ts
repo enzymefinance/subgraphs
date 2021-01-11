@@ -48,7 +48,7 @@ function unwrapAggregator(address: Address): Address {
     let contract = ChainlinkAggregatorProxyContract.bind(aggregator);
     let result = contract.try_aggregator();
 
-    if (result.reverted || result.value.equals(zeroAddress)) {
+    if (result.reverted || result.value.equals(zeroAddress) || result.value.equals(aggregator)) {
       break;
     }
 
