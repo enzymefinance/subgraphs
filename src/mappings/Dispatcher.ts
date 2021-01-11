@@ -90,6 +90,7 @@ export function handleMigrationCancelled(event: MigrationCancelled): void {
   migration.cancelled = true;
   migration.save();
 }
+
 export function handleMigrationExecuted(event: MigrationExecuted): void {
   let migrationExecution = new MigrationExecutedEvent(genericId(event));
   let migrationId = generateMigrationId(
@@ -117,6 +118,7 @@ export function handleMigrationExecuted(event: MigrationExecuted): void {
   migration.executed = true;
   migration.save();
 }
+
 export function handleMigrationSignaled(event: MigrationSignaled): void {
   let migrationSignaling = new MigrationSignaledEvent(genericId(event));
   migrationSignaling.fund = useFund(event.params.vaultProxy.toHex()).id;
@@ -185,6 +187,7 @@ export function handleNominatedOwnerRemoved(event: NominatedOwnerRemoved): void 
   ownerRemoved.nominatedOwner = event.params.nominatedOwner.toHex();
   ownerRemoved.save();
 }
+
 export function handleNominatedOwnerSet(event: NominatedOwnerSet): void {
   let ownerSet = new NominatedOwnerSetEvent(genericId(event));
   ownerSet.contract = useContract(event.address.toHex(), 'Dispatcher').id;
@@ -193,6 +196,7 @@ export function handleNominatedOwnerSet(event: NominatedOwnerSet): void {
   ownerSet.nominatedOwner = event.params.nominatedOwner.toHex();
   ownerSet.save();
 }
+
 export function handleOwnershipTransferred(event: OwnershipTransferred): void {
   let transferred = new DispatcherOwnershipTransferredEvent(genericId(event));
   transferred.contract = useContract(event.address.toHex(), 'Dispatcher').id;

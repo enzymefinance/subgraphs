@@ -1,4 +1,5 @@
 import fs from 'fs';
+import moment from 'moment';
 import glob from 'glob';
 import request, { gql } from 'graphql-request';
 import handlebars from 'handlebars';
@@ -255,25 +256,51 @@ yargs
       const deploymentJson = await fetchDeployment(args.deployment);
 
       {
+        console.log('Generating subgraph manifest');
+
         const templateFile = path.join(__dirname, '../templates/subgraph.yml');
-        const subgraphFile = path.join(__dirname, '../subgraph.yaml');
+        const outputFile = path.join(__dirname, '../subgraph.yaml');
         const templateContent = fs.readFileSync(templateFile, 'utf8');
 
         const compile = handlebars.compile(templateContent);
         const replaced = compile(deploymentJson);
 
-        fs.writeFileSync(subgraphFile, replaced);
+        fs.writeFileSync(outputFile, replaced);
       }
 
       {
+        console.log('Generating static address map');
+
         const templateFile = path.join(__dirname, '../templates/addresses.ts');
-        const subgraphFile = path.join(__dirname, '../src/addresses.ts');
+        const outputFile = path.join(__dirname, '../src/addresses.ts');
         const templateContent = fs.readFileSync(templateFile, 'utf8');
 
         const compile = handlebars.compile(templateContent);
         const replaced = compile(deploymentJson);
 
-        fs.writeFileSync(subgraphFile, replaced);
+        fs.writeFileSync(outputFile, replaced);
+      }
+
+      {
+        console.log('Generating timestamps for month starts');
+
+        const initial = moment.utc('2020-11-01T00:00:00.000Z').startOf('month').startOf('day');
+        const timestamps = Array(100)
+          .fill(null)
+          .map((_, index) => initial.clone().add(index, 'month').startOf('month').startOf('day'));
+
+        const data = {
+          months: timestamps.map((timestamp) => ({ start: timestamp.unix() })),
+        };
+
+        const templateFile = path.join(__dirname, '../templates/months.ts');
+        const outpufile = path.join(__dirname, '../src/months.ts');
+        const templateContent = fs.readFileSync(templateFile, 'utf8');
+
+        const compile = handlebars.compile(templateContent);
+        const replaced = compile(data);
+
+        fs.writeFileSync(outpufile, replaced);
       }
     },
   )

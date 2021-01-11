@@ -14,6 +14,7 @@ export function hexToNumberString(hex: string): string {
       hexNumber = hexNumber.plus(BigInt.fromI32(digit).times(BigInt.fromI32(16).pow(i as u8)));
     }
   }
+
   return hexNumber.toString();
 }
 

@@ -1,3 +1,5 @@
+import { logCritical } from './logCritical';
+
 export function getSettlementType(type: number): string {
   if (type == 0) {
     return 'None';
@@ -6,12 +8,15 @@ export function getSettlementType(type: number): string {
   if (type == 1) {
     return 'Direct';
   }
+
   if (type == 2) {
     return 'Mint';
   }
+
   if (type == 3) {
     return 'Burn';
   }
+
   if (type == 4) {
     return 'MintSharesOutstanding';
   }
@@ -20,5 +25,7 @@ export function getSettlementType(type: number): string {
     return 'BurnSharesOutstanding';
   }
 
-  return 'Settlement type not found';
+  logCritical('Settlement type not found');
+
+  return '';
 }

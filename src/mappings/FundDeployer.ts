@@ -103,6 +103,7 @@ export function handleVaultCallDeregistered(event: VaultCallDeregistered): void 
   deregistered.selector = event.params.selector.toHexString();
   deregistered.save();
 }
+
 export function handleVaultCallRegistered(event: VaultCallRegistered): void {
   // TODO: remove this, once testnet is no longer active
   // Testnet emits this as the first event, on Kovan, the first event is "FundDeployerSet"

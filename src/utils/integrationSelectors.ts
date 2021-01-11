@@ -1,3 +1,5 @@
+import { logCritical } from './logCritical';
+
 export let addTrackedAssetsSelector = '0x848f3a59';
 export let addTrackedAssetsMethod = 'addTrackedAssets(address,bytes,bytes)';
 export let addTrackedAssetsType = 'ADD_TRACKED_ASSETS';
@@ -31,7 +33,9 @@ export function convertSelectorToMethod(selector: string): string {
     return redeemMethod;
   }
 
-  return 'Invalid integration selector';
+  logCritical('Invalid integration selector');
+
+  return '';
 }
 
 export function convertSelectorToType(selector: string): string {
@@ -51,5 +55,7 @@ export function convertSelectorToType(selector: string): string {
     return redeemType;
   }
 
-  return 'Invalid integration selector';
+  logCritical('Invalid integration selector');
+
+  return '';
 }

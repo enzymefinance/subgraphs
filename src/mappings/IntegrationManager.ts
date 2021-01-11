@@ -125,7 +125,6 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
   execution.save();
 
   trackTrade(fund, adapter, integrationSelector, incomingAssetAmounts, outgoingAssetAmounts, event);
-
   trackPortfolioState(fund, event, execution);
   trackCalculationState(fund, event, execution);
 }
