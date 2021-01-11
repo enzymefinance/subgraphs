@@ -129,7 +129,7 @@ dataSources:
         - event: FeesRecipientSetForFund(indexed address,address,address)
           handler: handleFeesRecipientSet
         - event: SharesOutstandingPaidForFund(indexed address,indexed address,uint256)
-          handler: handleSharesOutstandingPaidForFee
+          handler: handleSharesOutstandingPaidForFund
 
   - name: ManagementFeeDataSource
     kind: ethereum/contract
