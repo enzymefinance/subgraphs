@@ -1,10 +1,10 @@
 import { BigDecimal, BigInt } from '@graphprotocol/graph-ts';
-import { EntranceRateDirectFeeSetting, Fee, Fund, Policy } from '../generated/schema';
+import { EntranceRateDirectFeeSetting, Fee, Fund } from '../generated/schema';
 import { feeSettingId } from '../utils/feeSettingId';
 import { logCritical } from '../utils/logCritical';
 
-export function useEntranceRateDirectFeeSetting(fund: Fund, policy: Policy): EntranceRateDirectFeeSetting {
-  let id = feeSettingId(fund.id, policy);
+export function useEntranceRateDirectFeeSetting(fund: Fund, fee: Fee): EntranceRateDirectFeeSetting {
+  let id = feeSettingId(fund.id, fee);
   let setting = EntranceRateDirectFeeSetting.load(id) as EntranceRateDirectFeeSetting;
 
   if (setting == null) {
