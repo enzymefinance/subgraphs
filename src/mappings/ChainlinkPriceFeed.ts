@@ -49,11 +49,13 @@ function unwrapAggregator(address: Address): Address {
     let result = contract.try_aggregator();
 
     if (result.reverted || result.value.equals(zeroAddress)) {
-      return aggregator;
+      break;
     }
 
     aggregator = result.value;
   }
+
+  return aggregator;
 }
 
 export function handleEthUsdAggregatorSet(event: EthUsdAggregatorSet): void {
