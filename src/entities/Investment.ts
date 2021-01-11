@@ -1,6 +1,5 @@
 import { BigDecimal, ethereum } from '@graphprotocol/graph-ts';
 import { Account, Fund, Investment } from '../generated/schema';
-import { arrayUnique } from '../utils/arrayUnique';
 import { logCritical } from '../utils/logCritical';
 import { trackNetworkInvestments } from './NetworkState';
 
@@ -24,8 +23,7 @@ export function ensureInvestment(investor: Account, fund: Fund, stateId: string,
   investment.since = event.block.timestamp;
   investment.save();
 
-  fund.investments = arrayUnique<string>(fund.investments.concat([id]));
-  fund.investmentCount = fund.investments.length;
+  fund.investmentCount = fund.investmentCount + 1;
   fund.save();
 
   trackNetworkInvestments(event);

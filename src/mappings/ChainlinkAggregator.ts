@@ -43,6 +43,8 @@ export function handleAnswerUpdated(event: AnswerUpdated): void {
     trackCurrencyPrice(currency, event.block.timestamp, current);
 
     let cron = ensureCron();
+    // We need to update all USD quoted assets whenever the ETHUSD prices changes
+    // (prices are stored in ETH)
     let assets = cron.usdQuotedPrimitives.map<Asset>((primitive) => useAsset(primitive));
     for (let i: i32 = 0; i < assets.length; i++) {
       let asset = assets[i];

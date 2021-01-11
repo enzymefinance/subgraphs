@@ -1264,9 +1264,10 @@ type Fund @entity {
   # trading
   trackedAssets: [Asset!]!
   trades: [Trade!]! @derivedFrom(field: "fund")
+  # TODO (after release): deriveFrom or use separate AuthUser entity
   authUsers: [Account!]!
 
-  investments: [Investment!]!
+  investments: [Investment!]! @derivedFrom(field: "fund")
   investmentCount: Int!
   sharesChanges: [SharesChangeInterface!]! @derivedFrom(field: "fund")
   feeSharesChanges: [FeeSharesChangeInterface!]! @derivedFrom(field: "fund")
@@ -1292,15 +1293,6 @@ type Fund @entity {
 
   events: [FundEventInterface!]! @derivedFrom(field: "fund")
   migrations: [Migration!] @derivedFrom(field: "fund")
-}
-
-type FirstInvestmentState @entity {
-  id: ID!
-  fund: Fund!
-  timestamp: BigInt!
-  assetPrices: [AssetPrice!]!
-  currencyPrices: [CurrencyPrice!]!
-  fundState: FundState!
 }
 
 type HourlyFundState implements PeriodicFundStateInterface @entity {
@@ -1396,7 +1388,7 @@ type Fee @entity {
   id: ID!
   feeManager: FeeManager!
   identifier: String!
-  funds: [Fund!]!
+  settings: [FeeSettingInterface!]! @derivedFrom(field: "fee")
 }
 
 type ManagementFeeSetting implements FeeSettingInterface @entity {
@@ -1809,6 +1801,7 @@ type AssetAmount @entity {
   price: AssetPrice
 }
 
+# TODO (after release): introduce AssetPriceInterface
 type AssetPrice @entity {
   id: ID!
   asset: Asset!
@@ -1816,6 +1809,7 @@ type AssetPrice @entity {
   timestamp: BigInt!
 }
 
+# TODO (after release): introduce CurrencyPriceInterface
 type CurrencyPrice @entity {
   id: ID!
   currency: Currency!
@@ -1984,6 +1978,8 @@ type Cron @entity {
 # Network stats
 #################################################
 
+# TODO: create second subgraph for network stats
+
 type Network @entity {
   id: ID!
   timestamp: BigInt!
@@ -1997,6 +1993,7 @@ type NetworkState @entity {
   id: ID!
   network: Network!
   timestamp: BigInt!
+  # TODO : derived from
   assetHoldings: [NetworkAssetHolding!]!
   funds: Int!
   managers: Int!

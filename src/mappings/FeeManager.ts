@@ -28,7 +28,6 @@ import {
   FeesRecipientSetForFundEvent,
   SharesOutstandingPaidForFundEvent,
 } from '../generated/schema';
-import { arrayUnique } from '../utils/arrayUnique';
 import { genericId } from '../utils/genericId';
 import { getFeeHook } from '../utils/getFeeHook';
 import { getSettlementType } from '../utils/getSettlementType';
@@ -106,9 +105,6 @@ export function handleFeeEnabledForFund(event: FeeEnabledForFund): void {
   enabled.comptrollerProxy = event.params.comptrollerProxy.toHex();
   enabled.settingsData = event.params.settingsData;
   enabled.save();
-
-  fee.funds = arrayUnique<string>(fee.funds.concat([fundId]));
-  fee.save();
 }
 
 export function handleFeeSettledForFund(event: FeeSettledForFund): void {

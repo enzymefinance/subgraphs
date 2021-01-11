@@ -25,7 +25,6 @@ export function ensureFee(address: Address, feeManager: Address): Fee {
   fee = new Fee(address.toHex());
   fee.feeManager = ensureFeeManager(feeManager).id;
   fee.identifier = identifier;
-  fee.funds = new Array<string>();
   fee.save();
 
   return fee;

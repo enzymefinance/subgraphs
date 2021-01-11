@@ -662,6 +662,8 @@ templates:
           file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
         - name: ERC20Contract
           file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json
+        - name: FundActionsWrapperContract
+          file: ./node_modules/@melonproject/protocol/artifacts/FundActionsWrapper.json
       eventHandlers:
         - event: AccessorSet(address,address)
           handler: handleAccessorSet
