@@ -30,12 +30,12 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@chainlink/contracts@^0.0.11":
-  version "0.0.11"
-  resolved "https://registry.yarnpkg.com/@chainlink/contracts/-/contracts-0.0.11.tgz#22de73cdb8c1b2242ea0ebd32b639d2a17ed2ffe"
-  integrity sha512-ZHvsb6WIgCQFvrtqpmV4AJv/LlozXjseTHll9lTlrzSLJMMyPt3g73pKFpQHjhCXL/0YMGosIYxQ4J+RGirbkg==
+"@chainlink/contracts@^0.0.12":
+  version "0.0.12"
+  resolved "https://registry.yarnpkg.com/@chainlink/contracts/-/contracts-0.0.12.tgz#a768905bfb83a991d919020286d5da093ea8325c"
+  integrity sha512-IFc7kV69PIVOo/mqUrnNI7gUPG+fQ3gpWxxE69F0GmK5CrwPcC3hIbdn32caHGMGcDAhnO0Nwj+8eQ/GpsfXTg==
   optionalDependencies:
-    "@truffle/contract" "^4.2.6"
+    "@truffle/contract" "^4.2.29"
     ethers "^4.0.45"
 
 "@ethersproject/abi@5.0.0-beta.153":
@@ -447,14 +447,6 @@
     "@babel/runtime" "^7.12.5"
     decimal.js "^10.2.1"
 
-"@melonproject/testutils@^2.0.0-dev.5044+f7bfcbf4":
-  version "2.0.0-dev.5044"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_dmbEz/%40melonproject%2Ftestutils-2.0.0-dev.5044.tgz#d600c05b2c9a5faff2cfc4a29634406bfbd330d1"
-  integrity sha1-1gDAWyyaX6/yz8SiljRAa/vTMNE=
-  dependencies:
-    "@babel/runtime" "^7.12.5"
-    "@melonproject/protocol" "^2.0.0-dev.5044+f7bfcbf4"
-
 "@openzeppelin/contracts@^3.3.0":
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-3.3.0.tgz#ffdb693c5c349fc33bba420248dd3ac0a2d7c408"
@@ -511,7 +503,7 @@
     crypto-js "^3.1.9-1"
     debug "^4.1.0"
 
-"@truffle/contract@^4.2.6":
+"@truffle/contract@^4.2.29":
   version "4.3.5"
   resolved "https://registry.yarnpkg.com/@truffle/contract/-/contract-4.3.5.tgz#360434b09bbf9a8d34ed2f7075f40d36509b180c"
   integrity sha512-08gLSId+spnXqdM/25pOiurNcSBeCBa6KrplCgojy1RvqlG8JbEa9jXHWt1DCACZTtSnCsC2ywSNxAKRb4HqIA==
@@ -876,9 +868,9 @@ assemblyscript@^0.17.13:
     binaryen "98.0.0-nightly.20201109"
     long "^4.0.0"
 
-"assemblyscript@git+https://github.com/AssemblyScript/assemblyscript.git#36040d5b5312f19a025782b5e36663823494c2f3":
+"assemblyscript@https://github.com/AssemblyScript/assemblyscript#36040d5b5312f19a025782b5e36663823494c2f3":
   version "0.6.0"
-  resolved "git+https://github.com/AssemblyScript/assemblyscript.git#36040d5b5312f19a025782b5e36663823494c2f3"
+  resolved "https://github.com/AssemblyScript/assemblyscript#36040d5b5312f19a025782b5e36663823494c2f3"
   dependencies:
     "@protobufjs/utf8" "^1.1.0"
     binaryen "77.0.0-nightly.20190407"

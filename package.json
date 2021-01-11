@@ -39,11 +39,10 @@
     "lint": "yarn prettier --list-different {src,scripts}/{*,**/*}.{ts,json,yaml}"
   },
   "devDependencies": {
-    "@chainlink/contracts": "^0.0.11",
+    "@chainlink/contracts": "^0.0.12",
     "@graphprotocol/graph-cli": "^0.19.0",
     "@graphprotocol/graph-ts": "^0.19.0",
     "@melonproject/protocol": "^2.0.0-dev.5044+f7bfcbf4",
-    "@melonproject/testutils": "^2.0.0-dev.5044+f7bfcbf4",
     "@openzeppelin/contracts": "^3.3.0",
     "@types/mustache": "^4.1.0",
     "@types/node": "^14.14.20",
