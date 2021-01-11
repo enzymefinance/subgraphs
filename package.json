@@ -26,7 +26,7 @@
     "make:beta": "graph create enzymefinance/enzyme --node https://api.thegraph.beta.enzyme.finance",
     "make:debug": "graph create enzymefinance/debug --node https://api.thegraph.beta.enzyme.finance",
     "make:local": "graph create enzymefinance/enzyme --node http://localhost:8020",
-    "predeploy:testnet": "yarn make || true",
+    "predeploy:testnet": "yarn make:testnet || true",
     "predeploy:beta": "yarn make:beta || true",
     "predeploy:debug": "yarn make:debug || true",
     "predeploy:local": "yarn make:local || true",
