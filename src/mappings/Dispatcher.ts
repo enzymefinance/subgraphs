@@ -37,7 +37,7 @@ import {
 import { genericId } from '../utils/genericId';
 
 export function handleCurrentFundDeployerSet(event: CurrentFundDeployerSet): void {
-  // Set up system wide tracking
+  // NOTE: This is the first event on kovan.
   let network = ensureNetwork(event);
 
   // Set up release (each new fund deployer is a release)

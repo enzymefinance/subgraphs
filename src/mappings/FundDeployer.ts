@@ -105,8 +105,7 @@ export function handleVaultCallDeregistered(event: VaultCallDeregistered): void 
 }
 
 export function handleVaultCallRegistered(event: VaultCallRegistered): void {
-  // TODO: remove this, once testnet is no longer active
-  // Testnet emits this as the first event, on Kovan, the first event is "FundDeployerSet"
+  // NOTE: This is the first event on testnet.
   ensureNetwork(event);
 
   let registered = new VaultCallRegisteredEvent(genericId(event));

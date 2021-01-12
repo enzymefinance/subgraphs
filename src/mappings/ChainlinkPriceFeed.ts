@@ -20,6 +20,7 @@ import {
 } from '../entities/ChainlinkAggregator';
 import { ensureContract, useContract } from '../entities/Contract';
 import { ensureCurrency } from '../entities/Currency';
+import { ensureNetwork } from '../entities/Network';
 import { ensureTransaction } from '../entities/Transaction';
 import { ChainlinkAggregatorContract } from '../generated/ChainlinkAggregatorContract';
 import { ChainlinkAggregatorProxyContract } from '../generated/ChainlinkAggregatorProxyContract';
@@ -59,6 +60,9 @@ function unwrapAggregator(address: Address): Address {
 }
 
 export function handleEthUsdAggregatorSet(event: EthUsdAggregatorSet): void {
+  // NOTE: This is the first event on mainnet.
+  ensureNetwork(event);
+
   let ethUsdAggregatorSet = new EthUsdAggregatorSetEvent(genericId(event));
   ethUsdAggregatorSet.contract = ensureContract(event.address, 'ChainlinkPriceFeed').id;
   ethUsdAggregatorSet.timestamp = event.block.timestamp;
