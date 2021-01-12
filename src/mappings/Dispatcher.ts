@@ -4,7 +4,7 @@ import { ensureContract, registerContracts } from '../entities/Contract';
 import { useFund } from '../entities/Fund';
 import { ensureMigration, generateMigrationId, useMigration } from '../entities/Migration';
 import { ensureNetwork } from '../entities/Network';
-import { createRelease, useRelease } from '../entities/Release';
+import { ensureRelease, useRelease } from '../entities/Release';
 import { ensureTransaction } from '../entities/Transaction';
 import {
   CurrentFundDeployerSet,
@@ -41,7 +41,7 @@ export function handleCurrentFundDeployerSet(event: CurrentFundDeployerSet): voi
   let network = ensureNetwork(event);
 
   // Set up release (each new fund deployer is a release)
-  let release = createRelease(event, network);
+  let release = ensureRelease(event.params.nextFundDeployer.toHex(), event);
 
   network.currentRelease = release.id;
   network.save();

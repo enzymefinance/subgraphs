@@ -1792,7 +1792,7 @@ type UniswapV2PoolAssetDetail @entity {
 
 type CompoundAssetDetails @entity {
   id: ID!
-  underlying: Asset!
+  underlying: Asset
 }
 
 type AssetAmount @entity {

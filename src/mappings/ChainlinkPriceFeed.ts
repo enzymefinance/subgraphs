@@ -4,6 +4,7 @@ import {
   btcChainlinkAggregator,
   chfChainlinkAggregator,
   eurChainlinkAggregator,
+  fundDeployerAddress,
   gbpChainlinkAggregator,
   jpyChainlinkAggregator,
   wethTokenAddress,
@@ -18,10 +19,11 @@ import {
   enableChainlinkCurrencyAggregator,
   enableChainlinkEthUsdAggregator,
 } from '../entities/ChainlinkAggregator';
-import { ensureContract, useContract } from '../entities/Contract';
+import { ensureContract, registerContracts, useContract } from '../entities/Contract';
 import { ensureCurrency } from '../entities/Currency';
 import { trackCurrencyPrice } from '../entities/CurrencyPrice';
 import { ensureNetwork } from '../entities/Network';
+import { ensureRelease } from '../entities/Release';
 import { ensureTransaction } from '../entities/Transaction';
 import { ChainlinkAggregatorContract } from '../generated/ChainlinkAggregatorContract';
 import { ChainlinkAggregatorProxyContract } from '../generated/ChainlinkAggregatorProxyContract';
@@ -63,6 +65,17 @@ function unwrapAggregator(address: Address): Address {
 export function handleEthUsdAggregatorSet(event: EthUsdAggregatorSet): void {
   // NOTE: This is the first event on mainnet.
   ensureNetwork(event);
+
+  let network = ensureNetwork(event);
+
+  // Set up release (each new fund deployer is a release)
+  let release = ensureRelease(fundDeployerAddress.toHex(), event);
+
+  network.currentRelease = release.id;
+  network.save();
+
+  // Register contracts for the current release
+  registerContracts();
 
   let ethUsdAggregatorSet = new EthUsdAggregatorSetEvent(genericId(event));
   ethUsdAggregatorSet.contract = ensureContract(event.address, 'ChainlinkPriceFeed').id;
