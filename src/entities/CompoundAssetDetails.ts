@@ -1,17 +1,21 @@
 import { Address, log } from '@graphprotocol/graph-ts';
 import { wethTokenAddress } from '../addresses';
-import { CTokenIsCTokenContract } from '../generated/CTokenIsCTokenContract';
 import { ICERC20 } from '../generated/ICERC20';
 import { Asset, CompoundAssetDetails as CompoundAssetDetail } from '../generated/schema';
 
 export function checkCompoundAssetDetail(derivative: Asset): void {
-  let address = Address.fromString(derivative.id);
-
-  let cTokenIsCTokenContract = CTokenIsCTokenContract.bind(address);
-  let isCTokenCall = cTokenIsCTokenContract.try_isCToken();
-  if (isCTokenCall.reverted || isCTokenCall.value == false) {
+  if (!derivative.name.startsWith('Compound ')) {
     return;
   }
+
+  let address = Address.fromString(derivative.id);
+
+  // for Mainnet / Kovan
+  // let cTokenIsCTokenContract = CTokenIsCTokenContract.bind(address);
+  // let isCTokenCall = cTokenIsCTokenContract.try_isCToken();
+  // if (isCTokenCall.reverted || isCTokenCall.value == false) {
+  //   return;
+  // }
 
   let compound = ICERC20.bind(address);
   let result = compound.try_underlying();
