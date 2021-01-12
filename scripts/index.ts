@@ -6,6 +6,7 @@ import handlebars from 'handlebars';
 import path from 'path';
 import yargs from 'yargs';
 import kovan from './deployments/kovan.json';
+import mainnet from './deployments/mainnet.json';
 
 const query = gql`
   {
@@ -199,6 +200,7 @@ async function fetchDeployment(source: string): Promise<DeploymentWithMetadata> 
 
       // External
       wethToken: '0xd0a1e359811322d97991e03f863a0c30c2cf029c',
+      // TODO: Expose all the external addresses under their right names.
       chaiIntegratee: kovan.contracts['mocks/MockChaiIntegratee'].address,
       kyberIntegratee: kovan.contracts['mocks/MockKyberIntegratee'].address,
       uniswapV2Integratee: kovan.contracts['mocks/MockUniswapV2Integratee'].address,
@@ -208,11 +210,80 @@ async function fetchDeployment(source: string): Promise<DeploymentWithMetadata> 
 
       // Currencies
       audChainlinkAggregator: '0x5813A90f826e16dB392abd2aF7966313fc1fd5B8',
-      btcChainlinkAggregator: '0xF7904a295A029a3aBDFFB6F12755974a958C7C25',
+      btcChainlinkAggregator: '0xF4030086522a5bEEa4988F8cA5B36dbC97BeE88c',
       chfChainlinkAggregator: '0xed0616BeF04D374969f302a34AE4A63882490A8C',
       eurChainlinkAggregator: '0x0c15Ab9A0DB086e062194c273CC79f41597Bbf13',
       gbpChainlinkAggregator: '0x28b0061f44E6A9780224AA61BEc8C3Fcb0d37de9',
       jpyChainlinkAggregator: '0xD627B1eF3AC23F1d3e576FA6206126F3c1Bd0942',
+    };
+  }
+
+  if (source === 'mainnet') {
+    return {
+      networkName: 'mainnet',
+      startBlock: 11636493,
+
+      // Core
+      dispatcher: mainnet.contracts.Dispatcher.address,
+      fundDeployer: mainnet.contracts.FundDeployer.address,
+      vaultLib: mainnet.contracts.VaultLib.address,
+      comptrollerLib: mainnet.contracts.ComptrollerLib.address,
+      valueInterpreter: mainnet.contracts.ValueInterpreter.address,
+      integrationManager: mainnet.contracts.IntegrationManager.address,
+      policyManager: mainnet.contracts.PolicyManager.address,
+      feeManager: mainnet.contracts.FeeManager.address,
+
+      // Prices
+      aggregatedDerivativePriceFeed: mainnet.contracts.AggregatedDerivativePriceFeed.address,
+      chainlinkPriceFeed: mainnet.contracts.ChainlinkPriceFeed.address,
+
+      // Peripheral
+      fundActionsWrapper: mainnet.contracts.FundActionsWrapper.address,
+
+      // Fees
+      managementFee: mainnet.contracts.ManagementFee.address,
+      performanceFee: mainnet.contracts.PerformanceFee.address,
+      entranceRateBurnFee: mainnet.contracts.EntranceRateBurnFee.address,
+      entranceRateDirectFee: mainnet.contracts.EntranceRateDirectFee.address,
+
+      // Policies
+      adapterBlacklist: mainnet.contracts.AdapterBlacklist.address,
+      adapterWhitelist: mainnet.contracts.AdapterWhitelist.address,
+      assetBlacklist: mainnet.contracts.AssetBlacklist.address,
+      assetWhitelist: mainnet.contracts.AssetWhitelist.address,
+      investorWhitelist: mainnet.contracts.InvestorWhitelist.address,
+      guaranteedRedemption: mainnet.contracts.GuaranteedRedemption.address,
+      maxConcentration: mainnet.contracts.MaxConcentration.address,
+      minMaxInvestment: mainnet.contracts.MinMaxInvestment.address,
+      buySharesCallerWhitelist: mainnet.contracts.BuySharesCallerWhitelist.address,
+
+      // Adapters
+      trackedAssetsAdapter: mainnet.contracts.TrackedAssetsAdapter.address,
+      compoundAdapter: mainnet.contracts.CompoundAdapter.address,
+      chaiAdapter: mainnet.contracts.ChaiAdapter.address,
+      kyberAdapter: mainnet.contracts.KyberAdapter.address,
+      uniswapV2Adapter: mainnet.contracts.UniswapV2Adapter.address,
+      paraSwapAdapter: mainnet.contracts.ParaSwapAdapter.address,
+      zeroExV2Adapter: mainnet.contracts.ZeroExV2Adapter.address,
+      synthetixAdapter: mainnet.contracts.SynthetixAdapter.address,
+
+      // External
+      wethToken: '0xd0a1e359811322d97991e03f863a0c30c2cf029c',
+      // TODO: Expose all the external addresses under their right names.
+      chaiIntegratee: mainnet.contracts['Config'].linkedData.chai.chai,
+      kyberIntegratee: mainnet.contracts['Config'].linkedData.kyber.networkProxy,
+      uniswapV2Integratee: mainnet.contracts['Config'].linkedData.uniswap.router,
+      synthetixIntegratee: mainnet.contracts['Config'].linkedData.synthetix.snx,
+      synthetixAddressResolver: mainnet.contracts['Config'].linkedData.synthetix.addressResolver,
+      synthetixDelegateApprovals: mainnet.contracts['Config'].linkedData.synthetix.delegateApprovals,
+
+      // Currencies
+      audChainlinkAggregator: '0x77F9710E7d0A19669A13c055F62cd80d313dF022',
+      btcChainlinkAggregator: '0xF4030086522a5bEEa4988F8cA5B36dbC97BeE88c',
+      chfChainlinkAggregator: '0x449d117117838fFA61263B61dA6301AA2a88B13A',
+      eurChainlinkAggregator: '0xb49f677943BC038e9857d61E7d053CaA2C1734C1',
+      gbpChainlinkAggregator: '0x5c0Ab2d9b5a7ed9f470386e82BB36A3613cDd4b5',
+      jpyChainlinkAggregator: '0xBcE206caE7f0ec07b545EddE332A47C2F75bbeb3',
     };
   }
 
