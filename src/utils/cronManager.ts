@@ -3,7 +3,7 @@ import { wethTokenAddress } from '../addresses';
 import { useAsset } from '../entities/Asset';
 import { fetchAssetPrice, trackAssetPrice, useAssetPrice } from '../entities/AssetPrice';
 import { useCurrency } from '../entities/Currency';
-import { trackCurrencyPrice } from '../entities/CurrencyPrice';
+import { trackCurrencyPrice, useCurrencyPrice } from '../entities/CurrencyPrice';
 import {
   ensureDailyPriceCandleGroup,
   ensureHourlyPriceCandleGroup,
@@ -110,14 +110,25 @@ function cronCandles(cron: Cron, timestamp: BigInt): void {
     ensureMonthlyPriceCandleGroup(currentMonthStartEnd[0], currentMonthStartEnd[1]);
   }
 
-  let ids = arrayUnique<string>(cron.primitives.concat(cron.derivatives));
-  for (let i: i32 = 0; i < ids.length; i++) {
-    let asset = useAsset(ids[i]);
+  let assetIds = arrayUnique<string>(cron.primitives.concat(cron.derivatives));
+  for (let i: i32 = 0; i < assetIds.length; i++) {
+    let asset = useAsset(assetIds[i]);
     if (asset.price == null) {
       logCritical('Missing price for asset {}', [asset.id]);
     }
 
     let price = useAssetPrice(asset.price as string);
     trackAssetPrice(asset, timestamp, price.price);
+  }
+
+  let currencyIds = cron.currencies;
+  for (let i: i32 = 0; i < currencyIds.length; i++) {
+    let currency = useCurrency(currencyIds[i]);
+    if (currency.price == null) {
+      logCritical('Missing price for currency {}', [currency.id]);
+    }
+
+    let price = useCurrencyPrice(currency.price as string);
+    trackCurrencyPrice(currency, timestamp, price.price);
   }
 }
