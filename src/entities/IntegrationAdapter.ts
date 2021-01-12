@@ -20,11 +20,14 @@ export function ensureIntegrationAdapter(address: Address, integrationManager: A
   }
 
   let contract = IIntegrationAdapterInterface.bind(address);
-  let identifier = contract.identifier();
+  let identifierCall = contract.try_identifier();
+  if (identifierCall.reverted) {
+    logCritical('identifier() reverted for {}', [address.toHex()]);
+  }
 
   integrationAdapter = new IntegrationAdapter(address.toHex());
   integrationAdapter.integrationManager = ensureIntegrationManager(integrationManager).id;
-  integrationAdapter.identifier = identifier;
+  integrationAdapter.identifier = identifierCall.value;
   integrationAdapter.save();
 
   return integrationAdapter;

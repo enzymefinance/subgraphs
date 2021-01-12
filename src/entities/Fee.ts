@@ -20,11 +20,14 @@ export function ensureFee(address: Address, feeManager: Address): Fee {
   }
 
   let contract = IFeeInterface.bind(address);
-  let identifier = contract.identifier();
+  let identifierCall = contract.try_identifier();
+  if (identifierCall.reverted) {
+    logCritical('identifier() reverted for {}', [address.toHex()]);
+  }
 
   fee = new Fee(address.toHex());
   fee.feeManager = ensureFeeManager(feeManager).id;
-  fee.identifier = identifier;
+  fee.identifier = identifierCall.value;
   fee.save();
 
   return fee;

@@ -19,10 +19,14 @@ export function ensureGuaranteedRedemption(address: Address): GuaranteedRedempti
   }
 
   let contract = GuaranteedRedemptionContract.bind(address);
+  let redemptionWindowBufferCall = contract.try_getRedemptionWindowBuffer();
+  if (redemptionWindowBufferCall.reverted) {
+    logCritical('getRedemptionWindowBuffer() call reverted for {}', [address.toHex()]);
+  }
 
   guaranteedRedemption = new GuaranteedRedemption(address.toHex());
   guaranteedRedemption.adapters = new Array<string>();
-  guaranteedRedemption.buffer = contract.getRedemptionWindowBuffer();
+  guaranteedRedemption.buffer = redemptionWindowBufferCall.value;
   guaranteedRedemption.save();
 
   return guaranteedRedemption;

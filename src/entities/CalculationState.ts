@@ -64,11 +64,11 @@ export function trackCalculationState(fund: Fund, event: ethereum.Event, cause: 
 
   if (
     gav.reverted ||
-    !gav.value.value1 ||
     totalSupply.reverted ||
     grossShareValue.reverted ||
-    !grossShareValue.value.value1 ||
     netShareValue.reverted ||
+    !gav.value.value1 ||
+    !grossShareValue.value.value1 ||
     !netShareValue.value.value1
   ) {
     return;

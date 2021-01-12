@@ -20,11 +20,14 @@ export function ensurePolicy(address: Address, policyManager: Address): Policy {
   }
 
   let contract = IPolicyInterface.bind(address);
-  let identifier = contract.identifier();
+  let identifierCall = contract.try_identifier();
+  if (identifierCall.reverted) {
+    logCritical('identifier() reverted for {}', [address.toHex()]);
+  }
 
   policy = new Policy(address.toHex());
   policy.policyManager = ensurePolicyManager(policyManager).id;
-  policy.identifier = identifier;
+  policy.identifier = identifierCall.value;
   policy.save();
 
   return policy;

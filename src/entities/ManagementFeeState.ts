@@ -76,14 +76,19 @@ export function ensureManagementFeeState(
       feeState.save();
     } else {
       let contract = ManagementFeeContract.bind(Address.fromString(fee.id));
-      let feeInfo = contract.getFeeInfoForFund(Address.fromString(fund.accessor));
+      let feeInfoCall = contract.try_getFeeInfoForFund(Address.fromString(fund.accessor));
+      if (feeInfoCall.reverted) {
+        logCritical('getFeeInfoForFund() reverted for {}', [fund.accessor]);
+      }
+
       managementFeeState = createManagementFeeState(
         fund,
         fee,
-        { lastSettled: feeInfo.lastSettled, shares: shares },
+        { lastSettled: feeInfoCall.value.lastSettled, shares: shares },
         event,
         cause,
       );
+
       let feeState = useFeeState(feeStateId(fund, event));
       feeState.feeStates = feeState.feeStates.concat([managementFeeState.id]);
       feeState.save();

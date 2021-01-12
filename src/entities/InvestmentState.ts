@@ -42,15 +42,18 @@ export function useInvestmentState(investor: Account, fund: Fund, event: ethereu
 
 export function trackInvestmentState(investor: Account, fund: Fund, event: ethereum.Event): InvestmentState {
   let vaultProxy = VaultLibContract.bind(Address.fromString(fund.id));
-  let balance = vaultProxy.balanceOf(Address.fromString(investor.id));
+  let balanceCall = vaultProxy.try_balanceOf(Address.fromString(investor.id));
+  if (balanceCall.reverted) {
+    logCritical('balanceOf() reverted for {}', [investor.id]);
+  }
 
   let investmentState = ensureInvestmentState(investor, fund, event);
-  investmentState.shares = toBigDecimal(balance);
+  investmentState.shares = toBigDecimal(balanceCall.value);
   investmentState.fundState = fund.state;
   investmentState.save();
 
   let investment = useInvestment(investor, fund);
-  investment.shares = toBigDecimal(balance);
+  investment.shares = toBigDecimal(balanceCall.value);
   investment.save();
 
   return investmentState;

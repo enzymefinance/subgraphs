@@ -88,17 +88,20 @@ export function ensurePerformanceFeeState(
       feeState.save();
     } else {
       let contract = PerformanceFeeContract.bind(Address.fromString(fee.id));
-      let feeInfo = contract.getFeeInfoForFund(Address.fromString(fund.accessor));
+      let feeInfoCall = contract.try_getFeeInfoForFund(Address.fromString(fund.accessor));
+      if (feeInfoCall.reverted) {
+        logCritical('getFeeInfoForFund() reverted for {}', [fund.accessor]);
+      }
 
       performanceFeeState = createPerformanceFeeState(
         fund,
         fee,
         {
-          grossSharePrice: toBigDecimal(feeInfo.lastSharePrice),
-          highWaterMark: toBigDecimal(feeInfo.highWaterMark),
-          aggregateValueDue: toBigDecimal(feeInfo.aggregateValueDue),
+          grossSharePrice: toBigDecimal(feeInfoCall.value.lastSharePrice),
+          highWaterMark: toBigDecimal(feeInfoCall.value.highWaterMark),
+          aggregateValueDue: toBigDecimal(feeInfoCall.value.aggregateValueDue),
           sharesOutstanding: BigDecimal.fromString('0'),
-          lastPaid: feeInfo.lastPaid,
+          lastPaid: feeInfoCall.value.lastPaid,
         },
         event,
         cause,

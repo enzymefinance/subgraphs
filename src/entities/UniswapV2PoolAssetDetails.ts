@@ -1,4 +1,4 @@
-import { Address } from '@graphprotocol/graph-ts';
+import { Address, log } from '@graphprotocol/graph-ts';
 import { ERC20Contract } from '../generated/ERC20Contract';
 import { IUniswapV2Pair } from '../generated/IUniswapV2Pair';
 import { Asset, UniswapV2PoolAssetDetail } from '../generated/schema';
@@ -19,10 +19,18 @@ export function checkUniswapV2PoolAssetDetail(derivative: Asset): void {
   details.save();
 
   let contract0 = ERC20Contract.bind(token0Address);
-  let contract1 = ERC20Contract.bind(token1Address);
+  let symbol0Call = contract0.try_symbol();
+  let symbol0 = symbol0Call.reverted ? '' : symbol0Call.value;
+  if (symbol0Call.reverted) {
+    log.warning('symbol() call reverted for {}', [token0Address.toHex()]);
+  }
 
-  let symbol0 = contract0.symbol();
-  let symbol1 = contract1.symbol();
+  let contract1 = ERC20Contract.bind(token1Address);
+  let symbol1Call = contract1.try_symbol();
+  let symbol1 = symbol1Call.reverted ? '' : symbol1Call.value;
+  if (symbol1Call.reverted) {
+    log.warning('symbol() call reverted for {}', [token1Address.toHex()]);
+  }
 
   let name = 'Uniswap ' + symbol0 + '/' + symbol1 + ' Pool';
 
