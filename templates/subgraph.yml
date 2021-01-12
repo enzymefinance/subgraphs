@@ -77,6 +77,8 @@ dataSources:
           file: ./src/utils/abis/ERC20NameBytes.json
         - name: ERC20SymbolBytesContract
           file: ./src/utils/abis/ERC20SymbolBytes.json
+        - name: CTokenIsCTokenContract
+          file: ./src/utils/abis/CTokenIsCToken.json
       eventHandlers:
         - event: ComptrollerLibSet(address)
           handler: handleComptrollerLibSet
@@ -117,6 +119,8 @@ dataSources:
           file: ./src/utils/abis/ERC20NameBytes.json
         - name: ERC20SymbolBytesContract
           file: ./src/utils/abis/ERC20SymbolBytes.json
+        - name: CTokenIsCTokenContract
+          file: ./src/utils/abis/CTokenIsCToken.json
         - name: IFeeInterface
           file: ./node_modules/@melonproject/protocol/artifacts/IFee.json
         - name: PerformanceFeeContract
@@ -167,6 +171,8 @@ dataSources:
           file: ./src/utils/abis/ERC20NameBytes.json
         - name: ERC20SymbolBytesContract
           file: ./src/utils/abis/ERC20SymbolBytes.json
+        - name: CTokenIsCTokenContract
+          file: ./src/utils/abis/CTokenIsCToken.json
         - name: IFeeInterface
           file: ./node_modules/@melonproject/protocol/artifacts/IFee.json
       eventHandlers:
@@ -237,6 +243,8 @@ dataSources:
           file: ./src/utils/abis/ERC20NameBytes.json
         - name: ERC20SymbolBytesContract
           file: ./src/utils/abis/ERC20SymbolBytes.json
+        - name: CTokenIsCTokenContract
+          file: ./src/utils/abis/CTokenIsCToken.json
         - name: IFeeInterface
           file: ./node_modules/@melonproject/protocol/artifacts/IFee.json
       eventHandlers:
@@ -273,6 +281,8 @@ dataSources:
           file: ./src/utils/abis/ERC20NameBytes.json
         - name: ERC20SymbolBytesContract
           file: ./src/utils/abis/ERC20SymbolBytes.json
+        - name: CTokenIsCTokenContract
+          file: ./src/utils/abis/CTokenIsCToken.json
         - name: IFeeInterface
           file: ./node_modules/@melonproject/protocol/artifacts/IFee.json
       eventHandlers:
@@ -307,6 +317,8 @@ dataSources:
           file: ./src/utils/abis/ERC20NameBytes.json
         - name: ERC20SymbolBytesContract
           file: ./src/utils/abis/ERC20SymbolBytes.json
+        - name: CTokenIsCTokenContract
+          file: ./src/utils/abis/CTokenIsCToken.json
         - name: IPolicyInterface
           file: ./node_modules/@melonproject/protocol/artifacts/IPolicy.json
       eventHandlers:
@@ -581,6 +593,8 @@ dataSources:
           file: ./src/utils/abis/ERC20NameBytes.json
         - name: ERC20SymbolBytesContract
           file: ./src/utils/abis/ERC20SymbolBytes.json
+        - name: CTokenIsCTokenContract
+          file: ./src/utils/abis/CTokenIsCToken.json
         - name: IIntegrationAdapterInterface
           file: ./node_modules/@melonproject/protocol/artifacts/IIntegrationAdapter.json
         - name: FundActionsWrapperContract
@@ -623,6 +637,8 @@ dataSources:
           file: ./src/utils/abis/ERC20NameBytes.json
         - name: ERC20SymbolBytesContract
           file: ./src/utils/abis/ERC20SymbolBytes.json
+        - name: CTokenIsCTokenContract
+          file: ./src/utils/abis/CTokenIsCToken.json
         - name: ChainlinkAggregatorContract
           file: ./node_modules/@chainlink/contracts/abi/v0.6/AggregatorInterface.json
         - name: ChainlinkAggregatorProxyContract
@@ -665,6 +681,8 @@ dataSources:
           file: ./src/utils/abis/ERC20NameBytes.json
         - name: ERC20SymbolBytesContract
           file: ./src/utils/abis/ERC20SymbolBytes.json
+        - name: CTokenIsCTokenContract
+          file: ./src/utils/abis/CTokenIsCToken.json
         - name: ValueInterpreterContract
           file: ./node_modules/@melonproject/protocol/artifacts/ValueInterpreter.json
         - name: IUniswapV2Pair
@@ -702,6 +720,8 @@ templates:
           file: ./src/utils/abis/ERC20NameBytes.json
         - name: ERC20SymbolBytesContract
           file: ./src/utils/abis/ERC20SymbolBytes.json
+        - name: CTokenIsCTokenContract
+          file: ./src/utils/abis/CTokenIsCToken.json
         - name: FundActionsWrapperContract
           file: ./node_modules/@melonproject/protocol/artifacts/FundActionsWrapper.json
       eventHandlers:
@@ -746,6 +766,8 @@ templates:
           file: ./src/utils/abis/ERC20NameBytes.json
         - name: ERC20SymbolBytesContract
           file: ./src/utils/abis/ERC20SymbolBytes.json
+        - name: CTokenIsCTokenContract
+          file: ./src/utils/abis/CTokenIsCToken.json
         - name: FundActionsWrapperContract
           file: ./node_modules/@melonproject/protocol/artifacts/FundActionsWrapper.json
       eventHandlers:

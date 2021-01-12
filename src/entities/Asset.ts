@@ -76,7 +76,8 @@ export function checkChai(derivative: Asset): void {
 }
 
 export function checkSynthetix(derivative: Asset): void {
-  if (!(derivative.symbol.startsWith('s') || derivative.symbol.startsWith('i'))) {
+  // TODO: find better identifier of Synth assets
+  if (!derivative.name.startsWith('Synth ')) {
     return;
   }
 

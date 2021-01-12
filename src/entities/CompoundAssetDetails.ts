@@ -1,17 +1,19 @@
 import { Address, log } from '@graphprotocol/graph-ts';
 import { wethTokenAddress } from '../addresses';
+import { CTokenIsCTokenContract } from '../generated/CTokenIsCTokenContract';
 import { ICERC20 } from '../generated/ICERC20';
 import { Asset, CompoundAssetDetails as CompoundAssetDetail } from '../generated/schema';
 
 export function checkCompoundAssetDetail(derivative: Asset): void {
-  // TODO: This check is not good enough.
-  // There is a method `isCToken` on all cTokens, we might want to use that
+  let address = Address.fromString(derivative.id);
 
-  if (!derivative.name.startsWith('Compound ')) {
+  let cTokenIsCTokenContract = CTokenIsCTokenContract.bind(address);
+  let isCTokenCall = cTokenIsCTokenContract.try_isCToken();
+  if (isCTokenCall.reverted || isCTokenCall.value == false) {
     return;
   }
 
-  let compound = ICERC20.bind(Address.fromString(derivative.id));
+  let compound = ICERC20.bind(address);
   let result = compound.try_underlying();
   let underlying: string = '';
   if (result.reverted) {
