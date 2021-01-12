@@ -73,6 +73,10 @@ dataSources:
           file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
         - name: ERC20Contract
           file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json
+        - name: ERC20NameBytesContract
+          file: ./src/utils/abis/ERC20NameBytes.json
+        - name: ERC20SymbolBytesContract
+          file: ./src/utils/abis/ERC20SymbolBytes.json
       eventHandlers:
         - event: ComptrollerLibSet(address)
           handler: handleComptrollerLibSet
@@ -109,6 +113,10 @@ dataSources:
           file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
         - name: ERC20Contract
           file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json
+        - name: ERC20NameBytesContract
+          file: ./src/utils/abis/ERC20NameBytes.json
+        - name: ERC20SymbolBytesContract
+          file: ./src/utils/abis/ERC20SymbolBytes.json
         - name: IFeeInterface
           file: ./node_modules/@melonproject/protocol/artifacts/IFee.json
         - name: PerformanceFeeContract
@@ -155,6 +163,10 @@ dataSources:
           file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
         - name: ERC20Contract
           file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json
+        - name: ERC20NameBytesContract
+          file: ./src/utils/abis/ERC20NameBytes.json
+        - name: ERC20SymbolBytesContract
+          file: ./src/utils/abis/ERC20SymbolBytes.json
         - name: IFeeInterface
           file: ./node_modules/@melonproject/protocol/artifacts/IFee.json
       eventHandlers:
@@ -221,6 +233,10 @@ dataSources:
           file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
         - name: ERC20Contract
           file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json
+        - name: ERC20NameBytesContract
+          file: ./src/utils/abis/ERC20NameBytes.json
+        - name: ERC20SymbolBytesContract
+          file: ./src/utils/abis/ERC20SymbolBytes.json
         - name: IFeeInterface
           file: ./node_modules/@melonproject/protocol/artifacts/IFee.json
       eventHandlers:
@@ -253,6 +269,10 @@ dataSources:
           file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
         - name: ERC20Contract
           file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json
+        - name: ERC20NameBytesContract
+          file: ./src/utils/abis/ERC20NameBytes.json
+        - name: ERC20SymbolBytesContract
+          file: ./src/utils/abis/ERC20SymbolBytes.json
         - name: IFeeInterface
           file: ./node_modules/@melonproject/protocol/artifacts/IFee.json
       eventHandlers:
@@ -283,6 +303,10 @@ dataSources:
           file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
         - name: ERC20Contract
           file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json
+        - name: ERC20NameBytesContract
+          file: ./src/utils/abis/ERC20NameBytes.json
+        - name: ERC20SymbolBytesContract
+          file: ./src/utils/abis/ERC20SymbolBytes.json
         - name: IPolicyInterface
           file: ./node_modules/@melonproject/protocol/artifacts/IPolicy.json
       eventHandlers:
@@ -553,6 +577,10 @@ dataSources:
           file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
         - name: ERC20Contract
           file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json
+        - name: ERC20NameBytesContract
+          file: ./src/utils/abis/ERC20NameBytes.json
+        - name: ERC20SymbolBytesContract
+          file: ./src/utils/abis/ERC20SymbolBytes.json
         - name: IIntegrationAdapterInterface
           file: ./node_modules/@melonproject/protocol/artifacts/IIntegrationAdapter.json
         - name: FundActionsWrapperContract
@@ -591,6 +619,10 @@ dataSources:
           file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
         - name: ERC20Contract
           file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json
+        - name: ERC20NameBytesContract
+          file: ./src/utils/abis/ERC20NameBytes.json
+        - name: ERC20SymbolBytesContract
+          file: ./src/utils/abis/ERC20SymbolBytes.json
         - name: ChainlinkAggregatorContract
           file: ./node_modules/@chainlink/contracts/abi/v0.6/AggregatorInterface.json
         - name: ChainlinkAggregatorProxyContract
@@ -629,6 +661,10 @@ dataSources:
           file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
         - name: ERC20Contract
           file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json
+        - name: ERC20NameBytesContract
+          file: ./src/utils/abis/ERC20NameBytes.json
+        - name: ERC20SymbolBytesContract
+          file: ./src/utils/abis/ERC20SymbolBytes.json
         - name: ValueInterpreterContract
           file: ./node_modules/@melonproject/protocol/artifacts/ValueInterpreter.json
         - name: IUniswapV2Pair
@@ -662,6 +698,10 @@ templates:
           file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
         - name: ERC20Contract
           file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json
+        - name: ERC20NameBytesContract
+          file: ./src/utils/abis/ERC20NameBytes.json
+        - name: ERC20SymbolBytesContract
+          file: ./src/utils/abis/ERC20SymbolBytes.json
         - name: FundActionsWrapperContract
           file: ./node_modules/@melonproject/protocol/artifacts/FundActionsWrapper.json
       eventHandlers:
@@ -702,6 +742,10 @@ templates:
           file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
         - name: ERC20Contract
           file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json
+        - name: ERC20NameBytesContract
+          file: ./src/utils/abis/ERC20NameBytes.json
+        - name: ERC20SymbolBytesContract
+          file: ./src/utils/abis/ERC20SymbolBytes.json
         - name: FundActionsWrapperContract
           file: ./node_modules/@melonproject/protocol/artifacts/FundActionsWrapper.json
       eventHandlers:

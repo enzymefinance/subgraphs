@@ -1,6 +1,8 @@
-import { Address, log } from '@graphprotocol/graph-ts';
+import { Address } from '@graphprotocol/graph-ts';
 import { ERC20Contract } from '../generated/ERC20Contract';
 import { Asset } from '../generated/schema';
+import { getERC20Name } from '../utils/getERC20Name';
+import { getERC20Symbol } from '../utils/getERC20Symbol';
 import { logCritical } from '../utils/logCritical';
 
 export function useAsset(id: string): Asset {
@@ -18,20 +20,10 @@ export function ensureAsset(address: Address): Asset {
     return asset;
   }
 
+  let name = getERC20Name(address);
+  let symbol = getERC20Symbol(address);
+
   let contract = ERC20Contract.bind(address);
-
-  let nameCall = contract.try_name();
-  let name = nameCall.reverted ? '' : nameCall.value;
-  if (nameCall.reverted) {
-    log.warning('name() call reverted for {}', [address.toHex()]);
-  }
-
-  let symbolCall = contract.try_symbol();
-  let symbol = symbolCall.reverted ? '' : symbolCall.value;
-  if (symbolCall.reverted) {
-    log.warning('symbol() call reverted for {}', [address.toHex()]);
-  }
-
   let decimalsCall = contract.try_decimals();
   if (decimalsCall.reverted) {
     logCritical('decimals() call reverted for {}', [address.toHex()]);
