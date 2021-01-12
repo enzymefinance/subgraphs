@@ -210,7 +210,7 @@ async function fetchDeployment(source: string): Promise<DeploymentWithMetadata> 
 
       // Currencies
       audChainlinkAggregator: '0x5813A90f826e16dB392abd2aF7966313fc1fd5B8',
-      btcChainlinkAggregator: '0xF4030086522a5bEEa4988F8cA5B36dbC97BeE88c',
+      btcChainlinkAggregator: '0x6135b13325bfC4B00278B4abC5e20bbce2D6580e',
       chfChainlinkAggregator: '0xed0616BeF04D374969f302a34AE4A63882490A8C',
       eurChainlinkAggregator: '0x0c15Ab9A0DB086e062194c273CC79f41597Bbf13',
       gbpChainlinkAggregator: '0x28b0061f44E6A9780224AA61BEc8C3Fcb0d37de9',
@@ -268,7 +268,7 @@ async function fetchDeployment(source: string): Promise<DeploymentWithMetadata> 
       synthetixAdapter: mainnet.contracts.SynthetixAdapter.address,
 
       // External
-      wethToken: '0xd0a1e359811322d97991e03f863a0c30c2cf029c',
+      wethToken: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
       // TODO: Expose all the external addresses under their right names.
       chaiIntegratee: mainnet.contracts['Config'].linkedData.chai.chai,
       kyberIntegratee: mainnet.contracts['Config'].linkedData.kyber.networkProxy,
