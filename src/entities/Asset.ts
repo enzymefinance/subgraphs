@@ -43,6 +43,7 @@ export function ensureAsset(address: Address): Asset {
   asset.decimals = decimalsCall.value;
   asset.type = 'UNKNOWN';
   asset.networkAssetHolding = '';
+  asset.removed = false;
   asset.save();
 
   return asset;

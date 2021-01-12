@@ -174,6 +174,8 @@ export function handlePrimitiveAdded(event: PrimitiveAdded): void {
 
 export function handlePrimitiveRemoved(event: PrimitiveRemoved): void {
   let primitive = ensureAsset(event.params.primitive);
+  primitive.removed = true;
+  primitive.save();
 
   let primitivePriceFeedRemoved = new PrimitiveRemovedEvent(genericId(event));
   primitivePriceFeedRemoved.primitive = primitive.id;

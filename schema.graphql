@@ -1738,6 +1738,7 @@ type Asset @entity {
   symbol: String!
   decimals: Int!
   type: AssetType!
+  removed: Boolean!
 
   # Details for certain derivative assets
   derivativeType: DerivativeType

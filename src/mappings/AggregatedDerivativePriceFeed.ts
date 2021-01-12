@@ -54,6 +54,8 @@ export function handleDerivativeAdded(event: DerivativeAdded): void {
 
 export function handleDerivativeRemoved(event: DerivativeRemoved): void {
   let derivative = ensureAsset(event.params.derivative);
+  derivative.removed = true;
+  derivative.save();
 
   let derivativeRemoved = new DerivativeRemovedEvent(genericId(event));
   derivativeRemoved.derivative = derivative.id;

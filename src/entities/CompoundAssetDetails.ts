@@ -4,6 +4,8 @@ import { Asset, CompoundAssetDetails as CompoundAssetDetail } from '../generated
 
 export function checkCompoundAssetDetail(derivative: Asset): void {
   // TODO: This check is not good enough.
+  // There is a method `isCToken` on all cTokens, we might want to use that
+
   if (!derivative.name.startsWith('Compound ')) {
     return;
   }
