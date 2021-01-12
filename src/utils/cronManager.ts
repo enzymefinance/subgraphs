@@ -12,7 +12,7 @@ import {
 import { Cron } from '../generated/schema';
 import { arrayUnique } from './arrayUnique';
 import { logCritical } from './logCritical';
-import { getDayOpenTime, getHourOpenTime, getMonthOpenAndClose, getTenMinuteOpenTime } from './timeHelpers';
+import { getDayOpenTime, getHourOpenTime, getMonthOpenAndClose } from './timeHelpers';
 
 export function ensureCron(): Cron {
   let cron = Cron.load('SINGLETON') as Cron;
@@ -74,8 +74,8 @@ function cronUsd(cron: Cron, timestamp: BigInt): void {
 }
 
 function cronDerivatives(cron: Cron, timestamp: BigInt): void {
-  let previousWindow = getTenMinuteOpenTime(cron.cron);
-  let currentWindow = getTenMinuteOpenTime(timestamp);
+  let previousWindow = getHourOpenTime(cron.cron);
+  let currentWindow = getHourOpenTime(timestamp);
 
   // Only update the derivative prices once per time window.
   if (!currentWindow.gt(previousWindow)) {
