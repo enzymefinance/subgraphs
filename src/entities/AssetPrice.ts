@@ -87,6 +87,6 @@ export function fetchAssetPrice(asset: Asset): BigDecimal {
   let call = contract.try_calcCanonicalAssetValue(address, one, wethTokenAddress);
 
   let valid = !call.reverted && call.value.value1 == true;
-  let value = valid ? toBigDecimal(call.value.value0) : BigDecimal.fromString('0');
+  let value = valid ? toBigDecimal(call.value.value0, asset.decimals) : BigDecimal.fromString('0');
   return value;
 }
