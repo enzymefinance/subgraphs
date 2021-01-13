@@ -76,9 +76,9 @@ export function fetchAssetPrice(asset: Asset): BigDecimal {
   let contract = ValueInterpreterContract.bind(valueInterpreterAddress);
 
   // TODO: remove this once prices for UNI-V2 are valid
-  if (asset.symbol == 'UNI-V2') {
-    return BigDecimal.fromString('0');
-  }
+  // if (asset.symbol == 'UNI-V2') {
+  //   return BigDecimal.fromString('0');
+  // }
 
   // NOTE: Because we are using one "unit" of the given derivative as the amount when
   // calculating the value with the value interpreter, this is also the rate.
@@ -87,6 +87,6 @@ export function fetchAssetPrice(asset: Asset): BigDecimal {
   let call = contract.try_calcCanonicalAssetValue(address, one, wethTokenAddress);
 
   let valid = !call.reverted && call.value.value1 == true;
-  let value = valid ? toBigDecimal(call.value.value0, asset.decimals) : BigDecimal.fromString('0');
+  let value = valid ? toBigDecimal(call.value.value0) : BigDecimal.fromString('0');
   return value;
 }
