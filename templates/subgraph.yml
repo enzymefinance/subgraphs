@@ -20,11 +20,11 @@ dataSources:
       entities: []
       abis:
         - name: DispatcherContract
-          file: ./node_modules/@melonproject/protocol/artifacts/Dispatcher.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/Dispatcher.json
         - name: FundDeployerContract
-          file: ./node_modules/@melonproject/protocol/artifacts/FundDeployer.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/FundDeployer.json
         - name: ComptrollerLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/ComptrollerLib.json
       eventHandlers:
         - event: CurrentFundDeployerSet(address,address)
           handler: handleCurrentFundDeployerSet
@@ -66,11 +66,11 @@ dataSources:
       entities: []
       abis:
         - name: FundDeployerContract
-          file: ./node_modules/@melonproject/protocol/artifacts/FundDeployer.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/FundDeployer.json
         - name: VaultLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/VaultLib.json
         - name: ComptrollerLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/ComptrollerLib.json
         - name: ERC20Contract
           file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json
         - name: ERC20NameBytesContract
@@ -108,11 +108,11 @@ dataSources:
       entities: []
       abis:
         - name: FeeManagerContract
-          file: ./node_modules/@melonproject/protocol/artifacts/FeeManager.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/FeeManager.json
         - name: VaultLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/VaultLib.json
         - name: ComptrollerLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/ComptrollerLib.json
         - name: ERC20Contract
           file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json
         - name: ERC20NameBytesContract
@@ -122,11 +122,11 @@ dataSources:
         - name: CTokenIsCTokenContract
           file: ./src/utils/abis/CTokenIsCToken.json
         - name: IFeeInterface
-          file: ./node_modules/@melonproject/protocol/artifacts/IFee.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/IFee.json
         - name: PerformanceFeeContract
-          file: ./node_modules/@melonproject/protocol/artifacts/PerformanceFee.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/PerformanceFee.json
         - name: FundActionsWrapperContract
-          file: ./node_modules/@melonproject/protocol/artifacts/FundActionsWrapper.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/FundActionsWrapper.json
       eventHandlers:
         - event: AllSharesOutstandingForcePaidForFund(indexed address,address,uint256)
           handler: handleAllSharesOutstandingForcePaidForFund
@@ -158,13 +158,13 @@ dataSources:
       entities: []
       abis:
         - name: ManagementFeeContract
-          file: ./node_modules/@melonproject/protocol/artifacts/ManagementFee.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/ManagementFee.json
         - name: FeeManagerContract
-          file: ./node_modules/@melonproject/protocol/artifacts/FeeManager.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/FeeManager.json
         - name: VaultLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/VaultLib.json
         - name: ComptrollerLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/ComptrollerLib.json
         - name: ERC20Contract
           file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json
         - name: ERC20NameBytesContract
@@ -174,7 +174,7 @@ dataSources:
         - name: CTokenIsCTokenContract
           file: ./src/utils/abis/CTokenIsCToken.json
         - name: IFeeInterface
-          file: ./node_modules/@melonproject/protocol/artifacts/IFee.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/IFee.json
       eventHandlers:
         - event: FundSettingsAdded(indexed address,uint256)
           handler: handleFundSettingsAdded
@@ -196,13 +196,13 @@ dataSources:
       entities: []
       abis:
         - name: PerformanceFeeContract
-          file: ./node_modules/@melonproject/protocol/artifacts/PerformanceFee.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/PerformanceFee.json
         - name: FeeManagerContract
-          file: ./node_modules/@melonproject/protocol/artifacts/FeeManager.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/FeeManager.json
         - name: VaultLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/VaultLib.json
         - name: ComptrollerLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/ComptrollerLib.json
       eventHandlers:
         - event: ActivatedForFund(indexed address,uint256)
           handler: handleActivatedForFund
@@ -230,13 +230,13 @@ dataSources:
       entities: []
       abis:
         - name: EntranceRateDirectFeeContract
-          file: ./node_modules/@melonproject/protocol/artifacts/EntranceRateDirectFee.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/EntranceRateDirectFee.json
         - name: FeeManagerContract
-          file: ./node_modules/@melonproject/protocol/artifacts/FeeManager.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/FeeManager.json
         - name: VaultLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/VaultLib.json
         - name: ComptrollerLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/ComptrollerLib.json
         - name: ERC20Contract
           file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json
         - name: ERC20NameBytesContract
@@ -246,7 +246,7 @@ dataSources:
         - name: CTokenIsCTokenContract
           file: ./src/utils/abis/CTokenIsCToken.json
         - name: IFeeInterface
-          file: ./node_modules/@melonproject/protocol/artifacts/IFee.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/IFee.json
       eventHandlers:
         - event: FundSettingsAdded(indexed address,uint256)
           handler: handleFundSettingsAdded
@@ -268,13 +268,13 @@ dataSources:
       entities: []
       abis:
         - name: EntranceRateBurnFeeContract
-          file: ./node_modules/@melonproject/protocol/artifacts/EntranceRateBurnFee.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/EntranceRateBurnFee.json
         - name: FeeManagerContract
-          file: ./node_modules/@melonproject/protocol/artifacts/FeeManager.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/FeeManager.json
         - name: VaultLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/VaultLib.json
         - name: ComptrollerLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/ComptrollerLib.json
         - name: ERC20Contract
           file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json
         - name: ERC20NameBytesContract
@@ -284,7 +284,7 @@ dataSources:
         - name: CTokenIsCTokenContract
           file: ./src/utils/abis/CTokenIsCToken.json
         - name: IFeeInterface
-          file: ./node_modules/@melonproject/protocol/artifacts/IFee.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/IFee.json
       eventHandlers:
         - event: FundSettingsAdded(indexed address,uint256)
           handler: handleFundSettingsAdded
@@ -306,11 +306,11 @@ dataSources:
       entities: []
       abis:
         - name: PolicyManagerContract
-          file: ./node_modules/@melonproject/protocol/artifacts/PolicyManager.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/PolicyManager.json
         - name: VaultLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/VaultLib.json
         - name: ComptrollerLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/ComptrollerLib.json
         - name: ERC20Contract
           file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json
         - name: ERC20NameBytesContract
@@ -320,7 +320,7 @@ dataSources:
         - name: CTokenIsCTokenContract
           file: ./src/utils/abis/CTokenIsCToken.json
         - name: IPolicyInterface
-          file: ./node_modules/@melonproject/protocol/artifacts/IPolicy.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/IPolicy.json
       eventHandlers:
         - event: PolicyDeregistered(indexed address,indexed string)
           handler: handlePolicyDeregistered
@@ -346,11 +346,11 @@ dataSources:
       entities: []
       abis:
         - name: AdapterBlacklistContract
-          file: ./node_modules/@melonproject/protocol/artifacts/AdapterBlacklist.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/AdapterBlacklist.json
         - name: VaultLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/VaultLib.json
         - name: ComptrollerLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/ComptrollerLib.json
       eventHandlers:
         - event: AddressesAdded(indexed address,address[])
           handler: handleAddressesAdded
@@ -372,13 +372,13 @@ dataSources:
       entities: []
       abis:
         - name: AdapterWhitelistContract
-          file: ./node_modules/@melonproject/protocol/artifacts/AdapterWhitelist.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/AdapterWhitelist.json
         - name: FeeManagerContract
-          file: ./node_modules/@melonproject/protocol/artifacts/FeeManager.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/FeeManager.json
         - name: VaultLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/VaultLib.json
         - name: ComptrollerLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/ComptrollerLib.json
       eventHandlers:
         - event: AddressesAdded(indexed address,address[])
           handler: handleAddressesAdded
@@ -400,11 +400,11 @@ dataSources:
       entities: []
       abis:
         - name: AssetWhitelistContract
-          file: ./node_modules/@melonproject/protocol/artifacts/AssetWhitelist.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/AssetWhitelist.json
         - name: VaultLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/VaultLib.json
         - name: ComptrollerLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/ComptrollerLib.json
       eventHandlers:
         - event: AddressesAdded(indexed address,address[])
           handler: handleAddressesAdded
@@ -426,11 +426,11 @@ dataSources:
       entities: []
       abis:
         - name: AssetBlacklistContract
-          file: ./node_modules/@melonproject/protocol/artifacts/AssetBlacklist.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/AssetBlacklist.json
         - name: VaultLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/VaultLib.json
         - name: ComptrollerLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/ComptrollerLib.json
       eventHandlers:
         - event: AddressesAdded(indexed address,address[])
           handler: handleAddressesAdded
@@ -452,11 +452,11 @@ dataSources:
       entities: []
       abis:
         - name: BuySharesCallerWhitelistContract
-          file: ./node_modules/@melonproject/protocol/artifacts/BuySharesCallerWhitelist.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/BuySharesCallerWhitelist.json
         - name: VaultLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/VaultLib.json
         - name: ComptrollerLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/ComptrollerLib.json
       eventHandlers:
         - event: AddressesAdded(indexed address,address[])
           handler: handleAddressesAdded
@@ -478,11 +478,11 @@ dataSources:
       entities: []
       abis:
         - name: GuaranteedRedemptionContract
-          file: ./node_modules/@melonproject/protocol/artifacts/GuaranteedRedemption.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/GuaranteedRedemption.json
         - name: VaultLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/VaultLib.json
         - name: ComptrollerLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/ComptrollerLib.json
       eventHandlers:
         - event: AdapterAdded(address)
           handler: handleAdapterAdded
@@ -508,11 +508,11 @@ dataSources:
       entities: []
       abis:
         - name: InvestorWhitelistContract
-          file: ./node_modules/@melonproject/protocol/artifacts/InvestorWhitelist.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/InvestorWhitelist.json
         - name: VaultLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/VaultLib.json
         - name: ComptrollerLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/ComptrollerLib.json
       eventHandlers:
         - event: AddressesAdded(indexed address,address[])
           handler: handleAddressesAdded
@@ -534,13 +534,13 @@ dataSources:
       entities: []
       abis:
         - name: MaxConcentrationContract
-          file: ./node_modules/@melonproject/protocol/artifacts/MaxConcentration.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/MaxConcentration.json
         - name: VaultLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/VaultLib.json
         - name: ComptrollerLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/ComptrollerLib.json
       eventHandlers:
-        - event: MaxConcentrationSet(address,uint256)
+        - event: MaxConcentrationSet(indexed address,uint256)
           handler: handleMaxConcentrationSet
 
   - name: MinMaxInvestmentDataSource
@@ -558,11 +558,11 @@ dataSources:
       entities: []
       abis:
         - name: MinMaxInvestmentContract
-          file: ./node_modules/@melonproject/protocol/artifacts/MinMaxInvestment.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/MinMaxInvestment.json
         - name: VaultLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/VaultLib.json
         - name: ComptrollerLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/ComptrollerLib.json
       eventHandlers:
         - event: FundSettingsSet(indexed address,uint256,uint256)
           handler: handleFundSettingsSet
@@ -582,11 +582,11 @@ dataSources:
       entities: []
       abis:
         - name: IntegrationManagerContract
-          file: ./node_modules/@melonproject/protocol/artifacts/IntegrationManager.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/IntegrationManager.json
         - name: VaultLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/VaultLib.json
         - name: ComptrollerLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/ComptrollerLib.json
         - name: ERC20Contract
           file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json
         - name: ERC20NameBytesContract
@@ -596,9 +596,9 @@ dataSources:
         - name: CTokenIsCTokenContract
           file: ./src/utils/abis/CTokenIsCToken.json
         - name: IIntegrationAdapterInterface
-          file: ./node_modules/@melonproject/protocol/artifacts/IIntegrationAdapter.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/IIntegrationAdapter.json
         - name: FundActionsWrapperContract
-          file: ./node_modules/@melonproject/protocol/artifacts/FundActionsWrapper.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/FundActionsWrapper.json
       eventHandlers:
         - event: AdapterDeregistered(indexed address,indexed string)
           handler: handleAdapterDeregistered
@@ -626,11 +626,11 @@ dataSources:
       entities: []
       abis:
         - name: ChainlinkPriceFeedContract
-          file: ./node_modules/@melonproject/protocol/artifacts/ChainlinkPriceFeed.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/ChainlinkPriceFeed.json
         - name: VaultLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/VaultLib.json
         - name: ComptrollerLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/ComptrollerLib.json
         - name: ERC20Contract
           file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json
         - name: ERC20NameBytesContract
@@ -644,7 +644,7 @@ dataSources:
         - name: ChainlinkAggregatorProxyContract
           file: ./node_modules/@chainlink/contracts/abi/v0.6/AggregatorProxy.json
         - name: ValueInterpreterContract
-          file: ./node_modules/@melonproject/protocol/artifacts/ValueInterpreter.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/ValueInterpreter.json
       eventHandlers:
         - event: EthUsdAggregatorSet(address,address)
           handler: handleEthUsdAggregatorSet
@@ -670,11 +670,11 @@ dataSources:
       entities: []
       abis:
         - name: AggregatedDerivativePriceFeedContract
-          file: ./node_modules/@melonproject/protocol/artifacts/AggregatedDerivativePriceFeed.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/AggregatedDerivativePriceFeed.json
         - name: VaultLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/VaultLib.json
         - name: ComptrollerLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/ComptrollerLib.json
         - name: ERC20Contract
           file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json
         - name: ERC20NameBytesContract
@@ -684,11 +684,11 @@ dataSources:
         - name: CTokenIsCTokenContract
           file: ./src/utils/abis/CTokenIsCToken.json
         - name: ValueInterpreterContract
-          file: ./node_modules/@melonproject/protocol/artifacts/ValueInterpreter.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/ValueInterpreter.json
         - name: IUniswapV2Pair
-          file: ./node_modules/@melonproject/protocol/artifacts/IUniswapV2Pair.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/IUniswapV2Pair.json
         - name: ICERC20
-          file: ./node_modules/@melonproject/protocol/artifacts/ICERC20.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/ICERC20.json
       eventHandlers:
         - event: DerivativeAdded(indexed address,address)
           handler: handleDerivativeAdded
@@ -711,9 +711,9 @@ templates:
       entities: []
       abis:
         - name: ComptrollerLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/ComptrollerLib.json
         - name: VaultLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/VaultLib.json
         - name: ERC20Contract
           file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json
         - name: ERC20NameBytesContract
@@ -723,7 +723,7 @@ templates:
         - name: CTokenIsCTokenContract
           file: ./src/utils/abis/CTokenIsCToken.json
         - name: FundActionsWrapperContract
-          file: ./node_modules/@melonproject/protocol/artifacts/FundActionsWrapper.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/FundActionsWrapper.json
       eventHandlers:
         - event: AccessorSet(address,address)
           handler: handleAccessorSet
@@ -757,9 +757,9 @@ templates:
       entities: []
       abis:
         - name: ComptrollerLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/ComptrollerLib.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/ComptrollerLib.json
         - name: VaultLibContract
-          file: ./node_modules/@melonproject/protocol/artifacts/VaultLib.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/VaultLib.json
         - name: ERC20Contract
           file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json
         - name: ERC20NameBytesContract
@@ -769,7 +769,7 @@ templates:
         - name: CTokenIsCTokenContract
           file: ./src/utils/abis/CTokenIsCToken.json
         - name: FundActionsWrapperContract
-          file: ./node_modules/@melonproject/protocol/artifacts/FundActionsWrapper.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/FundActionsWrapper.json
       eventHandlers:
         - event: MigratedSharesDuePaid(uint256)
           handler: handleMigratedSharesDuePaid
@@ -797,7 +797,7 @@ templates:
       file: ./src/mappings/ChainlinkAggregator.ts
       abis:
         - name: ValueInterpreterContract
-          file: ./node_modules/@melonproject/protocol/artifacts/ValueInterpreter.json
+          file: ./node_modules/@enzymefinance/protocol/artifacts/ValueInterpreter.json
         - name: ChainlinkAggregatorContract
           file: ./node_modules/@chainlink/contracts/abi/v0.6/AggregatorInterface.json
       eventHandlers:

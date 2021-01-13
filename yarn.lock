@@ -38,6 +38,14 @@
     "@truffle/contract" "^4.2.29"
     ethers "^4.0.45"
 
+"@enzymefinance/protocol@^1.0.0-dev.5045+c6f07054":
+  version "1.0.0-dev.5045"
+  resolved "https://npm-proxy.fury.io/melonproject/~/up/ver_5V22R/%40enzymefinance%2Fprotocol-1.0.0-dev.5045.tgz#8ab0633087a09f072e95f6e2fcd319fbdda7f8b4"
+  integrity sha1-irBjMIegnwculfbi/NMZ+92n+LQ=
+  dependencies:
+    "@babel/runtime" "^7.12.5"
+    decimal.js "^10.2.1"
+
 "@ethersproject/abi@5.0.0-beta.153":
   version "5.0.0-beta.153"
   resolved "https://registry.yarnpkg.com/@ethersproject/abi/-/abi-5.0.0-beta.153.tgz#43a37172b33794e4562999f6e2d555b7599a8eee"
@@ -261,14 +269,6 @@
   integrity sha512-9dRwZF/jMHjIC/4jZDl8uUV3vHbXgHZV2m6728JbYcbjt4Kaw73cIxVqrsXHyDNVkVaIkZ/yorQ37pY2suLddg==
   dependencies:
     assemblyscript "https://github.com/AssemblyScript/assemblyscript#36040d5b5312f19a025782b5e36663823494c2f3"
-
-"@melonproject/protocol@^2.0.0-dev.5044+f7bfcbf4":
-  version "2.0.0-dev.5044"
-  resolved "https://npm.fury.io/melonproject/~/up/ver_LkRh8/%40melonproject%2Fprotocol-2.0.0-dev.5044.tgz#5ec18a1e853111407ca475ba3e33a1f8555a181c"
-  integrity sha1-XsGKHoUxEUB8pHW6PjOh+FVaGBw=
-  dependencies:
-    "@babel/runtime" "^7.12.5"
-    decimal.js "^10.2.1"
 
 "@openzeppelin/contracts@^3.3.0":
   version "3.3.0"

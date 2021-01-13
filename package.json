@@ -45,9 +45,9 @@
   },
   "devDependencies": {
     "@chainlink/contracts": "^0.0.12",
+    "@enzymefinance/protocol": "^1.0.0-dev.5045+c6f07054",
     "@graphprotocol/graph-cli": "^0.19.0",
     "@graphprotocol/graph-ts": "^0.19.0",
-    "@melonproject/protocol": "^2.0.0-dev.5044+f7bfcbf4",
     "@openzeppelin/contracts": "^3.3.0",
     "@types/glob": "^7.1.3",
     "@types/node": "^14.14.20",
