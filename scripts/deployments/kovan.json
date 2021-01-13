@@ -3,7 +3,7 @@
   "chainId": "42",
   "contracts": {
     "AdapterBlacklist": {
-      "address": "0x14E0a799AFFD003fBc2FC40AaD7743719763F045",
+      "address": "0xd9D567798a17790C8E693Bb138CE9a2B084c86DD",
       "abi": [
         {
           "inputs": [
@@ -256,7 +256,7 @@
       ]
     },
     "AdapterWhitelist": {
-      "address": "0x3DBC8370Ff615dF6e75E4F29868d35128acb7dCC",
+      "address": "0x905E2b1C43632575ea58AdecBa9361Be2F2F69c2",
       "abi": [
         {
           "inputs": [
@@ -509,7 +509,7 @@
       ]
     },
     "AggregatedDerivativePriceFeed": {
-      "address": "0xda553CA12c1C90991428A04aEEc903378582EaF2",
+      "address": "0x97569FB1432C9E089FaaC538ECE50D8B5E33A4D1",
       "abi": [
         {
           "inputs": [
@@ -734,7 +734,7 @@
       ]
     },
     "AssetBlacklist": {
-      "address": "0xFC6dce4E1929884e9A5380CE7a4c2Bc9F93286D9",
+      "address": "0x26b938812308C4A61CF2D432910E9fB6419F97eb",
       "abi": [
         {
           "inputs": [
@@ -987,7 +987,7 @@
       ]
     },
     "AssetWhitelist": {
-      "address": "0xF4Ac39c9Fa746ddECb432e699a4E247258539250",
+      "address": "0x876BE4c3Ed16E8D60ee3577C44eaacC68A634fc4",
       "abi": [
         {
           "inputs": [
@@ -1240,7 +1240,7 @@
       ]
     },
     "AuthUserExecutedSharesRequestorFactory": {
-      "address": "0x49Bb3D1Ea35BcBCbAF7114AF6CA36a9C653330D9",
+      "address": "0xa5068D6043832abB31ecBbaBD34d75e6B1C45534",
       "abi": [
         {
           "inputs": [
@@ -1344,7 +1344,7 @@
       ]
     },
     "AuthUserExecutedSharesRequestorLib": {
-      "address": "0x79f3f4a652a8aDdD45383945e60d1B125b10936A",
+      "address": "0x81f7D2dB743DcEbd46237C3EaAb189D1b93d3F4A",
       "abi": [
         {
           "anonymous": false,
@@ -1622,7 +1622,7 @@
       ]
     },
     "BuySharesCallerWhitelist": {
-      "address": "0xa6FC7Ca88a88f380E3FF3812b6CA8443F44CeCF2",
+      "address": "0x455d3278313286DF88d92Ad25b29a63c9CB435f5",
       "abi": [
         {
           "inputs": [
@@ -1875,7 +1875,7 @@
       ]
     },
     "ChaiAdapter": {
-      "address": "0x9A1C76028cc42f6B76Ef03cec0d696dCD51e2e57",
+      "address": "0x8fe7167E034e67eD290e7c9648e05be69a530b39",
       "abi": [
         {
           "inputs": [
@@ -2095,7 +2095,7 @@
       ]
     },
     "ChaiPriceFeed": {
-      "address": "0xF70D09ECE0BbF79bF180BD9740e60B92a291E95E",
+      "address": "0x1E24035aAF222C4cf487C9Ee0791bF6a8b80C7E8",
       "abi": [
         {
           "inputs": [
@@ -2208,7 +2208,7 @@
       ]
     },
     "ChainlinkPriceFeed": {
-      "address": "0x461e2f964b44003b848dA183d836720267b3B6D9",
+      "address": "0xC3BA0F2f061e0aebDa2144a6444Cbe11FB12a7Db",
       "abi": [
         {
           "inputs": [
@@ -2702,7 +2702,7 @@
       ]
     },
     "CompoundAdapter": {
-      "address": "0x8Bc1246DF2ed76C4Cf5D052197FABf31253CBA61",
+      "address": "0x10659C63dAca511281E458Bc79dF0F09AEe3a557",
       "abi": [
         {
           "inputs": [
@@ -2926,7 +2926,7 @@
       ]
     },
     "CompoundPriceFeed": {
-      "address": "0xe053dE203431A7D52452f22c82bb5B6E66C8A28c",
+      "address": "0x393133E9316c76bb93C470b1d0bf81eaDab710d5",
       "abi": [
         {
           "inputs": [
@@ -3082,7 +3082,7 @@
       ]
     },
     "ComptrollerLib": {
-      "address": "0x40A84D3c735930a1933F71e802E83f0fB10Ec5EA",
+      "address": "0x51c9b50b52aCff73d1F0E68AD27BfbAB39BB0705",
       "abi": [
         {
           "inputs": [
@@ -3663,26 +3663,26 @@
       "linkedData": {
         "weth": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
         "primitives": {
-          "bat": "0x202007582da0249ba7367F734C1Ed8DAba6EBA05",
-          "bnb": "0xf7e98d9215Ccd238DB943042405a6249eE72dee3",
-          "busd": "0x57B2526D9428a1E9878DD414EC447640E673cb68",
-          "bzrx": "0xeA0f2Ec29eE29710074A24518b9C96c59025De2a",
-          "dai": "0x401387C7E624ff8Dac93734F35c976199c7ED8b9",
-          "snx": "0x56457B3f0C3eaB4543a6b86B0c32B3d7D19fb3ac",
-          "enj": "0xDd684133A7f883847Cb63bff638f5857d1e16A69",
-          "knc": "0xC081d9b3Ba8fE54e263cAE844527E131Fc1a842b",
-          "link": "0x155B4B7A9864cd2fece65fA26B55945c697388Fb",
-          "mana": "0x59F82009e72d3c3A753089B8272008090DACC57A",
-          "mkr": "0x640Ad814A19E3d2055FEf5B02A6CbF5AdDA10E5c",
-          "ren": "0x1fd97Eb71Db8f4177FFEa84A7D99772FD78bF23b",
-          "rep": "0xe45e75B387030d5068122c9F32e4220b5A638c96",
-          "uni": "0x186710A80Fa7d7aBC484eA2002cEE2bFf85E9b60",
-          "usdc": "0x3422817d9abBF57c075432951696FAb79D44D39f",
-          "usdt": "0x772CaE8015719A718Fa955c3A8C04fa7Ed99cCD9",
-          "wbtc": "0xaa913815c9713Ef88edeEcACb27f83e498cbE828",
-          "yfi": "0x723702253Aa2d171270Be4e7a9AFf63515ff0cf5",
-          "zrx": "0x5bCF5A1f7e008Db70BF88CD1965c63C982111534",
-          "susd": "0x683347E0C73fAB30e6d625a63cbF6D79289bc479"
+          "bat": "0x238b9F2BAabA5409a8C986ba9c4A089d83Ded1e1",
+          "bnb": "0x3E797a79387DB761EF43c2e4864Fb07b0fcB0bb7",
+          "busd": "0xfe6A3E093656B520d23FB614FCe4051ea7d4Ce0C",
+          "bzrx": "0xDe763ECA02DD66548E94b0a9239f0a2a1D949624",
+          "dai": "0x4e4e675688DD4B860301fF03eaedd9b560025c86",
+          "snx": "0xDC0799182cA728b088f6AE1267C7d53b0c64faDd",
+          "enj": "0x25E91e333FB7C8993db8ba70ECe97A00cF78eE39",
+          "knc": "0x64C5D0A85471B899638b46177748Cf01b12E786e",
+          "link": "0xABf315575195F47936e8B19f1BfEF78bBF56FBf1",
+          "mana": "0x36ed06e1d34DBb664d258419ea6914db501538c7",
+          "mkr": "0x917d6f25650e9753647BDe7cFc90b43Aa0E50eE2",
+          "ren": "0xCF5362dC7FB6eb69654aaAFE85AE1d4eb7965b3D",
+          "rep": "0x50C46B3b1891D2d4431515CA49f6ADcA0B59dD2C",
+          "uni": "0x9cC15d4ca5D0460FeC402463E08623F87a12229E",
+          "usdc": "0x8c2fefE1a64f505f871563c57F82d3cA8d572679",
+          "usdt": "0xe0397284A7bd8e467Bf89C4C113bDd80099c6987",
+          "wbtc": "0xB9596D95986113f2445B2c37F589bE050F8CfA21",
+          "yfi": "0x8bca30829F826b9e4B4052729AEE0d79F5b5F038",
+          "zrx": "0x82f1888cb73AA5cE1B7ABf0B74D0C3cAB50D4b48",
+          "susd": "0x0C3fCB6B44DB198DC660666bcaAf13a7356a4464"
         },
         "chainlink": {
           "ethusd": "0x9326BFA02ADD2366b30bacB125260Af641031331",
@@ -3774,76 +3774,76 @@
           }
         },
         "wdgld": {
-          "wdgld": "0x257C90161c65228D7b87dee2738DF37Ac7C183C5",
+          "wdgld": "0x784875B78b198DA67b68358b24E5b06f685b1eDd",
           "ethusd": "0x9326BFA02ADD2366b30bacB125260Af641031331",
           "xauusd": "0xc8fb5684f2707C82f28595dEaC017Bfdf44EE9c5"
         },
         "synthetix": {
-          "snx": "0x136f76517fF8E258FDee55Ba665D8d227AF8f514",
-          "susd": "0x683347E0C73fAB30e6d625a63cbF6D79289bc479",
+          "snx": "0x17A2148EF0e3c1220e4FA398F6BB3ED07D81e1F6",
+          "susd": "0x0C3fCB6B44DB198DC660666bcaAf13a7356a4464",
           "synths": {
-            "sdefi": "0xe85a113ff0c2327c557249c39131189999a96252"
+            "sdefi": "0x22e951DEE6248ef11961304F443A577E18ecd932"
           },
-          "addressResolver": "0x136f76517fF8E258FDee55Ba665D8d227AF8f514",
-          "delegateApprovals": "0x136f76517fF8E258FDee55Ba665D8d227AF8f514",
+          "addressResolver": "0x17A2148EF0e3c1220e4FA398F6BB3ED07D81e1F6",
+          "delegateApprovals": "0x17A2148EF0e3c1220e4FA398F6BB3ED07D81e1F6",
           "originator": "0x1ad1fc9964c551f456238Dd88D6a38344B5319D7",
           "trackingCode": "0x454e5a594d450000000000000000000000000000000000000000000000000000"
         },
         "compound": {
-          "ceth": "0x095Da9764D58c35B29c3F878a61A1CFAA1615290",
+          "ceth": "0x92FFcA83d0E4C5AB1211d0BBC41E2a53192cBd0f",
           "ctokens": {
-            "cbat": "0x3151124848bf4cf2c604de9D39D231Cfe3cf8cEF",
-            "cdai": "0x2178380003A2531ebf65C54D8691aaaaaf1376f2",
-            "crep": "0xAc9c7b35bBFB08099d18D9CBAE2c7F2188400a3C",
-            "cuni": "0xdf56603c4812751961731389DB6e9bf64D7A915C",
-            "cusdc": "0xc1F7Aa8FC57329c6cDb281145d140CCF27FE3C78",
-            "cusdt": "0xf6909166Aae2ae66908F49C6569829aeEb9d3a0A",
-            "cwbtc": "0xb446d1743C3A07349C2830EF71A12821e8a9028b",
-            "czrx": "0x900371502AAbBee469687466be7a8Dc5547ADc56"
+            "cbat": "0x0207659DA5A941CA66d07CDbEAC6568d0fbb1d49",
+            "cdai": "0x8AE91d119EFE4a96f89d832c63d916384E6ca5Cb",
+            "crep": "0x05F8Ff369643432e43c8AcEd3A8F1a5cf3890055",
+            "cuni": "0x113639d2CcC8334680b6FA9A2caCCC7D7f4f442D",
+            "cusdc": "0xa9d2FF5E5f10624A417046922e608530C304B066",
+            "cusdt": "0xCACd4C81F096cCd339AF8012A5E10f81B3fd3ff1",
+            "cwbtc": "0xF6279B14fCA29aC9539124E5B67C68034f130535",
+            "czrx": "0x9cA80d2D02A30d47d06A362607DCC1c4A07d92cC"
           }
         },
         "chai": {
-          "dai": "0x401387C7E624ff8Dac93734F35c976199c7ED8b9",
-          "chai": "0xBa871b2E0F69EcB449f8981cFcC2826b6c3e16ef",
-          "pot": "0x1E28c5430f8A5403435d098CeCE993F4C676cA7f"
+          "dai": "0x4e4e675688DD4B860301fF03eaedd9b560025c86",
+          "chai": "0x33f4C53912EE7866a450223D91Ce568FAD80bd96",
+          "pot": "0xe49eb862191120e590272c768B9B6A03D3b907BD"
         },
         "kyber": {
-          "networkProxy": "0x0b9058e14F4f33980dE47D8f9D7058469db5376B"
+          "networkProxy": "0x28451EdB8d61B276647e14Ccea09f4f354D073C3"
         },
         "paraswap": {
-          "augustusSwapper": "0xa2aFD7F90B66f92CcE3780D3f7fDa8381CA7026c",
-          "tokenTransferProxy": "0xa2aFD7F90B66f92CcE3780D3f7fDa8381CA7026c"
+          "augustusSwapper": "0x614BbC83b4583Eb9b5D1839AdebCC37beee31387",
+          "tokenTransferProxy": "0x614BbC83b4583Eb9b5D1839AdebCC37beee31387"
         },
         "uniswap": {
-          "factory": "0xB0093814b859422aC6E02928F78556e95add9852",
-          "router": "0xB0093814b859422aC6E02928F78556e95add9852",
+          "factory": "0x9921CA64fbC6A2772AFFAE188E27C4aCB3caC1b3",
+          "router": "0x9921CA64fbC6A2772AFFAE188E27C4aCB3caC1b3",
           "pools": {
-            "batWeth": "0x987846Dd6a75c7bff67dD657F71bA206E3402090",
-            "busdUsdc": "0xc5FdBf2F9a1bB73327B73a4828fE1b7b89F53ED0",
-            "bzrxWeth": "0xBa14C8DFb69809e72d37a713344b82e88B022ff1",
-            "daiUsdc": "0x5944062E776d73E3717eB5a4AD88Ab97D474772A",
-            "daiUsdt": "0xCaDf0c0cA6142D79b6C39DE39878ed8665f0e036",
-            "daiWeth": "0x20F0ad9c2BD3F53D9BB5767F76D84C859CC729C5",
-            "linkWeth": "0x1F61384aa1B00e8C73408Ad7776918a472eF4a81",
-            "manaWeth": "0x12276a237f5f96A8649AA958539369aA862dFBaF",
-            "mkrWeth": "0x3C6b28AF1669B4059f698A40D8048d3244FbEBe8",
-            "renWeth": "0xf1b6471C121879De038a726a1B5742df7EE20620",
-            "snxWeth": "0xeef9c9C8D58c11b27c772Ae670a798Dd9a2623AA",
-            "uniWeth": "0x841084B50C789C4eEbf3E945b987347872740fa3",
-            "usdcUsdt": "0x76e50fB2e8B73Bf6BaA939Cd35aa049E14b8Ba68",
-            "usdcWeth": "0x45d4f2715f9c4a9009F8751b026Dd146eE3f7Aea",
-            "wbtcUsdc": "0x1d13f71a03DFF7f062Ac51038FC6EBD316261826",
-            "wbtcUsdt": "0xFdFE06473Dd01867806Ec989E5CB513cCc51Ea70",
-            "wbtcWeth": "0x0291C484B65dDAcC0dB5836C8e6A2F4d628955B1",
-            "wethEnj": "0x83d41a0C627682dfA02da2551ECA774C353BD802",
-            "wethKnc": "0x696D32c7Fc485A439eCCDD58a0a8dC5F357a4C6c",
-            "wethUsdt": "0x2ea10B5AaB228791276cE7F5c38793AFBb1B953d",
-            "wethZrx": "0x6c9f323Cb88886c7694778b599730481a90A0291",
-            "yfiWeth": "0xF04b2FEd157CE2e60A45Ea8A984Df3C818dda0Ff"
+            "batWeth": "0xeC17A8A7Fa94C2FD31513D0cd055C1AC05D45E13",
+            "busdUsdc": "0xE44e5259C2f21AcAefFc31a7628fe6bBbb44d620",
+            "bzrxWeth": "0x1f71AFA4D701d048c4496A77933277DA4F1D74A8",
+            "daiUsdc": "0xE86112DCf9E7f7346a56CFad72b4Ad7C7394829D",
+            "daiUsdt": "0x525f0E27106fc67DA6db47Daa04abe60507ABFE6",
+            "daiWeth": "0xc26DCEA4CABbbB0c7D075C222434e493D0877D9C",
+            "linkWeth": "0xF0E44acB436A5b700eC5A79cDe13364EC62b2762",
+            "manaWeth": "0xCB191f8EDC44CaC8FE8E6Db62611A8cB14ad91E7",
+            "mkrWeth": "0x962cDc84cD5acbCC9F5A20c46cd317EA253803b5",
+            "renWeth": "0x4aa809d7D922a3906f937d375BcDACC18Fe24089",
+            "snxWeth": "0xeb982F9a9144638C39D21BC6E01A887857bB004F",
+            "uniWeth": "0xF44C21b2d9fB8B6Ea2e9b9EEd9F1E7F81fB8674D",
+            "usdcUsdt": "0x1728d752f02eE33c8Dd8C7904b2733a2d83DC702",
+            "usdcWeth": "0x45975E2bdFD80d9CDA16634B6011E4D17b56CAd4",
+            "wbtcUsdc": "0x89181eeF72207e55AA8CeCf5A9c9f10Ed4997D4e",
+            "wbtcUsdt": "0x86B79cfe890567AdB8a862BB47B6b892Fb07983F",
+            "wbtcWeth": "0xFc39Ba7bd3d2031EefA00aA7A323e4C627C560dD",
+            "wethEnj": "0x4043A5735B4e5F71B5AC1f56495b023AE7AA6d5c",
+            "wethKnc": "0xb21CAeAf2056058330ECeDb0E69525727f36e014",
+            "wethUsdt": "0xfDb4F951818Ac785a5e52871aD21Aa8742579251",
+            "wethZrx": "0x8DD62A3739b6D0D0F1F7b2089D03De5AdB3A1C38",
+            "yfiWeth": "0xA651D58A4c207988D0A50f5472f33465C241d9cc"
           }
         },
         "zeroex": {
-          "exchange": "0x581631222d0Aa6c5D6B6572e3C30Ad1A91eFf33E",
+          "exchange": "0x5afE1F83c00e3413b9BEF25345723Ddb55b4E1EB",
           "allowedMakers": []
         },
         "policies": {
@@ -3854,7 +3854,7 @@
       }
     },
     "Dispatcher": {
-      "address": "0xE72821efbc58d1445A63c37844931E3Ac269D7BA",
+      "address": "0x6C140a4e3C8372096C7E1A56725F238627a4D99d",
       "abi": [
         {
           "inputs": [],
@@ -4563,7 +4563,7 @@
       ]
     },
     "EntranceRateBurnFee": {
-      "address": "0x160Ccc3BF37b181a29293466937E3915c3bF4C2E",
+      "address": "0xfe1264311c47CA91AD1c61624d4703eaAc16D358",
       "abi": [
         {
           "inputs": [
@@ -4851,7 +4851,7 @@
       ]
     },
     "EntranceRateDirectFee": {
-      "address": "0x3eB925d6b3362E599D366A4d70e56d0D8a607E21",
+      "address": "0x02D712E1eE65AA07a568289404c5A0C0b60Cae2e",
       "abi": [
         {
           "inputs": [
@@ -5139,7 +5139,7 @@
       ]
     },
     "FeeManager": {
-      "address": "0x8CF96Fc5470065DEfC1A7c40F67F0a613b560997",
+      "address": "0xf38CE8F1300596d56ac19C6515023Cc47b607676",
       "abi": [
         {
           "inputs": [
@@ -5671,7 +5671,7 @@
       ]
     },
     "FundActionsWrapper": {
-      "address": "0x27c76B8b7ad66dC08b2915d57730Da18fB939518",
+      "address": "0x083D84c48059dE61725B848c725f947d1A71211E",
       "abi": [
         {
           "inputs": [
@@ -5761,7 +5761,7 @@
       ]
     },
     "FundDeployer": {
-      "address": "0x214a5dF51648d00b10Ecb0607415eaf05ee61483",
+      "address": "0x7dCFc424E1812567FBDb57c609DfC1Bc17ac5252",
       "abi": [
         {
           "inputs": [
@@ -6387,7 +6387,7 @@
       ]
     },
     "GuaranteedRedemption": {
-      "address": "0xa0Eb22523B0D7540A39c77AB9dAc050Da900d76E",
+      "address": "0xe929480261f7555bE7BF7ee4daF3Be17405dd55a",
       "abi": [
         {
           "inputs": [
@@ -6791,7 +6791,7 @@
       ]
     },
     "IntegrationManager": {
-      "address": "0x7dBBDa600A8020E2c71fEc23709B8f3a53826770",
+      "address": "0x2358ef822531e44c366536249f654624ED20BB65",
       "abi": [
         {
           "inputs": [
@@ -7259,7 +7259,7 @@
       ]
     },
     "InvestorWhitelist": {
-      "address": "0x5FB9213bB5B144D126A4cA0e837699563d86BbE9",
+      "address": "0x90D7F184bAd2b4862aA19D47Ac4208CB7AD0d11E",
       "abi": [
         {
           "inputs": [
@@ -7512,7 +7512,7 @@
       ]
     },
     "KyberAdapter": {
-      "address": "0xBe76820A035687cc8B32eccD5D14FaAB8F39a39A",
+      "address": "0x76188a84eb2aF22A223411682c566c8D0C0cA836",
       "abi": [
         {
           "inputs": [
@@ -7713,7 +7713,7 @@
       ]
     },
     "ManagementFee": {
-      "address": "0xF6407a22C3626c49709170aafe6049B8caa2ceA2",
+      "address": "0x8ad5F21f72eBD1348DAE15e05Bd9AD9116da5575",
       "abi": [
         {
           "inputs": [
@@ -8000,7 +8000,7 @@
       ]
     },
     "MaxConcentration": {
-      "address": "0x8a434bb0795F872199Ba6f78f77b8aC7147822FF",
+      "address": "0xA7C46ff2259840ba67b77f3b873a140A8bcB6119",
       "abi": [
         {
           "inputs": [
@@ -8233,7 +8233,7 @@
       ]
     },
     "MinMaxInvestment": {
-      "address": "0xbB7FD19194d4044777B36C29Ea1a2aaA242EA1d0",
+      "address": "0x7d995DBE2187a2Bf46B08278C38eABcC76494c1d",
       "abi": [
         {
           "inputs": [
@@ -8461,7 +8461,7 @@
       ]
     },
     "ParaSwapAdapter": {
-      "address": "0xFE971da02D4F0B194aaB8aD0D28Ced4B9A229EeC",
+      "address": "0x050e915F2cbdBBf33824C44Dd65716e0EcEbfbd1",
       "abi": [
         {
           "inputs": [
@@ -8680,7 +8680,7 @@
       ]
     },
     "PerformanceFee": {
-      "address": "0x2bc9C27B6c5530085A3a03482775bbD751f04D33",
+      "address": "0x02F0874e6dC4c52E8A3013C924ba87Fada4D5A2E",
       "abi": [
         {
           "inputs": [
@@ -9098,7 +9098,7 @@
       ]
     },
     "PolicyManager": {
-      "address": "0xB3f2Ec8f0127Aa8069B486117f677927c52dE11E",
+      "address": "0xC0CB04a44D1f2B97d4Fb18B14bF9a8956eC8fF97",
       "abi": [
         {
           "inputs": [
@@ -9515,7 +9515,7 @@
       ]
     },
     "SynthetixAdapter": {
-      "address": "0x6C8aE3a77326cEd1c309919937BDDA1Cc5B406A5",
+      "address": "0x2CFaebA2a90EC1E1E8BD70786e3B79b10597933d",
       "abi": [
         {
           "inputs": [
@@ -9748,7 +9748,7 @@
       ]
     },
     "SynthetixPriceFeed": {
-      "address": "0x3EED185a3843712D4DEd86cB32700441e826D27f",
+      "address": "0x5921abe448Ad1166B28faa0B91bA9A73FfeB430a",
       "abi": [
         {
           "inputs": [
@@ -9987,7 +9987,7 @@
       ]
     },
     "TrackedAssetsAdapter": {
-      "address": "0x0D79251E231BEAC1B3dcb7811221aD2411cBA3c2",
+      "address": "0xd00f7aDd58aB1F6f706508f73edAcaB3f41eFF76",
       "abi": [
         {
           "inputs": [
@@ -10148,7 +10148,7 @@
       ]
     },
     "UniswapV2Adapter": {
-      "address": "0x9Ac10989f55a0AeC4c0DF29f2B02e9347e47596f",
+      "address": "0x5AaC7655b4641a76998c978F61bF4524681b353A",
       "abi": [
         {
           "inputs": [
@@ -10391,7 +10391,7 @@
       ]
     },
     "UniswapV2PoolPriceFeed": {
-      "address": "0xD5151b20b467c0370d9662d2Bfd2228876301D05",
+      "address": "0x752373eE9705d3fE1d277F4Da1E0BC7785ee8D9D",
       "abi": [
         {
           "inputs": [
@@ -10661,7 +10661,7 @@
       ]
     },
     "ValueInterpreter": {
-      "address": "0x1ACD7eD2C2f98a34a8d968f0528d244ca84c6ab5",
+      "address": "0xD9c45226Ce9dd5ee5BC0F88B4E3512C2EA75996c",
       "abi": [
         {
           "inputs": [
@@ -10844,7 +10844,7 @@
       ]
     },
     "VaultLib": {
-      "address": "0x48E213b631b8d209ef4749C1C5fcBfC273118332",
+      "address": "0x72422779E210C08e6Be4d7c6423AF04024174F36",
       "abi": [
         {
           "anonymous": false,
@@ -11538,7 +11538,7 @@
       ]
     },
     "WdgldPriceFeed": {
-      "address": "0x47B5437B120DDB9d1Fe6233d88791d222141DCE3",
+      "address": "0xBcd83faDe8460b78CF4A9eB2e6DD371A33E21b15",
       "abi": [
         {
           "inputs": [
@@ -11682,7 +11682,7 @@
       ]
     },
     "ZeroExV2Adapter": {
-      "address": "0x745C2CB1b75fB254EA1B10b91267292fD56C4711",
+      "address": "0x388631262F7D11b0e2F665C780014c9886421413",
       "abi": [
         {
           "inputs": [
@@ -11968,7 +11968,7 @@
       ]
     },
     "mocks/CentralizedRateProvider": {
-      "address": "0x5E806Ec714315042E85B4eD2b5c408AA597fB7Bc",
+      "address": "0xEbe2741b2B4b03CF8C1F3f254e4d8c46314C173c",
       "abi": [
         {
           "inputs": [
@@ -12229,7 +12229,7 @@
       ]
     },
     "mocks/MockCEtherIntegratee (cETH)": {
-      "address": "0x095Da9764D58c35B29c3F878a61A1CFAA1615290",
+      "address": "0x92FFcA83d0E4C5AB1211d0BBC41E2a53192cBd0f",
       "abi": [
         {
           "inputs": [
@@ -12705,7 +12705,7 @@
       ]
     },
     "mocks/MockCTokenIntegratee (cBAT)": {
-      "address": "0x3151124848bf4cf2c604de9D39D231Cfe3cf8cEF",
+      "address": "0x0207659DA5A941CA66d07CDbEAC6568d0fbb1d49",
       "abi": [
         {
           "inputs": [
@@ -13193,7 +13193,7 @@
       ]
     },
     "mocks/MockCTokenIntegratee (cDAI)": {
-      "address": "0x2178380003A2531ebf65C54D8691aaaaaf1376f2",
+      "address": "0x8AE91d119EFE4a96f89d832c63d916384E6ca5Cb",
       "abi": [
         {
           "inputs": [
@@ -13681,7 +13681,7 @@
       ]
     },
     "mocks/MockCTokenIntegratee (cREP)": {
-      "address": "0xAc9c7b35bBFB08099d18D9CBAE2c7F2188400a3C",
+      "address": "0x05F8Ff369643432e43c8AcEd3A8F1a5cf3890055",
       "abi": [
         {
           "inputs": [
@@ -14169,7 +14169,7 @@
       ]
     },
     "mocks/MockCTokenIntegratee (cUNI)": {
-      "address": "0xdf56603c4812751961731389DB6e9bf64D7A915C",
+      "address": "0x113639d2CcC8334680b6FA9A2caCCC7D7f4f442D",
       "abi": [
         {
           "inputs": [
@@ -14657,7 +14657,7 @@
       ]
     },
     "mocks/MockCTokenIntegratee (cUSDC)": {
-      "address": "0xc1F7Aa8FC57329c6cDb281145d140CCF27FE3C78",
+      "address": "0xa9d2FF5E5f10624A417046922e608530C304B066",
       "abi": [
         {
           "inputs": [
@@ -15145,7 +15145,7 @@
       ]
     },
     "mocks/MockCTokenIntegratee (cUSDT)": {
-      "address": "0xf6909166Aae2ae66908F49C6569829aeEb9d3a0A",
+      "address": "0xCACd4C81F096cCd339AF8012A5E10f81B3fd3ff1",
       "abi": [
         {
           "inputs": [
@@ -15633,7 +15633,7 @@
       ]
     },
     "mocks/MockCTokenIntegratee (cWBTC)": {
-      "address": "0xb446d1743C3A07349C2830EF71A12821e8a9028b",
+      "address": "0xF6279B14fCA29aC9539124E5B67C68034f130535",
       "abi": [
         {
           "inputs": [
@@ -16121,7 +16121,7 @@
       ]
     },
     "mocks/MockCTokenIntegratee (cZRX)": {
-      "address": "0x900371502AAbBee469687466be7a8Dc5547ADc56",
+      "address": "0x9cA80d2D02A30d47d06A362607DCC1c4A07d92cC",
       "abi": [
         {
           "inputs": [
@@ -16609,7 +16609,7 @@
       ]
     },
     "mocks/MockChaiIntegratee": {
-      "address": "0xBa871b2E0F69EcB449f8981cFcC2826b6c3e16ef",
+      "address": "0x33f4C53912EE7866a450223D91Ce568FAD80bd96",
       "abi": [
         {
           "inputs": [
@@ -17033,7 +17033,7 @@
       ]
     },
     "mocks/MockChaiPriceSource": {
-      "address": "0x1E28c5430f8A5403435d098CeCE993F4C676cA7f",
+      "address": "0xe49eb862191120e590272c768B9B6A03D3b907BD",
       "abi": [
         {
           "inputs": [],
@@ -17077,7 +17077,7 @@
       ]
     },
     "mocks/MockKyberIntegratee": {
-      "address": "0x0b9058e14F4f33980dE47D8f9D7058469db5376B",
+      "address": "0x28451EdB8d61B276647e14Ccea09f4f354D073C3",
       "abi": [
         {
           "inputs": [
@@ -17358,7 +17358,7 @@
       ]
     },
     "mocks/MockParaSwapIntegratee": {
-      "address": "0xa2aFD7F90B66f92CcE3780D3f7fDa8381CA7026c",
+      "address": "0x614BbC83b4583Eb9b5D1839AdebCC37beee31387",
       "abi": [
         {
           "inputs": [
@@ -17530,7 +17530,7 @@
       ]
     },
     "mocks/MockSynthetixIntegratee": {
-      "address": "0x136f76517fF8E258FDee55Ba665D8d227AF8f514",
+      "address": "0x17A2148EF0e3c1220e4FA398F6BB3ED07D81e1F6",
       "abi": [
         {
           "inputs": [
@@ -18213,7 +18213,7 @@
       ]
     },
     "mocks/MockSynthetixPriceSource": {
-      "address": "0x30984D76e44FCa05937099A0aCFc13E2Ea1e0219",
+      "address": "0x4cc4C4CeE921Dd31Ccd0a0619e1DAc7bEaa50Ff7",
       "abi": [
         {
           "inputs": [
@@ -18396,7 +18396,7 @@
       ]
     },
     "mocks/MockSynthetixToken (sDEFI)": {
-      "address": "0xe85a113ff0c2327c557249c39131189999a96252",
+      "address": "0x22e951DEE6248ef11961304F443A577E18ecd932",
       "abi": [
         {
           "inputs": [
@@ -18927,7 +18927,7 @@
       ]
     },
     "mocks/MockSynthetixToken (sUSD)": {
-      "address": "0x683347E0C73fAB30e6d625a63cbF6D79289bc479",
+      "address": "0x0C3fCB6B44DB198DC660666bcaAf13a7356a4464",
       "abi": [
         {
           "inputs": [
@@ -19458,7 +19458,7 @@
       ]
     },
     "mocks/MockToken (BAT)": {
-      "address": "0x202007582da0249ba7367F734C1Ed8DAba6EBA05",
+      "address": "0x238b9F2BAabA5409a8C986ba9c4A089d83Ded1e1",
       "abi": [
         {
           "inputs": [
@@ -19816,7 +19816,7 @@
       ]
     },
     "mocks/MockToken (BNB)": {
-      "address": "0xf7e98d9215Ccd238DB943042405a6249eE72dee3",
+      "address": "0x3E797a79387DB761EF43c2e4864Fb07b0fcB0bb7",
       "abi": [
         {
           "inputs": [
@@ -20174,7 +20174,7 @@
       ]
     },
     "mocks/MockToken (BUSD)": {
-      "address": "0x57B2526D9428a1E9878DD414EC447640E673cb68",
+      "address": "0xfe6A3E093656B520d23FB614FCe4051ea7d4Ce0C",
       "abi": [
         {
           "inputs": [
@@ -20532,7 +20532,7 @@
       ]
     },
     "mocks/MockToken (BZRX)": {
-      "address": "0xeA0f2Ec29eE29710074A24518b9C96c59025De2a",
+      "address": "0xDe763ECA02DD66548E94b0a9239f0a2a1D949624",
       "abi": [
         {
           "inputs": [
@@ -20890,7 +20890,7 @@
       ]
     },
     "mocks/MockToken (DAI)": {
-      "address": "0x401387C7E624ff8Dac93734F35c976199c7ED8b9",
+      "address": "0x4e4e675688DD4B860301fF03eaedd9b560025c86",
       "abi": [
         {
           "inputs": [
@@ -21248,7 +21248,7 @@
       ]
     },
     "mocks/MockToken (ENJ)": {
-      "address": "0xDd684133A7f883847Cb63bff638f5857d1e16A69",
+      "address": "0x25E91e333FB7C8993db8ba70ECe97A00cF78eE39",
       "abi": [
         {
           "inputs": [
@@ -21606,7 +21606,7 @@
       ]
     },
     "mocks/MockToken (KNC)": {
-      "address": "0xC081d9b3Ba8fE54e263cAE844527E131Fc1a842b",
+      "address": "0x64C5D0A85471B899638b46177748Cf01b12E786e",
       "abi": [
         {
           "inputs": [
@@ -21964,7 +21964,7 @@
       ]
     },
     "mocks/MockToken (LINK)": {
-      "address": "0x155B4B7A9864cd2fece65fA26B55945c697388Fb",
+      "address": "0xABf315575195F47936e8B19f1BfEF78bBF56FBf1",
       "abi": [
         {
           "inputs": [
@@ -22322,7 +22322,7 @@
       ]
     },
     "mocks/MockToken (MANA)": {
-      "address": "0x59F82009e72d3c3A753089B8272008090DACC57A",
+      "address": "0x36ed06e1d34DBb664d258419ea6914db501538c7",
       "abi": [
         {
           "inputs": [
@@ -22680,7 +22680,7 @@
       ]
     },
     "mocks/MockToken (MKR)": {
-      "address": "0x640Ad814A19E3d2055FEf5B02A6CbF5AdDA10E5c",
+      "address": "0x917d6f25650e9753647BDe7cFc90b43Aa0E50eE2",
       "abi": [
         {
           "inputs": [
@@ -23038,7 +23038,7 @@
       ]
     },
     "mocks/MockToken (REN)": {
-      "address": "0x1fd97Eb71Db8f4177FFEa84A7D99772FD78bF23b",
+      "address": "0xCF5362dC7FB6eb69654aaAFE85AE1d4eb7965b3D",
       "abi": [
         {
           "inputs": [
@@ -23396,7 +23396,7 @@
       ]
     },
     "mocks/MockToken (REP)": {
-      "address": "0xe45e75B387030d5068122c9F32e4220b5A638c96",
+      "address": "0x50C46B3b1891D2d4431515CA49f6ADcA0B59dD2C",
       "abi": [
         {
           "inputs": [
@@ -23754,7 +23754,7 @@
       ]
     },
     "mocks/MockToken (SNX)": {
-      "address": "0x56457B3f0C3eaB4543a6b86B0c32B3d7D19fb3ac",
+      "address": "0xDC0799182cA728b088f6AE1267C7d53b0c64faDd",
       "abi": [
         {
           "inputs": [
@@ -24112,7 +24112,7 @@
       ]
     },
     "mocks/MockToken (UNI)": {
-      "address": "0x186710A80Fa7d7aBC484eA2002cEE2bFf85E9b60",
+      "address": "0x9cC15d4ca5D0460FeC402463E08623F87a12229E",
       "abi": [
         {
           "inputs": [
@@ -24470,7 +24470,7 @@
       ]
     },
     "mocks/MockToken (USDC)": {
-      "address": "0x3422817d9abBF57c075432951696FAb79D44D39f",
+      "address": "0x8c2fefE1a64f505f871563c57F82d3cA8d572679",
       "abi": [
         {
           "inputs": [
@@ -24828,7 +24828,7 @@
       ]
     },
     "mocks/MockToken (USDT)": {
-      "address": "0x772CaE8015719A718Fa955c3A8C04fa7Ed99cCD9",
+      "address": "0xe0397284A7bd8e467Bf89C4C113bDd80099c6987",
       "abi": [
         {
           "inputs": [
@@ -25186,7 +25186,7 @@
       ]
     },
     "mocks/MockToken (WBTC)": {
-      "address": "0xaa913815c9713Ef88edeEcACb27f83e498cbE828",
+      "address": "0xB9596D95986113f2445B2c37F589bE050F8CfA21",
       "abi": [
         {
           "inputs": [
@@ -25544,7 +25544,7 @@
       ]
     },
     "mocks/MockToken (YFI)": {
-      "address": "0x723702253Aa2d171270Be4e7a9AFf63515ff0cf5",
+      "address": "0x8bca30829F826b9e4B4052729AEE0d79F5b5F038",
       "abi": [
         {
           "inputs": [
@@ -25902,7 +25902,7 @@
       ]
     },
     "mocks/MockToken (ZRX)": {
-      "address": "0x5bCF5A1f7e008Db70BF88CD1965c63C982111534",
+      "address": "0x82f1888cb73AA5cE1B7ABf0B74D0C3cAB50D4b48",
       "abi": [
         {
           "inputs": [
@@ -26260,7 +26260,7 @@
       ]
     },
     "mocks/MockToken (wDGLD)": {
-      "address": "0x257C90161c65228D7b87dee2738DF37Ac7C183C5",
+      "address": "0x784875B78b198DA67b68358b24E5b06f685b1eDd",
       "abi": [
         {
           "inputs": [
@@ -26618,7 +26618,7 @@
       ]
     },
     "mocks/MockUniswapV2Integratee": {
-      "address": "0xB0093814b859422aC6E02928F78556e95add9852",
+      "address": "0x9921CA64fbC6A2772AFFAE188E27C4aCB3caC1b3",
       "abi": [
         {
           "inputs": [
@@ -27016,7 +27016,7 @@
       ]
     },
     "mocks/MockUniswapV2PriceSource (BAT-WETH)": {
-      "address": "0x987846Dd6a75c7bff67dD657F71bA206E3402090",
+      "address": "0xeC17A8A7Fa94C2FD31513D0cd055C1AC05D45E13",
       "abi": [
         {
           "inputs": [
@@ -27436,7 +27436,7 @@
       ]
     },
     "mocks/MockUniswapV2PriceSource (BUSD-USDC)": {
-      "address": "0xc5FdBf2F9a1bB73327B73a4828fE1b7b89F53ED0",
+      "address": "0xE44e5259C2f21AcAefFc31a7628fe6bBbb44d620",
       "abi": [
         {
           "inputs": [
@@ -27856,7 +27856,7 @@
       ]
     },
     "mocks/MockUniswapV2PriceSource (BZRX-WETH)": {
-      "address": "0xBa14C8DFb69809e72d37a713344b82e88B022ff1",
+      "address": "0x1f71AFA4D701d048c4496A77933277DA4F1D74A8",
       "abi": [
         {
           "inputs": [
@@ -28276,7 +28276,7 @@
       ]
     },
     "mocks/MockUniswapV2PriceSource (DAI-USDC)": {
-      "address": "0x5944062E776d73E3717eB5a4AD88Ab97D474772A",
+      "address": "0xE86112DCf9E7f7346a56CFad72b4Ad7C7394829D",
       "abi": [
         {
           "inputs": [
@@ -28696,7 +28696,7 @@
       ]
     },
     "mocks/MockUniswapV2PriceSource (DAI-USDT)": {
-      "address": "0xCaDf0c0cA6142D79b6C39DE39878ed8665f0e036",
+      "address": "0x525f0E27106fc67DA6db47Daa04abe60507ABFE6",
       "abi": [
         {
           "inputs": [
@@ -29116,7 +29116,7 @@
       ]
     },
     "mocks/MockUniswapV2PriceSource (DAI-WETH)": {
-      "address": "0x20F0ad9c2BD3F53D9BB5767F76D84C859CC729C5",
+      "address": "0xc26DCEA4CABbbB0c7D075C222434e493D0877D9C",
       "abi": [
         {
           "inputs": [
@@ -29536,7 +29536,7 @@
       ]
     },
     "mocks/MockUniswapV2PriceSource (LINK-WETH)": {
-      "address": "0x1F61384aa1B00e8C73408Ad7776918a472eF4a81",
+      "address": "0xF0E44acB436A5b700eC5A79cDe13364EC62b2762",
       "abi": [
         {
           "inputs": [
@@ -29956,7 +29956,7 @@
       ]
     },
     "mocks/MockUniswapV2PriceSource (MANA-WETH)": {
-      "address": "0x12276a237f5f96A8649AA958539369aA862dFBaF",
+      "address": "0xCB191f8EDC44CaC8FE8E6Db62611A8cB14ad91E7",
       "abi": [
         {
           "inputs": [
@@ -30376,7 +30376,7 @@
       ]
     },
     "mocks/MockUniswapV2PriceSource (MKR-WETH)": {
-      "address": "0x3C6b28AF1669B4059f698A40D8048d3244FbEBe8",
+      "address": "0x962cDc84cD5acbCC9F5A20c46cd317EA253803b5",
       "abi": [
         {
           "inputs": [
@@ -30796,7 +30796,7 @@
       ]
     },
     "mocks/MockUniswapV2PriceSource (REN-WETH)": {
-      "address": "0xf1b6471C121879De038a726a1B5742df7EE20620",
+      "address": "0x4aa809d7D922a3906f937d375BcDACC18Fe24089",
       "abi": [
         {
           "inputs": [
@@ -31216,7 +31216,7 @@
       ]
     },
     "mocks/MockUniswapV2PriceSource (SNX-WETH)": {
-      "address": "0xeef9c9C8D58c11b27c772Ae670a798Dd9a2623AA",
+      "address": "0xeb982F9a9144638C39D21BC6E01A887857bB004F",
       "abi": [
         {
           "inputs": [
@@ -31636,7 +31636,7 @@
       ]
     },
     "mocks/MockUniswapV2PriceSource (UNI-WETH)": {
-      "address": "0x841084B50C789C4eEbf3E945b987347872740fa3",
+      "address": "0xF44C21b2d9fB8B6Ea2e9b9EEd9F1E7F81fB8674D",
       "abi": [
         {
           "inputs": [
@@ -32056,7 +32056,7 @@
       ]
     },
     "mocks/MockUniswapV2PriceSource (USDC-USDT)": {
-      "address": "0x76e50fB2e8B73Bf6BaA939Cd35aa049E14b8Ba68",
+      "address": "0x1728d752f02eE33c8Dd8C7904b2733a2d83DC702",
       "abi": [
         {
           "inputs": [
@@ -32476,7 +32476,7 @@
       ]
     },
     "mocks/MockUniswapV2PriceSource (USDC-WETH)": {
-      "address": "0x45d4f2715f9c4a9009F8751b026Dd146eE3f7Aea",
+      "address": "0x45975E2bdFD80d9CDA16634B6011E4D17b56CAd4",
       "abi": [
         {
           "inputs": [
@@ -32896,7 +32896,7 @@
       ]
     },
     "mocks/MockUniswapV2PriceSource (WBTC-USDC)": {
-      "address": "0x1d13f71a03DFF7f062Ac51038FC6EBD316261826",
+      "address": "0x89181eeF72207e55AA8CeCf5A9c9f10Ed4997D4e",
       "abi": [
         {
           "inputs": [
@@ -33316,7 +33316,7 @@
       ]
     },
     "mocks/MockUniswapV2PriceSource (WBTC-USDT)": {
-      "address": "0xFdFE06473Dd01867806Ec989E5CB513cCc51Ea70",
+      "address": "0x86B79cfe890567AdB8a862BB47B6b892Fb07983F",
       "abi": [
         {
           "inputs": [
@@ -33736,7 +33736,7 @@
       ]
     },
     "mocks/MockUniswapV2PriceSource (WBTC-WETH)": {
-      "address": "0x0291C484B65dDAcC0dB5836C8e6A2F4d628955B1",
+      "address": "0xFc39Ba7bd3d2031EefA00aA7A323e4C627C560dD",
       "abi": [
         {
           "inputs": [
@@ -34156,7 +34156,7 @@
       ]
     },
     "mocks/MockUniswapV2PriceSource (WETH-ENJ)": {
-      "address": "0x83d41a0C627682dfA02da2551ECA774C353BD802",
+      "address": "0x4043A5735B4e5F71B5AC1f56495b023AE7AA6d5c",
       "abi": [
         {
           "inputs": [
@@ -34576,7 +34576,7 @@
       ]
     },
     "mocks/MockUniswapV2PriceSource (WETH-KNC)": {
-      "address": "0x696D32c7Fc485A439eCCDD58a0a8dC5F357a4C6c",
+      "address": "0xb21CAeAf2056058330ECeDb0E69525727f36e014",
       "abi": [
         {
           "inputs": [
@@ -34996,7 +34996,7 @@
       ]
     },
     "mocks/MockUniswapV2PriceSource (WETH-USDT)": {
-      "address": "0x2ea10B5AaB228791276cE7F5c38793AFBb1B953d",
+      "address": "0xfDb4F951818Ac785a5e52871aD21Aa8742579251",
       "abi": [
         {
           "inputs": [
@@ -35416,7 +35416,7 @@
       ]
     },
     "mocks/MockUniswapV2PriceSource (WETH-ZRX)": {
-      "address": "0x6c9f323Cb88886c7694778b599730481a90A0291",
+      "address": "0x8DD62A3739b6D0D0F1F7b2089D03De5AdB3A1C38",
       "abi": [
         {
           "inputs": [
@@ -35836,7 +35836,7 @@
       ]
     },
     "mocks/MockUniswapV2PriceSource (YFI-WETH)": {
-      "address": "0xF04b2FEd157CE2e60A45Ea8A984Df3C818dda0Ff",
+      "address": "0xA651D58A4c207988D0A50f5472f33465C241d9cc",
       "abi": [
         {
           "inputs": [
@@ -36256,7 +36256,7 @@
       ]
     },
     "mocks/MockZeroExV2Integratee": {
-      "address": "0x581631222d0Aa6c5D6B6572e3C30Ad1A91eFf33E",
+      "address": "0x5afE1F83c00e3413b9BEF25345723Ddb55b4E1EB",
       "abi": [
         {
           "inputs": [
