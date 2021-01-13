@@ -75,6 +75,11 @@ export function fetchAssetPrice(asset: Asset): BigDecimal {
   // Whenever a new (derivative) asset is registered, we need to fetch its current price immediately.
   let contract = ValueInterpreterContract.bind(valueInterpreterAddress);
 
+  // TODO: remove this once prices for UNI-V2 are valid
+  if (asset.symbol == 'UNI-V2') {
+    return BigDecimal.fromString('0');
+  }
+
   // NOTE: Because we are using one "unit" of the given derivative as the amount when
   // calculating the value with the value interpreter, this is also the rate.
   let one = BigInt.fromI32(10).pow(asset.decimals as u8);
