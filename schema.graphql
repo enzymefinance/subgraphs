@@ -1202,7 +1202,6 @@ type Transaction @entity {
   id: ID!
   from: String!
   to: String
-  index: BigInt!
   contract: Contract
   value: BigDecimal!
   timestamp: BigInt!
