@@ -3,7 +3,7 @@
   "chainId": "42",
   "contracts": {
     "AdapterBlacklist": {
-      "address": "0x8c3A75d4532148D34e78867A21FEC58b70f77493",
+      "address": "0x7c1b301Bc372E9F1B6D7E8e9ba9e09cF8fE25e4f",
       "abi": [
         {
           "inputs": [
@@ -256,7 +256,7 @@
       ]
     },
     "AdapterWhitelist": {
-      "address": "0x04317D8fe9d3d1229ae1e4FDB825ee7f80624BD5",
+      "address": "0x2e203db00f0B4600889AF263db866082b517eB76",
       "abi": [
         {
           "inputs": [
@@ -509,7 +509,7 @@
       ]
     },
     "AggregatedDerivativePriceFeed": {
-      "address": "0xeA94E057621605A1Da5A14e255ccF3f5E31f92f2",
+      "address": "0xB52a764C32f4c86e88773630ba3f33AaF2DA1Bd9",
       "abi": [
         {
           "inputs": [
@@ -734,7 +734,7 @@
       ]
     },
     "AssetBlacklist": {
-      "address": "0x83bcaCf4015E88A8278f3C33939F57127CFC041E",
+      "address": "0x1181169fA774cAF6f84E7b535128001ECAE871E3",
       "abi": [
         {
           "inputs": [
@@ -987,7 +987,7 @@
       ]
     },
     "AssetWhitelist": {
-      "address": "0xe8F94ECBaD4Dbc66f81c0dee9563C00B294178a1",
+      "address": "0x32b87bef7171022a8C6fBC227da2b68CfB1b4204",
       "abi": [
         {
           "inputs": [
@@ -1240,7 +1240,7 @@
       ]
     },
     "AuthUserExecutedSharesRequestorFactory": {
-      "address": "0x992E7d12490F0e70B32e69aA386EC784545575A2",
+      "address": "0x529ff978097aCF89229805c7289AA934398d89c7",
       "abi": [
         {
           "inputs": [
@@ -1344,7 +1344,7 @@
       ]
     },
     "AuthUserExecutedSharesRequestorLib": {
-      "address": "0xB02bc3eb02d54e41114Bb3814Bf0d5a3Dc53BE2D",
+      "address": "0x490De2c9C21fDdF84F12132Ad98235B4D1bCFe87",
       "abi": [
         {
           "anonymous": false,
@@ -1622,7 +1622,7 @@
       ]
     },
     "BuySharesCallerWhitelist": {
-      "address": "0xEF7365e15733C998eF5B4F442961F35f7A003e86",
+      "address": "0x581BE8a7DA9F313ebc7D85C68ffa17d87cBA0CC3",
       "abi": [
         {
           "inputs": [
@@ -1875,7 +1875,7 @@
       ]
     },
     "ChaiAdapter": {
-      "address": "0x2A80a35690970F4835446CdC0C4071077e0a6f7e",
+      "address": "0x039Abf1d67954E9924918B3F8AC2ce0B2d07BF6f",
       "abi": [
         {
           "inputs": [
@@ -2095,7 +2095,7 @@
       ]
     },
     "ChaiPriceFeed": {
-      "address": "0xf279ee51ddD68B0AAC5A37ef476811BA95233927",
+      "address": "0x73c563c7574f547a5E0ac42d7EE2EdCfA731cD3D",
       "abi": [
         {
           "inputs": [
@@ -2208,7 +2208,7 @@
       ]
     },
     "ChainlinkPriceFeed": {
-      "address": "0x8DBdd70A6024A691800e368C6afD0a157C72d700",
+      "address": "0x57d50F698aDEe69A8F62F8591Fdfe934268581d3",
       "abi": [
         {
           "inputs": [
@@ -2702,7 +2702,7 @@
       ]
     },
     "CompoundAdapter": {
-      "address": "0xabFc2E0364726d2E9eDffCA76E442D103231f0b5",
+      "address": "0x0551C5f061C54f231Ad45ED0C768E7024a2e96bE",
       "abi": [
         {
           "inputs": [
@@ -2926,7 +2926,7 @@
       ]
     },
     "CompoundPriceFeed": {
-      "address": "0xF4357c3B5aCF73B0aD786Fc9EB39AB8918884594",
+      "address": "0x8FF2a93Da7df73F2ebE3D5caACA8daaF5918f15b",
       "abi": [
         {
           "inputs": [
@@ -3082,7 +3082,7 @@
       ]
     },
     "ComptrollerLib": {
-      "address": "0x4b446839F4977690fc2db3B0515Ec6B95Fd8B6BF",
+      "address": "0x2B15757bBa435D29Fb676a6F2623f4a238fc8e2A",
       "abi": [
         {
           "inputs": [
@@ -3663,26 +3663,26 @@
       "linkedData": {
         "weth": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
         "primitives": {
-          "bat": "0xADe1236E7f116CDa461E30692020ff0478681dC7",
-          "bnb": "0x8f75f581948b4D305A774eCa3703aA2ecf99c3ee",
-          "busd": "0xf6b22e8bf959e6B965498C7C928331AAa40C96C6",
-          "bzrx": "0x6c04D0033c8E064AB7E47EA8822FCa5a4A4Bd3cD",
-          "dai": "0x98c4d4075B98005A54B60C9eC718569f01756CD5",
-          "snx": "0x5FB30e174fe36E013571281705DE93415236bEBe",
-          "enj": "0xF6444520e962A07F310482Ef58A1A5C12eaEBAd5",
-          "knc": "0x16efe483cc7e4d491Eaa68FcfCD6ad7DcdE95441",
-          "link": "0x5720623dbaB4Ef6Ff53045E49eD600CDab55925f",
-          "mana": "0x575f5F915B21727C50e0BCC923E03A5d62B05973",
-          "mkr": "0x2682DDD56A5455d7B1AedA1468a697C96004B555",
-          "ren": "0x859bB55bb257168dC6dE3E4acd6A31ED0f510e1a",
-          "rep": "0x2CB82e6276A584908C217386b1F8493E7dA56A3d",
-          "uni": "0xCc1f26334BBa1Cc9dd51389cae0c486BE8b644bE",
-          "usdc": "0xE02f4C6574cb1D85dDa4542B55745346E65fF3f6",
-          "usdt": "0x73483CFD82dEEC8A051Bf57F441A9254c4D577Bd",
-          "wbtc": "0x9390717539c21A97Ca33193fF7B45bC6F62aBdC0",
-          "yfi": "0x6064fe1F16D0FFa4Bcf79fB62c12294417284dD5",
-          "zrx": "0xC21c60f68C45DCB8Ce50B0DB1edc111cCBb24203",
-          "susd": "0xA6CAa48833F8690F61004eEfb2f88a5a94020ae9"
+          "bat": "0x2E62eAaf0f490219BE8eD376326e0516228Bae89",
+          "bnb": "0x4674e9587925f9FB4d3A4Cc5591029596280E00C",
+          "busd": "0x88dd7a403A3d48625c9CB511Ff47d1D6c25Eb121",
+          "bzrx": "0x23cB26E7BC6868452097E351e42d2a39c861b6BB",
+          "dai": "0x0707de6EA02D4558fEA1E0a96cad9003f8C1D384",
+          "snx": "0x4c22D46c07AB880f94e8213e0256727AF471A9F4",
+          "enj": "0x1DC1216b3D1803a0B5F7664B7756377f477614aB",
+          "knc": "0x902aAEfd695f2Af5CCfA6A027051261976131D69",
+          "link": "0xd7f19f0d395e8C7d5368d74a81b774e2b822df25",
+          "mana": "0x7C52405aDa0bFbCa32a81703862A03757fb702f7",
+          "mkr": "0xdE016FEA21895e5ACA1112b95504f303500002b5",
+          "ren": "0xD9436124f61685E63cD87370D1A9B32E79B75601",
+          "rep": "0x56A7C6766b5E7a9e6BC704F7Becc001F2755a713",
+          "uni": "0x86684577af5598b229a27c5774b658D303e2e044",
+          "usdc": "0xFaC5cbeFa43A877C675E8007A685e0d72eE1f109",
+          "usdt": "0x50e7615a526F715556c478749303C75571F1e6B5",
+          "wbtc": "0x08adEDfB5F473a7dffD05DA2c0f33651553668a9",
+          "yfi": "0x3a854556f28F77dCC803538032cA64FDf42A0783",
+          "zrx": "0x8955cD6B7826A86E820f0774278d89B76DB25C46",
+          "susd": "0x190CECE40AEF39a2a15d8858CAFa691F01a909C5"
         },
         "chainlink": {
           "ethusd": "0x9326BFA02ADD2366b30bacB125260Af641031331",
@@ -3774,53 +3774,53 @@
           }
         },
         "wdgld": {
-          "wdgld": "0x649c9Ff20341b0D66B90D364230DCcab9E54a9Cd",
+          "wdgld": "0x23993cA98c63F1f8de457C271f8ceFD9076A42f4",
           "ethusd": "0x9326BFA02ADD2366b30bacB125260Af641031331",
           "xauusd": "0xc8fb5684f2707C82f28595dEaC017Bfdf44EE9c5"
         },
         "synthetix": {
-          "snx": "0xe788ABaE44d9b464b17de604D8f2FDC8Ba230A0b",
-          "susd": "0xA6CAa48833F8690F61004eEfb2f88a5a94020ae9",
+          "snx": "0x93A5c5c7547832c8ebFcCAbc2157D43A9c5E68d4",
+          "susd": "0x190CECE40AEF39a2a15d8858CAFa691F01a909C5",
           "synths": {
-            "sdefi": "0xFc3CEE90CD5B237A85b3aEBd90467C30EE747fc9"
+            "sdefi": "0xf1762903953e3729335bE6cF02b846501c9049a8"
           },
-          "addressResolver": "0xe788ABaE44d9b464b17de604D8f2FDC8Ba230A0b",
-          "delegateApprovals": "0xe788ABaE44d9b464b17de604D8f2FDC8Ba230A0b",
+          "addressResolver": "0x93A5c5c7547832c8ebFcCAbc2157D43A9c5E68d4",
+          "delegateApprovals": "0x93A5c5c7547832c8ebFcCAbc2157D43A9c5E68d4",
           "originator": "0x1ad1fc9964c551f456238Dd88D6a38344B5319D7",
           "trackingCode": "0x454e5a594d450000000000000000000000000000000000000000000000000000"
         },
         "compound": {
-          "ceth": "0xA60d84c656CE085bb70738024746CF866429FE03",
+          "ceth": "0x651C7D880878C1FeBf485B3279d5883F41e24896",
           "ctokens": {
-            "cbat": "0xc47535A72268167F43612a8851801Cb6062B27be",
-            "cdai": "0x53F01187F45D57CDDa33963ACc7D7263AAa7B153",
-            "crep": "0x66AB5d6B0569eDDCA7b51551Dd6411fee1e856d5",
-            "cuni": "0xE1E1B3aF3BE1b1Ad181Eb226F4108b766457ee39",
-            "cusdc": "0xBdfDce6016EB6BD6d76E30539b0ba97174769f9F",
-            "cusdt": "0x8390F3871640B52e30D256f089A50ad8bC4C6276",
-            "cwbtc": "0xd822eC61b4cC723Ec16691F7c5B342b5b4394155",
-            "czrx": "0x3C1759a7B38F48E57dD06D01D95C7da8D3d0fDd4"
+            "cbat": "0xdbacce684dcd33aF1A4da089B3173A5Dedba7469",
+            "cdai": "0x9B19b1590B9289E5aBbc7Ee9511076be8d75ac42",
+            "crep": "0x9Be41D202e8A1d7327b2fD860749e41bAA89Cb6A",
+            "cuni": "0x3E9867F6e41dF327eae9D0832530d1007D1fbB4f",
+            "cusdc": "0x1AD7EcfB656eC99538db3bC46d66E7d79E9Acc9e",
+            "cusdt": "0xaB8B04c6F87a47aEEF37B7bc82D39656549A3A29",
+            "cwbtc": "0x4f4a33BDC3e4b4b4CC25D8F1f29Bc185b176e525",
+            "czrx": "0xCb37F0CE3cE7fa5545dE084A41F2B18F76815a85"
           }
         },
         "chai": {
-          "dai": "0x98c4d4075B98005A54B60C9eC718569f01756CD5",
-          "chai": "0x9DDecEd2df3777CB4cF02d2f87B122080cF472fF",
-          "pot": "0x6B63744422A8BC623A46E5D9462F2443d8503476"
+          "dai": "0x0707de6EA02D4558fEA1E0a96cad9003f8C1D384",
+          "chai": "0x597331A15e0F3447101881CF471A838393C5B271",
+          "pot": "0x000439b5dF6536958c4C5FbD9cDA915092aa78a7"
         },
         "kyber": {
-          "networkProxy": "0xFDeD2f17a0bdAB77dBE859b493Cd939dDAc0C797"
+          "networkProxy": "0x400146f45383d1acAB17d2807510c9f939d9fD1b"
         },
         "paraswap": {
-          "augustusSwapper": "0x38C4C26903A88CA8394943594D08A8E42a31FAdF",
-          "tokenTransferProxy": "0x38C4C26903A88CA8394943594D08A8E42a31FAdF"
+          "augustusSwapper": "0x5597aFb3fe7cE42471DD3267A7bbdFC275851b9E",
+          "tokenTransferProxy": "0x5597aFb3fe7cE42471DD3267A7bbdFC275851b9E"
         },
         "uniswap": {
-          "factory": "0x976c2512558426234C285eAcE7245bf722cbF178",
-          "router": "0x976c2512558426234C285eAcE7245bf722cbF178",
+          "factory": "0x0022B151B637722757852Ef64c57c982277203fF",
+          "router": "0x0022B151B637722757852Ef64c57c982277203fF",
           "pools": {}
         },
         "zeroex": {
-          "exchange": "0x97E55Ff9F97c5d7693a9871b225a4CFE51E3079C",
+          "exchange": "0x6Ffa4088e56986E25e65d73657C23D3A869EE570",
           "allowedMakers": []
         },
         "policies": {
@@ -3831,7 +3831,7 @@
       }
     },
     "Dispatcher": {
-      "address": "0xB7b9803363c8da9A900168444d004F8e30799f8a",
+      "address": "0x27536BD04b0e66991B6b53C9A5f4751d88787Cc6",
       "abi": [
         {
           "inputs": [],
@@ -4540,7 +4540,7 @@
       ]
     },
     "EntranceRateBurnFee": {
-      "address": "0x01EB20054CaA6bF60CF2e4728FE680697835a816",
+      "address": "0x644EE06cE9463368cB32da1a45f4F3FCeb565ab1",
       "abi": [
         {
           "inputs": [
@@ -4828,7 +4828,7 @@
       ]
     },
     "EntranceRateDirectFee": {
-      "address": "0x931fe2Af544a725D6EAC2AcCecf3e0d9e2436eE8",
+      "address": "0x885D6F6616Bf9647C4eCde754C872690e68106af",
       "abi": [
         {
           "inputs": [
@@ -5116,7 +5116,7 @@
       ]
     },
     "FeeManager": {
-      "address": "0x55aF4Bc27B9De6140107a9d6f4e16B55C9755991",
+      "address": "0x39E585bf76E3888590B33F1DD7c2372cAEe1e8F4",
       "abi": [
         {
           "inputs": [
@@ -5648,7 +5648,7 @@
       ]
     },
     "FundActionsWrapper": {
-      "address": "0x4a36c93b49c733743a035B49BDe7549Be09dD460",
+      "address": "0xf640A2763bfdE34D1e00ECCa322B0286233F6775",
       "abi": [
         {
           "inputs": [
@@ -5738,7 +5738,7 @@
       ]
     },
     "FundDeployer": {
-      "address": "0xcEB8968101ddd4b79946528AEcf734739c73a3F6",
+      "address": "0x7CAf39324A8FE8964c0c67a94f03cd5072075A33",
       "abi": [
         {
           "inputs": [
@@ -6364,7 +6364,7 @@
       ]
     },
     "GuaranteedRedemption": {
-      "address": "0x2cB698b67015490441Ba0451C7F63d777ef14e7F",
+      "address": "0x126D92a4050db920BfB32cfe228F17b4A841452E",
       "abi": [
         {
           "inputs": [
@@ -6768,7 +6768,7 @@
       ]
     },
     "IntegrationManager": {
-      "address": "0x0dFfA3E16dfFdbd1667Ee2aF861243eAa3b9BcEd",
+      "address": "0x5B5100bFFFcd40A0f49cc7a01049Ab71699C3FB1",
       "abi": [
         {
           "inputs": [
@@ -7236,7 +7236,7 @@
       ]
     },
     "InvestorWhitelist": {
-      "address": "0xC5d0f2f48E40c027FEa5fAD9372F4Cf29c9C9683",
+      "address": "0x06bD72eA79f0951F88df8388E07664868Eb37913",
       "abi": [
         {
           "inputs": [
@@ -7489,7 +7489,7 @@
       ]
     },
     "KyberAdapter": {
-      "address": "0x98cE65E878E8E61bBC712fc359D190E1f7649830",
+      "address": "0xb0BB81Ca46531DEb10bfF87e1fbc019917D80cCf",
       "abi": [
         {
           "inputs": [
@@ -7690,7 +7690,7 @@
       ]
     },
     "ManagementFee": {
-      "address": "0x51fc525798D52Dc6a2416646E42daEB224dDA442",
+      "address": "0x54e384c95f24b077a78Fa3Da566d3761874ca9E0",
       "abi": [
         {
           "inputs": [
@@ -7977,7 +7977,7 @@
       ]
     },
     "MaxConcentration": {
-      "address": "0x79b869FcffbcF54624E17827Fe0f8443fFF2A138",
+      "address": "0x1Bae3C68F47A69EE6a95525c07035A467c07f1eb",
       "abi": [
         {
           "inputs": [
@@ -8210,7 +8210,7 @@
       ]
     },
     "MinMaxInvestment": {
-      "address": "0x90fe12c453904cb39Bc337Da0DaD744fF24086d0",
+      "address": "0x4005e072a4B4cbd72F707a97675bE24a201C0173",
       "abi": [
         {
           "inputs": [
@@ -8438,7 +8438,7 @@
       ]
     },
     "ParaSwapAdapter": {
-      "address": "0x15Ba9213b1067F288B10405fb72997498BF9323c",
+      "address": "0x45809130aa4bF66add6EA71E312B0920c8874c84",
       "abi": [
         {
           "inputs": [
@@ -8657,7 +8657,7 @@
       ]
     },
     "PerformanceFee": {
-      "address": "0xf0e2213BC7c8c6eE7FD13f93342Ca22dea658D86",
+      "address": "0x540654Bd3E6FFf5A001B6104b38B583aA7440D12",
       "abi": [
         {
           "inputs": [
@@ -9075,7 +9075,7 @@
       ]
     },
     "PolicyManager": {
-      "address": "0xA08F1FD26D5C75fA074CEFB566A04464bF54a439",
+      "address": "0x9aF80cA19726d4cCdeE9Ea07372c7ec89E94cbb6",
       "abi": [
         {
           "inputs": [
@@ -9492,7 +9492,7 @@
       ]
     },
     "SynthetixAdapter": {
-      "address": "0xb3e4caF49b3CA9D90507367e26fa39c6ccC48094",
+      "address": "0xD8d0aaFE84AA6a0D3566928A879Ab59dc69B2718",
       "abi": [
         {
           "inputs": [
@@ -9725,7 +9725,7 @@
       ]
     },
     "SynthetixPriceFeed": {
-      "address": "0x869dEa41615Df7bF9483A9ac0EE6d5cab3E950EE",
+      "address": "0x1f73Fa72cdD13e873e01d887844A088Eba3eaA1D",
       "abi": [
         {
           "inputs": [
@@ -9964,7 +9964,7 @@
       ]
     },
     "TrackedAssetsAdapter": {
-      "address": "0x37D9B9455a8831760A0A790E8c2815224CfE206D",
+      "address": "0x4edfB9a078ed4CD3aBb93AC17f3937b7F79621d9",
       "abi": [
         {
           "inputs": [
@@ -10125,7 +10125,7 @@
       ]
     },
     "UniswapV2Adapter": {
-      "address": "0xc7C350D7e9Fe1DFEdCC3821aaE2ED09c36460b2B",
+      "address": "0x152AB3F0360E630eEA5C5b55830169236BbF38c9",
       "abi": [
         {
           "inputs": [
@@ -10368,7 +10368,7 @@
       ]
     },
     "UniswapV2PoolPriceFeed": {
-      "address": "0xdB61285184B2640584C722F0414BA69744BE17B6",
+      "address": "0x235fB764540acb692526289F6b99635b51e4F384",
       "abi": [
         {
           "inputs": [
@@ -10638,7 +10638,7 @@
       ]
     },
     "ValueInterpreter": {
-      "address": "0xae414857e3c03Aa4660eF84cBE378818F38F5982",
+      "address": "0x6d11e561F1f81399Ea4563Ab31617FAff9C15D69",
       "abi": [
         {
           "inputs": [
@@ -10821,7 +10821,7 @@
       ]
     },
     "VaultLib": {
-      "address": "0xd151330434D82D22ddB199e8d062ADEd06bDec2a",
+      "address": "0x0BF46b27da6eC61861FC894d212F42d387C151c5",
       "abi": [
         {
           "anonymous": false,
@@ -11515,7 +11515,7 @@
       ]
     },
     "WdgldPriceFeed": {
-      "address": "0xe3C76b53ECd942e1EF2Cbb1fD9b14600e4e10Fac",
+      "address": "0x01a39da6b39a998b351EF742c29268D60b3d1Edd",
       "abi": [
         {
           "inputs": [
@@ -11659,7 +11659,7 @@
       ]
     },
     "ZeroExV2Adapter": {
-      "address": "0xe6aE6A803D4fD8fDdea87449A074DB75dA1aC461",
+      "address": "0xbf5d8A4F94b655b6a74B778a90b3dAa412ccC97f",
       "abi": [
         {
           "inputs": [
@@ -11945,7 +11945,7 @@
       ]
     },
     "mocks/CentralizedRateProvider": {
-      "address": "0xF3F0ae9919c0000Ea8639000361C655AF07b7be4",
+      "address": "0xF1733E9a968D75aD3bc1a524eaBf16F7B53729B1",
       "abi": [
         {
           "inputs": [
@@ -12206,7 +12206,7 @@
       ]
     },
     "mocks/MockCEtherIntegratee (cETH)": {
-      "address": "0xA60d84c656CE085bb70738024746CF866429FE03",
+      "address": "0x651C7D880878C1FeBf485B3279d5883F41e24896",
       "abi": [
         {
           "inputs": [
@@ -12682,7 +12682,7 @@
       ]
     },
     "mocks/MockCTokenIntegratee (cBAT)": {
-      "address": "0xc47535A72268167F43612a8851801Cb6062B27be",
+      "address": "0xdbacce684dcd33aF1A4da089B3173A5Dedba7469",
       "abi": [
         {
           "inputs": [
@@ -13170,7 +13170,7 @@
       ]
     },
     "mocks/MockCTokenIntegratee (cDAI)": {
-      "address": "0x53F01187F45D57CDDa33963ACc7D7263AAa7B153",
+      "address": "0x9B19b1590B9289E5aBbc7Ee9511076be8d75ac42",
       "abi": [
         {
           "inputs": [
@@ -13658,7 +13658,7 @@
       ]
     },
     "mocks/MockCTokenIntegratee (cREP)": {
-      "address": "0x66AB5d6B0569eDDCA7b51551Dd6411fee1e856d5",
+      "address": "0x9Be41D202e8A1d7327b2fD860749e41bAA89Cb6A",
       "abi": [
         {
           "inputs": [
@@ -14146,7 +14146,7 @@
       ]
     },
     "mocks/MockCTokenIntegratee (cUNI)": {
-      "address": "0xE1E1B3aF3BE1b1Ad181Eb226F4108b766457ee39",
+      "address": "0x3E9867F6e41dF327eae9D0832530d1007D1fbB4f",
       "abi": [
         {
           "inputs": [
@@ -14634,7 +14634,7 @@
       ]
     },
     "mocks/MockCTokenIntegratee (cUSDC)": {
-      "address": "0xBdfDce6016EB6BD6d76E30539b0ba97174769f9F",
+      "address": "0x1AD7EcfB656eC99538db3bC46d66E7d79E9Acc9e",
       "abi": [
         {
           "inputs": [
@@ -15122,7 +15122,7 @@
       ]
     },
     "mocks/MockCTokenIntegratee (cUSDT)": {
-      "address": "0x8390F3871640B52e30D256f089A50ad8bC4C6276",
+      "address": "0xaB8B04c6F87a47aEEF37B7bc82D39656549A3A29",
       "abi": [
         {
           "inputs": [
@@ -15610,7 +15610,7 @@
       ]
     },
     "mocks/MockCTokenIntegratee (cWBTC)": {
-      "address": "0xd822eC61b4cC723Ec16691F7c5B342b5b4394155",
+      "address": "0x4f4a33BDC3e4b4b4CC25D8F1f29Bc185b176e525",
       "abi": [
         {
           "inputs": [
@@ -16098,7 +16098,7 @@
       ]
     },
     "mocks/MockCTokenIntegratee (cZRX)": {
-      "address": "0x3C1759a7B38F48E57dD06D01D95C7da8D3d0fDd4",
+      "address": "0xCb37F0CE3cE7fa5545dE084A41F2B18F76815a85",
       "abi": [
         {
           "inputs": [
@@ -16586,7 +16586,7 @@
       ]
     },
     "mocks/MockChaiIntegratee": {
-      "address": "0x9DDecEd2df3777CB4cF02d2f87B122080cF472fF",
+      "address": "0x597331A15e0F3447101881CF471A838393C5B271",
       "abi": [
         {
           "inputs": [
@@ -16640,6 +16640,25 @@
             {
               "indexed": true,
               "internalType": "address",
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
               "name": "from",
               "type": "address"
             },
@@ -16683,6 +16702,19 @@
             }
           ],
           "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address[]",
+              "name": "_minters",
+              "type": "address[]"
+            }
+          ],
+          "name": "addMinters",
+          "outputs": [],
+          "stateMutability": "nonpayable",
           "type": "function"
         },
         {
@@ -16926,6 +16958,26 @@
         },
         {
           "inputs": [],
+          "name": "owner",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "renounceOwnership",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
           "name": "symbol",
           "outputs": [
             {
@@ -17004,13 +17056,26 @@
           "type": "function"
         },
         {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "transferOwnership",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
           "stateMutability": "payable",
           "type": "receive"
         }
       ]
     },
     "mocks/MockChaiPriceSource": {
-      "address": "0x6B63744422A8BC623A46E5D9462F2443d8503476",
+      "address": "0x000439b5dF6536958c4C5FbD9cDA915092aa78a7",
       "abi": [
         {
           "inputs": [],
@@ -17054,7 +17119,7 @@
       ]
     },
     "mocks/MockKyberIntegratee": {
-      "address": "0xFDeD2f17a0bdAB77dBE859b493Cd939dDAc0C797",
+      "address": "0x400146f45383d1acAB17d2807510c9f939d9fD1b",
       "abi": [
         {
           "inputs": [
@@ -17335,7 +17400,7 @@
       ]
     },
     "mocks/MockParaSwapIntegratee": {
-      "address": "0x38C4C26903A88CA8394943594D08A8E42a31FAdF",
+      "address": "0x5597aFb3fe7cE42471DD3267A7bbdFC275851b9E",
       "abi": [
         {
           "inputs": [
@@ -17507,7 +17572,7 @@
       ]
     },
     "mocks/MockSynthetixIntegratee": {
-      "address": "0xe788ABaE44d9b464b17de604D8f2FDC8Ba230A0b",
+      "address": "0x93A5c5c7547832c8ebFcCAbc2157D43A9c5E68d4",
       "abi": [
         {
           "inputs": [
@@ -17613,6 +17678,19 @@
           ],
           "name": "Transfer",
           "type": "event"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address[]",
+              "name": "_minters",
+              "type": "address[]"
+            }
+          ],
+          "name": "addMinters",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
         },
         {
           "inputs": [
@@ -18190,7 +18268,7 @@
       ]
     },
     "mocks/MockSynthetixPriceSource": {
-      "address": "0xd4bC3E2997679A7e283BB2724F469E8b9a62bE2f",
+      "address": "0xd41020aA956D5C590b6A8E45fF271224AA1BaddE",
       "abi": [
         {
           "inputs": [
@@ -18373,7 +18451,7 @@
       ]
     },
     "mocks/MockSynthetixToken (sDEFI)": {
-      "address": "0xFc3CEE90CD5B237A85b3aEBd90467C30EE747fc9",
+      "address": "0xf1762903953e3729335bE6cF02b846501c9049a8",
       "abi": [
         {
           "inputs": [
@@ -18481,6 +18559,19 @@
             }
           ],
           "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address[]",
+              "name": "_minters",
+              "type": "address[]"
+            }
+          ],
+          "name": "addMinters",
+          "outputs": [],
+          "stateMutability": "nonpayable",
           "type": "function"
         },
         {
@@ -18904,7 +18995,7 @@
       ]
     },
     "mocks/MockSynthetixToken (sUSD)": {
-      "address": "0xA6CAa48833F8690F61004eEfb2f88a5a94020ae9",
+      "address": "0x190CECE40AEF39a2a15d8858CAFa691F01a909C5",
       "abi": [
         {
           "inputs": [
@@ -19012,6 +19103,19 @@
             }
           ],
           "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address[]",
+              "name": "_minters",
+              "type": "address[]"
+            }
+          ],
+          "name": "addMinters",
+          "outputs": [],
+          "stateMutability": "nonpayable",
           "type": "function"
         },
         {
@@ -19435,7 +19539,7 @@
       ]
     },
     "mocks/MockToken (BAT)": {
-      "address": "0xADe1236E7f116CDa461E30692020ff0478681dC7",
+      "address": "0x2E62eAaf0f490219BE8eD376326e0516228Bae89",
       "abi": [
         {
           "inputs": [
@@ -19489,6 +19593,25 @@
             {
               "indexed": true,
               "internalType": "address",
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
               "name": "from",
               "type": "address"
             },
@@ -19507,6 +19630,19 @@
           ],
           "name": "Transfer",
           "type": "event"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address[]",
+              "name": "_minters",
+              "type": "address[]"
+            }
+          ],
+          "name": "addMinters",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
         },
         {
           "inputs": [
@@ -19713,6 +19849,26 @@
         },
         {
           "inputs": [],
+          "name": "owner",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "renounceOwnership",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
           "name": "symbol",
           "outputs": [
             {
@@ -19787,13 +19943,26 @@
               "type": "bool"
             }
           ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "transferOwnership",
+          "outputs": [],
           "stateMutability": "nonpayable",
           "type": "function"
         }
       ]
     },
     "mocks/MockToken (BNB)": {
-      "address": "0x8f75f581948b4D305A774eCa3703aA2ecf99c3ee",
+      "address": "0x4674e9587925f9FB4d3A4Cc5591029596280E00C",
       "abi": [
         {
           "inputs": [
@@ -19847,6 +20016,25 @@
             {
               "indexed": true,
               "internalType": "address",
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
               "name": "from",
               "type": "address"
             },
@@ -19865,6 +20053,19 @@
           ],
           "name": "Transfer",
           "type": "event"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address[]",
+              "name": "_minters",
+              "type": "address[]"
+            }
+          ],
+          "name": "addMinters",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
         },
         {
           "inputs": [
@@ -20071,6 +20272,26 @@
         },
         {
           "inputs": [],
+          "name": "owner",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "renounceOwnership",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
           "name": "symbol",
           "outputs": [
             {
@@ -20145,13 +20366,26 @@
               "type": "bool"
             }
           ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "transferOwnership",
+          "outputs": [],
           "stateMutability": "nonpayable",
           "type": "function"
         }
       ]
     },
     "mocks/MockToken (BUSD)": {
-      "address": "0xf6b22e8bf959e6B965498C7C928331AAa40C96C6",
+      "address": "0x88dd7a403A3d48625c9CB511Ff47d1D6c25Eb121",
       "abi": [
         {
           "inputs": [
@@ -20205,6 +20439,25 @@
             {
               "indexed": true,
               "internalType": "address",
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
               "name": "from",
               "type": "address"
             },
@@ -20223,6 +20476,19 @@
           ],
           "name": "Transfer",
           "type": "event"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address[]",
+              "name": "_minters",
+              "type": "address[]"
+            }
+          ],
+          "name": "addMinters",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
         },
         {
           "inputs": [
@@ -20429,6 +20695,26 @@
         },
         {
           "inputs": [],
+          "name": "owner",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "renounceOwnership",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
           "name": "symbol",
           "outputs": [
             {
@@ -20503,13 +20789,26 @@
               "type": "bool"
             }
           ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "transferOwnership",
+          "outputs": [],
           "stateMutability": "nonpayable",
           "type": "function"
         }
       ]
     },
     "mocks/MockToken (BZRX)": {
-      "address": "0x6c04D0033c8E064AB7E47EA8822FCa5a4A4Bd3cD",
+      "address": "0x23cB26E7BC6868452097E351e42d2a39c861b6BB",
       "abi": [
         {
           "inputs": [
@@ -20563,6 +20862,25 @@
             {
               "indexed": true,
               "internalType": "address",
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
               "name": "from",
               "type": "address"
             },
@@ -20581,6 +20899,19 @@
           ],
           "name": "Transfer",
           "type": "event"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address[]",
+              "name": "_minters",
+              "type": "address[]"
+            }
+          ],
+          "name": "addMinters",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
         },
         {
           "inputs": [
@@ -20787,6 +21118,26 @@
         },
         {
           "inputs": [],
+          "name": "owner",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "renounceOwnership",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
           "name": "symbol",
           "outputs": [
             {
@@ -20861,13 +21212,26 @@
               "type": "bool"
             }
           ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "transferOwnership",
+          "outputs": [],
           "stateMutability": "nonpayable",
           "type": "function"
         }
       ]
     },
     "mocks/MockToken (DAI)": {
-      "address": "0x98c4d4075B98005A54B60C9eC718569f01756CD5",
+      "address": "0x0707de6EA02D4558fEA1E0a96cad9003f8C1D384",
       "abi": [
         {
           "inputs": [
@@ -20921,6 +21285,25 @@
             {
               "indexed": true,
               "internalType": "address",
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
               "name": "from",
               "type": "address"
             },
@@ -20939,6 +21322,19 @@
           ],
           "name": "Transfer",
           "type": "event"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address[]",
+              "name": "_minters",
+              "type": "address[]"
+            }
+          ],
+          "name": "addMinters",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
         },
         {
           "inputs": [
@@ -21145,6 +21541,26 @@
         },
         {
           "inputs": [],
+          "name": "owner",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "renounceOwnership",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
           "name": "symbol",
           "outputs": [
             {
@@ -21219,13 +21635,26 @@
               "type": "bool"
             }
           ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "transferOwnership",
+          "outputs": [],
           "stateMutability": "nonpayable",
           "type": "function"
         }
       ]
     },
     "mocks/MockToken (ENJ)": {
-      "address": "0xF6444520e962A07F310482Ef58A1A5C12eaEBAd5",
+      "address": "0x1DC1216b3D1803a0B5F7664B7756377f477614aB",
       "abi": [
         {
           "inputs": [
@@ -21279,6 +21708,25 @@
             {
               "indexed": true,
               "internalType": "address",
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
               "name": "from",
               "type": "address"
             },
@@ -21297,6 +21745,19 @@
           ],
           "name": "Transfer",
           "type": "event"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address[]",
+              "name": "_minters",
+              "type": "address[]"
+            }
+          ],
+          "name": "addMinters",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
         },
         {
           "inputs": [
@@ -21503,6 +21964,26 @@
         },
         {
           "inputs": [],
+          "name": "owner",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "renounceOwnership",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
           "name": "symbol",
           "outputs": [
             {
@@ -21577,13 +22058,26 @@
               "type": "bool"
             }
           ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "transferOwnership",
+          "outputs": [],
           "stateMutability": "nonpayable",
           "type": "function"
         }
       ]
     },
     "mocks/MockToken (KNC)": {
-      "address": "0x16efe483cc7e4d491Eaa68FcfCD6ad7DcdE95441",
+      "address": "0x902aAEfd695f2Af5CCfA6A027051261976131D69",
       "abi": [
         {
           "inputs": [
@@ -21637,6 +22131,25 @@
             {
               "indexed": true,
               "internalType": "address",
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
               "name": "from",
               "type": "address"
             },
@@ -21655,6 +22168,19 @@
           ],
           "name": "Transfer",
           "type": "event"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address[]",
+              "name": "_minters",
+              "type": "address[]"
+            }
+          ],
+          "name": "addMinters",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
         },
         {
           "inputs": [
@@ -21861,6 +22387,26 @@
         },
         {
           "inputs": [],
+          "name": "owner",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "renounceOwnership",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
           "name": "symbol",
           "outputs": [
             {
@@ -21935,13 +22481,26 @@
               "type": "bool"
             }
           ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "transferOwnership",
+          "outputs": [],
           "stateMutability": "nonpayable",
           "type": "function"
         }
       ]
     },
     "mocks/MockToken (LINK)": {
-      "address": "0x5720623dbaB4Ef6Ff53045E49eD600CDab55925f",
+      "address": "0xd7f19f0d395e8C7d5368d74a81b774e2b822df25",
       "abi": [
         {
           "inputs": [
@@ -21995,6 +22554,25 @@
             {
               "indexed": true,
               "internalType": "address",
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
               "name": "from",
               "type": "address"
             },
@@ -22013,6 +22591,19 @@
           ],
           "name": "Transfer",
           "type": "event"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address[]",
+              "name": "_minters",
+              "type": "address[]"
+            }
+          ],
+          "name": "addMinters",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
         },
         {
           "inputs": [
@@ -22219,6 +22810,26 @@
         },
         {
           "inputs": [],
+          "name": "owner",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "renounceOwnership",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
           "name": "symbol",
           "outputs": [
             {
@@ -22293,13 +22904,26 @@
               "type": "bool"
             }
           ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "transferOwnership",
+          "outputs": [],
           "stateMutability": "nonpayable",
           "type": "function"
         }
       ]
     },
     "mocks/MockToken (MANA)": {
-      "address": "0x575f5F915B21727C50e0BCC923E03A5d62B05973",
+      "address": "0x7C52405aDa0bFbCa32a81703862A03757fb702f7",
       "abi": [
         {
           "inputs": [
@@ -22353,6 +22977,25 @@
             {
               "indexed": true,
               "internalType": "address",
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
               "name": "from",
               "type": "address"
             },
@@ -22371,6 +23014,19 @@
           ],
           "name": "Transfer",
           "type": "event"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address[]",
+              "name": "_minters",
+              "type": "address[]"
+            }
+          ],
+          "name": "addMinters",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
         },
         {
           "inputs": [
@@ -22577,6 +23233,26 @@
         },
         {
           "inputs": [],
+          "name": "owner",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "renounceOwnership",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
           "name": "symbol",
           "outputs": [
             {
@@ -22651,13 +23327,26 @@
               "type": "bool"
             }
           ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "transferOwnership",
+          "outputs": [],
           "stateMutability": "nonpayable",
           "type": "function"
         }
       ]
     },
     "mocks/MockToken (MKR)": {
-      "address": "0x2682DDD56A5455d7B1AedA1468a697C96004B555",
+      "address": "0xdE016FEA21895e5ACA1112b95504f303500002b5",
       "abi": [
         {
           "inputs": [
@@ -22711,6 +23400,25 @@
             {
               "indexed": true,
               "internalType": "address",
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
               "name": "from",
               "type": "address"
             },
@@ -22729,6 +23437,19 @@
           ],
           "name": "Transfer",
           "type": "event"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address[]",
+              "name": "_minters",
+              "type": "address[]"
+            }
+          ],
+          "name": "addMinters",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
         },
         {
           "inputs": [
@@ -22935,6 +23656,26 @@
         },
         {
           "inputs": [],
+          "name": "owner",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "renounceOwnership",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
           "name": "symbol",
           "outputs": [
             {
@@ -23009,13 +23750,26 @@
               "type": "bool"
             }
           ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "transferOwnership",
+          "outputs": [],
           "stateMutability": "nonpayable",
           "type": "function"
         }
       ]
     },
     "mocks/MockToken (REN)": {
-      "address": "0x859bB55bb257168dC6dE3E4acd6A31ED0f510e1a",
+      "address": "0xD9436124f61685E63cD87370D1A9B32E79B75601",
       "abi": [
         {
           "inputs": [
@@ -23069,6 +23823,25 @@
             {
               "indexed": true,
               "internalType": "address",
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
               "name": "from",
               "type": "address"
             },
@@ -23087,6 +23860,19 @@
           ],
           "name": "Transfer",
           "type": "event"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address[]",
+              "name": "_minters",
+              "type": "address[]"
+            }
+          ],
+          "name": "addMinters",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
         },
         {
           "inputs": [
@@ -23293,6 +24079,26 @@
         },
         {
           "inputs": [],
+          "name": "owner",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "renounceOwnership",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
           "name": "symbol",
           "outputs": [
             {
@@ -23367,13 +24173,26 @@
               "type": "bool"
             }
           ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "transferOwnership",
+          "outputs": [],
           "stateMutability": "nonpayable",
           "type": "function"
         }
       ]
     },
     "mocks/MockToken (REP)": {
-      "address": "0x2CB82e6276A584908C217386b1F8493E7dA56A3d",
+      "address": "0x56A7C6766b5E7a9e6BC704F7Becc001F2755a713",
       "abi": [
         {
           "inputs": [
@@ -23427,6 +24246,25 @@
             {
               "indexed": true,
               "internalType": "address",
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
               "name": "from",
               "type": "address"
             },
@@ -23445,6 +24283,19 @@
           ],
           "name": "Transfer",
           "type": "event"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address[]",
+              "name": "_minters",
+              "type": "address[]"
+            }
+          ],
+          "name": "addMinters",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
         },
         {
           "inputs": [
@@ -23651,6 +24502,26 @@
         },
         {
           "inputs": [],
+          "name": "owner",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "renounceOwnership",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
           "name": "symbol",
           "outputs": [
             {
@@ -23725,13 +24596,26 @@
               "type": "bool"
             }
           ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "transferOwnership",
+          "outputs": [],
           "stateMutability": "nonpayable",
           "type": "function"
         }
       ]
     },
     "mocks/MockToken (SNX)": {
-      "address": "0x5FB30e174fe36E013571281705DE93415236bEBe",
+      "address": "0x4c22D46c07AB880f94e8213e0256727AF471A9F4",
       "abi": [
         {
           "inputs": [
@@ -23785,6 +24669,25 @@
             {
               "indexed": true,
               "internalType": "address",
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
               "name": "from",
               "type": "address"
             },
@@ -23803,6 +24706,19 @@
           ],
           "name": "Transfer",
           "type": "event"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address[]",
+              "name": "_minters",
+              "type": "address[]"
+            }
+          ],
+          "name": "addMinters",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
         },
         {
           "inputs": [
@@ -24009,6 +24925,26 @@
         },
         {
           "inputs": [],
+          "name": "owner",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "renounceOwnership",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
           "name": "symbol",
           "outputs": [
             {
@@ -24083,13 +25019,26 @@
               "type": "bool"
             }
           ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "transferOwnership",
+          "outputs": [],
           "stateMutability": "nonpayable",
           "type": "function"
         }
       ]
     },
     "mocks/MockToken (UNI)": {
-      "address": "0xCc1f26334BBa1Cc9dd51389cae0c486BE8b644bE",
+      "address": "0x86684577af5598b229a27c5774b658D303e2e044",
       "abi": [
         {
           "inputs": [
@@ -24143,6 +25092,25 @@
             {
               "indexed": true,
               "internalType": "address",
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
               "name": "from",
               "type": "address"
             },
@@ -24161,6 +25129,19 @@
           ],
           "name": "Transfer",
           "type": "event"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address[]",
+              "name": "_minters",
+              "type": "address[]"
+            }
+          ],
+          "name": "addMinters",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
         },
         {
           "inputs": [
@@ -24367,6 +25348,26 @@
         },
         {
           "inputs": [],
+          "name": "owner",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "renounceOwnership",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
           "name": "symbol",
           "outputs": [
             {
@@ -24441,13 +25442,26 @@
               "type": "bool"
             }
           ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "transferOwnership",
+          "outputs": [],
           "stateMutability": "nonpayable",
           "type": "function"
         }
       ]
     },
     "mocks/MockToken (USDC)": {
-      "address": "0xE02f4C6574cb1D85dDa4542B55745346E65fF3f6",
+      "address": "0xFaC5cbeFa43A877C675E8007A685e0d72eE1f109",
       "abi": [
         {
           "inputs": [
@@ -24501,6 +25515,25 @@
             {
               "indexed": true,
               "internalType": "address",
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
               "name": "from",
               "type": "address"
             },
@@ -24519,6 +25552,19 @@
           ],
           "name": "Transfer",
           "type": "event"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address[]",
+              "name": "_minters",
+              "type": "address[]"
+            }
+          ],
+          "name": "addMinters",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
         },
         {
           "inputs": [
@@ -24725,6 +25771,26 @@
         },
         {
           "inputs": [],
+          "name": "owner",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "renounceOwnership",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
           "name": "symbol",
           "outputs": [
             {
@@ -24799,13 +25865,26 @@
               "type": "bool"
             }
           ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "transferOwnership",
+          "outputs": [],
           "stateMutability": "nonpayable",
           "type": "function"
         }
       ]
     },
     "mocks/MockToken (USDT)": {
-      "address": "0x73483CFD82dEEC8A051Bf57F441A9254c4D577Bd",
+      "address": "0x50e7615a526F715556c478749303C75571F1e6B5",
       "abi": [
         {
           "inputs": [
@@ -24859,6 +25938,25 @@
             {
               "indexed": true,
               "internalType": "address",
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
               "name": "from",
               "type": "address"
             },
@@ -24877,6 +25975,19 @@
           ],
           "name": "Transfer",
           "type": "event"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address[]",
+              "name": "_minters",
+              "type": "address[]"
+            }
+          ],
+          "name": "addMinters",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
         },
         {
           "inputs": [
@@ -25083,6 +26194,26 @@
         },
         {
           "inputs": [],
+          "name": "owner",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "renounceOwnership",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
           "name": "symbol",
           "outputs": [
             {
@@ -25157,13 +26288,26 @@
               "type": "bool"
             }
           ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "transferOwnership",
+          "outputs": [],
           "stateMutability": "nonpayable",
           "type": "function"
         }
       ]
     },
     "mocks/MockToken (WBTC)": {
-      "address": "0x9390717539c21A97Ca33193fF7B45bC6F62aBdC0",
+      "address": "0x08adEDfB5F473a7dffD05DA2c0f33651553668a9",
       "abi": [
         {
           "inputs": [
@@ -25217,6 +26361,25 @@
             {
               "indexed": true,
               "internalType": "address",
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
               "name": "from",
               "type": "address"
             },
@@ -25235,6 +26398,19 @@
           ],
           "name": "Transfer",
           "type": "event"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address[]",
+              "name": "_minters",
+              "type": "address[]"
+            }
+          ],
+          "name": "addMinters",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
         },
         {
           "inputs": [
@@ -25441,6 +26617,26 @@
         },
         {
           "inputs": [],
+          "name": "owner",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "renounceOwnership",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
           "name": "symbol",
           "outputs": [
             {
@@ -25515,13 +26711,26 @@
               "type": "bool"
             }
           ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "transferOwnership",
+          "outputs": [],
           "stateMutability": "nonpayable",
           "type": "function"
         }
       ]
     },
     "mocks/MockToken (YFI)": {
-      "address": "0x6064fe1F16D0FFa4Bcf79fB62c12294417284dD5",
+      "address": "0x3a854556f28F77dCC803538032cA64FDf42A0783",
       "abi": [
         {
           "inputs": [
@@ -25575,6 +26784,25 @@
             {
               "indexed": true,
               "internalType": "address",
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
               "name": "from",
               "type": "address"
             },
@@ -25593,6 +26821,19 @@
           ],
           "name": "Transfer",
           "type": "event"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address[]",
+              "name": "_minters",
+              "type": "address[]"
+            }
+          ],
+          "name": "addMinters",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
         },
         {
           "inputs": [
@@ -25799,6 +27040,26 @@
         },
         {
           "inputs": [],
+          "name": "owner",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "renounceOwnership",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
           "name": "symbol",
           "outputs": [
             {
@@ -25873,13 +27134,26 @@
               "type": "bool"
             }
           ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "transferOwnership",
+          "outputs": [],
           "stateMutability": "nonpayable",
           "type": "function"
         }
       ]
     },
     "mocks/MockToken (ZRX)": {
-      "address": "0xC21c60f68C45DCB8Ce50B0DB1edc111cCBb24203",
+      "address": "0x8955cD6B7826A86E820f0774278d89B76DB25C46",
       "abi": [
         {
           "inputs": [
@@ -25933,6 +27207,25 @@
             {
               "indexed": true,
               "internalType": "address",
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
               "name": "from",
               "type": "address"
             },
@@ -25951,6 +27244,19 @@
           ],
           "name": "Transfer",
           "type": "event"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address[]",
+              "name": "_minters",
+              "type": "address[]"
+            }
+          ],
+          "name": "addMinters",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
         },
         {
           "inputs": [
@@ -26157,6 +27463,26 @@
         },
         {
           "inputs": [],
+          "name": "owner",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "renounceOwnership",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
           "name": "symbol",
           "outputs": [
             {
@@ -26231,13 +27557,26 @@
               "type": "bool"
             }
           ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "transferOwnership",
+          "outputs": [],
           "stateMutability": "nonpayable",
           "type": "function"
         }
       ]
     },
     "mocks/MockToken (wDGLD)": {
-      "address": "0x649c9Ff20341b0D66B90D364230DCcab9E54a9Cd",
+      "address": "0x23993cA98c63F1f8de457C271f8ceFD9076A42f4",
       "abi": [
         {
           "inputs": [
@@ -26291,6 +27630,25 @@
             {
               "indexed": true,
               "internalType": "address",
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
               "name": "from",
               "type": "address"
             },
@@ -26309,6 +27667,19 @@
           ],
           "name": "Transfer",
           "type": "event"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address[]",
+              "name": "_minters",
+              "type": "address[]"
+            }
+          ],
+          "name": "addMinters",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
         },
         {
           "inputs": [
@@ -26515,6 +27886,26 @@
         },
         {
           "inputs": [],
+          "name": "owner",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "renounceOwnership",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
           "name": "symbol",
           "outputs": [
             {
@@ -26591,11 +27982,24 @@
           ],
           "stateMutability": "nonpayable",
           "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "transferOwnership",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
         }
       ]
     },
     "mocks/MockUniswapV2Integratee": {
-      "address": "0x976c2512558426234C285eAcE7245bf722cbF178",
+      "address": "0x0022B151B637722757852Ef64c57c982277203fF",
       "abi": [
         {
           "inputs": [
@@ -26993,7 +28397,7 @@
       ]
     },
     "mocks/MockZeroExV2Integratee": {
-      "address": "0x97E55Ff9F97c5d7693a9871b225a4CFE51E3079C",
+      "address": "0x6Ffa4088e56986E25e65d73657C23D3A869EE570",
       "abi": [
         {
           "inputs": [
