@@ -1,10 +1,10 @@
 # Enzyme Subgraph
 
-> The official subgraph (thegraph.com) for Enzyme Finance.
+The official subgraph (thegraph.com) for Enzyme Finance.
 
 ## Development
 
-Before you can start developing, you'll need to have [Node.js][node], [Yarn][yarn] and [Docker][docker], installed.
+Before you can start developing, you'll need to have [Node.js][node] and [Yarn][yarn] installed.
 
 Installing only takes two commands and you're ready to roll:
 
@@ -16,19 +16,7 @@ yarn install
 yarn codegen
 ```
 
-In order to deploy the subgraph locally, you need to start the dockerized development dependencies (ganache, graph-node, ipfs).
-
-```bash
-docker-compose up -d
-```
-
 You are now ready to start development. Documentation is available [here](https://thegraph.com/docs). There are also several helpful scripts in package.json for testing, and deploying the subgraph locally.
-
-In order to deploy the subgraph locally, all you need to do is.
-
-```bash
-yarn make && yarn deploy
-```
 
 ## Contributing
 
@@ -38,5 +26,4 @@ Please note that all repositories hosted under this organization follow our [Cod
 
 [yarn]: https://yarnpkg.com
 [node]: https://nodejs.org
-[docker]: https://www.docker.com/
 [coc]: https://github.com/enzymefinance/enzymejs/blob/master/CODE_OF_CONDUCT.md
