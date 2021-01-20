@@ -1,79 +1,11 @@
 import fs from 'fs';
 import moment from 'moment';
 import glob from 'glob';
-import request, { gql } from 'graphql-request';
 import handlebars from 'handlebars';
 import path from 'path';
 import yargs from 'yargs';
 import kovan from './deployments/kovan.json';
 import mainnet from './deployments/mainnet.json';
-
-const query = gql`
-  {
-    deployment {
-      # Core
-      dispatcher
-      fundDeployer
-      vaultLib
-      comptrollerLib
-      valueInterpreter
-      integrationManager
-      policyManager
-      feeManager
-
-      # Prices
-      aggregatedDerivativePriceFeed
-      chainlinkPriceFeed
-
-      # Peripheral
-      fundActionsWrapper
-
-      # Fees
-      managementFee
-      performanceFee
-      entranceRateBurnFee
-      entranceRateDirectFee
-
-      # Policies
-      adapterBlacklist
-      adapterWhitelist
-      assetBlacklist
-      assetWhitelist
-      investorWhitelist
-      guaranteedRedemption
-      maxConcentration
-      minMaxInvestment
-      buySharesCallerWhitelist
-
-      # Adapters
-      trackedAssetsAdapter
-      compoundAdapter
-      chaiAdapter
-      kyberAdapter
-      uniswapV2Adapter
-      paraSwapAdapter
-      zeroExV2Adapter
-      synthetixAdapter
-
-      # External
-      wethToken
-      chaiIntegratee
-      kyberIntegratee
-      uniswapV2Integratee
-      synthetixIntegratee
-      synthetixAddressResolver
-      synthetixDelegateApprovals
-
-      # Currencies
-      audChainlinkAggregator
-      btcChainlinkAggregator
-      chfChainlinkAggregator
-      eurChainlinkAggregator
-      gbpChainlinkAggregator
-      jpyChainlinkAggregator
-    }
-  }
-`;
 
 interface Deployment {
   // Core
@@ -144,11 +76,6 @@ interface DeploymentWithMetadata extends Deployment {
 }
 
 async function fetchDeployment(source: string): Promise<DeploymentWithMetadata> {
-  if (source.startsWith('http://') || source.startsWith('https://')) {
-    const deployment = (await request<{ deployment: Deployment }>(source, query)).deployment;
-    return { ...deployment, networkName: 'mainnet', startBlock: 0 };
-  }
-
   if (source === 'kovan') {
     return {
       networkName: 'kovan',
@@ -316,11 +243,11 @@ yargs
   })
   .command(
     'template',
-    'Create the subgraph manifest from the template.',
+    'Generate files from templates using the deployment addresses.',
     (yargs) => {
       return yargs.option('deployment', {
         type: 'string',
-        default: 'https://evm.testnet.enzyme.finance/graphql',
+        default: 'mainnet',
       });
     },
     async (args) => {
