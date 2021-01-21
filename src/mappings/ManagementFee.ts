@@ -1,5 +1,4 @@
 import { ensureAccount } from '../entities/Account';
-import { ensureContract } from '../entities/Contract';
 import { useFee } from '../entities/Fee';
 import { trackFeeState } from '../entities/FeeState';
 import { useFund } from '../entities/Fund';
@@ -22,7 +21,6 @@ export function handleFundSettingsAdded(event: FundSettingsAdded): void {
   let feeSettings = new ManagementFeeSettingsAddedEvent(genericId(event));
   feeSettings.fund = vault.toHex(); // fund does not exist yet
   feeSettings.account = ensureAccount(event.transaction.from, event).id;
-  feeSettings.contract = ensureContract(event.address, 'ManagementFee').id;
   feeSettings.timestamp = event.block.timestamp;
   feeSettings.transaction = ensureTransaction(event).id;
   feeSettings.comptrollerProxy = event.params.comptrollerProxy.toHex();
@@ -45,7 +43,6 @@ export function handleSettled(event: Settled): void {
   let settled = new ManagementFeeSettledEvent(genericId(event));
   settled.fund = fund.id;
   settled.account = ensureAccount(event.transaction.from, event).id;
-  settled.contract = event.address.toHex();
   settled.timestamp = event.block.timestamp;
   settled.transaction = ensureTransaction(event).id;
   settled.comptrollerProxy = event.params.comptrollerProxy.toHex();

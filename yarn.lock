@@ -38,10 +38,10 @@
     "@truffle/contract" "^4.2.29"
     ethers "^4.0.45"
 
-"@enzymefinance/protocol@^1.0.0-dev.5045+c6f07054":
-  version "1.0.0-dev.5045"
-  resolved "https://npm-proxy.fury.io/melonproject/~/up/ver_5V22R/%40enzymefinance%2Fprotocol-1.0.0-dev.5045.tgz#8ab0633087a09f072e95f6e2fcd319fbdda7f8b4"
-  integrity sha1-irBjMIegnwculfbi/NMZ+92n+LQ=
+"@enzymefinance/protocol@^1.0.0-dev.5046+8993c26a":
+  version "1.0.0-dev.5046"
+  resolved "https://npm-proxy.fury.io/melonproject/~/up/ver_1l1hAG/%40enzymefinance%2Fprotocol-1.0.0-dev.5046.tgz#2663e35242beacc585bd2be552d0d0d778e4daf5"
+  integrity sha1-JmPjUkK+rMWFvSvlUtDQ13jk2vU=
   dependencies:
     "@babel/runtime" "^7.12.5"
     decimal.js "^10.2.1"
@@ -435,7 +435,7 @@
   resolved "https://registry.yarnpkg.com/@types/minimatch/-/minimatch-3.0.3.tgz#3dca0e3f33b200fc7d1139c0cd96c1268cadfd9d"
   integrity sha512-tHq6qdbT9U1IRSGf14CL0pUlULksvY9OZ+5eEgl1N7t+OA3tGvNpxJCzuKQlsNgCVwbAs670L1vcVQi8j9HjnA==
 
-"@types/node@*", "@types/node@^14.14.20":
+"@types/node@*":
   version "14.14.20"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.20.tgz#f7974863edd21d1f8a494a73e8e2b3658615c340"
   integrity sha512-Y93R97Ouif9JEOWPIUyU+eyIdyRqQR0I8Ez1dzku4hDx34NWh4HbtIc3WNzwB1Y9ULvNGeu5B8h8bVL5cAk4/A==
@@ -449,6 +449,11 @@
   version "12.19.12"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.19.12.tgz#04793c2afa4ce833a9972e4c476432e30f9df47b"
   integrity sha512-UwfL2uIU9arX/+/PRcIkT08/iBadGN2z6ExOROA2Dh5mAuWTBj6iJbQX4nekiV5H8cTrEG569LeX+HRco9Cbxw==
+
+"@types/node@^14.14.22":
+  version "14.14.22"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.22.tgz#0d29f382472c4ccf3bd96ff0ce47daf5b7b84b18"
+  integrity sha512-g+f/qj/cNcqKkc3tFqlXOYjrmZA+jNBiDzbP3kH+B+otKFqAdPgVTGP1IeKRdMml/aE69as5S4FqtxAbl+LaMw==
 
 "@types/parse-json@^4.0.0":
   version "4.0.0"
@@ -665,10 +670,10 @@ asn1@~0.2.3:
   dependencies:
     safer-buffer "~2.1.0"
 
-assemblyscript@^0.17.13:
-  version "0.17.13"
-  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.17.13.tgz#2006601985beca63018a5f76933066de060ddda5"
-  integrity sha512-ok34czSbqkmoooaYA7j6S29QEBCgDu6DIQMN3A4AP9K8PjOilRPPxLkHYvbtyvrFr9bmscrlwPJDKF9LgcwXRw==
+assemblyscript@^0.17.14:
+  version "0.17.14"
+  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.17.14.tgz#9ea4a04a50dc53042b35d492fff947101ae00248"
+  integrity sha512-TLuwNvZAIH26wu2puKpAJokzLp10kJkVXxbgDjFFmbW9VF/qg7rkmi0hjsiu41bjoH1UaVgY4vYvbbUeOHtKyg==
   dependencies:
     binaryen "98.0.0-nightly.20201109"
     long "^4.0.0"

@@ -1,7 +1,6 @@
 import { DataSourceContext } from '@graphprotocol/graph-ts';
 import { ensureAccount, ensureManager } from '../entities/Account';
 import { useAsset } from '../entities/Asset';
-import { ensureContract } from '../entities/Contract';
 import { createFund } from '../entities/Fund';
 import { ensureNetwork } from '../entities/Network';
 import { ensureTransaction } from '../entities/Transaction';
@@ -32,7 +31,6 @@ export function handleNewFundCreated(event: NewFundCreated): void {
   fundCreation.timestamp = event.block.timestamp;
   fundCreation.fund = event.params.vaultProxy.toHex();
   fundCreation.account = manager.id;
-  fundCreation.contract = ensureContract(event.address, 'FundDeployer').id;
   fundCreation.comptrollerProxy = event.params.comptrollerProxy.toHex();
   fundCreation.vaultProxy = event.params.vaultProxy.toHex();
   fundCreation.fundOwner = manager.id;
@@ -57,7 +55,6 @@ export function handleNewFundCreated(event: NewFundCreated): void {
 export function handleComptrollerLibSet(event: ComptrollerLibSet): void {
   let comptrollerLib = new ComptrollerLibSetEvent(genericId(event));
   comptrollerLib.timestamp = event.block.timestamp;
-  comptrollerLib.contract = ensureContract(event.address, 'FundDeployer').id;
   comptrollerLib.comptrollerLib = event.params.comptrollerLib.toHex();
   comptrollerLib.transaction = ensureTransaction(event).id;
   comptrollerLib.save();
@@ -71,7 +68,6 @@ export function handleComptrollerProxyDeployed(event: ComptrollerProxyDeployed):
   comptrollerProxyDeployment.timestamp = event.block.timestamp;
   comptrollerProxyDeployment.fund = vaultProxy.toHex();
   comptrollerProxyDeployment.account = ensureAccount(event.transaction.from, event).id;
-  comptrollerProxyDeployment.contract = ensureContract(event.address, 'FundDeployer').id;
   comptrollerProxyDeployment.comptrollerProxy = event.params.comptrollerProxy.toHex();
   comptrollerProxyDeployment.transaction = ensureTransaction(event).id;
   comptrollerProxyDeployment.denominationAsset = useAsset(event.params.denominationAsset.toHex()).id;
@@ -85,7 +81,6 @@ export function handleComptrollerProxyDeployed(event: ComptrollerProxyDeployed):
 export function handleReleaseStatusSet(event: ReleaseStatusSet): void {
   let statusSet = new ReleaseStatusSetEvent(genericId(event));
   statusSet.timestamp = event.block.timestamp;
-  statusSet.contract = ensureContract(event.address, 'FundDeployer').id;
   statusSet.transaction = ensureTransaction(event).id;
   statusSet.prevStatus = event.params.prevStatus;
   statusSet.nextStatus = event.params.nextStatus;
@@ -97,7 +92,6 @@ export function handleReleaseStatusSet(event: ReleaseStatusSet): void {
 export function handleVaultCallDeregistered(event: VaultCallDeregistered): void {
   let deregistered = new VaultCallDeregisteredEvent(genericId(event));
   deregistered.timestamp = event.block.timestamp;
-  deregistered.contract = ensureContract(event.address, 'FundDeployer').id;
   deregistered.transaction = ensureTransaction(event).id;
   deregistered.contractAddress = event.params.contractAddress.toHex();
   deregistered.selector = event.params.selector.toHexString();
@@ -110,7 +104,6 @@ export function handleVaultCallRegistered(event: VaultCallRegistered): void {
 
   let registered = new VaultCallRegisteredEvent(genericId(event));
   registered.timestamp = event.block.timestamp;
-  registered.contract = ensureContract(event.address, 'FundDeployer').id;
   registered.transaction = ensureTransaction(event).id;
   registered.contractAddress = event.params.contractAddress.toHex();
   registered.selector = event.params.selector.toHexString();

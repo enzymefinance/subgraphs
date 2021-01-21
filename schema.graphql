@@ -4,14 +4,12 @@
 
 interface EventInterface {
   id: ID!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
 }
 
 interface NetworkEventInterface {
   id: ID!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
 }
@@ -20,7 +18,6 @@ interface FundEventInterface {
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
 }
@@ -188,9 +185,8 @@ type NewFundCreatedEvent implements EventInterface & FundEventInterface @entity 
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
-  comptrollerProxy: Contract!
+  comptrollerProxy: String!
   vaultProxy: Fund!
   creator: Account!
   fundOwner: Account!
@@ -206,9 +202,8 @@ type ComptrollerProxyDeployedEvent implements EventInterface & FundEventInterfac
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
-  comptrollerProxy: Contract!
+  comptrollerProxy: String!
   transaction: Transaction!
   denominationAsset: Asset!
   sharesActionTimelock: BigInt!
@@ -221,7 +216,6 @@ type VaultProxySetEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
   vaultProxy: String!
@@ -234,7 +228,6 @@ type SharesBoughtEvent implements EventInterface & FundEventInterface & SharesCh
   type: ShareChangeType!
   account: Account!
   investor: Account!
-  contract: Contract!
   investmentState: InvestmentState!
   shares: BigDecimal!
   asset: Asset!
@@ -253,7 +246,6 @@ type SharesRedeemedEvent implements EventInterface & FundEventInterface & Shares
   type: ShareChangeType!
   account: Account!
   investor: Account!
-  contract: Contract!
   investmentState: InvestmentState!
   shares: BigDecimal!
   payoutAssetAmounts: [AssetAmount!]!
@@ -263,24 +255,11 @@ type SharesRedeemedEvent implements EventInterface & FundEventInterface & Shares
   calculations: CalculationState!
 }
 
-type AmguPaidEvent implements EventInterface & FundEventInterface @entity {
-  id: ID!
-  fund: Fund!
-  account: Account!
-  contract: Contract!
-  timestamp: BigInt!
-  payer: Account!
-  amount: BigDecimal!
-  gas: Int!
-  transaction: Transaction!
-}
-
 type AssetWithdrawnEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   asset: Asset!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
   target: String!
@@ -291,7 +270,6 @@ type TrackedAssetAddedEvent implements EventInterface & FundEventInterface @enti
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   asset: Asset!
   timestamp: BigInt!
   transaction: Transaction!
@@ -301,7 +279,6 @@ type TrackedAssetRemovedEvent implements EventInterface & FundEventInterface @en
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   asset: Asset!
   timestamp: BigInt!
   transaction: Transaction!
@@ -311,7 +288,6 @@ type AuthUserAddedForFundEvent implements EventInterface & FundEventInterface @e
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
 }
@@ -320,7 +296,6 @@ type AuthUserRemovedForFundEvent implements EventInterface & FundEventInterface 
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
 }
@@ -329,7 +304,6 @@ type CallOnIntegrationExecutedForFundEvent implements EventInterface & FundEvent
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   adapter: IntegrationAdapter!
   selector: String!
   integrationData: String!
@@ -343,7 +317,6 @@ type MigrationSignaledEvent implements EventInterface & FundEventInterface @enti
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
   migration: Migration!
@@ -353,7 +326,6 @@ type MigrationCancelledEvent implements EventInterface & FundEventInterface @ent
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
   migration: Migration!
@@ -364,7 +336,6 @@ type MigrationExecutedEvent implements EventInterface & FundEventInterface @enti
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
   migration: Migration!
@@ -375,7 +346,6 @@ type MigrationInCancelHookFailedEvent implements EventInterface & FundEventInter
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
   vaultProxy: String!
@@ -390,7 +360,6 @@ type MigrationOutHookFailedEvent implements EventInterface & FundEventInterface 
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
   vaultProxy: String!
@@ -403,24 +372,22 @@ type MigrationOutHookFailedEvent implements EventInterface & FundEventInterface 
 
 type FeeEnabledForFundEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
-  contract: Contract!
   fund: Fund!
   account: Account!
   timestamp: BigInt!
   transaction: Transaction!
   fee: Fee!
-  comptrollerProxy: Contract!
+  comptrollerProxy: String!
   settingsData: Bytes!
 }
 
 type FeesRecipientSetForFundEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
-  contract: Contract!
   fund: Fund!
   account: Account!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: Contract!
+  comptrollerProxy: String!
   prevFeesRecipient: String!
   nextFeesRecipient: String!
 }
@@ -428,7 +395,6 @@ type FeesRecipientSetForFundEvent implements EventInterface & FundEventInterface
 type FeeSettledForFundEvent implements EventInterface & FundEventInterface & SharesChangeInterface & FeeSharesChangeInterface
   @entity {
   id: ID!
-  contract: Contract!
   fund: Fund!
   type: ShareChangeType!
   account: Account!
@@ -437,7 +403,7 @@ type FeeSettledForFundEvent implements EventInterface & FundEventInterface & Sha
   transaction: Transaction!
   investmentState: InvestmentState!
   shares: BigDecimal!
-  comptrollerProxy: Contract!
+  comptrollerProxy: String!
   fee: Fee!
   payer: String!
   payee: String!
@@ -450,7 +416,6 @@ type FeeSettledForFundEvent implements EventInterface & FundEventInterface & Sha
 type AllSharesOutstandingForcePaidForFundEvent implements EventInterface & FundEventInterface & SharesChangeInterface & FeeSharesChangeInterface
   @entity {
   id: ID!
-  contract: Contract!
   fund: Fund!
   type: ShareChangeType!
   account: Account!
@@ -459,7 +424,7 @@ type AllSharesOutstandingForcePaidForFundEvent implements EventInterface & FundE
   transaction: Transaction!
   investmentState: InvestmentState!
   shares: BigDecimal!
-  comptrollerProxy: Contract!
+  comptrollerProxy: String!
   payee: String!
   sharesDue: BigDecimal!
   calculations: CalculationState!
@@ -469,7 +434,6 @@ type AllSharesOutstandingForcePaidForFundEvent implements EventInterface & FundE
 type SharesOutstandingPaidForFundEvent implements EventInterface & FundEventInterface & SharesChangeInterface & FeeSharesChangeInterface
   @entity {
   id: ID!
-  contract: Contract!
   fund: Fund!
   type: ShareChangeType!
   account: Account!
@@ -478,7 +442,7 @@ type SharesOutstandingPaidForFundEvent implements EventInterface & FundEventInte
   transaction: Transaction!
   investmentState: InvestmentState!
   shares: BigDecimal!
-  comptrollerProxy: Contract!
+  comptrollerProxy: String!
   fee: Fee!
   sharesDue: BigDecimal!
   calculations: CalculationState!
@@ -487,7 +451,6 @@ type SharesOutstandingPaidForFundEvent implements EventInterface & FundEventInte
 
 type PolicyEnabledForFundEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
-  contract: Contract!
   fund: Fund!
   account: Account!
   policy: Policy!
@@ -498,7 +461,6 @@ type PolicyEnabledForFundEvent implements EventInterface & FundEventInterface @e
 
 type PolicyDisabledForFundEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
-  contract: Contract!
   fund: Fund!
   account: Account!
   policy: Policy!
@@ -508,11 +470,10 @@ type PolicyDisabledForFundEvent implements EventInterface & FundEventInterface @
 
 type AccessorSetEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
-  contract: Contract!
   fund: Fund!
   account: Account!
-  prevAccessor: Contract
-  nextAccessor: Contract!
+  prevAccessor: String
+  nextAccessor: String!
   transaction: Transaction!
   timestamp: BigInt!
 }
@@ -521,7 +482,6 @@ type OwnerSetEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
   prevOwner: Account
@@ -532,7 +492,6 @@ type MigratorSetEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
   prevMigrator: Account
@@ -543,18 +502,16 @@ type VaultLibSetEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  prevVaultLib: Contract
-  nextVaultLib: Contract!
+  prevVaultLib: String
+  nextVaultLib: String!
 }
 
 type ApprovalEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
   owner: String!
@@ -566,7 +523,6 @@ type TransferEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
   from: String!
@@ -578,10 +534,9 @@ type AdapterBlacklistAddressesAddedEvent implements EventInterface & FundEventIn
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: Contract!
+  comptrollerProxy: String!
   items: [IntegrationAdapter!]!
 }
 
@@ -589,10 +544,9 @@ type AdapterBlacklistAddressesRemovedEvent implements EventInterface & FundEvent
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: Contract!
+  comptrollerProxy: String!
   items: [IntegrationAdapter!]!
 }
 
@@ -600,10 +554,9 @@ type AdapterWhitelistAddressesAddedEvent implements EventInterface & FundEventIn
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: Contract!
+  comptrollerProxy: String!
   items: [IntegrationAdapter!]!
 }
 
@@ -611,10 +564,9 @@ type AdapterWhitelistAddressesRemovedEvent implements EventInterface & FundEvent
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: Contract!
+  comptrollerProxy: String!
   items: [IntegrationAdapter!]!
 }
 
@@ -622,10 +574,9 @@ type AssetBlacklistAddressesAddedEvent implements EventInterface & FundEventInte
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: Contract!
+  comptrollerProxy: String!
   items: [Asset!]!
 }
 
@@ -633,10 +584,9 @@ type AssetBlacklistAddressesRemovedEvent implements EventInterface & FundEventIn
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: Contract!
+  comptrollerProxy: String!
   items: [Asset!]!
 }
 
@@ -644,10 +594,9 @@ type AssetWhitelistAddressesAddedEvent implements EventInterface & FundEventInte
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: Contract!
+  comptrollerProxy: String!
   items: [Asset!]!
 }
 
@@ -655,10 +604,9 @@ type AssetWhitelistAddressesRemovedEvent implements EventInterface & FundEventIn
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: Contract!
+  comptrollerProxy: String!
   items: [Asset!]!
 }
 
@@ -666,10 +614,9 @@ type BuySharesCallerWhitelistAddressesAddedEvent implements EventInterface & Fun
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: Contract!
+  comptrollerProxy: String!
   items: [String!]!
 }
 
@@ -677,10 +624,9 @@ type BuySharesCallerWhitelistAddressesRemovedEvent implements EventInterface & F
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: Contract!
+  comptrollerProxy: String!
   items: [String!]!
 }
 
@@ -688,10 +634,9 @@ type GuaranteedRedemptionFundSettingsSetEvent implements EventInterface & FundEv
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: Contract!
+  comptrollerProxy: String!
   startTimestamp: BigInt!
   duration: BigInt!
 }
@@ -700,10 +645,9 @@ type InvestorWhitelistAddressesAddedEvent implements EventInterface & FundEventI
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: Contract!
+  comptrollerProxy: String!
   items: [Account!]!
 }
 
@@ -711,10 +655,9 @@ type InvestorWhitelistAddressesRemovedEvent implements EventInterface & FundEven
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: Contract!
+  comptrollerProxy: String!
   items: [Account!]!
 }
 
@@ -722,10 +665,9 @@ type MaxConcentrationSetEvent implements EventInterface & FundEventInterface @en
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: Contract!
+  comptrollerProxy: String!
   value: BigDecimal!
 }
 
@@ -733,10 +675,9 @@ type MinMaxInvestmentFundSettingsSetEvent implements EventInterface & FundEventI
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: Contract!
+  comptrollerProxy: String!
   minInvestmentAmount: BigDecimal!
   maxInvestmentAmount: BigDecimal!
 }
@@ -745,10 +686,9 @@ type ManagementFeeSettingsAddedEvent implements EventInterface & FundEventInterf
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: Contract!
+  comptrollerProxy: String!
   scaledPerSecondRate: BigInt!
 }
 
@@ -756,10 +696,9 @@ type ManagementFeeSettledEvent implements EventInterface & FundEventInterface @e
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: Contract!
+  comptrollerProxy: String!
   sharesDue: BigDecimal!
   secondsSinceSettlement: BigInt!
 }
@@ -768,10 +707,9 @@ type PerformanceFeeSettingsAddedEvent implements EventInterface & FundEventInter
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: Contract!
+  comptrollerProxy: String!
   rate: BigDecimal!
   period: BigInt!
 }
@@ -780,10 +718,9 @@ type PerformanceFeeActivatedForFundEvent implements EventInterface & FundEventIn
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: Contract!
+  comptrollerProxy: String!
   highWaterMark: BigDecimal!
 }
 
@@ -791,10 +728,9 @@ type PerformanceFeeSharePriceUpdatedEvent implements EventInterface & FundEventI
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: Contract!
+  comptrollerProxy: String!
   prevSharePrice: BigDecimal!
   nextSharePrice: BigDecimal!
 }
@@ -803,10 +739,9 @@ type PerformanceFeePaidOutEvent implements EventInterface & FundEventInterface @
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: Contract!
+  comptrollerProxy: String!
   prevHighWaterMark: BigDecimal!
   nextHighWaterMark: BigDecimal!
 }
@@ -815,10 +750,9 @@ type PerformanceFeePerformanceUpdatedEvent implements EventInterface & FundEvent
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: Contract!
+  comptrollerProxy: String!
   prevAggregateValueDue: BigDecimal!
   nextAggregateValueDue: BigDecimal!
   sharesOutstandingDiff: BigDecimal!
@@ -828,10 +762,9 @@ type EntranceRateDirectFeeSettingsAddedEvent implements EventInterface & FundEve
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: Contract!
+  comptrollerProxy: String!
   rate: BigDecimal!
 }
 
@@ -839,10 +772,9 @@ type EntranceRateDirectFeeSettledEvent implements EventInterface & FundEventInte
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: Contract!
+  comptrollerProxy: String!
   sharesQuantity: BigDecimal!
   payer: Account!
 }
@@ -851,10 +783,9 @@ type EntranceRateBurnFeeSettingsAddedEvent implements EventInterface & FundEvent
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: Contract!
+  comptrollerProxy: String!
   rate: BigDecimal!
 }
 
@@ -862,10 +793,9 @@ type EntranceRateBurnFeeSettledEvent implements EventInterface & FundEventInterf
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: Contract!
+  comptrollerProxy: String!
   sharesQuantity: BigDecimal!
   payer: Account!
 }
@@ -874,7 +804,6 @@ type OverridePauseSetEvent implements EventInterface & FundEventInterface @entit
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
   overridePause: Boolean!
@@ -884,7 +813,6 @@ type MigratedSharesDuePaidEvent implements EventInterface & FundEventInterface @
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
   sharesDue: BigDecimal!
@@ -894,7 +822,6 @@ type PreRedeemSharesHookFailedEvent implements EventInterface & FundEventInterfa
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   sharesQuantity: BigDecimal!
   redeemer: Account!
@@ -911,19 +838,17 @@ type VaultProxyDeployedEvent implements EventInterface & FundEventInterface & Ne
   id: ID!
   fund: Fund!
   account: Account!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  fundDeployer: Contract!
+  fundDeployer: String!
   owner: Account!
-  vaultLib: Contract!
-  accessor: Contract!
+  vaultLib: String!
+  accessor: String!
   fundName: String!
 }
 
 type ComptrollerLibSetEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
   comptrollerLib: String!
@@ -932,7 +857,6 @@ type ComptrollerLibSetEvent implements EventInterface & NetworkEventInterface @e
 type AdapterRegisteredEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
   identifier: String!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
   integrationAdapter: IntegrationAdapter!
@@ -941,7 +865,6 @@ type AdapterRegisteredEvent implements EventInterface & NetworkEventInterface @e
 type AdapterDeregisteredEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
   identifier: String!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
   integrationAdapter: IntegrationAdapter!
@@ -949,7 +872,6 @@ type AdapterDeregisteredEvent implements EventInterface & NetworkEventInterface 
 
 type TrackedAssetsLimitSetEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
-  contract: Contract!
   timestamp: BigInt!
   nextTrackedAssetsLimit: BigInt!
   transaction: Transaction!
@@ -958,7 +880,6 @@ type TrackedAssetsLimitSetEvent implements EventInterface & NetworkEventInterfac
 type PolicyRegisteredEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
   identifier: String!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
   policy: Policy!
@@ -968,7 +889,6 @@ type PolicyRegisteredEvent implements EventInterface & NetworkEventInterface @en
 type PolicyDeregisteredEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
   identifier: String!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
   policy: Policy!
@@ -976,7 +896,6 @@ type PolicyDeregisteredEvent implements EventInterface & NetworkEventInterface @
 
 type GuaranteedRedemptionAdapterAddedEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
   adapter: IntegrationAdapter!
@@ -984,7 +903,6 @@ type GuaranteedRedemptionAdapterAddedEvent implements EventInterface & NetworkEv
 
 type GuaranteedRedemptionAdapterRemovedEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
   adapter: IntegrationAdapter!
@@ -992,7 +910,6 @@ type GuaranteedRedemptionAdapterRemovedEvent implements EventInterface & Network
 
 type GuaranteedRedemptionRedemptionWindowBufferSetEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
   prevBuffer: BigInt!
@@ -1001,25 +918,22 @@ type GuaranteedRedemptionRedemptionWindowBufferSetEvent implements EventInterfac
 
 type FundDeployerSetEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  nextFundDeployer: Contract!
-  prevFundDeployer: Contract
+  nextFundDeployer: String!
+  prevFundDeployer: String
 }
 
 type ValueInterpreterSetEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
-  prevValueInterpreter: Contract
-  nextValueInterpreter: Contract!
+  prevValueInterpreter: String
+  nextValueInterpreter: String!
 }
 
 type OwnershipTransferredEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
   previousOwner: String!
@@ -1028,7 +942,6 @@ type OwnershipTransferredEvent implements EventInterface & NetworkEventInterface
 
 type DerivativeAddedEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
   derivative: Asset!
@@ -1037,7 +950,6 @@ type DerivativeAddedEvent implements EventInterface & NetworkEventInterface @ent
 
 type DerivativeRemovedEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
   derivative: Asset!
@@ -1045,7 +957,6 @@ type DerivativeRemovedEvent implements EventInterface & NetworkEventInterface @e
 
 type DerivativeUpdatedEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
   derivative: Asset!
@@ -1055,7 +966,6 @@ type DerivativeUpdatedEvent implements EventInterface & NetworkEventInterface @e
 
 type AggregatorUpdatedEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
   primitive: Asset!
@@ -1065,7 +975,6 @@ type AggregatorUpdatedEvent implements EventInterface & NetworkEventInterface @e
 
 type EthUsdAggregatorSetEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
   prevEthUsdAggregator: String!
@@ -1074,7 +983,6 @@ type EthUsdAggregatorSetEvent implements EventInterface & NetworkEventInterface 
 
 type PrimitiveAddedEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
   primitive: Asset!
@@ -1084,7 +992,6 @@ type PrimitiveAddedEvent implements EventInterface & NetworkEventInterface @enti
 
 type PrimitiveRemovedEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
   primitive: Asset!
@@ -1092,7 +999,6 @@ type PrimitiveRemovedEvent implements EventInterface & NetworkEventInterface @en
 
 type FeeRegisteredEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
   fee: Fee!
@@ -1105,7 +1011,6 @@ type FeeRegisteredEvent implements EventInterface & NetworkEventInterface @entit
 
 type FeeDeregisteredEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
   fee: Fee!
@@ -1114,7 +1019,6 @@ type FeeDeregisteredEvent implements EventInterface & NetworkEventInterface @ent
 
 type ChainlinkAggregatorAnswerUpdatedEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
-  contract: Contract!
   aggregator: ChainlinkAggregator!
   timestamp: BigInt!
   transaction: Transaction!
@@ -1127,7 +1031,6 @@ type ChainlinkAggregatorAnswerUpdatedEvent implements EventInterface & NetworkEv
 
 type MigrationTimelockSetEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
   prevTimelock: BigInt!
@@ -1136,7 +1039,6 @@ type MigrationTimelockSetEvent implements EventInterface & NetworkEventInterface
 
 type NominatedOwnerRemovedEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
   nominatedOwner: String!
@@ -1144,7 +1046,6 @@ type NominatedOwnerRemovedEvent implements EventInterface & NetworkEventInterfac
 
 type NominatedOwnerSetEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
   nominatedOwner: String!
@@ -1152,7 +1053,6 @@ type NominatedOwnerSetEvent implements EventInterface & NetworkEventInterface @e
 
 type DispatcherOwnershipTransferredEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
   prevOwner: String!
@@ -1161,7 +1061,6 @@ type DispatcherOwnershipTransferredEvent implements EventInterface & NetworkEven
 
 type SharesTokenSymbolSetEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
   sharesTokenSymbol: String!
@@ -1169,7 +1068,6 @@ type SharesTokenSymbolSetEvent implements EventInterface & NetworkEventInterface
 
 type ReleaseStatusSetEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
   prevStatus: Int!
@@ -1178,7 +1076,6 @@ type ReleaseStatusSetEvent implements EventInterface & NetworkEventInterface @en
 
 type VaultCallRegisteredEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
   contractAddress: String!
@@ -1187,7 +1084,6 @@ type VaultCallRegisteredEvent implements EventInterface & NetworkEventInterface 
 
 type VaultCallDeregisteredEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
-  contract: Contract!
   timestamp: BigInt!
   transaction: Transaction!
   contractAddress: String!
@@ -1202,7 +1098,6 @@ type Transaction @entity {
   id: ID!
   from: String!
   to: String
-  contract: Contract
   value: BigDecimal!
   timestamp: BigInt!
   block: BigInt!
@@ -1211,14 +1106,6 @@ type Transaction @entity {
   input: String!
   account: Account
   events: [EventInterface!]! @derivedFrom(field: "transaction")
-}
-
-type Contract @entity {
-  id: ID!
-  address: String!
-  name: String!
-  release: Release
-  events: [EventInterface!]! @derivedFrom(field: "contract")
 }
 
 type IntegrationManager @entity {
@@ -1338,9 +1225,48 @@ type Release @entity {
   current: Boolean!
   open: BigInt!
   close: BigInt
-  contracts: [Contract!] @derivedFrom(field: "release")
   funds: [Fund!] @derivedFrom(field: "release")
   network: Network!
+  # contracts
+  adapterBlacklist: String!
+  adapterWhitelist: String!
+  aggregatedDerivativePriceFeed: String!
+  assetBlacklist: String!
+  assetWhitelist: String!
+  buySharesCallerWhitelist: String!
+  chaiAdapter: String!
+  chaiIntegratee: String!
+  chainlinkPriceFeed: String!
+  compoundAdapter: String!
+  comptrollerLib: String!
+  dispatcher: String!
+  entranceRateBurnFee: String!
+  entranceRateDirectFee: String!
+  feeManager: String!
+  fundActionsWrapper: String!
+  fundDeployer: String!
+  guaranteedRedemption: String!
+  integrationManager: String!
+  investorWhitelist: String!
+  kyberAdapter: String!
+  kyberIntegratee: String!
+  managementFee: String!
+  maxConcentration: String!
+  minMaxInvestment: String!
+  paraSwapAdapter: String!
+  performanceFee: String!
+  policyManager: String!
+  synthetixAdapter: String!
+  synthetixAddressResolver: String!
+  synthetixDelegateApprovals: String!
+  synthetixIntegratee: String!
+  trackedAssetsAdapter: String!
+  uniswapV2Adapter: String!
+  uniswapV2Integratee: String!
+  valueInterpreter: String!
+  vaultLib: String!
+  wethToken: String!
+  zeroExV2Adapter: String!
 }
 
 type Account @entity {

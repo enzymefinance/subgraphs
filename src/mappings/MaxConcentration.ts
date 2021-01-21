@@ -1,5 +1,4 @@
 import { ensureAccount } from '../entities/Account';
-import { ensureContract } from '../entities/Contract';
 import { ensureMaxConcentrationSetting } from '../entities/MaxConcentrationSetting';
 import { usePolicy } from '../entities/Policy';
 import { ensureTransaction } from '../entities/Transaction';
@@ -19,7 +18,6 @@ export function handleMaxConcentrationSet(event: MaxConcentrationSet): void {
   let maxConcentration = new MaxConcentrationSetEvent(genericId(event));
   maxConcentration.fund = vault.toHex(); // fund does not exist yet
   maxConcentration.account = ensureAccount(event.transaction.from, event).id;
-  maxConcentration.contract = ensureContract(event.address, 'MaxConcentration').id;
   maxConcentration.timestamp = event.block.timestamp;
   maxConcentration.transaction = ensureTransaction(event).id;
   maxConcentration.comptrollerProxy = event.params.comptrollerProxy.toHex();

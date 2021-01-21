@@ -2,7 +2,6 @@ import { dataSource } from '@graphprotocol/graph-ts';
 import { useAsset } from '../entities/Asset';
 import { trackAssetPrice } from '../entities/AssetPrice';
 import { useChainlinkAggregator } from '../entities/ChainlinkAggregator';
-import { ensureContract } from '../entities/Contract';
 import { useCurrency } from '../entities/Currency';
 import { trackCurrencyPrice } from '../entities/CurrencyPrice';
 import { ensureTransaction } from '../entities/Transaction';
@@ -21,7 +20,6 @@ export function handleAnswerUpdated(event: AnswerUpdated): void {
   let decimals = context.getI32('decimals');
   let current = toBigDecimal(event.params.current, decimals);
   let answerUpdated = new ChainlinkAggregatorAnswerUpdatedEvent(genericId(event));
-  answerUpdated.contract = ensureContract(event.address, 'ChainlinkAggregator').id;
   answerUpdated.timestamp = event.block.timestamp;
   answerUpdated.transaction = ensureTransaction(event).id;
   answerUpdated.aggregator = aggregator.id;
