@@ -1,7 +1,6 @@
 import { checkChai, checkSynthetix, ensureAsset } from '../entities/Asset';
 import { fetchAssetPrice, trackAssetPrice } from '../entities/AssetPrice';
 import { checkCompoundAssetDetail } from '../entities/CompoundAssetDetails';
-import { ensureContract } from '../entities/Contract';
 import { ensureTransaction } from '../entities/Transaction';
 import { checkUniswapV2PoolAssetDetail } from '../entities/UniswapV2PoolAssetDetails';
 import {
@@ -34,7 +33,6 @@ export function handleDerivativeAdded(event: DerivativeAdded): void {
 
   let derivativeAdded = new DerivativeAddedEvent(genericId(event));
   derivativeAdded.derivative = derivative.id;
-  derivativeAdded.contract = ensureContract(event.address, 'AggregatedDerivativePriceFeed').id;
   derivativeAdded.timestamp = event.block.timestamp;
   derivativeAdded.transaction = ensureTransaction(event).id;
   derivativeAdded.priceFeed = event.params.priceFeed.toHex();
@@ -59,7 +57,6 @@ export function handleDerivativeRemoved(event: DerivativeRemoved): void {
 
   let derivativeRemoved = new DerivativeRemovedEvent(genericId(event));
   derivativeRemoved.derivative = derivative.id;
-  derivativeRemoved.contract = ensureContract(event.address, 'AggregatedDerivativePriceFeed').id;
   derivativeRemoved.timestamp = event.block.timestamp;
   derivativeRemoved.transaction = ensureTransaction(event).id;
   derivativeRemoved.save();
@@ -77,7 +74,6 @@ export function handleDerivativeUpdated(event: DerivativeUpdated): void {
 
   let derivativeUpdated = new DerivativeUpdatedEvent(genericId(event));
   derivativeUpdated.derivative = derivative.id;
-  derivativeUpdated.contract = ensureContract(event.address, 'AggregatedDerivativePriceFeed').id;
   derivativeUpdated.timestamp = event.block.timestamp;
   derivativeUpdated.transaction = ensureTransaction(event).id;
   derivativeUpdated.prevPriceFeed = event.params.prevPriceFeed.toHex();

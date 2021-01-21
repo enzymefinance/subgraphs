@@ -3,7 +3,6 @@ import { ensureAccount, ensureInvestor, useAccount } from '../entities/Account';
 import { useAsset } from '../entities/Asset';
 import { createAssetAmount } from '../entities/AssetAmount';
 import { calculationStateId, trackCalculationState } from '../entities/CalculationState';
-import { ensureContract, useContract } from '../entities/Contract';
 import { useFund } from '../entities/Fund';
 import { useInvestment } from '../entities/Investment';
 import { trackInvestmentState } from '../entities/InvestmentState';
@@ -44,7 +43,6 @@ export function handleSharesBought(event: SharesBought): void {
   addition.investor = investment.investor;
   addition.fund = investment.fund;
   addition.type = 'SharesBought';
-  addition.contract = ensureContract(event.address, 'ComptrollerLib').id;
   addition.investmentState = investmentState.id;
   addition.asset = asset.id;
   addition.investmentAmount = toBigDecimal(event.params.investmentAmount, asset.decimals);
@@ -82,7 +80,6 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
   redemption.investor = investor.id;
   redemption.fund = investment.fund;
   redemption.type = 'SharesRedeemed';
-  redemption.contract = ensureContract(event.address, 'ComptrollerLib').id;
   redemption.investmentState = investmentState.id;
   redemption.shares = shares;
   redemption.payoutAssetAmounts = assetAmounts.map<string>((assetAmount) => assetAmount.id);
@@ -101,7 +98,6 @@ export function handleVaultProxySet(event: VaultProxySet): void {
   let vaultProxySet = new VaultProxySetEvent(genericId(event));
   vaultProxySet.fund = event.params.vaultProxy.toHex();
   vaultProxySet.account = useAccount(event.transaction.from.toHex()).id;
-  vaultProxySet.contract = ensureContract(event.address, 'ComptrollerLib').id;
   vaultProxySet.timestamp = event.block.timestamp;
   vaultProxySet.transaction = ensureTransaction(event).id;
   vaultProxySet.vaultProxy = event.params.vaultProxy.toHex();
@@ -115,7 +111,6 @@ export function handleOverridePauseSet(event: OverridePauseSet): void {
   let overridePauseSet = new OverridePauseSetEvent(genericId(event));
   overridePauseSet.fund = fund.id;
   overridePauseSet.account = account.id;
-  overridePauseSet.contract = useContract(event.address.toHex(), 'ComptrollerLib').id;
   overridePauseSet.timestamp = event.block.timestamp;
   overridePauseSet.transaction = ensureTransaction(event).id;
   overridePauseSet.overridePause = event.params.overridePause;
@@ -129,7 +124,6 @@ export function handleMigratedSharesDuePaid(event: MigratedSharesDuePaid): void 
   let paid = new MigratedSharesDuePaidEvent(genericId(event));
   paid.fund = fund.id;
   paid.account = account.id;
-  paid.contract = useContract(event.address.toHex(), 'ComptrollerLib').id;
   paid.timestamp = event.block.timestamp;
   paid.transaction = ensureTransaction(event).id;
   paid.sharesDue = toBigDecimal(event.params.sharesDue);
@@ -143,7 +137,6 @@ export function handlePreRedeemSharesHookFailed(event: PreRedeemSharesHookFailed
   let hookFailed = new PreRedeemSharesHookFailedEvent(genericId(event));
   hookFailed.fund = fund.id;
   hookFailed.account = account.id;
-  hookFailed.contract = useContract(event.address.toHex(), 'ComptrollerLib').id;
   hookFailed.timestamp = event.block.timestamp;
   hookFailed.sharesQuantity = toBigDecimal(event.params.sharesQuantity);
   hookFailed.redeemer = ensureAccount(event.params.redeemer, event).id;

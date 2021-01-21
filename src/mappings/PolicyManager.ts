@@ -1,5 +1,4 @@
 import { ensureAccount, useAccount } from '../entities/Account';
-import { ensureContract } from '../entities/Contract';
 import { ensurePolicy, usePolicy } from '../entities/Policy';
 import { trackPolicySettingDisabled, trackPolicySettingEnabled } from '../entities/PolicySetting';
 import { ensureTransaction } from '../entities/Transaction';
@@ -25,7 +24,6 @@ export function handlePolicyRegistered(event: PolicyRegistered): void {
   let registration = new PolicyRegisteredEvent(genericId(event));
   registration.timestamp = event.block.timestamp;
   registration.transaction = ensureTransaction(event).id;
-  registration.contract = ensureContract(event.address, 'PolicyManager').id;
   registration.policy = policy.id;
   registration.identifier = event.params.identifier.toHex();
   registration.implementedHooks = event.params.implementedHooks.map<string>((hook) => getPolicyHook(hook));
@@ -36,7 +34,6 @@ export function handlePolicyDeregistered(event: PolicyDeregistered): void {
   let deregistration = new PolicyDeregisteredEvent(genericId(event));
   deregistration.timestamp = event.block.timestamp;
   deregistration.transaction = ensureTransaction(event).id;
-  deregistration.contract = event.address.toHex();
   deregistration.policy = usePolicy(event.params.policy.toHex()).id;
   deregistration.identifier = event.params.identifier.toHex();
   deregistration.save();
@@ -52,7 +49,6 @@ export function handlePolicyEnabledForFund(event: PolicyEnabledForFund): void {
   enabled.account = ensureAccount(event.transaction.from, event).id;
   enabled.timestamp = event.block.timestamp;
   enabled.transaction = ensureTransaction(event).id;
-  enabled.contract = event.address.toHex();
   enabled.policy = policy.id;
   enabled.settingsData = event.params.settingsData.toHexString();
   enabled.save();
@@ -70,7 +66,6 @@ export function handlePolicyDisabledForFund(event: PolicyDisabledForFund): void 
   enabled.account = useAccount(event.transaction.from.toHex()).id;
   enabled.timestamp = event.block.timestamp;
   enabled.transaction = ensureTransaction(event).id;
-  enabled.contract = event.address.toHex();
   enabled.policy = policy.id;
   enabled.save();
 

@@ -19,7 +19,6 @@ import {
   enableChainlinkCurrencyAggregator,
   enableChainlinkEthUsdAggregator,
 } from '../entities/ChainlinkAggregator';
-import { ensureContract, registerContracts, useContract } from '../entities/Contract';
 import { ensureCurrency } from '../entities/Currency';
 import { trackCurrencyPrice } from '../entities/CurrencyPrice';
 import { ensureNetwork } from '../entities/Network';
@@ -74,11 +73,7 @@ export function handleEthUsdAggregatorSet(event: EthUsdAggregatorSet): void {
   network.currentRelease = release.id;
   network.save();
 
-  // Register contracts for the current release
-  registerContracts();
-
   let ethUsdAggregatorSet = new EthUsdAggregatorSetEvent(genericId(event));
-  ethUsdAggregatorSet.contract = ensureContract(event.address, 'ChainlinkPriceFeed').id;
   ethUsdAggregatorSet.timestamp = event.block.timestamp;
   ethUsdAggregatorSet.transaction = ensureTransaction(event).id;
   ethUsdAggregatorSet.prevEthUsdAggregator = event.params.prevEthUsdAggregator.toHex();
@@ -179,7 +174,6 @@ export function handlePrimitiveAdded(event: PrimitiveAdded): void {
 
   let primitivePriceFeedAdded = new PrimitiveAddedEvent(genericId(event));
   primitivePriceFeedAdded.primitive = primitive.id;
-  primitivePriceFeedAdded.contract = ensureContract(event.address, 'ChainlinkPriceFeed').id;
   primitivePriceFeedAdded.timestamp = event.block.timestamp;
   primitivePriceFeedAdded.transaction = ensureTransaction(event).id;
   primitivePriceFeedAdded.priceFeed = event.params.aggregator.toHex();
@@ -214,7 +208,6 @@ export function handlePrimitiveRemoved(event: PrimitiveRemoved): void {
 
   let primitivePriceFeedRemoved = new PrimitiveRemovedEvent(genericId(event));
   primitivePriceFeedRemoved.primitive = primitive.id;
-  primitivePriceFeedRemoved.contract = ensureContract(event.address, 'ChainlinkPriceFeed').id;
   primitivePriceFeedRemoved.timestamp = event.block.timestamp;
   primitivePriceFeedRemoved.transaction = ensureTransaction(event).id;
   primitivePriceFeedRemoved.save();
@@ -234,7 +227,6 @@ export function handlePrimitiveUpdated(event: PrimitiveUpdated): void {
   let primitive = ensureAsset(event.params.primitive);
 
   let primitiveUpdated = new AggregatorUpdatedEvent(genericId(event));
-  primitiveUpdated.contract = useContract(event.address.toHex(), 'ChainlinkPriceFeed').id;
   primitiveUpdated.timestamp = event.block.timestamp;
   primitiveUpdated.transaction = ensureTransaction(event).id;
   primitiveUpdated.primitive = primitive.id;
