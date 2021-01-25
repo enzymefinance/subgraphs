@@ -1,6 +1,6 @@
 import { dataSource } from '@graphprotocol/graph-ts';
 import { useAsset } from '../entities/Asset';
-import { trackAssetPrice } from '../entities/AssetPrice';
+import { fetchAssetPrice, trackAssetPrice } from '../entities/AssetPrice';
 import { useChainlinkAggregator } from '../entities/ChainlinkAggregator';
 import { useCurrency } from '../entities/Currency';
 import { trackCurrencyPrice } from '../entities/CurrencyPrice';
@@ -17,6 +17,7 @@ export function handleAnswerUpdated(event: AnswerUpdated): void {
   if (!aggregator.active) {
     return;
   }
+
   let decimals = context.getI32('decimals');
   let current = toBigDecimal(event.params.current, decimals);
   let answerUpdated = new ChainlinkAggregatorAnswerUpdatedEvent(genericId(event));
@@ -46,7 +47,7 @@ export function handleAnswerUpdated(event: AnswerUpdated): void {
     let assets = cron.usdQuotedPrimitives.map<Asset>((primitive) => useAsset(primitive));
     for (let i: i32 = 0; i < assets.length; i++) {
       let asset = assets[i];
-      trackAssetPrice(asset, event.block.timestamp);
+      trackAssetPrice(asset, event.block.timestamp, fetchAssetPrice(asset));
     }
   } else if (aggregator.type == 'CURRENCY') {
     let currency = useCurrency(aggregator.currency as string);

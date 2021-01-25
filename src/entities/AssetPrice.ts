@@ -50,12 +50,8 @@ export function ensureAssetPrice(asset: Asset, current: BigDecimal, timestamp: B
   return price;
 }
 
-export function trackAssetPrice(asset: Asset, timestamp: BigInt, price: BigDecimal | null = null): AssetPrice {
-  if (asset.type == 'USD' || price == null) {
-    price = fetchAssetPrice(asset);
-  }
-
-  let current = ensureAssetPrice(asset, price as BigDecimal, timestamp);
+export function trackAssetPrice(asset: Asset, timestamp: BigInt, price: BigDecimal): AssetPrice {
+  let current = ensureAssetPrice(asset, price, timestamp);
   let hourly = updateHourlyAssetPriceCandle(asset, current);
   let daily = updateDailyAssetPriceCandle(asset, current);
   let monthly = updateMonthlyAssetPriceCandle(asset, current);

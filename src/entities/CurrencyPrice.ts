@@ -49,12 +49,8 @@ export function ensureCurrencyPrice(currency: Currency, current: BigDecimal, tim
   return price;
 }
 
-export function trackCurrencyPrice(
-  currency: Currency,
-  timestamp: BigInt,
-  price: BigDecimal | null = null,
-): CurrencyPrice {
-  let current = ensureCurrencyPrice(currency, price as BigDecimal, timestamp);
+export function trackCurrencyPrice(currency: Currency, timestamp: BigInt, price: BigDecimal): CurrencyPrice {
+  let current = ensureCurrencyPrice(currency, price, timestamp);
   let hourly = updateHourlyCurrencyPriceCandle(currency, current);
   let daily = updateDailyCurrencyPriceCandle(currency, current);
   let monthly = updateMonthlyCurrencyPriceCandle(currency, current);
