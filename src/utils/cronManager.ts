@@ -9,7 +9,7 @@ import {
   ensureHourlyPriceCandleGroup,
   ensureMonthlyPriceCandleGroup,
 } from '../entities/PriceCandleGroup';
-import { Cron } from '../generated/schema';
+import { Asset, Cron } from '../generated/schema';
 import { arrayUnique } from './arrayUnique';
 import { logCritical } from './logCritical';
 import { getDayOpenTime, getHourOpenTime, getMonthOpenAndClose } from './timeHelpers';
@@ -36,55 +36,40 @@ export function triggerCron(timestamp: BigInt): void {
     return;
   }
 
-  cronWeth(cron, timestamp);
-  cronUsd(cron, timestamp);
-  cronDerivatives(cron, timestamp);
+  let previousWindow = getHourOpenTime(cron.cron);
+  let currentWindow = getHourOpenTime(timestamp);
+
+  // Only update once per time window.
+  if (!currentWindow.gt(previousWindow)) {
+    return;
+  }
+
+  cronWeth(timestamp);
+  cronUsd(timestamp);
+  cronDependentPrices(cron.usdQuotedPrimitives, timestamp);
+  cronDependentPrices(cron.derivatives, timestamp);
   cronCandles(cron, timestamp);
 
   cron.cron = timestamp;
   cron.save();
 }
 
-function cronWeth(cron: Cron, timestamp: BigInt): void {
-  let previousWindow = getHourOpenTime(cron.cron);
-  let currentWindow = getHourOpenTime(timestamp);
-
-  // Only update the weth once per hour.
-  if (!currentWindow.gt(previousWindow)) {
-    return;
-  }
-
+function cronWeth(timestamp: BigInt): void {
   let asset = useAsset(wethTokenAddress.toHex());
   let current = BigDecimal.fromString('1');
   trackAssetPrice(asset, timestamp, current);
 }
 
-function cronUsd(cron: Cron, timestamp: BigInt): void {
-  let previousWindow = getHourOpenTime(cron.cron);
-  let currentWindow = getHourOpenTime(timestamp);
-
-  // Only update the weth once per hour.
-  if (!currentWindow.gt(previousWindow)) {
-    return;
-  }
-
+function cronUsd(timestamp: BigInt): void {
   let currency = useCurrency('USD');
   let current = BigDecimal.fromString('1');
   trackCurrencyPrice(currency, timestamp, current);
 }
 
-function cronDerivatives(cron: Cron, timestamp: BigInt): void {
-  let previousWindow = getHourOpenTime(cron.cron);
-  let currentWindow = getHourOpenTime(timestamp);
-
-  // Only update the derivative prices once per time window.
-  if (!currentWindow.gt(previousWindow)) {
-    return;
-  }
-
-  let derivatives = cron.derivatives;
-  for (let i: i32 = 0; i < derivatives.length; i++) {
-    let asset = useAsset(derivatives[i]);
+function cronDependentPrices(assetIds: string[], timestamp: BigInt): void {
+  let assets = assetIds.map<Asset>((assetId) => useAsset(assetId));
+  for (let i: i32 = 0; i < assets.length; i++) {
+    let asset = assets[i];
     let current = fetchAssetPrice(asset);
     trackAssetPrice(asset, timestamp, current);
   }
@@ -92,10 +77,6 @@ function cronDerivatives(cron: Cron, timestamp: BigInt): void {
 
 function cronCandles(cron: Cron, timestamp: BigInt): void {
   let currentHour = getHourOpenTime(timestamp);
-  if (!currentHour.gt(getHourOpenTime(cron.cron))) {
-    // Bail out early if no updates are required.
-    return;
-  }
 
   ensureHourlyPriceCandleGroup(currentHour);
 

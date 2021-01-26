@@ -4,11 +4,8 @@ import { fetchAssetPrice, trackAssetPrice } from '../entities/AssetPrice';
 import { useChainlinkAggregator } from '../entities/ChainlinkAggregator';
 import { useCurrency } from '../entities/Currency';
 import { trackCurrencyPrice } from '../entities/CurrencyPrice';
-import { ensureTransaction } from '../entities/Transaction';
 import { AnswerUpdated } from '../generated/ChainlinkAggregatorContract';
-import { Asset, ChainlinkAggregatorAnswerUpdatedEvent } from '../generated/schema';
-import { ensureCron, triggerCron } from '../utils/cronManager';
-import { genericId } from '../utils/genericId';
+import { triggerCron } from '../utils/cronManager';
 import { toBigDecimal } from '../utils/toBigDecimal';
 
 export function handleAnswerUpdated(event: AnswerUpdated): void {
@@ -20,44 +17,17 @@ export function handleAnswerUpdated(event: AnswerUpdated): void {
 
   let decimals = context.getI32('decimals');
   let current = toBigDecimal(event.params.current, decimals);
-  let answerUpdated = new ChainlinkAggregatorAnswerUpdatedEvent(genericId(event));
-  answerUpdated.timestamp = event.block.timestamp;
-  answerUpdated.transaction = ensureTransaction(event).id;
-  answerUpdated.aggregator = aggregator.id;
-  answerUpdated.current = current;
-  answerUpdated.roundId = event.params.roundId;
-  answerUpdated.updatedAt = event.params.updatedAt;
-  answerUpdated.save();
 
   if (aggregator.type == 'ASSET') {
     let asset = useAsset(aggregator.asset as string);
-    answerUpdated.asset = asset.id;
-    answerUpdated.save();
 
-    if (asset.type == 'USD') {
-      current = fetchAssetPrice(asset);
-    }
-
-    // NOTE: We use the block timestamp here on purpose (instead of event.params.updatedAt).
-    trackAssetPrice(asset, event.block.timestamp, current);
-  } else if (aggregator.type == 'ETHUSD') {
+    // NOTES:
+    // - we use the block timestamp here on purpose (instead of event.params.updatedAt).
+    // - for USD based asset, we fetch the asset price, which is simpler than fetching the ETH/USD price and then converting it.
+    trackAssetPrice(asset, event.block.timestamp, asset.type == 'USD' ? fetchAssetPrice(asset) : current);
+  } else if (aggregator.type == 'ETHUSD' || aggregator.type == 'CURRENCY') {
     let currency = useCurrency(aggregator.currency as string);
-    answerUpdated.currency = currency.id;
-    answerUpdated.save();
-    trackCurrencyPrice(currency, event.block.timestamp, current);
 
-    let cron = ensureCron();
-    // We need to update all USD quoted assets whenever the ETHUSD prices changes
-    // (prices are stored in ETH)
-    let assets = cron.usdQuotedPrimitives.map<Asset>((primitive) => useAsset(primitive));
-    for (let i: i32 = 0; i < assets.length; i++) {
-      let asset = assets[i];
-      trackAssetPrice(asset, event.block.timestamp, fetchAssetPrice(asset));
-    }
-  } else if (aggregator.type == 'CURRENCY') {
-    let currency = useCurrency(aggregator.currency as string);
-    answerUpdated.currency = currency.id;
-    answerUpdated.save();
     trackCurrencyPrice(currency, event.block.timestamp, current);
   }
 

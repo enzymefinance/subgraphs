@@ -52,6 +52,12 @@ export function ensureAssetPrice(asset: Asset, current: BigDecimal, timestamp: B
 
 export function trackAssetPrice(asset: Asset, timestamp: BigInt, price: BigDecimal): AssetPrice {
   let current = ensureAssetPrice(asset, price, timestamp);
+
+  // Skip updates within the same block.
+  if (current.id == asset.price) {
+    return current;
+  }
+
   let hourly = updateHourlyAssetPriceCandle(asset, current);
   let daily = updateDailyAssetPriceCandle(asset, current);
   let monthly = updateMonthlyAssetPriceCandle(asset, current);
@@ -70,11 +76,6 @@ export function trackAssetPrice(asset: Asset, timestamp: BigInt, price: BigDecim
 export function fetchAssetPrice(asset: Asset): BigDecimal {
   // Whenever a new (derivative) asset is registered, we need to fetch its current price immediately.
   let contract = ValueInterpreterContract.bind(valueInterpreterAddress);
-
-  // TODO: remove this once prices for UNI-V2 are valid
-  // if (asset.symbol == 'UNI-V2') {
-  //   return BigDecimal.fromString('0');
-  // }
 
   // NOTE: Because we are using one "unit" of the given derivative as the amount when
   // calculating the value with the value interpreter, this is also the rate.

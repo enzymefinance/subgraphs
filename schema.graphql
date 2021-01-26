@@ -1017,18 +1017,6 @@ type FeeDeregisteredEvent implements EventInterface & NetworkEventInterface @ent
   identifier: String!
 }
 
-type ChainlinkAggregatorAnswerUpdatedEvent implements EventInterface & NetworkEventInterface @entity {
-  id: ID!
-  aggregator: ChainlinkAggregator!
-  timestamp: BigInt!
-  transaction: Transaction!
-  asset: Asset
-  currency: Currency
-  current: BigDecimal!
-  roundId: BigInt!
-  updatedAt: BigInt!
-}
-
 type MigrationTimelockSetEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
   timestamp: BigInt!
@@ -1870,7 +1858,6 @@ type ChainlinkAggregator @entity {
   asset: Asset
   currency: Currency
   active: Boolean!
-  updates: [ChainlinkAggregatorAnswerUpdatedEvent!]! @derivedFrom(field: "aggregator")
 }
 
 # Knowing the timestamp of the most recent update allows us to create missing
