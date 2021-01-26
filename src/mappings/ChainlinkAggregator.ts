@@ -21,7 +21,9 @@ export function handleAnswerUpdated(event: AnswerUpdated): void {
   if (aggregator.type == 'ASSET') {
     let asset = useAsset(aggregator.asset as string);
 
-    // NOTE: We use the block timestamp here on purpose (instead of event.params.updatedAt).
+    // NOTES:
+    // - we use the block timestamp here on purpose (instead of event.params.updatedAt).
+    // - for USD based asset, we fetch the asset price, which is simpler than fetching the ETH/USD price and then converting it.
     trackAssetPrice(asset, event.block.timestamp, asset.type == 'USD' ? fetchAssetPrice(asset) : current);
   } else if (aggregator.type == 'ETHUSD' || aggregator.type == 'CURRENCY') {
     let currency = useCurrency(aggregator.currency as string);

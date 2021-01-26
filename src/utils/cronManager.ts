@@ -39,7 +39,7 @@ export function triggerCron(timestamp: BigInt): void {
   let previousWindow = getHourOpenTime(cron.cron);
   let currentWindow = getHourOpenTime(timestamp);
 
-  // Only update the derivative prices once per time window.
+  // Only update once per time window.
   if (!currentWindow.gt(previousWindow)) {
     return;
   }
