@@ -33,6 +33,11 @@ export function handleAnswerUpdated(event: AnswerUpdated): void {
     let asset = useAsset(aggregator.asset as string);
     answerUpdated.asset = asset.id;
     answerUpdated.save();
+
+    if (asset.type == 'USD') {
+      current = fetchAssetPrice(asset);
+    }
+
     // NOTE: We use the block timestamp here on purpose (instead of event.params.updatedAt).
     trackAssetPrice(asset, event.block.timestamp, current);
   } else if (aggregator.type == 'ETHUSD') {

@@ -73,17 +73,14 @@ export function trackPortfolioState(fund: Fund, event: ethereum.Event, cause: En
     let asset = useAsset(assetAddress.toHex());
     let quantity = toBigDecimal(assetBalance, asset.decimals);
 
-    // Add the fund holding entry for the current asset unless it's 0.
-    // Always add denomination asset (even if it's zero)
-    if (!quantity.digits.isZero() || asset.id == fund.denominationAsset) {
-      let match = findHoldingState(previousHoldings, asset) as HoldingState;
+    // Add the fund holding entry for the current asset.
+    let match = findHoldingState(previousHoldings, asset) as HoldingState;
 
-      // Re-use the previous holding entry unless it has changed.
-      if (match != null && match.amount == quantity) {
-        nextHoldings = nextHoldings.concat([match]);
-      } else {
-        nextHoldings = nextHoldings.concat([createHoldingState(asset, quantity, fund, event, cause)]);
-      }
+    // Re-use the previous holding entry unless it has changed.
+    if (match != null && match.amount == quantity) {
+      nextHoldings = nextHoldings.concat([match]);
+    } else {
+      nextHoldings = nextHoldings.concat([createHoldingState(asset, quantity, fund, event, cause)]);
     }
   }
 

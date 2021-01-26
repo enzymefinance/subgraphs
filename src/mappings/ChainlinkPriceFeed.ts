@@ -193,7 +193,7 @@ export function handlePrimitiveAdded(event: PrimitiveAdded): void {
   let cron = ensureCron();
   cron.primitives = arrayUnique<string>(cron.primitives.concat([primitive.id]));
   if (primitive.type == 'USD') {
-    cron.usdQuotedPrimitives = arrayUnique<string>(cron.primitives.concat([primitive.id]));
+    cron.usdQuotedPrimitives = arrayUnique<string>(cron.usdQuotedPrimitives.concat([primitive.id]));
   }
   cron.save();
 
@@ -215,7 +215,7 @@ export function handlePrimitiveRemoved(event: PrimitiveRemoved): void {
   let cron = ensureCron();
   cron.primitives = arrayDiff<string>(cron.primitives, [primitive.id]);
   if (primitive.type == 'USD') {
-    cron.usdQuotedPrimitives = arrayDiff<string>(cron.primitives, [primitive.id]);
+    cron.usdQuotedPrimitives = arrayDiff<string>(cron.usdQuotedPrimitives, [primitive.id]);
   }
   cron.save();
 
