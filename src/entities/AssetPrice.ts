@@ -53,7 +53,7 @@ export function ensureAssetPrice(asset: Asset, current: BigDecimal, timestamp: B
 export function trackAssetPrice(asset: Asset, timestamp: BigInt, price: BigDecimal): AssetPrice {
   let current = ensureAssetPrice(asset, price, timestamp);
 
-  // skip updates within the same block
+  // Skip updates within the same block.
   if (current.id == asset.price) {
     return current;
   }
