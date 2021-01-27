@@ -111,6 +111,18 @@ interface Trade {
   fundState: FundState!
 }
 
+interface SharesRequestInterface {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  timestamp: BigInt!
+  sharesRequestor: SharesRequestor!
+  type: SharesRequestType!
+  investmentAmount: BigDecimal!
+  minSharesQuantity: BigDecimal!
+  transaction: Transaction!
+}
+
 #################################################
 # Enums
 #################################################
@@ -175,6 +187,12 @@ enum IntegrationMethod {
   TAKE_ORDER
   LEND
   REDEEM
+}
+
+enum SharesRequestType {
+  CANCEL
+  CREATE
+  REMOVE
 }
 
 #################################################
@@ -829,34 +847,60 @@ type PreRedeemSharesHookFailedEvent implements EventInterface & FundEventInterfa
   transaction: Transaction!
 }
 
-type RequestCanceledEvent implements EventInterface & FundEventInterface @entity {
+type RequestCanceledEvent implements EventInterface & FundEventInterface & SharesRequestInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
   timestamp: BigInt!
+  sharesRequestor: SharesRequestor!
+  type: SharesRequestType!
   investmentAmount: BigDecimal!
   minSharesQuantity: BigDecimal!
   transaction: Transaction!
 }
 
-type RequestCreatedEvent implements EventInterface & FundEventInterface @entity {
+type RequestCreatedEvent implements EventInterface & FundEventInterface & SharesRequestInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
   timestamp: BigInt!
+  sharesRequestor: SharesRequestor!
+  type: SharesRequestType!
   investmentAmount: BigDecimal!
   minSharesQuantity: BigDecimal!
   transaction: Transaction!
 }
 
-type RequestExecutedEvent implements EventInterface & FundEventInterface @entity {
+type RequestExecutedEvent implements EventInterface & FundEventInterface & SharesRequestInterface @entity {
   id: ID!
   fund: Fund!
   account: Account!
   timestamp: BigInt!
+  sharesRequestor: SharesRequestor!
+  type: SharesRequestType!
   investmentAmount: BigDecimal!
   minSharesQuantity: BigDecimal!
   caller: String!
+  transaction: Transaction!
+}
+
+type RequestExecutorAddedEvent implements EventInterface & NetworkEventInterface @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  timestamp: BigInt!
+  sharesRequestor: SharesRequestor!
+  requestExecutor: SharesRequestExecutor!
+  transaction: Transaction!
+}
+
+type RequestExecutorRemovedEvent implements EventInterface & NetworkEventInterface @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  timestamp: BigInt!
+  sharesRequestor: SharesRequestor!
+  requestExecutor: SharesRequestExecutor!
   transaction: Transaction!
 }
 
@@ -1117,22 +1161,6 @@ type SharesRequestorProxyDeployedEvent implements EventInterface & NetworkEventI
   sharesRequestorProxy: String!
 }
 
-type RequestExecutorAddedEvent implements EventInterface & NetworkEventInterface @entity {
-  id: ID!
-  timestamp: BigInt!
-  transaction: Transaction!
-  sharesRequestor: SharesRequestor!
-  requestExecutor: SharesRequestExecutor!
-}
-
-type RequestExecutorRemoved implements EventInterface & NetworkEventInterface @entity {
-  id: ID!
-  timestamp: BigInt!
-  transaction: Transaction!
-  sharesRequestor: SharesRequestor!
-  requestExecutor: SharesRequestExecutor!
-}
-
 #################################################
 # High-level entities
 #################################################
@@ -1277,6 +1305,7 @@ type Release @entity {
   aggregatedDerivativePriceFeed: String!
   assetBlacklist: String!
   assetWhitelist: String!
+  authUserExecutedSharesRequestorFactory: String!
   buySharesCallerWhitelist: String!
   chaiAdapter: String!
   chaiIntegratee: String!
@@ -1703,6 +1732,7 @@ type SharesRequestor @entity {
   fund: Fund!
   executors: [SharesRequestExecutor!]! @derivedFrom(field: "sharesRequestor")
   requests: [SharesRequest!]! @derivedFrom(field: "sharesRequestor")
+  requestHistory: [SharesRequestInterface!]! @derivedFrom(field: "sharesRequestor")
 }
 
 type SharesRequestExecutor @entity {

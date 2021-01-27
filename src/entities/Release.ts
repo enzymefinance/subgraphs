@@ -5,6 +5,7 @@ import {
   aggregatedDerivativePriceFeedAddress,
   assetBlacklistAddress,
   assetWhitelistAddress,
+  authUserExecutedSharesRequestorFactoryAddress,
   buySharesCallerWhitelistAddress,
   chaiAdapterAddress,
   chaiIntegrateeAddress,
@@ -58,11 +59,13 @@ export function createRelease(address: Address, event: ethereum.Event): Release 
   release.current = true;
   release.open = event.block.timestamp;
   release.network = networkId;
+
   release.adapterBlacklist = adapterBlacklistAddress.toHex();
   release.adapterWhitelist = adapterWhitelistAddress.toHex();
   release.aggregatedDerivativePriceFeed = aggregatedDerivativePriceFeedAddress.toHex();
   release.assetBlacklist = assetBlacklistAddress.toHex();
   release.assetWhitelist = assetWhitelistAddress.toHex();
+  release.authUserExecutedSharesRequestorFactory = authUserExecutedSharesRequestorFactoryAddress.toHex();
   release.buySharesCallerWhitelist = buySharesCallerWhitelistAddress.toHex();
   release.chaiAdapter = chaiAdapterAddress.toHex();
   release.chaiIntegratee = chaiIntegrateeAddress.toHex();
