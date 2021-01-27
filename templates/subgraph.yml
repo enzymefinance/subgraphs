@@ -611,6 +611,30 @@ dataSources:
         - event: CallOnIntegrationExecutedForFund(indexed address,address,address,indexed address,indexed bytes4,bytes,address[],uint256[],address[],uint256[])
           handler: handleCallOnIntegrationExecutedForFund
 
+  - name: AuthUserExecutedSharesRequestorFactoryDataSource
+    kind: ethereum/contract
+    network: {{networkName}}
+    source:
+      address: '{{authUserExecutedSharesRequestorFactory}}'
+      abi: AuthUserExecutedSharesRequestorFactoryContract
+      startBlock: {{startBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/AuthUserExecutedSharesRequestorFactory.ts
+      entities: []
+      abis:
+        - name: AuthUserExecutedSharesRequestorFactoryContract
+          file: ./node_modules/@enzymefinance/protocol/artifacts/AuthUserExecutedSharesRequestorFactory.json
+        - name: VaultLibContract
+          file: ./node_modules/@enzymefinance/protocol/artifacts/VaultLib.json
+        - name: ComptrollerLibContract
+          file: ./node_modules/@enzymefinance/protocol/artifacts/ComptrollerLib.json
+      eventHandlers:
+        - event: SharesRequestorProxyDeployed(indexed address,address)
+          handler: handleSharesRequestorProxyDeployed
+
   - name: ChainlinkPriceFeedDataSource
     kind: ethereum/contract
     network: {{networkName}}
@@ -783,6 +807,34 @@ templates:
           handler: handleSharesRedeemed
         - event: VaultProxySet(address)
           handler: handleVaultProxySet
+
+  - name: AuthUserExecutedSharesRequestorLibDataSource
+    kind: ethereum/contract
+    network: {{networkName}}
+    source:
+      abi: AuthUserExecutedSharesRequestorLibContract
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mappings/AuthUserExecutedSharesRequestorLib.ts
+      entities: []
+      abis:
+        - name: AuthUserExecutedSharesRequestorLibContract
+          file: ./node_modules/@enzymefinance/protocol/artifacts/AuthUserExecutedSharesRequestorLib.json
+        - name: VaultLibContract
+          file: ./node_modules/@enzymefinance/protocol/artifacts/VaultLib.json
+      eventHandlers:
+        - event: RequestCanceled(indexed address,uint256,uint256)
+          handler: handleRequestCanceled
+        - event: RequestCreated(indexed address,uint256,uint256)
+          handler: handleRequestCreated
+        - event: RequestExecuted(indexed address,indexed address,uint256,uint256)
+          handler: handleRequestExecuted
+        - event: RequestExecutorAdded(indexed address)
+          handler: handleRequestExecutorAdded
+        - event: RequestExecutorRemoved(indexed address)
+          handler: handleRequestExecutorRemoved
 
   - name: ChainlinkAggregatorDataSource
     kind: ethereum/contract

@@ -1,7 +1,7 @@
 import fs from 'fs';
-import moment from 'moment';
 import glob from 'glob';
 import handlebars from 'handlebars';
+import moment from 'moment';
 import path from 'path';
 import yargs from 'yargs';
 import kovan from './deployments/kovan.json';
@@ -24,6 +24,7 @@ interface Deployment {
 
   // Peripheral
   fundActionsWrapper: string;
+  authUserExecutedSharesRequestorFactory: string;
 
   // Fees
   managementFee: string;
@@ -97,6 +98,7 @@ async function fetchDeployment(source: string): Promise<DeploymentWithMetadata> 
 
       // Peripheral
       fundActionsWrapper: kovan.contracts.FundActionsWrapper.address,
+      authUserExecutedSharesRequestorFactory: kovan.contracts.AuthUserExecutedSharesRequestorFactory.address,
 
       // Fees
       managementFee: kovan.contracts.ManagementFee.address,
@@ -166,6 +168,7 @@ async function fetchDeployment(source: string): Promise<DeploymentWithMetadata> 
 
       // Peripheral
       fundActionsWrapper: mainnet.contracts.FundActionsWrapper.address,
+      authUserExecutedSharesRequestorFactory: mainnet.contracts.AuthUserExecutedSharesRequestorFactory.address,
 
       // Fees
       managementFee: mainnet.contracts.ManagementFee.address,

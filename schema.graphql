@@ -829,6 +829,37 @@ type PreRedeemSharesHookFailedEvent implements EventInterface & FundEventInterfa
   transaction: Transaction!
 }
 
+type RequestCanceledEvent implements EventInterface & FundEventInterface @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  timestamp: BigInt!
+  investmentAmount: BigDecimal!
+  minSharesQuantity: BigDecimal!
+  transaction: Transaction!
+}
+
+type RequestCreatedEvent implements EventInterface & FundEventInterface @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  timestamp: BigInt!
+  investmentAmount: BigDecimal!
+  minSharesQuantity: BigDecimal!
+  transaction: Transaction!
+}
+
+type RequestExecutedEvent implements EventInterface & FundEventInterface @entity {
+  id: ID!
+  fund: Fund!
+  account: Account!
+  timestamp: BigInt!
+  investmentAmount: BigDecimal!
+  minSharesQuantity: BigDecimal!
+  caller: String!
+  transaction: Transaction!
+}
+
 #################################################
 # Low-level network event entities
 #################################################
@@ -1078,6 +1109,30 @@ type VaultCallDeregisteredEvent implements EventInterface & NetworkEventInterfac
   selector: String!
 }
 
+type SharesRequestorProxyDeployedEvent implements EventInterface & NetworkEventInterface @entity {
+  id: ID!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: String!
+  sharesRequestorProxy: String!
+}
+
+type RequestExecutorAddedEvent implements EventInterface & NetworkEventInterface @entity {
+  id: ID!
+  timestamp: BigInt!
+  transaction: Transaction!
+  sharesRequestor: SharesRequestor!
+  requestExecutor: SharesRequestExecutor!
+}
+
+type RequestExecutorRemoved implements EventInterface & NetworkEventInterface @entity {
+  id: ID!
+  timestamp: BigInt!
+  transaction: Transaction!
+  sharesRequestor: SharesRequestor!
+  requestExecutor: SharesRequestExecutor!
+}
+
 #################################################
 # High-level entities
 #################################################
@@ -1129,6 +1184,7 @@ type Fund @entity {
   denominationAsset: Asset!
   sharesActionTimelock: BigInt!
   lastKnowGavInEth: BigDecimal
+  sharesRequestor: SharesRequestor
 
   # policies
   policies: [PolicySettingInterface!]! @derivedFrom(field: "fund")
@@ -1640,6 +1696,30 @@ type AddTrackedAssetsTrade implements Trade @entity {
   incomingAssetAmounts: [AssetAmount!]!
   timestamp: BigInt!
   fundState: FundState!
+}
+
+type SharesRequestor @entity {
+  id: ID!
+  fund: Fund!
+  executors: [SharesRequestExecutor!]! @derivedFrom(field: "sharesRequestor")
+  requests: [SharesRequest!]! @derivedFrom(field: "sharesRequestor")
+}
+
+type SharesRequestExecutor @entity {
+  id: ID!
+  since: BigInt!
+  account: Account!
+  sharesRequestor: SharesRequestor!
+}
+
+type SharesRequest @entity {
+  id: ID!
+  timestamp: BigInt!
+  sharesRequestor: SharesRequestor!
+  account: Account!
+  fund: Fund!
+  investmentAmount: BigDecimal!
+  minSharesQuantity: BigDecimal!
 }
 
 #################################################
