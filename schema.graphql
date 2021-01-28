@@ -1231,6 +1231,7 @@ type Fund @entity {
   sharesChanges: [SharesChangeInterface!]! @derivedFrom(field: "fund")
   feeSharesChanges: [FeeSharesChangeInterface!]! @derivedFrom(field: "fund")
   investmentSharesChanges: [InvestmentSharesChangeInterface!]! @derivedFrom(field: "fund")
+  sharesRequests: [SharesRequest!]!
 
   # fund state
   shares: ShareState!
@@ -1353,6 +1354,8 @@ type Account @entity {
   investor: Boolean!
   investorSince: BigInt
   investments: [Investment!]! @derivedFrom(field: "investor")
+
+  sharesRequests: [SharesRequest!]! @derivedFrom(field: "account")
 
   sharesChanges: [SharesChangeInterface!]! @derivedFrom(field: "investor")
   feeSharesChanges: [FeeSharesChangeInterface!]! @derivedFrom(field: "investor")
