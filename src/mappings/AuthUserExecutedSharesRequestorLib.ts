@@ -74,6 +74,7 @@ export function handleRequestCreated(event: RequestCreated): void {
   request.minSharesQuantity = minSharesQuantity;
   request.save();
 }
+
 export function handleRequestExecuted(event: RequestExecuted): void {
   let fund = useFund(dataSource.context().getString('vaultProxy'));
   let account = ensureAccount(event.transaction.from, event);
@@ -111,6 +112,7 @@ export function handleRequestExecutorAdded(event: RequestExecutorAdded): void {
 
   ensureSharesRequestExecutor(sharesRequestor, account, event);
 }
+
 export function handleRequestExecutorRemoved(event: RequestExecutorRemoved): void {
   let fund = useFund(dataSource.context().getString('vaultProxy'));
   let account = ensureAccount(event.transaction.from, event);

@@ -190,9 +190,9 @@ enum IntegrationMethod {
 }
 
 enum SharesRequestType {
-  CANCEL
-  CREATE
-  REMOVE
+  CANCELED
+  CREATED
+  EXECUTED
 }
 
 #################################################

@@ -18,9 +18,10 @@ export function handleSharesRequestorProxyDeployed(event: SharesRequestorProxyDe
 
   let comptrollerProxy = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let vaultProxy = comptrollerProxy.getVaultProxy();
-  let fund = useFund(vaultProxy.toHex());
 
-  ensureSharesRequestor(event.params.sharesRequestorProxy.toHex(), fund, event);
+  let fund = useFund(vaultProxy.toHex());
+  fund.sharesRequestor = ensureSharesRequestor(event.params.sharesRequestorProxy.toHex(), fund, event).id;
+  fund.save();
 
   let sharesRequestorContext = new DataSourceContext();
   sharesRequestorContext.setString('vaultProxy', vaultProxy.toHex());
