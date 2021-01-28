@@ -101,30 +101,34 @@ export function handleRequestExecutorAdded(event: RequestExecutorAdded): void {
   let fund = useFund(dataSource.context().getString('vaultProxy'));
   let account = ensureAccount(event.transaction.from, event);
   let sharesRequestor = ensureSharesRequestor(event.address.toHex(), fund, event);
+  let executor = ensureAccount(event.params.account, event);
 
   let added = new RequestExecutorAddedEvent(genericId(event));
   added.timestamp = event.block.timestamp;
   added.fund = fund.id;
   added.account = account.id;
-  added.requestExecutor = event.params.account.toHex();
+  added.sharesRequestor = sharesRequestor.id;
+  added.requestExecutor = executor.id;
   added.transaction = ensureTransaction(event).id;
   added.save();
 
-  ensureSharesRequestExecutor(sharesRequestor, account, event);
+  ensureSharesRequestExecutor(sharesRequestor, executor, event);
 }
 
 export function handleRequestExecutorRemoved(event: RequestExecutorRemoved): void {
   let fund = useFund(dataSource.context().getString('vaultProxy'));
   let account = ensureAccount(event.transaction.from, event);
   let sharesRequestor = ensureSharesRequestor(event.address.toHex(), fund, event);
+  let executor = ensureAccount(event.params.account, event);
 
   let removed = new RequestExecutorRemovedEvent(genericId(event));
   removed.timestamp = event.block.timestamp;
   removed.fund = fund.id;
   removed.account = account.id;
-  removed.requestExecutor = event.params.account.toHex();
+  removed.sharesRequestor = sharesRequestor.id;
+  removed.requestExecutor = executor.id;
   removed.transaction = ensureTransaction(event).id;
   removed.save();
 
-  deleteSharesRequestExecutor(sharesRequestor, account);
+  deleteSharesRequestExecutor(sharesRequestor, executor);
 }
