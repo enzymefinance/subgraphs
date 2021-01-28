@@ -26,5 +26,8 @@ export function handleSharesRequestorProxyDeployed(event: SharesRequestorProxyDe
   let sharesRequestorContext = new DataSourceContext();
   sharesRequestorContext.setString('vaultProxy', vaultProxy.toHex());
 
-  AuthUserExecutedSharesRequestorLibDataSource.create(event.params.sharesRequestorProxy);
+  AuthUserExecutedSharesRequestorLibDataSource.createWithContext(
+    event.params.sharesRequestorProxy,
+    sharesRequestorContext,
+  );
 }
