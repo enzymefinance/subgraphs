@@ -42,7 +42,7 @@ export function getDayOpenTime(timestamp: BigInt): BigInt {
 }
 
 export function getDayCloseTime(timestamp: BigInt): BigInt {
-  return getDayOpenTime(timestamp).minus(one);
+  return getDayOpenTime(timestamp).plus(day).minus(one);
 }
 
 export function getMonthOpenTime(timestamp: BigInt): BigInt {
