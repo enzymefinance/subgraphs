@@ -156,16 +156,10 @@ export function handleEthUsdAggregatorSet(event: EthUsdAggregatorSet): void {
   triggerCron(event.block.timestamp);
 }
 
-// TODO: Chainlink uses proxies for their price oracles. Sadly, these proxies do not
-// emit events whenever the underlying aggregator changes. Chainlink has proposed that
-// they could add a central registry that emits an event whenever an aggregator changes.
+// Chainlink uses proxies for their price oracles. Sadly, these proxies do not
+// emit events whenever the underlying aggregator changes.
 //
-// If they can't make this happen, an alternative solution could be to monitor these
-// changes (through contract calls) either as part of cron or by checking and comparing
-// the current aggregator whenever we track an AnswerUpdated event and swap out the
-// underlying aggregator whenever we observe a change. This would be possible because
-// chainlink (allegedly) keeps updating the "old" aggregator for a limited amount of time
-// even after they've migrated to a new one and pointed the proxy to the new aggregator.
+// We are monitoring these changes through contract calls as part of cron.
 
 export function handlePrimitiveAdded(event: PrimitiveAdded): void {
   let primitive = ensureAsset(event.params.primitive);
