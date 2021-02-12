@@ -25,6 +25,7 @@ export function chainlinkCurrencyAggregatorId(aggregatorAddress: string, identif
 }
 
 function enableChainlinkAggregator(
+  proxy: Address,
   address: Address,
   id: string,
   type: string,
@@ -43,6 +44,7 @@ function enableChainlinkAggregator(
 
     let context = new DataSourceContext();
     context.setString('aggregator', id);
+    context.setString('proxy', proxy.toHex());
     context.setI32('decimals', asset == null || asset.type == 'USD' ? 8 : 18);
     ChainlinkAggregatorDataSource.createWithContext(address, context);
   }
@@ -55,9 +57,9 @@ function enableChainlinkAggregator(
   return aggregator;
 }
 
-export function enableChainlinkAssetAggregator(address: Address, asset: Asset): ChainlinkAggregator {
+export function enableChainlinkAssetAggregator(proxy: Address, address: Address, asset: Asset): ChainlinkAggregator {
   let id = chainlinkAssetAggregatorId(address.toHex(), asset.id);
-  return enableChainlinkAggregator(address, id, 'ASSET', asset);
+  return enableChainlinkAggregator(proxy, address, id, 'ASSET', asset);
 }
 
 export function disableChainlinkAssetAggregator(address: Address, asset: Asset): ChainlinkAggregator {
@@ -72,9 +74,13 @@ export function disableChainlinkAssetAggregator(address: Address, asset: Asset):
   return aggregator;
 }
 
-export function enableChainlinkEthUsdAggregator(address: Address, currency: Currency): ChainlinkAggregator {
+export function enableChainlinkEthUsdAggregator(
+  proxy: Address,
+  address: Address,
+  currency: Currency,
+): ChainlinkAggregator {
   let id = chainlinkEthUsdAggregatorId(address.toHex());
-  return enableChainlinkAggregator(address, id, 'ETHUSD', null, currency);
+  return enableChainlinkAggregator(proxy, address, id, 'ETHUSD', null, currency);
 }
 
 export function disableChainlinkEthUsdAggregator(address: Address): ChainlinkAggregator {
@@ -89,9 +95,13 @@ export function disableChainlinkEthUsdAggregator(address: Address): ChainlinkAgg
   return aggregator;
 }
 
-export function enableChainlinkCurrencyAggregator(address: Address, currency: Currency): ChainlinkAggregator {
+export function enableChainlinkCurrencyAggregator(
+  proxy: Address,
+  address: Address,
+  currency: Currency,
+): ChainlinkAggregator {
   let id = chainlinkCurrencyAggregatorId(address.toHex(), currency.id);
-  return enableChainlinkAggregator(address, id, 'CURRENCY', null, currency);
+  return enableChainlinkAggregator(proxy, address, id, 'CURRENCY', null, currency);
 }
 
 export function disableChainlinkCurrencyAggregator(address: Address, currency: Currency): ChainlinkAggregator {

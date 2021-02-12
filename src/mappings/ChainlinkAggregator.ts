@@ -1,18 +1,46 @@
-import { dataSource } from '@graphprotocol/graph-ts';
+import { Address, dataSource } from '@graphprotocol/graph-ts';
 import { useAsset } from '../entities/Asset';
 import { fetchAssetPrice, trackAssetPrice } from '../entities/AssetPrice';
-import { useChainlinkAggregator } from '../entities/ChainlinkAggregator';
+import {
+  disableChainlinkAssetAggregator,
+  disableChainlinkCurrencyAggregator,
+  disableChainlinkEthUsdAggregator,
+  enableChainlinkAssetAggregator,
+  enableChainlinkCurrencyAggregator,
+  enableChainlinkEthUsdAggregator,
+  useChainlinkAggregator,
+} from '../entities/ChainlinkAggregator';
 import { useCurrency } from '../entities/Currency';
 import { trackCurrencyPrice } from '../entities/CurrencyPrice';
 import { AnswerUpdated } from '../generated/ChainlinkAggregatorContract';
 import { triggerCron } from '../utils/cronManager';
 import { toBigDecimal } from '../utils/toBigDecimal';
+import { unwrapAggregator } from './ChainlinkPriceFeed';
 
 export function handleAnswerUpdated(event: AnswerUpdated): void {
   let context = dataSource.context();
   let aggregator = useChainlinkAggregator(context.getString('aggregator'));
   if (!aggregator.active) {
     return;
+  }
+
+  // check if the event comes from the current aggregator
+  let proxy = Address.fromString(context.getString('proxy'));
+  let currentAggregator = unwrapAggregator(proxy);
+  if (event.address.toHex() != currentAggregator.toHex()) {
+    if (aggregator.type == 'ASSET') {
+      let asset = useAsset(aggregator.asset as string);
+      disableChainlinkAssetAggregator(event.address, asset);
+      aggregator = enableChainlinkAssetAggregator(proxy, currentAggregator, asset);
+    } else if (aggregator.type == 'ETHUSD') {
+      let eth = useCurrency('ETH');
+      disableChainlinkEthUsdAggregator(event.address);
+      aggregator = enableChainlinkEthUsdAggregator(proxy, currentAggregator, eth);
+    } else if (aggregator.type == 'CURRENCY') {
+      let currency = useCurrency(aggregator.currency as string);
+      disableChainlinkCurrencyAggregator(event.address, currency);
+      aggregator = enableChainlinkCurrencyAggregator(proxy, currentAggregator, currency);
+    }
   }
 
   let decimals = context.getI32('decimals');
