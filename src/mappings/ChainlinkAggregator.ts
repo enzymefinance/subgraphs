@@ -10,9 +10,8 @@ import { toBigDecimal } from '../utils/toBigDecimal';
 
 export function handleAnswerUpdated(event: AnswerUpdated): void {
   let context = dataSource.context();
-  let proxyId = context.getString('proxy');
 
-  let proxy = useChainlinkAggregatorProxy(proxyId);
+  let proxy = useChainlinkAggregatorProxy(context.getString('proxy'));
   if (proxy.aggregator != event.address.toHex()) {
     return;
   }
