@@ -852,6 +852,8 @@ templates:
           file: ./node_modules/@enzymefinance/protocol/artifacts/ValueInterpreter.json
         - name: ChainlinkAggregatorContract
           file: ./node_modules/@chainlink/contracts/abi/v0.6/AggregatorInterface.json
+        - name: ChainlinkAggregatorProxyContract
+          file: ./node_modules/@chainlink/contracts/abi/v0.6/AggregatorProxy.json
       eventHandlers:
         - event: AnswerUpdated(indexed int256,indexed uint256,uint256)
           handler: handleAnswerUpdated
