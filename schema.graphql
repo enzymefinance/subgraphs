@@ -141,7 +141,7 @@ enum DerivativeType {
   Synthetix
 }
 
-enum ChainlinkAggregatorProxyType {
+enum ChainlinkAggregatorType {
   ASSET
   ETHUSD
   CURRENCY
@@ -1965,13 +1965,12 @@ type MonthlyPriceCandleGroup @entity {
   currencyCandles: [MonthlyCurrencyPriceCandle!]! @derivedFrom(field: "group")
 }
 
-type ChainlinkAggregatorProxy @entity {
+type ChainlinkAggregator @entity {
   id: ID!
-  aggregator: String!
-  type: ChainlinkAggregatorProxyType!
-  decimals: Int!
+  type: ChainlinkAggregatorType!
   asset: Asset
   currency: Currency
+  active: Boolean!
 }
 
 # Knowing the timestamp of the most recent update allows us to create missing
@@ -2000,9 +1999,6 @@ type Cron @entity {
 
   #
   currencies: [Currency!]!
-
-  # ChainlinkAggregatorProxies
-  chainlinkAggregatorProxies: [ChainlinkAggregatorProxy!]!
 }
 
 #################################################

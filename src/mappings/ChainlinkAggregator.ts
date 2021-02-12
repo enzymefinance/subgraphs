@@ -1,7 +1,7 @@
 import { dataSource } from '@graphprotocol/graph-ts';
 import { useAsset } from '../entities/Asset';
 import { fetchAssetPrice, trackAssetPrice } from '../entities/AssetPrice';
-import { useChainlinkAggregatorProxy } from '../entities/ChainlinkAggregatorProxy';
+import { useChainlinkAggregator } from '../entities/ChainlinkAggregator';
 import { useCurrency } from '../entities/Currency';
 import { trackCurrencyPrice } from '../entities/CurrencyPrice';
 import { AnswerUpdated } from '../generated/ChainlinkAggregatorContract';
@@ -10,23 +10,23 @@ import { toBigDecimal } from '../utils/toBigDecimal';
 
 export function handleAnswerUpdated(event: AnswerUpdated): void {
   let context = dataSource.context();
-
-  let proxy = useChainlinkAggregatorProxy(context.getString('proxy'));
-  if (proxy.aggregator != event.address.toHex()) {
+  let aggregator = useChainlinkAggregator(context.getString('aggregator'));
+  if (!aggregator.active) {
     return;
   }
 
-  let current = toBigDecimal(event.params.current, proxy.decimals);
+  let decimals = context.getI32('decimals');
+  let current = toBigDecimal(event.params.current, decimals);
 
-  if (proxy.type == 'ASSET') {
-    let asset = useAsset(proxy.asset as string);
+  if (aggregator.type == 'ASSET') {
+    let asset = useAsset(aggregator.asset as string);
 
     // NOTES:
     // - we use the block timestamp here on purpose (instead of event.params.updatedAt).
     // - for USD based asset, we fetch the asset price, which is simpler than fetching the ETH/USD price and then converting it.
     trackAssetPrice(asset, event.block.timestamp, asset.type == 'USD' ? fetchAssetPrice(asset) : current);
-  } else if (proxy.type == 'ETHUSD' || proxy.type == 'CURRENCY') {
-    let currency = useCurrency(proxy.currency as string);
+  } else if (aggregator.type == 'ETHUSD' || aggregator.type == 'CURRENCY') {
+    let currency = useCurrency(aggregator.currency as string);
 
     trackCurrencyPrice(currency, event.block.timestamp, current);
   }

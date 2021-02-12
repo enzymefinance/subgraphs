@@ -1,13 +1,7 @@
-import { Address, BigDecimal, BigInt } from '@graphprotocol/graph-ts';
+import { BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 import { wethTokenAddress } from '../addresses';
 import { useAsset } from '../entities/Asset';
 import { fetchAssetPrice, trackAssetPrice, useAssetPrice } from '../entities/AssetPrice';
-import {
-  ensureChainlinkAssetAggregatorProxy,
-  ensureChainlinkCurrencyAggregatorProxy,
-  ensureChainlinkEthUsdAggregatorProxy,
-  useChainlinkAggregatorProxy,
-} from '../entities/ChainlinkAggregatorProxy';
 import { useCurrency } from '../entities/Currency';
 import { trackCurrencyPrice, useCurrencyPrice } from '../entities/CurrencyPrice';
 import {
@@ -15,8 +9,7 @@ import {
   ensureHourlyPriceCandleGroup,
   ensureMonthlyPriceCandleGroup,
 } from '../entities/PriceCandleGroup';
-import { Asset, ChainlinkAggregatorProxy, Cron } from '../generated/schema';
-import { unwrapAggregator } from '../mappings/ChainlinkPriceFeed';
+import { Asset, Cron } from '../generated/schema';
 import { arrayUnique } from './arrayUnique';
 import { logCritical } from './logCritical';
 import { getDayOpenTime, getHourOpenTime, getMonthOpenAndClose } from './timeHelpers';
@@ -30,7 +23,6 @@ export function ensureCron(): Cron {
     cron.derivatives = new Array<string>();
     cron.usdQuotedPrimitives = new Array<string>();
     cron.currencies = new Array<string>();
-    cron.chainlinkAggregatorProxies = new Array<string>();
     cron.save();
   }
 
@@ -46,10 +38,8 @@ export function triggerCron(timestamp: BigInt): void {
 
   let previousWindow = getHourOpenTime(cron.cron);
   let currentWindow = getHourOpenTime(timestamp);
-  let previousDay = getDayOpenTime(cron.cron);
-  let currentDay = getDayOpenTime(timestamp);
 
-  // Update once per hour.
+  // Only update once per time window.
   if (!currentWindow.gt(previousWindow)) {
     return;
   }
@@ -62,13 +52,6 @@ export function triggerCron(timestamp: BigInt): void {
 
   cron.cron = timestamp;
   cron.save();
-
-  // Update once day.
-  if (!currentDay.gt(previousDay)) {
-    return;
-  }
-
-  cronChainlinkAggregatorProxies(cron.chainlinkAggregatorProxies);
 }
 
 function cronWeth(timestamp: BigInt): void {
@@ -128,29 +111,5 @@ function cronCandles(cron: Cron, timestamp: BigInt): void {
 
     let price = useCurrencyPrice(currency.price as string);
     trackCurrencyPrice(currency, timestamp, price.price);
-  }
-}
-
-function cronChainlinkAggregatorProxies(proxyIds: string[]): void {
-  let proxies = proxyIds.map<ChainlinkAggregatorProxy>((id) => useChainlinkAggregatorProxy(id));
-  for (let i: i32 = 0; i < proxyIds.length; i++) {
-    let proxy = proxies[i];
-
-    let newAggregator = unwrapAggregator(Address.fromString(proxy.id));
-
-    if (proxy.aggregator != newAggregator.toHex()) {
-      let proxyAddress = Address.fromString(proxy.id);
-
-      if (proxy.type == 'ASSET') {
-        let asset = useAsset(proxy.asset as string);
-        ensureChainlinkAssetAggregatorProxy(proxyAddress, newAggregator, asset);
-      } else if (proxy.type == 'ETHUSD') {
-        let eth = useCurrency('ETH');
-        ensureChainlinkEthUsdAggregatorProxy(proxyAddress, newAggregator, eth);
-      } else if (proxy.type == 'CURRENCY') {
-        let currency = useCurrency(proxy.currency as string);
-        ensureChainlinkCurrencyAggregatorProxy(proxyAddress, newAggregator, currency);
-      }
-    }
   }
 }
