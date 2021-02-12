@@ -244,7 +244,7 @@ export function handlePrimitiveUpdated(event: PrimitiveUpdated): void {
 
   if (!event.params.prevAggregator.equals(zeroAddress)) {
     let aggregator = unwrapAggregator(event.params.prevAggregator);
-    disableChainlinkAssetAggregator(aggregator, primitive);
+    disableChainlinkAssetAggregator(aggregator);
   }
 
   let proxy = event.params.nextAggregator;

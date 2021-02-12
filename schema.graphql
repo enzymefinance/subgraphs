@@ -1855,6 +1855,8 @@ type MonthlyPriceCandleGroup @entity {
 type ChainlinkAggregator @entity {
   id: ID!
   type: ChainlinkAggregatorType!
+  proxy: String!
+  decimals: Int!
   asset: Asset
   currency: Currency
   active: Boolean!

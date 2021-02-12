@@ -1,4 +1,4 @@
-import { Address, dataSource } from '@graphprotocol/graph-ts';
+import { Address } from '@graphprotocol/graph-ts';
 import { useAsset } from '../entities/Asset';
 import { fetchAssetPrice, trackAssetPrice } from '../entities/AssetPrice';
 import {
@@ -18,19 +18,18 @@ import { toBigDecimal } from '../utils/toBigDecimal';
 import { unwrapAggregator } from './ChainlinkPriceFeed';
 
 export function handleAnswerUpdated(event: AnswerUpdated): void {
-  let context = dataSource.context();
-  let aggregator = useChainlinkAggregator(context.getString('aggregator'));
+  let aggregator = useChainlinkAggregator(event.address.toHex());
   if (!aggregator.active) {
     return;
   }
 
   // check if the event comes from the current aggregator
-  let proxy = Address.fromString(context.getString('proxy'));
+  let proxy = Address.fromString(aggregator.proxy);
   let currentAggregator = unwrapAggregator(proxy);
   if (event.address.toHex() != currentAggregator.toHex()) {
     if (aggregator.type == 'ASSET') {
       let asset = useAsset(aggregator.asset as string);
-      disableChainlinkAssetAggregator(event.address, asset);
+      disableChainlinkAssetAggregator(event.address);
       aggregator = enableChainlinkAssetAggregator(proxy, currentAggregator, asset);
     } else if (aggregator.type == 'ETHUSD') {
       let eth = useCurrency('ETH');
@@ -38,13 +37,12 @@ export function handleAnswerUpdated(event: AnswerUpdated): void {
       aggregator = enableChainlinkEthUsdAggregator(proxy, currentAggregator, eth);
     } else if (aggregator.type == 'CURRENCY') {
       let currency = useCurrency(aggregator.currency as string);
-      disableChainlinkCurrencyAggregator(event.address, currency);
+      disableChainlinkCurrencyAggregator(event.address);
       aggregator = enableChainlinkCurrencyAggregator(proxy, currentAggregator, currency);
     }
   }
 
-  let decimals = context.getI32('decimals');
-  let current = toBigDecimal(event.params.current, decimals);
+  let current = toBigDecimal(event.params.current, aggregator.decimals);
 
   if (aggregator.type == 'ASSET') {
     let asset = useAsset(aggregator.asset as string);
