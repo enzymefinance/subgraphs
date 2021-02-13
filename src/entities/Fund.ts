@@ -53,6 +53,7 @@ export function createFund(event: NewFundCreated): Fund {
   fund.state = state.id;
   fund.denominationAsset = useAsset(event.params.denominationAsset.toHex()).id;
   fund.sharesActionTimelock = event.params.sharesActionTimelock;
+  fund.sharesRequests = new Array<string>();
   fund.save();
 
   trackNetworkFunds(event);
