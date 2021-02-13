@@ -1,4 +1,3 @@
-import { ethereum } from '@graphprotocol/graph-ts';
 import { Fund, SharesRequestor } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
 
@@ -11,7 +10,7 @@ export function useSharesRequestor(id: string): SharesRequestor {
   return requestor;
 }
 
-export function createSharesRequestor(id: string, fund: Fund, event: ethereum.Event): SharesRequestor {
+export function createSharesRequestor(id: string, fund: Fund): SharesRequestor {
   let requestor = new SharesRequestor(id);
   requestor.fund = fund.id;
   requestor.save();
@@ -19,12 +18,12 @@ export function createSharesRequestor(id: string, fund: Fund, event: ethereum.Ev
   return requestor;
 }
 
-export function ensureSharesRequestor(id: string, fund: Fund, event: ethereum.Event): SharesRequestor {
+export function ensureSharesRequestor(id: string, fund: Fund): SharesRequestor {
   let requestor = SharesRequestor.load(id) as SharesRequestor;
 
   if (requestor != null) {
     return requestor;
   }
 
-  return createSharesRequestor(id, fund, event);
+  return createSharesRequestor(id, fund);
 }

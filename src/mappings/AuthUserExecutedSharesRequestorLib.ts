@@ -26,7 +26,7 @@ import { toBigDecimal } from '../utils/toBigDecimal';
 export function handleRequestCanceled(event: RequestCanceled): void {
   let fund = useFund(dataSource.context().getString('vaultProxy'));
   let account = ensureAccount(event.transaction.from, event);
-  let sharesRequestor = ensureSharesRequestor(event.address.toHex(), fund, event);
+  let sharesRequestor = ensureSharesRequestor(event.address.toHex(), fund);
 
   let investmentAmount = toBigDecimal(event.params.investmentAmount, useAsset(fund.denominationAsset).decimals);
   let minSharesQuantity = toBigDecimal(event.params.minSharesQuantity);
@@ -48,7 +48,7 @@ export function handleRequestCanceled(event: RequestCanceled): void {
 export function handleRequestCreated(event: RequestCreated): void {
   let fund = useFund(dataSource.context().getString('vaultProxy'));
   let account = ensureAccount(event.transaction.from, event);
-  let sharesRequestor = ensureSharesRequestor(event.address.toHex(), fund, event);
+  let sharesRequestor = ensureSharesRequestor(event.address.toHex(), fund);
 
   let investmentAmount = toBigDecimal(event.params.investmentAmount, useAsset(fund.denominationAsset).decimals);
   let minSharesQuantity = toBigDecimal(event.params.minSharesQuantity);
@@ -78,7 +78,7 @@ export function handleRequestCreated(event: RequestCreated): void {
 export function handleRequestExecuted(event: RequestExecuted): void {
   let fund = useFund(dataSource.context().getString('vaultProxy'));
   let account = ensureAccount(event.transaction.from, event);
-  let sharesRequestor = ensureSharesRequestor(event.address.toHex(), fund, event);
+  let sharesRequestor = ensureSharesRequestor(event.address.toHex(), fund);
 
   let investmentAmount = toBigDecimal(event.params.investmentAmount, useAsset(fund.denominationAsset).decimals);
   let minSharesQuantity = toBigDecimal(event.params.minSharesQuantity);
@@ -100,7 +100,7 @@ export function handleRequestExecuted(event: RequestExecuted): void {
 export function handleRequestExecutorAdded(event: RequestExecutorAdded): void {
   let fund = useFund(dataSource.context().getString('vaultProxy'));
   let account = ensureAccount(event.transaction.from, event);
-  let sharesRequestor = ensureSharesRequestor(event.address.toHex(), fund, event);
+  let sharesRequestor = ensureSharesRequestor(event.address.toHex(), fund);
   let executor = ensureAccount(event.params.account, event);
 
   let added = new RequestExecutorAddedEvent(genericId(event));
@@ -118,7 +118,7 @@ export function handleRequestExecutorAdded(event: RequestExecutorAdded): void {
 export function handleRequestExecutorRemoved(event: RequestExecutorRemoved): void {
   let fund = useFund(dataSource.context().getString('vaultProxy'));
   let account = ensureAccount(event.transaction.from, event);
-  let sharesRequestor = ensureSharesRequestor(event.address.toHex(), fund, event);
+  let sharesRequestor = ensureSharesRequestor(event.address.toHex(), fund);
   let executor = ensureAccount(event.params.account, event);
 
   let removed = new RequestExecutorRemovedEvent(genericId(event));
