@@ -163,6 +163,7 @@ export function handleEthUsdAggregatorSet(event: EthUsdAggregatorSet): void {
 
 export function handlePrimitiveAdded(event: PrimitiveAdded): void {
   let primitive = ensureAsset(event.params.primitive);
+  primitive.removed = false;
   primitive.type = event.params.rateAsset == 1 ? 'USD' : 'ETH';
   primitive.save();
 
