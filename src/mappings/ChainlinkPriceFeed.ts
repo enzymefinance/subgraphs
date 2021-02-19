@@ -32,6 +32,7 @@ import {
 } from '../generated/ChainlinkPriceFeedContract';
 import {
   AggregatorUpdatedEvent,
+  Asset,
   EthUsdAggregatorSetEvent,
   PrimitiveAddedEvent,
   PrimitiveRemovedEvent,
@@ -162,6 +163,12 @@ export function handleEthUsdAggregatorSet(event: EthUsdAggregatorSet): void {
 // We are monitoring these changes through contract calls as part of cron.
 
 export function handlePrimitiveAdded(event: PrimitiveAdded): void {
+  // Ignore the incorrectly added DPI/USD aggregator.
+  let dpiUsdAggregator = Address.fromString('0xd2a593bf7594ace1fad597adb697b5645d5eddb2');
+  if (event.params.aggregator.equals(dpiUsdAggregator)) {
+    return;
+  }
+
   let primitive = ensureAsset(event.params.primitive);
   primitive.removed = false;
   primitive.type = event.params.rateAsset == 1 ? 'USD' : 'ETH';
@@ -198,6 +205,10 @@ export function handlePrimitiveAdded(event: PrimitiveAdded): void {
 }
 
 export function handlePrimitiveRemoved(event: PrimitiveRemoved): void {
+  if (Asset.load(event.params.primitive.toHexString()) == null) {
+    return;
+  }
+
   let primitive = ensureAsset(event.params.primitive);
   primitive.removed = true;
   primitive.save();
