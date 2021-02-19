@@ -1,4 +1,4 @@
-import { Address } from '@graphprotocol/graph-ts';
+import { Address, BigDecimal } from '@graphprotocol/graph-ts';
 import {
   audChainlinkAggregator,
   btcChainlinkAggregator,
@@ -30,13 +30,7 @@ import {
   PrimitiveRemoved,
   PrimitiveUpdated,
 } from '../generated/ChainlinkPriceFeedContract';
-import {
-  AggregatorUpdatedEvent,
-  Asset,
-  EthUsdAggregatorSetEvent,
-  PrimitiveAddedEvent,
-  PrimitiveRemovedEvent,
-} from '../generated/schema';
+import { EthUsdAggregatorSetEvent } from '../generated/schema';
 import { arrayDiff } from '../utils/arrayDiff';
 import { arrayUnique } from '../utils/arrayUnique';
 import { ensureCron, triggerCron } from '../utils/cronManager';
@@ -163,24 +157,10 @@ export function handleEthUsdAggregatorSet(event: EthUsdAggregatorSet): void {
 // We are monitoring these changes through contract calls as part of cron.
 
 export function handlePrimitiveAdded(event: PrimitiveAdded): void {
-  // Ignore the incorrectly added DPI/USD aggregator.
-  let dpiUsdAggregator = Address.fromString('0xd2a593bf7594ace1fad597adb697b5645d5eddb2');
-  if (event.params.aggregator.equals(dpiUsdAggregator)) {
-    return;
-  }
-
   let primitive = ensureAsset(event.params.primitive);
   primitive.removed = false;
   primitive.type = event.params.rateAsset == 1 ? 'USD' : 'ETH';
   primitive.save();
-
-  let primitivePriceFeedAdded = new PrimitiveAddedEvent(genericId(event));
-  primitivePriceFeedAdded.primitive = primitive.id;
-  primitivePriceFeedAdded.timestamp = event.block.timestamp;
-  primitivePriceFeedAdded.transaction = ensureTransaction(event).id;
-  primitivePriceFeedAdded.priceFeed = event.params.aggregator.toHex();
-  primitivePriceFeedAdded.rateAsset = event.params.rateAsset;
-  primitivePriceFeedAdded.save();
 
   let proxy = event.params.aggregator;
   let aggregator = unwrapAggregator(event.params.aggregator);
@@ -188,10 +168,23 @@ export function handlePrimitiveAdded(event: PrimitiveAdded): void {
   // Whenever a new asset is registered, we need to fetch its current price immediately.
   let contract = ChainlinkAggregatorContract.bind(aggregator);
   let current = toBigDecimal(contract.latestAnswer(), primitive.type === 'USD' ? 8 : 18);
+
+  // NOTE: We incorrectly added a DPI/USD aggregator, we need to do some special treatmet for that one.
+  let dpiUsdAggregator = Address.fromString('0xd2a593bf7594ace1fad597adb697b5645d5eddb2');
+  if (event.params.aggregator.equals(dpiUsdAggregator)) {
+    current = BigDecimal.fromString('0');
+
+    primitive.type = 'ETH';
+    primitive.save();
+  }
+
   trackAssetPrice(primitive, event.block.timestamp, current);
 
-  // Keep tracking this asset using the registered chainlink aggregator.
-  ensureChainlinkAssetAggregatorProxy(proxy, aggregator, primitive);
+  // NOTE: We skip creation of the aggregator data source for DPI/USD.
+  if (!event.params.aggregator.equals(dpiUsdAggregator)) {
+    // Keep tracking this asset using the registered chainlink aggregator.
+    ensureChainlinkAssetAggregatorProxy(proxy, aggregator, primitive);
+  }
 
   let cron = ensureCron();
   cron.primitives = arrayUnique<string>(cron.primitives.concat([primitive.id]));
@@ -205,19 +198,9 @@ export function handlePrimitiveAdded(event: PrimitiveAdded): void {
 }
 
 export function handlePrimitiveRemoved(event: PrimitiveRemoved): void {
-  if (Asset.load(event.params.primitive.toHexString()) == null) {
-    return;
-  }
-
   let primitive = ensureAsset(event.params.primitive);
   primitive.removed = true;
   primitive.save();
-
-  let primitivePriceFeedRemoved = new PrimitiveRemovedEvent(genericId(event));
-  primitivePriceFeedRemoved.primitive = primitive.id;
-  primitivePriceFeedRemoved.timestamp = event.block.timestamp;
-  primitivePriceFeedRemoved.transaction = ensureTransaction(event).id;
-  primitivePriceFeedRemoved.save();
 
   let cron = ensureCron();
   cron.primitives = arrayDiff<string>(cron.primitives, [primitive.id]);
@@ -232,14 +215,6 @@ export function handlePrimitiveRemoved(event: PrimitiveRemoved): void {
 
 export function handlePrimitiveUpdated(event: PrimitiveUpdated): void {
   let primitive = ensureAsset(event.params.primitive);
-
-  let primitiveUpdated = new AggregatorUpdatedEvent(genericId(event));
-  primitiveUpdated.timestamp = event.block.timestamp;
-  primitiveUpdated.transaction = ensureTransaction(event).id;
-  primitiveUpdated.primitive = primitive.id;
-  primitiveUpdated.prevAggregator = event.params.prevAggregator.toHex();
-  primitiveUpdated.nextAggregator = event.params.nextAggregator.toHex();
-  primitiveUpdated.save();
 
   let proxy = event.params.nextAggregator;
   let aggregator = unwrapAggregator(event.params.nextAggregator);

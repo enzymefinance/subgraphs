@@ -940,61 +940,12 @@ type OwnershipTransferredEvent implements EventInterface & NetworkEventInterface
   newOwner: String!
 }
 
-type DerivativeAddedEvent implements EventInterface & NetworkEventInterface @entity {
-  id: ID!
-  timestamp: BigInt!
-  transaction: Transaction!
-  derivative: Asset!
-  priceFeed: String!
-}
-
-type DerivativeRemovedEvent implements EventInterface & NetworkEventInterface @entity {
-  id: ID!
-  timestamp: BigInt!
-  transaction: Transaction!
-  derivative: Asset!
-}
-
-type DerivativeUpdatedEvent implements EventInterface & NetworkEventInterface @entity {
-  id: ID!
-  timestamp: BigInt!
-  transaction: Transaction!
-  derivative: Asset!
-  prevPriceFeed: String!
-  nextPriceFeed: String!
-}
-
-type AggregatorUpdatedEvent implements EventInterface & NetworkEventInterface @entity {
-  id: ID!
-  timestamp: BigInt!
-  transaction: Transaction!
-  primitive: Asset!
-  prevAggregator: String!
-  nextAggregator: String!
-}
-
 type EthUsdAggregatorSetEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
   timestamp: BigInt!
   transaction: Transaction!
   prevEthUsdAggregator: String!
   nextEthUsdAggregator: String!
-}
-
-type PrimitiveAddedEvent implements EventInterface & NetworkEventInterface @entity {
-  id: ID!
-  timestamp: BigInt!
-  transaction: Transaction!
-  primitive: Asset!
-  priceFeed: String!
-  rateAsset: Int!
-}
-
-type PrimitiveRemovedEvent implements EventInterface & NetworkEventInterface @entity {
-  id: ID!
-  timestamp: BigInt!
-  transaction: Transaction!
-  primitive: Asset!
 }
 
 type FeeRegisteredEvent implements EventInterface & NetworkEventInterface @entity {
