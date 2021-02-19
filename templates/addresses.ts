@@ -50,6 +50,7 @@ export let uniswapV2AdapterAddress = Address.fromString('{{uniswapV2Adapter}}');
 export let paraSwapAdapterAddress = Address.fromString('{{paraSwapAdapter}}');
 export let zeroExV2AdapterAddress = Address.fromString('{{zeroExV2Adapter}}');
 export let synthetixAdapterAddress = Address.fromString('{{synthetixAdapter}}');
+export let alphaHomoraV1AdapterAddress = Address.fromString('{{alphaHomoraV1Adapter}}');
 
 // External
 export let wethTokenAddress = Address.fromString('{{wethToken}}');
