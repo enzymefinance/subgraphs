@@ -159,6 +159,7 @@ export function handleSharesOutstandingPaidForFund(event: SharesOutstandingPaidF
   sharesPaid.fee = fee.id;
   sharesPaid.sharesDue = toBigDecimal(event.params.sharesDue);
   sharesPaid.calculations = calculationStateId(fund, event);
+  sharesPaid.fundState = fund.state;
   sharesPaid.save();
 
   trackShareState(fund, event, sharesPaid);
