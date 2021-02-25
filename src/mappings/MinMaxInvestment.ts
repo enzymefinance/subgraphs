@@ -1,4 +1,3 @@
-import { ensureAccount } from '../entities/Account';
 import { useAsset } from '../entities/Asset';
 import { ensureMinMaxInvestmentSetting } from '../entities/MinMaxInvestmentSetting';
 import { usePolicy } from '../entities/Policy';
@@ -18,7 +17,6 @@ export function handleFundSettingsSet(event: FundSettingsSet): void {
 
   let settingsSet = new MinMaxInvestmentFundSettingsSetEvent(genericId(event));
   settingsSet.fund = fundId;
-  settingsSet.account = ensureAccount(event.transaction.from, event).id;
   settingsSet.timestamp = event.block.timestamp;
   settingsSet.transaction = ensureTransaction(event).id;
   settingsSet.comptrollerProxy = event.params.comptrollerProxy.toHex();

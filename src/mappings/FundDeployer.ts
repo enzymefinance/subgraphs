@@ -30,7 +30,6 @@ export function handleNewFundCreated(event: NewFundCreated): void {
   let fundCreation = new NewFundCreatedEvent(genericId(event));
   fundCreation.timestamp = event.block.timestamp;
   fundCreation.fund = event.params.vaultProxy.toHex();
-  fundCreation.account = manager.id;
   fundCreation.comptrollerProxy = event.params.comptrollerProxy.toHex();
   fundCreation.vaultProxy = event.params.vaultProxy.toHex();
   fundCreation.fundOwner = manager.id;
@@ -67,7 +66,6 @@ export function handleComptrollerProxyDeployed(event: ComptrollerProxyDeployed):
   let comptrollerProxyDeployment = new ComptrollerProxyDeployedEvent(genericId(event));
   comptrollerProxyDeployment.timestamp = event.block.timestamp;
   comptrollerProxyDeployment.fund = vaultProxy.toHex();
-  comptrollerProxyDeployment.account = ensureAccount(event.transaction.from, event).id;
   comptrollerProxyDeployment.comptrollerProxy = event.params.comptrollerProxy.toHex();
   comptrollerProxyDeployment.transaction = ensureTransaction(event).id;
   comptrollerProxyDeployment.denominationAsset = useAsset(event.params.denominationAsset.toHex()).id;

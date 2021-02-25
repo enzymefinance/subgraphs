@@ -1,4 +1,4 @@
-import { ensureAccount, useAccount } from '../entities/Account';
+import { ensureAccount } from '../entities/Account';
 import { useAsset } from '../entities/Asset';
 import { createAssetAmount } from '../entities/AssetAmount';
 import { trackCalculationState } from '../entities/CalculationState';
@@ -58,7 +58,6 @@ export function handleAuthUserAddedForFund(event: AuthUserAddedForFund): void {
   userAdded.fund = fund.id;
   userAdded.timestamp = event.block.timestamp;
   userAdded.transaction = ensureTransaction(event).id;
-  userAdded.account = account.id;
   userAdded.save();
 
   fund.authUsers = arrayUnique<string>(fund.authUsers.concat([account.id]));
@@ -74,7 +73,6 @@ export function handleAuthUserRemovedForFund(event: AuthUserRemovedForFund): voi
   userRemoved.fund = fund.id;
   userRemoved.timestamp = event.block.timestamp;
   userRemoved.transaction = ensureTransaction(event).id;
-  userRemoved.account = account.id;
   userRemoved.save();
 
   fund.authUsers = arrayDiff<string>(fund.authUsers, [account.id]);
@@ -107,7 +105,6 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
 
   let execution = new CallOnIntegrationExecutedForFundEvent(genericId(event));
   execution.fund = fund.id;
-  execution.account = useAccount(event.params.caller.toHex()).id;
   execution.adapter = adapter.id;
   execution.selector = integrationSelector;
   execution.integrationData = event.params.integrationData.toHexString();

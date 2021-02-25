@@ -30,7 +30,12 @@ import {
   PrimitiveRemoved,
   PrimitiveUpdated,
 } from '../generated/ChainlinkPriceFeedContract';
-import { EthUsdAggregatorSetEvent } from '../generated/schema';
+import {
+  AggregatorUpdatedEvent,
+  EthUsdAggregatorSetEvent,
+  PrimitiveAddedEvent,
+  PrimitiveRemovedEvent,
+} from '../generated/schema';
 import { arrayDiff } from '../utils/arrayDiff';
 import { arrayUnique } from '../utils/arrayUnique';
 import { ensureCron, triggerCron } from '../utils/cronManager';
@@ -162,6 +167,14 @@ export function handlePrimitiveAdded(event: PrimitiveAdded): void {
   primitive.type = event.params.rateAsset == 1 ? 'USD' : 'ETH';
   primitive.save();
 
+  let primitivePriceFeedAdded = new PrimitiveAddedEvent(genericId(event));
+  primitivePriceFeedAdded.primitive = primitive.id;
+  primitivePriceFeedAdded.timestamp = event.block.timestamp;
+  primitivePriceFeedAdded.transaction = ensureTransaction(event).id;
+  primitivePriceFeedAdded.priceFeed = event.params.aggregator.toHex();
+  primitivePriceFeedAdded.rateAsset = event.params.rateAsset;
+  primitivePriceFeedAdded.save();
+
   let proxy = event.params.aggregator;
   let aggregator = unwrapAggregator(event.params.aggregator);
 
@@ -202,6 +215,12 @@ export function handlePrimitiveRemoved(event: PrimitiveRemoved): void {
   primitive.removed = true;
   primitive.save();
 
+  let primitivePriceFeedRemoved = new PrimitiveRemovedEvent(genericId(event));
+  primitivePriceFeedRemoved.primitive = primitive.id;
+  primitivePriceFeedRemoved.timestamp = event.block.timestamp;
+  primitivePriceFeedRemoved.transaction = ensureTransaction(event).id;
+  primitivePriceFeedRemoved.save();
+
   let cron = ensureCron();
   cron.primitives = arrayDiff<string>(cron.primitives, [primitive.id]);
   if (primitive.type == 'USD') {
@@ -215,6 +234,14 @@ export function handlePrimitiveRemoved(event: PrimitiveRemoved): void {
 
 export function handlePrimitiveUpdated(event: PrimitiveUpdated): void {
   let primitive = ensureAsset(event.params.primitive);
+
+  let primitiveUpdated = new AggregatorUpdatedEvent(genericId(event));
+  primitiveUpdated.timestamp = event.block.timestamp;
+  primitiveUpdated.transaction = ensureTransaction(event).id;
+  primitiveUpdated.primitive = primitive.id;
+  primitiveUpdated.prevAggregator = event.params.prevAggregator.toHex();
+  primitiveUpdated.nextAggregator = event.params.nextAggregator.toHex();
+  primitiveUpdated.save();
 
   let proxy = event.params.nextAggregator;
   let aggregator = unwrapAggregator(event.params.nextAggregator);

@@ -32,7 +32,6 @@ export function ensureTransaction(event: ethereum.Event): Transaction {
   transaction.gasUsed = event.transaction.gasUsed.toI32();
   transaction.gasPrice = toBigDecimal(event.transaction.gasPrice);
   transaction.input = event.transaction.input.toHex();
-  transaction.account = event.transaction.from.toHex();
   transaction.save();
 
   return transaction;
