@@ -1,4 +1,3 @@
-import { ensureAccount, useAccount } from '../entities/Account';
 import { ensurePolicy, usePolicy } from '../entities/Policy';
 import { trackPolicySettingDisabled, trackPolicySettingEnabled } from '../entities/PolicySetting';
 import { ensureTransaction } from '../entities/Transaction';
@@ -46,7 +45,6 @@ export function handlePolicyEnabledForFund(event: PolicyEnabledForFund): void {
 
   let enabled = new PolicyEnabledForFundEvent(genericId(event));
   enabled.fund = fundId;
-  enabled.account = ensureAccount(event.transaction.from, event).id;
   enabled.timestamp = event.block.timestamp;
   enabled.transaction = ensureTransaction(event).id;
   enabled.policy = policy.id;
@@ -63,7 +61,6 @@ export function handlePolicyDisabledForFund(event: PolicyDisabledForFund): void 
 
   let enabled = new PolicyDisabledForFundEvent(genericId(event));
   enabled.fund = fundId;
-  enabled.account = useAccount(event.transaction.from.toHex()).id;
   enabled.timestamp = event.block.timestamp;
   enabled.transaction = ensureTransaction(event).id;
   enabled.policy = policy.id;

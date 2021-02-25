@@ -1,5 +1,5 @@
 import { zeroAddress } from '../constants';
-import { ensureManager, useAccount } from '../entities/Account';
+import { ensureManager } from '../entities/Account';
 import { useFund } from '../entities/Fund';
 import { ensureMigration, generateMigrationId, useMigration } from '../entities/Migration';
 import { ensureNetwork } from '../entities/Network';
@@ -74,7 +74,6 @@ export function handleMigrationCancelled(event: MigrationCancelled): void {
   let migration = useMigration(migrationId);
 
   migrationCancellation.fund = useFund(event.params.vaultProxy.toHex()).id;
-  migrationCancellation.account = useAccount(event.address.toHex()).id;
   migrationCancellation.timestamp = event.block.timestamp;
   migrationCancellation.transaction = ensureTransaction(event).id;
   migrationCancellation.migration = migration.id;
@@ -97,7 +96,6 @@ export function handleMigrationExecuted(event: MigrationExecuted): void {
   let migration = useMigration(migrationId);
 
   migrationExecution.fund = useFund(event.params.vaultProxy.toHex()).id;
-  migrationExecution.account = useAccount(event.address.toHex()).id;
   migrationExecution.timestamp = event.block.timestamp;
   migrationExecution.transaction = ensureTransaction(event).id;
   migrationExecution.migration = migration.id;
@@ -115,7 +113,6 @@ export function handleMigrationExecuted(event: MigrationExecuted): void {
 export function handleMigrationSignaled(event: MigrationSignaled): void {
   let migrationSignaling = new MigrationSignaledEvent(genericId(event));
   migrationSignaling.fund = useFund(event.params.vaultProxy.toHex()).id;
-  migrationSignaling.account = useAccount(event.address.toHex()).id;
   migrationSignaling.timestamp = event.block.timestamp;
   migrationSignaling.transaction = ensureTransaction(event).id;
   migrationSignaling.migration = ensureMigration(event).id;
@@ -125,7 +122,6 @@ export function handleMigrationSignaled(event: MigrationSignaled): void {
 export function handleMigrationInCancelHookFailed(event: MigrationInCancelHookFailed): void {
   let cancelHookFailed = new MigrationInCancelHookFailedEvent(genericId(event));
   cancelHookFailed.fund = useFund(event.params.vaultProxy.toHex()).id;
-  cancelHookFailed.account = useAccount(event.address.toHex()).id;
   cancelHookFailed.timestamp = event.block.timestamp;
   cancelHookFailed.transaction = ensureTransaction(event).id;
 
@@ -139,7 +135,6 @@ export function handleMigrationInCancelHookFailed(event: MigrationInCancelHookFa
 export function handleMigrationOutHookFailed(event: MigrationOutHookFailed): void {
   let outHookFailed = new MigrationOutHookFailedEvent(genericId(event));
   outHookFailed.fund = useFund(event.params.vaultProxy.toHex()).id;
-  outHookFailed.account = useAccount(event.address.toHex()).id;
   outHookFailed.timestamp = event.block.timestamp;
   outHookFailed.transaction = ensureTransaction(event).id;
 
@@ -195,7 +190,6 @@ export function handleOwnershipTransferred(event: OwnershipTransferred): void {
 export function handleVaultProxyDeployed(event: VaultProxyDeployed): void {
   let vaultDeployment = new VaultProxyDeployedEvent(genericId(event));
   vaultDeployment.fund = event.params.vaultProxy.toHex();
-  vaultDeployment.account = ensureManager(event.params.owner, event).id;
   vaultDeployment.timestamp = event.block.timestamp;
   vaultDeployment.transaction = ensureTransaction(event).id;
   vaultDeployment.fundDeployer = event.params.fundDeployer.toHex();

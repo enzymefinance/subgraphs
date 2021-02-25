@@ -1,4 +1,3 @@
-import { ensureAccount, useAccount } from '../entities/Account';
 import { ensureAdapterWhitelistSetting, useAdapterWhitelistSetting } from '../entities/AdapterWhitelistSetting';
 import { useFund } from '../entities/Fund';
 import { usePolicy } from '../entities/Policy';
@@ -18,7 +17,6 @@ export function handleAddressesAdded(event: AddressesAdded): void {
 
   let addressesAdded = new AdapterWhitelistAddressesAddedEvent(genericId(event));
   addressesAdded.fund = vault.toHex(); // fund does not exist yet
-  addressesAdded.account = ensureAccount(event.transaction.from, event).id;
   addressesAdded.timestamp = event.block.timestamp;
   addressesAdded.transaction = ensureTransaction(event).id;
   addressesAdded.comptrollerProxy = event.params.comptrollerProxy.toHex();
@@ -42,7 +40,6 @@ export function handleAddressesRemoved(event: AddressesRemoved): void {
 
   let addressesRemoved = new AdapterWhitelistAddressesRemovedEvent(genericId(event));
   addressesRemoved.fund = fund.id;
-  addressesRemoved.account = useAccount(event.transaction.from.toHex()).id;
   addressesRemoved.timestamp = event.block.timestamp;
   addressesRemoved.transaction = ensureTransaction(event).id;
   addressesRemoved.comptrollerProxy = event.params.comptrollerProxy.toHex();
