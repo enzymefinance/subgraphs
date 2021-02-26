@@ -1,5 +1,4 @@
 import { BigDecimal } from '@graphprotocol/graph-ts';
-import { ensureAccount } from '../entities/Account';
 import { useFee } from '../entities/Fee';
 import { trackFeeState } from '../entities/FeeState';
 import { useFund } from '../entities/Fund';
@@ -33,7 +32,6 @@ export function handleFundSettingsAdded(event: FundSettingsAdded): void {
 
   let feeSettings = new PerformanceFeeSettingsAddedEvent(genericId(event));
   feeSettings.fund = vault.toHex(); // fund does not exist yet
-  feeSettings.account = ensureAccount(event.transaction.from, event).id;
   feeSettings.timestamp = event.block.timestamp;
   feeSettings.transaction = ensureTransaction(event).id;
   feeSettings.comptrollerProxy = event.params.comptrollerProxy.toHex();
@@ -56,7 +54,6 @@ export function handleActivatedForFund(event: ActivatedForFund): void {
 
   let feeActivation = new PerformanceFeeActivatedForFundEvent(genericId(event));
   feeActivation.fund = vault.toHex(); // fund does not exist yet
-  feeActivation.account = ensureAccount(event.transaction.from, event).id;
   feeActivation.timestamp = event.block.timestamp;
   feeActivation.transaction = ensureTransaction(event).id;
   feeActivation.comptrollerProxy = event.params.comptrollerProxy.toHex();
@@ -75,7 +72,6 @@ export function handleLastSharePriceUpdated(event: LastSharePriceUpdated): void 
 
   let sharePriceUpdate = new PerformanceFeeSharePriceUpdatedEvent(genericId(event));
   sharePriceUpdate.fund = fund.id;
-  sharePriceUpdate.account = ensureAccount(event.transaction.from, event).id;
   sharePriceUpdate.timestamp = event.block.timestamp;
   sharePriceUpdate.transaction = ensureTransaction(event).id;
   sharePriceUpdate.comptrollerProxy = event.params.comptrollerProxy.toHex();
@@ -98,7 +94,6 @@ export function handlePaidOut(event: PaidOut): void {
 
   let paidOut = new PerformanceFeePaidOutEvent(genericId(event));
   paidOut.fund = fund.id;
-  paidOut.account = ensureAccount(event.transaction.from, event).id;
   paidOut.timestamp = event.block.timestamp;
   paidOut.transaction = ensureTransaction(event).id;
   paidOut.comptrollerProxy = event.params.comptrollerProxy.toHex();
@@ -121,7 +116,6 @@ export function handlePerformanceUpdated(event: PerformanceUpdated): void {
 
   let updated = new PerformanceFeePerformanceUpdatedEvent(genericId(event));
   updated.fund = fund.id;
-  updated.account = ensureAccount(event.transaction.from, event).id;
   updated.timestamp = event.block.timestamp;
   updated.transaction = ensureTransaction(event).id;
   updated.comptrollerProxy = event.params.comptrollerProxy.toHex();

@@ -40,6 +40,7 @@ import {
   vaultLibAddress,
   wethTokenAddress,
   zeroExV2AdapterAddress,
+  alphaHomoraV1AdapterAddress,
 } from '../addresses';
 import { Release } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
@@ -63,6 +64,7 @@ export function createRelease(address: Address, event: ethereum.Event): Release 
   release.adapterBlacklist = adapterBlacklistAddress.toHex();
   release.adapterWhitelist = adapterWhitelistAddress.toHex();
   release.aggregatedDerivativePriceFeed = aggregatedDerivativePriceFeedAddress.toHex();
+  release.alphaHomoraV1Adapter = alphaHomoraV1AdapterAddress.toHex();
   release.assetBlacklist = assetBlacklistAddress.toHex();
   release.assetWhitelist = assetWhitelistAddress.toHex();
   release.authUserExecutedSharesRequestorFactory = authUserExecutedSharesRequestorFactoryAddress.toHex();

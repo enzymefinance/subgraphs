@@ -1,4 +1,4 @@
-import { Address } from '@graphprotocol/graph-ts';
+import { Address, BigDecimal } from '@graphprotocol/graph-ts';
 import {
   audChainlinkAggregator,
   btcChainlinkAggregator,
@@ -169,6 +169,7 @@ export function handleEthUsdAggregatorSet(event: EthUsdAggregatorSet): void {
 
 export function handlePrimitiveAdded(event: PrimitiveAdded): void {
   let primitive = ensureAsset(event.params.primitive);
+  primitive.removed = false;
   primitive.type = event.params.rateAsset == 1 ? 'USD' : 'ETH';
   primitive.save();
 
@@ -185,10 +186,28 @@ export function handlePrimitiveAdded(event: PrimitiveAdded): void {
   // Whenever a new asset is registered, we need to fetch its current price immediately.
   let contract = ChainlinkAggregatorContract.bind(aggregator);
   let current = toBigDecimal(contract.latestAnswer(), primitive.type === 'USD' ? 8 : 18);
+
+  // NOTE: We incorrectly added a DPI/USD aggregator, we need to do some special treatmet for that one.
+  let dpiUsdAggregator = Address.fromString('0xd2a593bf7594ace1fad597adb697b5645d5eddb2');
+  if (event.params.aggregator.equals(dpiUsdAggregator)) {
+    current = BigDecimal.fromString('0');
+
+    primitive.type = 'ETH';
+    primitive.save();
+  }
+
   trackAssetPrice(primitive, event.block.timestamp, current);
 
+<<<<<<< HEAD
   // Keep tracking this asset using the registered chainlink aggregator.
   enableChainlinkAssetAggregator(aggregator, primitive);
+=======
+  // NOTE: We skip creation of the aggregator data source for DPI/USD.
+  if (!event.params.aggregator.equals(dpiUsdAggregator)) {
+    // Keep tracking this asset using the registered chainlink aggregator.
+    ensureChainlinkAssetAggregatorProxy(proxy, aggregator, primitive);
+  }
+>>>>>>> main
 
   let cron = ensureCron();
   cron.primitives = arrayUnique<string>(cron.primitives.concat([primitive.id]));

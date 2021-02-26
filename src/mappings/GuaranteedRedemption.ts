@@ -1,4 +1,3 @@
-import { ensureAccount } from '../entities/Account';
 import { ensureGuaranteedRedemption, useGuaranteedRedemption } from '../entities/GuaranteedRedemption';
 import { ensureGuaranteedRedemptionSetting } from '../entities/GuaranteedRedemptionSetting';
 import { useIntegrationAdapter } from '../entities/IntegrationAdapter';
@@ -53,7 +52,6 @@ export function handleFundSettingsSet(event: FundSettingsSet): void {
 
   let settingsSet = new GuaranteedRedemptionFundSettingsSetEvent(genericId(event));
   settingsSet.fund = fundId;
-  settingsSet.account = ensureAccount(event.transaction.from, event).id;
   settingsSet.timestamp = event.block.timestamp;
   settingsSet.transaction = ensureTransaction(event).id;
   settingsSet.comptrollerProxy = event.params.comptrollerProxy.toHex();

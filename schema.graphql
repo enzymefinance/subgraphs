@@ -17,7 +17,6 @@ interface NetworkEventInterface {
 interface FundEventInterface {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
 }
@@ -202,7 +201,6 @@ enum SharesRequestType {
 type NewFundCreatedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   comptrollerProxy: String!
   vaultProxy: Fund!
@@ -219,7 +217,6 @@ type NewFundCreatedEvent implements EventInterface & FundEventInterface @entity 
 type ComptrollerProxyDeployedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   comptrollerProxy: String!
   transaction: Transaction!
@@ -233,7 +230,6 @@ type ComptrollerProxyDeployedEvent implements EventInterface & FundEventInterfac
 type VaultProxySetEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
   vaultProxy: String!
@@ -244,7 +240,6 @@ type SharesBoughtEvent implements EventInterface & FundEventInterface & SharesCh
   id: ID!
   fund: Fund!
   type: ShareChangeType!
-  account: Account!
   investor: Account!
   investmentState: InvestmentState!
   shares: BigDecimal!
@@ -262,7 +257,6 @@ type SharesRedeemedEvent implements EventInterface & FundEventInterface & Shares
   id: ID!
   fund: Fund!
   type: ShareChangeType!
-  account: Account!
   investor: Account!
   investmentState: InvestmentState!
   shares: BigDecimal!
@@ -277,7 +271,6 @@ type AssetWithdrawnEvent implements EventInterface & FundEventInterface @entity 
   id: ID!
   asset: Asset!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
   target: String!
@@ -287,7 +280,6 @@ type AssetWithdrawnEvent implements EventInterface & FundEventInterface @entity 
 type TrackedAssetAddedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   asset: Asset!
   timestamp: BigInt!
   transaction: Transaction!
@@ -305,7 +297,6 @@ type TrackedAssetRemovedEvent implements EventInterface & FundEventInterface @en
 type AuthUserAddedForFundEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
 }
@@ -313,7 +304,6 @@ type AuthUserAddedForFundEvent implements EventInterface & FundEventInterface @e
 type AuthUserRemovedForFundEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
 }
@@ -321,7 +311,6 @@ type AuthUserRemovedForFundEvent implements EventInterface & FundEventInterface 
 type CallOnIntegrationExecutedForFundEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   adapter: IntegrationAdapter!
   selector: String!
   integrationData: String!
@@ -334,7 +323,6 @@ type CallOnIntegrationExecutedForFundEvent implements EventInterface & FundEvent
 type MigrationSignaledEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
   migration: Migration!
@@ -343,7 +331,6 @@ type MigrationSignaledEvent implements EventInterface & FundEventInterface @enti
 type MigrationCancelledEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
   migration: Migration!
@@ -353,7 +340,6 @@ type MigrationCancelledEvent implements EventInterface & FundEventInterface @ent
 type MigrationExecutedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
   migration: Migration!
@@ -363,7 +349,6 @@ type MigrationExecutedEvent implements EventInterface & FundEventInterface @enti
 type MigrationInCancelHookFailedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
   vaultProxy: String!
@@ -377,7 +362,6 @@ type MigrationInCancelHookFailedEvent implements EventInterface & FundEventInter
 type MigrationOutHookFailedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
   vaultProxy: String!
@@ -391,7 +375,6 @@ type MigrationOutHookFailedEvent implements EventInterface & FundEventInterface 
 type FeeEnabledForFundEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
   fee: Fee!
@@ -402,7 +385,6 @@ type FeeEnabledForFundEvent implements EventInterface & FundEventInterface @enti
 type FeesRecipientSetForFundEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
   comptrollerProxy: String!
@@ -415,7 +397,6 @@ type FeeSettledForFundEvent implements EventInterface & FundEventInterface & Sha
   id: ID!
   fund: Fund!
   type: ShareChangeType!
-  account: Account!
   investor: Account!
   timestamp: BigInt!
   transaction: Transaction!
@@ -436,7 +417,6 @@ type AllSharesOutstandingForcePaidForFundEvent implements EventInterface & FundE
   id: ID!
   fund: Fund!
   type: ShareChangeType!
-  account: Account!
   investor: Account!
   timestamp: BigInt!
   transaction: Transaction!
@@ -454,7 +434,6 @@ type SharesOutstandingPaidForFundEvent implements EventInterface & FundEventInte
   id: ID!
   fund: Fund!
   type: ShareChangeType!
-  account: Account!
   investor: Account!
   timestamp: BigInt!
   transaction: Transaction!
@@ -470,7 +449,6 @@ type SharesOutstandingPaidForFundEvent implements EventInterface & FundEventInte
 type PolicyEnabledForFundEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   policy: Policy!
   settingsData: String!
   timestamp: BigInt!
@@ -480,7 +458,6 @@ type PolicyEnabledForFundEvent implements EventInterface & FundEventInterface @e
 type PolicyDisabledForFundEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   policy: Policy!
   timestamp: BigInt!
   transaction: Transaction!
@@ -489,7 +466,6 @@ type PolicyDisabledForFundEvent implements EventInterface & FundEventInterface @
 type AccessorSetEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   prevAccessor: String
   nextAccessor: String!
   transaction: Transaction!
@@ -499,7 +475,6 @@ type AccessorSetEvent implements EventInterface & FundEventInterface @entity {
 type OwnerSetEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
   prevOwner: Account
@@ -509,7 +484,6 @@ type OwnerSetEvent implements EventInterface & FundEventInterface @entity {
 type MigratorSetEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
   prevMigrator: Account
@@ -519,7 +493,6 @@ type MigratorSetEvent implements EventInterface & FundEventInterface @entity {
 type VaultLibSetEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
   prevVaultLib: String
@@ -529,7 +502,6 @@ type VaultLibSetEvent implements EventInterface & FundEventInterface @entity {
 type ApprovalEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
   owner: String!
@@ -540,7 +512,6 @@ type ApprovalEvent implements EventInterface & FundEventInterface @entity {
 type TransferEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
   from: String!
@@ -551,7 +522,6 @@ type TransferEvent implements EventInterface & FundEventInterface @entity {
 type AdapterBlacklistAddressesAddedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
   comptrollerProxy: String!
@@ -561,7 +531,6 @@ type AdapterBlacklistAddressesAddedEvent implements EventInterface & FundEventIn
 type AdapterBlacklistAddressesRemovedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
   comptrollerProxy: String!
@@ -571,7 +540,6 @@ type AdapterBlacklistAddressesRemovedEvent implements EventInterface & FundEvent
 type AdapterWhitelistAddressesAddedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
   comptrollerProxy: String!
@@ -581,7 +549,6 @@ type AdapterWhitelistAddressesAddedEvent implements EventInterface & FundEventIn
 type AdapterWhitelistAddressesRemovedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
   comptrollerProxy: String!
@@ -591,7 +558,6 @@ type AdapterWhitelistAddressesRemovedEvent implements EventInterface & FundEvent
 type AssetBlacklistAddressesAddedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
   comptrollerProxy: String!
@@ -601,7 +567,6 @@ type AssetBlacklistAddressesAddedEvent implements EventInterface & FundEventInte
 type AssetBlacklistAddressesRemovedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
   comptrollerProxy: String!
@@ -611,7 +576,6 @@ type AssetBlacklistAddressesRemovedEvent implements EventInterface & FundEventIn
 type AssetWhitelistAddressesAddedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
   comptrollerProxy: String!
@@ -621,7 +585,6 @@ type AssetWhitelistAddressesAddedEvent implements EventInterface & FundEventInte
 type AssetWhitelistAddressesRemovedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
   comptrollerProxy: String!
@@ -631,7 +594,6 @@ type AssetWhitelistAddressesRemovedEvent implements EventInterface & FundEventIn
 type BuySharesCallerWhitelistAddressesAddedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
   comptrollerProxy: String!
@@ -641,7 +603,6 @@ type BuySharesCallerWhitelistAddressesAddedEvent implements EventInterface & Fun
 type BuySharesCallerWhitelistAddressesRemovedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
   comptrollerProxy: String!
@@ -651,7 +612,6 @@ type BuySharesCallerWhitelistAddressesRemovedEvent implements EventInterface & F
 type GuaranteedRedemptionFundSettingsSetEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
   comptrollerProxy: String!
@@ -662,7 +622,6 @@ type GuaranteedRedemptionFundSettingsSetEvent implements EventInterface & FundEv
 type InvestorWhitelistAddressesAddedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
   comptrollerProxy: String!
@@ -672,7 +631,6 @@ type InvestorWhitelistAddressesAddedEvent implements EventInterface & FundEventI
 type InvestorWhitelistAddressesRemovedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
   comptrollerProxy: String!
@@ -682,7 +640,6 @@ type InvestorWhitelistAddressesRemovedEvent implements EventInterface & FundEven
 type MaxConcentrationSetEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
   comptrollerProxy: String!
@@ -692,7 +649,6 @@ type MaxConcentrationSetEvent implements EventInterface & FundEventInterface @en
 type MinMaxInvestmentFundSettingsSetEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
   comptrollerProxy: String!
@@ -703,7 +659,6 @@ type MinMaxInvestmentFundSettingsSetEvent implements EventInterface & FundEventI
 type ManagementFeeSettingsAddedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
   comptrollerProxy: String!
@@ -713,7 +668,6 @@ type ManagementFeeSettingsAddedEvent implements EventInterface & FundEventInterf
 type ManagementFeeSettledEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
   comptrollerProxy: String!
@@ -724,7 +678,6 @@ type ManagementFeeSettledEvent implements EventInterface & FundEventInterface @e
 type PerformanceFeeSettingsAddedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
   comptrollerProxy: String!
@@ -735,7 +688,6 @@ type PerformanceFeeSettingsAddedEvent implements EventInterface & FundEventInter
 type PerformanceFeeActivatedForFundEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
   comptrollerProxy: String!
@@ -745,7 +697,6 @@ type PerformanceFeeActivatedForFundEvent implements EventInterface & FundEventIn
 type PerformanceFeeSharePriceUpdatedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
   comptrollerProxy: String!
@@ -756,7 +707,6 @@ type PerformanceFeeSharePriceUpdatedEvent implements EventInterface & FundEventI
 type PerformanceFeePaidOutEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
   comptrollerProxy: String!
@@ -767,7 +717,6 @@ type PerformanceFeePaidOutEvent implements EventInterface & FundEventInterface @
 type PerformanceFeePerformanceUpdatedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
   comptrollerProxy: String!
@@ -779,7 +728,6 @@ type PerformanceFeePerformanceUpdatedEvent implements EventInterface & FundEvent
 type EntranceRateDirectFeeSettingsAddedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
   comptrollerProxy: String!
@@ -789,7 +737,6 @@ type EntranceRateDirectFeeSettingsAddedEvent implements EventInterface & FundEve
 type EntranceRateDirectFeeSettledEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
   comptrollerProxy: String!
@@ -800,7 +747,6 @@ type EntranceRateDirectFeeSettledEvent implements EventInterface & FundEventInte
 type EntranceRateBurnFeeSettingsAddedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
   comptrollerProxy: String!
@@ -810,7 +756,6 @@ type EntranceRateBurnFeeSettingsAddedEvent implements EventInterface & FundEvent
 type EntranceRateBurnFeeSettledEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
   comptrollerProxy: String!
@@ -821,7 +766,6 @@ type EntranceRateBurnFeeSettledEvent implements EventInterface & FundEventInterf
 type OverridePauseSetEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
   overridePause: Boolean!
@@ -830,7 +774,6 @@ type OverridePauseSetEvent implements EventInterface & FundEventInterface @entit
 type MigratedSharesDuePaidEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
   sharesDue: BigDecimal!
@@ -839,7 +782,6 @@ type MigratedSharesDuePaidEvent implements EventInterface & FundEventInterface @
 type PreRedeemSharesHookFailedEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   sharesQuantity: BigDecimal!
   redeemer: Account!
@@ -912,7 +854,6 @@ type RequestExecutorRemovedEvent implements EventInterface & NetworkEventInterfa
 type VaultProxyDeployedEvent implements EventInterface & FundEventInterface & NetworkEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   transaction: Transaction!
   fundDeployer: String!
@@ -1175,7 +1116,6 @@ type Transaction @entity {
   gasUsed: Int!
   gasPrice: BigDecimal!
   input: String!
-  account: Account
   events: [EventInterface!]! @derivedFrom(field: "transaction")
 }
 
@@ -1304,6 +1244,7 @@ type Release @entity {
   adapterBlacklist: String!
   adapterWhitelist: String!
   aggregatedDerivativePriceFeed: String!
+  alphaHomoraV1Adapter: String!
   assetBlacklist: String!
   assetWhitelist: String!
   authUserExecutedSharesRequestorFactory: String!
@@ -1360,8 +1301,6 @@ type Account @entity {
   sharesChanges: [SharesChangeInterface!]! @derivedFrom(field: "investor")
   feeSharesChanges: [FeeSharesChangeInterface!]! @derivedFrom(field: "investor")
   investmentSharesChanges: [InvestmentSharesChangeInterface!]! @derivedFrom(field: "investor")
-  events: [FundEventInterface!]! @derivedFrom(field: "account")
-  transactions: [Transaction!]! @derivedFrom(field: "account")
   whitelisted: [InvestorWhitelistSetting!]! @derivedFrom(field: "listed")
 }
 

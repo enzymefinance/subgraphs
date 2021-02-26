@@ -1,6 +1,6 @@
 import { Address, BigDecimal } from '@graphprotocol/graph-ts';
 import { zeroAddress } from '../constants';
-import { ensureAccount, useAccount } from '../entities/Account';
+import { ensureAccount } from '../entities/Account';
 import { calculationStateId, trackCalculationState } from '../entities/CalculationState';
 import { ensureFee, useFee } from '../entities/Fee';
 import { trackFeeState } from '../entities/FeeState';
@@ -43,7 +43,6 @@ export function handleAllSharesOutstandingForcePaidForFund(event: AllSharesOutst
   let settled = new AllSharesOutstandingForcePaidForFundEvent(genericId(event));
   settled.fund = fund.id;
   settled.type = 'AllSharesOutstandingForcePaidForFund';
-  settled.account = useAccount(event.transaction.from.toHex()).id;
   settled.investor = investor.id;
   settled.timestamp = event.block.timestamp;
   settled.transaction = ensureTransaction(event).id;
@@ -93,7 +92,6 @@ export function handleFeeEnabledForFund(event: FeeEnabledForFund): void {
 
   let enabled = new FeeEnabledForFundEvent(genericId(event));
   enabled.fund = fundId;
-  enabled.account = ensureAccount(event.transaction.from, event).id;
   enabled.timestamp = event.block.timestamp;
   enabled.transaction = ensureTransaction(event).id;
   enabled.fee = fee.id;
@@ -117,7 +115,6 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
   let settled = new FeeSettledForFundEvent(genericId(event));
   settled.fund = fund.id;
   settled.type = 'FeeSettledForFund';
-  settled.account = useAccount(event.transaction.from.toHex()).id;
   settled.investor = investor.id;
   settled.timestamp = event.block.timestamp;
   settled.transaction = ensureTransaction(event).id;
@@ -149,7 +146,6 @@ export function handleSharesOutstandingPaidForFund(event: SharesOutstandingPaidF
   let sharesPaid = new SharesOutstandingPaidForFundEvent(genericId(event));
   sharesPaid.fund = fund.id;
   sharesPaid.type = 'SharesOutstandingPaidForFund';
-  sharesPaid.account = useAccount(event.transaction.from.toHex()).id;
   sharesPaid.investor = investor.id;
   sharesPaid.timestamp = event.block.timestamp;
   sharesPaid.transaction = ensureTransaction(event).id;
@@ -159,6 +155,7 @@ export function handleSharesOutstandingPaidForFund(event: SharesOutstandingPaidF
   sharesPaid.fee = fee.id;
   sharesPaid.sharesDue = toBigDecimal(event.params.sharesDue);
   sharesPaid.calculations = calculationStateId(fund, event);
+  sharesPaid.fundState = fund.state;
   sharesPaid.save();
 
   trackShareState(fund, event, sharesPaid);
@@ -172,7 +169,6 @@ export function handleFeesRecipientSetForFund(event: FeesRecipientSetForFund): v
 
   let feeRecipientSet = new FeesRecipientSetForFundEvent(genericId(event));
   feeRecipientSet.fund = vaultProxy;
-  feeRecipientSet.account = ensureAccount(event.transaction.from, event).id;
   feeRecipientSet.timestamp = event.block.timestamp;
   feeRecipientSet.transaction = ensureTransaction(event).id;
   feeRecipientSet.comptrollerProxy = event.params.comptrollerProxy.toHex();
