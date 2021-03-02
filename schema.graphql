@@ -113,7 +113,6 @@ interface Trade {
 interface SharesRequestInterface {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   sharesRequestor: SharesRequestor!
   type: SharesRequestType!
