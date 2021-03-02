@@ -140,7 +140,7 @@ enum DerivativeType {
   Synthetix
 }
 
-enum ChainlinkAggregatorType {
+enum ChainlinkAggregatorProxyType {
   ASSET
   ETHUSD
   CURRENCY
@@ -1906,7 +1906,7 @@ type MonthlyPriceCandleGroup @entity {
 
 type ChainlinkAggregator @entity {
   id: ID!
-  type: ChainlinkAggregatorType!
+  type: ChainlinkAggregatorProxyType!
   asset: Asset
   currency: Currency
   active: Boolean!
