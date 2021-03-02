@@ -4023,154 +4023,43 @@
         "chainlink": {
           "ethusd": "0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419",
           "aggregators": {
-            "aave": [
-              "0x6Df09E975c830ECae5bd4eD9d90f3A95a4f88012",
-              0
-            ],
-            "adx": [
-              "0x231e764B44b2C1b7Ca171fa8021A24ed520Cde10",
-              1
-            ],
-            "ant": [
-              "0x8f83670260f8f7708143b836a2a6f11ef0abac01",
-              0
-            ],
-            "bal": [
-              "0xc1438aa3823a6ba0c159cfa8d98df5a994ba120b",
-              0
-            ],
-            "bat": [
-              "0x0d16d4528239e9ee52fa531af613acdb23d88c94",
-              0
-            ],
-            "bnb": [
-              "0x14e613ac84a31f709eadbdf89c6cc390fdc9540a",
-              1
-            ],
-            "bnt": [
-              "0xcf61d1841b178fe82c8895fe60c2edda08314416",
-              0
-            ],
-            "busd": [
-              "0x614715d2af89e6ec99a233818275142ce88d1cfd",
-              0
-            ],
-            "bzrx": [
-              "0x8f7c7181ed1a2ba41cfc3f5d064ef91b67daef66",
-              0
-            ],
-            "comp": [
-              "0x1b39ee86ec5979ba5c322b826b3ecb8c79991699",
-              0
-            ],
-            "cro": [
-              "0xcA696a9Eb93b81ADFE6435759A29aB4cf2991A96",
-              0
-            ],
-            "crv": [
-              "0x8a12be339b0cd1829b91adc01977caa5e9ac121e",
-              0
-            ],
-            "dai": [
-              "0x773616e4d11a78f511299002da57a0a94577f1f4",
-              0
-            ],
-            "dmg": [
-              "0xD010e899f7ab723AC93f825cDC5Aa057669557c2",
-              0
-            ],
-            "enj": [
-              "0x24d9ab51950f3d62e9144fdc2f3135daa6ce8d1b",
-              0
-            ],
-            "knc": [
-              "0x656c0544ef4c98a6a98491833a89204abb045d6b",
-              0
-            ],
-            "link": [
-              "0xdc530d9457755926550b59e8eccdae7624181557",
-              0
-            ],
-            "lrc": [
-              "0x160AC928A16C93eD4895C2De6f81ECcE9a7eB7b4",
-              0
-            ],
-            "mana": [
-              "0x82a44d92d6c329826dc557c5e1be6ebec5d5feb9",
-              0
-            ],
-            "mkr": [
-              "0x24551a8fb2a7211a25a17b1481f043a8a8adc7f2",
-              0
-            ],
-            "mln": [
-              "0xdaea8386611a157b08829ed4997a8a62b557014c",
-              0
-            ],
-            "nmr": [
-              "0x9cb2a01a7e64992d32a34db7ceea4c919c391f6a",
-              0
-            ],
-            "oxt": [
-              "0xd75AAaE4AF0c398ca13e2667Be57AF2ccA8B5de6",
-              1
-            ],
-            "ren": [
-              "0x3147d7203354dc06d9fd350c7a2437bca92387a4",
-              0
-            ],
-            "rep": [
-              "0xd4ce430c3b67b3e2f7026d86e7128588629e2455",
-              0
-            ],
-            "rlc": [
-              "0x4cba1e1fdc738d0fe8db3ee07728e2bc4da676c6",
-              0
-            ],
-            "snx": [
-              "0x79291a9d692df95334b1a0b3b4ae6bc606782f8c",
-              0
-            ],
-            "susd": [
-              "0x8e0b7e6062272B5eF4524250bFFF8e5Bd3497757",
-              0
-            ],
-            "sxp": [
-              "0xFb0CfD6c19e25DB4a08D8a204a387cEa48Cc138f",
-              1
-            ],
-            "tusd": [
-              "0x3886BA987236181D98F2401c507Fb8BeA7871dF2",
-              0
-            ],
-            "uni": [
-              "0xd6aa3d25116d8da79ea0246c4826eb951872e02e",
-              0
-            ],
-            "usdc": [
-              "0x986b5e1e1755e3c2440e960477f25201b0a8bbd4",
-              0
-            ],
-            "usdt": [
-              "0xee9f2375b4bdf6387aa8265dd4fb8f16512a1d46",
-              0
-            ],
-            "wbtc": [
-              "0xdeb288f737066589598e9214e782fa5a8ed689e8",
-              0
-            ],
-            "wnxm": [
-              "0xe5dc0a609ab8bcf15d3f35cfaa1ff40f521173ea",
-              0
-            ],
-            "yfi": [
-              "0x7c5d4f8345e66f68099581db340cd65b078c41f4",
-              0
-            ],
-            "zrx": [
-              "0x2da4983a622a8498bb1a21fae9d8f6c664939962",
-              0
-            ]
+            "aave": ["0x6Df09E975c830ECae5bd4eD9d90f3A95a4f88012", 0],
+            "adx": ["0x231e764B44b2C1b7Ca171fa8021A24ed520Cde10", 1],
+            "ant": ["0x8f83670260f8f7708143b836a2a6f11ef0abac01", 0],
+            "bal": ["0xc1438aa3823a6ba0c159cfa8d98df5a994ba120b", 0],
+            "bat": ["0x0d16d4528239e9ee52fa531af613acdb23d88c94", 0],
+            "bnb": ["0x14e613ac84a31f709eadbdf89c6cc390fdc9540a", 1],
+            "bnt": ["0xcf61d1841b178fe82c8895fe60c2edda08314416", 0],
+            "busd": ["0x614715d2af89e6ec99a233818275142ce88d1cfd", 0],
+            "bzrx": ["0x8f7c7181ed1a2ba41cfc3f5d064ef91b67daef66", 0],
+            "comp": ["0x1b39ee86ec5979ba5c322b826b3ecb8c79991699", 0],
+            "cro": ["0xcA696a9Eb93b81ADFE6435759A29aB4cf2991A96", 0],
+            "crv": ["0x8a12be339b0cd1829b91adc01977caa5e9ac121e", 0],
+            "dai": ["0x773616e4d11a78f511299002da57a0a94577f1f4", 0],
+            "dmg": ["0xD010e899f7ab723AC93f825cDC5Aa057669557c2", 0],
+            "enj": ["0x24d9ab51950f3d62e9144fdc2f3135daa6ce8d1b", 0],
+            "knc": ["0x656c0544ef4c98a6a98491833a89204abb045d6b", 0],
+            "link": ["0xdc530d9457755926550b59e8eccdae7624181557", 0],
+            "lrc": ["0x160AC928A16C93eD4895C2De6f81ECcE9a7eB7b4", 0],
+            "mana": ["0x82a44d92d6c329826dc557c5e1be6ebec5d5feb9", 0],
+            "mkr": ["0x24551a8fb2a7211a25a17b1481f043a8a8adc7f2", 0],
+            "mln": ["0xdaea8386611a157b08829ed4997a8a62b557014c", 0],
+            "nmr": ["0x9cb2a01a7e64992d32a34db7ceea4c919c391f6a", 0],
+            "oxt": ["0xd75AAaE4AF0c398ca13e2667Be57AF2ccA8B5de6", 1],
+            "ren": ["0x3147d7203354dc06d9fd350c7a2437bca92387a4", 0],
+            "rep": ["0xd4ce430c3b67b3e2f7026d86e7128588629e2455", 0],
+            "rlc": ["0x4cba1e1fdc738d0fe8db3ee07728e2bc4da676c6", 0],
+            "snx": ["0x79291a9d692df95334b1a0b3b4ae6bc606782f8c", 0],
+            "susd": ["0x8e0b7e6062272B5eF4524250bFFF8e5Bd3497757", 0],
+            "sxp": ["0xFb0CfD6c19e25DB4a08D8a204a387cEa48Cc138f", 1],
+            "tusd": ["0x3886BA987236181D98F2401c507Fb8BeA7871dF2", 0],
+            "uni": ["0xd6aa3d25116d8da79ea0246c4826eb951872e02e", 0],
+            "usdc": ["0x986b5e1e1755e3c2440e960477f25201b0a8bbd4", 0],
+            "usdt": ["0xee9f2375b4bdf6387aa8265dd4fb8f16512a1d46", 0],
+            "wbtc": ["0xdeb288f737066589598e9214e782fa5a8ed689e8", 0],
+            "wnxm": ["0xe5dc0a609ab8bcf15d3f35cfaa1ff40f521173ea", 0],
+            "yfi": ["0x7c5d4f8345e66f68099581db340cd65b078c41f4", 0],
+            "zrx": ["0x2da4983a622a8498bb1a21fae9d8f6c664939962", 0]
           }
         },
         "wdgld": {
@@ -4312,10 +4201,7 @@
         },
         "zeroex": {
           "exchange": "0x080bf510fcbf18b91105470639e9561022937712",
-          "allowedMakers": [
-            "0x56178a0d5F301bAf6CF3e1Cd53d9863437345Bf9",
-            "0xe0238DA09Cab56B3066F26F98657DccE801c16B9"
-          ]
+          "allowedMakers": ["0x56178a0d5F301bAf6CF3e1Cd53d9863437345Bf9", "0xe0238DA09Cab56B3066F26F98657DccE801c16B9"]
         },
         "policies": {
           "guaranteedRedemption": {
@@ -6150,10 +6036,34 @@
               "internalType": "address",
               "name": "_feeManager",
               "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "_weth",
+              "type": "address"
             }
           ],
           "stateMutability": "nonpayable",
           "type": "constructor"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_who",
+              "type": "address"
+            }
+          ],
+          "name": "accountHasMaxWethAllowance",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "hasMaxWethAllowance_",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
         },
         {
           "inputs": [
@@ -6177,6 +6087,60 @@
             }
           ],
           "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_comptrollerProxy",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "_denominationAsset",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "_buyer",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_minSharesQuantity",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "_exchange",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "_exchangeApproveTarget",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes",
+              "name": "_exchangeData",
+              "type": "bytes"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_minInvestmentAmount",
+              "type": "uint256"
+            }
+          ],
+          "name": "exchangeAndBuyShares",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "sharesReceivedAmount_",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "payable",
           "type": "function"
         },
         {
@@ -6212,6 +6176,19 @@
           "type": "function"
         },
         {
+          "inputs": [],
+          "name": "getWethToken",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "wethToken_",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
           "inputs": [
             {
               "internalType": "address",
@@ -6228,6 +6205,10 @@
           "outputs": [],
           "stateMutability": "nonpayable",
           "type": "function"
+        },
+        {
+          "stateMutability": "payable",
+          "type": "receive"
         }
       ]
     },
