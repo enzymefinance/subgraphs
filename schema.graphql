@@ -792,7 +792,6 @@ type PreRedeemSharesHookFailedEvent implements EventInterface & FundEventInterfa
 type RequestCanceledEvent implements EventInterface & FundEventInterface & SharesRequestInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   sharesRequestor: SharesRequestor!
   type: SharesRequestType!
@@ -804,7 +803,6 @@ type RequestCanceledEvent implements EventInterface & FundEventInterface & Share
 type RequestCreatedEvent implements EventInterface & FundEventInterface & SharesRequestInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   sharesRequestor: SharesRequestor!
   type: SharesRequestType!
@@ -816,7 +814,6 @@ type RequestCreatedEvent implements EventInterface & FundEventInterface & Shares
 type RequestExecutedEvent implements EventInterface & FundEventInterface & SharesRequestInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   sharesRequestor: SharesRequestor!
   type: SharesRequestType!
@@ -829,7 +826,6 @@ type RequestExecutedEvent implements EventInterface & FundEventInterface & Share
 type RequestExecutorAddedEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   sharesRequestor: SharesRequestor!
   requestExecutor: SharesRequestExecutor!
@@ -839,7 +835,6 @@ type RequestExecutorAddedEvent implements EventInterface & NetworkEventInterface
 type RequestExecutorRemovedEvent implements EventInterface & NetworkEventInterface @entity {
   id: ID!
   fund: Fund!
-  account: Account!
   timestamp: BigInt!
   sharesRequestor: SharesRequestor!
   requestExecutor: SharesRequestExecutor!

@@ -34,7 +34,6 @@ export function handleRequestCanceled(event: RequestCanceled): void {
   let canceled = new RequestCanceledEvent(genericId(event));
   canceled.timestamp = event.block.timestamp;
   canceled.fund = fund.id;
-  canceled.account = account.id;
   canceled.sharesRequestor = sharesRequestor.id;
   canceled.type = 'CANCELED';
   canceled.investmentAmount = investmentAmount;
@@ -56,7 +55,6 @@ export function handleRequestCreated(event: RequestCreated): void {
   let created = new RequestCreatedEvent(genericId(event));
   created.timestamp = event.block.timestamp;
   created.fund = fund.id;
-  created.account = account.id;
   created.sharesRequestor = sharesRequestor.id;
   created.type = 'CREATED';
   created.investmentAmount = investmentAmount;
@@ -86,7 +84,6 @@ export function handleRequestExecuted(event: RequestExecuted): void {
   let created = new RequestCreatedEvent(genericId(event));
   created.timestamp = event.block.timestamp;
   created.fund = fund.id;
-  created.account = account.id;
   created.sharesRequestor = sharesRequestor.id;
   created.type = 'EXECUTED';
   created.investmentAmount = investmentAmount;
@@ -106,7 +103,6 @@ export function handleRequestExecutorAdded(event: RequestExecutorAdded): void {
   let added = new RequestExecutorAddedEvent(genericId(event));
   added.timestamp = event.block.timestamp;
   added.fund = fund.id;
-  added.account = account.id;
   added.sharesRequestor = sharesRequestor.id;
   added.requestExecutor = executor.id;
   added.transaction = ensureTransaction(event).id;
@@ -124,7 +120,6 @@ export function handleRequestExecutorRemoved(event: RequestExecutorRemoved): voi
   let removed = new RequestExecutorRemovedEvent(genericId(event));
   removed.timestamp = event.block.timestamp;
   removed.fund = fund.id;
-  removed.account = account.id;
   removed.sharesRequestor = sharesRequestor.id;
   removed.requestExecutor = executor.id;
   removed.transaction = ensureTransaction(event).id;
