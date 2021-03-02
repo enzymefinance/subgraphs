@@ -1899,12 +1899,13 @@ type MonthlyPriceCandleGroup @entity {
   currencyCandles: [MonthlyCurrencyPriceCandle!]! @derivedFrom(field: "group")
 }
 
-type ChainlinkAggregator @entity {
+type ChainlinkAggregatorProxy @entity {
   id: ID!
+  aggregator: String!
   type: ChainlinkAggregatorProxyType!
+  decimals: Int!
   asset: Asset
   currency: Currency
-  active: Boolean!
 }
 
 # Knowing the timestamp of the most recent update allows us to create missing
@@ -1933,6 +1934,9 @@ type Cron @entity {
 
   #
   currencies: [Currency!]!
+
+  # ChainlinkAggregatorProxies
+  chainlinkAggregatorProxies: [ChainlinkAggregatorProxy!]!
 }
 
 #################################################
