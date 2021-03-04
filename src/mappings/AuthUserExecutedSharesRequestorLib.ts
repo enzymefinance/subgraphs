@@ -96,7 +96,6 @@ export function handleRequestExecuted(event: RequestExecuted): void {
 
 export function handleRequestExecutorAdded(event: RequestExecutorAdded): void {
   let fund = useFund(dataSource.context().getString('vaultProxy'));
-  let account = ensureAccount(event.transaction.from, event);
   let sharesRequestor = ensureSharesRequestor(event.address.toHex(), fund);
   let executor = ensureAccount(event.params.account, event);
 
@@ -113,7 +112,6 @@ export function handleRequestExecutorAdded(event: RequestExecutorAdded): void {
 
 export function handleRequestExecutorRemoved(event: RequestExecutorRemoved): void {
   let fund = useFund(dataSource.context().getString('vaultProxy'));
-  let account = ensureAccount(event.transaction.from, event);
   let sharesRequestor = ensureSharesRequestor(event.address.toHex(), fund);
   let executor = ensureAccount(event.params.account, event);
 

@@ -1165,7 +1165,7 @@ type Fund @entity {
   sharesChanges: [SharesChangeInterface!]! @derivedFrom(field: "fund")
   feeSharesChanges: [FeeSharesChangeInterface!]! @derivedFrom(field: "fund")
   investmentSharesChanges: [InvestmentSharesChangeInterface!]! @derivedFrom(field: "fund")
-  sharesRequests: [SharesRequest!]!
+  sharesRequests: [SharesRequest!]! @derivedFrom(field: "fund")
 
   # fund state
   shares: ShareState!
