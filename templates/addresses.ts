@@ -23,6 +23,9 @@ export let chainlinkPriceFeedAddress = Address.fromString('{{chainlinkPriceFeed}
 
 // Peripheral
 export let fundActionsWrapperAddress = Address.fromString('{{fundActionsWrapper}}');
+export let authUserExecutedSharesRequestorFactoryAddress = Address.fromString(
+  '{{authUserExecutedSharesRequestorFactory}}',
+);
 
 // Fees
 export let managementFeeAddress = Address.fromString('{{managementFee}}');
