@@ -137,6 +137,7 @@ enum DerivativeType {
   Chai
   UniswapPool
   Synthetix
+  IbEth
 }
 
 enum ChainlinkAggregatorProxyType {
@@ -1702,8 +1703,9 @@ type Asset @entity {
 
   # Details for certain derivative assets
   derivativeType: DerivativeType
-  uniswapV2PoolAssetDetail: UniswapV2PoolAssetDetail
-  compoundAssetDetail: CompoundAssetDetails
+  uniswapV2PoolAssetDetails: UniswapV2PoolAssetDetails
+  compoundAssetDetails: CompoundAssetDetails
+  ibEthAssetDetails: IbEthAssetDetails
 
   # Latest price and candles
   price: AssetPrice
@@ -1744,13 +1746,18 @@ type Currency @entity {
   monthlyHistory: [MonthlyCurrencyPriceCandle!]! @derivedFrom(field: "currency")
 }
 
-type UniswapV2PoolAssetDetail @entity {
+type UniswapV2PoolAssetDetails @entity {
   id: ID!
   token0: Asset!
   token1: Asset!
 }
 
 type CompoundAssetDetails @entity {
+  id: ID!
+  underlying: Asset
+}
+
+type IbEthAssetDetails @entity {
   id: ID!
   underlying: Asset
 }
