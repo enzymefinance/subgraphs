@@ -1,7 +1,7 @@
 import { Address, log } from '@graphprotocol/graph-ts';
 import { wethTokenAddress } from '../addresses';
 import { ICERC20 } from '../generated/ICERC20';
-import { Asset, CompoundAssetDetails } from '../generated/schema';
+import { Asset, CompoundAssetDetail } from '../generated/schema';
 
 export function checkCompoundAssetDetails(derivative: Asset): void {
   if (!derivative.name.startsWith('Compound ')) {
@@ -32,7 +32,7 @@ export function checkCompoundAssetDetails(derivative: Asset): void {
     underlying = result.value.toHex();
   }
 
-  let details = new CompoundAssetDetails(derivative.id);
+  let details = new CompoundAssetDetail(derivative.id);
   details.underlying = underlying;
   details.save();
 

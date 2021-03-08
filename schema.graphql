@@ -1703,9 +1703,9 @@ type Asset @entity {
 
   # Details for certain derivative assets
   derivativeType: DerivativeType
-  uniswapV2PoolAssetDetails: UniswapV2PoolAssetDetails
-  compoundAssetDetails: CompoundAssetDetails
-  ibEthAssetDetails: IbEthAssetDetails
+  uniswapV2PoolAssetDetails: UniswapV2PoolAssetDetail
+  compoundAssetDetails: CompoundAssetDetail
+  ibEthAssetDetails: IbEthAssetDetail
 
   # Latest price and candles
   price: AssetPrice
@@ -1746,20 +1746,20 @@ type Currency @entity {
   monthlyHistory: [MonthlyCurrencyPriceCandle!]! @derivedFrom(field: "currency")
 }
 
-type UniswapV2PoolAssetDetails @entity {
+type UniswapV2PoolAssetDetail @entity {
   id: ID!
   token0: Asset!
   token1: Asset!
 }
 
-type CompoundAssetDetails @entity {
+type CompoundAssetDetail @entity {
   id: ID!
   underlying: Asset
 }
 
-type IbEthAssetDetails @entity {
+type IbEthAssetDetail @entity {
   id: ID!
-  underlying: Asset
+  underlying: Asset!
 }
 
 type AssetAmount @entity {
