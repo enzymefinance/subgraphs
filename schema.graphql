@@ -1705,9 +1705,7 @@ type Asset @entity {
   # Details for certain derivative assets
   derivativeType: DerivativeType
   uniswapV2PoolAssetDetails: UniswapV2PoolAssetDetail
-  compoundAssetDetails: CompoundAssetDetail
-  alphaAssetDetails: AlphaAssetDetail
-  aaveAssetDetails: AaveAssetDetail
+  underlyingAsset: SingleUnderlyingAssetDetail
 
   # Latest price and candles
   price: AssetPrice
@@ -1754,19 +1752,9 @@ type UniswapV2PoolAssetDetail @entity {
   token1: Asset!
 }
 
-type CompoundAssetDetail @entity {
+type SingleUnderlyingAssetDetail @entity {
   id: ID!
   underlying: Asset
-}
-
-type AlphaAssetDetail @entity {
-  id: ID!
-  underlying: Asset!
-}
-
-type AaveAssetDetail @entity {
-  id: ID!
-  underlying: Asset!
 }
 
 type AssetAmount @entity {

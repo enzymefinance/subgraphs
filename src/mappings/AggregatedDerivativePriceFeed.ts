@@ -1,8 +1,11 @@
-import { checkAaveAssetDetails } from '../entities/AaveAssetDetails';
-import { checkAlphaAssetDetails } from '../entities/AlphaAssetDetails';
-import { checkChai, checkSynthetix, ensureAsset } from '../entities/Asset';
+import { checkSynthetix, ensureAsset } from '../entities/Asset';
 import { fetchAssetPrice, trackAssetPrice } from '../entities/AssetPrice';
-import { checkCompoundAssetDetails } from '../entities/CompoundAssetDetails';
+import {
+  checkAaveAssetDetails,
+  checkAlphaAssetDetails,
+  checkChai,
+  checkCompoundAssetDetails,
+} from '../entities/SingleUnderlyingAssetDetail';
 import { ensureTransaction } from '../entities/Transaction';
 import { checkUniswapV2PoolAssetDetail } from '../entities/UniswapV2PoolAssetDetail';
 import {

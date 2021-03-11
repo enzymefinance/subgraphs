@@ -8,6 +8,8 @@ export function checkUniswapV2PoolAssetDetail(derivative: Asset): void {
     return;
   }
 
+  // TODO: monitor events in the UniswapV2PoolPriceFeed and get data from there
+
   let uniswapPair = IUniswapV2Pair.bind(Address.fromString(derivative.id));
 
   let details = new UniswapV2PoolAssetDetail(derivative.id);
