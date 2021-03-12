@@ -1,9 +1,19 @@
 import { Address, log } from '@graphprotocol/graph-ts';
 import { wethTokenAddress } from '../addresses';
 import { ICERC20 } from '../generated/ICERC20';
-import { Asset, SingleUnderlyingAssetDetail } from '../generated/schema';
+import { Asset } from '../generated/schema';
+import { checkUniswapV2PoolAssetDetail } from './UniswapV2PoolAssetDetail';
 
-export function checkAaveAssetDetails(derivative: Asset): void {
+export function checkDerivativeType(derivative: Asset): void {
+  checkAaveDerivativeType(derivative);
+  checkAlphaDerivativeType(derivative);
+  checkChaiDerivativeType(derivative);
+  checkCompoundDerivativeType(derivative);
+  checkSynthetixDerivativeType(derivative);
+  checkUniswapV2PoolAssetDetail(derivative);
+}
+
+function checkAaveDerivativeType(derivative: Asset): void {
   if (!derivative.name.startsWith('Aave interest bearing')) {
     return;
   }
@@ -12,39 +22,33 @@ export function checkAaveAssetDetails(derivative: Asset): void {
   // - either through a contract call (need to store ABI)
   // - or through observing events on the AavePriceFeed
 
-  // let details = new AaveAssetDetail(derivative.id);
-  // details.underlying = wethTokenAddress.toHex();
-  // details.save();
-
   derivative.derivativeType = 'Aave';
-  // derivative.aaveAssetDetails = details.id;
+  // derivative.underlyingAsset = details.id;
   derivative.save();
 }
 
-export function checkAlphaAssetDetails(derivative: Asset): void {
+function checkAlphaDerivativeType(derivative: Asset): void {
   if (derivative.name != 'Interest Bearing ETH') {
     return;
   }
 
-  let details = new SingleUnderlyingAssetDetail(derivative.id);
-  details.underlying = wethTokenAddress.toHex();
-  details.save();
-
   derivative.derivativeType = 'Alpha';
-  derivative.underlyingAsset = details.id;
+  derivative.underlyingAsset = wethTokenAddress.toHex();
   derivative.save();
 }
 
-export function checkChai(derivative: Asset): void {
+function checkChaiDerivativeType(derivative: Asset): void {
   if (derivative.symbol != 'CHAI') {
     return;
   }
 
   derivative.derivativeType = 'Chai';
+  // TODO: add DAI
+  // derivative.underlyingAsset = dai;
   derivative.save();
 }
 
-export function checkCompoundAssetDetails(derivative: Asset): void {
+function checkCompoundDerivativeType(derivative: Asset): void {
   if (!derivative.name.startsWith('Compound ')) {
     return;
   }
@@ -73,11 +77,19 @@ export function checkCompoundAssetDetails(derivative: Asset): void {
     underlying = result.value.toHex();
   }
 
-  let details = new SingleUnderlyingAssetDetail(derivative.id);
-  details.underlying = underlying;
-  details.save();
-
   derivative.derivativeType = 'Compound';
-  derivative.underlyingAsset = details.id;
+  derivative.underlyingAsset = underlying;
+  derivative.save();
+}
+
+function checkSynthetixDerivativeType(derivative: Asset): void {
+  // TODO: find better identifier of Synth assets
+  // TODO: observe SynthAdded event in the SynthetixPriceFeed
+
+  if (!derivative.name.startsWith('Synth ')) {
+    return;
+  }
+
+  derivative.derivativeType = 'Synthetix';
   derivative.save();
 }

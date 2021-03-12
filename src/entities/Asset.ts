@@ -65,15 +65,3 @@ export function extractAssets(ids: string[]): Asset[] {
 
   return assets;
 }
-
-export function checkSynthetix(derivative: Asset): void {
-  // TODO: find better identifier of Synth assets
-  // TODO: observe SynthAdded event in the SynthetixPriceFeed
-
-  if (!derivative.name.startsWith('Synth ')) {
-    return;
-  }
-
-  derivative.derivativeType = 'Synthetix';
-  derivative.save();
-}
