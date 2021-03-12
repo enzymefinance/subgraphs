@@ -1,5 +1,6 @@
 import { Address, ethereum } from '@graphprotocol/graph-ts';
 import {
+  aaveAdapterAddress,
   adapterBlacklistAddress,
   adapterWhitelistAddress,
   aggregatedDerivativePriceFeedAddress,
@@ -65,6 +66,7 @@ export function createRelease(address: Address, event: ethereum.Event): Release 
   release.adapterWhitelist = adapterWhitelistAddress.toHex();
   release.aggregatedDerivativePriceFeed = aggregatedDerivativePriceFeedAddress.toHex();
   release.alphaHomoraV1Adapter = alphaHomoraV1AdapterAddress.toHex();
+  release.aaveAdapter = aaveAdapterAddress.toHex();
   release.assetBlacklist = assetBlacklistAddress.toHex();
   release.assetWhitelist = assetWhitelistAddress.toHex();
   release.authUserExecutedSharesRequestorFactory = authUserExecutedSharesRequestorFactoryAddress.toHex();
