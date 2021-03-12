@@ -1752,14 +1752,6 @@ type UniswapV2PoolAssetDetail @entity {
   token1: Asset!
 }
 
-<<<<<<< HEAD
-=======
-type SingleUnderlyingAssetDetail @entity {
-  id: ID!
-  underlying: Asset
-}
-
->>>>>>> main
 type AssetAmount @entity {
   id: ID!
   asset: Asset!
