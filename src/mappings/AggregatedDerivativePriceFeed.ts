@@ -1,13 +1,8 @@
-import { checkSynthetix, ensureAsset } from '../entities/Asset';
+import { checkChai, checkSynthetix, ensureAsset } from '../entities/Asset';
 import { fetchAssetPrice, trackAssetPrice } from '../entities/AssetPrice';
-import {
-  checkAaveAssetDetails,
-  checkAlphaAssetDetails,
-  checkChai,
-  checkCompoundAssetDetails,
-} from '../entities/SingleUnderlyingAssetDetail';
+import { checkCompoundAssetDetail } from '../entities/CompoundAssetDetails';
 import { ensureTransaction } from '../entities/Transaction';
-import { checkUniswapV2PoolAssetDetail } from '../entities/UniswapV2PoolAssetDetail';
+import { checkUniswapV2PoolAssetDetail } from '../entities/UniswapV2PoolAssetDetails';
 import {
   DerivativeAdded,
   DerivativeRemoved,
@@ -25,12 +20,10 @@ export function handleDerivativeAdded(event: DerivativeAdded): void {
   derivative.type = 'DERIVATIVE';
   derivative.save();
 
-  checkAaveAssetDetails(derivative);
-  checkAlphaAssetDetails(derivative);
   checkChai(derivative);
-  checkCompoundAssetDetails(derivative);
-  checkSynthetix(derivative);
+  checkCompoundAssetDetail(derivative);
   checkUniswapV2PoolAssetDetail(derivative);
+  checkSynthetix(derivative);
 
   let derivativeAdded = new DerivativeAddedEvent(genericId(event));
   derivativeAdded.derivative = derivative.id;

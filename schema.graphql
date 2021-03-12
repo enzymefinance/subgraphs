@@ -137,8 +137,6 @@ enum DerivativeType {
   Chai
   UniswapPool
   Synthetix
-  Alpha
-  Aave
 }
 
 enum ChainlinkAggregatorProxyType {
@@ -1704,8 +1702,8 @@ type Asset @entity {
 
   # Details for certain derivative assets
   derivativeType: DerivativeType
-  uniswapV2PoolAssetDetails: UniswapV2PoolAssetDetail
-  underlyingAsset: SingleUnderlyingAssetDetail
+  uniswapV2PoolAssetDetail: UniswapV2PoolAssetDetail
+  compoundAssetDetail: CompoundAssetDetails
 
   # Latest price and candles
   price: AssetPrice
@@ -1752,7 +1750,7 @@ type UniswapV2PoolAssetDetail @entity {
   token1: Asset!
 }
 
-type SingleUnderlyingAssetDetail @entity {
+type CompoundAssetDetails @entity {
   id: ID!
   underlying: Asset
 }
