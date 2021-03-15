@@ -54,6 +54,7 @@ interface Deployment {
   zeroExV2Adapter: string;
   synthetixAdapter: string;
   alphaHomoraV1Adapter: string;
+  aaveAdapter: string;
 
   // External
   wethToken: string;
@@ -129,6 +130,7 @@ async function fetchDeployment(source: string): Promise<DeploymentWithMetadata> 
       zeroExV2Adapter: kovan.contracts.ZeroExV2Adapter.address,
       synthetixAdapter: kovan.contracts.SynthetixAdapter.address,
       alphaHomoraV1Adapter: '0x0000000000000000000000000000000000000000',
+      aaveAdapter: '0x0000000000000000000000000000000000000000',
 
       // External
       wethToken: '0xd0a1e359811322d97991e03f863a0c30c2cf029c',
@@ -200,6 +202,7 @@ async function fetchDeployment(source: string): Promise<DeploymentWithMetadata> 
       zeroExV2Adapter: mainnet.contracts.ZeroExV2Adapter.address,
       synthetixAdapter: mainnet.contracts.SynthetixAdapter.address,
       alphaHomoraV1Adapter: mainnet.contracts.AlphaHomoraV1Adapter.address,
+      aaveAdapter: mainnet.contracts.AaveAdapter.address,
 
       // External
       wethToken: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
