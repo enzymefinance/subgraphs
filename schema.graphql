@@ -1241,6 +1241,7 @@ type Release @entity {
   adapterWhitelist: String!
   aggregatedDerivativePriceFeed: String!
   alphaHomoraV1Adapter: String!
+  aaveAdapter: String!
   assetBlacklist: String!
   assetWhitelist: String!
   authUserExecutedSharesRequestorFactory: String!

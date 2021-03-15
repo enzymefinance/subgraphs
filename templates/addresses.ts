@@ -57,6 +57,7 @@ export let minMaxInvestmentAddress = Address.fromString('{{minMaxInvestment}}');
 export let buySharesCallerWhitelistAddress = Address.fromString('{{buySharesCallerWhitelist}}');
 
 // Adapters
+export let aaveAdapterAddress = Address.fromString('{{aaveAdapter}}');
 export let trackedAssetsAdapterAddress = Address.fromString('{{trackedAssetsAdapter}}');
 export let compoundAdapterAddress = Address.fromString('{{compoundAdapter}}');
 export let chaiAdapterAddress = Address.fromString('{{chaiAdapter}}');
