@@ -21,6 +21,18 @@ export let feeManagerAddress = Address.fromString('{{feeManager}}');
 export let aggregatedDerivativePriceFeedAddress = Address.fromString('{{aggregatedDerivativePriceFeed}}');
 export let chainlinkPriceFeedAddress = Address.fromString('{{chainlinkPriceFeed}}');
 
+// Derivative Price Feeds
+export let aavePriceFeed = Address.fromString('{{aavePriceFeed}}');
+export let alphaHomoraV1PriceFeed = Address.fromString('{{alphaHomoraV1PriceFeed}}');
+export let chaiPriceFeed = Address.fromString('{{chaiPriceFeed}}');
+export let compoundPriceFeed = Address.fromString('{{compoundPriceFeed}}');
+export let curvePriceFeed = Address.fromString('{{curvePriceFeed}}');
+export let lidoStethPriceFeed = Address.fromString('{{lidoStethPriceFeed}}');
+export let stakehoundEthPriceFeed = Address.fromString('{{stakehoundEthPriceFeed}}');
+export let synthetixPriceFeed = Address.fromString('{{synthetixPriceFeed}}');
+export let uniswapV2PoolPriceFeed = Address.fromString('{{uniswapV2PoolPriceFeed}}');
+export let wdgldPriceFeed = Address.fromString('{{wdgldPriceFeed}}');
+
 // Peripheral
 export let fundActionsWrapperAddress = Address.fromString('{{fundActionsWrapper}}');
 export let authUserExecutedSharesRequestorFactoryAddress = Address.fromString(

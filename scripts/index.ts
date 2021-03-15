@@ -6,7 +6,6 @@ import path from 'path';
 import yargs from 'yargs';
 import kovan from './deployments/kovan.json';
 import mainnet from './deployments/mainnet.json';
-import { zeroAddress } from '../src/constants';
 
 interface Deployment {
   // Core
@@ -22,6 +21,18 @@ interface Deployment {
   // Prices
   aggregatedDerivativePriceFeed: string;
   chainlinkPriceFeed: string;
+
+  // Derivative Price Feeds
+  aavePriceFeed: string;
+  alphaHomoraV1PriceFeed: string;
+  chaiPriceFeed: string;
+  compoundPriceFeed: string;
+  curvePriceFeed: string;
+  lidoStethPriceFeed: string;
+  stakehoundEthPriceFeed: string;
+  synthetixPriceFeed: string;
+  uniswapV2PoolPriceFeed: string;
+  wdgldPriceFeed: string;
 
   // Peripheral
   fundActionsWrapper: string;
@@ -98,6 +109,18 @@ async function fetchDeployment(source: string): Promise<DeploymentWithMetadata> 
       aggregatedDerivativePriceFeed: kovan.contracts.AggregatedDerivativePriceFeed.address,
       chainlinkPriceFeed: kovan.contracts.ChainlinkPriceFeed.address,
 
+      // Derivative Price Feeds
+      aavePriceFeed: '0x0000000000000000000000000000000000000000',
+      alphaHomoraV1PriceFeed: '0x0000000000000000000000000000000000000000',
+      chaiPriceFeed: kovan.contracts.ChaiPriceFeed.address,
+      compoundPriceFeed: kovan.contracts.CompoundPriceFeed.address,
+      curvePriceFeed: '0x0000000000000000000000000000000000000000',
+      lidoStethPriceFeed: '0x0000000000000000000000000000000000000000',
+      stakehoundEthPriceFeed: '0x0000000000000000000000000000000000000000',
+      synthetixPriceFeed: kovan.contracts.SynthetixPriceFeed.address,
+      uniswapV2PoolPriceFeed: kovan.contracts.UniswapV2PoolPriceFeed.address,
+      wdgldPriceFeed: kovan.contracts.WdgldPriceFeed.address,
+
       // Peripheral
       fundActionsWrapper: kovan.contracts.FundActionsWrapper.address,
       authUserExecutedSharesRequestorFactory: kovan.contracts.AuthUserExecutedSharesRequestorFactory.address,
@@ -168,6 +191,18 @@ async function fetchDeployment(source: string): Promise<DeploymentWithMetadata> 
       // Prices
       aggregatedDerivativePriceFeed: mainnet.contracts.AggregatedDerivativePriceFeed.address,
       chainlinkPriceFeed: mainnet.contracts.ChainlinkPriceFeed.address,
+
+      // Derivative Price Feeds
+      aavePriceFeed: '0x0000000000000000000000000000000000000000',
+      alphaHomoraV1PriceFeed: mainnet.contracts.AlphaHomoraV1PriceFeed.address,
+      chaiPriceFeed: mainnet.contracts.ChaiPriceFeed.address,
+      compoundPriceFeed: mainnet.contracts.CompoundPriceFeed.address,
+      curvePriceFeed: '0x0000000000000000000000000000000000000000',
+      lidoStethPriceFeed: '0x0000000000000000000000000000000000000000',
+      stakehoundEthPriceFeed: mainnet.contracts.StakehoundEthPriceFeed.address,
+      synthetixPriceFeed: mainnet.contracts.SynthetixPriceFeed.address,
+      uniswapV2PoolPriceFeed: mainnet.contracts.UniswapV2PoolPriceFeed.address,
+      wdgldPriceFeed: mainnet.contracts.WdgldPriceFeed.address,
 
       // Peripheral
       fundActionsWrapper: mainnet.contracts.FundActionsWrapper.address,
