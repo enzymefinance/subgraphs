@@ -1,20 +1,29 @@
-import { Address } from '@graphprotocol/graph-ts';
-import { IUniswapV2Pair } from '../generated/IUniswapV2Pair';
+import { Address, log } from '@graphprotocol/graph-ts';
+import { uniswapV2PoolPriceFeed } from '../addresses';
 import { Asset, UniswapV2PoolAssetDetail } from '../generated/schema';
+import { UniswapV2PoolPriceFeedContract } from '../generated/UniswapV2PoolPriceFeedContract';
 import { getERC20Symbol } from '../utils/getERC20Symbol';
 
 export function checkUniswapV2PoolAssetDetail(derivative: Asset): void {
-  if (derivative.symbol != 'UNI-V2') {
+  let address = Address.fromString(derivative.id);
+
+  let priceFeedContract = UniswapV2PoolPriceFeedContract.bind(uniswapV2PoolPriceFeed);
+  let isSupported = priceFeedContract.try_isSupportedAsset(address);
+
+  if (isSupported.reverted) {
     return;
   }
 
-  // TODO: monitor events in the UniswapV2PoolPriceFeed and get data from there
+  let underlying = priceFeedContract.try_getPoolTokenUnderlyings(address);
 
-  let uniswapPair = IUniswapV2Pair.bind(Address.fromString(derivative.id));
+  if (underlying.reverted) {
+    log.warning('Reverted getPoolTokenUnderlyings for asset {}', [derivative.id]);
+    return;
+  }
 
   let details = new UniswapV2PoolAssetDetail(derivative.id);
-  let token0Address = uniswapPair.token0();
-  let token1Address = uniswapPair.token1();
+  let token0Address = underlying.value.value0;
+  let token1Address = underlying.value.value1;
 
   details.token0 = token0Address.toHex();
   details.token1 = token1Address.toHex();

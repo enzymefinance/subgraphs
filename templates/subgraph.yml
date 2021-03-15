@@ -705,14 +705,24 @@ dataSources:
           file: ./src/utils/abis/ERC20NameBytes.json
         - name: ERC20SymbolBytesContract
           file: ./src/utils/abis/ERC20SymbolBytes.json
-        - name: CTokenIsCTokenContract
-          file: ./src/utils/abis/CTokenIsCToken.json
         - name: ValueInterpreterContract
           file: ./node_modules/@enzymefinance/protocol/artifacts/ValueInterpreter.json
-        - name: IUniswapV2Pair
+        - name: IUniswapV2PairContract
           file: ./node_modules/@enzymefinance/protocol/artifacts/IUniswapV2Pair.json
-        - name: ICERC20
+        - name: ICERC20Contract
           file: ./node_modules/@enzymefinance/protocol/artifacts/ICERC20.json
+        - name: AavePriceFeedContract
+          file: ./node_modules/@enzymefinance/protocol/artifacts/AavePriceFeed.json
+        - name: AlphaHomoraV1PriceFeedContract
+          file: ./node_modules/@enzymefinance/protocol/artifacts/AlphaHomoraV1PriceFeed.json
+        - name: ChaiPriceFeedContract
+          file: ./node_modules/@enzymefinance/protocol/artifacts/ChaiPriceFeed.json
+        - name: CompoundPriceFeedContract
+          file: ./node_modules/@enzymefinance/protocol/artifacts/CompoundPriceFeed.json
+        - name: SynthetixPriceFeedContract
+          file: ./node_modules/@enzymefinance/protocol/artifacts/SynthetixPriceFeed.json
+        - name: UniswapV2PoolPriceFeedContract
+          file: ./node_modules/@enzymefinance/protocol/artifacts/UniswapV2PoolPriceFeed.json
       eventHandlers:
         - event: DerivativeAdded(indexed address,address)
           handler: handleDerivativeAdded
