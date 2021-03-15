@@ -195,7 +195,7 @@ async function fetchDeployment(source: string): Promise<DeploymentWithMetadata> 
       chainlinkPriceFeed: mainnet.contracts.ChainlinkPriceFeed.address,
 
       // Derivative Price Feeds
-      aavePriceFeed: '0x0000000000000000000000000000000000000000',
+      aavePriceFeed: mainnet.contracts.AavePriceFeed.address,
       alphaHomoraV1PriceFeed: mainnet.contracts.AlphaHomoraV1PriceFeed.address,
       chaiPriceFeed: mainnet.contracts.ChaiPriceFeed.address,
       compoundPriceFeed: mainnet.contracts.CompoundPriceFeed.address,
