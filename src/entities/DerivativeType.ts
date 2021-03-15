@@ -29,7 +29,7 @@ function checkAaveDerivativeType(derivative: Asset): void {
   let priceFeedContract = AavePriceFeedContract.bind(aavePriceFeed);
   let isSupported = priceFeedContract.try_isSupportedAsset(address);
 
-  if (isSupported.reverted) {
+  if (isSupported.reverted || isSupported.value == false) {
     return;
   }
 
@@ -51,7 +51,7 @@ function checkAlphaDerivativeType(derivative: Asset): void {
   let priceFeedContract = AlphaHomoraV1PriceFeedContract.bind(alphaHomoraV1PriceFeed);
   let isSupported = priceFeedContract.try_isSupportedAsset(address);
 
-  if (isSupported.reverted) {
+  if (isSupported.reverted || isSupported.value == false) {
     return;
   }
 
@@ -73,7 +73,7 @@ function checkChaiDerivativeType(derivative: Asset): void {
   let priceFeedContract = ChaiPriceFeedContract.bind(chaiPriceFeed);
   let isSupported = priceFeedContract.try_isSupportedAsset(address);
 
-  if (isSupported.reverted) {
+  if (isSupported.reverted || isSupported.value == false) {
     return;
   }
 
@@ -95,7 +95,7 @@ function checkCompoundDerivativeType(derivative: Asset): void {
   let priceFeedContract = CompoundPriceFeedContract.bind(compoundPriceFeed);
   let isSupported = priceFeedContract.try_isSupportedAsset(address);
 
-  if (isSupported.reverted) {
+  if (isSupported.reverted || isSupported.value == false) {
     return;
   }
 
@@ -117,7 +117,7 @@ function checkSynthetixDerivativeType(derivative: Asset): void {
   let priceFeedContract = SynthetixPriceFeedContract.bind(synthetixPriceFeed);
   let isSupported = priceFeedContract.try_isSupportedAsset(address);
 
-  if (isSupported.reverted) {
+  if (isSupported.reverted || isSupported.value == false) {
     return;
   }
 

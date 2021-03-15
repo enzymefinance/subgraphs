@@ -10,7 +10,7 @@ export function checkUniswapV2PoolAssetDetail(derivative: Asset): void {
   let priceFeedContract = UniswapV2PoolPriceFeedContract.bind(uniswapV2PoolPriceFeed);
   let isSupported = priceFeedContract.try_isSupportedAsset(address);
 
-  if (isSupported.reverted) {
+  if (isSupported.reverted || isSupported.value == false) {
     return;
   }
 
