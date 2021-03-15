@@ -1279,6 +1279,16 @@ type Release @entity {
   vaultLib: String!
   wethToken: String!
   zeroExV2Adapter: String!
+  aavePriceFeed: String!
+  alphaHomoraV1PriceFeed: String!
+  chaiPriceFeed: String!
+  compoundPriceFeed: String!
+  curvePriceFeed: String!
+  lidoStethPriceFeed: String!
+  stakehoundEthPriceFeed: String!
+  synthetixPriceFeed: String!
+  uniswapV2PoolPriceFeed: String!
+  wdgldPriceFeed: String!
 }
 
 type Account @entity {
