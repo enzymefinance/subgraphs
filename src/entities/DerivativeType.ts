@@ -1,7 +1,17 @@
 import { Address, log } from '@graphprotocol/graph-ts';
-import { wethTokenAddress } from '../addresses';
-import { ICERC20 } from '../generated/ICERC20';
+import {
+  aavePriceFeed,
+  alphaHomoraV1PriceFeed,
+  chaiPriceFeed,
+  compoundPriceFeed,
+  synthetixPriceFeed,
+} from '../addresses';
+import { AavePriceFeedContract } from '../generated/AavePriceFeedContract';
+import { AlphaHomoraV1PriceFeedContract } from '../generated/AlphaHomoraV1PriceFeedContract';
+import { ChaiPriceFeedContract } from '../generated/ChaiPriceFeedContract';
+import { CompoundPriceFeedContract } from '../generated/CompoundPriceFeedContract';
 import { Asset } from '../generated/schema';
+import { SynthetixPriceFeedContract } from '../generated/SynthetixPriceFeedContract';
 import { checkUniswapV2PoolAssetDetail } from './UniswapV2PoolAssetDetail';
 
 export function checkDerivativeType(derivative: Asset): void {
@@ -14,79 +24,100 @@ export function checkDerivativeType(derivative: Asset): void {
 }
 
 function checkAaveDerivativeType(derivative: Asset): void {
-  if (!derivative.name.startsWith('Aave interest bearing')) {
+  let address = Address.fromString(derivative.id);
+
+  let priceFeedContract = AavePriceFeedContract.bind(aavePriceFeed);
+  let isSupported = priceFeedContract.try_isSupportedAsset(address);
+
+  if (isSupported.reverted || isSupported.value == false) {
     return;
   }
 
-  // TODO: get underlying token
-  // - either through a contract call (need to store ABI)
-  // - or through observing events on the AavePriceFeed
+  let underlying = priceFeedContract.try_getUnderlyingForDerivative(address);
+
+  if (underlying.reverted) {
+    log.warning('Reverted getUnderlyingForDerivative for asset {}', [derivative.id]);
+    return;
+  }
 
   derivative.derivativeType = 'Aave';
-  // derivative.underlyingAsset = details.id;
+  derivative.underlyingAsset = underlying.value.toHex();
   derivative.save();
 }
 
 function checkAlphaDerivativeType(derivative: Asset): void {
-  if (derivative.name != 'Interest Bearing ETH') {
+  let address = Address.fromString(derivative.id);
+
+  let priceFeedContract = AlphaHomoraV1PriceFeedContract.bind(alphaHomoraV1PriceFeed);
+  let isSupported = priceFeedContract.try_isSupportedAsset(address);
+
+  if (isSupported.reverted || isSupported.value == false) {
+    return;
+  }
+
+  let underlying = priceFeedContract.try_getWethToken();
+
+  if (underlying.reverted) {
+    log.warning('Reverted getWethToken for asset {}', [derivative.id]);
     return;
   }
 
   derivative.derivativeType = 'Alpha';
-  derivative.underlyingAsset = wethTokenAddress.toHex();
+  derivative.underlyingAsset = underlying.value.toHex();
   derivative.save();
 }
 
 function checkChaiDerivativeType(derivative: Asset): void {
-  if (derivative.symbol != 'CHAI') {
+  let address = Address.fromString(derivative.id);
+
+  let priceFeedContract = ChaiPriceFeedContract.bind(chaiPriceFeed);
+  let isSupported = priceFeedContract.try_isSupportedAsset(address);
+
+  if (isSupported.reverted || isSupported.value == false) {
+    return;
+  }
+
+  let underlying = priceFeedContract.try_getDai();
+
+  if (underlying.reverted) {
+    log.warning('Reverted getDai for asset {}', [derivative.id]);
     return;
   }
 
   derivative.derivativeType = 'Chai';
-  // TODO: add DAI
-  // derivative.underlyingAsset = dai;
+  derivative.underlyingAsset = underlying.value.toHex();
   derivative.save();
 }
 
 function checkCompoundDerivativeType(derivative: Asset): void {
-  if (!derivative.name.startsWith('Compound ')) {
+  let address = Address.fromString(derivative.id);
+
+  let priceFeedContract = CompoundPriceFeedContract.bind(compoundPriceFeed);
+  let isSupported = priceFeedContract.try_isSupportedAsset(address);
+
+  if (isSupported.reverted || isSupported.value == false) {
     return;
   }
 
-  let address = Address.fromString(derivative.id);
+  let underlying = priceFeedContract.try_getTokenFromCToken(address);
 
-  // for Mainnet / Kovan
-  // let cTokenIsCTokenContract = CTokenIsCTokenContract.bind(address);
-  // let isCTokenCall = cTokenIsCTokenContract.try_isCToken();
-  // if (isCTokenCall.reverted || isCTokenCall.value == false) {
-  //   return;
-  // }
-
-  let compound = ICERC20.bind(address);
-  let result = compound.try_underlying();
-  let underlying: string = '';
-  if (result.reverted) {
-    // cETH doesn't have `underlying()` implemented
-    if (derivative.name == 'Compound Ether') {
-      underlying = wethTokenAddress.toHex();
-    } else {
-      log.warning('Reverted underlying() for asset {} - and asset is not Compound Ether', [derivative.id]);
-      return;
-    }
-  } else {
-    underlying = result.value.toHex();
+  if (underlying.reverted) {
+    log.warning('Reverted getTokenFromCToken for asset {}', [derivative.id]);
+    return;
   }
 
   derivative.derivativeType = 'Compound';
-  derivative.underlyingAsset = underlying;
+  derivative.underlyingAsset = underlying.value.toHex();
   derivative.save();
 }
 
 function checkSynthetixDerivativeType(derivative: Asset): void {
-  // TODO: find better identifier of Synth assets
-  // TODO: observe SynthAdded event in the SynthetixPriceFeed
+  let address = Address.fromString(derivative.id);
 
-  if (!derivative.name.startsWith('Synth ')) {
+  let priceFeedContract = SynthetixPriceFeedContract.bind(synthetixPriceFeed);
+  let isSupported = priceFeedContract.try_isSupportedAsset(address);
+
+  if (isSupported.reverted || isSupported.value == false) {
     return;
   }
 
