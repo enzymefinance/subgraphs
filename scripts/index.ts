@@ -56,16 +56,20 @@ interface Deployment {
   buySharesCallerWhitelist: string;
 
   // Adapters
-  trackedAssetsAdapter: string;
-  compoundAdapter: string;
-  chaiAdapter: string;
-  kyberAdapter: string;
-  uniswapV2Adapter: string;
-  paraSwapAdapter: string;
-  zeroExV2Adapter: string;
-  synthetixAdapter: string;
-  alphaHomoraV1Adapter: string;
   aaveAdapter: string;
+  alphaHomoraV1Adapter: string;
+  chaiAdapter: string;
+  compoundAdapter: string;
+  curveExchangeAdapter: string;
+  curveLiquidityAaveAdapter: string;
+  curveLiquiditySethAdapter: string;
+  curveLiquidityStethAdapter: string;
+  kyberAdapter: string;
+  paraSwapAdapter: string;
+  synthetixAdapter: string;
+  trackedAssetsAdapter: string;
+  uniswapV2Adapter: string;
+  zeroExV2Adapter: string;
 
   // External
   wethToken: string;
@@ -144,16 +148,20 @@ async function fetchDeployment(source: string): Promise<DeploymentWithMetadata> 
       buySharesCallerWhitelist: kovan.contracts.BuySharesCallerWhitelist.address,
 
       // Adapters
-      trackedAssetsAdapter: kovan.contracts.TrackedAssetsAdapter.address,
-      compoundAdapter: kovan.contracts.CompoundAdapter.address,
-      chaiAdapter: kovan.contracts.ChaiAdapter.address,
-      kyberAdapter: kovan.contracts.KyberAdapter.address,
-      uniswapV2Adapter: kovan.contracts.UniswapV2Adapter.address,
-      paraSwapAdapter: kovan.contracts.ParaSwapAdapter.address,
-      zeroExV2Adapter: kovan.contracts.ZeroExV2Adapter.address,
-      synthetixAdapter: kovan.contracts.SynthetixAdapter.address,
-      alphaHomoraV1Adapter: '0x0000000000000000000000000000000000000000',
       aaveAdapter: '0x0000000000000000000000000000000000000000',
+      alphaHomoraV1Adapter: '0x0000000000000000000000000000000000000000',
+      chaiAdapter: kovan.contracts.ChaiAdapter.address,
+      compoundAdapter: kovan.contracts.CompoundAdapter.address,
+      curveExchangeAdapter: '0x0000000000000000000000000000000000000000',
+      curveLiquidityAaveAdapter: '0x0000000000000000000000000000000000000000',
+      curveLiquiditySethAdapter: '0x0000000000000000000000000000000000000000',
+      curveLiquidityStethAdapter: '0x0000000000000000000000000000000000000000',
+      kyberAdapter: kovan.contracts.KyberAdapter.address,
+      paraSwapAdapter: kovan.contracts.ParaSwapAdapter.address,
+      synthetixAdapter: kovan.contracts.SynthetixAdapter.address,
+      trackedAssetsAdapter: kovan.contracts.TrackedAssetsAdapter.address,
+      uniswapV2Adapter: kovan.contracts.UniswapV2Adapter.address,
+      zeroExV2Adapter: kovan.contracts.ZeroExV2Adapter.address,
 
       // External
       wethToken: '0xd0a1e359811322d97991e03f863a0c30c2cf029c',
@@ -228,16 +236,20 @@ async function fetchDeployment(source: string): Promise<DeploymentWithMetadata> 
       buySharesCallerWhitelist: mainnet.contracts.BuySharesCallerWhitelist.address,
 
       // Adapters
-      trackedAssetsAdapter: mainnet.contracts.TrackedAssetsAdapter.address,
-      compoundAdapter: mainnet.contracts.CompoundAdapter.address,
-      chaiAdapter: mainnet.contracts.ChaiAdapter.address,
-      kyberAdapter: mainnet.contracts.KyberAdapter.address,
-      uniswapV2Adapter: mainnet.contracts.UniswapV2Adapter.address,
-      paraSwapAdapter: mainnet.contracts.ParaSwapAdapter.address,
-      zeroExV2Adapter: mainnet.contracts.ZeroExV2Adapter.address,
-      synthetixAdapter: mainnet.contracts.SynthetixAdapter.address,
-      alphaHomoraV1Adapter: mainnet.contracts.AlphaHomoraV1Adapter.address,
       aaveAdapter: mainnet.contracts.AaveAdapter.address,
+      alphaHomoraV1Adapter: mainnet.contracts.AlphaHomoraV1Adapter.address,
+      chaiAdapter: mainnet.contracts.ChaiAdapter.address,
+      compoundAdapter: mainnet.contracts.CompoundAdapter.address,
+      curveExchangeAdapter: '0x0000000000000000000000000000000000000000',
+      curveLiquidityAaveAdapter: '0x0000000000000000000000000000000000000000',
+      curveLiquiditySethAdapter: '0x0000000000000000000000000000000000000000',
+      curveLiquidityStethAdapter: '0x0000000000000000000000000000000000000000',
+      kyberAdapter: mainnet.contracts.KyberAdapter.address,
+      paraSwapAdapter: mainnet.contracts.ParaSwapAdapter.address,
+      synthetixAdapter: mainnet.contracts.SynthetixAdapter.address,
+      trackedAssetsAdapter: mainnet.contracts.TrackedAssetsAdapter.address,
+      uniswapV2Adapter: mainnet.contracts.UniswapV2Adapter.address,
+      zeroExV2Adapter: mainnet.contracts.ZeroExV2Adapter.address,
 
       // External
       wethToken: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',

@@ -58,15 +58,19 @@ export let buySharesCallerWhitelistAddress = Address.fromString('{{buySharesCall
 
 // Adapters
 export let aaveAdapterAddress = Address.fromString('{{aaveAdapter}}');
-export let trackedAssetsAdapterAddress = Address.fromString('{{trackedAssetsAdapter}}');
-export let compoundAdapterAddress = Address.fromString('{{compoundAdapter}}');
-export let chaiAdapterAddress = Address.fromString('{{chaiAdapter}}');
-export let kyberAdapterAddress = Address.fromString('{{kyberAdapter}}');
-export let uniswapV2AdapterAddress = Address.fromString('{{uniswapV2Adapter}}');
-export let paraSwapAdapterAddress = Address.fromString('{{paraSwapAdapter}}');
-export let zeroExV2AdapterAddress = Address.fromString('{{zeroExV2Adapter}}');
-export let synthetixAdapterAddress = Address.fromString('{{synthetixAdapter}}');
 export let alphaHomoraV1AdapterAddress = Address.fromString('{{alphaHomoraV1Adapter}}');
+export let chaiAdapterAddress = Address.fromString('{{chaiAdapter}}');
+export let compoundAdapterAddress = Address.fromString('{{compoundAdapter}}');
+export let curveExchangeAdapterAddress = Address.fromString('{{curveExchangeAdapter}}');
+export let curveLiquidityAaveAdapterAddress = Address.fromString('{{curveLiquidityAaveAdapter}}');
+export let curveLiquiditySethAdapterAddress = Address.fromString('{{curveLiquiditySethAdapter}}');
+export let curveLiquidityStethAdapterAddress = Address.fromString('{{curveLiquidityStethAdapter}}');
+export let kyberAdapterAddress = Address.fromString('{{kyberAdapter}}');
+export let paraSwapAdapterAddress = Address.fromString('{{paraSwapAdapter}}');
+export let synthetixAdapterAddress = Address.fromString('{{synthetixAdapter}}');
+export let trackedAssetsAdapterAddress = Address.fromString('{{trackedAssetsAdapter}}');
+export let uniswapV2AdapterAddress = Address.fromString('{{uniswapV2Adapter}}');
+export let zeroExV2AdapterAddress = Address.fromString('{{zeroExV2Adapter}}');
 
 // External
 export let wethTokenAddress = Address.fromString('{{wethToken}}');

@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "@chainlink/contracts": "^0.1.6",
-    "@enzymefinance/protocol": "^1.0.0-dev.5049+a3e3daba",
+    "@enzymefinance/protocol": "^2.0.2",
     "@graphprotocol/graph-cli": "^0.20.0",
     "@graphprotocol/graph-ts": "^0.20.0",
     "@openzeppelin/contracts": "^3.4.1",

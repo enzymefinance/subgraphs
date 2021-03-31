@@ -132,6 +132,11 @@ enum AssetType {
   USD
 }
 
+enum CurveAssetType {
+  GAUGE
+  POOL
+}
+
 enum DerivativeType {
   Compound
   Chai
@@ -1716,6 +1721,7 @@ type Asset @entity {
   # Details for certain derivative assets
   derivativeType: DerivativeType
   underlyingAsset: Asset
+  curvePoolAssetDetails: CurvePoolAssetDetail
   uniswapV2PoolAssetDetails: UniswapV2PoolAssetDetail
 
   # Latest price and candles
@@ -1755,6 +1761,18 @@ type Currency @entity {
   hourlyHistory: [HourlyCurrencyPriceCandle!]! @derivedFrom(field: "currency")
   dailyHistory: [DailyCurrencyPriceCandle!]! @derivedFrom(field: "currency")
   monthlyHistory: [MonthlyCurrencyPriceCandle!]! @derivedFrom(field: "currency")
+}
+
+type CurvePoolAssetDetail @entity {
+  id: ID!
+  pool: String!
+  gauge: String!
+  curveAssetType: CurveAssetType!
+  numberOfTokens: Int!
+  invariantProxyAsset: Asset!
+  token0: Asset!
+  token1: Asset!
+  token2: Asset
 }
 
 type UniswapV2PoolAssetDetail @entity {

@@ -77,8 +77,6 @@ dataSources:
           file: ./src/utils/abis/ERC20NameBytes.json
         - name: ERC20SymbolBytesContract
           file: ./src/utils/abis/ERC20SymbolBytes.json
-        - name: CTokenIsCTokenContract
-          file: ./src/utils/abis/CTokenIsCToken.json
       eventHandlers:
         - event: ComptrollerLibSet(address)
           handler: handleComptrollerLibSet
@@ -119,8 +117,6 @@ dataSources:
           file: ./src/utils/abis/ERC20NameBytes.json
         - name: ERC20SymbolBytesContract
           file: ./src/utils/abis/ERC20SymbolBytes.json
-        - name: CTokenIsCTokenContract
-          file: ./src/utils/abis/CTokenIsCToken.json
         - name: IFeeInterface
           file: ./node_modules/@enzymefinance/protocol/artifacts/IFee.json
         - name: PerformanceFeeContract
@@ -171,8 +167,6 @@ dataSources:
           file: ./src/utils/abis/ERC20NameBytes.json
         - name: ERC20SymbolBytesContract
           file: ./src/utils/abis/ERC20SymbolBytes.json
-        - name: CTokenIsCTokenContract
-          file: ./src/utils/abis/CTokenIsCToken.json
         - name: IFeeInterface
           file: ./node_modules/@enzymefinance/protocol/artifacts/IFee.json
       eventHandlers:
@@ -243,8 +237,6 @@ dataSources:
           file: ./src/utils/abis/ERC20NameBytes.json
         - name: ERC20SymbolBytesContract
           file: ./src/utils/abis/ERC20SymbolBytes.json
-        - name: CTokenIsCTokenContract
-          file: ./src/utils/abis/CTokenIsCToken.json
         - name: IFeeInterface
           file: ./node_modules/@enzymefinance/protocol/artifacts/IFee.json
       eventHandlers:
@@ -281,8 +273,6 @@ dataSources:
           file: ./src/utils/abis/ERC20NameBytes.json
         - name: ERC20SymbolBytesContract
           file: ./src/utils/abis/ERC20SymbolBytes.json
-        - name: CTokenIsCTokenContract
-          file: ./src/utils/abis/CTokenIsCToken.json
         - name: IFeeInterface
           file: ./node_modules/@enzymefinance/protocol/artifacts/IFee.json
       eventHandlers:
@@ -317,8 +307,6 @@ dataSources:
           file: ./src/utils/abis/ERC20NameBytes.json
         - name: ERC20SymbolBytesContract
           file: ./src/utils/abis/ERC20SymbolBytes.json
-        - name: CTokenIsCTokenContract
-          file: ./src/utils/abis/CTokenIsCToken.json
         - name: IPolicyInterface
           file: ./node_modules/@enzymefinance/protocol/artifacts/IPolicy.json
       eventHandlers:
@@ -593,8 +581,6 @@ dataSources:
           file: ./src/utils/abis/ERC20NameBytes.json
         - name: ERC20SymbolBytesContract
           file: ./src/utils/abis/ERC20SymbolBytes.json
-        - name: CTokenIsCTokenContract
-          file: ./src/utils/abis/CTokenIsCToken.json
         - name: IIntegrationAdapterInterface
           file: ./node_modules/@enzymefinance/protocol/artifacts/IIntegrationAdapter.json
         - name: FundActionsWrapperContract
@@ -661,8 +647,6 @@ dataSources:
           file: ./src/utils/abis/ERC20NameBytes.json
         - name: ERC20SymbolBytesContract
           file: ./src/utils/abis/ERC20SymbolBytes.json
-        - name: CTokenIsCTokenContract
-          file: ./src/utils/abis/CTokenIsCToken.json
         - name: ChainlinkAggregatorContract
           file: ./node_modules/@chainlink/contracts/abi/v0.6/AggregatorInterface.json
         - name: ChainlinkAggregatorProxyContract
@@ -719,6 +703,16 @@ dataSources:
           file: ./node_modules/@enzymefinance/protocol/artifacts/ChaiPriceFeed.json
         - name: CompoundPriceFeedContract
           file: ./node_modules/@enzymefinance/protocol/artifacts/CompoundPriceFeed.json
+        - name: CurvePriceFeedContract
+          file: ./node_modules/@enzymefinance/protocol/artifacts/CurvePriceFeed.json
+        - name: ICurveAddressProviderContract
+          file: ./node_modules/@enzymefinance/protocol/artifacts/ICurveAddressProvider.json
+        # - name: ICurveLiquidityGaugeTokenContract
+        #   file: ./node_modules/@enzymefinance/protocol/artifacts/ICurveLiquidityGaugeToken.json
+        - name: CurveRegistryContract
+          file: ./src/utils/abis/CurveRegistry.json
+        - name: StakehoundEthPriceFeedContract
+          file: ./node_modules/@enzymefinance/protocol/artifacts/StakehoundEthPriceFeed.json
         - name: SynthetixPriceFeedContract
           file: ./node_modules/@enzymefinance/protocol/artifacts/SynthetixPriceFeed.json
         - name: UniswapV2PoolPriceFeedContract
@@ -754,8 +748,6 @@ templates:
           file: ./src/utils/abis/ERC20NameBytes.json
         - name: ERC20SymbolBytesContract
           file: ./src/utils/abis/ERC20SymbolBytes.json
-        - name: CTokenIsCTokenContract
-          file: ./src/utils/abis/CTokenIsCToken.json
         - name: FundActionsWrapperContract
           file: ./node_modules/@enzymefinance/protocol/artifacts/FundActionsWrapper.json
       eventHandlers:
@@ -800,8 +792,6 @@ templates:
           file: ./src/utils/abis/ERC20NameBytes.json
         - name: ERC20SymbolBytesContract
           file: ./src/utils/abis/ERC20SymbolBytes.json
-        - name: CTokenIsCTokenContract
-          file: ./src/utils/abis/CTokenIsCToken.json
         - name: FundActionsWrapperContract
           file: ./node_modules/@enzymefinance/protocol/artifacts/FundActionsWrapper.json
       eventHandlers:
