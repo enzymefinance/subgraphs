@@ -6,7 +6,7 @@ export let addTrackedAssetsType = 'ADD_TRACKED_ASSETS';
 
 export let approveAssetsSelector = '0x3377e18a';
 export let approveAssetsMethod = 'approveAssets(address,bytes,bytes)';
-export let approveAssetsType = 'APPROVE_ASSETS_SELECTOR';
+export let approveAssetsType = 'APPROVE_ASSETS';
 
 export let takeOrderSelector = '0x03e38a2b';
 export let takeOrderMethod = 'takeOrder(address,bytes,bytes)';
