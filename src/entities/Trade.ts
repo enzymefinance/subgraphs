@@ -35,7 +35,7 @@ export function trackTrade(
     let trade = new TokenSwapTrade(genericId(event));
     trade.fund = fund.id;
     trade.adapter = adapter.id;
-    trade.method = convertSelectorToType(selector);
+    trade.method = tradeType;
     trade.incomingAssetAmount = incomingAssetAmounts[0].id;
     trade.outgoingAssetAmount = outgoingAssetAmounts[0].id;
     trade.price = outgoingAssetAmounts[0].amount.div(incomingAssetAmounts[0].amount);
@@ -51,7 +51,7 @@ export function trackTrade(
     let trade = new MultiTokenSwapTrade(genericId(event));
     trade.fund = fund.id;
     trade.adapter = adapter.id;
-    trade.method = convertSelectorToType(selector);
+    trade.method = tradeType;
     trade.incomingAssetAmounts = incomingAssetAmounts.map<string>((assetAmount) => assetAmount.id);
     trade.outgoingAssetAmounts = outgoingAssetAmounts.map<string>((assetAmount) => assetAmount.id);
     trade.timestamp = event.block.timestamp;
@@ -65,7 +65,7 @@ export function trackTrade(
     let trade = new LendTrade(genericId(event));
     trade.fund = fund.id;
     trade.adapter = adapter.id;
-    trade.method = convertSelectorToType(selector);
+    trade.method = tradeType;
     trade.incomingAssetAmount = incomingAssetAmounts[0].id;
     trade.outgoingAssetAmount = outgoingAssetAmounts[0].id;
     trade.price = outgoingAssetAmounts[0].amount.div(incomingAssetAmounts[0].amount);
@@ -80,7 +80,7 @@ export function trackTrade(
     let trade = new MultiLendTrade(genericId(event));
     trade.fund = fund.id;
     trade.adapter = adapter.id;
-    trade.method = convertSelectorToType(selector);
+    trade.method = tradeType;
     trade.incomingAssetAmounts = incomingAssetAmounts.map<string>((assetAmount) => assetAmount.id);
     trade.outgoingAssetAmounts = outgoingAssetAmounts.map<string>((assetAmount) => assetAmount.id);
     trade.timestamp = event.block.timestamp;
@@ -94,7 +94,7 @@ export function trackTrade(
     let trade = new RedeemTrade(genericId(event));
     trade.fund = fund.id;
     trade.adapter = adapter.id;
-    trade.method = convertSelectorToType(selector);
+    trade.method = tradeType;
     trade.incomingAssetAmount = incomingAssetAmounts[0].id;
     trade.outgoingAssetAmount = outgoingAssetAmounts[0].id;
     trade.price = outgoingAssetAmounts[0].amount.div(incomingAssetAmounts[0].amount);
@@ -109,7 +109,7 @@ export function trackTrade(
     let trade = new MultiRedeemTrade(genericId(event));
     trade.fund = fund.id;
     trade.adapter = adapter.id;
-    trade.method = convertSelectorToType(selector);
+    trade.method = tradeType;
     trade.incomingAssetAmounts = incomingAssetAmounts.map<string>((assetAmount) => assetAmount.id);
     trade.outgoingAssetAmounts = outgoingAssetAmounts.map<string>((assetAmount) => assetAmount.id);
     trade.timestamp = event.block.timestamp;
@@ -123,7 +123,7 @@ export function trackTrade(
     let trade = new AddTrackedAssetsTrade(genericId(event));
     trade.fund = fund.id;
     trade.adapter = adapter.id;
-    trade.method = convertSelectorToType(selector);
+    trade.method = tradeType;
     trade.incomingAssetAmounts = incomingAssetAmounts.map<string>((assetAmount) => assetAmount.id);
     trade.timestamp = event.block.timestamp;
     trade.fundState = fund.state;

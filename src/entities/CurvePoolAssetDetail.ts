@@ -4,7 +4,6 @@ import { CurvePriceFeedContract } from '../generated/CurvePriceFeedContract';
 import { CurveRegistryContract } from '../generated/CurveRegistryContract';
 import { ICurveAddressProviderContract } from '../generated/ICurveAddressProviderContract';
 import { Asset, CurvePoolAssetDetail } from '../generated/schema';
-import { getERC20Name } from '../utils/getERC20Name';
 
 export function checkCurvePoolAssetDetail(derivative: Asset): void {
   let address = Address.fromString(derivative.id);
@@ -44,9 +43,6 @@ export function checkCurvePoolAssetDetail(derivative: Asset): void {
   }
   details.save();
 
-  let name = getERC20Name(address);
-
-  derivative.name = name;
   derivative.derivativeType = 'Curve';
   derivative.curvePoolAssetDetails = details.id;
   derivative.save();
