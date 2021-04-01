@@ -1,5 +1,6 @@
 import { Address } from '@graphprotocol/graph-ts';
 import { curvePriceFeed } from '../addresses';
+import { zeroAddress } from '../constants';
 import { CurvePriceFeedContract } from '../generated/CurvePriceFeedContract';
 import { CurveRegistryContract } from '../generated/CurveRegistryContract';
 import { ICurveAddressProviderContract } from '../generated/ICurveAddressProviderContract';
@@ -31,19 +32,27 @@ export function checkCurvePoolAssetDetail(derivative: Asset): void {
   let gauges = registry.get_gauges(info.pool);
   let coins = registry.get_coins(info.pool);
 
+  // check if the derivative is a pool token or a gauge token
+  let lpToken = registry.get_lp_token(info.pool);
+  let curveAssetType = 'POOL';
+  if (lpToken.equals(zeroAddress)) {
+    curveAssetType = 'GAUGE';
+  }
+
   let details = new CurvePoolAssetDetail(derivative.id);
   details.pool = info.pool.toHex();
   details.gauge = gauges.value0[0].toHex();
-  details.numberOfTokens = nCoins[0].toI32();
+  details.curveAssetType = curveAssetType;
   details.invariantProxyAsset = info.invariantProxyAsset.toHex();
+  details.numberOfTokens = nCoins[0].toI32();
   details.token0 = coins[0].toHex();
   details.token1 = coins[1].toHex();
-  if (nCoins[0].toI32() >= 3) {
+  if (nCoins[0].toI32() == 3) {
     details.token2 = coins[2].toHex();
   }
   details.save();
 
-  derivative.derivativeType = 'Curve';
+  derivative.derivativeType = 'CurvePool';
   derivative.curvePoolAssetDetails = details.id;
   derivative.save();
 }

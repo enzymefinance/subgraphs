@@ -142,7 +142,7 @@ enum DerivativeType {
   Alpha
   Chai
   Compound
-  Curve
+  CurvePool
   Stakehound
   Synthetix
   UniswapPool
@@ -1778,8 +1778,8 @@ type CurvePoolAssetDetail @entity {
   pool: String!
   gauge: String!
   curveAssetType: CurveAssetType!
-  numberOfTokens: Int!
   invariantProxyAsset: Asset!
+  numberOfTokens: Int!
   token0: Asset!
   token1: Asset!
   token2: Asset
