@@ -138,12 +138,14 @@ enum CurveAssetType {
 }
 
 enum DerivativeType {
-  Compound
-  Chai
-  UniswapPool
-  Synthetix
-  Alpha
   Aave
+  Alpha
+  Chai
+  Compound
+  Curve
+  Stakehound
+  Synthetix
+  UniswapPool
 }
 
 enum ChainlinkAggregatorProxyType {
