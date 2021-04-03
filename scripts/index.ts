@@ -208,7 +208,7 @@ async function fetchDeployment(source: string): Promise<DeploymentWithMetadata> 
       chaiPriceFeed: mainnet.contracts.ChaiPriceFeed.address,
       compoundPriceFeed: mainnet.contracts.CompoundPriceFeed.address,
       curvePriceFeed: mainnet.contracts.CurvePriceFeed.address,
-      lidoStethPriceFeed: '0x0000000000000000000000000000000000000000',
+      lidoStethPriceFeed: mainnet.contracts.LidoStethPriceFeed.address,
       stakehoundEthPriceFeed: mainnet.contracts.StakehoundEthPriceFeed.address,
       synthetixPriceFeed: mainnet.contracts.SynthetixPriceFeed.address,
       uniswapV2PoolPriceFeed: mainnet.contracts.UniswapV2PoolPriceFeed.address,
