@@ -1,6 +1,5 @@
 import { Address } from '@graphprotocol/graph-ts';
 import { curvePriceFeed } from '../addresses';
-import { zeroAddress } from '../constants';
 import { CurvePriceFeedContract } from '../generated/CurvePriceFeedContract';
 import { CurveRegistryContract } from '../generated/CurveRegistryContract';
 import { ICurveAddressProviderContract } from '../generated/ICurveAddressProviderContract';
@@ -34,14 +33,13 @@ export function checkCurvePoolAssetDetail(derivative: Asset): void {
 
   // check if the derivative is a pool token or a gauge token
   let lpToken = registry.get_lp_token(info.pool);
-  let curveAssetType = 'POOL';
-  if (lpToken.equals(zeroAddress)) {
-    curveAssetType = 'GAUGE';
-  }
+  let curveAssetType = lpToken.equals(address) ? 'POOL' : 'GAUGE';
 
   let details = new CurvePoolAssetDetail(derivative.id);
   details.pool = info.pool.toHex();
   details.gauge = gauges.value0[0].toHex();
+  details.lpToken = lpToken.toHex();
+  details.gaugeToken = gauges.value0[0].toHex();
   details.curveAssetType = curveAssetType;
   details.invariantProxyAsset = info.invariantProxyAsset.toHex();
   details.numberOfTokens = nCoins[0].toI32();
