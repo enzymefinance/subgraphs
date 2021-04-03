@@ -1777,6 +1777,8 @@ type CurvePoolAssetDetail @entity {
   id: ID!
   pool: String!
   gauge: String!
+  lpToken: Asset!
+  gaugeToken: Asset!
   curveAssetType: CurveAssetType!
   invariantProxyAsset: Asset!
   numberOfTokens: Int!
