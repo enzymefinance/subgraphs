@@ -1284,6 +1284,10 @@ type Release @entity {
   chaiPriceFeed: String!
   compoundPriceFeed: String!
   curvePriceFeed: String!
+  curveExchangeAdapter: String!
+  curveLiquidityAaveAdapter: String!
+  curveLiquiditySethAdapter: String!
+  curveLiquidityStethAdapter: String!
   lidoStethPriceFeed: String!
   stakehoundEthPriceFeed: String!
   synthetixPriceFeed: String!

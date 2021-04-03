@@ -19,6 +19,10 @@ import {
   compoundPriceFeed,
   comptrollerLibAddress,
   curvePriceFeed,
+  curveExchangeAdapter,
+  curveLiquidityAaveAdapter,
+  curveLiquiditySethAdapter,
+  curveLiquidityStethAdapter,
   dispatcherAddress,
   entranceRateBurnFeeAddress,
   entranceRateDirectFeeAddress,
@@ -91,6 +95,10 @@ export function createRelease(address: Address, event: ethereum.Event): Release 
   release.compoundPriceFeed = compoundPriceFeed.toHex();
   release.comptrollerLib = comptrollerLibAddress.toHex();
   release.curvePriceFeed = curvePriceFeed.toHex();
+  release.curveExchangeAdapter = curveExchangeAdapter.toHex();
+  release.curveLiquidityAaveAdapter = curveLiquidityAaveAdapter.toHex();
+  release.curveLiquiditySethAdapter = curveLiquiditySethAdapter.toHex();
+  release.curveLiquidityStethAdapter = curveLiquidityStethAdapter.toHex();
   release.dispatcher = dispatcherAddress.toHex();
   release.entranceRateBurnFee = entranceRateBurnFeeAddress.toHex();
   release.entranceRateDirectFee = entranceRateDirectFeeAddress.toHex();

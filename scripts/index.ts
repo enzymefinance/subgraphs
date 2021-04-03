@@ -56,6 +56,10 @@ interface Deployment {
   buySharesCallerWhitelist: string;
 
   // Adapters
+  curveExchangeAdapter: string;
+  curveLiquidityAaveAdapter: string;
+  curveLiquiditySethAdapter: string;
+  curveLiquidityStethAdapter: string;
   trackedAssetsAdapter: string;
   compoundAdapter: string;
   chaiAdapter: string;
@@ -144,6 +148,10 @@ async function fetchDeployment(source: string): Promise<DeploymentWithMetadata> 
       buySharesCallerWhitelist: kovan.contracts.BuySharesCallerWhitelist.address,
 
       // Adapters
+      curveExchangeAdapter: '0x0000000000000000000000000000000000000000',
+      curveLiquidityAaveAdapter: '0x0000000000000000000000000000000000000000',
+      curveLiquiditySethAdapter: '0x0000000000000000000000000000000000000000',
+      curveLiquidityStethAdapter: '0x0000000000000000000000000000000000000000',
       trackedAssetsAdapter: kovan.contracts.TrackedAssetsAdapter.address,
       compoundAdapter: kovan.contracts.CompoundAdapter.address,
       chaiAdapter: kovan.contracts.ChaiAdapter.address,
@@ -199,7 +207,7 @@ async function fetchDeployment(source: string): Promise<DeploymentWithMetadata> 
       alphaHomoraV1PriceFeed: mainnet.contracts.AlphaHomoraV1PriceFeed.address,
       chaiPriceFeed: mainnet.contracts.ChaiPriceFeed.address,
       compoundPriceFeed: mainnet.contracts.CompoundPriceFeed.address,
-      curvePriceFeed: '0x0000000000000000000000000000000000000000',
+      curvePriceFeed: mainnet.contracts.CurvePriceFeed.address,
       lidoStethPriceFeed: '0x0000000000000000000000000000000000000000',
       stakehoundEthPriceFeed: mainnet.contracts.StakehoundEthPriceFeed.address,
       synthetixPriceFeed: mainnet.contracts.SynthetixPriceFeed.address,
@@ -228,6 +236,10 @@ async function fetchDeployment(source: string): Promise<DeploymentWithMetadata> 
       buySharesCallerWhitelist: mainnet.contracts.BuySharesCallerWhitelist.address,
 
       // Adapters
+      curveExchangeAdapter: mainnet.contracts.CurveExchangeAdapter.address,
+      curveLiquidityAaveAdapter: mainnet.contracts.CurveLiquidityAaveAdapter.address,
+      curveLiquiditySethAdapter: mainnet.contracts.CurveLiquiditySethAdapter.address,
+      curveLiquidityStethAdapter: mainnet.contracts.CurveLiquidityStethAdapter.address,
       trackedAssetsAdapter: mainnet.contracts.TrackedAssetsAdapter.address,
       compoundAdapter: mainnet.contracts.CompoundAdapter.address,
       chaiAdapter: mainnet.contracts.ChaiAdapter.address,

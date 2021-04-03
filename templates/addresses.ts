@@ -58,6 +58,10 @@ export let buySharesCallerWhitelistAddress = Address.fromString('{{buySharesCall
 
 // Adapters
 export let aaveAdapterAddress = Address.fromString('{{aaveAdapter}}');
+export let curveExchangeAdapter = Address.fromString('{{curveExchangeAdapter}}');
+export let curveLiquidityAaveAdapter = Address.fromString('{{curveLiquidityAaveAdapter}}');
+export let curveLiquiditySethAdapter = Address.fromString('{{curveLiquiditySethAdapter}}');
+export let curveLiquidityStethAdapter = Address.fromString('{{curveLiquidityStethAdapter}}');
 export let trackedAssetsAdapterAddress = Address.fromString('{{trackedAssetsAdapter}}');
 export let compoundAdapterAddress = Address.fromString('{{compoundAdapter}}');
 export let chaiAdapterAddress = Address.fromString('{{chaiAdapter}}');
