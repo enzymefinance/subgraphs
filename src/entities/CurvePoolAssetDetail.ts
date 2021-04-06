@@ -1,9 +1,10 @@
 import { Address } from '@graphprotocol/graph-ts';
-import { curvePriceFeed } from '../addresses';
+import { curvePriceFeed, wethTokenAddress } from '../addresses';
 import { CurvePriceFeedContract } from '../generated/CurvePriceFeedContract';
 import { CurveRegistryContract } from '../generated/CurveRegistryContract';
 import { ICurveAddressProviderContract } from '../generated/ICurveAddressProviderContract';
 import { Asset, CurvePoolAssetDetail } from '../generated/schema';
+import { ethAddress } from '../utils/ethAddress';
 
 export function checkCurvePoolAssetDetail(derivative: Asset): void {
   let address = Address.fromString(derivative.id);
@@ -43,10 +44,10 @@ export function checkCurvePoolAssetDetail(derivative: Asset): void {
   details.curveAssetType = curveAssetType;
   details.invariantProxyAsset = info.invariantProxyAsset.toHex();
   details.numberOfTokens = nCoins[0].toI32();
-  details.token0 = coins[0].toHex();
-  details.token1 = coins[1].toHex();
+  details.token0 = coins[0].equals(ethAddress) ? wethTokenAddress.toHex() : coins[0].toHex();
+  details.token1 = coins[1].equals(ethAddress) ? wethTokenAddress.toHex() : coins[1].toHex();
   if (nCoins[0].toI32() == 3) {
-    details.token2 = coins[2].toHex();
+    details.token2 = coins[2].equals(ethAddress) ? wethTokenAddress.toHex() : coins[2].toHex();
   }
   details.save();
 
