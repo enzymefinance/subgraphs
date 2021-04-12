@@ -44,7 +44,7 @@ export let lendAndStakeSelector = '0x29fa046e';
 export let lendAndStakeMethod = 'lendAndStake(address,bytes,bytes)';
 export let lendAndStakeType = 'LEND_AND_STAKE';
 
-export let unstakeAndRedeemSelector = '0x099f7515';
+export let unstakeAndRedeemSelector = '0x8334eb99';
 export let unstakeAndRedeemMethod = 'unstakeAndRedeem(address,bytes,bytes)';
 export let unstakeAndRedeemType = 'UNSTAKE_AND_REDEEM';
 
