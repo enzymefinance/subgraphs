@@ -5,7 +5,7 @@ import { arrayUnique } from '../utils/arrayUnique';
 import { logCritical } from '../utils/logCritical';
 import { getDayOpenTime, isSameDay } from '../utils/timeHelpers';
 import { ensureAsset } from './Asset';
-import { networkId, useNetwork } from './Network';
+import { ensureNetwork, networkId } from './Network';
 import { ensureNetworkState } from './NetworkState';
 
 function networkAssetHoldingId(asset: Asset, event: ethereum.Event): string {
@@ -114,7 +114,7 @@ export function trackNetworkAssetHoldings(prev: HoldingState[], next: HoldingSta
   state.assetHoldings = nextAssetHoldings;
   state.save();
 
-  let network = useNetwork();
+  let network = ensureNetwork(event);
   network.state = state.id;
   network.save();
 }
