@@ -1696,6 +1696,92 @@ type AddTrackedAssetsTrade implements Trade @entity {
   fundState: FundState!
 }
 
+type ApproveAssetsTrade implements Trade @entity {
+  id: ID!
+  fund: Fund!
+  adapter: IntegrationAdapter!
+  method: IntegrationMethod!
+  incomingAssetAmounts: [AssetAmount!]!
+  timestamp: BigInt!
+  fundState: FundState!
+}
+
+type StakeTrade implements Trade @entity {
+  id: ID!
+  fund: Fund!
+  adapter: IntegrationAdapter!
+  method: IntegrationMethod!
+  incomingAssetAmount: AssetAmount!
+  outgoingAssetAmount: AssetAmount!
+  timestamp: BigInt!
+  fundState: FundState!
+}
+
+type UnstakeTrade implements Trade @entity {
+  id: ID!
+  fund: Fund!
+  adapter: IntegrationAdapter!
+  method: IntegrationMethod!
+  incomingAssetAmount: AssetAmount!
+  outgoingAssetAmount: AssetAmount!
+  timestamp: BigInt!
+  fundState: FundState!
+}
+
+type ClaimRewardsTrade implements Trade @entity {
+  id: ID!
+  fund: Fund!
+  adapter: IntegrationAdapter!
+  method: IntegrationMethod!
+  incomingAssetAmounts: [AssetAmount!]!
+  timestamp: BigInt!
+  fundState: FundState!
+}
+
+type ClaimRewardsAndReinvestTrade implements Trade @entity {
+  id: ID!
+  fund: Fund!
+  adapter: IntegrationAdapter!
+  method: IntegrationMethod!
+  incomingAssetAmounts: [AssetAmount!]!
+  outgoingAssetAmount: AssetAmount!
+  timestamp: BigInt!
+  fundState: FundState!
+}
+
+type ClaimRewardsAndSwapTrade implements Trade @entity {
+  id: ID!
+  fund: Fund!
+  adapter: IntegrationAdapter!
+  method: IntegrationMethod!
+  incomingAssetAmounts: [AssetAmount!]!
+  outgoingAssetAmount: AssetAmount!
+  timestamp: BigInt!
+  fundState: FundState!
+}
+
+type LendAndStakeTrade implements Trade @entity {
+  id: ID!
+  fund: Fund!
+  adapter: IntegrationAdapter!
+  method: IntegrationMethod!
+  incomingAssetAmounts: [AssetAmount!]!
+  outgoingAssetAmount: AssetAmount!
+  timestamp: BigInt!
+  fundState: FundState!
+}
+
+type UnstakeAndRedeemTrade implements Trade @entity {
+  id: ID!
+  fund: Fund!
+  adapter: IntegrationAdapter!
+  method: IntegrationMethod!
+  incomingAssetAmount: AssetAmount!
+  outgoingAssetAmounts: [AssetAmount!]!
+  timestamp: BigInt!
+  fundState: FundState!
+}
+
 type SharesRequestor @entity {
   id: ID!
   fund: Fund!
