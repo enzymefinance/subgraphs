@@ -1,5 +1,3 @@
-import { logCritical } from './logCritical';
-
 export function getFeeHook(hook: number): string {
   if (hook == 0) {
     return 'Continuous';
@@ -25,7 +23,5 @@ export function getFeeHook(hook: number): string {
     return 'PreRedeemShares';
   }
 
-  logCritical('FeeHook not found');
-
-  return '';
+  return 'Unknown';
 }

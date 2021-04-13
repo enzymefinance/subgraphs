@@ -3,6 +3,8 @@ description: Enzyme Finance
 repository: https://github.com/enzymefinance/subgraph
 schema:
   file: ./schema.graphql
+features:
+  - nonFatalErrors
 
 dataSources:
   - name: DispatcherDataSource
