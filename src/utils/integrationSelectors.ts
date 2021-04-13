@@ -1,5 +1,3 @@
-import { logCritical } from './logCritical';
-
 export let addTrackedAssetsSelector = '0x848f3a59';
 export let addTrackedAssetsMethod = 'addTrackedAssets(address,bytes,bytes)';
 export let addTrackedAssetsType = 'ADD_TRACKED_ASSETS';
@@ -47,60 +45,6 @@ export let lendAndStakeType = 'LEND_AND_STAKE';
 export let unstakeAndRedeemSelector = '0x8334eb99';
 export let unstakeAndRedeemMethod = 'unstakeAndRedeem(address,bytes,bytes)';
 export let unstakeAndRedeemType = 'UNSTAKE_AND_REDEEM';
-
-export function convertSelectorToMethod(selector: string): string {
-  if (selector == addTrackedAssetsSelector) {
-    return addTrackedAssetsMethod;
-  }
-
-  if (selector == approveAssetsSelector) {
-    return approveAssetsMethod;
-  }
-
-  if (selector == takeOrderSelector) {
-    return takeOrderMethod;
-  }
-
-  if (selector == lendSelector) {
-    return lendMethod;
-  }
-
-  if (selector == redeemSelector) {
-    return redeemMethod;
-  }
-
-  if (selector == stakeSelector) {
-    return stakeMethod;
-  }
-
-  if (selector == unstakeSelector) {
-    return unstakeMethod;
-  }
-
-  if (selector == claimRewardsSelector) {
-    return claimRewardsMethod;
-  }
-
-  if (selector == claimRewardsAndReinvestSelector) {
-    return claimRewardsAndReinvestMethod;
-  }
-
-  if (selector == claimRewardsAndSwapSelector) {
-    return claimRewardsAndSwapMethod;
-  }
-
-  if (selector == lendAndStakeSelector) {
-    return lendAndStakeMethod;
-  }
-
-  if (selector == unstakeAndRedeemSelector) {
-    return unstakeAndRedeemMethod;
-  }
-
-  logCritical('Invalid integration selector');
-
-  return '';
-}
 
 export function convertSelectorToType(selector: string): string {
   if (selector == addTrackedAssetsSelector) {
@@ -151,7 +95,5 @@ export function convertSelectorToType(selector: string): string {
     return unstakeAndRedeemType;
   }
 
-  logCritical('Invalid integration selector');
-
-  return '';
+  return 'UNKNOWN';
 }

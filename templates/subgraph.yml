@@ -707,8 +707,6 @@ dataSources:
           file: ./node_modules/@enzymefinance/protocol/artifacts/CurvePriceFeed.json
         - name: ICurveAddressProviderContract
           file: ./node_modules/@enzymefinance/protocol/artifacts/ICurveAddressProvider.json
-        # - name: ICurveLiquidityGaugeTokenContract
-        #   file: ./node_modules/@enzymefinance/protocol/artifacts/ICurveLiquidityGaugeToken.json
         - name: CurveRegistryContract
           file: ./src/utils/abis/CurveRegistry.json
         - name: StakehoundEthPriceFeedContract
