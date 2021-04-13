@@ -2,7 +2,7 @@ import { ethereum } from '@graphprotocol/graph-ts';
 import { NetworkState } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
 import { getDayOpenTime } from '../utils/timeHelpers';
-import { networkId, useNetwork } from './Network';
+import { ensureNetwork, networkId } from './Network';
 
 export function networkStateId(event: ethereum.Event): string {
   let startOfDay = getDayOpenTime(event.block.timestamp);
@@ -46,7 +46,7 @@ export function ensureNetworkState(event: ethereum.Event): NetworkState {
   }
 
   // network state doesn't exist, create new state by porting over all records/data
-  let network = useNetwork();
+  let network = ensureNetwork(event);
   let previous = useNetworkState(network.state);
 
   let state = createNetworkState(
@@ -61,11 +61,6 @@ export function ensureNetworkState(event: ethereum.Event): NetworkState {
   network.state = state.id;
   network.save();
 
-  // link fund states to period states
-  //   trackHourlyFundState(fund, state, event);
-  //   trackDailyFundState(fund, state, event);
-  //   trackMonthlyFundState(fund, state, event);
-
   return state;
 }
 
@@ -75,7 +70,7 @@ export function trackNetworkFunds(event: ethereum.Event): void {
   state.funds = state.funds + 1;
   state.save();
 
-  let network = useNetwork();
+  let network = ensureNetwork(event);
   network.state = state.id;
   network.save();
 }
@@ -86,7 +81,7 @@ export function trackNetworkManagers(event: ethereum.Event): void {
   state.managers = state.managers + 1;
   state.save();
 
-  let network = useNetwork();
+  let network = ensureNetwork(event);
   network.state = state.id;
   network.save();
 }
@@ -97,7 +92,7 @@ export function trackNetworkInvestors(event: ethereum.Event): void {
   state.investors = state.investors + 1;
   state.save();
 
-  let network = useNetwork();
+  let network = ensureNetwork(event);
   network.state = state.id;
   network.save();
 }
@@ -108,7 +103,7 @@ export function trackNetworkInvestments(event: ethereum.Event): void {
   state.investments = state.investments + 1;
   state.save();
 
-  let network = useNetwork();
+  let network = ensureNetwork(event);
   network.state = state.id;
   network.save();
 }

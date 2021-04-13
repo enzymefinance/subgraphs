@@ -1,18 +1,6 @@
 import { BigDecimal, BigInt } from '@graphprotocol/graph-ts';
-import { Fund, MinMaxInvestmentSetting, Policy } from '../generated/schema';
-import { logCritical } from '../utils/logCritical';
+import { MinMaxInvestmentSetting, Policy } from '../generated/schema';
 import { policySettingId } from './PolicySetting';
-
-export function useMinMaxInvestmentSetting(fund: Fund, policy: Policy): MinMaxInvestmentSetting {
-  let id = policySettingId(fund.id, policy);
-  let setting = MinMaxInvestmentSetting.load(id) as MinMaxInvestmentSetting;
-
-  if (setting == null) {
-    logCritical('Failed to load MinMaxInvestmentSetting {}.', [id]);
-  }
-
-  return setting;
-}
 
 export function ensureMinMaxInvestmentSetting(fundId: string, policy: Policy): MinMaxInvestmentSetting {
   let id = policySettingId(fundId, policy);

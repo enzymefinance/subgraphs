@@ -58,17 +58,7 @@ import {
   zeroExV2AdapterAddress,
 } from '../addresses';
 import { Release } from '../generated/schema';
-import { logCritical } from '../utils/logCritical';
 import { networkId } from './Network';
-
-export function useRelease(id: string): Release {
-  let release = Release.load(id) as Release;
-  if (release == null) {
-    logCritical('Failed to load release {}.', [id]);
-  }
-
-  return release;
-}
 
 export function createRelease(address: Address, event: ethereum.Event): Release {
   let release = new Release(address.toHex());

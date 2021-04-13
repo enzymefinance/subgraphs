@@ -1,5 +1,5 @@
 import { ensureAccount } from '../entities/Account';
-import { useAsset } from '../entities/Asset';
+import { ensureAsset } from '../entities/Asset';
 import { createAssetAmount } from '../entities/AssetAmount';
 import { trackCalculationState } from '../entities/CalculationState';
 import { useFund } from '../entities/Fund';
@@ -85,7 +85,7 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
   let adapter = useIntegrationAdapter(event.params.adapter.toHex());
   let integrationSelector = event.params.selector.toHexString();
 
-  let incomingAssets = event.params.incomingAssets.map<Asset>((asset) => useAsset(asset.toHex()));
+  let incomingAssets = event.params.incomingAssets.map<Asset>((asset) => ensureAsset(asset));
   let incomingAssetAmounts: AssetAmount[] = new Array<AssetAmount>();
   let incomingAmounts = event.params.incomingAssetAmounts;
   for (let i = 0; i < incomingAmounts.length; i++) {
@@ -94,7 +94,7 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
     incomingAssetAmounts = incomingAssetAmounts.concat([assetAmount]);
   }
 
-  let outgoingAssets = event.params.outgoingAssets.map<Asset>((asset) => useAsset(asset.toHex()));
+  let outgoingAssets = event.params.outgoingAssets.map<Asset>((asset) => ensureAsset(asset));
   let outgoingAssetAmounts: AssetAmount[] = new Array<AssetAmount>();
   let outgoingAmounts = event.params.outgoingAssetAmounts;
   for (let i = 0; i < outgoingAmounts.length; i++) {

@@ -1,4 +1,4 @@
-import { useAsset } from '../entities/Asset';
+import { ensureAsset } from '../entities/Asset';
 import { ensureMinMaxInvestmentSetting } from '../entities/MinMaxInvestmentSetting';
 import { usePolicy } from '../entities/Policy';
 import { ensureTransaction } from '../entities/Transaction';
@@ -13,7 +13,7 @@ export function handleFundSettingsSet(event: FundSettingsSet): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let fundId = comptroller.getVaultProxy().toHex(); // fund entity may not exist yet
   let policy = usePolicy(event.address.toHex());
-  let denominationAsset = useAsset(comptroller.getDenominationAsset().toHex());
+  let denominationAsset = ensureAsset(comptroller.getDenominationAsset());
 
   let settingsSet = new MinMaxInvestmentFundSettingsSetEvent(genericId(event));
   settingsSet.fund = fundId;

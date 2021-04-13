@@ -1,18 +1,6 @@
 import { BigInt } from '@graphprotocol/graph-ts';
-import { AssetWhitelistSetting, Fund, Policy } from '../generated/schema';
-import { logCritical } from '../utils/logCritical';
+import { AssetWhitelistSetting, Policy } from '../generated/schema';
 import { policySettingId } from './PolicySetting';
-
-export function useAssetWhitelistSetting(fund: Fund, policy: Policy): AssetWhitelistSetting {
-  let id = policySettingId(fund.id, policy);
-  let setting = AssetWhitelistSetting.load(id) as AssetWhitelistSetting;
-
-  if (setting == null) {
-    logCritical('Failed to load AssetWhitelistSetting {}.', [id]);
-  }
-
-  return setting;
-}
 
 export function ensureAssetWhitelistSetting(fundId: string, policy: Policy): AssetWhitelistSetting {
   let id = policySettingId(fundId, policy);

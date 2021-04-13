@@ -2,7 +2,7 @@ import { BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 import { Currency, CurrencyPrice } from '../generated/schema';
 import { ensureCron } from '../utils/cronManager';
 import { logCritical } from '../utils/logCritical';
-import { useCurrency } from './Currency';
+import { ensureCurrency } from './Currency';
 import {
   updateDailyCurrencyPriceCandle,
   updateHourlyCurrencyPriceCandle,
@@ -72,7 +72,7 @@ export function loadCurrentCurrencyPrices(): CurrencyPrice[] {
 
   let prices: CurrencyPrice[] = new Array<CurrencyPrice>();
   for (let i = 0; i < currencies.length; i++) {
-    let currency = useCurrency(currencies[i]);
+    let currency = ensureCurrency(currencies[i]);
     if (currency.price != null) {
       prices = prices.concat([useCurrencyPrice(currency.price)]);
     }

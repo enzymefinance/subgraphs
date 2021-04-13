@@ -1,4 +1,4 @@
-import { ensureGuaranteedRedemption, useGuaranteedRedemption } from '../entities/GuaranteedRedemption';
+import { ensureGuaranteedRedemption } from '../entities/GuaranteedRedemption';
 import { ensureGuaranteedRedemptionSetting } from '../entities/GuaranteedRedemptionSetting';
 import { useIntegrationAdapter } from '../entities/IntegrationAdapter';
 import { usePolicy } from '../entities/Policy';
@@ -41,7 +41,7 @@ export function handleAdapterRemoved(event: AdapterRemoved): void {
   adapterRemoved.transaction = ensureTransaction(event).id;
   adapterRemoved.save();
 
-  let guaranteedRedemption = useGuaranteedRedemption(event.address.toHex());
+  let guaranteedRedemption = ensureGuaranteedRedemption(event.address);
   guaranteedRedemption.adapters = arrayDiff<string>(guaranteedRedemption.adapters, [adapter.id]);
   guaranteedRedemption.save();
 }

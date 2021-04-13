@@ -7,7 +7,7 @@ import { VaultLibContract } from '../generated/VaultLibContract';
 import { arrayUnique } from '../utils/arrayUnique';
 import { logCritical } from '../utils/logCritical';
 import { toBigDecimal } from '../utils/toBigDecimal';
-import { useAsset } from './Asset';
+import { ensureAsset } from './Asset';
 import { useAssetPrice } from './AssetPrice';
 import { ensureFundState } from './FundState';
 
@@ -74,7 +74,7 @@ export function trackCalculationState(fund: Fund, event: ethereum.Event, cause: 
     return;
   }
 
-  let denominationAsset = useAsset(fund.denominationAsset);
+  let denominationAsset = ensureAsset(Address.fromString(fund.denominationAsset));
 
   let calculations = ensureCalculationState(fund, event, cause);
   calculations.gav = toBigDecimal(gav.value.value0, denominationAsset.decimals);

@@ -1,6 +1,6 @@
 import { DataSourceContext } from '@graphprotocol/graph-ts';
 import { ensureAccount, ensureManager } from '../entities/Account';
-import { useAsset } from '../entities/Asset';
+import { ensureAsset } from '../entities/Asset';
 import { createFund } from '../entities/Fund';
 import { ensureNetwork } from '../entities/Network';
 import { ensureTransaction } from '../entities/Transaction';
@@ -35,7 +35,7 @@ export function handleNewFundCreated(event: NewFundCreated): void {
   fundCreation.fundOwner = manager.id;
   fundCreation.fundName = event.params.fundName;
   fundCreation.creator = ensureAccount(event.params.creator, event).id;
-  fundCreation.denominationAsset = useAsset(event.params.denominationAsset.toHex()).id;
+  fundCreation.denominationAsset = ensureAsset(event.params.denominationAsset).id;
   fundCreation.sharesActionTimelock = event.params.sharesActionTimelock;
   fundCreation.feeManagerConfigData = event.params.feeManagerConfigData.toHex();
   fundCreation.policyManagerConfigData = event.params.policyManagerConfigData.toHex();
@@ -68,7 +68,7 @@ export function handleComptrollerProxyDeployed(event: ComptrollerProxyDeployed):
   comptrollerProxyDeployment.fund = vaultProxy.toHex();
   comptrollerProxyDeployment.comptrollerProxy = event.params.comptrollerProxy.toHex();
   comptrollerProxyDeployment.transaction = ensureTransaction(event).id;
-  comptrollerProxyDeployment.denominationAsset = useAsset(event.params.denominationAsset.toHex()).id;
+  comptrollerProxyDeployment.denominationAsset = ensureAsset(event.params.denominationAsset).id;
   comptrollerProxyDeployment.sharesActionTimelock = event.params.sharesActionTimelock;
   comptrollerProxyDeployment.feeManagerConfigData = event.params.feeManagerConfigData.toHexString();
   comptrollerProxyDeployment.policyManagerConfigData = event.params.policyManagerConfigData.toHexString();

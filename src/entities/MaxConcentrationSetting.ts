@@ -1,18 +1,6 @@
 import { BigDecimal, BigInt } from '@graphprotocol/graph-ts';
-import { Fund, MaxConcentrationSetting, Policy } from '../generated/schema';
-import { logCritical } from '../utils/logCritical';
+import { MaxConcentrationSetting, Policy } from '../generated/schema';
 import { policySettingId } from './PolicySetting';
-
-export function useMaxConcentrationSetting(fund: Fund, policy: Policy): MaxConcentrationSetting {
-  let id = policySettingId(fund.id, policy);
-  let setting = MaxConcentrationSetting.load(id) as MaxConcentrationSetting;
-
-  if (setting == null) {
-    logCritical('Failed to load MaxConcentrationSetting {}.', [id]);
-  }
-
-  return setting;
-}
 
 export function ensureMaxConcentrationSetting(fundId: string, policy: Policy): MaxConcentrationSetting {
   let id = policySettingId(fundId, policy);

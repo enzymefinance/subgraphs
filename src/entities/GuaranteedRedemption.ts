@@ -3,15 +3,6 @@ import { GuaranteedRedemptionContract } from '../generated/GuaranteedRedemptionC
 import { GuaranteedRedemption } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
 
-export function useGuaranteedRedemption(id: string): GuaranteedRedemption {
-  let guaranteedRedemption = GuaranteedRedemption.load(id) as GuaranteedRedemption;
-  if (guaranteedRedemption == null) {
-    logCritical('Failed to load GuaranteedRedemption {}.', [id]);
-  }
-
-  return guaranteedRedemption;
-}
-
 export function ensureGuaranteedRedemption(address: Address): GuaranteedRedemption {
   let guaranteedRedemption = GuaranteedRedemption.load(address.toHex()) as GuaranteedRedemption;
   if (guaranteedRedemption) {

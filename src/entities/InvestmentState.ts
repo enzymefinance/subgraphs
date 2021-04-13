@@ -3,7 +3,7 @@ import { Account, Fund, InvestmentState } from '../generated/schema';
 import { VaultLibContract } from '../generated/VaultLibContract';
 import { logCritical } from '../utils/logCritical';
 import { toBigDecimal } from '../utils/toBigDecimal';
-import { ensureInvestment, useInvestment } from './Investment';
+import { ensureInvestment } from './Investment';
 
 function investmentStateId(investor: Account, fund: Fund, event: ethereum.Event): string {
   return fund.id + '/' + investor.id + '/' + event.block.timestamp.toString();
@@ -29,17 +29,6 @@ export function ensureInvestmentState(investor: Account, fund: Fund, event: ethe
   return investmentState;
 }
 
-export function useInvestmentState(investor: Account, fund: Fund, event: ethereum.Event): InvestmentState {
-  let id = investmentStateId(investor, fund, event);
-
-  let investmentState = InvestmentState.load(id) as InvestmentState;
-  if (investmentState == null) {
-    logCritical('Failed to load investment state {}.', [id]);
-  }
-
-  return investmentState;
-}
-
 export function trackInvestmentState(investor: Account, fund: Fund, event: ethereum.Event): InvestmentState {
   let vaultProxy = VaultLibContract.bind(Address.fromString(fund.id));
   let balanceCall = vaultProxy.try_balanceOf(Address.fromString(investor.id));
@@ -52,7 +41,7 @@ export function trackInvestmentState(investor: Account, fund: Fund, event: ether
   investmentState.fundState = fund.state;
   investmentState.save();
 
-  let investment = useInvestment(investor, fund);
+  let investment = ensureInvestment(investor, fund, investmentState.id, event);
   investment.shares = toBigDecimal(balanceCall.value);
   investment.save();
 

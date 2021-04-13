@@ -1,6 +1,6 @@
-import { dataSource, store } from '@graphprotocol/graph-ts';
+import { Address, dataSource, store } from '@graphprotocol/graph-ts';
 import { ensureAccount } from '../entities/Account';
-import { useAsset } from '../entities/Asset';
+import { ensureAsset } from '../entities/Asset';
 import { useFund } from '../entities/Fund';
 import { sharesRequestId } from '../entities/SharesRequest';
 import { deleteSharesRequestExecutor, ensureSharesRequestExecutor } from '../entities/SharesRequestExecutor';
@@ -28,7 +28,10 @@ export function handleRequestCanceled(event: RequestCanceled): void {
   let account = ensureAccount(event.transaction.from, event);
   let sharesRequestor = ensureSharesRequestor(event.address.toHex(), fund);
 
-  let investmentAmount = toBigDecimal(event.params.investmentAmount, useAsset(fund.denominationAsset).decimals);
+  let investmentAmount = toBigDecimal(
+    event.params.investmentAmount,
+    ensureAsset(Address.fromString(fund.denominationAsset)).decimals,
+  );
   let minSharesQuantity = toBigDecimal(event.params.minSharesQuantity);
 
   let canceled = new RequestCanceledEvent(genericId(event));
@@ -49,7 +52,10 @@ export function handleRequestCreated(event: RequestCreated): void {
   let account = ensureAccount(event.transaction.from, event);
   let sharesRequestor = ensureSharesRequestor(event.address.toHex(), fund);
 
-  let investmentAmount = toBigDecimal(event.params.investmentAmount, useAsset(fund.denominationAsset).decimals);
+  let investmentAmount = toBigDecimal(
+    event.params.investmentAmount,
+    ensureAsset(Address.fromString(fund.denominationAsset)).decimals,
+  );
   let minSharesQuantity = toBigDecimal(event.params.minSharesQuantity);
 
   let created = new RequestCreatedEvent(genericId(event));
@@ -78,7 +84,10 @@ export function handleRequestExecuted(event: RequestExecuted): void {
   let account = ensureAccount(event.transaction.from, event);
   let sharesRequestor = ensureSharesRequestor(event.address.toHex(), fund);
 
-  let investmentAmount = toBigDecimal(event.params.investmentAmount, useAsset(fund.denominationAsset).decimals);
+  let investmentAmount = toBigDecimal(
+    event.params.investmentAmount,
+    ensureAsset(Address.fromString(fund.denominationAsset)).decimals,
+  );
   let minSharesQuantity = toBigDecimal(event.params.minSharesQuantity);
 
   let created = new RequestCreatedEvent(genericId(event));

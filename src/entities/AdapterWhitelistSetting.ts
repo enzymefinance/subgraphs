@@ -1,18 +1,6 @@
 import { BigInt } from '@graphprotocol/graph-ts';
-import { AdapterWhitelistSetting, Fund, Policy } from '../generated/schema';
-import { logCritical } from '../utils/logCritical';
+import { AdapterWhitelistSetting, Policy } from '../generated/schema';
 import { policySettingId } from './PolicySetting';
-
-export function useAdapterWhitelistSetting(fund: Fund, policy: Policy): AdapterWhitelistSetting {
-  let id = policySettingId(fund.id, policy);
-  let setting = AdapterWhitelistSetting.load(id) as AdapterWhitelistSetting;
-
-  if (setting == null) {
-    logCritical('Failed to load AdapterWhitelistSetting {}.', [id]);
-  }
-
-  return setting;
-}
 
 export function ensureAdapterWhitelistSetting(fundId: string, policy: Policy): AdapterWhitelistSetting {
   let id = policySettingId(fundId, policy);

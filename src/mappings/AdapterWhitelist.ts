@@ -1,4 +1,4 @@
-import { ensureAdapterWhitelistSetting, useAdapterWhitelistSetting } from '../entities/AdapterWhitelistSetting';
+import { ensureAdapterWhitelistSetting } from '../entities/AdapterWhitelistSetting';
 import { useFund } from '../entities/Fund';
 import { usePolicy } from '../entities/Policy';
 import { ensureTransaction } from '../entities/Transaction';
@@ -46,7 +46,7 @@ export function handleAddressesRemoved(event: AddressesRemoved): void {
   addressesRemoved.items = items;
   addressesRemoved.save();
 
-  let setting = useAdapterWhitelistSetting(fund, policy);
+  let setting = ensureAdapterWhitelistSetting(fund.id, policy);
   setting.listed = arrayDiff<string>(setting.listed, items);
   setting.adapters = setting.listed;
   setting.events = arrayUnique<string>(setting.events.concat([addressesRemoved.id]));

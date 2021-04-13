@@ -1,18 +1,6 @@
 import { BigInt } from '@graphprotocol/graph-ts';
-import { Fund, GuaranteedRedemptionSetting, Policy } from '../generated/schema';
-import { logCritical } from '../utils/logCritical';
+import { GuaranteedRedemptionSetting, Policy } from '../generated/schema';
 import { policySettingId } from './PolicySetting';
-
-export function useGuaranteedRedemptionSetting(fund: Fund, policy: Policy): GuaranteedRedemptionSetting {
-  let id = policySettingId(fund.id, policy);
-  let setting = GuaranteedRedemptionSetting.load(id) as GuaranteedRedemptionSetting;
-
-  if (setting == null) {
-    logCritical('Failed to load GuaranteedRedemptionSetting {}.', [id]);
-  }
-
-  return setting;
-}
 
 export function ensureGuaranteedRedemptionSetting(fundId: string, policy: Policy): GuaranteedRedemptionSetting {
   let id = policySettingId(fundId, policy);

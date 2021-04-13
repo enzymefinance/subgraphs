@@ -1,7 +1,4 @@
-import {
-  ensureBuySharesCallerWhitelistSetting,
-  useBuySharesCallerWhitelistSetting,
-} from '../entities/BuySharesCallerWhitelistSetting';
+import { ensureBuySharesCallerWhitelistSetting } from '../entities/BuySharesCallerWhitelistSetting';
 import { useFund } from '../entities/Fund';
 import { usePolicy } from '../entities/Policy';
 import { ensureTransaction } from '../entities/Transaction';
@@ -51,7 +48,7 @@ export function handleAddressesRemoved(event: AddressesRemoved): void {
   addressesRemoved.items = items;
   addressesRemoved.save();
 
-  let setting = useBuySharesCallerWhitelistSetting(fund, policy);
+  let setting = ensureBuySharesCallerWhitelistSetting(fund.id, policy);
   setting.listed = arrayDiff<string>(setting.listed, items);
   setting.events = arrayUnique<string>(setting.events.concat([addressesRemoved.id]));
   setting.timestamp = event.block.timestamp;
