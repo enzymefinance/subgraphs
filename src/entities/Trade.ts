@@ -211,7 +211,6 @@ export function trackTrade(
     trade.adapter = adapter.id;
     trade.method = tradeType;
     trade.incomingAssetAmount = incomingAssetAmounts[0].id;
-    trade.outgoingAssetAmounts = outgoingAssetAmounts.map<string>((assetAmount) => assetAmount.id);
     trade.timestamp = event.block.timestamp;
     trade.fundState = fund.state;
     trade.save();
@@ -225,7 +224,6 @@ export function trackTrade(
     trade.adapter = adapter.id;
     trade.method = tradeType;
     trade.incomingAssetAmount = incomingAssetAmounts[0].id;
-    trade.outgoingAssetAmounts = outgoingAssetAmounts.map<string>((assetAmount) => assetAmount.id);
     trade.timestamp = event.block.timestamp;
     trade.fundState = fund.state;
     trade.save();
