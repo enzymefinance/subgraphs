@@ -85,6 +85,10 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
   let adapter = useIntegrationAdapter(event.params.adapter.toHex());
   let integrationSelector = event.params.selector.toHexString();
 
+  // TODO: fix this (asset amounts and assets don't have to be the same lenght, e.g. approveAssetsTrade)
+  // - store assets and amounts separately
+  // -
+
   let incomingAssets = event.params.incomingAssets.map<Asset>((asset) => ensureAsset(asset));
   let incomingAssetAmounts: AssetAmount[] = new Array<AssetAmount>();
   let incomingAmounts = event.params.incomingAssetAmounts;
@@ -114,7 +118,16 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
   execution.transaction = ensureTransaction(event).id;
   execution.save();
 
-  trackTrade(fund, adapter, integrationSelector, incomingAssetAmounts, outgoingAssetAmounts, event);
+  trackTrade(
+    fund,
+    adapter,
+    integrationSelector,
+    incomingAssets,
+    outgoingAssets,
+    incomingAssetAmounts,
+    outgoingAssetAmounts,
+    event,
+  );
   trackPortfolioState(fund, event, execution);
   trackCalculationState(fund, event, execution);
 }

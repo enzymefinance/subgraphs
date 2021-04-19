@@ -2,6 +2,7 @@ import { CallOnIntegrationExecutedForFund } from '../generated/IntegrationManage
 import {
   AddTrackedAssetsTrade,
   ApproveAssetsTrade,
+  Asset,
   AssetAmount,
   ClaimRewardsAndReinvestTrade,
   ClaimRewardsAndSwapTrade,
@@ -40,6 +41,8 @@ export function trackTrade(
   fund: Fund,
   adapter: IntegrationAdapter,
   selector: string,
+  incomingAssets: Asset[],
+  outgoingAssets: Asset[],
   incomingAssetAmounts: AssetAmount[],
   outgoingAssetAmounts: AssetAmount[],
   event: CallOnIntegrationExecutedForFund,
@@ -153,7 +156,7 @@ export function trackTrade(
     trade.fund = fund.id;
     trade.adapter = adapter.id;
     trade.method = tradeType;
-    trade.incomingAssetAmounts = incomingAssetAmounts.map<string>((assetAmount) => assetAmount.id);
+    trade.incomingAssets = incomingAssets.map<string>((asset) => asset.id);
     trade.timestamp = event.block.timestamp;
     trade.fundState = fund.state;
     trade.save();
@@ -207,8 +210,8 @@ export function trackTrade(
     trade.fund = fund.id;
     trade.adapter = adapter.id;
     trade.method = tradeType;
-    trade.incomingAssetAmounts = incomingAssetAmounts.map<string>((assetAmount) => assetAmount.id);
-    trade.outgoingAssetAmount = outgoingAssetAmounts[0].id;
+    trade.incomingAssetAmount = incomingAssetAmounts[0].id;
+    trade.outgoingAssetAmounts = outgoingAssetAmounts.map<string>((assetAmount) => assetAmount.id);
     trade.timestamp = event.block.timestamp;
     trade.fundState = fund.state;
     trade.save();
@@ -221,8 +224,8 @@ export function trackTrade(
     trade.fund = fund.id;
     trade.adapter = adapter.id;
     trade.method = tradeType;
-    trade.incomingAssetAmounts = incomingAssetAmounts.map<string>((assetAmount) => assetAmount.id);
-    trade.outgoingAssetAmount = outgoingAssetAmounts[0].id;
+    trade.incomingAssetAmount = incomingAssetAmounts[0].id;
+    trade.outgoingAssetAmounts = outgoingAssetAmounts.map<string>((assetAmount) => assetAmount.id);
     trade.timestamp = event.block.timestamp;
     trade.fundState = fund.state;
     trade.save();
@@ -235,8 +238,8 @@ export function trackTrade(
     trade.fund = fund.id;
     trade.adapter = adapter.id;
     trade.method = tradeType;
-    trade.incomingAssetAmounts = incomingAssetAmounts.map<string>((assetAmount) => assetAmount.id);
-    trade.outgoingAssetAmount = outgoingAssetAmounts[0].id;
+    trade.incomingAssetAmount = incomingAssetAmounts[0].id;
+    trade.outgoingAssetAmounts = outgoingAssetAmounts.map<string>((assetAmount) => assetAmount.id);
     trade.timestamp = event.block.timestamp;
     trade.fundState = fund.state;
     trade.save();
@@ -249,8 +252,8 @@ export function trackTrade(
     trade.fund = fund.id;
     trade.adapter = adapter.id;
     trade.method = tradeType;
-    trade.incomingAssetAmount = incomingAssetAmounts[0].id;
-    trade.outgoingAssetAmounts = outgoingAssetAmounts.map<string>((assetAmount) => assetAmount.id);
+    trade.incomingAssetAmounts = incomingAssetAmounts.map<string>((assetAmount) => assetAmount.id);
+    trade.outgoingAssetAmount = outgoingAssetAmounts[0].id;
     trade.timestamp = event.block.timestamp;
     trade.fundState = fund.state;
     trade.save();

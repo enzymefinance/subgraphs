@@ -334,6 +334,8 @@ type CallOnIntegrationExecutedForFundEvent implements EventInterface & FundEvent
   adapter: IntegrationAdapter!
   selector: String!
   integrationData: String!
+  incomingAssets: [Asset!]!
+  outgoingAssets: [Asset!]!
   incomingAssetAmounts: [AssetAmount!]!
   outgoingAssetAmounts: [AssetAmount!]!
   timestamp: BigInt!
@@ -1704,7 +1706,7 @@ type ApproveAssetsTrade implements Trade @entity {
   fund: Fund!
   adapter: IntegrationAdapter!
   method: IntegrationMethod!
-  incomingAssetAmounts: [AssetAmount!]!
+  incomingAssets: [Asset!]!
   timestamp: BigInt!
   fundState: FundState!
 }
@@ -1746,8 +1748,8 @@ type ClaimRewardsAndReinvestTrade implements Trade @entity {
   fund: Fund!
   adapter: IntegrationAdapter!
   method: IntegrationMethod!
-  incomingAssetAmounts: [AssetAmount!]!
-  outgoingAssetAmount: AssetAmount!
+  incomingAssetAmount: AssetAmount!
+  outgoingAssetAmounts: [AssetAmount!]!
   timestamp: BigInt!
   fundState: FundState!
 }
@@ -1757,8 +1759,8 @@ type ClaimRewardsAndSwapTrade implements Trade @entity {
   fund: Fund!
   adapter: IntegrationAdapter!
   method: IntegrationMethod!
-  incomingAssetAmounts: [AssetAmount!]!
-  outgoingAssetAmount: AssetAmount!
+  incomingAssetAmount: AssetAmount!
+  outgoingAssetAmounts: [AssetAmount!]!
   timestamp: BigInt!
   fundState: FundState!
 }
@@ -1768,8 +1770,8 @@ type LendAndStakeTrade implements Trade @entity {
   fund: Fund!
   adapter: IntegrationAdapter!
   method: IntegrationMethod!
-  incomingAssetAmounts: [AssetAmount!]!
-  outgoingAssetAmount: AssetAmount!
+  incomingAssetAmount: AssetAmount!
+  outgoingAssetAmounts: [AssetAmount!]!
   timestamp: BigInt!
   fundState: FundState!
 }
@@ -1779,8 +1781,8 @@ type UnstakeAndRedeemTrade implements Trade @entity {
   fund: Fund!
   adapter: IntegrationAdapter!
   method: IntegrationMethod!
-  incomingAssetAmount: AssetAmount!
-  outgoingAssetAmounts: [AssetAmount!]!
+  incomingAssetAmounts: [AssetAmount!]!
+  outgoingAssetAmount: AssetAmount!
   timestamp: BigInt!
   fundState: FundState!
 }
