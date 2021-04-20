@@ -28,6 +28,7 @@ interface Deployment {
   chaiPriceFeed: string;
   compoundPriceFeed: string;
   curvePriceFeed: string;
+  idlePriceFeed: string;
   lidoStethPriceFeed: string;
   stakehoundEthPriceFeed: string;
   synthetixPriceFeed: string;
@@ -64,6 +65,7 @@ interface Deployment {
   curveLiquidityAaveAdapter: string;
   curveLiquiditySethAdapter: string;
   curveLiquidityStethAdapter: string;
+  idleAdapter: string;
   kyberAdapter: string;
   paraSwapAdapter: string;
   synthetixAdapter: string;
@@ -120,6 +122,7 @@ async function fetchDeployment(source: string): Promise<DeploymentWithMetadata> 
       chaiPriceFeed: kovan.contracts.ChaiPriceFeed.address,
       compoundPriceFeed: kovan.contracts.CompoundPriceFeed.address,
       curvePriceFeed: '0x0000000000000000000000000000000000000000',
+      idlePriceFeed: '0x0000000000000000000000000000000000000000',
       lidoStethPriceFeed: '0x0000000000000000000000000000000000000000',
       stakehoundEthPriceFeed: '0x0000000000000000000000000000000000000000',
       synthetixPriceFeed: kovan.contracts.SynthetixPriceFeed.address,
@@ -156,6 +159,7 @@ async function fetchDeployment(source: string): Promise<DeploymentWithMetadata> 
       curveLiquidityAaveAdapter: '0x0000000000000000000000000000000000000000',
       curveLiquiditySethAdapter: '0x0000000000000000000000000000000000000000',
       curveLiquidityStethAdapter: '0x0000000000000000000000000000000000000000',
+      idleAdapter: '0x0000000000000000000000000000000000000000',
       kyberAdapter: kovan.contracts.KyberAdapter.address,
       paraSwapAdapter: kovan.contracts.ParaSwapAdapter.address,
       synthetixAdapter: kovan.contracts.SynthetixAdapter.address,
@@ -208,6 +212,7 @@ async function fetchDeployment(source: string): Promise<DeploymentWithMetadata> 
       chaiPriceFeed: mainnet.contracts.ChaiPriceFeed.address,
       compoundPriceFeed: mainnet.contracts.CompoundPriceFeed.address,
       curvePriceFeed: mainnet.contracts.CurvePriceFeed.address,
+      idlePriceFeed: '0x0000000000000000000000000000000000000000',
       lidoStethPriceFeed: mainnet.contracts.LidoStethPriceFeed.address,
       stakehoundEthPriceFeed: mainnet.contracts.StakehoundEthPriceFeed.address,
       synthetixPriceFeed: mainnet.contracts.SynthetixPriceFeed.address,
@@ -245,6 +250,7 @@ async function fetchDeployment(source: string): Promise<DeploymentWithMetadata> 
       trackedAssetsAdapter: mainnet.contracts.TrackedAssetsAdapter.address,
       compoundAdapter: mainnet.contracts.CompoundAdapter.address,
       chaiAdapter: mainnet.contracts.ChaiAdapter.address,
+      idleAdapter: '0x0000000000000000000000000000000000000000',
       kyberAdapter: mainnet.contracts.KyberAdapter.address,
       paraSwapAdapter: mainnet.contracts.ParaSwapAdapter.address,
       synthetixAdapter: mainnet.contracts.SynthetixAdapter.address,

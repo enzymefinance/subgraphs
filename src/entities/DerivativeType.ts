@@ -4,6 +4,7 @@ import {
   alphaHomoraV1PriceFeed,
   chaiPriceFeed,
   compoundPriceFeed,
+  idlePriceFeed,
   stakehoundEthPriceFeed,
   synthetixPriceFeed,
 } from '../addresses';
@@ -11,6 +12,7 @@ import { AavePriceFeedContract } from '../generated/AavePriceFeedContract';
 import { AlphaHomoraV1PriceFeedContract } from '../generated/AlphaHomoraV1PriceFeedContract';
 import { ChaiPriceFeedContract } from '../generated/ChaiPriceFeedContract';
 import { CompoundPriceFeedContract } from '../generated/CompoundPriceFeedContract';
+import { IdlePriceFeedContract } from '../generated/IdlePriceFeedContract';
 import { Asset } from '../generated/schema';
 import { StakehoundEthPriceFeedContract } from '../generated/StakehoundEthPriceFeedContract';
 import { SynthetixPriceFeedContract } from '../generated/SynthetixPriceFeedContract';
@@ -23,6 +25,7 @@ export function checkDerivativeType(derivative: Asset): void {
   checkAlphaDerivativeType(derivative);
   checkChaiDerivativeType(derivative);
   checkCompoundDerivativeType(derivative);
+  checkIdleDerivativeType(derivative);
   checkStakehoundDerivativeType(derivative);
   checkSynthetixDerivativeType(derivative);
 
@@ -115,6 +118,28 @@ function checkCompoundDerivativeType(derivative: Asset): void {
   }
 
   derivative.derivativeType = 'Compound';
+  derivative.underlyingAsset = underlying.value.toHex();
+  derivative.save();
+}
+
+function checkIdleDerivativeType(derivative: Asset): void {
+  let address = Address.fromString(derivative.id);
+
+  let priceFeedContract = IdlePriceFeedContract.bind(idlePriceFeed);
+  let isSupported = priceFeedContract.try_isSupportedAsset(address);
+
+  if (isSupported.reverted || isSupported.value == false) {
+    return;
+  }
+
+  let underlying = priceFeedContract.try_getUnderlyingForDerivative(address);
+
+  if (underlying.reverted) {
+    log.warning('Reverted getUnderlyingForDerivative for asset {}', [derivative.id]);
+    return;
+  }
+
+  derivative.derivativeType = 'Idle';
   derivative.underlyingAsset = underlying.value.toHex();
   derivative.save();
 }
