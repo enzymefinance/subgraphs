@@ -112,6 +112,8 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
   execution.adapter = adapter.id;
   execution.selector = integrationSelector;
   execution.integrationData = event.params.integrationData.toHexString();
+  execution.incomingAssets = incomingAssets.map<string>((asset) => asset.id);
+  execution.outgoingAssets = outgoingAssets.map<string>((asset) => asset.id);
   execution.incomingAssetAmounts = incomingAssetAmounts.map<string>((assetAmount) => assetAmount.id);
   execution.outgoingAssetAmounts = outgoingAssetAmounts.map<string>((assetAmount) => assetAmount.id);
   execution.timestamp = event.block.timestamp;
