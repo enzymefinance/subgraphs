@@ -1,5 +1,5 @@
 import { Address } from '@graphprotocol/graph-ts';
-import { curvePriceFeed, wethTokenAddress } from '../addresses';
+import { curvePriceFeedAddress, wethTokenAddress } from '../addresses';
 import { CurvePriceFeedContract } from '../generated/CurvePriceFeedContract';
 import { CurveRegistryContract } from '../generated/CurveRegistryContract';
 import { ICurveAddressProviderContract } from '../generated/ICurveAddressProviderContract';
@@ -9,7 +9,7 @@ import { ethAddress } from '../utils/ethAddress';
 export function checkCurvePoolAssetDetail(derivative: Asset): void {
   let address = Address.fromString(derivative.id);
 
-  let priceFeedContract = CurvePriceFeedContract.bind(curvePriceFeed);
+  let priceFeedContract = CurvePriceFeedContract.bind(curvePriceFeedAddress);
   let isSupported = priceFeedContract.try_isSupportedAsset(address);
 
   if (isSupported.reverted || isSupported.value == false) {

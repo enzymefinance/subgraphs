@@ -1,5 +1,5 @@
 import { Address, log } from '@graphprotocol/graph-ts';
-import { uniswapV2PoolPriceFeed } from '../addresses';
+import { uniswapV2PoolPriceFeedAddress } from '../addresses';
 import { Asset, UniswapV2PoolAssetDetail } from '../generated/schema';
 import { UniswapV2PoolPriceFeedContract } from '../generated/UniswapV2PoolPriceFeedContract';
 import { getERC20Symbol } from '../utils/getERC20Symbol';
@@ -7,7 +7,7 @@ import { getERC20Symbol } from '../utils/getERC20Symbol';
 export function checkUniswapV2PoolAssetDetail(derivative: Asset): void {
   let address = Address.fromString(derivative.id);
 
-  let priceFeedContract = UniswapV2PoolPriceFeedContract.bind(uniswapV2PoolPriceFeed);
+  let priceFeedContract = UniswapV2PoolPriceFeedContract.bind(uniswapV2PoolPriceFeedAddress);
   let isSupported = priceFeedContract.try_isSupportedAsset(address);
 
   if (isSupported.reverted || isSupported.value == false) {

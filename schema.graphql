@@ -1290,6 +1290,7 @@ type Release @entity {
   maxConcentration: String!
   minMaxInvestment: String!
   paraSwapAdapter: String!
+  paraSwapV4Adapter: String!
   performanceFee: String!
   policyManager: String!
   synthetixAdapter: String!

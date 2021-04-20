@@ -1,12 +1,12 @@
 import { Address, log } from '@graphprotocol/graph-ts';
 import {
-  aavePriceFeed,
-  alphaHomoraV1PriceFeed,
-  chaiPriceFeed,
-  compoundPriceFeed,
-  idlePriceFeed,
-  stakehoundEthPriceFeed,
-  synthetixPriceFeed,
+  aavePriceFeedAddress,
+  alphaHomoraV1PriceFeedAddress,
+  chaiPriceFeedAddress,
+  compoundPriceFeedAddress,
+  idlePriceFeedAddress,
+  stakehoundEthPriceFeedAddress,
+  synthetixPriceFeedAddress,
 } from '../addresses';
 import { AavePriceFeedContract } from '../generated/AavePriceFeedContract';
 import { AlphaHomoraV1PriceFeedContract } from '../generated/AlphaHomoraV1PriceFeedContract';
@@ -37,7 +37,7 @@ export function checkDerivativeType(derivative: Asset): void {
 function checkAaveDerivativeType(derivative: Asset): void {
   let address = Address.fromString(derivative.id);
 
-  let priceFeedContract = AavePriceFeedContract.bind(aavePriceFeed);
+  let priceFeedContract = AavePriceFeedContract.bind(aavePriceFeedAddress);
   let isSupported = priceFeedContract.try_isSupportedAsset(address);
 
   if (isSupported.reverted || isSupported.value == false) {
@@ -59,7 +59,7 @@ function checkAaveDerivativeType(derivative: Asset): void {
 function checkAlphaDerivativeType(derivative: Asset): void {
   let address = Address.fromString(derivative.id);
 
-  let priceFeedContract = AlphaHomoraV1PriceFeedContract.bind(alphaHomoraV1PriceFeed);
+  let priceFeedContract = AlphaHomoraV1PriceFeedContract.bind(alphaHomoraV1PriceFeedAddress);
   let isSupported = priceFeedContract.try_isSupportedAsset(address);
 
   if (isSupported.reverted || isSupported.value == false) {
@@ -81,7 +81,7 @@ function checkAlphaDerivativeType(derivative: Asset): void {
 function checkChaiDerivativeType(derivative: Asset): void {
   let address = Address.fromString(derivative.id);
 
-  let priceFeedContract = ChaiPriceFeedContract.bind(chaiPriceFeed);
+  let priceFeedContract = ChaiPriceFeedContract.bind(chaiPriceFeedAddress);
   let isSupported = priceFeedContract.try_isSupportedAsset(address);
 
   if (isSupported.reverted || isSupported.value == false) {
@@ -103,7 +103,7 @@ function checkChaiDerivativeType(derivative: Asset): void {
 function checkCompoundDerivativeType(derivative: Asset): void {
   let address = Address.fromString(derivative.id);
 
-  let priceFeedContract = CompoundPriceFeedContract.bind(compoundPriceFeed);
+  let priceFeedContract = CompoundPriceFeedContract.bind(compoundPriceFeedAddress);
   let isSupported = priceFeedContract.try_isSupportedAsset(address);
 
   if (isSupported.reverted || isSupported.value == false) {
@@ -125,7 +125,7 @@ function checkCompoundDerivativeType(derivative: Asset): void {
 function checkIdleDerivativeType(derivative: Asset): void {
   let address = Address.fromString(derivative.id);
 
-  let priceFeedContract = IdlePriceFeedContract.bind(idlePriceFeed);
+  let priceFeedContract = IdlePriceFeedContract.bind(idlePriceFeedAddress);
   let isSupported = priceFeedContract.try_isSupportedAsset(address);
 
   if (isSupported.reverted || isSupported.value == false) {
@@ -147,7 +147,7 @@ function checkIdleDerivativeType(derivative: Asset): void {
 function checkStakehoundDerivativeType(derivative: Asset): void {
   let address = Address.fromString(derivative.id);
 
-  let priceFeedContract = StakehoundEthPriceFeedContract.bind(stakehoundEthPriceFeed);
+  let priceFeedContract = StakehoundEthPriceFeedContract.bind(stakehoundEthPriceFeedAddress);
   let isSupported = priceFeedContract.try_isSupportedAsset(address);
 
   if (isSupported.reverted || isSupported.value == false) {
@@ -169,7 +169,7 @@ function checkStakehoundDerivativeType(derivative: Asset): void {
 function checkSynthetixDerivativeType(derivative: Asset): void {
   let address = Address.fromString(derivative.id);
 
-  let priceFeedContract = SynthetixPriceFeedContract.bind(synthetixPriceFeed);
+  let priceFeedContract = SynthetixPriceFeedContract.bind(synthetixPriceFeedAddress);
   let isSupported = priceFeedContract.try_isSupportedAsset(address);
 
   if (isSupported.reverted || isSupported.value == false) {

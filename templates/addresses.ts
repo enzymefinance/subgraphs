@@ -22,17 +22,17 @@ export let aggregatedDerivativePriceFeedAddress = Address.fromString('{{aggregat
 export let chainlinkPriceFeedAddress = Address.fromString('{{chainlinkPriceFeed}}');
 
 // Derivative Price Feeds
-export let aavePriceFeed = Address.fromString('{{aavePriceFeed}}');
-export let alphaHomoraV1PriceFeed = Address.fromString('{{alphaHomoraV1PriceFeed}}');
-export let chaiPriceFeed = Address.fromString('{{chaiPriceFeed}}');
-export let compoundPriceFeed = Address.fromString('{{compoundPriceFeed}}');
-export let curvePriceFeed = Address.fromString('{{curvePriceFeed}}');
-export let idlePriceFeed = Address.fromString('{{idlePriceFeed}}');
-export let lidoStethPriceFeed = Address.fromString('{{lidoStethPriceFeed}}');
-export let stakehoundEthPriceFeed = Address.fromString('{{stakehoundEthPriceFeed}}');
-export let synthetixPriceFeed = Address.fromString('{{synthetixPriceFeed}}');
-export let uniswapV2PoolPriceFeed = Address.fromString('{{uniswapV2PoolPriceFeed}}');
-export let wdgldPriceFeed = Address.fromString('{{wdgldPriceFeed}}');
+export let aavePriceFeedAddress = Address.fromString('{{aavePriceFeed}}');
+export let alphaHomoraV1PriceFeedAddress = Address.fromString('{{alphaHomoraV1PriceFeed}}');
+export let chaiPriceFeedAddress = Address.fromString('{{chaiPriceFeed}}');
+export let compoundPriceFeedAddress = Address.fromString('{{compoundPriceFeed}}');
+export let curvePriceFeedAddress = Address.fromString('{{curvePriceFeed}}');
+export let idlePriceFeedAddress = Address.fromString('{{idlePriceFeed}}');
+export let lidoStethPriceFeedAddress = Address.fromString('{{lidoStethPriceFeed}}');
+export let stakehoundEthPriceFeedAddress = Address.fromString('{{stakehoundEthPriceFeed}}');
+export let synthetixPriceFeedAddress = Address.fromString('{{synthetixPriceFeed}}');
+export let uniswapV2PoolPriceFeedAddress = Address.fromString('{{uniswapV2PoolPriceFeed}}');
+export let wdgldPriceFeedAddress = Address.fromString('{{wdgldPriceFeed}}');
 
 // Peripheral
 export let fundActionsWrapperAddress = Address.fromString('{{fundActionsWrapper}}');
@@ -84,9 +84,9 @@ export let synthetixAddressResolverAddress = Address.fromString('{{synthetixAddr
 export let synthetixDelegateApprovalsAddress = Address.fromString('{{synthetixDelegateApprovals}}');
 
 // Currencies
-export let audChainlinkAggregator = Address.fromString('{{audChainlinkAggregator}}');
-export let btcChainlinkAggregator = Address.fromString('{{btcChainlinkAggregator}}');
-export let chfChainlinkAggregator = Address.fromString('{{chfChainlinkAggregator}}');
-export let eurChainlinkAggregator = Address.fromString('{{eurChainlinkAggregator}}');
-export let gbpChainlinkAggregator = Address.fromString('{{gbpChainlinkAggregator}}');
-export let jpyChainlinkAggregator = Address.fromString('{{jpyChainlinkAggregator}}');
+export let audChainlinkAggregatorAddress = Address.fromString('{{audChainlinkAggregator}}');
+export let btcChainlinkAggregatorAddress = Address.fromString('{{btcChainlinkAggregator}}');
+export let chfChainlinkAggregatorAddress = Address.fromString('{{chfChainlinkAggregator}}');
+export let eurChainlinkAggregatorAddress = Address.fromString('{{eurChainlinkAggregator}}');
+export let gbpChainlinkAggregatorAddress = Address.fromString('{{gbpChainlinkAggregator}}');
+export let jpyChainlinkAggregatorAddress = Address.fromString('{{jpyChainlinkAggregator}}');

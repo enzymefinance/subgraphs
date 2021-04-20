@@ -68,6 +68,7 @@ interface Deployment {
   idleAdapter: string;
   kyberAdapter: string;
   paraSwapAdapter: string;
+  paraSwapV4Adapter: string;
   synthetixAdapter: string;
   trackedAssetsAdapter: string;
   uniswapV2Adapter: string;
@@ -162,6 +163,7 @@ async function fetchDeployment(source: string): Promise<DeploymentWithMetadata> 
       idleAdapter: '0x0000000000000000000000000000000000000000',
       kyberAdapter: kovan.contracts.KyberAdapter.address,
       paraSwapAdapter: kovan.contracts.ParaSwapAdapter.address,
+      paraSwapV4Adapter: '0x0000000000000000000000000000000000000000',
       synthetixAdapter: kovan.contracts.SynthetixAdapter.address,
       trackedAssetsAdapter: kovan.contracts.TrackedAssetsAdapter.address,
       uniswapV2Adapter: kovan.contracts.UniswapV2Adapter.address,
@@ -253,6 +255,7 @@ async function fetchDeployment(source: string): Promise<DeploymentWithMetadata> 
       idleAdapter: mainnet.contracts.IdleAdapter.address,
       kyberAdapter: mainnet.contracts.KyberAdapter.address,
       paraSwapAdapter: mainnet.contracts.ParaSwapAdapter.address,
+      paraSwapV4Adapter: mainnet.contracts.ParaSwapV4Adapter.address,
       synthetixAdapter: mainnet.contracts.SynthetixAdapter.address,
       uniswapV2Adapter: mainnet.contracts.UniswapV2Adapter.address,
       zeroExV2Adapter: mainnet.contracts.ZeroExV2Adapter.address,
