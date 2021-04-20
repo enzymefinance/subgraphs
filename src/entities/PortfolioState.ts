@@ -5,7 +5,7 @@ import { VaultLibContract } from '../generated/VaultLibContract';
 import { arrayUnique } from '../utils/arrayUnique';
 import { logCritical } from '../utils/logCritical';
 import { toBigDecimal } from '../utils/toBigDecimal';
-import { useAsset } from './Asset';
+import { ensureAsset } from './Asset';
 import { ensureFundState, useFundState } from './FundState';
 import { createHoldingState, findHoldingState, useHoldingState } from './HoldingState';
 import { trackNetworkAssetHoldings } from './NetworkAssetHolding';
@@ -70,7 +70,7 @@ export function trackPortfolioState(fund: Fund, event: ethereum.Event, cause: En
     let assetContract = ERC20Contract.bind(assetAddress);
     let assetBalance = assetContract.balanceOf(vaultProxyAddress);
 
-    let asset = useAsset(assetAddress.toHex());
+    let asset = ensureAsset(assetAddress);
     let quantity = toBigDecimal(assetBalance, asset.decimals);
 
     // Add the fund holding entry for the current asset.

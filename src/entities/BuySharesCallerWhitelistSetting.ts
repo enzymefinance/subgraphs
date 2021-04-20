@@ -1,18 +1,6 @@
 import { BigInt } from '@graphprotocol/graph-ts';
-import { BuySharesCallerWhitelistSetting, Fund, Policy } from '../generated/schema';
-import { logCritical } from '../utils/logCritical';
+import { BuySharesCallerWhitelistSetting, Policy } from '../generated/schema';
 import { policySettingId } from './PolicySetting';
-
-export function useBuySharesCallerWhitelistSetting(fund: Fund, policy: Policy): BuySharesCallerWhitelistSetting {
-  let id = policySettingId(fund.id, policy);
-  let setting = BuySharesCallerWhitelistSetting.load(id) as BuySharesCallerWhitelistSetting;
-
-  if (setting == null) {
-    logCritical('Failed to load BuySharesCallerWhitelistSetting {}.', [id]);
-  }
-
-  return setting;
-}
 
 export function ensureBuySharesCallerWhitelistSetting(fundId: string, policy: Policy): BuySharesCallerWhitelistSetting {
   let id = policySettingId(fundId, policy);

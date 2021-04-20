@@ -1,4 +1,4 @@
-import { ensureAssetBlacklistSetting, useAssetBlacklistSetting } from '../entities/AssetBlacklistSetting';
+import { ensureAssetBlacklistSetting } from '../entities/AssetBlacklistSetting';
 import { useFund } from '../entities/Fund';
 import { usePolicy } from '../entities/Policy';
 import { ensureTransaction } from '../entities/Transaction';
@@ -46,7 +46,7 @@ export function handleAddressesRemoved(event: AddressesRemoved): void {
   addressesRemoved.items = items;
   addressesRemoved.save();
 
-  let setting = useAssetBlacklistSetting(fund, policy);
+  let setting = ensureAssetBlacklistSetting(fund.id, policy);
   setting.listed = arrayDiff<string>(setting.listed, items);
   setting.assets = setting.listed;
   setting.events = arrayUnique<string>(setting.events.concat([addressesRemoved.id]));

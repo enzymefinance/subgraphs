@@ -1,5 +1,3 @@
-import { logCritical } from './logCritical';
-
 export function getPolicyHook(hook: number): string {
   if (hook == 0) {
     return 'BuySharesSetup';
@@ -25,7 +23,5 @@ export function getPolicyHook(hook: number): string {
     return 'PostCallOnIntegration';
   }
 
-  logCritical('PolicyHook not found');
-
-  return '';
+  return 'Unknown';
 }

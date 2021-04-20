@@ -2,7 +2,7 @@ import { BigDecimal } from '@graphprotocol/graph-ts';
 import { useFee } from '../entities/Fee';
 import { trackFeeState } from '../entities/FeeState';
 import { useFund } from '../entities/Fund';
-import { ensurePerformanceFeeSetting, usePerformanceFeeSetting } from '../entities/PerformanceFeeSetting';
+import { ensurePerformanceFeeSetting } from '../entities/PerformanceFeeSetting';
 import { performanceFeeStateId, usePerformanceFeeState } from '../entities/PerformanceFeeState';
 import { ensureTransaction } from '../entities/Transaction';
 import { ComptrollerLibContract } from '../generated/ComptrollerLibContract';
@@ -60,7 +60,7 @@ export function handleActivatedForFund(event: ActivatedForFund): void {
   feeActivation.highWaterMark = toBigDecimal(event.params.highWaterMark);
   feeActivation.save();
 
-  let setting = usePerformanceFeeSetting(vault.toHex(), fee);
+  let setting = ensurePerformanceFeeSetting(vault.toHex(), fee);
   setting.activated = event.block.timestamp;
   setting.save();
 }

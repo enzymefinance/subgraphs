@@ -1,8 +1,10 @@
-import { logCritical } from './logCritical';
-
 export let addTrackedAssetsSelector = '0x848f3a59';
 export let addTrackedAssetsMethod = 'addTrackedAssets(address,bytes,bytes)';
 export let addTrackedAssetsType = 'ADD_TRACKED_ASSETS';
+
+export let approveAssetsSelector = '0x3377e18a';
+export let approveAssetsMethod = 'approveAssets(address,bytes,bytes)';
+export let approveAssetsType = 'APPROVE_ASSETS';
 
 export let takeOrderSelector = '0x03e38a2b';
 export let takeOrderMethod = 'takeOrder(address,bytes,bytes)';
@@ -16,31 +18,41 @@ export let redeemSelector = '0xc29fa9dd';
 export let redeemMethod = 'redeem(address,bytes,bytes)';
 export let redeemType = 'REDEEM';
 
-export function convertSelectorToMethod(selector: string): string {
-  if (selector == addTrackedAssetsSelector) {
-    return addTrackedAssetsMethod;
-  }
+export let stakeSelector = '0xfa7dd04d';
+export let stakeMethod = 'stake(address,bytes,bytes)';
+export let stakeType = 'STAKE';
 
-  if (selector == takeOrderSelector) {
-    return takeOrderMethod;
-  }
+export let unstakeSelector = '0x68e30677';
+export let unstakeMethod = 'unstake(address,bytes,bytes)';
+export let unstakeType = 'UNSTAKE';
 
-  if (selector == lendSelector) {
-    return lendMethod;
-  }
+export let claimRewardsSelector = '0xb9dfbacc';
+export let claimRewardsMethod = 'claimRewards(address,bytes,bytes)';
+export let claimRewardsType = 'CLAIM_REWARDS';
 
-  if (selector == redeemSelector) {
-    return redeemMethod;
-  }
+export let claimRewardsAndReinvestSelector = '0xdfd5ee0f';
+export let claimRewardsAndReinvestMethod = 'claimRewardsAndReinvest(address,bytes,bytes)';
+export let claimRewardsAndReinvestType = 'CLAIM_REWARDS_AND_REINVEST';
 
-  logCritical('Invalid integration selector');
+export let claimRewardsAndSwapSelector = '0x1d51f49b';
+export let claimRewardsAndSwapMethod = 'claimRewardsAndSwap(address,bytes,bytes)';
+export let claimRewardsAndSwapType = 'CLAIM_REWARDS_AND_SWAP';
 
-  return '';
-}
+export let lendAndStakeSelector = '0x29fa046e';
+export let lendAndStakeMethod = 'lendAndStake(address,bytes,bytes)';
+export let lendAndStakeType = 'LEND_AND_STAKE';
+
+export let unstakeAndRedeemSelector = '0x8334eb99';
+export let unstakeAndRedeemMethod = 'unstakeAndRedeem(address,bytes,bytes)';
+export let unstakeAndRedeemType = 'UNSTAKE_AND_REDEEM';
 
 export function convertSelectorToType(selector: string): string {
   if (selector == addTrackedAssetsSelector) {
     return addTrackedAssetsType;
+  }
+
+  if (selector == approveAssetsSelector) {
+    return approveAssetsType;
   }
 
   if (selector == takeOrderSelector) {
@@ -55,7 +67,33 @@ export function convertSelectorToType(selector: string): string {
     return redeemType;
   }
 
-  logCritical('Invalid integration selector');
+  if (selector == stakeSelector) {
+    return stakeType;
+  }
 
-  return '';
+  if (selector == unstakeSelector) {
+    return unstakeType;
+  }
+
+  if (selector == claimRewardsSelector) {
+    return claimRewardsType;
+  }
+
+  if (selector == claimRewardsAndReinvestSelector) {
+    return claimRewardsAndReinvestType;
+  }
+
+  if (selector == claimRewardsAndSwapSelector) {
+    return claimRewardsAndSwapType;
+  }
+
+  if (selector == lendAndStakeSelector) {
+    return lendAndStakeType;
+  }
+
+  if (selector == unstakeAndRedeemSelector) {
+    return unstakeAndRedeemType;
+  }
+
+  return 'UNKNOWN';
 }

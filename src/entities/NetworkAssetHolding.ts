@@ -1,11 +1,11 @@
-import { BigDecimal, ethereum } from '@graphprotocol/graph-ts';
+import { Address, BigDecimal, ethereum } from '@graphprotocol/graph-ts';
 import { Asset, HoldingState, NetworkAssetHolding } from '../generated/schema';
 import { arrayDiff } from '../utils/arrayDiff';
 import { arrayUnique } from '../utils/arrayUnique';
 import { logCritical } from '../utils/logCritical';
 import { getDayOpenTime, isSameDay } from '../utils/timeHelpers';
-import { useAsset } from './Asset';
-import { networkId, useNetwork } from './Network';
+import { ensureAsset } from './Asset';
+import { ensureNetwork, networkId } from './Network';
 import { ensureNetworkState } from './NetworkState';
 
 function networkAssetHoldingId(asset: Asset, event: ethereum.Event): string {
@@ -45,7 +45,7 @@ export function trackNetworkAssetHoldings(prev: HoldingState[], next: HoldingSta
   // loop through prev holdings, subtract from network holdings
   for (let i = 0; i < prev.length; i++) {
     let holdingState = prev[i];
-    let asset = useAsset(holdingState.asset);
+    let asset = ensureAsset(Address.fromString(holdingState.asset));
     let currentNetworkAssetHolding = NetworkAssetHolding.load(asset.networkAssetHolding || '');
 
     // no match: this should not happen
@@ -77,7 +77,7 @@ export function trackNetworkAssetHoldings(prev: HoldingState[], next: HoldingSta
   // loop through next holdings, add to network holdings
   for (let i = 0; i < next.length; i++) {
     let holdingState = next[i];
-    let asset = useAsset(holdingState.asset);
+    let asset = ensureAsset(Address.fromString(holdingState.asset));
     let currentNetworkAssetHolding = NetworkAssetHolding.load(asset.networkAssetHolding || '');
 
     // no match: create new record
@@ -114,7 +114,7 @@ export function trackNetworkAssetHoldings(prev: HoldingState[], next: HoldingSta
   state.assetHoldings = nextAssetHoldings;
   state.save();
 
-  let network = useNetwork();
+  let network = ensureNetwork(event);
   network.state = state.id;
   network.save();
 }

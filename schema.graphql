@@ -132,13 +132,20 @@ enum AssetType {
   USD
 }
 
+enum CurveAssetType {
+  GAUGE
+  POOL
+}
+
 enum DerivativeType {
-  Compound
-  Chai
-  UniswapPool
-  Synthetix
-  Alpha
   Aave
+  Alpha
+  Chai
+  Compound
+  CurvePool
+  Stakehound
+  Synthetix
+  UniswapPool
 }
 
 enum ChainlinkAggregatorProxyType {
@@ -154,6 +161,7 @@ enum FeeHook {
   PostBuyShares
   BuySharesCompleted
   PreRedeemShares
+  Unknown
 }
 
 enum PolicyHook {
@@ -163,6 +171,7 @@ enum PolicyHook {
   BuySharesCompleted
   PreCallOnIntegration
   PostCallOnIntegration
+  Unknown
 }
 
 enum SettlementType {
@@ -172,6 +181,7 @@ enum SettlementType {
   Burn
   MintSharesOutstanding
   BurnSharesOutstanding
+  Unknown
 }
 
 enum ShareChangeType {
@@ -184,9 +194,18 @@ enum ShareChangeType {
 
 enum IntegrationMethod {
   ADD_TRACKED_ASSETS
+  APPROVE_ASSETS
   TAKE_ORDER
   LEND
   REDEEM
+  STAKE
+  UNSTAKE
+  CLAIM_REWARDS
+  CLAIM_REWARDS_AND_REINVEST
+  CLAIM_REWARDS_AND_SWAP
+  LEND_AND_STAKE
+  UNSTAKE_AND_REDEEM
+  UNKNOWN
 }
 
 enum SharesRequestType {
@@ -315,6 +334,8 @@ type CallOnIntegrationExecutedForFundEvent implements EventInterface & FundEvent
   adapter: IntegrationAdapter!
   selector: String!
   integrationData: String!
+  incomingAssets: [Asset!]!
+  outgoingAssets: [Asset!]!
   incomingAssetAmounts: [AssetAmount!]!
   outgoingAssetAmounts: [AssetAmount!]!
   timestamp: BigInt!
@@ -1680,6 +1701,90 @@ type AddTrackedAssetsTrade implements Trade @entity {
   fundState: FundState!
 }
 
+type ApproveAssetsTrade implements Trade @entity {
+  id: ID!
+  fund: Fund!
+  adapter: IntegrationAdapter!
+  method: IntegrationMethod!
+  incomingAssets: [Asset!]!
+  timestamp: BigInt!
+  fundState: FundState!
+}
+
+type StakeTrade implements Trade @entity {
+  id: ID!
+  fund: Fund!
+  adapter: IntegrationAdapter!
+  method: IntegrationMethod!
+  incomingAssetAmount: AssetAmount!
+  outgoingAssetAmount: AssetAmount!
+  timestamp: BigInt!
+  fundState: FundState!
+}
+
+type UnstakeTrade implements Trade @entity {
+  id: ID!
+  fund: Fund!
+  adapter: IntegrationAdapter!
+  method: IntegrationMethod!
+  incomingAssetAmount: AssetAmount!
+  outgoingAssetAmount: AssetAmount!
+  timestamp: BigInt!
+  fundState: FundState!
+}
+
+type ClaimRewardsTrade implements Trade @entity {
+  id: ID!
+  fund: Fund!
+  adapter: IntegrationAdapter!
+  method: IntegrationMethod!
+  incomingAssetAmounts: [AssetAmount!]!
+  timestamp: BigInt!
+  fundState: FundState!
+}
+
+type ClaimRewardsAndReinvestTrade implements Trade @entity {
+  id: ID!
+  fund: Fund!
+  adapter: IntegrationAdapter!
+  method: IntegrationMethod!
+  incomingAssetAmount: AssetAmount!
+  timestamp: BigInt!
+  fundState: FundState!
+}
+
+type ClaimRewardsAndSwapTrade implements Trade @entity {
+  id: ID!
+  fund: Fund!
+  adapter: IntegrationAdapter!
+  method: IntegrationMethod!
+  incomingAssetAmount: AssetAmount!
+  timestamp: BigInt!
+  fundState: FundState!
+}
+
+type LendAndStakeTrade implements Trade @entity {
+  id: ID!
+  fund: Fund!
+  adapter: IntegrationAdapter!
+  method: IntegrationMethod!
+  incomingAssetAmount: AssetAmount!
+  outgoingAssetAmounts: [AssetAmount!]!
+  timestamp: BigInt!
+  fundState: FundState!
+}
+
+type UnstakeAndRedeemTrade implements Trade @entity {
+  id: ID!
+  fund: Fund!
+  adapter: IntegrationAdapter!
+  method: IntegrationMethod!
+  incomingAssetAmounts: [AssetAmount!]!
+  outgoingAssetAmount: AssetAmount!
+  timestamp: BigInt!
+  fundState: FundState!
+}
+
 type SharesRequestor @entity {
   id: ID!
   fund: Fund!
@@ -1720,6 +1825,7 @@ type Asset @entity {
   # Details for certain derivative assets
   derivativeType: DerivativeType
   underlyingAsset: Asset
+  curvePoolAssetDetails: CurvePoolAssetDetail
   uniswapV2PoolAssetDetails: UniswapV2PoolAssetDetail
 
   # Latest price and candles
@@ -1759,6 +1865,20 @@ type Currency @entity {
   hourlyHistory: [HourlyCurrencyPriceCandle!]! @derivedFrom(field: "currency")
   dailyHistory: [DailyCurrencyPriceCandle!]! @derivedFrom(field: "currency")
   monthlyHistory: [MonthlyCurrencyPriceCandle!]! @derivedFrom(field: "currency")
+}
+
+type CurvePoolAssetDetail @entity {
+  id: ID!
+  pool: String!
+  gauge: String!
+  lpToken: Asset!
+  gaugeToken: Asset!
+  curveAssetType: CurveAssetType!
+  invariantProxyAsset: Asset!
+  numberOfTokens: Int!
+  token0: Asset!
+  token1: Asset!
+  token2: Asset
 }
 
 type UniswapV2PoolAssetDetail @entity {

@@ -1,18 +1,6 @@
 import { BigInt } from '@graphprotocol/graph-ts';
-import { AssetBlacklistSetting, Fund, Policy } from '../generated/schema';
-import { logCritical } from '../utils/logCritical';
+import { AssetBlacklistSetting, Policy } from '../generated/schema';
 import { policySettingId } from './PolicySetting';
-
-export function useAssetBlacklistSetting(fund: Fund, policy: Policy): AssetBlacklistSetting {
-  let id = policySettingId(fund.id, policy);
-  let setting = AssetBlacklistSetting.load(id) as AssetBlacklistSetting;
-
-  if (setting == null) {
-    logCritical('Failed to load AssetBlacklistSetting {}.', [id]);
-  }
-
-  return setting;
-}
 
 export function ensureAssetBlacklistSetting(fundId: string, policy: Policy): AssetBlacklistSetting {
   let id = policySettingId(fundId, policy);

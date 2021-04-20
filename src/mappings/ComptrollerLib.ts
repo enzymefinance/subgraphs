@@ -1,10 +1,10 @@
-import { dataSource } from '@graphprotocol/graph-ts';
+import { Address, dataSource } from '@graphprotocol/graph-ts';
 import { ensureAccount, ensureInvestor } from '../entities/Account';
-import { useAsset } from '../entities/Asset';
+import { ensureAsset } from '../entities/Asset';
 import { createAssetAmount } from '../entities/AssetAmount';
 import { calculationStateId, trackCalculationState } from '../entities/CalculationState';
 import { useFund } from '../entities/Fund';
-import { useInvestment } from '../entities/Investment';
+import { ensureInvestment } from '../entities/Investment';
 import { trackInvestmentState } from '../entities/InvestmentState';
 import { trackPortfolioState } from '../entities/PortfolioState';
 import { trackShareState } from '../entities/ShareState';
@@ -34,8 +34,8 @@ export function handleSharesBought(event: SharesBought): void {
   let fund = useFund(dataSource.context().getString('vaultProxy'));
   let investor = ensureInvestor(event.params.buyer, event);
   let investmentState = trackInvestmentState(investor, fund, event);
-  let investment = useInvestment(investor, fund);
-  let asset = useAsset(fund.denominationAsset);
+  let investment = ensureInvestment(investor, fund, investmentState.id, event);
+  let asset = ensureAsset(Address.fromString(fund.denominationAsset));
   let shares = toBigDecimal(event.params.sharesReceived);
 
   let addition = new SharesBoughtEvent(genericId(event));
@@ -62,9 +62,9 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
   let fund = useFund(dataSource.context().getString('vaultProxy'));
   let investor = ensureInvestor(event.params.redeemer, event);
   let investmentState = trackInvestmentState(investor, fund, event);
-  let investment = useInvestment(investor, fund);
+  let investment = ensureInvestment(investor, fund, investmentState.id, event);
   let shares = toBigDecimal(event.params.sharesQuantity);
-  let assets = event.params.receivedAssets.map<Asset>((id) => useAsset(id.toHex()));
+  let assets = event.params.receivedAssets.map<Asset>((id) => ensureAsset(id));
   let qtys = event.params.receivedAssetQuantities;
 
   let assetAmounts: AssetAmount[] = new Array<AssetAmount>();

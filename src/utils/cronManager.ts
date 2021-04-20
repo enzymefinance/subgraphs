@@ -1,6 +1,6 @@
 import { Address, BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 import { wethTokenAddress } from '../addresses';
-import { useAsset } from '../entities/Asset';
+import { ensureAsset } from '../entities/Asset';
 import { fetchAssetPrice, trackAssetPrice, useAssetPrice } from '../entities/AssetPrice';
 import {
   ensureChainlinkAssetAggregatorProxy,
@@ -8,7 +8,7 @@ import {
   ensureChainlinkEthUsdAggregatorProxy,
   useChainlinkAggregatorProxy,
 } from '../entities/ChainlinkAggregatorProxy';
-import { useCurrency } from '../entities/Currency';
+import { ensureCurrency } from '../entities/Currency';
 import { trackCurrencyPrice, useCurrencyPrice } from '../entities/CurrencyPrice';
 import {
   ensureDailyPriceCandleGroup,
@@ -72,19 +72,19 @@ export function triggerCron(timestamp: BigInt): void {
 }
 
 function cronWeth(timestamp: BigInt): void {
-  let asset = useAsset(wethTokenAddress.toHex());
+  let asset = ensureAsset(wethTokenAddress);
   let current = BigDecimal.fromString('1');
   trackAssetPrice(asset, timestamp, current);
 }
 
 function cronUsd(timestamp: BigInt): void {
-  let currency = useCurrency('USD');
+  let currency = ensureCurrency('USD');
   let current = BigDecimal.fromString('1');
   trackCurrencyPrice(currency, timestamp, current);
 }
 
 function cronDependentPrices(assetIds: string[], timestamp: BigInt): void {
-  let assets = assetIds.map<Asset>((assetId) => useAsset(assetId));
+  let assets = assetIds.map<Asset>((assetId) => ensureAsset(Address.fromString(assetId)));
   for (let i: i32 = 0; i < assets.length; i++) {
     let asset = assets[i];
     let current = fetchAssetPrice(asset);
@@ -110,7 +110,7 @@ function cronCandles(cron: Cron, timestamp: BigInt): void {
 
   let assetIds = arrayUnique<string>(cron.primitives.concat(cron.derivatives));
   for (let i: i32 = 0; i < assetIds.length; i++) {
-    let asset = useAsset(assetIds[i]);
+    let asset = ensureAsset(Address.fromString(assetIds[i]));
     if (asset.price == null) {
       logCritical('Missing price for asset {}', [asset.id]);
     }
@@ -121,7 +121,7 @@ function cronCandles(cron: Cron, timestamp: BigInt): void {
 
   let currencyIds = cron.currencies;
   for (let i: i32 = 0; i < currencyIds.length; i++) {
-    let currency = useCurrency(currencyIds[i]);
+    let currency = ensureCurrency(currencyIds[i]);
     if (currency.price == null) {
       logCritical('Missing price for currency {}', [currency.id]);
     }
@@ -142,13 +142,13 @@ function cronChainlinkAggregatorProxies(proxyIds: string[]): void {
       let proxyAddress = Address.fromString(proxy.id);
 
       if (proxy.type == 'ASSET') {
-        let asset = useAsset(proxy.asset as string);
+        let asset = ensureAsset(Address.fromString(proxy.asset as string));
         ensureChainlinkAssetAggregatorProxy(proxyAddress, newAggregator, asset);
       } else if (proxy.type == 'ETHUSD') {
-        let eth = useCurrency('ETH');
+        let eth = ensureCurrency('ETH');
         ensureChainlinkEthUsdAggregatorProxy(proxyAddress, newAggregator, eth);
       } else if (proxy.type == 'CURRENCY') {
-        let currency = useCurrency(proxy.currency as string);
+        let currency = ensureCurrency(proxy.currency as string);
         ensureChainlinkCurrencyAggregatorProxy(proxyAddress, newAggregator, currency);
       }
     }

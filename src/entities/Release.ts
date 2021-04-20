@@ -18,11 +18,11 @@ import {
   compoundAdapterAddress,
   compoundPriceFeed,
   comptrollerLibAddress,
+  curveExchangeAdapterAddress,
+  curveLiquidityAaveAdapterAddress,
+  curveLiquiditySethAdapterAddress,
+  curveLiquidityStethAdapterAddress,
   curvePriceFeed,
-  curveExchangeAdapter,
-  curveLiquidityAaveAdapter,
-  curveLiquiditySethAdapter,
-  curveLiquidityStethAdapter,
   dispatcherAddress,
   entranceRateBurnFeeAddress,
   entranceRateDirectFeeAddress,
@@ -58,17 +58,7 @@ import {
   zeroExV2AdapterAddress,
 } from '../addresses';
 import { Release } from '../generated/schema';
-import { logCritical } from '../utils/logCritical';
 import { networkId } from './Network';
-
-export function useRelease(id: string): Release {
-  let release = Release.load(id) as Release;
-  if (release == null) {
-    logCritical('Failed to load release {}.', [id]);
-  }
-
-  return release;
-}
 
 export function createRelease(address: Address, event: ethereum.Event): Release {
   let release = new Release(address.toHex());
@@ -95,10 +85,10 @@ export function createRelease(address: Address, event: ethereum.Event): Release 
   release.compoundPriceFeed = compoundPriceFeed.toHex();
   release.comptrollerLib = comptrollerLibAddress.toHex();
   release.curvePriceFeed = curvePriceFeed.toHex();
-  release.curveExchangeAdapter = curveExchangeAdapter.toHex();
-  release.curveLiquidityAaveAdapter = curveLiquidityAaveAdapter.toHex();
-  release.curveLiquiditySethAdapter = curveLiquiditySethAdapter.toHex();
-  release.curveLiquidityStethAdapter = curveLiquidityStethAdapter.toHex();
+  release.curveExchangeAdapter = curveExchangeAdapterAddress.toHex();
+  release.curveLiquidityAaveAdapter = curveLiquidityAaveAdapterAddress.toHex();
+  release.curveLiquiditySethAdapter = curveLiquiditySethAdapterAddress.toHex();
+  release.curveLiquidityStethAdapter = curveLiquidityStethAdapterAddress.toHex();
   release.dispatcher = dispatcherAddress.toHex();
   release.entranceRateBurnFee = entranceRateBurnFeeAddress.toHex();
   release.entranceRateDirectFee = entranceRateDirectFeeAddress.toHex();

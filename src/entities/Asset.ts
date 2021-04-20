@@ -5,15 +5,6 @@ import { getERC20Name } from '../utils/getERC20Name';
 import { getERC20Symbol } from '../utils/getERC20Symbol';
 import { logCritical } from '../utils/logCritical';
 
-export function useAsset(id: string): Asset {
-  let asset = Asset.load(id) as Asset;
-  if (asset == null) {
-    logCritical('Failed to load asset {}.', [id]);
-  }
-
-  return asset;
-}
-
 export function ensureAsset(address: Address): Asset {
   let asset = Asset.load(address.toHex()) as Asset;
   if (asset) {
@@ -39,10 +30,6 @@ export function ensureAsset(address: Address): Asset {
   asset.save();
 
   return asset;
-}
-
-export function useAssets(ids: string[]): Asset[] {
-  return ids.map<Asset>((id) => useAsset(id));
 }
 
 export function ensureAssets(addresses: Address[]): Asset[] {

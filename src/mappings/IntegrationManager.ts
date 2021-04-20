@@ -1,5 +1,5 @@
 import { ensureAccount } from '../entities/Account';
-import { useAsset } from '../entities/Asset';
+import { ensureAsset } from '../entities/Asset';
 import { createAssetAmount } from '../entities/AssetAmount';
 import { trackCalculationState } from '../entities/CalculationState';
 import { useFund } from '../entities/Fund';
@@ -85,7 +85,11 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
   let adapter = useIntegrationAdapter(event.params.adapter.toHex());
   let integrationSelector = event.params.selector.toHexString();
 
-  let incomingAssets = event.params.incomingAssets.map<Asset>((asset) => useAsset(asset.toHex()));
+  // TODO: fix this (asset amounts and assets don't have to be the same lenght, e.g. approveAssetsTrade)
+  // - store assets and amounts separately
+  // -
+
+  let incomingAssets = event.params.incomingAssets.map<Asset>((asset) => ensureAsset(asset));
   let incomingAssetAmounts: AssetAmount[] = new Array<AssetAmount>();
   let incomingAmounts = event.params.incomingAssetAmounts;
   for (let i = 0; i < incomingAmounts.length; i++) {
@@ -94,7 +98,7 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
     incomingAssetAmounts = incomingAssetAmounts.concat([assetAmount]);
   }
 
-  let outgoingAssets = event.params.outgoingAssets.map<Asset>((asset) => useAsset(asset.toHex()));
+  let outgoingAssets = event.params.outgoingAssets.map<Asset>((asset) => ensureAsset(asset));
   let outgoingAssetAmounts: AssetAmount[] = new Array<AssetAmount>();
   let outgoingAmounts = event.params.outgoingAssetAmounts;
   for (let i = 0; i < outgoingAmounts.length; i++) {
@@ -108,13 +112,24 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
   execution.adapter = adapter.id;
   execution.selector = integrationSelector;
   execution.integrationData = event.params.integrationData.toHexString();
+  execution.incomingAssets = incomingAssets.map<string>((asset) => asset.id);
+  execution.outgoingAssets = outgoingAssets.map<string>((asset) => asset.id);
   execution.incomingAssetAmounts = incomingAssetAmounts.map<string>((assetAmount) => assetAmount.id);
   execution.outgoingAssetAmounts = outgoingAssetAmounts.map<string>((assetAmount) => assetAmount.id);
   execution.timestamp = event.block.timestamp;
   execution.transaction = ensureTransaction(event).id;
   execution.save();
 
-  trackTrade(fund, adapter, integrationSelector, incomingAssetAmounts, outgoingAssetAmounts, event);
+  trackTrade(
+    fund,
+    adapter,
+    integrationSelector,
+    incomingAssets,
+    outgoingAssets,
+    incomingAssetAmounts,
+    outgoingAssetAmounts,
+    event,
+  );
   trackPortfolioState(fund, event, execution);
   trackCalculationState(fund, event, execution);
 }

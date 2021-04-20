@@ -1,6 +1,6 @@
 import { ensureAccount } from '../entities/Account';
 import { useFund } from '../entities/Fund';
-import { ensureInvestorWhitelistSetting, useInvestorWhitelistSetting } from '../entities/InvestorWhitelistSetting';
+import { ensureInvestorWhitelistSetting } from '../entities/InvestorWhitelistSetting';
 import { usePolicy } from '../entities/Policy';
 import { ensureTransaction } from '../entities/Transaction';
 import { ComptrollerLibContract } from '../generated/ComptrollerLibContract';
@@ -51,7 +51,7 @@ export function handleAddressesRemoved(event: AddressesRemoved): void {
   addressesRemoved.items = items;
   addressesRemoved.save();
 
-  let setting = useInvestorWhitelistSetting(fund, policy);
+  let setting = ensureInvestorWhitelistSetting(fund.id, policy);
   setting.listed = arrayDiff<string>(setting.listed, items);
   setting.events = arrayUnique<string>(setting.events.concat([addressesRemoved.id]));
   setting.timestamp = event.block.timestamp;

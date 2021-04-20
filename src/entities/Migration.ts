@@ -1,8 +1,8 @@
 import { MigrationSignaled } from '../generated/DispatcherContract';
 import { Migration } from '../generated/schema';
-import { useRelease } from './Release';
-import { useFund } from './Fund';
 import { logCritical } from '../utils/logCritical';
+import { useFund } from './Fund';
+import { ensureRelease } from './Release';
 
 export function useMigration(id: string): Migration {
   let migration = Migration.load(id) as Migration;
@@ -27,8 +27,8 @@ export function ensureMigration(event: MigrationSignaled): Migration {
   }
 
   migration = new Migration(id);
-  migration.prevRelease = useRelease(event.params.prevFundDeployer.toHex()).id;
-  migration.nextRelease = useRelease(event.params.nextFundDeployer.toHex()).id;
+  migration.prevRelease = ensureRelease(event.params.prevFundDeployer.toHex(), event).id;
+  migration.nextRelease = ensureRelease(event.params.nextFundDeployer.toHex(), event).id;
   migration.fund = useFund(event.params.vaultProxy.toHex()).id;
   migration.executableTimestamp = event.block.timestamp;
   migration.cancelled = false;

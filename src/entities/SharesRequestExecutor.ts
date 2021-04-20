@@ -1,18 +1,8 @@
 import { ethereum, store } from '@graphprotocol/graph-ts';
 import { Account, SharesRequestExecutor, SharesRequestor } from '../generated/schema';
-import { logCritical } from '../utils/logCritical';
 
 export function sharesRequestExecutorId(sharesRequestor: SharesRequestor, account: Account): string {
   return sharesRequestor.id + '/' + account.id;
-}
-
-export function useSharesRequestExecutor(id: string): SharesRequestExecutor {
-  let executor = SharesRequestExecutor.load(id) as SharesRequestExecutor;
-  if (executor == null) {
-    logCritical('Failed to load SharesRequestExecutor {}.', [id]);
-  }
-
-  return executor;
 }
 
 export function createSharesRequestExecutor(

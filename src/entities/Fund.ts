@@ -3,13 +3,13 @@ import { NewFundCreated } from '../generated/FundDeployerContract';
 import { Fund } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
 import { ensureAccount, ensureManager } from './Account';
-import { useAsset } from './Asset';
+import { ensureAsset } from './Asset';
 import { createCalculationState } from './CalculationState';
 import { createFeeState } from './FeeState';
 import { createFundState } from './FundState';
 import { trackNetworkFunds } from './NetworkState';
 import { createPortfolioState } from './PortfolioState';
-import { useRelease } from './Release';
+import { ensureRelease } from './Release';
 import { createShareState } from './ShareState';
 
 export function useFund(id: string): Fund {
@@ -39,7 +39,7 @@ export function createFund(event: NewFundCreated): Fund {
 
   fund.name = event.params.fundName;
   fund.inception = event.block.timestamp;
-  fund.release = useRelease(event.address.toHex()).id;
+  fund.release = ensureRelease(event.address.toHex(), event).id;
   fund.accessor = event.params.comptrollerProxy.toHex();
   fund.manager = ensureManager(event.params.fundOwner, event).id;
   fund.creator = ensureAccount(event.params.creator, event).id;
@@ -51,7 +51,7 @@ export function createFund(event: NewFundCreated): Fund {
   fund.feeState = feeState.id;
   fund.calculations = calculations.id;
   fund.state = state.id;
-  fund.denominationAsset = useAsset(event.params.denominationAsset.toHex()).id;
+  fund.denominationAsset = ensureAsset(event.params.denominationAsset).id;
   fund.sharesActionTimelock = event.params.sharesActionTimelock;
   fund.save();
 

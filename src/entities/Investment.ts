@@ -1,6 +1,5 @@
 import { BigDecimal, ethereum } from '@graphprotocol/graph-ts';
 import { Account, Fund, Investment } from '../generated/schema';
-import { logCritical } from '../utils/logCritical';
 import { trackNetworkInvestments } from './NetworkState';
 
 function investmentId(investor: Account, fund: Fund): string {
@@ -27,25 +26,6 @@ export function ensureInvestment(investor: Account, fund: Fund, stateId: string,
   fund.save();
 
   trackNetworkInvestments(event);
-
-  return investment;
-}
-
-export function useInvestment(investor: Account, fund: Fund): Investment {
-  let id = investmentId(investor, fund);
-  let investment = Investment.load(id) as Investment;
-  if (investment == null) {
-    logCritical('Failed to load investment {}.', [id]);
-  }
-
-  return investment;
-}
-
-export function useInvestmentWithId(id: string): Investment {
-  let investment = Investment.load(id) as Investment;
-  if (investment == null) {
-    logCritical('Failed to load investment {}.', [id]);
-  }
 
   return investment;
 }

@@ -3,7 +3,7 @@ import { ensureManager } from '../entities/Account';
 import { useFund } from '../entities/Fund';
 import { ensureMigration, generateMigrationId, useMigration } from '../entities/Migration';
 import { ensureNetwork } from '../entities/Network';
-import { ensureRelease, useRelease } from '../entities/Release';
+import { ensureRelease } from '../entities/Release';
 import { ensureTransaction } from '../entities/Transaction';
 import {
   CurrentFundDeployerSet,
@@ -55,7 +55,7 @@ export function handleCurrentFundDeployerSet(event: CurrentFundDeployerSet): voi
   fundDeployerSet.save();
 
   if (!event.params.prevFundDeployer.equals(zeroAddress)) {
-    let prevRelease = useRelease(event.params.prevFundDeployer.toHex());
+    let prevRelease = ensureRelease(event.params.prevFundDeployer.toHex(), event);
     prevRelease.current = false;
     prevRelease.close = event.block.timestamp;
     prevRelease.save();
@@ -103,7 +103,7 @@ export function handleMigrationExecuted(event: MigrationExecuted): void {
   migrationExecution.save();
 
   let fund = useFund(event.params.vaultProxy.toHex());
-  fund.release = useRelease(event.params.nextFundDeployer.toHex()).id;
+  fund.release = ensureRelease(event.params.nextFundDeployer.toHex(), event).id;
   fund.accessor = migration.nextAccessor;
 
   migration.executed = true;

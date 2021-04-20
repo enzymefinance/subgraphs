@@ -1,6 +1,7 @@
+import { Address } from '@graphprotocol/graph-ts';
 import { zeroAddress } from '../constants';
-import { ensureAccount, ensureManager, useAccount } from '../entities/Account';
-import { useAsset } from '../entities/Asset';
+import { ensureAccount, ensureManager } from '../entities/Account';
+import { ensureAsset } from '../entities/Asset';
 import { trackCalculationState } from '../entities/CalculationState';
 import { useFund } from '../entities/Fund';
 import { trackPortfolioState } from '../entities/PortfolioState';
@@ -44,7 +45,7 @@ export function handleAccessorSet(event: AccessorSet): void {
 
 export function handleAssetWithdrawn(event: AssetWithdrawn): void {
   let withdrawal = new AssetWithdrawnEvent(genericId(event));
-  withdrawal.asset = useAsset(event.params.asset.toHex()).id;
+  withdrawal.asset = ensureAsset(event.params.asset).id;
   withdrawal.fund = useFund(event.address.toHex()).id;
   withdrawal.timestamp = event.block.timestamp;
   withdrawal.transaction = ensureTransaction(event).id;
@@ -79,7 +80,7 @@ export function handleOwnerSet(event: OwnerSet): void {
 
 export function handleTrackedAssetAdded(event: TrackedAssetAdded): void {
   let fund = useFund(event.address.toHex());
-  let asset = useAsset(event.params.asset.toHex());
+  let asset = ensureAsset(event.params.asset);
 
   let trackedAssetAddition = new TrackedAssetAddedEvent(genericId(event));
   trackedAssetAddition.asset = asset.id;
@@ -97,13 +98,13 @@ export function handleTrackedAssetAdded(event: TrackedAssetAdded): void {
 
 export function handleTrackedAssetRemoved(event: TrackedAssetRemoved): void {
   let fund = useFund(event.address.toHex());
-  let asset = useAsset(event.params.asset.toHex());
+  let asset = ensureAsset(event.params.asset);
 
   let trackedAssetRemoval = new TrackedAssetRemovedEvent(genericId(event));
   trackedAssetRemoval.asset = asset.id;
   trackedAssetRemoval.fund = fund.id;
   trackedAssetRemoval.timestamp = event.block.timestamp;
-  trackedAssetRemoval.account = useAccount(fund.manager).id;
+  trackedAssetRemoval.account = ensureAccount(Address.fromString(fund.manager), event).id;
   trackedAssetRemoval.transaction = ensureTransaction(event).id;
   trackedAssetRemoval.save();
 
