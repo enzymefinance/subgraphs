@@ -69,6 +69,7 @@ export let curveLiquidityStethAdapterAddress = Address.fromString('{{curveLiquid
 export let idleAdapterAddress = Address.fromString('{{idleAdapter}}');
 export let kyberAdapterAddress = Address.fromString('{{kyberAdapter}}');
 export let paraSwapAdapterAddress = Address.fromString('{{paraSwapAdapter}}');
+export let paraSwapV4AdapterAddress = Address.fromString('{{paraSwapV4Adapter}}');
 export let synthetixAdapterAddress = Address.fromString('{{synthetixAdapter}}');
 export let trackedAssetsAdapterAddress = Address.fromString('{{trackedAssetsAdapter}}');
 export let uniswapV2AdapterAddress = Address.fromString('{{uniswapV2Adapter}}');

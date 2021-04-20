@@ -41,6 +41,7 @@ import {
   maxConcentrationAddress,
   minMaxInvestmentAddress,
   paraSwapAdapterAddress,
+  paraSwapV4AdapterAddress,
   performanceFeeAddress,
   policyManagerAddress,
   stakehoundEthPriceFeedAddress,
@@ -109,6 +110,7 @@ export function createRelease(address: Address, event: ethereum.Event): Release 
   release.maxConcentration = maxConcentrationAddress.toHex();
   release.minMaxInvestment = minMaxInvestmentAddress.toHex();
   release.paraSwapAdapter = paraSwapAdapterAddress.toHex();
+  release.paraSwapV4Adapter = paraSwapV4AdapterAddress.toHex();
   release.performanceFee = performanceFeeAddress.toHex();
   release.policyManager = policyManagerAddress.toHex();
   release.stakehoundEthPriceFeed = stakehoundEthPriceFeedAddress.toHex();
