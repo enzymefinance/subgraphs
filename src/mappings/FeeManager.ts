@@ -163,7 +163,7 @@ export function handleSharesOutstandingPaidForFund(event: SharesOutstandingPaidF
   trackFeeState(fund, fee, BigDecimal.fromString('0'), event, sharesPaid);
 
   // we only need to look at Performance Fee here, since it is the only Fee that pays out SharesOutstanding
-  if (fee.identifier === 'PERFORMANCE') {
+  if (fee.identifier == 'PERFORMANCE') {
     let performanceFeeState = ensurePerformanceFeeState(fund, fee, event, sharesPaid);
     performanceFeeState.sharesOutstanding = performanceFeeState.sharesOutstanding.minus(shares);
     performanceFeeState.save();
