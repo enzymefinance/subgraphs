@@ -143,6 +143,7 @@ enum DerivativeType {
   Chai
   Compound
   CurvePool
+  Idle
   Stakehound
   Synthetix
   UniswapPool
@@ -1279,6 +1280,8 @@ type Release @entity {
   fundActionsWrapper: String!
   fundDeployer: String!
   guaranteedRedemption: String!
+  idleAdapter: String!
+  idlePriceFeed: String!
   integrationManager: String!
   investorWhitelist: String!
   kyberAdapter: String!
@@ -1287,6 +1290,7 @@ type Release @entity {
   maxConcentration: String!
   minMaxInvestment: String!
   paraSwapAdapter: String!
+  paraSwapV4Adapter: String!
   performanceFee: String!
   policyManager: String!
   synthetixAdapter: String!

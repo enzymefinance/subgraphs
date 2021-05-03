@@ -711,6 +711,8 @@ dataSources:
           file: ./node_modules/@enzymefinance/protocol/artifacts/ICurveAddressProvider.json
         - name: CurveRegistryContract
           file: ./src/utils/abis/CurveRegistry.json
+        - name: IdlePriceFeedContract
+          file: ./node_modules/@enzymefinance/protocol/artifacts/IdlePriceFeed.json
         - name: StakehoundEthPriceFeedContract
           file: ./node_modules/@enzymefinance/protocol/artifacts/StakehoundEthPriceFeed.json
         - name: SynthetixPriceFeedContract

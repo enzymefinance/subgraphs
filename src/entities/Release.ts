@@ -1,12 +1,12 @@
 import { Address, ethereum } from '@graphprotocol/graph-ts';
 import {
   aaveAdapterAddress,
-  aavePriceFeed,
+  aavePriceFeedAddress,
   adapterBlacklistAddress,
   adapterWhitelistAddress,
   aggregatedDerivativePriceFeedAddress,
   alphaHomoraV1AdapterAddress,
-  alphaHomoraV1PriceFeed,
+  alphaHomoraV1PriceFeedAddress,
   assetBlacklistAddress,
   assetWhitelistAddress,
   authUserExecutedSharesRequestorFactoryAddress,
@@ -14,15 +14,15 @@ import {
   chaiAdapterAddress,
   chaiIntegrateeAddress,
   chainlinkPriceFeedAddress,
-  chaiPriceFeed,
+  chaiPriceFeedAddress,
   compoundAdapterAddress,
-  compoundPriceFeed,
+  compoundPriceFeedAddress,
   comptrollerLibAddress,
   curveExchangeAdapterAddress,
   curveLiquidityAaveAdapterAddress,
   curveLiquiditySethAdapterAddress,
   curveLiquidityStethAdapterAddress,
-  curvePriceFeed,
+  curvePriceFeedAddress,
   dispatcherAddress,
   entranceRateBurnFeeAddress,
   entranceRateDirectFeeAddress,
@@ -30,30 +30,33 @@ import {
   fundActionsWrapperAddress,
   fundDeployerAddress,
   guaranteedRedemptionAddress,
+  idleAdapterAddress,
+  idlePriceFeedAddress,
   integrationManagerAddress,
   investorWhitelistAddress,
   kyberAdapterAddress,
   kyberIntegrateeAddress,
-  lidoStethPriceFeed,
+  lidoStethPriceFeedAddress,
   managementFeeAddress,
   maxConcentrationAddress,
   minMaxInvestmentAddress,
   paraSwapAdapterAddress,
+  paraSwapV4AdapterAddress,
   performanceFeeAddress,
   policyManagerAddress,
-  stakehoundEthPriceFeed,
+  stakehoundEthPriceFeedAddress,
   synthetixAdapterAddress,
   synthetixAddressResolverAddress,
   synthetixDelegateApprovalsAddress,
   synthetixIntegrateeAddress,
-  synthetixPriceFeed,
+  synthetixPriceFeedAddress,
   trackedAssetsAdapterAddress,
   uniswapV2AdapterAddress,
   uniswapV2IntegrateeAddress,
-  uniswapV2PoolPriceFeed,
+  uniswapV2PoolPriceFeedAddress,
   valueInterpreterAddress,
   vaultLibAddress,
-  wdgldPriceFeed,
+  wdgldPriceFeedAddress,
   wethTokenAddress,
   zeroExV2AdapterAddress,
 } from '../addresses';
@@ -66,12 +69,12 @@ export function createRelease(address: Address, event: ethereum.Event): Release 
   release.open = event.block.timestamp;
   release.network = networkId;
 
-  release.aavePriceFeed = aavePriceFeed.toHex();
+  release.aavePriceFeed = aavePriceFeedAddress.toHex();
   release.adapterBlacklist = adapterBlacklistAddress.toHex();
   release.adapterWhitelist = adapterWhitelistAddress.toHex();
   release.aggregatedDerivativePriceFeed = aggregatedDerivativePriceFeedAddress.toHex();
   release.alphaHomoraV1Adapter = alphaHomoraV1AdapterAddress.toHex();
-  release.alphaHomoraV1PriceFeed = alphaHomoraV1PriceFeed.toHex();
+  release.alphaHomoraV1PriceFeed = alphaHomoraV1PriceFeedAddress.toHex();
   release.aaveAdapter = aaveAdapterAddress.toHex();
   release.assetBlacklist = assetBlacklistAddress.toHex();
   release.assetWhitelist = assetWhitelistAddress.toHex();
@@ -80,11 +83,11 @@ export function createRelease(address: Address, event: ethereum.Event): Release 
   release.chaiAdapter = chaiAdapterAddress.toHex();
   release.chaiIntegratee = chaiIntegrateeAddress.toHex();
   release.chainlinkPriceFeed = chainlinkPriceFeedAddress.toHex();
-  release.chaiPriceFeed = chaiPriceFeed.toHex();
+  release.chaiPriceFeed = chaiPriceFeedAddress.toHex();
   release.compoundAdapter = compoundAdapterAddress.toHex();
-  release.compoundPriceFeed = compoundPriceFeed.toHex();
+  release.compoundPriceFeed = compoundPriceFeedAddress.toHex();
   release.comptrollerLib = comptrollerLibAddress.toHex();
-  release.curvePriceFeed = curvePriceFeed.toHex();
+  release.curvePriceFeed = curvePriceFeedAddress.toHex();
   release.curveExchangeAdapter = curveExchangeAdapterAddress.toHex();
   release.curveLiquidityAaveAdapter = curveLiquidityAaveAdapterAddress.toHex();
   release.curveLiquiditySethAdapter = curveLiquiditySethAdapterAddress.toHex();
@@ -96,30 +99,33 @@ export function createRelease(address: Address, event: ethereum.Event): Release 
   release.fundActionsWrapper = fundActionsWrapperAddress.toHex();
   release.fundDeployer = fundDeployerAddress.toHex();
   release.guaranteedRedemption = guaranteedRedemptionAddress.toHex();
+  release.idleAdapter = idleAdapterAddress.toHex();
+  release.idlePriceFeed = idlePriceFeedAddress.toHex();
   release.integrationManager = integrationManagerAddress.toHex();
   release.investorWhitelist = investorWhitelistAddress.toHex();
   release.kyberAdapter = kyberAdapterAddress.toHex();
   release.kyberIntegratee = kyberIntegrateeAddress.toHex();
-  release.lidoStethPriceFeed = lidoStethPriceFeed.toHex();
+  release.lidoStethPriceFeed = lidoStethPriceFeedAddress.toHex();
   release.managementFee = managementFeeAddress.toHex();
   release.maxConcentration = maxConcentrationAddress.toHex();
   release.minMaxInvestment = minMaxInvestmentAddress.toHex();
   release.paraSwapAdapter = paraSwapAdapterAddress.toHex();
+  release.paraSwapV4Adapter = paraSwapV4AdapterAddress.toHex();
   release.performanceFee = performanceFeeAddress.toHex();
   release.policyManager = policyManagerAddress.toHex();
-  release.stakehoundEthPriceFeed = stakehoundEthPriceFeed.toHex();
+  release.stakehoundEthPriceFeed = stakehoundEthPriceFeedAddress.toHex();
   release.synthetixAdapter = synthetixAdapterAddress.toHex();
   release.synthetixAddressResolver = synthetixAddressResolverAddress.toHex();
   release.synthetixDelegateApprovals = synthetixDelegateApprovalsAddress.toHex();
   release.synthetixIntegratee = synthetixIntegrateeAddress.toHex();
-  release.synthetixPriceFeed = synthetixPriceFeed.toHex();
+  release.synthetixPriceFeed = synthetixPriceFeedAddress.toHex();
   release.trackedAssetsAdapter = trackedAssetsAdapterAddress.toHex();
   release.uniswapV2Adapter = uniswapV2AdapterAddress.toHex();
   release.uniswapV2Integratee = uniswapV2IntegrateeAddress.toHex();
-  release.uniswapV2PoolPriceFeed = uniswapV2PoolPriceFeed.toHex();
+  release.uniswapV2PoolPriceFeed = uniswapV2PoolPriceFeedAddress.toHex();
   release.valueInterpreter = valueInterpreterAddress.toHex();
   release.vaultLib = vaultLibAddress.toHex();
-  release.wdgldPriceFeed = wdgldPriceFeed.toHex();
+  release.wdgldPriceFeed = wdgldPriceFeedAddress.toHex();
   release.wethToken = wethTokenAddress.toHex();
   release.zeroExV2Adapter = zeroExV2AdapterAddress.toHex();
   release.save();

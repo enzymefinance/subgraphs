@@ -1,12 +1,12 @@
 import { Address, BigDecimal } from '@graphprotocol/graph-ts';
 import {
-  audChainlinkAggregator,
-  btcChainlinkAggregator,
-  chfChainlinkAggregator,
-  eurChainlinkAggregator,
+  audChainlinkAggregatorAddress,
+  btcChainlinkAggregatorAddress,
+  chfChainlinkAggregatorAddress,
+  eurChainlinkAggregatorAddress,
   fundDeployerAddress,
-  gbpChainlinkAggregator,
-  jpyChainlinkAggregator,
+  gbpChainlinkAggregatorAddress,
+  jpyChainlinkAggregatorAddress,
   wethTokenAddress,
 } from '../addresses';
 import { zeroAddress } from '../constants';
@@ -94,48 +94,48 @@ export function handleEthUsdAggregatorSet(event: EthUsdAggregatorSet): void {
   }
 
   // Aggregators for currencies
-  let audProxy = audChainlinkAggregator;
-  let audAggregator = unwrapAggregator(audChainlinkAggregator);
+  let audProxy = audChainlinkAggregatorAddress;
+  let audAggregator = unwrapAggregator(audChainlinkAggregatorAddress);
   let aud = ensureCurrency('AUD');
   let audAggregatorContract = ChainlinkAggregatorContract.bind(audAggregator);
   let audCurrentPrice = toBigDecimal(audAggregatorContract.latestAnswer(), 8);
   trackCurrencyPrice(aud, event.block.timestamp, audCurrentPrice);
   ensureChainlinkCurrencyAggregatorProxy(audProxy, audAggregator, aud);
 
-  let btcProxy = btcChainlinkAggregator;
-  let btcAggregator = unwrapAggregator(btcChainlinkAggregator);
+  let btcProxy = btcChainlinkAggregatorAddress;
+  let btcAggregator = unwrapAggregator(btcChainlinkAggregatorAddress);
   let btc = ensureCurrency('BTC');
   let btcAggregatorContract = ChainlinkAggregatorContract.bind(btcAggregator);
   let btcCurrentPrice = toBigDecimal(btcAggregatorContract.latestAnswer(), 8);
   trackCurrencyPrice(btc, event.block.timestamp, btcCurrentPrice);
   ensureChainlinkCurrencyAggregatorProxy(btcProxy, btcAggregator, btc);
 
-  let chfProxy = chfChainlinkAggregator;
-  let chfAggregator = unwrapAggregator(chfChainlinkAggregator);
+  let chfProxy = chfChainlinkAggregatorAddress;
+  let chfAggregator = unwrapAggregator(chfChainlinkAggregatorAddress);
   let chf = ensureCurrency('CHF');
   let chfAggregatorContract = ChainlinkAggregatorContract.bind(chfAggregator);
   let chfCurrentPrice = toBigDecimal(chfAggregatorContract.latestAnswer(), 8);
   trackCurrencyPrice(chf, event.block.timestamp, chfCurrentPrice);
   ensureChainlinkCurrencyAggregatorProxy(chfProxy, chfAggregator, chf);
 
-  let eurProxy = eurChainlinkAggregator;
-  let eurAggregator = unwrapAggregator(eurChainlinkAggregator);
+  let eurProxy = eurChainlinkAggregatorAddress;
+  let eurAggregator = unwrapAggregator(eurChainlinkAggregatorAddress);
   let eur = ensureCurrency('EUR');
   let eurAggregatorContract = ChainlinkAggregatorContract.bind(eurAggregator);
   let eurCurrentPrice = toBigDecimal(eurAggregatorContract.latestAnswer(), 8);
   trackCurrencyPrice(eur, event.block.timestamp, eurCurrentPrice);
   ensureChainlinkCurrencyAggregatorProxy(eurProxy, eurAggregator, eur);
 
-  let gbpProxy = gbpChainlinkAggregator;
-  let gbpAggregator = unwrapAggregator(gbpChainlinkAggregator);
+  let gbpProxy = gbpChainlinkAggregatorAddress;
+  let gbpAggregator = unwrapAggregator(gbpChainlinkAggregatorAddress);
   let gbp = ensureCurrency('GBP');
   let gbpAggregatorContract = ChainlinkAggregatorContract.bind(gbpAggregator);
   let gbpCurrentPrice = toBigDecimal(gbpAggregatorContract.latestAnswer(), 8);
   trackCurrencyPrice(gbp, event.block.timestamp, gbpCurrentPrice);
   ensureChainlinkCurrencyAggregatorProxy(gbpProxy, gbpAggregator, gbp);
 
-  let jpyProxy = jpyChainlinkAggregator;
-  let jpyAggregator = unwrapAggregator(jpyChainlinkAggregator);
+  let jpyProxy = jpyChainlinkAggregatorAddress;
+  let jpyAggregator = unwrapAggregator(jpyChainlinkAggregatorAddress);
   let jpy = ensureCurrency('JPY');
   let jpyAggregatorContract = ChainlinkAggregatorContract.bind(jpyAggregator);
   let jpyCurrentPrice = toBigDecimal(jpyAggregatorContract.latestAnswer(), 8);
