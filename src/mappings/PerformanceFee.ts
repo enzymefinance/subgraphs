@@ -112,6 +112,8 @@ export function handlePaidOut(event: PaidOut): void {
   let performanceFeeState = usePerformanceFeeState(performanceFeeStateId(fund, event));
   performanceFeeState.highWaterMark = toBigDecimal(event.params.nextHighWaterMark, denominationAsset.decimals);
   performanceFeeState.lastPaid = event.block.timestamp;
+  // AggregateValueDue is not emitted, but it is always set to zero just before the event is emitted
+  performanceFeeState.aggregateValueDue = BigDecimal.fromString('0');
   performanceFeeState.save();
 }
 
