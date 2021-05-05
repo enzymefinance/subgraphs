@@ -5,6 +5,7 @@ import { arrayDiff } from '../utils/arrayDiff';
 import { arrayUnique } from '../utils/arrayUnique';
 import { logCritical } from '../utils/logCritical';
 import { toBigDecimal } from '../utils/toBigDecimal';
+import { ensureAsset } from './Asset';
 import { feeStateId, useFeeState } from './FeeState';
 import { useFundState } from './FundState';
 
@@ -60,6 +61,8 @@ export function ensurePerformanceFeeState(
 ): PerformanceFeeState {
   let performanceFeeState = PerformanceFeeState.load(performanceFeeStateId(fund, event)) as PerformanceFeeState;
 
+  let denominationAsset = ensureAsset(Address.fromString(fund.denominationAsset));
+
   if (!performanceFeeState) {
     let state = useFundState(fund.state);
     let previousFeeState = useFeeState(state.feeState);
@@ -97,9 +100,9 @@ export function ensurePerformanceFeeState(
         fund,
         fee,
         {
-          grossSharePrice: toBigDecimal(feeInfoCall.value.lastSharePrice),
-          highWaterMark: toBigDecimal(feeInfoCall.value.highWaterMark),
-          aggregateValueDue: toBigDecimal(feeInfoCall.value.aggregateValueDue),
+          grossSharePrice: toBigDecimal(feeInfoCall.value.lastSharePrice, denominationAsset.decimals),
+          highWaterMark: toBigDecimal(feeInfoCall.value.highWaterMark, denominationAsset.decimals),
+          aggregateValueDue: toBigDecimal(feeInfoCall.value.aggregateValueDue, denominationAsset.decimals),
           sharesOutstanding: BigDecimal.fromString('0'),
           lastPaid: feeInfoCall.value.lastPaid,
         },

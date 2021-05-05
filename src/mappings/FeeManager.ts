@@ -6,6 +6,7 @@ import { ensureFee, useFee } from '../entities/Fee';
 import { trackFeeState } from '../entities/FeeState';
 import { useFund } from '../entities/Fund';
 import { trackInvestmentState } from '../entities/InvestmentState';
+import { ensurePerformanceFeeState } from '../entities/PerformanceFeeState';
 import { trackShareState } from '../entities/ShareState';
 import { ensureTransaction } from '../entities/Transaction';
 import { ComptrollerLibContract } from '../generated/ComptrollerLibContract';
@@ -160,6 +161,14 @@ export function handleSharesOutstandingPaidForFund(event: SharesOutstandingPaidF
 
   trackShareState(fund, event, sharesPaid);
   trackFeeState(fund, fee, BigDecimal.fromString('0'), event, sharesPaid);
+
+  // we only need to look at Performance Fee here, since it is the only Fee that pays out SharesOutstanding
+  if (fee.identifier == 'PERFORMANCE') {
+    let performanceFeeState = ensurePerformanceFeeState(fund, fee, event, sharesPaid);
+    performanceFeeState.sharesOutstanding = performanceFeeState.sharesOutstanding.minus(shares);
+    performanceFeeState.save();
+  }
+
   trackCalculationState(fund, event, sharesPaid);
 }
 
