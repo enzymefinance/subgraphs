@@ -1,0 +1,73 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+
+dataSources:
+  {{#each sources}}
+  - kind: ethereum/contract
+    name: {{name}}DataSource
+    network: {{@root.network}}
+    source:
+      abi: {{name}}Contract
+      {{#if address}}
+      address: '{{{address}}}'
+      {{/if}}
+      {{#if block}}
+      startBlock: {{block}}
+      {{/if}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities: []
+      file: {{file}}
+      abis:
+        {{#if abi}}
+        - name: {{name}}Contract
+          file: {{abi}}
+        {{/if}}
+        {{#each abis}}
+        - name: {{name}}
+          file: {{file}}
+        {{/each}}
+      {{#if events}}
+      eventHandlers:
+        {{#each events}}
+        - event: {{event}}
+          handler: {{handler}}
+        {{/each}}
+      {{/if}}
+  {{/each}}
+
+{{#if templates}}
+templates:
+  {{#each templates}}
+  - kind: ethereum/contract
+    name: {{name}}DataSource
+    network: {{@root.network}}
+    source:
+      abi: {{name}}Contract
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities: []
+      file: {{file}}
+      abis:
+        {{#if abi}}
+        - name: {{name}}Contract
+          file: {{abi}}
+        {{/if}}
+        {{#each abis}}
+        - name: {{name}}
+          file: {{file}}
+        {{/each}}
+      {{#if events}}
+      eventHandlers:
+        {{#each events}}
+        - event: {{event}}
+          handler: {{handler}}
+        {{/each}}
+      {{/if}}
+  {{/each}}
+{{/if}}

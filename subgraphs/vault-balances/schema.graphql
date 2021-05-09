@@ -1,0 +1,75 @@
+type Vault @entity {
+  id: ID!
+  holdings: [Holding!]! @derivedFrom(field: "vault")
+  transfers: [Transfer!]! @derivedFrom(field: "vault")
+  incoming: [IncomingTransfer!]! @derivedFrom(field: "vault")
+  outgoing: [OutgoingTransfer!]! @derivedFrom(field: "vault")
+}
+
+type Asset @entity {
+  id: ID!
+  decimals: Int!
+  symbol: String!
+  name: String!
+  total: BigDecimal!
+  holdings: [Holding!]! @derivedFrom(field: "asset")
+  transfers: [Transfer!]! @derivedFrom(field: "asset")
+}
+
+type IgnoreAsset @entity  {
+  id: ID!
+}
+
+type Holding @entity {
+  id: ID!
+  vault: Vault!
+  asset: Asset!
+  balance: BigDecimal!
+  updated: BigInt!
+  transfers: [Transfer!]! @derivedFrom(field: "holding")
+  incoming: [IncomingTransfer!]! @derivedFrom(field: "holding")
+  outgoing: [OutgoingTransfer!]! @derivedFrom(field: "holding")
+}
+
+enum TransferType {
+  IN
+  OUT
+}
+
+interface Transfer {
+  id: ID!
+  timestamp: BigInt!
+  type: TransferType!
+  asset: Asset!
+  vault: Vault!
+  holding: Holding!
+  amount: BigDecimal!
+  balance: BigDecimal!
+  transaction: String!
+}
+
+type OutgoingTransfer implements Transfer @entity {
+  id: ID!
+  timestamp: BigInt!
+  type: TransferType!
+  asset: Asset!
+  vault: Vault!
+  holding: Holding!
+  recipient: String!
+  amount: BigDecimal!
+  balance: BigDecimal!
+  transaction: String!
+}
+
+type IncomingTransfer implements Transfer @entity {
+  id: ID!
+  timestamp: BigInt!
+  type: TransferType!
+  asset: Asset!
+  vault: Vault!
+  holding: Holding!
+  sender: String!
+  amount: BigDecimal!
+  balance: BigDecimal!
+  transaction: String!
+}
