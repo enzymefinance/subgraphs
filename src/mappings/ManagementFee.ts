@@ -1,31 +1,31 @@
-import { useFee } from '../entities/Fee';
+import { ensureComptrollerProxy } from '../entities/ComptrollerProxy';
+import { ensureFee } from '../entities/Fee';
 import { trackFeeState } from '../entities/FeeState';
 import { useFund } from '../entities/Fund';
 import { ensureManagementFeeSetting } from '../entities/ManagementFeeSetting';
 import { managementFeeStateId, useManagementFeeState } from '../entities/ManagementFeeState';
 import { ensureTransaction } from '../entities/Transaction';
-import { ComptrollerLibContract } from '../generated/ComptrollerLibContract';
 import { FundSettingsAdded, Settled } from '../generated/ManagementFeeContract';
 import { ManagementFeeSettingsAddedEvent, ManagementFeeSettledEvent } from '../generated/schema';
 import { arrayUnique } from '../utils/arrayUnique';
 import { genericId } from '../utils/genericId';
+import { logCritical } from '../utils/logCritical';
 import { toBigDecimal } from '../utils/toBigDecimal';
 
+// TODO: handle activatedForFund
+
 export function handleFundSettingsAdded(event: FundSettingsAdded): void {
-  let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
-  let vault = comptroller.getVaultProxy();
-  let fee = useFee(event.address.toHex());
+  let fee = ensureFee(event.address);
   let scaledPerSecondRate = event.params.scaledPerSecondRate;
 
   let feeSettings = new ManagementFeeSettingsAddedEvent(genericId(event));
-  feeSettings.fund = vault.toHex(); // fund does not exist yet
   feeSettings.timestamp = event.block.timestamp;
   feeSettings.transaction = ensureTransaction(event).id;
-  feeSettings.comptrollerProxy = event.params.comptrollerProxy.toHex();
+  feeSettings.comptroller = event.params.comptrollerProxy.toHex();
   feeSettings.scaledPerSecondRate = scaledPerSecondRate;
   feeSettings.save();
 
-  let setting = ensureManagementFeeSetting(vault.toHex(), fee);
+  let setting = ensureManagementFeeSetting(event.params.comptrollerProxy.toHex(), fee);
   setting.scaledPerSecondRate = scaledPerSecondRate;
   setting.events = arrayUnique<string>(setting.events.concat([feeSettings.id]));
   setting.timestamp = event.block.timestamp;
@@ -33,16 +33,21 @@ export function handleFundSettingsAdded(event: FundSettingsAdded): void {
 }
 
 export function handleSettled(event: Settled): void {
-  let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
-  let fund = useFund(comptroller.getVaultProxy().toHex());
-  let fee = useFee(event.address.toHex());
+  let comptrollerProxy = ensureComptrollerProxy(event.params.comptrollerProxy, event);
+  if (comptrollerProxy.fund == null) {
+    logCritical('no vault attached to comptrollerProxy {}', [comptrollerProxy.id]);
+    return;
+  }
+
+  let fund = useFund(comptrollerProxy.fund);
+  let fee = ensureFee(event.address);
   let shares = toBigDecimal(event.params.sharesQuantity);
 
   let settled = new ManagementFeeSettledEvent(genericId(event));
   settled.fund = fund.id;
   settled.timestamp = event.block.timestamp;
   settled.transaction = ensureTransaction(event).id;
-  settled.comptrollerProxy = event.params.comptrollerProxy.toHex();
+  settled.comptroller = event.params.comptrollerProxy.toHex();
   settled.sharesDue = shares;
   settled.secondsSinceSettlement = event.params.secondsSinceSettlement;
   settled.save();

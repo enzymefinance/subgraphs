@@ -4,9 +4,9 @@ import {
   btcChainlinkAggregatorAddress,
   chfChainlinkAggregatorAddress,
   eurChainlinkAggregatorAddress,
-  fundDeployerAddress,
   gbpChainlinkAggregatorAddress,
   jpyChainlinkAggregatorAddress,
+  releaseAddressesA,
   wethTokenAddress,
 } from '../addresses';
 import { zeroAddress } from '../constants';
@@ -60,13 +60,13 @@ export function unwrapAggregator(address: Address): Address {
 }
 
 export function handleEthUsdAggregatorSet(event: EthUsdAggregatorSet): void {
-  // NOTE: This is the first event on mainnet.
+  // NOTE: This is the first event on mainnet, so we need to register the network and the release
   ensureNetwork(event);
 
   let network = ensureNetwork(event);
 
   // Set up release (each new fund deployer is a release)
-  let release = ensureRelease(fundDeployerAddress.toHex(), event);
+  let release = ensureRelease(releaseAddressesA.fundDeployerAddress.toHex(), event);
 
   network.currentRelease = release.id;
   network.save();

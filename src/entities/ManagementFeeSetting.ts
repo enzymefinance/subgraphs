@@ -2,8 +2,8 @@ import { BigInt } from '@graphprotocol/graph-ts';
 import { Fee, ManagementFeeSetting } from '../generated/schema';
 import { feeSettingId } from '../utils/feeSettingId';
 
-export function ensureManagementFeeSetting(fundId: string, fee: Fee): ManagementFeeSetting {
-  let id = feeSettingId(fundId, fee);
+export function ensureManagementFeeSetting(comptrollerProxy: string, fee: Fee): ManagementFeeSetting {
+  let id = feeSettingId(comptrollerProxy, fee);
   let setting = ManagementFeeSetting.load(id) as ManagementFeeSetting;
 
   if (setting) {
@@ -12,7 +12,7 @@ export function ensureManagementFeeSetting(fundId: string, fee: Fee): Management
 
   setting = new ManagementFeeSetting(id);
   setting.fee = fee.id;
-  setting.fund = fundId;
+  setting.comptroller = comptrollerProxy;
   setting.scaledPerSecondRate = BigInt.fromI32(0);
   setting.events = new Array<string>();
   setting.timestamp = BigInt.fromI32(0);

@@ -2,8 +2,8 @@ import { BigInt } from '@graphprotocol/graph-ts';
 import { AdapterWhitelistSetting, Policy } from '../generated/schema';
 import { policySettingId } from './PolicySetting';
 
-export function ensureAdapterWhitelistSetting(fundId: string, policy: Policy): AdapterWhitelistSetting {
-  let id = policySettingId(fundId, policy);
+export function ensureAdapterWhitelistSetting(comptrollerProxyId: string, policy: Policy): AdapterWhitelistSetting {
+  let id = policySettingId(comptrollerProxyId, policy);
   let setting = AdapterWhitelistSetting.load(id) as AdapterWhitelistSetting;
 
   if (setting) {
@@ -12,7 +12,7 @@ export function ensureAdapterWhitelistSetting(fundId: string, policy: Policy): A
 
   setting = new AdapterWhitelistSetting(id);
   setting.policy = policy.id;
-  setting.fund = fundId;
+  setting.comptroller = comptrollerProxyId;
   setting.listed = new Array<string>();
   setting.adapters = new Array<string>();
   setting.events = new Array<string>();

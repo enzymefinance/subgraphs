@@ -3,7 +3,6 @@ import { NewFundCreated } from '../generated/FundDeployerContract';
 import { Fund } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
 import { ensureAccount, ensureManager } from './Account';
-import { ensureAsset } from './Asset';
 import { createCalculationState } from './CalculationState';
 import { createFeeState } from './FeeState';
 import { createFundState } from './FundState';
@@ -51,8 +50,7 @@ export function createFund(event: NewFundCreated): Fund {
   fund.feeState = feeState.id;
   fund.calculations = calculations.id;
   fund.state = state.id;
-  fund.denominationAsset = ensureAsset(event.params.denominationAsset).id;
-  fund.sharesActionTimelock = event.params.sharesActionTimelock;
+
   fund.save();
 
   trackNetworkFunds(event);

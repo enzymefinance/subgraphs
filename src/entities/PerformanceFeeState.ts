@@ -6,6 +6,7 @@ import { arrayUnique } from '../utils/arrayUnique';
 import { logCritical } from '../utils/logCritical';
 import { toBigDecimal } from '../utils/toBigDecimal';
 import { ensureAsset } from './Asset';
+import { ensureComptrollerProxy } from './ComptrollerProxy';
 import { feeStateId, useFeeState } from './FeeState';
 import { useFundState } from './FundState';
 
@@ -60,8 +61,8 @@ export function ensurePerformanceFeeState(
   cause: Entity,
 ): PerformanceFeeState {
   let performanceFeeState = PerformanceFeeState.load(performanceFeeStateId(fund, event)) as PerformanceFeeState;
-
-  let denominationAsset = ensureAsset(Address.fromString(fund.denominationAsset));
+  let comptrollerProxy = ensureComptrollerProxy(Address.fromString(fund.accessor), event);
+  let denominationAsset = ensureAsset(Address.fromString(comptrollerProxy.denominationAsset));
 
   if (!performanceFeeState) {
     let state = useFundState(fund.state);

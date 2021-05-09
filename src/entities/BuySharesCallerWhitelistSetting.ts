@@ -2,8 +2,11 @@ import { BigInt } from '@graphprotocol/graph-ts';
 import { BuySharesCallerWhitelistSetting, Policy } from '../generated/schema';
 import { policySettingId } from './PolicySetting';
 
-export function ensureBuySharesCallerWhitelistSetting(fundId: string, policy: Policy): BuySharesCallerWhitelistSetting {
-  let id = policySettingId(fundId, policy);
+export function ensureBuySharesCallerWhitelistSetting(
+  comptrollerProxyId: string,
+  policy: Policy,
+): BuySharesCallerWhitelistSetting {
+  let id = policySettingId(comptrollerProxyId, policy);
   let setting = BuySharesCallerWhitelistSetting.load(id) as BuySharesCallerWhitelistSetting;
 
   if (setting) {
@@ -12,7 +15,7 @@ export function ensureBuySharesCallerWhitelistSetting(fundId: string, policy: Po
 
   setting = new BuySharesCallerWhitelistSetting(id);
   setting.policy = policy.id;
-  setting.fund = fundId;
+  setting.comptroller = comptrollerProxyId;
   setting.listed = new Array<string>();
   setting.events = new Array<string>();
   setting.timestamp = BigInt.fromI32(0);

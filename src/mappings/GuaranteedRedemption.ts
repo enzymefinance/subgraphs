@@ -1,7 +1,7 @@
 import { ensureGuaranteedRedemption } from '../entities/GuaranteedRedemption';
 import { ensureGuaranteedRedemptionSetting } from '../entities/GuaranteedRedemptionSetting';
-import { useIntegrationAdapter } from '../entities/IntegrationAdapter';
-import { usePolicy } from '../entities/Policy';
+import { ensureIntegrationAdapter } from '../entities/IntegrationAdapter';
+import { ensurePolicy } from '../entities/Policy';
 import { ensureTransaction } from '../entities/Transaction';
 import { ComptrollerLibContract } from '../generated/ComptrollerLibContract';
 import {
@@ -33,7 +33,7 @@ export function handleAdapterAdded(event: AdapterAdded): void {
   guaranteedRedemption.save();
 }
 export function handleAdapterRemoved(event: AdapterRemoved): void {
-  let adapter = useIntegrationAdapter(event.params.adapter.toHex());
+  let adapter = ensureIntegrationAdapter(event.params.adapter);
 
   let adapterRemoved = new GuaranteedRedemptionAdapterAddedEvent(genericId(event));
   adapterRemoved.timestamp = event.block.timestamp;
@@ -48,7 +48,7 @@ export function handleAdapterRemoved(event: AdapterRemoved): void {
 export function handleFundSettingsSet(event: FundSettingsSet): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let fundId = comptroller.getVaultProxy().toHex(); // fund entity may not exist yet
-  let policy = usePolicy(event.address.toHex());
+  let policy = ensurePolicy(event.address);
 
   let settingsSet = new GuaranteedRedemptionFundSettingsSetEvent(genericId(event));
   settingsSet.fund = fundId;
@@ -59,7 +59,7 @@ export function handleFundSettingsSet(event: FundSettingsSet): void {
   settingsSet.duration = event.params.duration;
   settingsSet.save();
 
-  let setting = ensureGuaranteedRedemptionSetting(fundId, policy);
+  let setting = ensureGuaranteedRedemptionSetting(event.params.comptrollerProxy.toHex(), policy);
   setting.startTimestamp = settingsSet.startTimestamp;
   setting.duration = settingsSet.duration;
   setting.events = arrayUnique<string>(setting.events.concat([settingsSet.id]));

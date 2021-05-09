@@ -2,7 +2,8 @@ import { Address, BigDecimal } from '@graphprotocol/graph-ts';
 import { zeroAddress } from '../constants';
 import { ensureAccount } from '../entities/Account';
 import { calculationStateId, trackCalculationState } from '../entities/CalculationState';
-import { ensureFee, useFee } from '../entities/Fee';
+import { ensureComptrollerProxy } from '../entities/ComptrollerProxy';
+import { ensureFee } from '../entities/Fee';
 import { trackFeeState } from '../entities/FeeState';
 import { useFund } from '../entities/Fund';
 import { trackInvestmentState } from '../entities/InvestmentState';
@@ -34,9 +35,12 @@ import { getSettlementType } from '../utils/getSettlementType';
 import { toBigDecimal } from '../utils/toBigDecimal';
 
 export function handleAllSharesOutstandingForcePaidForFund(event: AllSharesOutstandingForcePaidForFund): void {
-  let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
+  let comptrollerProxy = ensureComptrollerProxy(event.params.comptrollerProxy, event);
+  if (comptrollerProxy.fund == null) {
+    return;
+  }
 
-  let fund = useFund(comptroller.getVaultProxy().toHex());
+  let fund = useFund(comptrollerProxy.fund);
   let investor = ensureAccount(Address.fromString(fund.manager), event);
   let investmentState = trackInvestmentState(investor, fund, event);
   let shares = toBigDecimal(event.params.sharesDue);
@@ -66,13 +70,13 @@ export function handleFeeDeregistered(event: FeeDeregistered): void {
   let deregistration = new FeeDeregisteredEvent(genericId(event));
   deregistration.timestamp = event.block.timestamp;
   deregistration.transaction = ensureTransaction(event).id;
-  deregistration.fee = useFee(event.params.fee.toHex()).id;
+  deregistration.fee = ensureFee(event.params.fee).id;
   deregistration.identifier = event.params.identifier.toHex();
   deregistration.save();
 }
 
 export function handleFeeRegistered(event: FeeRegistered): void {
-  let fee = ensureFee(event.params.fee, event.address);
+  let fee = ensureFee(event.params.fee);
 
   let registered = new FeeRegisteredEvent(genericId(event));
   registered.timestamp = event.block.timestamp;
@@ -89,7 +93,7 @@ export function handleFeeRegistered(event: FeeRegistered): void {
 export function handleFeeEnabledForFund(event: FeeEnabledForFund): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let fundId = comptroller.getVaultProxy().toHex();
-  let fee = useFee(event.params.fee.toHex());
+  let fee = ensureFee(event.params.fee);
 
   let enabled = new FeeEnabledForFundEvent(genericId(event));
   enabled.fund = fundId;
@@ -102,15 +106,18 @@ export function handleFeeEnabledForFund(event: FeeEnabledForFund): void {
 }
 
 export function handleFeeSettledForFund(event: FeeSettledForFund): void {
-  let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
+  let comptrollerProxy = ensureComptrollerProxy(event.params.comptrollerProxy, event);
+  if (comptrollerProxy.fund == null) {
+    return;
+  }
 
   let payer = ensureAccount(event.params.payer, event);
   let payee = ensureAccount(event.params.payee, event);
 
-  let fund = useFund(comptroller.getVaultProxy().toHex());
+  let fund = useFund(comptrollerProxy.fund);
   let investor = payer.id != zeroAddress.toHex() ? payer : payee;
   let investmentState = trackInvestmentState(investor, fund, event);
-  let fee = useFee(event.params.fee.toHex());
+  let fee = ensureFee(event.params.fee);
   let shares = toBigDecimal(event.params.sharesDue);
 
   let settled = new FeeSettledForFundEvent(genericId(event));
@@ -137,11 +144,15 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
 }
 
 export function handleSharesOutstandingPaidForFund(event: SharesOutstandingPaidForFund): void {
-  let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
-  let fund = useFund(comptroller.getVaultProxy().toHex());
+  let comptrollerProxy = ensureComptrollerProxy(event.params.comptrollerProxy, event);
+  if (comptrollerProxy.fund == null) {
+    return;
+  }
+
+  let fund = useFund(comptrollerProxy.fund);
   let investor = ensureAccount(Address.fromString(fund.manager), event);
   let investmentState = trackInvestmentState(investor, fund, event);
-  let fee = useFee(event.params.fee.toHex());
+  let fee = ensureFee(event.params.fee);
   let shares = toBigDecimal(event.params.sharesDue);
 
   let sharesPaid = new SharesOutstandingPaidForFundEvent(genericId(event));

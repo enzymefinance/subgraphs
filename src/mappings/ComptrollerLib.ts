@@ -3,6 +3,7 @@ import { ensureAccount, ensureInvestor } from '../entities/Account';
 import { ensureAsset } from '../entities/Asset';
 import { createAssetAmount } from '../entities/AssetAmount';
 import { calculationStateId, trackCalculationState } from '../entities/CalculationState';
+import { ensureComptrollerProxy } from '../entities/ComptrollerProxy';
 import { useFund } from '../entities/Fund';
 import { ensureInvestment } from '../entities/Investment';
 import { trackInvestmentState } from '../entities/InvestmentState';
@@ -35,7 +36,8 @@ export function handleSharesBought(event: SharesBought): void {
   let investor = ensureInvestor(event.params.buyer, event);
   let investmentState = trackInvestmentState(investor, fund, event);
   let investment = ensureInvestment(investor, fund, investmentState.id, event);
-  let asset = ensureAsset(Address.fromString(fund.denominationAsset));
+  let comptrollerProxy = ensureComptrollerProxy(Address.fromString(fund.accessor), event);
+  let asset = ensureAsset(Address.fromString(comptrollerProxy.denominationAsset));
   let shares = toBigDecimal(event.params.sharesReceived);
 
   let addition = new SharesBoughtEvent(genericId(event));

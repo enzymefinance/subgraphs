@@ -1,5 +1,4 @@
 import { Address, BigDecimal, Entity, ethereum } from '@graphprotocol/graph-ts';
-import { fundActionsWrapperAddress } from '../addresses';
 import { ComptrollerLibContract } from '../generated/ComptrollerLibContract';
 import { FundActionsWrapperContract } from '../generated/FundActionsWrapperContract';
 import { CalculationState, Fund } from '../generated/schema';
@@ -9,7 +8,9 @@ import { logCritical } from '../utils/logCritical';
 import { toBigDecimal } from '../utils/toBigDecimal';
 import { ensureAsset } from './Asset';
 import { useAssetPrice } from './AssetPrice';
+import { ensureComptrollerProxy } from './ComptrollerProxy';
 import { ensureFundState } from './FundState';
+import { useCurrentRelease } from './Release';
 
 export function calculationStateId(fund: Fund, event: ethereum.Event): string {
   return fund.id + '/' + event.block.timestamp.toString() + '/calculations';
@@ -53,8 +54,10 @@ export function useCalculationState(id: string): CalculationState {
 }
 
 export function trackCalculationState(fund: Fund, event: ethereum.Event, cause: Entity): void {
+  let release = useCurrentRelease();
+
   let comptroller = ComptrollerLibContract.bind(Address.fromString(fund.accessor));
-  let wrapper = FundActionsWrapperContract.bind(fundActionsWrapperAddress);
+  let wrapper = FundActionsWrapperContract.bind(Address.fromString(release.fundActionsWrapper));
   let vault = VaultLibContract.bind(Address.fromString(fund.id));
 
   let gav = comptroller.try_calcGav(true);
@@ -74,7 +77,8 @@ export function trackCalculationState(fund: Fund, event: ethereum.Event, cause: 
     return;
   }
 
-  let denominationAsset = ensureAsset(Address.fromString(fund.denominationAsset));
+  let comptrollerProxy = ensureComptrollerProxy(Address.fromString(fund.accessor), event);
+  let denominationAsset = ensureAsset(Address.fromString(comptrollerProxy.denominationAsset));
 
   let calculations = ensureCalculationState(fund, event, cause);
   calculations.gav = toBigDecimal(gav.value.value0, denominationAsset.decimals);

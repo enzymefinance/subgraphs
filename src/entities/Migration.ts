@@ -1,6 +1,7 @@
 import { MigrationSignaled } from '../generated/DispatcherContract';
 import { Migration } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
+import { ensureComptrollerProxy } from './ComptrollerProxy';
 import { useFund } from './Fund';
 import { ensureRelease } from './Release';
 
@@ -18,7 +19,7 @@ export function ensureMigration(event: MigrationSignaled): Migration {
     event.params.vaultProxy.toHex(),
     event.params.prevFundDeployer.toHex(),
     event.params.nextFundDeployer.toHex(),
-    event.block.timestamp.toString(),
+    event.params.executableTimestamp.toString(),
   );
 
   let migration = Migration.load(id) as Migration;
@@ -30,10 +31,10 @@ export function ensureMigration(event: MigrationSignaled): Migration {
   migration.prevRelease = ensureRelease(event.params.prevFundDeployer.toHex(), event).id;
   migration.nextRelease = ensureRelease(event.params.nextFundDeployer.toHex(), event).id;
   migration.fund = useFund(event.params.vaultProxy.toHex()).id;
-  migration.executableTimestamp = event.block.timestamp;
+  migration.executableTimestamp = event.params.executableTimestamp;
   migration.cancelled = false;
   migration.executed = false;
-  migration.nextAccessor = event.params.nextVaultAccessor.toHex();
+  migration.nextAccessor = ensureComptrollerProxy(event.params.nextVaultAccessor, event).id;
   migration.save();
 
   return migration;
@@ -44,8 +45,8 @@ export function generateMigrationId(
   vaultProxy: string,
   prevFundDeployer: string,
   nextFundDeployer: string,
-  timestamp: string,
+  executableTimestamp: string,
 ): string {
-  let arr: string[] = [vaultProxy, prevFundDeployer, nextFundDeployer, timestamp];
+  let arr: Array<string> = [vaultProxy, prevFundDeployer, nextFundDeployer, executableTimestamp];
   return arr.join('/');
 }

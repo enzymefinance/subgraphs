@@ -1,6 +1,7 @@
 import { Address, dataSource, store } from '@graphprotocol/graph-ts';
 import { ensureAccount } from '../entities/Account';
 import { ensureAsset } from '../entities/Asset';
+import { ensureComptrollerProxy } from '../entities/ComptrollerProxy';
 import { useFund } from '../entities/Fund';
 import { sharesRequestId } from '../entities/SharesRequest';
 import { deleteSharesRequestExecutor, ensureSharesRequestExecutor } from '../entities/SharesRequestExecutor';
@@ -25,12 +26,13 @@ import { toBigDecimal } from '../utils/toBigDecimal';
 
 export function handleRequestCanceled(event: RequestCanceled): void {
   let fund = useFund(dataSource.context().getString('vaultProxy'));
+  let comptrollerProxy = ensureComptrollerProxy(Address.fromString(fund.accessor), event);
   let account = ensureAccount(event.transaction.from, event);
   let sharesRequestor = ensureSharesRequestor(event.address.toHex(), fund);
 
   let investmentAmount = toBigDecimal(
     event.params.investmentAmount,
-    ensureAsset(Address.fromString(fund.denominationAsset)).decimals,
+    ensureAsset(Address.fromString(comptrollerProxy.denominationAsset)).decimals,
   );
   let minSharesQuantity = toBigDecimal(event.params.minSharesQuantity);
 
@@ -49,12 +51,14 @@ export function handleRequestCanceled(event: RequestCanceled): void {
 
 export function handleRequestCreated(event: RequestCreated): void {
   let fund = useFund(dataSource.context().getString('vaultProxy'));
+  let comptrollerProxy = ensureComptrollerProxy(Address.fromString(fund.accessor), event);
+
   let account = ensureAccount(event.transaction.from, event);
   let sharesRequestor = ensureSharesRequestor(event.address.toHex(), fund);
 
   let investmentAmount = toBigDecimal(
     event.params.investmentAmount,
-    ensureAsset(Address.fromString(fund.denominationAsset)).decimals,
+    ensureAsset(Address.fromString(comptrollerProxy.denominationAsset)).decimals,
   );
   let minSharesQuantity = toBigDecimal(event.params.minSharesQuantity);
 
@@ -81,12 +85,14 @@ export function handleRequestCreated(event: RequestCreated): void {
 
 export function handleRequestExecuted(event: RequestExecuted): void {
   let fund = useFund(dataSource.context().getString('vaultProxy'));
+  let comptrollerProxy = ensureComptrollerProxy(Address.fromString(fund.accessor), event);
+
   let account = ensureAccount(event.transaction.from, event);
   let sharesRequestor = ensureSharesRequestor(event.address.toHex(), fund);
 
   let investmentAmount = toBigDecimal(
     event.params.investmentAmount,
-    ensureAsset(Address.fromString(fund.denominationAsset)).decimals,
+    ensureAsset(Address.fromString(comptrollerProxy.denominationAsset)).decimals,
   );
   let minSharesQuantity = toBigDecimal(event.params.minSharesQuantity);
 

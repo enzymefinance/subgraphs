@@ -1,6 +1,7 @@
 import { Address, BigDecimal } from '@graphprotocol/graph-ts';
 import { ensureAsset } from '../entities/Asset';
-import { useFee } from '../entities/Fee';
+import { ensureComptrollerProxy } from '../entities/ComptrollerProxy';
+import { ensureFee } from '../entities/Fee';
 import { trackFeeState } from '../entities/FeeState';
 import { useFund } from '../entities/Fund';
 import { ensurePerformanceFeeSetting } from '../entities/PerformanceFeeSetting';
@@ -15,6 +16,7 @@ import {
   PerformanceUpdated,
 } from '../generated/PerformanceFeeContract';
 import {
+  Fund,
   PerformanceFeeActivatedForFundEvent,
   PerformanceFeePaidOutEvent,
   PerformanceFeePerformanceUpdatedEvent,
@@ -23,24 +25,24 @@ import {
 } from '../generated/schema';
 import { arrayUnique } from '../utils/arrayUnique';
 import { genericId } from '../utils/genericId';
+import { logCritical } from '../utils/logCritical';
 import { toBigDecimal } from '../utils/toBigDecimal';
 
+// on fund creation, this event occurs before the Fund and Comptroller entities have been created
+// on a migration, this event occurs without a vault proxy (only comptroller)
 export function handleFundSettingsAdded(event: FundSettingsAdded): void {
-  let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
-  let vault = comptroller.getVaultProxy();
-  let fee = useFee(event.address.toHex());
+  let fee = ensureFee(event.address);
   let rate = toBigDecimal(event.params.rate);
 
   let feeSettings = new PerformanceFeeSettingsAddedEvent(genericId(event));
-  feeSettings.fund = vault.toHex(); // fund does not exist yet
   feeSettings.timestamp = event.block.timestamp;
   feeSettings.transaction = ensureTransaction(event).id;
-  feeSettings.comptrollerProxy = event.params.comptrollerProxy.toHex();
+  feeSettings.comptroller = event.params.comptrollerProxy.toHex();
   feeSettings.rate = rate;
   feeSettings.period = event.params.period;
   feeSettings.save();
 
-  let setting = ensurePerformanceFeeSetting(vault.toHex(), fee);
+  let setting = ensurePerformanceFeeSetting(event.params.comptrollerProxy.toHex(), fee);
   setting.rate = rate;
   setting.period = event.params.period;
   setting.events = arrayUnique<string>(setting.events.concat([feeSettings.id]));
@@ -49,10 +51,10 @@ export function handleFundSettingsAdded(event: FundSettingsAdded): void {
 }
 
 export function handleActivatedForFund(event: ActivatedForFund): void {
-  // fund entity does not yet exist, so we have to do contract calls
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let vault = comptroller.getVaultProxy();
-  let fee = useFee(event.address.toHex());
+
+  let fee = ensureFee(event.address);
 
   let denominationAsset = ensureAsset(comptroller.getDenominationAsset());
 
@@ -64,16 +66,32 @@ export function handleActivatedForFund(event: ActivatedForFund): void {
   feeActivation.highWaterMark = toBigDecimal(event.params.highWaterMark, denominationAsset.decimals);
   feeActivation.save();
 
-  let setting = ensurePerformanceFeeSetting(vault.toHex(), fee);
+  let setting = ensurePerformanceFeeSetting(event.params.comptrollerProxy.toHex(), fee);
   setting.activated = event.block.timestamp;
   setting.save();
+
+  // track fee state for migrated funds
+  let fund = Fund.load(vault.toHex()) as Fund;
+  if (fund != null) {
+    trackFeeState(fund, fee, BigDecimal.fromString('0'), event, feeActivation);
+
+    let performanceFeeState = usePerformanceFeeState(performanceFeeStateId(fund, event));
+    performanceFeeState.grossSharePrice = toBigDecimal(event.params.highWaterMark, denominationAsset.decimals);
+    performanceFeeState.highWaterMark = toBigDecimal(event.params.highWaterMark, denominationAsset.decimals);
+    performanceFeeState.save();
+  }
 }
 
 export function handleLastSharePriceUpdated(event: LastSharePriceUpdated): void {
-  let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
-  let fund = useFund(comptroller.getVaultProxy().toHex());
-  let fee = useFee(event.address.toHex());
-  let denominationAsset = ensureAsset(Address.fromString(fund.denominationAsset));
+  let comptrollerProxy = ensureComptrollerProxy(event.params.comptrollerProxy, event);
+  if (comptrollerProxy.fund == null) {
+    logCritical('no vault attached to comptrollerProxy {}', [comptrollerProxy.id]);
+    return;
+  }
+
+  let fund = useFund(comptrollerProxy.fund);
+  let fee = ensureFee(event.address);
+  let denominationAsset = ensureAsset(Address.fromString(comptrollerProxy.denominationAsset));
 
   let sharePriceUpdate = new PerformanceFeeSharePriceUpdatedEvent(genericId(event));
   sharePriceUpdate.fund = fund.id;
@@ -93,10 +111,15 @@ export function handleLastSharePriceUpdated(event: LastSharePriceUpdated): void 
 }
 
 export function handlePaidOut(event: PaidOut): void {
-  let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
-  let fund = useFund(comptroller.getVaultProxy().toHex());
-  let fee = useFee(event.address.toHex());
-  let denominationAsset = ensureAsset(Address.fromString(fund.denominationAsset));
+  let comptrollerProxy = ensureComptrollerProxy(event.params.comptrollerProxy, event);
+  if (comptrollerProxy.fund == null) {
+    logCritical('no vault attached to comptrollerProxy {}', [comptrollerProxy.id]);
+    return;
+  }
+
+  let fund = useFund(comptrollerProxy.fund);
+  let fee = ensureFee(event.address);
+  let denominationAsset = ensureAsset(Address.fromString(comptrollerProxy.denominationAsset));
 
   let paidOut = new PerformanceFeePaidOutEvent(genericId(event));
   paidOut.fund = fund.id;
@@ -118,10 +141,15 @@ export function handlePaidOut(event: PaidOut): void {
 }
 
 export function handlePerformanceUpdated(event: PerformanceUpdated): void {
-  let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
-  let fund = useFund(comptroller.getVaultProxy().toHex());
-  let fee = useFee(event.address.toHex());
-  let denominationAsset = ensureAsset(Address.fromString(fund.denominationAsset));
+  let comptrollerProxy = ensureComptrollerProxy(event.params.comptrollerProxy, event);
+  if (comptrollerProxy.fund == null) {
+    logCritical('no vault attached to comptrollerProxy {}', [comptrollerProxy.id]);
+    return;
+  }
+
+  let fund = useFund(comptrollerProxy.fund);
+  let fee = ensureFee(event.address);
+  let denominationAsset = ensureAsset(Address.fromString(comptrollerProxy.denominationAsset));
 
   let updated = new PerformanceFeePerformanceUpdatedEvent(genericId(event));
   updated.fund = fund.id;

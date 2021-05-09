@@ -7,73 +7,198 @@ import { Address } from '@graphprotocol/graph-ts';
 // there are constant values both by convention but also simply through the
 // way we deploy our protocol, we can use these addresses here.
 
+export class ReleaseAddresses {
+  fundDeployerAddress: Address;
+  vaultLibAddress: Address;
+  comptrollerLibAddress: Address;
+  valueInterpreterAddress: Address;
+  integrationManagerAddress: Address;
+  policyManagerAddress: Address;
+  feeManagerAddress: Address;
+  aggregatedDerivativePriceFeedAddress: Address;
+  chainlinkPriceFeedAddress: Address;
+  aavePriceFeedAddress: Address;
+  alphaHomoraV1PriceFeedAddress: Address;
+  chaiPriceFeedAddress: Address;
+  compoundPriceFeedAddress: Address;
+  curvePriceFeedAddress: Address;
+  idlePriceFeedAddress: Address;
+  lidoStethPriceFeedAddress: Address;
+  stakehoundEthPriceFeedAddress: Address;
+  synthetixPriceFeedAddress: Address;
+  uniswapV2PoolPriceFeedAddress: Address;
+  wdgldPriceFeedAddress: Address;
+  fundActionsWrapperAddress: Address;
+  authUserExecutedSharesRequestorFactoryAddress: Address;
+  managementFeeAddress: Address;
+  performanceFeeAddress: Address;
+  entranceRateBurnFeeAddress: Address;
+  entranceRateDirectFeeAddress: Address;
+  adapterBlacklistAddress: Address;
+  adapterWhitelistAddress: Address;
+  assetBlacklistAddress: Address;
+  assetWhitelistAddress: Address;
+  investorWhitelistAddress: Address;
+  guaranteedRedemptionAddress: Address;
+  maxConcentrationAddress: Address;
+  minMaxInvestmentAddress: Address;
+  buySharesCallerWhitelistAddress: Address;
+  aaveAdapterAddress: Address;
+  alphaHomoraV1AdapterAddress: Address;
+  chaiAdapterAddress: Address;
+  compoundAdapterAddress: Address;
+  curveExchangeAdapterAddress: Address;
+  curveLiquidityAaveAdapterAddress: Address;
+  curveLiquiditySethAdapterAddress: Address;
+  curveLiquidityStethAdapterAddress: Address;
+  idleAdapterAddress: Address;
+  kyberAdapterAddress: Address;
+  paraSwapAdapterAddress: Address;
+  paraSwapV4AdapterAddress: Address;
+  synthetixAdapterAddress: Address;
+  trackedAssetsAdapterAddress: Address;
+  uniswapV2AdapterAddress: Address;
+  zeroExV2AdapterAddress: Address;
+}
+
+export let releaseAddressesA: ReleaseAddresses = {
+  fundDeployerAddress: Address.fromString('{{releases.0.fundDeployer}}'),
+  vaultLibAddress: Address.fromString('{{releases.0.vaultLib}}'),
+  comptrollerLibAddress: Address.fromString('{{releases.0.comptrollerLib}}'),
+  valueInterpreterAddress: Address.fromString('{{releases.0.valueInterpreter}}'),
+  integrationManagerAddress: Address.fromString('{{releases.0.integrationManager}}'),
+  policyManagerAddress: Address.fromString('{{releases.0.policyManager}}'),
+  feeManagerAddress: Address.fromString('{{releases.0.feeManager}}'),
+
+  // Prices
+  aggregatedDerivativePriceFeedAddress: Address.fromString('{{releases.0.aggregatedDerivativePriceFeed}}'),
+  chainlinkPriceFeedAddress: Address.fromString('{{releases.0.chainlinkPriceFeed}}'),
+
+  // Derivative Price Feeds
+  aavePriceFeedAddress: Address.fromString('{{releases.0.aavePriceFeed}}'),
+  alphaHomoraV1PriceFeedAddress: Address.fromString('{{releases.0.alphaHomoraV1PriceFeed}}'),
+  chaiPriceFeedAddress: Address.fromString('{{releases.0.chaiPriceFeed}}'),
+  compoundPriceFeedAddress: Address.fromString('{{releases.0.compoundPriceFeed}}'),
+  curvePriceFeedAddress: Address.fromString('{{releases.0.curvePriceFeed}}'),
+  idlePriceFeedAddress: Address.fromString('{{releases.0.idlePriceFeed}}'),
+  lidoStethPriceFeedAddress: Address.fromString('{{releases.0.lidoStethPriceFeed}}'),
+  stakehoundEthPriceFeedAddress: Address.fromString('{{releases.0.stakehoundEthPriceFeed}}'),
+  synthetixPriceFeedAddress: Address.fromString('{{releases.0.synthetixPriceFeed}}'),
+  uniswapV2PoolPriceFeedAddress: Address.fromString('{{releases.0.uniswapV2PoolPriceFeed}}'),
+  wdgldPriceFeedAddress: Address.fromString('{{releases.0.wdgldPriceFeed}}'),
+
+  // Peripheral
+  fundActionsWrapperAddress: Address.fromString('{{releases.0.fundActionsWrapper}}'),
+  authUserExecutedSharesRequestorFactoryAddress: Address.fromString(
+    '{{releases.0.authUserExecutedSharesRequestorFactory}}',
+  ),
+
+  // Fees
+  managementFeeAddress: Address.fromString('{{releases.0.managementFee}}'),
+  performanceFeeAddress: Address.fromString('{{releases.0.performanceFee}}'),
+  entranceRateBurnFeeAddress: Address.fromString('{{releases.0.entranceRateBurnFee}}'),
+  entranceRateDirectFeeAddress: Address.fromString('{{releases.0.entranceRateDirectFee}}'),
+
+  // Policies
+  adapterBlacklistAddress: Address.fromString('{{releases.0.adapterBlacklist}}'),
+  adapterWhitelistAddress: Address.fromString('{{releases.0.adapterWhitelist}}'),
+  assetBlacklistAddress: Address.fromString('{{releases.0.assetBlacklist}}'),
+  assetWhitelistAddress: Address.fromString('{{releases.0.assetWhitelist}}'),
+  investorWhitelistAddress: Address.fromString('{{releases.0.investorWhitelist}}'),
+  guaranteedRedemptionAddress: Address.fromString('{{releases.0.guaranteedRedemption}}'),
+  maxConcentrationAddress: Address.fromString('{{releases.0.maxConcentration}}'),
+  minMaxInvestmentAddress: Address.fromString('{{releases.0.minMaxInvestment}}'),
+  buySharesCallerWhitelistAddress: Address.fromString('{{releases.0.buySharesCallerWhitelist}}'),
+
+  // Adapters
+  aaveAdapterAddress: Address.fromString('{{releases.0.aaveAdapter}}'),
+  alphaHomoraV1AdapterAddress: Address.fromString('{{releases.0.alphaHomoraV1Adapter}}'),
+  chaiAdapterAddress: Address.fromString('{{releases.0.chaiAdapter}}'),
+  compoundAdapterAddress: Address.fromString('{{releases.0.compoundAdapter}}'),
+  curveExchangeAdapterAddress: Address.fromString('{{releases.0.curveExchangeAdapter}}'),
+  curveLiquidityAaveAdapterAddress: Address.fromString('{{releases.0.curveLiquidityAaveAdapter}}'),
+  curveLiquiditySethAdapterAddress: Address.fromString('{{releases.0.curveLiquiditySethAdapter}}'),
+  curveLiquidityStethAdapterAddress: Address.fromString('{{releases.0.curveLiquidityStethAdapter}}'),
+  idleAdapterAddress: Address.fromString('{{releases.0.idleAdapter}}'),
+  kyberAdapterAddress: Address.fromString('{{releases.0.kyberAdapter}}'),
+  paraSwapAdapterAddress: Address.fromString('{{releases.0.paraSwapAdapter}}'),
+  paraSwapV4AdapterAddress: Address.fromString('{{releases.0.paraSwapV4Adapter}}'),
+  synthetixAdapterAddress: Address.fromString('{{releases.0.synthetixAdapter}}'),
+  trackedAssetsAdapterAddress: Address.fromString('{{releases.0.trackedAssetsAdapter}}'),
+  uniswapV2AdapterAddress: Address.fromString('{{releases.0.uniswapV2Adapter}}'),
+  zeroExV2AdapterAddress: Address.fromString('{{releases.0.zeroExV2Adapter}}'),
+};
+
+export let releaseAddressesB: ReleaseAddresses = {
+  fundDeployerAddress: Address.fromString('{{releases.1.fundDeployer}}'),
+  vaultLibAddress: Address.fromString('{{releases.1.vaultLib}}'),
+  comptrollerLibAddress: Address.fromString('{{releases.1.comptrollerLib}}'),
+  valueInterpreterAddress: Address.fromString('{{releases.1.valueInterpreter}}'),
+  integrationManagerAddress: Address.fromString('{{releases.1.integrationManager}}'),
+  policyManagerAddress: Address.fromString('{{releases.1.policyManager}}'),
+  feeManagerAddress: Address.fromString('{{releases.1.feeManager}}'),
+
+  // Prices
+  aggregatedDerivativePriceFeedAddress: Address.fromString('{{releases.1.aggregatedDerivativePriceFeed}}'),
+  chainlinkPriceFeedAddress: Address.fromString('{{releases.1.chainlinkPriceFeed}}'),
+
+  // Derivative Price Feeds
+  aavePriceFeedAddress: Address.fromString('{{releases.1.aavePriceFeed}}'),
+  alphaHomoraV1PriceFeedAddress: Address.fromString('{{releases.1.alphaHomoraV1PriceFeed}}'),
+  chaiPriceFeedAddress: Address.fromString('{{releases.1.chaiPriceFeed}}'),
+  compoundPriceFeedAddress: Address.fromString('{{releases.1.compoundPriceFeed}}'),
+  curvePriceFeedAddress: Address.fromString('{{releases.1.curvePriceFeed}}'),
+  idlePriceFeedAddress: Address.fromString('{{releases.1.idlePriceFeed}}'),
+  lidoStethPriceFeedAddress: Address.fromString('{{releases.1.lidoStethPriceFeed}}'),
+  stakehoundEthPriceFeedAddress: Address.fromString('{{releases.1.stakehoundEthPriceFeed}}'),
+  synthetixPriceFeedAddress: Address.fromString('{{releases.1.synthetixPriceFeed}}'),
+  uniswapV2PoolPriceFeedAddress: Address.fromString('{{releases.1.uniswapV2PoolPriceFeed}}'),
+  wdgldPriceFeedAddress: Address.fromString('{{releases.1.wdgldPriceFeed}}'),
+
+  // Peripheral
+  fundActionsWrapperAddress: Address.fromString('{{releases.1.fundActionsWrapper}}'),
+  authUserExecutedSharesRequestorFactoryAddress: Address.fromString(
+    '{{releases.1.authUserExecutedSharesRequestorFactory}}',
+  ),
+
+  // Fees
+  managementFeeAddress: Address.fromString('{{releases.1.managementFee}}'),
+  performanceFeeAddress: Address.fromString('{{releases.1.performanceFee}}'),
+  entranceRateBurnFeeAddress: Address.fromString('{{releases.1.entranceRateBurnFee}}'),
+  entranceRateDirectFeeAddress: Address.fromString('{{releases.1.entranceRateDirectFee}}'),
+
+  // Policies
+  adapterBlacklistAddress: Address.fromString('{{releases.1.adapterBlacklist}}'),
+  adapterWhitelistAddress: Address.fromString('{{releases.1.adapterWhitelist}}'),
+  assetBlacklistAddress: Address.fromString('{{releases.1.assetBlacklist}}'),
+  assetWhitelistAddress: Address.fromString('{{releases.1.assetWhitelist}}'),
+  investorWhitelistAddress: Address.fromString('{{releases.1.investorWhitelist}}'),
+  guaranteedRedemptionAddress: Address.fromString('{{releases.1.guaranteedRedemption}}'),
+  maxConcentrationAddress: Address.fromString('{{releases.1.maxConcentration}}'),
+  minMaxInvestmentAddress: Address.fromString('{{releases.1.minMaxInvestment}}'),
+  buySharesCallerWhitelistAddress: Address.fromString('{{releases.1.buySharesCallerWhitelist}}'),
+
+  // Adapters
+  aaveAdapterAddress: Address.fromString('{{releases.1.aaveAdapter}}'),
+  alphaHomoraV1AdapterAddress: Address.fromString('{{releases.1.alphaHomoraV1Adapter}}'),
+  chaiAdapterAddress: Address.fromString('{{releases.1.chaiAdapter}}'),
+  compoundAdapterAddress: Address.fromString('{{releases.1.compoundAdapter}}'),
+  curveExchangeAdapterAddress: Address.fromString('{{releases.1.curveExchangeAdapter}}'),
+  curveLiquidityAaveAdapterAddress: Address.fromString('{{releases.1.curveLiquidityAaveAdapter}}'),
+  curveLiquiditySethAdapterAddress: Address.fromString('{{releases.1.curveLiquiditySethAdapter}}'),
+  curveLiquidityStethAdapterAddress: Address.fromString('{{releases.1.curveLiquidityStethAdapter}}'),
+  idleAdapterAddress: Address.fromString('{{releases.1.idleAdapter}}'),
+  kyberAdapterAddress: Address.fromString('{{releases.1.kyberAdapter}}'),
+  paraSwapAdapterAddress: Address.fromString('{{releases.1.paraSwapAdapter}}'),
+  paraSwapV4AdapterAddress: Address.fromString('{{releases.1.paraSwapV4Adapter}}'),
+  synthetixAdapterAddress: Address.fromString('{{releases.1.synthetixAdapter}}'),
+  trackedAssetsAdapterAddress: Address.fromString('{{releases.1.trackedAssetsAdapter}}'),
+  uniswapV2AdapterAddress: Address.fromString('{{releases.1.uniswapV2Adapter}}'),
+  zeroExV2AdapterAddress: Address.fromString('{{releases.1.zeroExV2Adapter}}'),
+};
+
 // Core
 export let dispatcherAddress = Address.fromString('{{dispatcher}}');
-export let fundDeployerAddress = Address.fromString('{{fundDeployer}}');
-export let vaultLibAddress = Address.fromString('{{vaultLib}}');
-export let comptrollerLibAddress = Address.fromString('{{comptrollerLib}}');
-export let valueInterpreterAddress = Address.fromString('{{valueInterpreter}}');
-export let integrationManagerAddress = Address.fromString('{{integrationManager}}');
-export let policyManagerAddress = Address.fromString('{{policyManager}}');
-export let feeManagerAddress = Address.fromString('{{feeManager}}');
-
-// Prices
-export let aggregatedDerivativePriceFeedAddress = Address.fromString('{{aggregatedDerivativePriceFeed}}');
-export let chainlinkPriceFeedAddress = Address.fromString('{{chainlinkPriceFeed}}');
-
-// Derivative Price Feeds
-export let aavePriceFeedAddress = Address.fromString('{{aavePriceFeed}}');
-export let alphaHomoraV1PriceFeedAddress = Address.fromString('{{alphaHomoraV1PriceFeed}}');
-export let chaiPriceFeedAddress = Address.fromString('{{chaiPriceFeed}}');
-export let compoundPriceFeedAddress = Address.fromString('{{compoundPriceFeed}}');
-export let curvePriceFeedAddress = Address.fromString('{{curvePriceFeed}}');
-export let idlePriceFeedAddress = Address.fromString('{{idlePriceFeed}}');
-export let lidoStethPriceFeedAddress = Address.fromString('{{lidoStethPriceFeed}}');
-export let stakehoundEthPriceFeedAddress = Address.fromString('{{stakehoundEthPriceFeed}}');
-export let synthetixPriceFeedAddress = Address.fromString('{{synthetixPriceFeed}}');
-export let uniswapV2PoolPriceFeedAddress = Address.fromString('{{uniswapV2PoolPriceFeed}}');
-export let wdgldPriceFeedAddress = Address.fromString('{{wdgldPriceFeed}}');
-
-// Peripheral
-export let fundActionsWrapperAddress = Address.fromString('{{fundActionsWrapper}}');
-export let authUserExecutedSharesRequestorFactoryAddress = Address.fromString(
-  '{{authUserExecutedSharesRequestorFactory}}',
-);
-
-// Fees
-export let managementFeeAddress = Address.fromString('{{managementFee}}');
-export let performanceFeeAddress = Address.fromString('{{performanceFee}}');
-export let entranceRateBurnFeeAddress = Address.fromString('{{entranceRateBurnFee}}');
-export let entranceRateDirectFeeAddress = Address.fromString('{{entranceRateDirectFee}}');
-
-// Policies
-export let adapterBlacklistAddress = Address.fromString('{{adapterBlacklist}}');
-export let adapterWhitelistAddress = Address.fromString('{{adapterWhitelist}}');
-export let assetBlacklistAddress = Address.fromString('{{assetBlacklist}}');
-export let assetWhitelistAddress = Address.fromString('{{assetWhitelist}}');
-export let investorWhitelistAddress = Address.fromString('{{investorWhitelist}}');
-export let guaranteedRedemptionAddress = Address.fromString('{{guaranteedRedemption}}');
-export let maxConcentrationAddress = Address.fromString('{{maxConcentration}}');
-export let minMaxInvestmentAddress = Address.fromString('{{minMaxInvestment}}');
-export let buySharesCallerWhitelistAddress = Address.fromString('{{buySharesCallerWhitelist}}');
-
-// Adapters
-export let aaveAdapterAddress = Address.fromString('{{aaveAdapter}}');
-export let alphaHomoraV1AdapterAddress = Address.fromString('{{alphaHomoraV1Adapter}}');
-export let chaiAdapterAddress = Address.fromString('{{chaiAdapter}}');
-export let compoundAdapterAddress = Address.fromString('{{compoundAdapter}}');
-export let curveExchangeAdapterAddress = Address.fromString('{{curveExchangeAdapter}}');
-export let curveLiquidityAaveAdapterAddress = Address.fromString('{{curveLiquidityAaveAdapter}}');
-export let curveLiquiditySethAdapterAddress = Address.fromString('{{curveLiquiditySethAdapter}}');
-export let curveLiquidityStethAdapterAddress = Address.fromString('{{curveLiquidityStethAdapter}}');
-export let idleAdapterAddress = Address.fromString('{{idleAdapter}}');
-export let kyberAdapterAddress = Address.fromString('{{kyberAdapter}}');
-export let paraSwapAdapterAddress = Address.fromString('{{paraSwapAdapter}}');
-export let paraSwapV4AdapterAddress = Address.fromString('{{paraSwapV4Adapter}}');
-export let synthetixAdapterAddress = Address.fromString('{{synthetixAdapter}}');
-export let trackedAssetsAdapterAddress = Address.fromString('{{trackedAssetsAdapter}}');
-export let uniswapV2AdapterAddress = Address.fromString('{{uniswapV2Adapter}}');
-export let zeroExV2AdapterAddress = Address.fromString('{{zeroExV2Adapter}}');
 
 // External
 export let wethTokenAddress = Address.fromString('{{wethToken}}');

@@ -3,8 +3,12 @@ description: Enzyme Finance
 repository: https://github.com/enzymefinance/subgraph
 schema:
   file: ./schema.graphql
-features:
-  - nonFatalErrors
+# graft:
+#   base: QmPzMXZBUdUiCwynwpPFw7jKTbp97Xf1ZKXGQ348Hsz5pB
+#   block: 12399536
+# features:
+#   - nonFatalErrors
+
 
 dataSources:
   - name: DispatcherDataSource
@@ -53,12 +57,15 @@ dataSources:
         - event: VaultProxyDeployed(indexed address,indexed address,address,indexed address,address,string)
           handler: handleVaultProxyDeployed
 
-  - name: FundDeployerDataSource
+# Release specific contracts
+# {{#each releases}}
+# Release: {{id}}
+  - name: FundDeployerDataSource{{id}}
     kind: ethereum/contract
     network: {{networkName}}
     source:
-      address: '{{fundDeployer}}'
       abi: FundDeployerContract
+      address: '{{fundDeployer}}'
       startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
@@ -93,12 +100,12 @@ dataSources:
         - event: VaultCallRegistered(indexed address,bytes4)
           handler: handleVaultCallRegistered
 
-  - name: FeeManagerDataSource
+  - name: FeeManagerDataSource{{id}}
     kind: ethereum/contract
     network: {{networkName}}
     source:
-      address: '{{feeManager}}'
       abi: FeeManagerContract
+      address: '{{feeManager}}'
       startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
@@ -121,6 +128,8 @@ dataSources:
           file: ./src/utils/abis/ERC20SymbolBytes.json
         - name: IFeeInterface
           file: ./node_modules/@enzymefinance/protocol/artifacts/IFee.json
+        - name: ManagementFeeContract
+          file: ./node_modules/@enzymefinance/protocol/artifacts/ManagementFee.json
         - name: PerformanceFeeContract
           file: ./node_modules/@enzymefinance/protocol/artifacts/PerformanceFee.json
         - name: FundActionsWrapperContract
@@ -141,12 +150,12 @@ dataSources:
         - event: SharesOutstandingPaidForFund(indexed address,indexed address,uint256)
           handler: handleSharesOutstandingPaidForFund
 
-  - name: ManagementFeeDataSource
+  - name: ManagementFeeDataSource{{id}}
     kind: ethereum/contract
     network: {{networkName}}
     source:
-      address: '{{managementFee}}'
       abi: ManagementFeeContract
+      address: '{{managementFee}}'
       startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
@@ -171,18 +180,20 @@ dataSources:
           file: ./src/utils/abis/ERC20SymbolBytes.json
         - name: IFeeInterface
           file: ./node_modules/@enzymefinance/protocol/artifacts/IFee.json
+        - name: ManagementFeeContract
+          file: ./node_modules/@enzymefinance/protocol/artifacts/ManagementFee.json
       eventHandlers:
         - event: FundSettingsAdded(indexed address,uint256)
           handler: handleFundSettingsAdded
         - event: Settled(indexed address,uint256,uint256)
           handler: handleSettled
 
-  - name: PerformanceFeeDataSource
+  - name: PerformanceFeeDataSource{{id}}
     kind: ethereum/contract
     network: {{networkName}}
     source:
-      address: '{{performanceFee}}'
       abi: PerformanceFeeContract
+      address: '{{performanceFee}}'
       startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
@@ -193,6 +204,8 @@ dataSources:
       abis:
         - name: PerformanceFeeContract
           file: ./node_modules/@enzymefinance/protocol/artifacts/PerformanceFee.json
+        - name: ManagementFeeContract
+          file: ./node_modules/@enzymefinance/protocol/artifacts/ManagementFee.json
         - name: FeeManagerContract
           file: ./node_modules/@enzymefinance/protocol/artifacts/FeeManager.json
         - name: VaultLibContract
@@ -211,12 +224,12 @@ dataSources:
         - event: PerformanceUpdated(indexed address,uint256,uint256,int256)
           handler: handlePerformanceUpdated
 
-  - name: EntranceRateDirectFeeDataSource
+  - name: EntranceRateDirectFeeDataSource{{id}}
     kind: ethereum/contract
     network: {{networkName}}
     source:
-      address: '{{entranceRateDirectFee}}'
       abi: EntranceRateDirectFeeContract
+      address: '{{entranceRateDirectFee}}'
       startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
@@ -241,18 +254,20 @@ dataSources:
           file: ./src/utils/abis/ERC20SymbolBytes.json
         - name: IFeeInterface
           file: ./node_modules/@enzymefinance/protocol/artifacts/IFee.json
+        - name: ManagementFeeContract
+          file: ./node_modules/@enzymefinance/protocol/artifacts/ManagementFee.json
       eventHandlers:
         - event: FundSettingsAdded(indexed address,uint256)
           handler: handleFundSettingsAdded
         - event: Settled(indexed address,indexed address,uint256)
           handler: handleSettled
 
-  - name: EntranceRateBurnFeeDataSource
+  - name: EntranceRateBurnFeeDataSource{{id}}
     kind: ethereum/contract
     network: {{networkName}}
     source:
-      address: '{{entranceRateBurnFee}}'
       abi: EntranceRateBurnFeeContract
+      address: '{{entranceRateBurnFee}}'
       startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
@@ -277,18 +292,20 @@ dataSources:
           file: ./src/utils/abis/ERC20SymbolBytes.json
         - name: IFeeInterface
           file: ./node_modules/@enzymefinance/protocol/artifacts/IFee.json
+        - name: ManagementFeeContract
+          file: ./node_modules/@enzymefinance/protocol/artifacts/ManagementFee.json
       eventHandlers:
         - event: FundSettingsAdded(indexed address,uint256)
           handler: handleFundSettingsAdded
         - event: Settled(indexed address,indexed address,uint256)
           handler: handleSettled
 
-  - name: PolicyManagerDataSource
+  - name: PolicyManagerDataSource{{id}}
     kind: ethereum/contract
     network: {{networkName}}
     source:
-      address: '{{policyManager}}'
       abi: PolicyManagerContract
+      address: '{{policyManager}}'
       startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
@@ -311,6 +328,8 @@ dataSources:
           file: ./src/utils/abis/ERC20SymbolBytes.json
         - name: IPolicyInterface
           file: ./node_modules/@enzymefinance/protocol/artifacts/IPolicy.json
+        - name: MinMaxInvestmentContract
+          file: ./node_modules/@enzymefinance/protocol/artifacts/MinMaxInvestment.json
       eventHandlers:
         - event: PolicyDeregistered(indexed address,indexed string)
           handler: handlePolicyDeregistered
@@ -321,12 +340,12 @@ dataSources:
         - event: PolicyRegistered(indexed address,indexed string,uint8[])
           handler: handlePolicyRegistered
 
-  - name: AdapterBlacklistDataSource
+  - name: AdapterBlacklistDataSource{{id}}
     kind: ethereum/contract
     network: {{networkName}}
     source:
-      address: '{{adapterBlacklist}}'
       abi: AdapterBlacklistContract
+      address: '{{adapterBlacklist}}'
       startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
@@ -341,18 +360,22 @@ dataSources:
           file: ./node_modules/@enzymefinance/protocol/artifacts/VaultLib.json
         - name: ComptrollerLibContract
           file: ./node_modules/@enzymefinance/protocol/artifacts/ComptrollerLib.json
+        - name: MinMaxInvestmentContract
+          file: ./node_modules/@enzymefinance/protocol/artifacts/MinMaxInvestment.json
+        - name: PolicyManagerContract
+          file: ./node_modules/@enzymefinance/protocol/artifacts/PolicyManager.json
       eventHandlers:
         - event: AddressesAdded(indexed address,address[])
           handler: handleAddressesAdded
         - event: AddressesRemoved(indexed address,address[])
           handler: handleAddressesRemoved
 
-  - name: AdapterWhitelistDataSource
+  - name: AdapterWhitelistDataSource{{id}}
     kind: ethereum/contract
     network: {{networkName}}
     source:
-      address: '{{adapterWhitelist}}'
       abi: AdapterWhitelistContract
+      address: '{{adapterWhitelist}}'
       startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
@@ -369,18 +392,22 @@ dataSources:
           file: ./node_modules/@enzymefinance/protocol/artifacts/VaultLib.json
         - name: ComptrollerLibContract
           file: ./node_modules/@enzymefinance/protocol/artifacts/ComptrollerLib.json
+        - name: MinMaxInvestmentContract
+          file: ./node_modules/@enzymefinance/protocol/artifacts/MinMaxInvestment.json
+        - name: PolicyManagerContract
+          file: ./node_modules/@enzymefinance/protocol/artifacts/PolicyManager.json
       eventHandlers:
         - event: AddressesAdded(indexed address,address[])
           handler: handleAddressesAdded
         - event: AddressesRemoved(indexed address,address[])
           handler: handleAddressesRemoved
 
-  - name: AssetWhitelistDataSource
+  - name: AssetWhitelistDataSource{{id}}
     kind: ethereum/contract
     network: {{networkName}}
     source:
-      address: '{{assetWhitelist}}'
       abi: AssetWhitelistContract
+      address: '{{assetWhitelist}}'
       startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
@@ -395,18 +422,22 @@ dataSources:
           file: ./node_modules/@enzymefinance/protocol/artifacts/VaultLib.json
         - name: ComptrollerLibContract
           file: ./node_modules/@enzymefinance/protocol/artifacts/ComptrollerLib.json
+        - name: MinMaxInvestmentContract
+          file: ./node_modules/@enzymefinance/protocol/artifacts/MinMaxInvestment.json
+        - name: PolicyManagerContract
+          file: ./node_modules/@enzymefinance/protocol/artifacts/PolicyManager.json
       eventHandlers:
         - event: AddressesAdded(indexed address,address[])
           handler: handleAddressesAdded
         - event: AddressesRemoved(indexed address,address[])
           handler: handleAddressesRemoved
 
-  - name: AssetBlacklistDataSource
+  - name: AssetBlacklistDataSource{{id}}
     kind: ethereum/contract
     network: {{networkName}}
     source:
-      address: '{{assetBlacklist}}'
       abi: AssetBlacklistContract
+      address: '{{assetBlacklist}}'
       startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
@@ -421,18 +452,22 @@ dataSources:
           file: ./node_modules/@enzymefinance/protocol/artifacts/VaultLib.json
         - name: ComptrollerLibContract
           file: ./node_modules/@enzymefinance/protocol/artifacts/ComptrollerLib.json
+        - name: MinMaxInvestmentContract
+          file: ./node_modules/@enzymefinance/protocol/artifacts/MinMaxInvestment.json
+        - name: PolicyManagerContract
+          file: ./node_modules/@enzymefinance/protocol/artifacts/PolicyManager.json
       eventHandlers:
         - event: AddressesAdded(indexed address,address[])
           handler: handleAddressesAdded
         - event: AddressesRemoved(indexed address,address[])
           handler: handleAddressesRemoved
 
-  - name: BuySharesCallerWhitelistDataSource
+  - name: BuySharesCallerWhitelistDataSource{{id}}
     kind: ethereum/contract
     network: {{networkName}}
     source:
-      address: '{{buySharesCallerWhitelist}}'
       abi: BuySharesCallerWhitelistContract
+      address: '{{buySharesCallerWhitelist}}'
       startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
@@ -447,18 +482,22 @@ dataSources:
           file: ./node_modules/@enzymefinance/protocol/artifacts/VaultLib.json
         - name: ComptrollerLibContract
           file: ./node_modules/@enzymefinance/protocol/artifacts/ComptrollerLib.json
+        - name: MinMaxInvestmentContract
+          file: ./node_modules/@enzymefinance/protocol/artifacts/MinMaxInvestment.json
+        - name: PolicyManagerContract
+          file: ./node_modules/@enzymefinance/protocol/artifacts/PolicyManager.json
       eventHandlers:
         - event: AddressesAdded(indexed address,address[])
           handler: handleAddressesAdded
         - event: AddressesRemoved(indexed address,address[])
           handler: handleAddressesRemoved
 
-  - name: GuaranteedRedemptionDataSource
+  - name: GuaranteedRedemptionDataSource{{id}}
     kind: ethereum/contract
     network: {{networkName}}
     source:
-      address: '{{guaranteedRedemption}}'
       abi: GuaranteedRedemptionContract
+      address: '{{guaranteedRedemption}}'
       startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
@@ -473,6 +512,16 @@ dataSources:
           file: ./node_modules/@enzymefinance/protocol/artifacts/VaultLib.json
         - name: ComptrollerLibContract
           file: ./node_modules/@enzymefinance/protocol/artifacts/ComptrollerLib.json
+        - name: MinMaxInvestmentContract
+          file: ./node_modules/@enzymefinance/protocol/artifacts/MinMaxInvestment.json
+        - name: PolicyManagerContract
+          file: ./node_modules/@enzymefinance/protocol/artifacts/PolicyManager.json
+        - name: ERC20Contract
+          file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json
+        - name: ERC20NameBytesContract
+          file: ./src/utils/abis/ERC20NameBytes.json
+        - name: ERC20SymbolBytesContract
+          file: ./src/utils/abis/ERC20SymbolBytes.json          
       eventHandlers:
         - event: AdapterAdded(address)
           handler: handleAdapterAdded
@@ -483,12 +532,12 @@ dataSources:
         - event: RedemptionWindowBufferSet(uint256,uint256)
           handler: handleRedemptionWindowBufferSet
 
-  - name: InvestorWhitelistDataSource
+  - name: InvestorWhitelistDataSource{{id}}
     kind: ethereum/contract
-    network: {{networkName}}
+    network: '{{networkName}}'
     source:
-      address: '{{investorWhitelist}}'
       abi: InvestorWhitelistContract
+      address: '{{investorWhitelist}}'
       startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
@@ -503,18 +552,22 @@ dataSources:
           file: ./node_modules/@enzymefinance/protocol/artifacts/VaultLib.json
         - name: ComptrollerLibContract
           file: ./node_modules/@enzymefinance/protocol/artifacts/ComptrollerLib.json
+        - name: MinMaxInvestmentContract
+          file: ./node_modules/@enzymefinance/protocol/artifacts/MinMaxInvestment.json
+        - name: PolicyManagerContract
+          file: ./node_modules/@enzymefinance/protocol/artifacts/PolicyManager.json
       eventHandlers:
         - event: AddressesAdded(indexed address,address[])
           handler: handleAddressesAdded
         - event: AddressesRemoved(indexed address,address[])
           handler: handleAddressesRemoved
 
-  - name: MaxConcentrationDataSource
+  - name: MaxConcentrationDataSource{{id}}
     kind: ethereum/contract
     network: {{networkName}}
     source:
-      address: '{{maxConcentration}}'
       abi: MaxConcentrationContract
+      address: '{{maxConcentration}}'
       startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
@@ -529,16 +582,20 @@ dataSources:
           file: ./node_modules/@enzymefinance/protocol/artifacts/VaultLib.json
         - name: ComptrollerLibContract
           file: ./node_modules/@enzymefinance/protocol/artifacts/ComptrollerLib.json
+        - name: MinMaxInvestmentContract
+          file: ./node_modules/@enzymefinance/protocol/artifacts/MinMaxInvestment.json
+        - name: PolicyManagerContract
+          file: ./node_modules/@enzymefinance/protocol/artifacts/PolicyManager.json
       eventHandlers:
         - event: MaxConcentrationSet(indexed address,uint256)
           handler: handleMaxConcentrationSet
 
-  - name: MinMaxInvestmentDataSource
+  - name: MinMaxInvestmentDataSource{{id}}
     kind: ethereum/contract
     network: {{networkName}}
     source:
-      address: '{{minMaxInvestment}}'
       abi: MinMaxInvestmentContract
+      address: '{{minMaxInvestment}}'
       startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
@@ -553,16 +610,24 @@ dataSources:
           file: ./node_modules/@enzymefinance/protocol/artifacts/VaultLib.json
         - name: ComptrollerLibContract
           file: ./node_modules/@enzymefinance/protocol/artifacts/ComptrollerLib.json
+        - name: PolicyManagerContract
+          file: ./node_modules/@enzymefinance/protocol/artifacts/PolicyManager.json
+        - name: ERC20Contract
+          file: ./node_modules/@openzeppelin/contracts/build/contracts/ERC20.json
+        - name: ERC20NameBytesContract
+          file: ./src/utils/abis/ERC20NameBytes.json
+        - name: ERC20SymbolBytesContract
+          file: ./src/utils/abis/ERC20SymbolBytes.json
       eventHandlers:
         - event: FundSettingsSet(indexed address,uint256,uint256)
           handler: handleFundSettingsSet
 
-  - name: IntegrationManagerDataSource
+  - name: IntegrationManagerDataSource{{id}}
     kind: ethereum/contract
     network: {{networkName}}
     source:
-      address: '{{integrationManager}}'
       abi: IntegrationManagerContract
+      address: '{{integrationManager}}'
       startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
@@ -585,6 +650,8 @@ dataSources:
           file: ./src/utils/abis/ERC20SymbolBytes.json
         - name: IIntegrationAdapterInterface
           file: ./node_modules/@enzymefinance/protocol/artifacts/IIntegrationAdapter.json
+        - name: CompoundAdapter
+          file: ./node_modules/@enzymefinance/protocol/artifacts/CompoundAdapter.json
         - name: FundActionsWrapperContract
           file: ./node_modules/@enzymefinance/protocol/artifacts/FundActionsWrapper.json
       eventHandlers:
@@ -599,12 +666,12 @@ dataSources:
         - event: CallOnIntegrationExecutedForFund(indexed address,address,address,indexed address,indexed bytes4,bytes,address[],uint256[],address[],uint256[])
           handler: handleCallOnIntegrationExecutedForFund
 
-  - name: AuthUserExecutedSharesRequestorFactoryDataSource
+  - name: AuthUserExecutedSharesRequestorFactoryDataSource{{id}}
     kind: ethereum/contract
-    network: {{networkName}}
+    network: '{{networkName}}'
     source:
-      address: '{{authUserExecutedSharesRequestorFactory}}'
       abi: AuthUserExecutedSharesRequestorFactoryContract
+      address: '{{authUserExecutedSharesRequestorFactory}}'
       startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
@@ -623,12 +690,12 @@ dataSources:
         - event: SharesRequestorProxyDeployed(indexed address,address)
           handler: handleSharesRequestorProxyDeployed
 
-  - name: ChainlinkPriceFeedDataSource
+  - name: ChainlinkPriceFeedDataSource{{id}}
     kind: ethereum/contract
     network: {{networkName}}
     source:
-      address: '{{chainlinkPriceFeed}}'
       abi: ChainlinkPriceFeedContract
+      address: '{{chainlinkPriceFeed}}'
       startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
@@ -665,12 +732,12 @@ dataSources:
         - event: PrimitiveUpdated(indexed address,address,address)
           handler: handlePrimitiveUpdated
 
-  - name: AggregatedDerivativePriceFeedDataSource
+  - name: AggregatedDerivativePriceFeedDataSource{{id}}
     kind: ethereum/contract
     network: {{networkName}}
     source:
-      address: '{{aggregatedDerivativePriceFeed}}'
       abi: AggregatedDerivativePriceFeedContract
+      address: '{{aggregatedDerivativePriceFeed}}'
       startBlock: {{startBlock}}
     mapping:
       kind: ethereum/events
@@ -726,6 +793,7 @@ dataSources:
           handler: handleDerivativeRemoved
         - event: DerivativeUpdated(indexed address,address,address)
           handler: handleDerivativeUpdated
+# {{/each}}
 
 templates:
   - name: VaultLibDataSource

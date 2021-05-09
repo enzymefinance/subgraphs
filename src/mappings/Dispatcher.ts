@@ -1,5 +1,7 @@
+import { Address, DataSourceContext } from '@graphprotocol/graph-ts';
 import { zeroAddress } from '../constants';
 import { ensureManager } from '../entities/Account';
+import { ensureComptrollerProxy } from '../entities/ComptrollerProxy';
 import { useFund } from '../entities/Fund';
 import { ensureMigration, generateMigrationId, useMigration } from '../entities/Migration';
 import { ensureNetwork } from '../entities/Network';
@@ -33,6 +35,7 @@ import {
   SharesTokenSymbolSetEvent,
   VaultProxyDeployedEvent,
 } from '../generated/schema';
+import { ComptrollerLibDataSource } from '../generated/templates';
 import { genericId } from '../utils/genericId';
 
 export function handleCurrentFundDeployerSet(event: CurrentFundDeployerSet): void {
@@ -82,6 +85,11 @@ export function handleMigrationCancelled(event: MigrationCancelled): void {
 
   migration.cancelled = true;
   migration.save();
+
+  let comptrollerProxy = ensureComptrollerProxy(Address.fromString(migration.nextAccessor), event);
+  comptrollerProxy.fund = null;
+  comptrollerProxy.status = 'FREE';
+  comptrollerProxy.save();
 }
 
 export function handleMigrationExecuted(event: MigrationExecuted): void {
@@ -103,20 +111,44 @@ export function handleMigrationExecuted(event: MigrationExecuted): void {
   migrationExecution.save();
 
   let fund = useFund(event.params.vaultProxy.toHex());
+  let prevAccessor = fund.accessor;
   fund.release = ensureRelease(event.params.nextFundDeployer.toHex(), event).id;
-  fund.accessor = migration.nextAccessor;
+  fund.accessor = ensureComptrollerProxy(Address.fromString(migration.nextAccessor), event).id;
+  fund.save();
 
   migration.executed = true;
   migration.save();
+
+  // start monitoring the Comptroller Proxy
+  let comptrollerContext = new DataSourceContext();
+  comptrollerContext.setString('vaultProxy', event.params.vaultProxy.toHex());
+  ComptrollerLibDataSource.createWithContext(event.params.nextVaultAccessor, comptrollerContext);
+
+  let comptrollerProxy = ensureComptrollerProxy(Address.fromString(migration.nextAccessor), event);
+  comptrollerProxy.activationTime = event.block.timestamp;
+  comptrollerProxy.status = 'COMMITTED';
+  comptrollerProxy.save();
+
+  let prevComptrollerProxy = ensureComptrollerProxy(Address.fromString(prevAccessor), event);
+  prevComptrollerProxy.destructionTime = event.block.timestamp;
+  prevComptrollerProxy.status = 'DESTRUCTED';
+  prevComptrollerProxy.save();
 }
 
 export function handleMigrationSignaled(event: MigrationSignaled): void {
+  let fund = useFund(event.params.vaultProxy.toHex());
+
   let migrationSignaling = new MigrationSignaledEvent(genericId(event));
-  migrationSignaling.fund = useFund(event.params.vaultProxy.toHex()).id;
+  migrationSignaling.fund = fund.id;
   migrationSignaling.timestamp = event.block.timestamp;
   migrationSignaling.transaction = ensureTransaction(event).id;
   migrationSignaling.migration = ensureMigration(event).id;
   migrationSignaling.save();
+
+  let comptrollerProxy = ensureComptrollerProxy(event.params.nextVaultAccessor, event);
+  comptrollerProxy.fund = fund.id;
+  comptrollerProxy.status = 'SIGNALLED';
+  comptrollerProxy.save();
 }
 
 export function handleMigrationInCancelHookFailed(event: MigrationInCancelHookFailed): void {
@@ -125,10 +157,12 @@ export function handleMigrationInCancelHookFailed(event: MigrationInCancelHookFa
   cancelHookFailed.timestamp = event.block.timestamp;
   cancelHookFailed.transaction = ensureTransaction(event).id;
 
+  cancelHookFailed.vaultProxy = event.params.vaultProxy.toHex();
   cancelHookFailed.prevFundDeployer = event.params.prevFundDeployer.toHex();
   cancelHookFailed.nextFundDeployer = event.params.nextFundDeployer.toHex();
   cancelHookFailed.nextVaultLib = event.params.nextVaultLib.toHex();
   cancelHookFailed.nextVaultAccessor = event.params.nextVaultAccessor.toHex();
+  cancelHookFailed.failureReturnData = event.params.failureReturnData.toHexString();
   cancelHookFailed.save();
 }
 
@@ -138,10 +172,12 @@ export function handleMigrationOutHookFailed(event: MigrationOutHookFailed): voi
   outHookFailed.timestamp = event.block.timestamp;
   outHookFailed.transaction = ensureTransaction(event).id;
 
+  outHookFailed.vaultProxy = event.params.vaultProxy.toHex();
   outHookFailed.prevFundDeployer = event.params.prevFundDeployer.toHex();
   outHookFailed.nextFundDeployer = event.params.nextFundDeployer.toHex();
   outHookFailed.nextVaultLib = event.params.nextVaultLib.toHex();
   outHookFailed.nextVaultAccessor = event.params.nextVaultAccessor.toHex();
+  outHookFailed.failureReturnData = event.params.failureReturnData.toHexString();
   outHookFailed.save();
 }
 

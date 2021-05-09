@@ -3,7 +3,7 @@ import { ensureAsset } from '../entities/Asset';
 import { createAssetAmount } from '../entities/AssetAmount';
 import { trackCalculationState } from '../entities/CalculationState';
 import { useFund } from '../entities/Fund';
-import { ensureIntegrationAdapter, useIntegrationAdapter } from '../entities/IntegrationAdapter';
+import { ensureIntegrationAdapter } from '../entities/IntegrationAdapter';
 import { trackPortfolioState } from '../entities/PortfolioState';
 import { trackTrade } from '../entities/Trade';
 import { ensureTransaction } from '../entities/Transaction';
@@ -30,7 +30,7 @@ import { genericId } from '../utils/genericId';
 import { toBigDecimal } from '../utils/toBigDecimal';
 
 export function handleAdapterRegistered(event: AdapterRegistered): void {
-  let adapter = ensureIntegrationAdapter(event.params.adapter, event.address);
+  let adapter = ensureIntegrationAdapter(event.params.adapter);
 
   let registration = new AdapterRegisteredEvent(genericId(event));
   registration.timestamp = event.block.timestamp;
@@ -44,7 +44,7 @@ export function handleAdapterDeregistered(event: AdapterDeregistered): void {
   let deregistration = new AdapterDeregisteredEvent(genericId(event));
   deregistration.timestamp = event.block.timestamp;
   deregistration.transaction = ensureTransaction(event).id;
-  deregistration.integrationAdapter = useIntegrationAdapter(event.params.adapter.toHex()).id;
+  deregistration.integrationAdapter = ensureIntegrationAdapter(event.params.adapter).id;
   deregistration.identifier = event.params.identifier.toHex();
   deregistration.save();
 }
@@ -82,7 +82,7 @@ export function handleAuthUserRemovedForFund(event: AuthUserRemovedForFund): voi
 export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationExecutedForFund): void {
   let fund = useFund(event.params.vaultProxy.toHex());
 
-  let adapter = useIntegrationAdapter(event.params.adapter.toHex());
+  let adapter = ensureIntegrationAdapter(event.params.adapter);
   let integrationSelector = event.params.selector.toHexString();
 
   // TODO: fix this (asset amounts and assets don't have to be the same lenght, e.g. approveAssetsTrade)
