@@ -10,13 +10,38 @@ const root = path.join(__dirname, '..');
 
 function loadConfig(context) {
   const cwd = path.resolve(process.cwd());
-  const config = require(path.join(cwd, 'subgraph.config.js'));
-  const abis = ['ERC20', 'ERC20NameBytes', 'ERC20SymbolBytes'].map((name) => ({
-    name: `${name}Contract`,
-    file: path.relative(cwd, path.join(root, `abis/${name}.json`)),
-  }));
 
-  return config(context, abis);
+  function configure(contexts, abis, callback) {
+    const ctx = contexts[context];
+    if (ctx == null) {
+      throw new Error(`Invalid context ${context}. Available contexts: ${Object.keys(contexts).join(', ')}`);
+    }
+
+    const manifest = callback(ctx);
+    const variables = ctx.variables || {};
+    console.log(manifest);
+    process.exit(1);
+  }
+
+  const config = require(path.join(cwd, 'subgraph.config.js'))(configure);
+
+  function resolveAbi(artifact) {
+    const name = path.basename(artifact, '.json');
+
+    return {
+      name: `${name}Contract`,
+      file: path.relative(cwd, require.resolve(artifact)),
+    };
+  }
+
+  const commonAbis = ['ERC20', 'ERC20NameBytes', 'ERC20SymbolBytes'].map((name) => {
+    return resolveAbi(`@enzymefinance/subgraph-utils/abis/${name}.json`);
+  });
+
+  return config(context, {
+    commonAbis,
+    resolveAbi,
+  });
 }
 
 async function generateCode() {

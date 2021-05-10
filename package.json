@@ -3,7 +3,8 @@
   "private": true,
   "workspaces": [
     "subgraphs/*",
-    "utils"
+    "utils",
+    "cli"
   ],
   "scripts": {
     "postinstall": "lerna bootstrap",

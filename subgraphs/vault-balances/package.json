@@ -8,9 +8,8 @@
   },
   "dependencies": {
     "@enzymefinance/protocol": "^2.0.0",
+    "@enzymefinance/subgraph-cli": "^0.0.0",
     "@enzymefinance/subgraph-utils": "^0.0.0",
-    "@graphprotocol/graph-cli": "^0.20.0",
-    "@graphprotocol/graph-ts": "^0.20.0",
-    "@openzeppelin/contracts": "^3.4.1"
+    "@graphprotocol/graph-ts": "^0.20.0"
   }
 }

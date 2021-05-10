@@ -22,11 +22,7 @@ dataSources:
       entities: []
       file: {{file}}
       abis:
-        {{#if abi}}
-        - name: {{name}}Contract
-          file: {{abi}}
-        {{/if}}
-        {{#each abis}}
+        {{#each @root.abis}}
         - name: {{name}}
           file: {{file}}
         {{/each}}
@@ -54,10 +50,6 @@ templates:
       entities: []
       file: {{file}}
       abis:
-        {{#if abi}}
-        - name: {{name}}Contract
-          file: {{abi}}
-        {{/if}}
         {{#each abis}}
         - name: {{name}}
           file: {{file}}
