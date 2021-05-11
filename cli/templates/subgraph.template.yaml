@@ -5,10 +5,10 @@ schema:
 dataSources:
   {{#each sources}}
   - kind: ethereum/contract
-    name: {{name}}DataSource
+    name: {{name}}
     network: {{@root.network}}
     source:
-      abi: {{name}}Contract
+      abi: {{abi}}
       {{#if address}}
       address: '{{{address}}}'
       {{/if}}
@@ -46,10 +46,10 @@ dataSources:
 templates:
   {{#each templates}}
   - kind: ethereum/contract
-    name: {{name}}DataSource
+    name: {{name}}
     network: {{@root.network}}
     source:
-      abi: {{name}}Contract
+      abi: {{abi}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
