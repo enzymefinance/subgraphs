@@ -1,4 +1,6 @@
-import { Configurator, Contexts, Template } from '@enzymefinance/subgraph-cli';
+// @ts-ignore
+import path from 'path';
+import { Configurator, Contexts, Template, EventHandlerDeclaration, AbiDeclaration } from '@enzymefinance/subgraph-cli';
 
 export class ReleaseAddresses {
   fundDeployerAddress: string;
@@ -56,7 +58,7 @@ export class ReleaseAddresses {
 
 interface Variables {
   block: number;
-  dispatcher: string;
+  dispatcherAddress: string;
   releaseA: ReleaseAddresses;
   releaseB: ReleaseAddresses;
 }
@@ -68,7 +70,7 @@ export const contexts: Contexts<Variables> = {
     network: 'kovan',
     variables: {
       block: 24710049,
-      dispatcher: '0xC3DC853dD716bd5754f421ef94fdCbac3902ab32',
+      dispatcherAddress: '0xC3DC853dD716bd5754f421ef94fdCbac3902ab32',
       releaseA: {
         fundDeployerAddress: '0x9134C9975244b46692Ad9A7Da36DBa8734Ec6DA3',
         vaultLibAddress: '0xAC3fe07F51C51153E181bE892e4e37326EEA13Da',
@@ -206,7 +208,7 @@ export const contexts: Contexts<Variables> = {
     network: 'kovan',
     variables: {
       block: 24710049,
-      dispatcher: '0xC3DC853dD716bd5754f421ef94fdCbac3902ab32',
+      dispatcherAddress: '0xC3DC853dD716bd5754f421ef94fdCbac3902ab32',
       releaseA: {
         fundDeployerAddress: '0x9134C9975244b46692Ad9A7Da36DBa8734Ec6DA3',
         vaultLibAddress: '0xAC3fe07F51C51153E181bE892e4e37326EEA13Da',
@@ -344,7 +346,7 @@ export const contexts: Contexts<Variables> = {
     network: 'mainnet',
     variables: {
       block: 11636493,
-      dispatcher: '0xC3DC853dD716bd5754f421ef94fdCbac3902ab32',
+      dispatcherAddress: '0xC3DC853dD716bd5754f421ef94fdCbac3902ab32',
       releaseA: {
         fundDeployerAddress: '0x9134C9975244b46692Ad9A7Da36DBa8734Ec6DA3',
         vaultLibAddress: '0xAC3fe07F51C51153E181bE892e4e37326EEA13Da',
@@ -486,104 +488,58 @@ export const templates: Template[] = [
   },
 ];
 
+function abi(file: string): AbiDeclaration {
+  const name = `${path.basename(file, '.json')}Contract`;
+  return { name, file };
+}
+
+function event(event: string): EventHandlerDeclaration {
+  // @ts-ignore
+  const [handler] = event.split('(', 1).map((event) => `handle${event}`);
+  return { event, handler };
+}
+
 export const configure: Configurator<Variables> = (variables) => {
   const abis = [
-    {
-      name: 'ChainlinkAggregatorContract',
-      file: '@chainlink/contracts/abi/v0.6/AggregatorInterface.json',
-    },
-    {
-      name: 'CompoundAdapterContract',
-      file: '@enzymefinance/protocol/artifacts/CompoundAdapter.json',
-    },
-    {
-      name: 'MinMaxInvestmentContract',
-      file: '@enzymefinance/protocol/artifacts/MinMaxInvestment.json',
-    },
-    {
-      name: 'FundActionsWrapperContract',
-      file: '@enzymefinance/protocol/artifacts/FundActionsWrapper.json',
-    },
-    {
-      name: 'IUniswapV2PairContract',
-      file: '@enzymefinance/protocol/artifacts/IUniswapV2Pair.json',
-    },
-    {
-      name: 'ValueInterpreterContract',
-      file: '@enzymefinance/protocol/artifacts/ValueInterpreter.json',
-    },
-    {
-      name: 'IUniswapV2PairContract',
-      file: '@enzymefinance/protocol/artifacts/IUniswapV2Pair.json',
-    },
-    {
-      name: 'ICERC20Contract',
-      file: '@enzymefinance/protocol/artifacts/ICERC20.json',
-    },
-    {
-      name: 'AavePriceFeedContract',
-      file: '@enzymefinance/protocol/artifacts/AavePriceFeed.json',
-    },
-    {
-      name: 'AlphaHomoraV1PriceFeedContract',
-      file: '@enzymefinance/protocol/artifacts/AlphaHomoraV1PriceFeed.json',
-    },
-    {
-      name: 'ChaiPriceFeedContract',
-      file: '@enzymefinance/protocol/artifacts/ChaiPriceFeed.json',
-    },
-    {
-      name: 'CompoundPriceFeedContract',
-      file: '@enzymefinance/protocol/artifacts/CompoundPriceFeed.json',
-    },
-    {
-      name: 'CurvePriceFeedContract',
-      file: '@enzymefinance/protocol/artifacts/CurvePriceFeed.json',
-    },
-    {
-      name: 'ICurveAddressProviderContract',
-      file: '@enzymefinance/protocol/artifacts/ICurveAddressProvider.json',
-    },
-    {
-      name: 'IdlePriceFeedContract',
-      file: '@enzymefinance/protocol/artifacts/IdlePriceFeed.json',
-    },
-    {
-      name: 'StakehoundEthPriceFeedContract',
-      file: '@enzymefinance/protocol/artifacts/StakehoundEthPriceFeed.json',
-    },
-    {
-      name: 'SynthetixPriceFeedContract',
-      file: '@enzymefinance/protocol/artifacts/SynthetixPriceFeed.json',
-    },
-    {
-      name: 'UniswapV2PoolPriceFeedContract',
-      file: '@enzymefinance/protocol/artifacts/UniswapV2PoolPriceFeed.json',
-    },
-    {
-      name: 'CurveRegistryContract',
-      file: '@enzymefinance/enzyme-core-subgraph/utils/abis/CurveRegistry.json',
-    },
-    {
-      name: 'DispatcherContract',
-      file: '@enzymefinance/protocol/artifacts/Dispatcher.json',
-    },
-    {
-      name: 'FundDeployerContract',
-      file: '@enzymefinance/protocol/artifacts/FundDeployer.json',
-    },
-    {
-      name: 'DispatcherContract',
-      file: '@enzymefinance/protocol/artifacts/Dispatcher.json',
-    },
-    {
-      name: 'DispatcherContract',
-      file: '@enzymefinance/protocol/artifacts/Dispatcher.json',
-    },
-    {
-      name: 'DispatcherContract',
-      file: '@enzymefinance/protocol/artifacts/Dispatcher.json',
-    },
+    abi('@chainlink/contracts/abi/v0.6/AggregatorInterface.json'),
+    abi('@enzymefinance/enzyme-core-subgraph/utils/abis/CurveRegistry.json'),
+    abi('@enzymefinance/protocol/artifacts/CompoundAdapter.json'),
+    abi('@enzymefinance/protocol/artifacts/MinMaxInvestment.json'),
+    abi('@enzymefinance/protocol/artifacts/FundActionsWrapper.json'),
+    abi('@enzymefinance/protocol/artifacts/IUniswapV2Pair.json'),
+    abi('@enzymefinance/protocol/artifacts/ValueInterpreter.json'),
+    abi('@enzymefinance/protocol/artifacts/IUniswapV2Pair.json'),
+    abi('@enzymefinance/protocol/artifacts/ICERC20.json'),
+    abi('@enzymefinance/protocol/artifacts/AavePriceFeed.json'),
+    abi('@enzymefinance/protocol/artifacts/AlphaHomoraV1PriceFeed.json'),
+    abi('@enzymefinance/protocol/artifacts/ChaiPriceFeed.json'),
+    abi('@enzymefinance/protocol/artifacts/CompoundPriceFeed.json'),
+    abi('@enzymefinance/protocol/artifacts/CurvePriceFeed.json'),
+    abi('@enzymefinance/protocol/artifacts/ICurveAddressProvider.json'),
+    abi('@enzymefinance/protocol/artifacts/IdlePriceFeed.json'),
+    abi('@enzymefinance/protocol/artifacts/StakehoundEthPriceFeed.json'),
+    abi('@enzymefinance/protocol/artifacts/SynthetixPriceFeed.json'),
+    abi('@enzymefinance/protocol/artifacts/UniswapV2PoolPriceFeed.json'),
+    abi('@enzymefinance/protocol/artifacts/Dispatcher.json'),
+    abi('@enzymefinance/protocol/artifacts/FundDeployer.json'),
+    abi('@enzymefinance/protocol/artifacts/FeeManager.json'),
+    abi('@enzymefinance/protocol/artifacts/EntranceRateDirectFee.json'),
+    abi('@enzymefinance/protocol/artifacts/EntranceRateBurnFee.json'),
+    abi('@enzymefinance/protocol/artifacts/ManagementFee.json'),
+    abi('@enzymefinance/protocol/artifacts/PerformanceFee.json'),
+    abi('@enzymefinance/protocol/artifacts/IntegrationManager.json'),
+    abi('@enzymefinance/protocol/artifacts/PolicyManager.json'),
+    abi('@enzymefinance/protocol/artifacts/AdapterBlacklist.json'),
+    abi('@enzymefinance/protocol/artifacts/AdapterWhitelist.json'),
+    abi('@enzymefinance/protocol/artifacts/AssetBlacklist.json'),
+    abi('@enzymefinance/protocol/artifacts/AssetWhitelist.json'),
+    abi('@enzymefinance/protocol/artifacts/GuaranteedRedemption.json'),
+    abi('@enzymefinance/protocol/artifacts/InvestorWhitelist.json'),
+    abi('@enzymefinance/protocol/artifacts/MaxConcentration.json'),
+    abi('@enzymefinance/protocol/artifacts/AggregatedDerivativePriceFeed.json'),
+    abi('@enzymefinance/protocol/artifacts/ChainlinkPriceFeed.json'),
+    abi('@enzymefinance/protocol/artifacts/VaultLib.json'),
+    abi('@enzymefinance/protocol/artifacts/ComptrollerLib.json'),
   ];
 
   const dispatcher = {
@@ -591,60 +547,21 @@ export const configure: Configurator<Variables> = (variables) => {
     abi: 'DispatcherContract',
     file: 'mappings/Dispatcher.ts',
     block: variables.block,
-    address: variables.dispatcher,
+    address: variables.dispatcherAddress,
     events: [
-      {
-        event: 'VaultProxyDeployed(indexed address,indexed address,address,indexed address,address,string)',
-        handler: 'handleVaultProxyDeployed',
-      },
-      {
-        event: 'CurrentFundDeployerSet(address,address)',
-        handler: 'handleCurrentFundDeployerSet',
-      },
-      {
-        event: 'MigrationCancelled(indexed address,indexed address,indexed address,address,address,uint256)',
-        handler: 'handleMigrationCancelled',
-      },
-      {
-        event: 'MigrationExecuted(indexed address,indexed address,indexed address,address,address,uint256)',
-        handler: 'handleMigrationExecuted',
-      },
-      {
-        event: 'MigrationSignaled(indexed address,indexed address,indexed address,address,address,uint256)',
-        handler: 'handleMigrationSignaled',
-      },
-      {
-        event: 'MigrationInCancelHookFailed(bytes,indexed address,indexed address,indexed address,address,address)',
-        handler: 'handleMigrationInCancelHookFailed',
-      },
-      {
-        event: 'MigrationOutHookFailed(bytes,uint8,indexed address,indexed address,indexed address,address,address)',
-        handler: 'handleMigrationOutHookFailed',
-      },
-      {
-        event: 'MigrationTimelockSet(uint256,uint256)',
-        handler: 'handleMigrationTimelockSet',
-      },
-      {
-        event: 'NominatedOwnerRemoved(indexed address)',
-        handler: 'handleNominatedOwnerRemoved',
-      },
-      {
-        event: 'NominatedOwnerSet(indexed address)',
-        handler: 'handleNominatedOwnerSet',
-      },
-      {
-        event: 'OwnershipTransferred(indexed address,indexed address)',
-        handler: 'handleOwnershipTransferred',
-      },
-      {
-        event: 'SharesTokenSymbolSet(string)',
-        handler: 'handleSharesTokenSymbolSet',
-      },
-      {
-        event: 'VaultProxyDeployed(indexed address,indexed address,address,indexed address,address,string)',
-        handler: 'handleVaultProxyDeployed',
-      },
+      event('VaultProxyDeployed(indexed address,indexed address,address,indexed address,address,string)'),
+      event('CurrentFundDeployerSet(address,address)'),
+      event('MigrationCancelled(indexed address,indexed address,indexed address,address,address,uint256)'),
+      event('MigrationExecuted(indexed address,indexed address,indexed address,address,address,uint256)'),
+      event('MigrationSignaled(indexed address,indexed address,indexed address,address,address,uint256)'),
+      event('MigrationInCancelHookFailed(bytes,indexed address,indexed address,indexed address,address,address)'),
+      event('MigrationOutHookFailed(bytes,uint8,indexed address,indexed address,indexed address,address,address)'),
+      event('MigrationTimelockSet(uint256,uint256)'),
+      event('NominatedOwnerRemoved(indexed address)'),
+      event('NominatedOwnerSet(indexed address)'),
+      event('OwnershipTransferred(indexed address,indexed address)'),
+      event('SharesTokenSymbolSet(string)'),
+      event('VaultProxyDeployed(indexed address,indexed address,address,indexed address,address,string)'),
     ],
   };
 
@@ -656,19 +573,14 @@ export const configure: Configurator<Variables> = (variables) => {
       block: variables.block,
       address: release.fundDeployerAddress,
       events: [
-        { event: 'ComptrollerLibSet(address)', handler: 'handleComptrollerLibSet' },
-        {
-          event: 'ComptrollerProxyDeployed(indexed address,address,indexed address,uint256,bytes,bytes,indexed bool)',
-          handler: 'handleComptrollerProxyDeployed',
-        },
-        {
-          event:
-            'NewFundCreated(indexed address,address,address,indexed address,string,indexed address,uint256,bytes,bytes)',
-          handler: 'handleNewFundCreated',
-        },
-        { event: 'ReleaseStatusSet(indexed uint8,indexed uint8)', handler: 'handleReleaseStatusSet' },
-        { event: 'VaultCallDeregistered(indexed address,bytes4)', handler: 'handleVaultCallDeregistered' },
-        { event: 'VaultCallRegistered(indexed address,bytes4)', handler: 'handleVaultCallRegistered' },
+        event('ComptrollerLibSet(address)'),
+        event('ComptrollerProxyDeployed(indexed address,address,indexed address,uint256,bytes,bytes,indexed bool)'),
+        event(
+          'NewFundCreated(indexed address,address,address,indexed address,string,indexed address,uint256,bytes,bytes)',
+        ),
+        event('ReleaseStatusSet(indexed uint8,indexed uint8)'),
+        event('VaultCallDeregistered(indexed address,bytes4)'),
+        event('VaultCallRegistered(indexed address,bytes4)'),
       ],
     },
     {
@@ -678,25 +590,13 @@ export const configure: Configurator<Variables> = (variables) => {
       block: variables.block,
       address: release.feeManagerAddress,
       events: [
-        {
-          event: 'AllSharesOutstandingForcePaidForFund(indexed address,address,uint256)',
-          handler: 'handleAllSharesOutstandingForcePaidForFund',
-        },
-        { event: 'FeeDeregistered(indexed address,indexed string)', handler: 'handleFeeDeregistered' },
-        { event: 'FeeEnabledForFund(indexed address,indexed address,bytes)', handler: 'handleFeeEnabledForFund' },
-        {
-          event: 'FeeRegistered(indexed address,indexed string,uint8[],uint8[],bool,bool)',
-          handler: 'handleFeeRegistered',
-        },
-        {
-          event: 'FeeSettledForFund(indexed address,indexed address,indexed uint8,address,address,uint256)',
-          handler: 'handleFeeSettledForFund',
-        },
-        { event: 'FeesRecipientSetForFund(indexed address,address,address)', handler: 'handleFeesRecipientSet' },
-        {
-          event: 'SharesOutstandingPaidForFund(indexed address,indexed address,uint256)',
-          handler: 'handleSharesOutstandingPaidForFund',
-        },
+        event('AllSharesOutstandingForcePaidForFund(indexed address,address,uint256)'),
+        event('FeeDeregistered(indexed address,indexed string)'),
+        event('FeeEnabledForFund(indexed address,indexed address,bytes)'),
+        event('FeeRegistered(indexed address,indexed string,uint8[],uint8[],bool,bool)'),
+        event('FeeSettledForFund(indexed address,indexed address,indexed uint8,address,address,uint256)'),
+        event('FeesRecipientSetForFund(indexed address,address,address)'),
+        event('SharesOutstandingPaidForFund(indexed address,indexed address,uint256)'),
       ],
     },
     {
@@ -706,8 +606,8 @@ export const configure: Configurator<Variables> = (variables) => {
       block: variables.block,
       address: release.entranceRateDirectFeeAddress,
       events: [
-        { event: 'FundSettingsAdded(indexed address,uint256)', handler: 'handleFundSettingsAdded' },
-        { event: 'Settled(indexed address,indexed address,uint256)', handler: 'handleSettled' },
+        event('FundSettingsAdded(indexed address,uint256)'),
+        event('Settled(indexed address,indexed address,uint256)'),
       ],
     },
     {
@@ -717,8 +617,8 @@ export const configure: Configurator<Variables> = (variables) => {
       block: variables.block,
       address: release.entranceRateBurnFeeAddress,
       events: [
-        { event: 'FundSettingsAdded(indexed address,uint256)', handler: 'handleFundSettingsAdded' },
-        { event: 'Settled(indexed address,indexed address,uint256)', handler: 'handleSettled' },
+        event('FundSettingsAdded(indexed address,uint256)'),
+        event('Settled(indexed address,indexed address,uint256)'),
       ],
     },
     {
@@ -727,10 +627,7 @@ export const configure: Configurator<Variables> = (variables) => {
       file: 'mappings/ManagementFee.ts',
       block: variables.block,
       address: release.managementFeeAddress,
-      events: [
-        { event: 'FundSettingsAdded(indexed address,uint256)', handler: 'handleFundSettingsAdded' },
-        { event: 'Settled(indexed address,uint256,uint256)', handler: 'handleSettled' },
-      ],
+      events: [event('FundSettingsAdded(indexed address,uint256)'), event('Settled(indexed address,uint256,uint256)')],
     },
     {
       name: `PerformanceFee${index}`,
@@ -739,17 +636,11 @@ export const configure: Configurator<Variables> = (variables) => {
       block: variables.block,
       address: release.performanceFeeAddress,
       events: [
-        { event: 'ActivatedForFund(indexed address,uint256)', handler: 'handleActivatedForFund' },
-        { event: 'FundSettingsAdded(indexed address,uint256,uint256)', handler: 'handleFundSettingsAdded' },
-        {
-          event: 'LastSharePriceUpdated(indexed address,uint256,uint256)',
-          handler: 'handleLastSharePriceUpdated',
-        },
-        { event: 'PaidOut(indexed address,uint256,uint256,uint256)', handler: 'handlePaidOut' },
-        {
-          event: 'PerformanceUpdated(indexed address,uint256,uint256,int256)',
-          handler: 'handlePerformanceUpdated',
-        },
+        event('ActivatedForFund(indexed address,uint256)'),
+        event('FundSettingsAdded(indexed address,uint256,uint256)'),
+        event('LastSharePriceUpdated(indexed address,uint256,uint256)'),
+        event('PaidOut(indexed address,uint256,uint256,uint256)'),
+        event('PerformanceUpdated(indexed address,uint256,uint256,int256)'),
       ],
     },
     {
@@ -759,18 +650,13 @@ export const configure: Configurator<Variables> = (variables) => {
       block: variables.block,
       address: release.integrationManagerAddress,
       events: [
-        { event: 'AdapterDeregistered(indexed address,indexed string)', handler: 'handleAdapterDeregistered' },
-        { event: 'AdapterRegistered(indexed address,indexed string)', handler: 'handleAdapterRegistered' },
-        { event: 'AuthUserAddedForFund(indexed address,indexed address)', handler: 'handleAuthUserAddedForFund' },
-        {
-          event: 'AuthUserRemovedForFund(indexed address,indexed address)',
-          handler: 'handleAuthUserRemovedForFund',
-        },
-        {
-          event:
-            'CallOnIntegrationExecutedForFund(indexed address,address,address,indexed address,indexed bytes4,bytes,address[],uint256[],address[],uint256[])',
-          handler: 'handleCallOnIntegrationExecutedForFund',
-        },
+        event('AdapterDeregistered(indexed address,indexed string)'),
+        event('AdapterRegistered(indexed address,indexed string)'),
+        event('AuthUserAddedForFund(indexed address,indexed address)'),
+        event('AuthUserRemovedForFund(indexed address,indexed address)'),
+        event(
+          'CallOnIntegrationExecutedForFund(indexed address,address,address,indexed address,indexed bytes4,bytes,address[],uint256[],address[],uint256[])',
+        ),
       ],
     },
     {
@@ -780,16 +666,10 @@ export const configure: Configurator<Variables> = (variables) => {
       block: variables.block,
       address: release.policyManagerAddress,
       events: [
-        { event: 'PolicyDeregistered(indexed address,indexed string)', handler: 'handlePolicyDeregistered' },
-        {
-          event: 'PolicyDisabledForFund(indexed address,indexed address)',
-          handler: 'handlePolicyDisabledForFund',
-        },
-        {
-          event: 'PolicyEnabledForFund(indexed address,indexed address,bytes)',
-          handler: 'handlePolicyEnabledForFund',
-        },
-        { event: 'PolicyRegistered(indexed address,indexed string,uint8[])', handler: 'handlePolicyRegistered' },
+        event('PolicyDeregistered(indexed address,indexed string)'),
+        event('PolicyDisabledForFund(indexed address,indexed address)'),
+        event('PolicyEnabledForFund(indexed address,indexed address,bytes)'),
+        event('PolicyRegistered(indexed address,indexed string,uint8[])'),
       ],
     },
     {
@@ -799,8 +679,8 @@ export const configure: Configurator<Variables> = (variables) => {
       block: variables.block,
       address: release.adapterBlacklistAddress,
       events: [
-        { event: 'AddressesAdded(indexed address,address[])', handler: 'handleAddressesAdded' },
-        { event: 'AddressesRemoved(indexed address,address[])', handler: 'handleAddressesRemoved' },
+        event('AddressesAdded(indexed address,address[])'),
+        event('AddressesRemoved(indexed address,address[])'),
       ],
     },
     {
@@ -810,8 +690,8 @@ export const configure: Configurator<Variables> = (variables) => {
       block: variables.block,
       address: release.adapterWhitelistAddress,
       events: [
-        { event: 'AddressesAdded(indexed address,address[])', handler: 'handleAddressesAdded' },
-        { event: 'AddressesRemoved(indexed address,address[])', handler: 'handleAddressesRemoved' },
+        event('AddressesAdded(indexed address,address[])'),
+        event('AddressesRemoved(indexed address,address[])'),
       ],
     },
     {
@@ -821,8 +701,8 @@ export const configure: Configurator<Variables> = (variables) => {
       block: variables.block,
       address: release.assetBlacklistAddress,
       events: [
-        { event: 'AddressesAdded(indexed address,address[])', handler: 'handleAddressesAdded' },
-        { event: 'AddressesRemoved(indexed address,address[])', handler: 'handleAddressesRemoved' },
+        event('AddressesAdded(indexed address,address[])'),
+        event('AddressesRemoved(indexed address,address[])'),
       ],
     },
     {
@@ -832,8 +712,8 @@ export const configure: Configurator<Variables> = (variables) => {
       block: variables.block,
       address: release.assetWhitelistAddress,
       events: [
-        { event: 'AddressesAdded(indexed address,address[])', handler: 'handleAddressesAdded' },
-        { event: 'AddressesRemoved(indexed address,address[])', handler: 'handleAddressesRemoved' },
+        event('AddressesAdded(indexed address,address[])'),
+        event('AddressesRemoved(indexed address,address[])'),
       ],
     },
     {
@@ -843,10 +723,10 @@ export const configure: Configurator<Variables> = (variables) => {
       block: variables.block,
       address: release.guaranteedRedemptionAddress,
       events: [
-        { event: 'AdapterAdded(address)', handler: 'handleAdapterAdded' },
-        { event: 'AdapterRemoved(address)', handler: 'handleAdapterRemoved' },
-        { event: 'FundSettingsSet(indexed address,uint256,uint256)', handler: 'handleFundSettingsSet' },
-        { event: 'RedemptionWindowBufferSet(uint256,uint256)', handler: 'handleRedemptionWindowBufferSet' },
+        event('AdapterAdded(address)'),
+        event('AdapterRemoved(address)'),
+        event('FundSettingsSet(indexed address,uint256,uint256)'),
+        event('RedemptionWindowBufferSet(uint256,uint256)'),
       ],
     },
     {
@@ -856,8 +736,8 @@ export const configure: Configurator<Variables> = (variables) => {
       block: variables.block,
       address: release.investorWhitelistAddress,
       events: [
-        { event: 'AddressesAdded(indexed address,address[])', handler: 'handleAddressesAdded' },
-        { event: 'AddressesRemoved(indexed address,address[])', handler: 'handleAddressesRemoved' },
+        event('AddressesAdded(indexed address,address[])'),
+        event('AddressesRemoved(indexed address,address[])'),
       ],
     },
     {
@@ -866,7 +746,7 @@ export const configure: Configurator<Variables> = (variables) => {
       file: 'mappings/MaxConcentration.ts',
       block: variables.block,
       address: release.maxConcentrationAddress,
-      events: [{ event: 'MaxConcentrationSet(indexed address,uint256)', handler: 'handleMaxConcentrationSet' }],
+      events: [event('MaxConcentrationSet(indexed address,uint256)')],
     },
     {
       name: `MinMaxInvestment${index}`,
@@ -874,7 +754,7 @@ export const configure: Configurator<Variables> = (variables) => {
       file: 'mappings/MinMaxInvestment.ts',
       block: variables.block,
       address: release.minMaxInvestmentAddress,
-      events: [{ event: 'FundSettingsSet(indexed address,uint256,uint256)', handler: 'handleFundSettingsSet' }],
+      events: [event('FundSettingsSet(indexed address,uint256,uint256)')],
     },
     {
       name: `AggregatedDerivativePriceFeed${index}`,
@@ -883,9 +763,9 @@ export const configure: Configurator<Variables> = (variables) => {
       block: variables.block,
       address: release.aggregatedDerivativePriceFeedAddress,
       events: [
-        { event: 'DerivativeAdded(indexed address,address)', handler: 'handleDerivativeAdded' },
-        { event: 'DerivativeRemoved(indexed address)', handler: 'handleDerivativeRemoved' },
-        { event: 'DerivativeUpdated(indexed address,address,address)', handler: 'handleDerivativeUpdated' },
+        event('DerivativeAdded(indexed address,address)'),
+        event('DerivativeRemoved(indexed address)'),
+        event('DerivativeUpdated(indexed address,address,address)'),
       ],
     },
     {
@@ -895,10 +775,10 @@ export const configure: Configurator<Variables> = (variables) => {
       block: variables.block,
       address: release.chainlinkPriceFeedAddress,
       events: [
-        { event: 'EthUsdAggregatorSet(address,address)', handler: 'handleEthUsdAggregatorSet' },
-        { event: 'PrimitiveAdded(indexed address,address,uint8,uint256)', handler: 'handlePrimitiveAdded' },
-        { event: 'PrimitiveRemoved(indexed address)', handler: 'handlePrimitiveRemoved' },
-        { event: 'PrimitiveUpdated(indexed address,address,address)', handler: 'handlePrimitiveUpdated' },
+        event('EthUsdAggregatorSet(address,address)'),
+        event('PrimitiveAdded(indexed address,address,uint8,uint256)'),
+        event('PrimitiveRemoved(indexed address)'),
+        event('PrimitiveUpdated(indexed address,address,address)'),
       ],
     },
   ]);
@@ -911,15 +791,15 @@ export const configure: Configurator<Variables> = (variables) => {
       file: 'mappings/VaultLib.ts',
       abi: 'VaultLibContract',
       events: [
-        { event: 'AccessorSet(address,address)', handler: 'handleAccessorSet' },
-        { event: 'Approval(indexed address,indexed address,uint256)', handler: 'handleApproval' },
-        { event: 'AssetWithdrawn(indexed address,indexed address,uint256)', handler: 'handleAssetWithdrawn' },
-        { event: 'MigratorSet(address,address)', handler: 'handleMigratorSet' },
-        { event: 'OwnerSet(address,address)', handler: 'handleOwnerSet' },
-        { event: 'TrackedAssetAdded(address)', handler: 'handleTrackedAssetAdded' },
-        { event: 'TrackedAssetRemoved(address)', handler: 'handleTrackedAssetRemoved' },
-        { event: 'Transfer(indexed address,indexed address,uint256)', handler: 'handleTransfer' },
-        { event: 'VaultLibSet(address,address)', handler: 'handleVaultLibSet' },
+        event('AccessorSet(address,address)'),
+        event('Approval(indexed address,indexed address,uint256)'),
+        event('AssetWithdrawn(indexed address,indexed address,uint256)'),
+        event('MigratorSet(address,address)'),
+        event('OwnerSet(address,address)'),
+        event('TrackedAssetAdded(address)'),
+        event('TrackedAssetRemoved(address)'),
+        event('Transfer(indexed address,indexed address,uint256)'),
+        event('VaultLibSet(address,address)'),
       ],
     },
     {
@@ -927,15 +807,12 @@ export const configure: Configurator<Variables> = (variables) => {
       file: 'mappings/ComptrollerLib.ts',
       abi: 'ComptrollerLibContract',
       events: [
-        { event: 'MigratedSharesDuePaid(uint256)', handler: 'handleMigratedSharesDuePaid' },
-        { event: 'OverridePauseSet(indexed bool)', handler: 'handleOverridePauseSet' },
-        { event: 'PreRedeemSharesHookFailed(bytes,address,uint256)', handler: 'handlePreRedeemSharesHookFailed' },
-        {
-          event: 'SharesBought(indexed address,indexed address,uint256,uint256,uint256)',
-          handler: 'handleSharesBought',
-        },
-        { event: 'SharesRedeemed(indexed address,uint256,address[],uint256[])', handler: 'handleSharesRedeemed' },
-        { event: 'VaultProxySet(address)', handler: 'handleVaultProxySet' },
+        event('MigratedSharesDuePaid(uint256)'),
+        event('OverridePauseSet(indexed bool)'),
+        event('PreRedeemSharesHookFailed(bytes,address,uint256)'),
+        event('SharesBought(indexed address,indexed address,uint256,uint256,uint256)'),
+        event('SharesRedeemed(indexed address,uint256,address[],uint256[])'),
+        event('VaultProxySet(address)'),
       ],
     },
   ];
