@@ -11,7 +11,6 @@
     "@chainlink/contracts": "^0.1.6",
     "@enzymefinance/protocol": "^2.0.0",
     "@enzymefinance/subgraph-cli": "^0.0.0",
-    "@enzymefinance/subgraph-utils": "^0.0.0",
-    "@graphprotocol/graph-ts": "^0.20.0"
+    "@enzymefinance/subgraph-utils": "^0.0.0"
   }
 }
