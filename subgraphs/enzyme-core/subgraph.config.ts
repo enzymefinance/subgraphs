@@ -1,6 +1,14 @@
 // @ts-ignore
 import path from 'path';
-import { Configurator, Contexts, Template, EventHandlerDeclaration, AbiDeclaration } from '@enzymefinance/subgraph-cli';
+import {
+  Configurator,
+  Contexts,
+  Template,
+  EventHandlerDeclaration,
+  AbiDeclaration,
+  DataSourceTemplateDeclaration,
+  DataSourceDeclaration,
+} from '@enzymefinance/subgraph-cli';
 
 export class ReleaseAddresses {
   fundDeployerAddress: string;
@@ -499,322 +507,280 @@ function event(event: string): EventHandlerDeclaration {
   return { event, handler };
 }
 
+interface SourceOptions {
+  name: string;
+  events: string[];
+  suffix?: string;
+  block?: number;
+  address?: string;
+}
+
+function source(options: SourceOptions): DataSourceDeclaration {
+  return {
+    name: `${options.name}${options.suffix != null ? options.suffix : ''}DataSource`,
+    abi: `${options.name}Contract`,
+    file: `mappings/${options.name}.ts`,
+    events: options.events.map((signature) => event(signature)),
+    ...(options.address ? { address: options.address } : undefined),
+    ...(options.block ? { block: options.block } : undefined),
+  };
+}
+
+interface TemplateOptions {
+  name: string;
+  events: string[];
+  block?: number;
+  address?: string;
+}
+
+function template(name: string, events: string[]) {
+  return source({ name, events }) as DataSourceTemplateDeclaration;
+}
+
 export const configure: Configurator<Variables> = (variables) => {
   const abis = [
-    abi('@chainlink/contracts/abi/v0.6/AggregatorInterface.json'),
-    abi('@enzymefinance/enzyme-core-subgraph/utils/abis/CurveRegistry.json'),
-    abi('@enzymefinance/protocol/artifacts/CompoundAdapter.json'),
-    abi('@enzymefinance/protocol/artifacts/MinMaxInvestment.json'),
-    abi('@enzymefinance/protocol/artifacts/FundActionsWrapper.json'),
-    abi('@enzymefinance/protocol/artifacts/IUniswapV2Pair.json'),
-    abi('@enzymefinance/protocol/artifacts/ValueInterpreter.json'),
-    abi('@enzymefinance/protocol/artifacts/IUniswapV2Pair.json'),
-    abi('@enzymefinance/protocol/artifacts/ICERC20.json'),
-    abi('@enzymefinance/protocol/artifacts/AavePriceFeed.json'),
-    abi('@enzymefinance/protocol/artifacts/AlphaHomoraV1PriceFeed.json'),
-    abi('@enzymefinance/protocol/artifacts/ChaiPriceFeed.json'),
-    abi('@enzymefinance/protocol/artifacts/CompoundPriceFeed.json'),
-    abi('@enzymefinance/protocol/artifacts/CurvePriceFeed.json'),
-    abi('@enzymefinance/protocol/artifacts/ICurveAddressProvider.json'),
-    abi('@enzymefinance/protocol/artifacts/IdlePriceFeed.json'),
-    abi('@enzymefinance/protocol/artifacts/StakehoundEthPriceFeed.json'),
-    abi('@enzymefinance/protocol/artifacts/SynthetixPriceFeed.json'),
-    abi('@enzymefinance/protocol/artifacts/UniswapV2PoolPriceFeed.json'),
-    abi('@enzymefinance/protocol/artifacts/Dispatcher.json'),
-    abi('@enzymefinance/protocol/artifacts/FundDeployer.json'),
-    abi('@enzymefinance/protocol/artifacts/FeeManager.json'),
-    abi('@enzymefinance/protocol/artifacts/EntranceRateDirectFee.json'),
-    abi('@enzymefinance/protocol/artifacts/EntranceRateBurnFee.json'),
-    abi('@enzymefinance/protocol/artifacts/ManagementFee.json'),
-    abi('@enzymefinance/protocol/artifacts/PerformanceFee.json'),
-    abi('@enzymefinance/protocol/artifacts/IntegrationManager.json'),
-    abi('@enzymefinance/protocol/artifacts/PolicyManager.json'),
-    abi('@enzymefinance/protocol/artifacts/AdapterBlacklist.json'),
-    abi('@enzymefinance/protocol/artifacts/AdapterWhitelist.json'),
-    abi('@enzymefinance/protocol/artifacts/AssetBlacklist.json'),
-    abi('@enzymefinance/protocol/artifacts/AssetWhitelist.json'),
-    abi('@enzymefinance/protocol/artifacts/GuaranteedRedemption.json'),
-    abi('@enzymefinance/protocol/artifacts/InvestorWhitelist.json'),
-    abi('@enzymefinance/protocol/artifacts/MaxConcentration.json'),
-    abi('@enzymefinance/protocol/artifacts/AggregatedDerivativePriceFeed.json'),
-    abi('@enzymefinance/protocol/artifacts/ChainlinkPriceFeed.json'),
-    abi('@enzymefinance/protocol/artifacts/VaultLib.json'),
-    abi('@enzymefinance/protocol/artifacts/ComptrollerLib.json'),
-  ];
+    '@chainlink/contracts/abi/v0.6/AggregatorInterface.json',
+    '@enzymefinance/enzyme-core-subgraph/utils/abis/CurveRegistry.json',
+    '@enzymefinance/protocol/artifacts/CompoundAdapter.json',
+    '@enzymefinance/protocol/artifacts/MinMaxInvestment.json',
+    '@enzymefinance/protocol/artifacts/FundActionsWrapper.json',
+    '@enzymefinance/protocol/artifacts/IUniswapV2Pair.json',
+    '@enzymefinance/protocol/artifacts/ValueInterpreter.json',
+    '@enzymefinance/protocol/artifacts/IUniswapV2Pair.json',
+    '@enzymefinance/protocol/artifacts/ICERC20.json',
+    '@enzymefinance/protocol/artifacts/AavePriceFeed.json',
+    '@enzymefinance/protocol/artifacts/AlphaHomoraV1PriceFeed.json',
+    '@enzymefinance/protocol/artifacts/ChaiPriceFeed.json',
+    '@enzymefinance/protocol/artifacts/CompoundPriceFeed.json',
+    '@enzymefinance/protocol/artifacts/CurvePriceFeed.json',
+    '@enzymefinance/protocol/artifacts/ICurveAddressProvider.json',
+    '@enzymefinance/protocol/artifacts/IdlePriceFeed.json',
+    '@enzymefinance/protocol/artifacts/StakehoundEthPriceFeed.json',
+    '@enzymefinance/protocol/artifacts/SynthetixPriceFeed.json',
+    '@enzymefinance/protocol/artifacts/UniswapV2PoolPriceFeed.json',
+    '@enzymefinance/protocol/artifacts/Dispatcher.json',
+    '@enzymefinance/protocol/artifacts/FundDeployer.json',
+    '@enzymefinance/protocol/artifacts/FeeManager.json',
+    '@enzymefinance/protocol/artifacts/EntranceRateDirectFee.json',
+    '@enzymefinance/protocol/artifacts/EntranceRateBurnFee.json',
+    '@enzymefinance/protocol/artifacts/ManagementFee.json',
+    '@enzymefinance/protocol/artifacts/PerformanceFee.json',
+    '@enzymefinance/protocol/artifacts/IntegrationManager.json',
+    '@enzymefinance/protocol/artifacts/PolicyManager.json',
+    '@enzymefinance/protocol/artifacts/AdapterBlacklist.json',
+    '@enzymefinance/protocol/artifacts/AdapterWhitelist.json',
+    '@enzymefinance/protocol/artifacts/AssetBlacklist.json',
+    '@enzymefinance/protocol/artifacts/AssetWhitelist.json',
+    '@enzymefinance/protocol/artifacts/GuaranteedRedemption.json',
+    '@enzymefinance/protocol/artifacts/InvestorWhitelist.json',
+    '@enzymefinance/protocol/artifacts/MaxConcentration.json',
+    '@enzymefinance/protocol/artifacts/AggregatedDerivativePriceFeed.json',
+    '@enzymefinance/protocol/artifacts/ChainlinkPriceFeed.json',
+    '@enzymefinance/protocol/artifacts/VaultLib.json',
+    '@enzymefinance/protocol/artifacts/ComptrollerLib.json',
+  ].map((name) => abi(name));
 
-  const dispatcher = {
+  const dispatcher: SourceOptions = {
     name: 'Dispatcher',
-    abi: 'DispatcherContract',
-    file: 'mappings/Dispatcher.ts',
     block: variables.block,
     address: variables.dispatcherAddress,
     events: [
-      event('VaultProxyDeployed(indexed address,indexed address,address,indexed address,address,string)'),
-      event('CurrentFundDeployerSet(address,address)'),
-      event('MigrationCancelled(indexed address,indexed address,indexed address,address,address,uint256)'),
-      event('MigrationExecuted(indexed address,indexed address,indexed address,address,address,uint256)'),
-      event('MigrationSignaled(indexed address,indexed address,indexed address,address,address,uint256)'),
-      event('MigrationInCancelHookFailed(bytes,indexed address,indexed address,indexed address,address,address)'),
-      event('MigrationOutHookFailed(bytes,uint8,indexed address,indexed address,indexed address,address,address)'),
-      event('MigrationTimelockSet(uint256,uint256)'),
-      event('NominatedOwnerRemoved(indexed address)'),
-      event('NominatedOwnerSet(indexed address)'),
-      event('OwnershipTransferred(indexed address,indexed address)'),
-      event('SharesTokenSymbolSet(string)'),
-      event('VaultProxyDeployed(indexed address,indexed address,address,indexed address,address,string)'),
+      'VaultProxyDeployed(indexed address,indexed address,address,indexed address,address,string)',
+      'CurrentFundDeployerSet(address,address)',
+      'MigrationCancelled(indexed address,indexed address,indexed address,address,address,uint256)',
+      'MigrationExecuted(indexed address,indexed address,indexed address,address,address,uint256)',
+      'MigrationSignaled(indexed address,indexed address,indexed address,address,address,uint256)',
+      'MigrationInCancelHookFailed(bytes,indexed address,indexed address,indexed address,address,address)',
+      'MigrationOutHookFailed(bytes,uint8,indexed address,indexed address,indexed address,address,address)',
+      'MigrationTimelockSet(uint256,uint256)',
+      'NominatedOwnerRemoved(indexed address)',
+      'NominatedOwnerSet(indexed address)',
+      'OwnershipTransferred(indexed address,indexed address)',
+      'SharesTokenSymbolSet(string)',
+      'VaultProxyDeployed(indexed address,indexed address,address,indexed address,address,string)',
     ],
   };
 
-  const releases = [variables.releaseA, variables.releaseB].map((release, index) => [
-    {
-      name: `FundDeployer${index}`,
-      abi: 'FundDeployerContract',
-      file: 'mappings/FundDeployer.ts',
-      block: variables.block,
-      address: release.fundDeployerAddress,
-      events: [
-        event('ComptrollerLibSet(address)'),
-        event('ComptrollerProxyDeployed(indexed address,address,indexed address,uint256,bytes,bytes,indexed bool)'),
-        event(
+  const releases: SourceOptions[][] = [variables.releaseA, variables.releaseB]
+    .map((release) => [
+      {
+        name: 'FundDeployer',
+        block: variables.block,
+        address: release.fundDeployerAddress,
+        events: [
+          'ComptrollerLibSet(address)',
+          'ComptrollerProxyDeployed(indexed address,address,indexed address,uint256,bytes,bytes,indexed bool)',
           'NewFundCreated(indexed address,address,address,indexed address,string,indexed address,uint256,bytes,bytes)',
-        ),
-        event('ReleaseStatusSet(indexed uint8,indexed uint8)'),
-        event('VaultCallDeregistered(indexed address,bytes4)'),
-        event('VaultCallRegistered(indexed address,bytes4)'),
-      ],
-    },
-    {
-      name: `FeeManager${index}`,
-      abi: 'FeeManagerContract',
-      file: 'mappings/FeeManager.ts',
-      block: variables.block,
-      address: release.feeManagerAddress,
-      events: [
-        event('AllSharesOutstandingForcePaidForFund(indexed address,address,uint256)'),
-        event('FeeDeregistered(indexed address,indexed string)'),
-        event('FeeEnabledForFund(indexed address,indexed address,bytes)'),
-        event('FeeRegistered(indexed address,indexed string,uint8[],uint8[],bool,bool)'),
-        event('FeeSettledForFund(indexed address,indexed address,indexed uint8,address,address,uint256)'),
-        event('FeesRecipientSetForFund(indexed address,address,address)'),
-        event('SharesOutstandingPaidForFund(indexed address,indexed address,uint256)'),
-      ],
-    },
-    {
-      name: `EntranceRateDirectFee${index}`,
-      abi: 'EntranceRateDirectFeeContract',
-      file: 'mappings/EntranceRateDirectFee.ts',
-      block: variables.block,
-      address: release.entranceRateDirectFeeAddress,
-      events: [
-        event('FundSettingsAdded(indexed address,uint256)'),
-        event('Settled(indexed address,indexed address,uint256)'),
-      ],
-    },
-    {
-      name: `EntranceRateBurnFee${index}`,
-      abi: 'EntranceRateBurnFeeContract',
-      file: 'mappings/EntranceRateBurnFee.ts',
-      block: variables.block,
-      address: release.entranceRateBurnFeeAddress,
-      events: [
-        event('FundSettingsAdded(indexed address,uint256)'),
-        event('Settled(indexed address,indexed address,uint256)'),
-      ],
-    },
-    {
-      name: `ManagementFee${index}`,
-      abi: 'ManagementFeeContract',
-      file: 'mappings/ManagementFee.ts',
-      block: variables.block,
-      address: release.managementFeeAddress,
-      events: [event('FundSettingsAdded(indexed address,uint256)'), event('Settled(indexed address,uint256,uint256)')],
-    },
-    {
-      name: `PerformanceFee${index}`,
-      abi: 'PerformanceFeeContract',
-      file: 'mappings/PerformanceFee.ts',
-      block: variables.block,
-      address: release.performanceFeeAddress,
-      events: [
-        event('ActivatedForFund(indexed address,uint256)'),
-        event('FundSettingsAdded(indexed address,uint256,uint256)'),
-        event('LastSharePriceUpdated(indexed address,uint256,uint256)'),
-        event('PaidOut(indexed address,uint256,uint256,uint256)'),
-        event('PerformanceUpdated(indexed address,uint256,uint256,int256)'),
-      ],
-    },
-    {
-      name: `IntegrationManager${index}`,
-      abi: 'IntegrationManagerContract',
-      file: 'mappings/IntegrationManager.ts',
-      block: variables.block,
-      address: release.integrationManagerAddress,
-      events: [
-        event('AdapterDeregistered(indexed address,indexed string)'),
-        event('AdapterRegistered(indexed address,indexed string)'),
-        event('AuthUserAddedForFund(indexed address,indexed address)'),
-        event('AuthUserRemovedForFund(indexed address,indexed address)'),
-        event(
+          'ReleaseStatusSet(indexed uint8,indexed uint8)',
+          'VaultCallDeregistered(indexed address,bytes4)',
+          'VaultCallRegistered(indexed address,bytes4)',
+        ],
+      },
+      {
+        name: 'FeeManager',
+        block: variables.block,
+        address: release.feeManagerAddress,
+        events: [
+          'AllSharesOutstandingForcePaidForFund(indexed address,address,uint256)',
+          'FeeDeregistered(indexed address,indexed string)',
+          'FeeEnabledForFund(indexed address,indexed address,bytes)',
+          'FeeRegistered(indexed address,indexed string,uint8[],uint8[],bool,bool)',
+          'FeeSettledForFund(indexed address,indexed address,indexed uint8,address,address,uint256)',
+          'FeesRecipientSetForFund(indexed address,address,address)',
+          'SharesOutstandingPaidForFund(indexed address,indexed address,uint256)',
+        ],
+      },
+      {
+        name: 'EntranceRateDirectFee',
+        block: variables.block,
+        address: release.entranceRateDirectFeeAddress,
+        events: ['FundSettingsAdded(indexed address,uint256)', 'Settled(indexed address,indexed address,uint256)'],
+      },
+      {
+        name: 'EntranceRateBurnFee',
+        block: variables.block,
+        address: release.entranceRateBurnFeeAddress,
+        events: ['FundSettingsAdded(indexed address,uint256)', 'Settled(indexed address,indexed address,uint256)'],
+      },
+      {
+        name: 'ManagementFee',
+        block: variables.block,
+        address: release.managementFeeAddress,
+        events: ['FundSettingsAdded(indexed address,uint256)', 'Settled(indexed address,uint256,uint256)'],
+      },
+      {
+        name: 'PerformanceFee',
+        block: variables.block,
+        address: release.performanceFeeAddress,
+        events: [
+          'ActivatedForFund(indexed address,uint256)',
+          'FundSettingsAdded(indexed address,uint256,uint256)',
+          'LastSharePriceUpdated(indexed address,uint256,uint256)',
+          'PaidOut(indexed address,uint256,uint256,uint256)',
+          'PerformanceUpdated(indexed address,uint256,uint256,int256)',
+        ],
+      },
+      {
+        name: 'IntegrationManager',
+        block: variables.block,
+        address: release.integrationManagerAddress,
+        events: [
+          'AdapterDeregistered(indexed address,indexed string)',
+          'AdapterRegistered(indexed address,indexed string)',
+          'AuthUserAddedForFund(indexed address,indexed address)',
+          'AuthUserRemovedForFund(indexed address,indexed address)',
           'CallOnIntegrationExecutedForFund(indexed address,address,address,indexed address,indexed bytes4,bytes,address[],uint256[],address[],uint256[])',
-        ),
-      ],
-    },
-    {
-      name: `PolicyManager${index}`,
-      abi: 'PolicyManagerContract',
-      file: 'mappings/PolicyManager.ts',
-      block: variables.block,
-      address: release.policyManagerAddress,
-      events: [
-        event('PolicyDeregistered(indexed address,indexed string)'),
-        event('PolicyDisabledForFund(indexed address,indexed address)'),
-        event('PolicyEnabledForFund(indexed address,indexed address,bytes)'),
-        event('PolicyRegistered(indexed address,indexed string,uint8[])'),
-      ],
-    },
-    {
-      name: `AdapterBlacklist${index}`,
-      abi: 'AdapterBlacklistContract',
-      file: 'mappings/AdapterBlacklist.ts',
-      block: variables.block,
-      address: release.adapterBlacklistAddress,
-      events: [
-        event('AddressesAdded(indexed address,address[])'),
-        event('AddressesRemoved(indexed address,address[])'),
-      ],
-    },
-    {
-      name: `AdapterWhitelist${index}`,
-      abi: 'AdapterWhitelistContract',
-      file: 'mappings/AdapterWhitelist.ts',
-      block: variables.block,
-      address: release.adapterWhitelistAddress,
-      events: [
-        event('AddressesAdded(indexed address,address[])'),
-        event('AddressesRemoved(indexed address,address[])'),
-      ],
-    },
-    {
-      name: `AssetBlacklist${index}`,
-      abi: 'AssetBlacklistContract',
-      file: 'mappings/AssetBlacklist.ts',
-      block: variables.block,
-      address: release.assetBlacklistAddress,
-      events: [
-        event('AddressesAdded(indexed address,address[])'),
-        event('AddressesRemoved(indexed address,address[])'),
-      ],
-    },
-    {
-      name: `AssetWhitelist${index}`,
-      abi: 'AssetWhitelistContract',
-      file: 'mappings/AssetWhitelist.ts',
-      block: variables.block,
-      address: release.assetWhitelistAddress,
-      events: [
-        event('AddressesAdded(indexed address,address[])'),
-        event('AddressesRemoved(indexed address,address[])'),
-      ],
-    },
-    {
-      name: `GuaranteedRedemption${index}`,
-      abi: 'GuaranteedRedemptionContract',
-      file: 'mappings/GuaranteedRedemption.ts',
-      block: variables.block,
-      address: release.guaranteedRedemptionAddress,
-      events: [
-        event('AdapterAdded(address)'),
-        event('AdapterRemoved(address)'),
-        event('FundSettingsSet(indexed address,uint256,uint256)'),
-        event('RedemptionWindowBufferSet(uint256,uint256)'),
-      ],
-    },
-    {
-      name: `InvestorWhitelist${index}`,
-      abi: 'InvestorWhitelistContract',
-      file: 'mappings/InvestorWhitelist.ts',
-      block: variables.block,
-      address: release.investorWhitelistAddress,
-      events: [
-        event('AddressesAdded(indexed address,address[])'),
-        event('AddressesRemoved(indexed address,address[])'),
-      ],
-    },
-    {
-      name: `MaxConcentration${index}`,
-      abi: 'MaxConcentrationContract',
-      file: 'mappings/MaxConcentration.ts',
-      block: variables.block,
-      address: release.maxConcentrationAddress,
-      events: [event('MaxConcentrationSet(indexed address,uint256)')],
-    },
-    {
-      name: `MinMaxInvestment${index}`,
-      abi: 'MinMaxInvestmentContract',
-      file: 'mappings/MinMaxInvestment.ts',
-      block: variables.block,
-      address: release.minMaxInvestmentAddress,
-      events: [event('FundSettingsSet(indexed address,uint256,uint256)')],
-    },
-    {
-      name: `AggregatedDerivativePriceFeed${index}`,
-      abi: 'AggregatedDerivativePriceFeedContract',
-      file: 'mappings/AggregatedDerivativePriceFeed.ts',
-      block: variables.block,
-      address: release.aggregatedDerivativePriceFeedAddress,
-      events: [
-        event('DerivativeAdded(indexed address,address)'),
-        event('DerivativeRemoved(indexed address)'),
-        event('DerivativeUpdated(indexed address,address,address)'),
-      ],
-    },
-    {
-      name: `ChainlinkPriceFeed${index}`,
-      abi: 'ChainlinkPriceFeedContract',
-      file: 'mappings/ChainlinkPriceFeed.ts',
-      block: variables.block,
-      address: release.chainlinkPriceFeedAddress,
-      events: [
-        event('EthUsdAggregatorSet(address,address)'),
-        event('PrimitiveAdded(indexed address,address,uint8,uint256)'),
-        event('PrimitiveRemoved(indexed address)'),
-        event('PrimitiveUpdated(indexed address,address,address)'),
-      ],
-    },
-  ]);
+        ],
+      },
+      {
+        name: 'PolicyManager',
+        block: variables.block,
+        address: release.policyManagerAddress,
+        events: [
+          'PolicyDeregistered(indexed address,indexed string)',
+          'PolicyDisabledForFund(indexed address,indexed address)',
+          'PolicyEnabledForFund(indexed address,indexed address,bytes)',
+          'PolicyRegistered(indexed address,indexed string,uint8[])',
+        ],
+      },
+      {
+        name: 'AdapterBlacklist',
+        block: variables.block,
+        address: release.adapterBlacklistAddress,
+        events: ['AddressesAdded(indexed address,address[])', 'AddressesRemoved(indexed address,address[])'],
+      },
+      {
+        name: 'AdapterWhitelist',
+        block: variables.block,
+        address: release.adapterWhitelistAddress,
+        events: ['AddressesAdded(indexed address,address[])', 'AddressesRemoved(indexed address,address[])'],
+      },
+      {
+        name: 'AssetBlacklist',
+        block: variables.block,
+        address: release.assetBlacklistAddress,
+        events: ['AddressesAdded(indexed address,address[])', 'AddressesRemoved(indexed address,address[])'],
+      },
+      {
+        name: 'AssetWhitelist',
+        block: variables.block,
+        address: release.assetWhitelistAddress,
+        events: ['AddressesAdded(indexed address,address[])', 'AddressesRemoved(indexed address,address[])'],
+      },
+      {
+        name: 'GuaranteedRedemption',
+        block: variables.block,
+        address: release.guaranteedRedemptionAddress,
+        events: [
+          'AdapterAdded(address)',
+          'AdapterRemoved(address)',
+          'FundSettingsSet(indexed address,uint256,uint256)',
+          'RedemptionWindowBufferSet(uint256,uint256)',
+        ],
+      },
+      {
+        name: 'InvestorWhitelist',
+        block: variables.block,
+        address: release.investorWhitelistAddress,
+        events: ['AddressesAdded(indexed address,address[])', 'AddressesRemoved(indexed address,address[])'],
+      },
+      {
+        name: 'MaxConcentration',
+        block: variables.block,
+        address: release.maxConcentrationAddress,
+        events: ['MaxConcentrationSet(indexed address,uint256)'],
+      },
+      {
+        name: 'MinMaxInvestment',
+        block: variables.block,
+        address: release.minMaxInvestmentAddress,
+        events: ['FundSettingsSet(indexed address,uint256,uint256)'],
+      },
+      {
+        name: 'AggregatedDerivativePriceFeed',
+        block: variables.block,
+        address: release.aggregatedDerivativePriceFeedAddress,
+        events: [
+          'DerivativeAdded(indexed address,address)',
+          'DerivativeRemoved(indexed address)',
+          'DerivativeUpdated(indexed address,address,address)',
+        ],
+      },
+      {
+        name: 'ChainlinkPriceFeed',
+        block: variables.block,
+        address: release.chainlinkPriceFeedAddress,
+        events: [
+          'EthUsdAggregatorSet(address,address)',
+          'PrimitiveAdded(indexed address,address,uint8,uint256)',
+          'PrimitiveRemoved(indexed address)',
+          'PrimitiveUpdated(indexed address,address,address)',
+        ],
+      },
+    ])
+    .map((release, index) => release.map((source) => ({ ...source, suffix: `${index}` })));
 
-  const sources = [dispatcher, ...releases[0], ...releases[1]];
-
+  const sources = [dispatcher, ...releases[0], ...releases[1]].map((options) => source(options));
   const templates = [
-    {
-      name: 'VaultLib',
-      file: 'mappings/VaultLib.ts',
-      abi: 'VaultLibContract',
-      events: [
-        event('AccessorSet(address,address)'),
-        event('Approval(indexed address,indexed address,uint256)'),
-        event('AssetWithdrawn(indexed address,indexed address,uint256)'),
-        event('MigratorSet(address,address)'),
-        event('OwnerSet(address,address)'),
-        event('TrackedAssetAdded(address)'),
-        event('TrackedAssetRemoved(address)'),
-        event('Transfer(indexed address,indexed address,uint256)'),
-        event('VaultLibSet(address,address)'),
-      ],
-    },
-    {
-      name: 'ComptrollerLib',
-      file: 'mappings/ComptrollerLib.ts',
-      abi: 'ComptrollerLibContract',
-      events: [
-        event('MigratedSharesDuePaid(uint256)'),
-        event('OverridePauseSet(indexed bool)'),
-        event('PreRedeemSharesHookFailed(bytes,address,uint256)'),
-        event('SharesBought(indexed address,indexed address,uint256,uint256,uint256)'),
-        event('SharesRedeemed(indexed address,uint256,address[],uint256[])'),
-        event('VaultProxySet(address)'),
-      ],
-    },
+    template('VaultLib', [
+      'AccessorSet(address,address)',
+      'Approval(indexed address,indexed address,uint256)',
+      'AssetWithdrawn(indexed address,indexed address,uint256)',
+      'MigratorSet(address,address)',
+      'OwnerSet(address,address)',
+      'TrackedAssetAdded(address)',
+      'TrackedAssetRemoved(address)',
+      'Transfer(indexed address,indexed address,uint256)',
+      'VaultLibSet(address,address)',
+    ]),
+    template('ComptrollerLib', [
+      'MigratedSharesDuePaid(uint256)',
+      'OverridePauseSet(indexed bool)',
+      'PreRedeemSharesHookFailed(bytes,address,uint256)',
+      'SharesBought(indexed address,indexed address,uint256,uint256,uint256)',
+      'SharesRedeemed(indexed address,uint256,address[],uint256[])',
+      'VaultProxySet(address)',
+    ]),
   ];
 
   return { abis, sources, templates };
