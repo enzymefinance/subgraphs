@@ -57,7 +57,7 @@ templates:
       entities: []
       file: {{file}}
       abis:
-        {{#each abis}}
+        {{#each @root.abis}}
         - name: {{name}}
           file: {{file}}
         {{/each}}
