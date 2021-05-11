@@ -3,7 +3,7 @@ import glob from 'glob';
 import path from 'path';
 import yargs from 'yargs';
 import handlebars from 'handlebars';
-import { Configurator, Environment } from '@enzymefinance/subgraph-cli';
+import { Configurator, Context, Contexts, Environment, Template } from '@enzymefinance/subgraph-cli';
 
 const graph = require('@graphprotocol/graph-cli/src/cli').run as (args?: string[]) => Promise<void>;
 const root = path.join(__dirname, '..');
@@ -13,18 +13,39 @@ const defaultLocalIpfs = 'http://localhost:5001/';
 const defaultRemoteNode = 'https://api.thegraph.com/deploy/';
 const defaultRemoteIpfs = 'https://api.thegraph.com/ipfs/';
 
-function loadEnvironment(ctx: string) {
-  const cwd = process.cwd();
+class SubgraphLoader<TVariables = any> {
+  public readonly contexts: Contexts<TVariables>;
+  protected readonly configure: Configurator<TVariables>;
+  protected readonly templates: Template[];
 
-  const configure: Configurator<any> = (contexts, callback) => {
-    const context = contexts[ctx];
+  constructor(public readonly root: string) {
+    const config = require(path.join(root, 'subgraph.config.ts'));
+
+    this.templates = config.templates ?? [];
+    this.contexts = config.contexts;
+    this.configure = config.configure;
+  }
+
+  public load(ctx: string) {
+    const context: Context<TVariables> = this.contexts[ctx];
     if (context == null) {
-      throw new Error(`Invalid context ${context}. Available contexts: ${Object.keys(contexts).join(', ')}`);
+      throw new Error(`Invalid context ${context}. Available contexts: ${Object.keys(this.contexts).join(', ')}`);
     }
 
-    const manifest = callback(context.variables);
+    const manifest = this.configure(context.variables);
+    const abis = ['ERC20', 'ERC20NameBytes', 'ERC20SymbolBytes'].map((name) => ({
+      name: `${name}Contract`,
+      file: `@enzymefinance/subgraph-utils/abis/${name}.json`,
+    }));
 
-    return {
+    manifest.abis = [...(manifest.abis ?? []), ...abis]
+      .filter((item, index, array) => array.findIndex((inner) => inner.name === item.name) === index)
+      .map((item) => ({
+        name: item.name,
+        file: path.relative(this.root, require.resolve(item.file)),
+      }));
+
+    const environment: Environment<TVariables> = {
       name: context.name,
       network: context.network,
       local: context.local ? true : false,
@@ -33,91 +54,162 @@ function loadEnvironment(ctx: string) {
       variables: context.variables,
       manifest,
     };
-  };
 
-  const abis = ['ERC20', 'ERC20NameBytes', 'ERC20SymbolBytes'].map((name) => ({
-    name: `${name}Contract`,
-    file: `@enzymefinance/subgraph-utils/abis/${name}.json`,
-  }));
-
-  const environment = require(path.join(cwd, 'subgraph.config.ts')).default(configure) as Environment<any>;
-  environment.manifest.abis = [...environment.manifest.abis, ...abis]
-    .filter((item, index, array) => array.findIndex((inner) => inner.name === item.name) === index)
-    .map((item) => ({
-      name: item.name,
-      file: path.relative(cwd, require.resolve(item.file)),
-    }));
-
-  return environment;
+    return new Subgraph(environment, this.root, this.templates);
+  }
 }
 
-async function generateCode() {
-  await graph(['codegen']);
+class Subgraph<TVariables = any> {
+  constructor(
+    public readonly environment: Environment<TVariables>,
+    public readonly root: string,
+    public readonly templates: Template[] = [],
+  ) {}
 
-  const cwd = path.resolve(process.cwd(), 'generated');
-  const globbed = glob.sync('**/*', {
-    cwd,
-    absolute: true,
-  });
+  public async generateManifest() {
+    const templateFile = path.join(root, 'templates/subgraph.template.yaml');
+    const outputFile = path.join(this.root, 'subgraph.yaml');
+    const templateContent = fs.readFileSync(templateFile, 'utf8');
 
-  const files = globbed.filter((item) => fs.statSync(item).isFile());
-  const directories = globbed.filter((item) => fs.statSync(item).isDirectory());
+    const compile = handlebars.compile(templateContent);
+    const replaced = compile(this.environment.manifest);
 
-  files.forEach((item) => fs.renameSync(item, path.join(cwd, path.basename(item))));
-  directories.forEach((item) => fs.rmdirSync(item, { recursive: true }));
-}
-
-async function generateSubgraphManifest(environment: Environment<any>) {
-  const templateFile = path.join(root, 'templates/subgraph.template.yaml');
-  const outputFile = path.join(process.cwd(), 'subgraph.yaml');
-  const templateContent = fs.readFileSync(templateFile, 'utf8');
-
-  const compile = handlebars.compile(templateContent);
-  const replaced = compile(environment.manifest);
-
-  fs.writeFileSync(outputFile, replaced);
-}
-
-async function deploySubgraph(environment: Environment<any>) {
-  if (environment.local) {
-    await graph(['create', environment.name, '--node', environment.node]);
+    fs.writeFileSync(outputFile, replaced);
   }
 
-  await graph(['deploy', environment.name, '--node', environment.node, '--ipfs', environment.ipfs]);
+  public async generateCode() {
+    await graph(['codegen', '--skip-migrations', 'true']);
+
+    const cwd = path.resolve(this.root, 'generated');
+    const globbed = glob.sync('**/*', {
+      cwd,
+      absolute: true,
+    });
+
+    const files = globbed.filter((item) => fs.statSync(item).isFile());
+    const directories = globbed.filter((item) => fs.statSync(item).isDirectory());
+
+    files.forEach((item) => fs.renameSync(item, path.join(cwd, path.basename(item))));
+    directories.forEach((item) => fs.rmdirSync(item, { recursive: true }));
+
+    this.templates.forEach((template) => {
+      const templateFile = path.join(this.root, template.template);
+      const outputFile = path.join(this.root, template.destination);
+      const outputDir = path.dirname(outputFile);
+      const templateContent = fs.readFileSync(templateFile, 'utf8');
+
+      const compile = handlebars.compile(templateContent);
+      const replaced = compile(this.environment.variables);
+
+      if (!fs.existsSync(outputDir)) {
+        fs.mkdirSync(outputDir, { recursive: true });
+      }
+
+      fs.writeFileSync(outputFile, replaced);
+    });
+  }
+
+  public async deploySubgraph() {
+    await graph([
+      'deploy',
+      this.environment.name,
+      '--node',
+      this.environment.node,
+      '--ipfs',
+      this.environment.ipfs,
+      '--skip-migrations',
+      'true',
+      '--output-dir',
+      path.join(this.root, 'build/subgraph'),
+    ]);
+  }
+
+  public async buildSubgraph() {
+    await graph(['build', '--skip-migrations', 'true', '--output-dir', path.join(this.root, 'build/subgraph')]);
+  }
+
+  public async createSubgraph() {
+    if (!this.environment.local) {
+      return;
+    }
+
+    await graph(['create', this.environment.name, '--node', this.environment.node]);
+  }
+}
+
+interface Args {
+  subgraph: Subgraph;
 }
 
 yargs
-  .command(
+  .env('ENZYME_SUBGRAPH')
+  .option('cwd', {
+    type: 'string',
+    description: 'The working directory',
+    default: process.cwd(),
+  })
+  .positional('context', {
+    type: 'string',
+    description: 'The configuration context (e.g. network name).',
+  })
+  .demandOption(['cwd', 'context'])
+  .middleware((args) => {
+    const builder = new SubgraphLoader(args.cwd);
+    const contexts = Object.keys(builder.contexts);
+
+    if (!contexts.length) {
+      console.error('No available contexts.');
+      process.exit(1);
+    }
+
+    if (!contexts.includes(args.context)) {
+      console.error(`Invalid context "${args.context}". Available contexts: "${contexts.join('", "')}"`);
+      process.exit(1);
+    }
+
+    const subgraph = builder.load(args.context);
+    args.subgraph = subgraph;
+  })
+  .command<Args>(
     'codegen <context>',
     'Generate the subgraph manifest and code.',
-    (builder) => {
-      builder.positional('context', {
-        description: 'The configuration context (e.g. network name).',
-      });
-    },
-    async (args) => {
-      const environment = loadEnvironment(args.context as string);
-
+    () => {},
+    async ({ subgraph }) => {
       console.log('Generating subgraph manifest');
-      await generateSubgraphManifest(environment);
+      await subgraph.generateManifest();
 
       console.log('Generating code');
-      await generateCode();
+      await subgraph.generateCode();
     },
   )
-  .command(
+  .command<Args>(
+    'build <context>',
+    'Compile the subgraph code into the wasm runtimes.',
+    () => {},
+    async ({ subgraph }) => {
+      console.log('Generating subgraph manifest');
+      await subgraph.generateManifest();
+
+      console.log('Generating code');
+      await subgraph.generateCode();
+
+      console.log('Generating code');
+      await subgraph.buildSubgraph();
+    },
+  )
+  .command<Args>(
     'deploy <context>',
     'Deploy the subgraph.',
-    (builder) => {
-      builder.positional('context', {
-        description: 'The configuration context (e.g. network name).',
-      });
-    },
-    async (args) => {
-      const environment = loadEnvironment(args.context as string);
+    () => {},
+    async ({ subgraph }) => {
+      console.log('Generating subgraph manifest');
+      await subgraph.generateManifest();
+
+      console.log('Generating code');
+      await subgraph.generateCode();
 
       console.log('Deploying subgraph');
-      await deploySubgraph(environment);
+      await subgraph.deploySubgraph();
     },
   )
   .demandCommand()

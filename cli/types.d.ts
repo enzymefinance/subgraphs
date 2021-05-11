@@ -9,20 +9,21 @@ declare module '@enzymefinance/subgraph-cli' {
   }
 
   export interface ManifestValues {
-    abis: AbiDeclaration[];
     sources: DataSourceDeclaration[];
-    templates: DataSourceTemplateDeclaration[];
+    templates?: DataSourceTemplateDeclaration[];
+    abis?: AbiDeclaration[];
   }
 
   export interface Contexts<TVariables> {
     [context: string]: Context<TVariables>;
   }
 
-  export type ConfiguratorCallback<TVariables> = (variables: TVariables) => SubgraphManifestValues;
-  export type Configurator<TVariables> = (
-    contexts: Contexts<TVariables>,
-    callback: ConfiguratorCallback<TVariables>,
-  ) => Environment<TVariables>;
+  export interface Template {
+    template: string;
+    destination: string;
+  }
+
+  export type Configurator<TVariables> = (variables: TVariables) => ManifestValues;
 
   export interface AbiDeclaration {
     name: string;
@@ -40,16 +41,20 @@ declare module '@enzymefinance/subgraph-cli' {
   }
 
   export interface DataSourceDeclaration {
+    name: string;
+    abi: string;
+    file: string;
     address?: string;
     block?: number;
-    file: string;
-    events: EventHandlerDeclaration[];
+    events?: EventHandlerDeclaration[];
     calls?: CallHandlerDeclaration[];
   }
 
   export interface DataSourceTemplateDeclaration {
+    name: string;
+    abi: string;
     file: string;
-    events: EventHandlerDeclaration[];
+    events?: EventHandlerDeclaration[];
     calls?: CallHandlerDeclaration[];
   }
 

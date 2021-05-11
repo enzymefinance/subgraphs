@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "codegen": "enzyme-graph codegen",
+    "build": "enzyme-graph build",
     "deploy": "enzyme-graph deploy"
   },
   "dependencies": {

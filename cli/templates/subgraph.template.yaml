@@ -33,6 +33,13 @@ dataSources:
           handler: {{handler}}
         {{/each}}
       {{/if}}
+      {{#if calls}}
+      callHandlers:
+        {{#each calls}}
+        - call: {{call}}
+          handler: {{handler}}
+        {{/each}}
+      {{/if}}
   {{/each}}
 
 {{#if templates}}
@@ -58,6 +65,13 @@ templates:
       eventHandlers:
         {{#each events}}
         - event: {{event}}
+          handler: {{handler}}
+        {{/each}}
+      {{/if}}
+      {{#if calls}}
+      callHandlers:
+        {{#each calls}}
+        - call: {{call}}
           handler: {{handler}}
         {{/each}}
       {{/if}}
