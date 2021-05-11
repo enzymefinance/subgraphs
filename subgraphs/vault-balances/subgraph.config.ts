@@ -34,37 +34,19 @@ export const contexts: Contexts<Variables> = {
 };
 
 export const configure: Configurator<Variables> = (variables) => ({
-  abis: [
-    {
-      name: 'DispatcherContract',
-      file: '@enzymefinance/protocol/artifacts/Dispatcher.json',
-    },
-  ],
+  abis: ['@enzymefinance/protocol/artifacts/Dispatcher.json'],
   sources: [
     {
       name: 'Dispatcher',
-      abi: 'DispatcherContract',
       block: variables.block,
       address: variables.dispatcher,
-      file: './mappings/Dispatcher.ts',
-      events: [
-        {
-          event: 'VaultProxyDeployed(indexed address,indexed address,address,indexed address,address,string)',
-          handler: 'handleVaultProxyDeployed',
-        },
-      ],
+      events: ['VaultProxyDeployed(indexed address,indexed address,address,indexed address,address,string)'],
     },
     {
-      name: 'ERC20',
-      abi: 'ERC20Contract',
+      name: 'Asset',
+      abi: 'ERC20Contract', // Inherited from global abis.
       block: variables.block,
-      file: './mappings/Asset.ts',
-      events: [
-        {
-          event: 'Transfer(indexed address,indexed address,uint256)',
-          handler: 'handleTransfer',
-        },
-      ],
+      events: ['Transfer(indexed address,indexed address,uint256)'],
     },
   ],
 });

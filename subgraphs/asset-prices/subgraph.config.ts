@@ -1,16 +1,22 @@
-import { AbiDeclaration, Configurator, Contexts, DataSourceDeclaration, Template } from '@enzymefinance/subgraph-cli';
+import { Configurator, Contexts, Template } from '@enzymefinance/subgraph-cli';
 
 interface Variables {
   aggregatedDerivativePriceFeed: string;
+  aggregatedDerivativePriceFeedBlock: number;
+  chainlinkPriceFeed: string;
+  chainlinkPriceFeedBlock: number;
 }
 
 export const contexts: Contexts<Variables> = {
   local: {
     local: true,
-    name: 'enzymefinance/vault-balances',
+    name: 'enzymefinance/asset-prices',
     network: 'kovan',
     variables: {
-      aggregatedDerivativePriceFeed: '0xba9493530494958EC2DeED9c8BB34004ff37Ad28',
+      aggregatedDerivativePriceFeed: '0x1899F9e144A0D47cC1471e797C2b7930adf530b3',
+      aggregatedDerivativePriceFeedBlock: 24710069,
+      chainlinkPriceFeed: '0x1dbf40Fc502A61a09c38F5D0f4D07f42AC507606',
+      chainlinkPriceFeedBlock: 24710056,
     },
   },
 };
@@ -23,35 +29,44 @@ export const templates: Template[] = [
 ];
 
 export const configure: Configurator<Variables> = (variables: Variables) => {
-  const abis: AbiDeclaration[] = [
-    {
-      name: 'AggregatedDerivativePriceFeedContract',
-      file: '@enzymefinance/protocol/artifacts/AggregatedDerivativePriceFeed.json',
-    },
+  const abis = [
+    '@chainlink/contracts/abi/v0.6/AggregatorInterface.json',
+    '@chainlink/contracts/abi/v0.6/AggregatorProxy.json',
+    '@enzymefinance/protocol/artifacts/AggregatedDerivativePriceFeed.json',
+    '@enzymefinance/protocol/artifacts/ChainlinkPriceFeed.json',
+    '@enzymefinance/protocol/artifacts/ValueInterpreter.json',
   ];
 
-  const sources: DataSourceDeclaration[] = [
+  const sources = [
     {
       name: 'AggregatedDerivativePriceFeed',
-      abi: 'AggregatedDerivativePriceFeedContract',
-      file: 'mappings/AggregatedDerivativePriceFeed.ts',
       address: variables.aggregatedDerivativePriceFeed,
+      block: variables.aggregatedDerivativePriceFeedBlock,
       events: [
-        {
-          event: 'DerivativeAdded(indexed address,address)',
-          handler: 'handleDerivativeAdded',
-        },
-        {
-          event: 'DerivativeRemoved(indexed address)',
-          handler: 'handleDerivativeRemoved',
-        },
-        {
-          event: 'DerivativeUpdated(indexed address,address,address)',
-          handler: 'handleDerivativeUpdated',
-        },
+        'DerivativeAdded(indexed address,address)',
+        'DerivativeRemoved(indexed address)',
+        'DerivativeUpdated(indexed address,address,address)',
+      ],
+    },
+    {
+      name: 'ChainlinkPriceFeed',
+      address: variables.chainlinkPriceFeed,
+      block: variables.chainlinkPriceFeedBlock,
+      events: [
+        'PrimitiveAdded(indexed address,address,uint8,uint256)',
+        'PrimitiveRemoved(indexed address)',
+        'PrimitiveUpdated(indexed address,address,address)',
       ],
     },
   ];
 
-  return { abis, sources };
+  const templates = [
+    {
+      name: 'ChainlinkAggregator',
+      abi: 'AggregatorInterfaceContract',
+      events: ['AnswerUpdated(indexed int256,indexed uint256,uint256)'],
+    },
+  ];
+
+  return { abis, sources, templates };
 };

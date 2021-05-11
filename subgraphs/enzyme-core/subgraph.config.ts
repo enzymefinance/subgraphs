@@ -1,16 +1,6 @@
-// @ts-ignore
-import path from 'path';
-import {
-  Configurator,
-  Contexts,
-  Template,
-  EventHandlerDeclaration,
-  AbiDeclaration,
-  DataSourceTemplateDeclaration,
-  DataSourceDeclaration,
-} from '@enzymefinance/subgraph-cli';
+import { Configurator, Contexts, Template } from '@enzymefinance/subgraph-cli';
 
-export class ReleaseAddresses {
+class ReleaseAddresses {
   fundDeployerAddress: string;
   vaultLibAddress: string;
   comptrollerLibAddress: string;
@@ -75,9 +65,9 @@ export const contexts: Contexts<Variables> = {
   local: {
     local: true,
     name: 'enzymefinance/enzyme-core',
-    network: 'kovan',
+    network: 'mainnet',
     variables: {
-      block: 24710049,
+      block: 11636493,
       dispatcherAddress: '0xC3DC853dD716bd5754f421ef94fdCbac3902ab32',
       releaseA: {
         fundDeployerAddress: '0x9134C9975244b46692Ad9A7Da36DBa8734Ec6DA3',
@@ -496,84 +486,50 @@ export const templates: Template[] = [
   },
 ];
 
-function abi(file: string): AbiDeclaration {
-  const name = `${path.basename(file, '.json')}Contract`;
-  return { name, file };
-}
-
-function event(event: string): EventHandlerDeclaration {
-  // @ts-ignore
-  const [handler] = event.split('(', 1).map((event) => `handle${event}`);
-  return { event, handler };
-}
-
-interface SourceOptions {
-  name: string;
-  events: string[];
-  suffix?: string;
-  block?: number;
-  address?: string;
-}
-
-function source(options: SourceOptions): DataSourceDeclaration {
-  return {
-    name: `${options.name}${options.suffix != null ? options.suffix : ''}DataSource`,
-    abi: `${options.name}Contract`,
-    file: `mappings/${options.name}.ts`,
-    events: options.events.map((signature) => event(signature)),
-    ...(options.address ? { address: options.address } : undefined),
-    ...(options.block ? { block: options.block } : undefined),
-  };
-}
-
-function template(name: string, events: string[]) {
-  return source({ name, events }) as DataSourceTemplateDeclaration;
-}
-
 export const configure: Configurator<Variables> = (variables) => {
   const abis = [
-    '@chainlink/contracts/abi/v0.6/AggregatorInterface.json',
     '@enzymefinance/enzyme-core-subgraph/utils/abis/CurveRegistry.json',
-    '@enzymefinance/protocol/artifacts/CompoundAdapter.json',
-    '@enzymefinance/protocol/artifacts/MinMaxInvestment.json',
-    '@enzymefinance/protocol/artifacts/FundActionsWrapper.json',
-    '@enzymefinance/protocol/artifacts/IUniswapV2Pair.json',
-    '@enzymefinance/protocol/artifacts/ValueInterpreter.json',
-    '@enzymefinance/protocol/artifacts/IUniswapV2Pair.json',
-    '@enzymefinance/protocol/artifacts/ICERC20.json',
     '@enzymefinance/protocol/artifacts/AavePriceFeed.json',
+    '@enzymefinance/protocol/artifacts/AdapterBlacklist.json',
+    '@enzymefinance/protocol/artifacts/AdapterWhitelist.json',
+    '@enzymefinance/protocol/artifacts/AggregatedDerivativePriceFeed.json',
     '@enzymefinance/protocol/artifacts/AlphaHomoraV1PriceFeed.json',
+    '@enzymefinance/protocol/artifacts/AssetBlacklist.json',
+    '@enzymefinance/protocol/artifacts/AssetWhitelist.json',
+    '@enzymefinance/protocol/artifacts/ChainlinkPriceFeed.json',
     '@enzymefinance/protocol/artifacts/ChaiPriceFeed.json',
+    '@enzymefinance/protocol/artifacts/CompoundAdapter.json',
     '@enzymefinance/protocol/artifacts/CompoundPriceFeed.json',
+    '@enzymefinance/protocol/artifacts/ComptrollerLib.json',
     '@enzymefinance/protocol/artifacts/CurvePriceFeed.json',
+    '@enzymefinance/protocol/artifacts/Dispatcher.json',
+    '@enzymefinance/protocol/artifacts/EntranceRateBurnFee.json',
+    '@enzymefinance/protocol/artifacts/EntranceRateDirectFee.json',
+    '@enzymefinance/protocol/artifacts/FeeManager.json',
+    '@enzymefinance/protocol/artifacts/FundActionsWrapper.json',
+    '@enzymefinance/protocol/artifacts/FundDeployer.json',
+    '@enzymefinance/protocol/artifacts/GuaranteedRedemption.json',
+    '@enzymefinance/protocol/artifacts/ICERC20.json',
+    '@enzymefinance/protocol/artifacts/IChainlinkAggregator.json',
     '@enzymefinance/protocol/artifacts/ICurveAddressProvider.json',
     '@enzymefinance/protocol/artifacts/IdlePriceFeed.json',
+    '@enzymefinance/protocol/artifacts/IntegrationManager.json',
+    '@enzymefinance/protocol/artifacts/InvestorWhitelist.json',
+    '@enzymefinance/protocol/artifacts/IUniswapV2Pair.json',
+    '@enzymefinance/protocol/artifacts/IUniswapV2Pair.json',
+    '@enzymefinance/protocol/artifacts/ManagementFee.json',
+    '@enzymefinance/protocol/artifacts/MaxConcentration.json',
+    '@enzymefinance/protocol/artifacts/MinMaxInvestment.json',
+    '@enzymefinance/protocol/artifacts/PerformanceFee.json',
+    '@enzymefinance/protocol/artifacts/PolicyManager.json',
     '@enzymefinance/protocol/artifacts/StakehoundEthPriceFeed.json',
     '@enzymefinance/protocol/artifacts/SynthetixPriceFeed.json',
     '@enzymefinance/protocol/artifacts/UniswapV2PoolPriceFeed.json',
-    '@enzymefinance/protocol/artifacts/Dispatcher.json',
-    '@enzymefinance/protocol/artifacts/FundDeployer.json',
-    '@enzymefinance/protocol/artifacts/FeeManager.json',
-    '@enzymefinance/protocol/artifacts/EntranceRateDirectFee.json',
-    '@enzymefinance/protocol/artifacts/EntranceRateBurnFee.json',
-    '@enzymefinance/protocol/artifacts/ManagementFee.json',
-    '@enzymefinance/protocol/artifacts/PerformanceFee.json',
-    '@enzymefinance/protocol/artifacts/IntegrationManager.json',
-    '@enzymefinance/protocol/artifacts/PolicyManager.json',
-    '@enzymefinance/protocol/artifacts/AdapterBlacklist.json',
-    '@enzymefinance/protocol/artifacts/AdapterWhitelist.json',
-    '@enzymefinance/protocol/artifacts/AssetBlacklist.json',
-    '@enzymefinance/protocol/artifacts/AssetWhitelist.json',
-    '@enzymefinance/protocol/artifacts/GuaranteedRedemption.json',
-    '@enzymefinance/protocol/artifacts/InvestorWhitelist.json',
-    '@enzymefinance/protocol/artifacts/MaxConcentration.json',
-    '@enzymefinance/protocol/artifacts/AggregatedDerivativePriceFeed.json',
-    '@enzymefinance/protocol/artifacts/ChainlinkPriceFeed.json',
+    '@enzymefinance/protocol/artifacts/ValueInterpreter.json',
     '@enzymefinance/protocol/artifacts/VaultLib.json',
-    '@enzymefinance/protocol/artifacts/ComptrollerLib.json',
-  ].map((name) => abi(name));
+  ];
 
-  const dispatcher: SourceOptions = {
+  const dispatcher = {
     name: 'Dispatcher',
     block: variables.block,
     address: variables.dispatcherAddress,
@@ -590,11 +546,10 @@ export const configure: Configurator<Variables> = (variables) => {
       'NominatedOwnerSet(indexed address)',
       'OwnershipTransferred(indexed address,indexed address)',
       'SharesTokenSymbolSet(string)',
-      'VaultProxyDeployed(indexed address,indexed address,address,indexed address,address,string)',
     ],
   };
 
-  const releases: SourceOptions[][] = [variables.releaseA, variables.releaseB].map((release) => [
+  const releases = [variables.releaseA, variables.releaseB].map((release) => [
     {
       name: 'FundDeployer',
       block: variables.block,
@@ -752,29 +707,34 @@ export const configure: Configurator<Variables> = (variables) => {
   ]);
 
   // @ts-ignore
-  const flattened = releases.flatMap((release, index) => release.map((options) => ({ ...options, suffix: index })));
-  const sources = [dispatcher, ...flattened].map((options) => source(options));
-
+  const flattened = releases.flatMap((release, index) => release.map((source) => ({ ...source, version: index })));
+  const sources = [dispatcher, ...flattened];
   const templates = [
-    template('VaultLib', [
-      'AccessorSet(address,address)',
-      'Approval(indexed address,indexed address,uint256)',
-      'AssetWithdrawn(indexed address,indexed address,uint256)',
-      'MigratorSet(address,address)',
-      'OwnerSet(address,address)',
-      'TrackedAssetAdded(address)',
-      'TrackedAssetRemoved(address)',
-      'Transfer(indexed address,indexed address,uint256)',
-      'VaultLibSet(address,address)',
-    ]),
-    template('ComptrollerLib', [
-      'MigratedSharesDuePaid(uint256)',
-      'OverridePauseSet(indexed bool)',
-      'PreRedeemSharesHookFailed(bytes,address,uint256)',
-      'SharesBought(indexed address,indexed address,uint256,uint256,uint256)',
-      'SharesRedeemed(indexed address,uint256,address[],uint256[])',
-      'VaultProxySet(address)',
-    ]),
+    {
+      name: 'VaultLib',
+      events: [
+        'AccessorSet(address,address)',
+        'Approval(indexed address,indexed address,uint256)',
+        'AssetWithdrawn(indexed address,indexed address,uint256)',
+        'MigratorSet(address,address)',
+        'OwnerSet(address,address)',
+        'TrackedAssetAdded(address)',
+        'TrackedAssetRemoved(address)',
+        'Transfer(indexed address,indexed address,uint256)',
+        'VaultLibSet(address,address)',
+      ],
+    },
+    {
+      name: 'ComptrollerLib',
+      events: [
+        'MigratedSharesDuePaid(uint256)',
+        'OverridePauseSet(indexed bool)',
+        'PreRedeemSharesHookFailed(bytes,address,uint256)',
+        'SharesBought(indexed address,indexed address,uint256,uint256,uint256)',
+        'SharesRedeemed(indexed address,uint256,address[],uint256[])',
+        'VaultProxySet(address)',
+      ],
+    },
   ];
 
   return { abis, sources, templates };

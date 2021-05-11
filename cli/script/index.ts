@@ -3,7 +3,8 @@ import glob from 'glob';
 import path from 'path';
 import yargs from 'yargs';
 import handlebars from 'handlebars';
-import { Configurator, Context, Contexts, Environment, Template } from '@enzymefinance/subgraph-cli';
+import { Configurator, Context, Contexts, Environment, ManifestValues, Template } from '@enzymefinance/subgraph-cli';
+import { abi, source, template } from './utils';
 
 const graph = require('@graphprotocol/graph-cli/src/cli').run as (args?: string[]) => Promise<void>;
 const root = path.join(__dirname, '..');
@@ -32,19 +33,20 @@ class SubgraphLoader<TVariables = any> {
       throw new Error(`Invalid context ${context}. Available contexts: ${Object.keys(this.contexts).join(', ')}`);
     }
 
-    const manifest = this.configure(context.variables);
-    const abis = ['ERC20', 'ERC20NameBytes', 'ERC20SymbolBytes'].map((name) => ({
-      name: `${name}Contract`,
-      file: `@enzymefinance/subgraph-utils/abis/${name}.json`,
-    }));
+    const manifest = this.configure(context.variables) as ManifestValues;
+    const abis = [
+      '@enzymefinance/subgraph-utils/abis/ERC20.json',
+      '@enzymefinance/subgraph-utils/abis/ERC20NameBytes.json',
+      '@enzymefinance/subgraph-utils/abis/ERC20SymbolBytes.json',
+    ];
 
     manifest.network = context.network;
     manifest.abis = [...(manifest.abis ?? []), ...abis]
-      .filter((item, index, array) => array.findIndex((inner) => inner.name === item.name) === index)
-      .map((item) => ({
-        name: item.name,
-        file: path.relative(this.root, require.resolve(item.file)),
-      }));
+      .map((item) => abi(item, this.root))
+      .filter((item, index, array) => array.findIndex((inner) => inner.name === item.name) === index);
+
+    manifest.sources = manifest.sources.map((item) => source(item));
+    manifest.templates = manifest.templates?.map((item) => template(item));
 
     const environment: Environment<TVariables> = {
       name: context.name,
@@ -210,6 +212,7 @@ yargs
       await subgraph.generateCode();
 
       console.log('Deploying subgraph');
+      await subgraph.createSubgraph();
       await subgraph.deploySubgraph();
     },
   )

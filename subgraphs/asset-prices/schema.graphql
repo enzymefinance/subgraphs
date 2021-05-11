@@ -46,7 +46,6 @@ type AssetPrice @entity {
 interface PriceWindow {
   id: ID!
   asset: Asset!
-  group: PriceWindowGroup!
   from: BigInt!
   to: BigInt!
   open: AssetPrice!
@@ -91,7 +90,6 @@ interface PriceWindowGroup {
   id: ID!
   from: BigInt!
   to: BigInt!
-  windows: [PriceWindow!]! @derivedFrom(field: "group")
 }
 
 type HourlyPriceWindowGroup implements PriceWindowGroup @entity {

@@ -1,6 +1,6 @@
 import { BigDecimal, ethereum } from '@graphprotocol/graph-ts';
 import { toBigDecimal } from '../../../utils/utils/math';
-import { ChainlinkAggregatorContract } from '../generated/ChainlinkAggregatorContract';
+import { IChainlinkAggregatorContract } from '../generated/IChainlinkAggregatorContract';
 import { CurrencyPrice } from '../generated/schema';
 import { aggregatorAddressForCurrency, BTCETH_AGGREGATOR, ETHUSD_AGGREGATOR } from '../utils/aggregatorAddresses';
 
@@ -20,6 +20,7 @@ export function ensureCurrencyPrice(event: ethereum.Event): CurrencyPrice {
 
   // All prices are vs. ETH
   currencyPrice = new CurrencyPrice(id);
+  currencyPrice.timestamp = event.block.timestamp;
   currencyPrice.aud = getLatestCurrencyPrice('aud').div(ethUsd);
   currencyPrice.btc = btcEth;
   currencyPrice.chf = getLatestCurrencyPrice('chf').div(ethUsd);
@@ -33,7 +34,7 @@ export function ensureCurrencyPrice(event: ethereum.Event): CurrencyPrice {
 }
 
 function getLatestEthUsdPrice(): BigDecimal {
-  let aggregator = ChainlinkAggregatorContract.bind(ETHUSD_AGGREGATOR);
+  let aggregator = IChainlinkAggregatorContract.bind(ETHUSD_AGGREGATOR);
   let latestAnswer = aggregator.try_latestAnswer();
 
   if (latestAnswer.reverted) {
@@ -46,7 +47,7 @@ function getLatestEthUsdPrice(): BigDecimal {
 }
 
 function getLatestCurrencyPrice(currency: string): BigDecimal {
-  let aggregator = ChainlinkAggregatorContract.bind(aggregatorAddressForCurrency(currency));
+  let aggregator = IChainlinkAggregatorContract.bind(aggregatorAddressForCurrency(currency));
   let latestAnswer = aggregator.try_latestAnswer();
 
   if (latestAnswer.reverted) {
@@ -59,7 +60,7 @@ function getLatestCurrencyPrice(currency: string): BigDecimal {
 }
 
 function getLatestBtcEthPrice(): BigDecimal {
-  let aggregator = ChainlinkAggregatorContract.bind(BTCETH_AGGREGATOR);
+  let aggregator = IChainlinkAggregatorContract.bind(BTCETH_AGGREGATOR);
   let latestAnswer = aggregator.try_latestAnswer();
 
   if (latestAnswer.reverted) {

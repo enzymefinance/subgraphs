@@ -249,7 +249,6 @@ type SharesBoughtEvent implements EventInterface & VaultEventInterface & SharesC
   investor: Account!
   investmentState: InvestmentState!
   shares: BigDecimal!
-  asset: Asset!
   depositAssetAmount: AssetAmount!
   sharesIssued: BigDecimal!
   timestamp: BigInt!
@@ -1517,7 +1516,7 @@ type VaultState implements VaultStateInterface @entity {
   portfolio: PortfolioState!
   feeState: FeeState!
   calculations: CalculationState!
-  currencyPrices: [CurrencyPrice!]!
+  currency: CurrencyPrice!
   investmentCount: Int!
   events: [VaultEventInterface!]!
 }

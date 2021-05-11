@@ -2,6 +2,7 @@ import { ethereum } from '@graphprotocol/graph-ts';
 import { logCritical } from '../../../utils/utils/logging';
 import { CalculationState, FeeState, PortfolioState, ShareState, Vault, VaultState } from '../generated/schema';
 import { useCalculationState } from './CalculationState';
+import { ensureCurrencyPrice } from './CurrencyPrice';
 import { useFeeState } from './FeeState';
 import { trackDailyFundState, trackHourlyFundState, trackMonthlyFundState } from './PeriodicFundState';
 import { usePortfolioState } from './PortfolioState';
@@ -29,7 +30,7 @@ export function createVaultState(
   state.calculations = calculations.id;
   state.events = new Array<string>();
   state.investmentCount = investmentCount as i32;
-  // state.currencyPrices = loadCurrentCurrencyPrices().map<string>((price) => price.id);
+  state.currency = ensureCurrencyPrice(event).id;
   state.save();
 
   return state;
