@@ -1,5 +1,4 @@
-import { arrayDiff } from '.../../../utils/utils/array';
-import { arrayUnique } from '../../../utils/utils/array';
+import { arrayDiff, arrayUnique } from '../../../utils/utils/array';
 import { uniqueEventId } from '../../../utils/utils/id';
 import { ensureGuaranteedRedemption } from '../entities/GuaranteedRedemption';
 import { ensureGuaranteedRedemptionSetting } from '../entities/GuaranteedRedemptionSetting';

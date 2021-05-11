@@ -21,14 +21,19 @@ export function ensureAssetPrice(asset: Asset, event: ethereum.Event): AssetPric
   assetPrice = new AssetPrice(id);
   assetPrice.asset = asset.id;
   assetPrice.timestamp = event.block.timestamp;
-  assetPrice.price = currentAssetPrice[0];
-  assetPrice.valid = currentAssetPrice[1];
+  assetPrice.price = currentAssetPrice.price;
+  assetPrice.valid = currentAssetPrice.valid;
   assetPrice.save();
 
   return assetPrice;
 }
 
-export function getCurrentAssetPrice(asset: Asset): [BigDecimal, boolean] {
+export class AssetPriceReturnValue {
+  price: BigDecimal;
+  valid: boolean;
+}
+
+export function getCurrentAssetPrice(asset: Asset): AssetPriceReturnValue {
   let release = useCurrentRelease();
 
   let valueInterpreter = ValueInterpreterContract.bind(Address.fromString(release.valueInterpreter));
@@ -36,13 +41,13 @@ export function getCurrentAssetPrice(asset: Asset): [BigDecimal, boolean] {
   let baseAddress = Address.fromString(asset.id);
   let quoteAddress = Address.fromString(release.wethToken);
 
-  let amount = BigInt.fromI32(10).pow(asset.decimals);
+  let amount = BigInt.fromI32(10).pow(asset.decimals as i8);
 
   let value = valueInterpreter.try_calcCanonicalAssetValue(baseAddress, amount, quoteAddress);
 
   if (value.reverted || value.value.value1 == false) {
-    return [BigDecimal.fromString('0'), false];
+    return { price: BigDecimal.fromString('0'), valid: false };
   }
 
-  return [toBigDecimal(value.value.value0), true];
+  return { price: toBigDecimal(value.value.value0), valid: true };
 }
