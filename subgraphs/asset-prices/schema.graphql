@@ -1,0 +1,126 @@
+#################################################
+# Assets
+#################################################
+
+type Asset @entity {
+  id: ID!
+  name: String!
+  symbol: String!
+  decimals: Int!
+
+  # Latest price and windows
+  price: AssetPrice
+  hourly: HourlyAssetPriceWindow
+  daily: DailyAssetPriceWindow
+  monthly: MonthlyAssetPriceWindow
+
+  # Historical prices and windows
+  priceHistory: [AssetPrice!]! @derivedFrom(field: "asset")
+  hourlyHistory: [HourlyAssetPriceWindow!]! @derivedFrom(field: "asset")
+  dailyHistory: [DailyAssetPriceWindow!]! @derivedFrom(field: "asset")
+  monthlyHistory: [MonthlyAssetPriceWindow!]! @derivedFrom(field: "asset")
+}
+
+#################################################
+# Asset prices
+#################################################
+
+type AssetPrice @entity {
+  id: ID!
+  asset: Asset!
+  timestamp: BigInt!
+  eth: BigDecimal!
+  btc: BigDecimal!
+  usd: BigDecimal!
+  eur: BigDecimal!
+  aud: BigDecimal!
+  chf: BigDecimal!
+  gbp: BigDecimal!
+  jpy: BigDecimal!
+}
+
+#################################################
+# Asset price windows
+#################################################
+
+interface PriceWindow {
+  id: ID!
+  asset: Asset!
+  group: PriceWindowGroup!
+  from: BigInt!
+  to: BigInt!
+  open: AssetPrice!
+  close: AssetPrice!
+}
+
+type HourlyAssetPriceWindow implements PriceWindow @entity {
+  id: ID!
+  asset: Asset!
+  group: HourlyPriceWindowGroup!
+  from: BigInt!
+  to: BigInt!
+  open: AssetPrice!
+  close: AssetPrice!
+}
+
+type DailyAssetPriceWindow implements PriceWindow @entity {
+  id: ID!
+  asset: Asset!
+  group: DailyPriceWindowGroup!
+  from: BigInt!
+  to: BigInt!
+  open: AssetPrice!
+  close: AssetPrice!
+}
+
+type MonthlyAssetPriceWindow implements PriceWindow @entity {
+  id: ID!
+  asset: Asset!
+  group: MonthlyPriceWindowGroup!
+  from: BigInt!
+  to: BigInt!
+  open: AssetPrice!
+  close: AssetPrice!
+}
+
+#################################################
+# Asset and currency price window groups
+#################################################
+
+interface PriceWindowGroup {
+  id: ID!
+  from: BigInt!
+  to: BigInt!
+  windows: [PriceWindow!]! @derivedFrom(field: "group")
+}
+
+type HourlyPriceWindowGroup implements PriceWindowGroup @entity {
+  id: ID!
+  from: BigInt!
+  to: BigInt!
+  windows: [HourlyAssetPriceWindow!]! @derivedFrom(field: "group")
+}
+
+type DailyPriceWindowGroup implements PriceWindowGroup @entity {
+  id: ID!
+  from: BigInt!
+  to: BigInt!
+  windows: [DailyAssetPriceWindow!]! @derivedFrom(field: "group")
+}
+
+type MonthlyPriceWindowGroup implements PriceWindowGroup @entity {
+  id: ID!
+  from: BigInt!
+  to: BigInt!
+  windows: [MonthlyAssetPriceWindow!]! @derivedFrom(field: "group")
+}
+
+#################################################
+# Currencies
+#################################################
+
+type Currency @entity {
+  id: ID!
+  timestamp: BigInt!
+  eth: BigDecimal!
+}
