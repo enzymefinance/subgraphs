@@ -1,0 +1,1843 @@
+#################################################
+# Interfaces
+#################################################
+
+interface EventInterface {
+  id: ID!
+  timestamp: BigInt!
+  transaction: Transaction!
+}
+
+interface NetworkEventInterface {
+  id: ID!
+  timestamp: BigInt!
+  transaction: Transaction!
+}
+
+interface VaultEventInterface {
+  id: ID!
+  vault: Vault!
+  # comptroller: ComptrollerProxy!
+  timestamp: BigInt!
+  transaction: Transaction!
+}
+
+interface ComptrollerEventInterface {
+  id: ID!
+  comptroller: ComptrollerProxy!
+  timestamp: BigInt!
+  transaction: Transaction!
+}
+
+interface SharesChangeInterface {
+  id: ID!
+  vault: Vault!
+  investor: Account!
+  timestamp: BigInt!
+  type: ShareChangeType!
+  investmentState: InvestmentState!
+  shares: BigDecimal!
+  vaultState: VaultState!
+  transaction: Transaction!
+  calculations: CalculationState!
+}
+
+interface FeeSharesChangeInterface {
+  id: ID!
+  vault: Vault!
+  investor: Account!
+  timestamp: BigInt!
+  type: ShareChangeType!
+  investmentState: InvestmentState!
+  shares: BigDecimal!
+  vaultState: VaultState!
+  transaction: Transaction!
+  calculations: CalculationState!
+}
+
+interface InvestmentSharesChangeInterface {
+  id: ID!
+  vault: Vault!
+  investor: Account!
+  timestamp: BigInt!
+  type: ShareChangeType!
+  investmentState: InvestmentState!
+  shares: BigDecimal!
+  vaultState: VaultState!
+  transaction: Transaction!
+  calculations: CalculationState!
+}
+
+interface VaultStateInterface {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  events: [VaultEventInterface!]!
+}
+
+interface FeeSettingInterface {
+  id: ID!
+  fee: Fee!
+  comptroller: ComptrollerProxy!
+  timestamp: BigInt!
+  events: [VaultEventInterface!]!
+}
+
+interface PolicySettingInterface {
+  id: ID!
+  policy: Policy!
+  comptroller: ComptrollerProxy!
+  timestamp: BigInt!
+  enabled: Boolean!
+  events: [VaultEventInterface!]!
+}
+
+interface IndividualFeeStateInterface {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  fee: Fee!
+  events: [VaultEventInterface!]!
+}
+
+interface PeriodicVaultStateInterface {
+  id: ID!
+  vault: Vault!
+  start: BigInt!
+  end: BigInt!
+  first: VaultState!
+  last: VaultState!
+}
+
+interface Trade {
+  id: ID!
+  vault: Vault!
+  adapter: IntegrationAdapter!
+  method: IntegrationMethod!
+  timestamp: BigInt!
+  vaultState: VaultState!
+}
+
+#################################################
+# Enums
+#################################################
+
+enum AssetType {
+  UNKNOWN
+  DERIVATIVE
+  ETH
+  USD
+}
+
+enum CurveAssetType {
+  GAUGE
+  POOL
+}
+
+enum DerivativeType {
+  Aave
+  Alpha
+  Chai
+  Compound
+  CurvePool
+  Idle
+  Stakehound
+  Synthetix
+  UniswapPool
+}
+
+enum ChainlinkAggregatorProxyType {
+  ASSET
+  ETHUSD
+  CURRENCY
+}
+
+enum FeeHook {
+  Continuous
+  BuySharesSetup
+  PreBuyShares
+  PostBuyShares
+  BuySharesCompleted
+  PreRedeemShares
+  Unknown
+}
+
+enum PolicyHook {
+  BuySharesSetup
+  PreBuyShares
+  PostBuyShares
+  BuySharesCompleted
+  PreCallOnIntegration
+  PostCallOnIntegration
+  Unknown
+}
+
+enum SettlementType {
+  None
+  Direct
+  Mint
+  Burn
+  MintSharesOutstanding
+  BurnSharesOutstanding
+  Unknown
+}
+
+enum ShareChangeType {
+  SharesBought
+  SharesRedeemed
+  FeeSettledForFund
+  AllSharesOutstandingForcePaidForFund
+  SharesOutstandingPaidForFund
+}
+
+enum IntegrationMethod {
+  ADD_TRACKED_ASSETS
+  APPROVE_ASSETS
+  TAKE_ORDER
+  LEND
+  REDEEM
+  STAKE
+  UNSTAKE
+  CLAIM_REWARDS
+  CLAIM_REWARDS_AND_REINVEST
+  CLAIM_REWARDS_AND_SWAP
+  LEND_AND_STAKE
+  UNSTAKE_AND_REDEEM
+  UNKNOWN
+}
+
+enum ComptrollerProxyStatus {
+  FREE
+  SIGNALLED
+  COMMITTED
+  DESTRUCTED
+}
+
+#################################################
+# Low-level fund event entities
+#################################################
+
+type NewFundCreatedEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  comptroller: ComptrollerProxy!
+  vaultProxy: Vault!
+  creator: Account!
+  fundOwner: Account!
+  fundName: String!
+  denominationAsset: Asset!
+  sharesActionTimelock: BigInt!
+  feeManagerConfigData: String!
+  policyManagerConfigData: String!
+  transaction: Transaction!
+}
+
+type VaultProxySetEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  transaction: Transaction!
+  vaultProxy: String!
+}
+
+type SharesBoughtEvent implements EventInterface & VaultEventInterface & SharesChangeInterface & InvestmentSharesChangeInterface
+  @entity {
+  id: ID!
+  vault: Vault!
+  type: ShareChangeType!
+  investor: Account!
+  investmentState: InvestmentState!
+  shares: BigDecimal!
+  asset: Asset!
+  depositAssetAmount: AssetAmount!
+  sharesIssued: BigDecimal!
+  timestamp: BigInt!
+  vaultState: VaultState!
+  transaction: Transaction!
+  calculations: CalculationState!
+}
+
+type SharesRedeemedEvent implements EventInterface & VaultEventInterface & SharesChangeInterface & InvestmentSharesChangeInterface
+  @entity {
+  id: ID!
+  vault: Vault!
+  type: ShareChangeType!
+  investor: Account!
+  investmentState: InvestmentState!
+  shares: BigDecimal!
+  withdrawAssetAmounts: [AssetAmount!]!
+  timestamp: BigInt!
+  vaultState: VaultState!
+  transaction: Transaction!
+  calculations: CalculationState!
+}
+
+type AssetWithdrawnEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  asset: Asset!
+  vault: Vault!
+  timestamp: BigInt!
+  transaction: Transaction!
+  target: String!
+  amount: BigDecimal!
+}
+
+type TrackedAssetAddedEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  asset: Asset!
+  timestamp: BigInt!
+  transaction: Transaction!
+}
+
+type TrackedAssetRemovedEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  account: Account!
+  asset: Asset!
+  timestamp: BigInt!
+  transaction: Transaction!
+}
+
+type AuthUserAddedForFundEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  transaction: Transaction!
+}
+
+type AuthUserRemovedForFundEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  transaction: Transaction!
+}
+
+type CallOnIntegrationExecutedForFundEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  adapter: IntegrationAdapter!
+  selector: String!
+  integrationData: String!
+  incomingAssets: [Asset!]!
+  outgoingAssets: [Asset!]!
+  incomingAssetAmounts: [AssetAmount!]!
+  outgoingAssetAmounts: [AssetAmount!]!
+  timestamp: BigInt!
+  transaction: Transaction!
+}
+
+type MigrationSignaledEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  transaction: Transaction!
+  migration: Migration!
+}
+
+type MigrationCancelledEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  transaction: Transaction!
+  migration: Migration!
+  executableTimestamp: BigInt!
+}
+
+type MigrationExecutedEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  transaction: Transaction!
+  migration: Migration!
+  executableTimestamp: BigInt!
+}
+
+type MigrationInCancelHookFailedEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  transaction: Transaction!
+  vaultProxy: String!
+  prevFundDeployer: String!
+  nextFundDeployer: String!
+  nextVaultLib: String!
+  nextVaultAccessor: String!
+  failureReturnData: String!
+}
+
+type MigrationOutHookFailedEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  transaction: Transaction!
+  vaultProxy: String!
+  prevFundDeployer: String!
+  nextFundDeployer: String!
+  nextVaultLib: String!
+  nextVaultAccessor: String!
+  failureReturnData: String!
+}
+
+type FeeEnabledForFundEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  transaction: Transaction!
+  fee: Fee!
+  comptrollerProxy: String!
+  settingsData: Bytes!
+}
+
+type FeesRecipientSetForFundEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: String!
+  prevFeesRecipient: String!
+  nextFeesRecipient: String!
+}
+
+type FeeSettledForFundEvent implements EventInterface & VaultEventInterface & SharesChangeInterface & FeeSharesChangeInterface
+  @entity {
+  id: ID!
+  vault: Vault!
+  type: ShareChangeType!
+  investor: Account!
+  timestamp: BigInt!
+  transaction: Transaction!
+  investmentState: InvestmentState!
+  shares: BigDecimal!
+  comptrollerProxy: String!
+  fee: Fee!
+  payer: String!
+  payee: String!
+  settlementType: SettlementType!
+  sharesDue: BigDecimal!
+  calculations: CalculationState!
+  vaultState: VaultState!
+}
+
+type AllSharesOutstandingForcePaidForFundEvent implements EventInterface & VaultEventInterface & SharesChangeInterface & FeeSharesChangeInterface
+  @entity {
+  id: ID!
+  vault: Vault!
+  type: ShareChangeType!
+  investor: Account!
+  timestamp: BigInt!
+  transaction: Transaction!
+  investmentState: InvestmentState!
+  shares: BigDecimal!
+  comptrollerProxy: String!
+  payee: String!
+  sharesDue: BigDecimal!
+  calculations: CalculationState!
+  vaultState: VaultState!
+}
+
+type SharesOutstandingPaidForFundEvent implements EventInterface & VaultEventInterface & SharesChangeInterface & FeeSharesChangeInterface
+  @entity {
+  id: ID!
+  vault: Vault!
+  type: ShareChangeType!
+  investor: Account!
+  timestamp: BigInt!
+  transaction: Transaction!
+  investmentState: InvestmentState!
+  shares: BigDecimal!
+  comptrollerProxy: String!
+  fee: Fee!
+  sharesDue: BigDecimal!
+  calculations: CalculationState!
+  vaultState: VaultState!
+}
+
+type PolicyEnabledForFundEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  policy: Policy!
+  settingsData: String!
+  timestamp: BigInt!
+  transaction: Transaction!
+}
+
+type PolicyDisabledForFundEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  policy: Policy!
+  timestamp: BigInt!
+  transaction: Transaction!
+}
+
+type AccessorSetEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  prevAccessor: String
+  nextAccessor: String!
+  transaction: Transaction!
+  timestamp: BigInt!
+}
+
+type OwnerSetEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  transaction: Transaction!
+  prevOwner: Account
+  nextOwner: Account!
+}
+
+type MigratorSetEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  transaction: Transaction!
+  prevMigrator: Account
+  nextMigrator: Account!
+}
+
+type VaultLibSetEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  transaction: Transaction!
+  prevVaultLib: String
+  nextVaultLib: String!
+}
+
+type ApprovalEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  transaction: Transaction!
+  owner: String!
+  spender: String!
+  value: BigDecimal!
+}
+
+type TransferEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  transaction: Transaction!
+  from: String!
+  to: String!
+  amount: BigDecimal!
+}
+
+type AdapterBlacklistAddressesAddedEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: String!
+  items: [IntegrationAdapter!]!
+}
+
+type AdapterBlacklistAddressesRemovedEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: String!
+  items: [IntegrationAdapter!]!
+}
+
+type AdapterWhitelistAddressesAddedEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: String!
+  items: [IntegrationAdapter!]!
+}
+
+type AdapterWhitelistAddressesRemovedEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: String!
+  items: [IntegrationAdapter!]!
+}
+
+type AssetBlacklistAddressesAddedEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: String!
+  items: [Asset!]!
+}
+
+type AssetBlacklistAddressesRemovedEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: String!
+  items: [Asset!]!
+}
+
+type AssetWhitelistAddressesAddedEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: String!
+  items: [Asset!]!
+}
+
+type AssetWhitelistAddressesRemovedEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: String!
+  items: [Asset!]!
+}
+
+type BuySharesCallerWhitelistAddressesAddedEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: String!
+  items: [String!]!
+}
+
+type BuySharesCallerWhitelistAddressesRemovedEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: String!
+  items: [String!]!
+}
+
+type GuaranteedRedemptionFundSettingsSetEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: String!
+  startTimestamp: BigInt!
+  duration: BigInt!
+}
+
+type InvestorWhitelistAddressesAddedEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: String!
+  items: [Account!]!
+}
+
+type InvestorWhitelistAddressesRemovedEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: String!
+  items: [Account!]!
+}
+
+type MaxConcentrationSetEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: String!
+  value: BigDecimal!
+}
+
+type MinMaxInvestmentFundSettingsSetEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: String!
+  minInvestmentAmount: BigDecimal!
+  maxInvestmentAmount: BigDecimal!
+}
+
+type ManagementFeeSettingsAddedEvent implements EventInterface & ComptrollerEventInterface @entity {
+  id: ID!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptroller: ComptrollerProxy!
+  scaledPerSecondRate: BigInt!
+}
+
+type ManagementFeeSettledEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptroller: ComptrollerProxy!
+  sharesDue: BigDecimal!
+  secondsSinceSettlement: BigInt!
+}
+
+type PerformanceFeeSettingsAddedEvent implements EventInterface & ComptrollerEventInterface @entity {
+  id: ID!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptroller: ComptrollerProxy!
+  rate: BigDecimal!
+  period: BigInt!
+}
+
+type PerformanceFeeActivatedForFundEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: String!
+  highWaterMark: BigDecimal!
+}
+
+type PerformanceFeeSharePriceUpdatedEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: String!
+  prevSharePrice: BigDecimal!
+  nextSharePrice: BigDecimal!
+}
+
+type PerformanceFeePaidOutEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: String!
+  prevHighWaterMark: BigDecimal!
+  nextHighWaterMark: BigDecimal!
+}
+
+type PerformanceFeePerformanceUpdatedEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: String!
+  prevAggregateValueDue: BigDecimal!
+  nextAggregateValueDue: BigDecimal!
+  sharesOutstandingDiff: BigDecimal!
+}
+
+type EntranceRateDirectFeeSettingsAddedEvent implements EventInterface & ComptrollerEventInterface @entity {
+  id: ID!
+  comptroller: ComptrollerProxy!
+  timestamp: BigInt!
+  transaction: Transaction!
+  rate: BigDecimal!
+}
+
+type EntranceRateDirectFeeSettledEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: String!
+  sharesQuantity: BigDecimal!
+  payer: Account!
+}
+
+type EntranceRateBurnFeeSettingsAddedEvent implements EventInterface & ComptrollerEventInterface @entity {
+  id: ID!
+  comptroller: ComptrollerProxy!
+  timestamp: BigInt!
+  transaction: Transaction!
+  rate: BigDecimal!
+}
+
+type EntranceRateBurnFeeSettledEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerProxy: String!
+  sharesQuantity: BigDecimal!
+  payer: Account!
+}
+
+type OverridePauseSetEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  transaction: Transaction!
+  overridePause: Boolean!
+}
+
+type MigratedSharesDuePaidEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  transaction: Transaction!
+  sharesDue: BigDecimal!
+}
+
+type PreRedeemSharesHookFailedEvent implements EventInterface & VaultEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  sharesQuantity: BigDecimal!
+  redeemer: Account!
+  failureReturnData: String!
+  transaction: Transaction!
+}
+
+#################################################
+# Low-level network event entities
+#################################################
+
+# VaultProxyDeployedEvent is both a fund event and a network event
+type VaultProxyDeployedEvent implements EventInterface & VaultEventInterface & NetworkEventInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  transaction: Transaction!
+  fundDeployer: String!
+  owner: Account!
+  vaultLib: String!
+  accessor: String!
+  fundName: String!
+}
+
+type ComptrollerProxyDeployedEvent implements EventInterface & NetworkEventInterface @entity {
+  id: ID!
+  timestamp: BigInt!
+  creator: Account!
+  comptrollerProxy: String!
+  transaction: Transaction!
+  denominationAsset: Asset!
+  sharesActionTimelock: BigInt!
+  feeManagerConfigData: String!
+  policyManagerConfigData: String!
+  forMigration: Boolean!
+}
+
+type ComptrollerLibSetEvent implements EventInterface & NetworkEventInterface @entity {
+  id: ID!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptrollerLib: String!
+}
+
+type AdapterRegisteredEvent implements EventInterface & NetworkEventInterface @entity {
+  id: ID!
+  identifier: String!
+  timestamp: BigInt!
+  transaction: Transaction!
+  integrationAdapter: IntegrationAdapter!
+}
+
+type AdapterDeregisteredEvent implements EventInterface & NetworkEventInterface @entity {
+  id: ID!
+  identifier: String!
+  timestamp: BigInt!
+  transaction: Transaction!
+  integrationAdapter: IntegrationAdapter!
+}
+
+type TrackedAssetsLimitSetEvent implements EventInterface & NetworkEventInterface @entity {
+  id: ID!
+  timestamp: BigInt!
+  nextTrackedAssetsLimit: BigInt!
+  transaction: Transaction!
+}
+
+type PolicyRegisteredEvent implements EventInterface & NetworkEventInterface @entity {
+  id: ID!
+  identifier: String!
+  timestamp: BigInt!
+  transaction: Transaction!
+  policy: Policy!
+  implementedHooks: [PolicyHook!]!
+}
+
+type PolicyDeregisteredEvent implements EventInterface & NetworkEventInterface @entity {
+  id: ID!
+  identifier: String!
+  timestamp: BigInt!
+  transaction: Transaction!
+  policy: Policy!
+}
+
+type GuaranteedRedemptionAdapterAddedEvent implements EventInterface & NetworkEventInterface @entity {
+  id: ID!
+  timestamp: BigInt!
+  transaction: Transaction!
+  adapter: IntegrationAdapter!
+}
+
+type GuaranteedRedemptionAdapterRemovedEvent implements EventInterface & NetworkEventInterface @entity {
+  id: ID!
+  timestamp: BigInt!
+  transaction: Transaction!
+  adapter: IntegrationAdapter!
+}
+
+type GuaranteedRedemptionRedemptionWindowBufferSetEvent implements EventInterface & NetworkEventInterface @entity {
+  id: ID!
+  timestamp: BigInt!
+  transaction: Transaction!
+  prevBuffer: BigInt!
+  nextBuffer: BigInt!
+}
+
+type FundDeployerSetEvent implements EventInterface & NetworkEventInterface @entity {
+  id: ID!
+  timestamp: BigInt!
+  transaction: Transaction!
+  nextFundDeployer: String!
+  prevFundDeployer: String
+}
+
+type ValueInterpreterSetEvent implements EventInterface & NetworkEventInterface @entity {
+  id: ID!
+  timestamp: BigInt!
+  transaction: Transaction!
+  prevValueInterpreter: String
+  nextValueInterpreter: String!
+}
+
+type OwnershipTransferredEvent implements EventInterface & NetworkEventInterface @entity {
+  id: ID!
+  timestamp: BigInt!
+  transaction: Transaction!
+  previousOwner: String!
+  newOwner: String!
+}
+
+type DerivativeAddedEvent implements EventInterface & NetworkEventInterface @entity {
+  id: ID!
+  timestamp: BigInt!
+  transaction: Transaction!
+  derivative: Asset!
+  priceFeed: String!
+}
+
+type DerivativeRemovedEvent implements EventInterface & NetworkEventInterface @entity {
+  id: ID!
+  timestamp: BigInt!
+  transaction: Transaction!
+  derivative: Asset!
+}
+
+type DerivativeUpdatedEvent implements EventInterface & NetworkEventInterface @entity {
+  id: ID!
+  timestamp: BigInt!
+  transaction: Transaction!
+  derivative: Asset!
+  prevPriceFeed: String!
+  nextPriceFeed: String!
+}
+
+type AggregatorUpdatedEvent implements EventInterface & NetworkEventInterface @entity {
+  id: ID!
+  timestamp: BigInt!
+  transaction: Transaction!
+  primitive: Asset!
+  prevAggregator: String!
+  nextAggregator: String!
+}
+
+type EthUsdAggregatorSetEvent implements EventInterface & NetworkEventInterface @entity {
+  id: ID!
+  timestamp: BigInt!
+  transaction: Transaction!
+  prevEthUsdAggregator: String!
+  nextEthUsdAggregator: String!
+}
+
+type PrimitiveAddedEvent implements EventInterface & NetworkEventInterface @entity {
+  id: ID!
+  timestamp: BigInt!
+  transaction: Transaction!
+  primitive: Asset!
+  priceFeed: String!
+  rateAsset: Int!
+}
+
+type PrimitiveRemovedEvent implements EventInterface & NetworkEventInterface @entity {
+  id: ID!
+  timestamp: BigInt!
+  transaction: Transaction!
+  primitive: Asset!
+}
+
+type FeeRegisteredEvent implements EventInterface & NetworkEventInterface @entity {
+  id: ID!
+  timestamp: BigInt!
+  transaction: Transaction!
+  fee: Fee!
+  identifier: String!
+  implementedHooksForSettle: [FeeHook!]!
+  implementedHooksForUpdate: [FeeHook!]!
+  usesGavOnSettle: Boolean!
+  usesGavOnUpdate: Boolean!
+}
+
+type FeeDeregisteredEvent implements EventInterface & NetworkEventInterface @entity {
+  id: ID!
+  timestamp: BigInt!
+  transaction: Transaction!
+  fee: Fee!
+  identifier: String!
+}
+
+type MigrationTimelockSetEvent implements EventInterface & NetworkEventInterface @entity {
+  id: ID!
+  timestamp: BigInt!
+  transaction: Transaction!
+  prevTimelock: BigInt!
+  nextTimelock: BigInt!
+}
+
+type NominatedOwnerRemovedEvent implements EventInterface & NetworkEventInterface @entity {
+  id: ID!
+  timestamp: BigInt!
+  transaction: Transaction!
+  nominatedOwner: String!
+}
+
+type NominatedOwnerSetEvent implements EventInterface & NetworkEventInterface @entity {
+  id: ID!
+  timestamp: BigInt!
+  transaction: Transaction!
+  nominatedOwner: String!
+}
+
+type DispatcherOwnershipTransferredEvent implements EventInterface & NetworkEventInterface @entity {
+  id: ID!
+  timestamp: BigInt!
+  transaction: Transaction!
+  prevOwner: String!
+  nextOwner: String!
+}
+
+type SharesTokenSymbolSetEvent implements EventInterface & NetworkEventInterface @entity {
+  id: ID!
+  timestamp: BigInt!
+  transaction: Transaction!
+  sharesTokenSymbol: String!
+}
+
+type ReleaseStatusSetEvent implements EventInterface & NetworkEventInterface @entity {
+  id: ID!
+  timestamp: BigInt!
+  transaction: Transaction!
+  prevStatus: Int!
+  nextStatus: Int!
+}
+
+type VaultCallRegisteredEvent implements EventInterface & NetworkEventInterface @entity {
+  id: ID!
+  timestamp: BigInt!
+  transaction: Transaction!
+  contractAddress: String!
+  selector: String!
+}
+
+type VaultCallDeregisteredEvent implements EventInterface & NetworkEventInterface @entity {
+  id: ID!
+  timestamp: BigInt!
+  transaction: Transaction!
+  contractAddress: String!
+  selector: String!
+}
+
+#################################################
+# High-level entities
+#################################################
+
+type Transaction @entity {
+  id: ID!
+  from: String!
+  to: String
+  value: BigDecimal!
+  timestamp: BigInt!
+  block: BigInt!
+  gasUsed: Int!
+  gasPrice: BigDecimal!
+  input: String!
+  events: [EventInterface!]! @derivedFrom(field: "transaction")
+}
+
+type IntegrationManager @entity {
+  id: ID!
+  release: Release!
+  adapters: [IntegrationAdapter!]! @derivedFrom(field: "integrationManager")
+}
+
+type PolicyManager @entity {
+  id: ID!
+  release: Release!
+  policies: [Policy!]! @derivedFrom(field: "policyManager")
+}
+
+type FeeManager @entity {
+  id: ID!
+  release: Release!
+  fees: [Fee!]! @derivedFrom(field: "feeManager")
+}
+
+type GuaranteedRedemption @entity {
+  id: ID!
+  adapters: [IntegrationAdapter!]!
+  buffer: BigInt!
+}
+
+type Vault @entity {
+  id: ID!
+  accessor: ComptrollerProxy!
+  comptrollerProxies: [ComptrollerProxy!]! @derivedFrom(field: "vault")
+  name: String!
+  inception: BigInt!
+  creator: Account!
+  release: Release!
+  manager: Account!
+  migrator: String
+  lastKnowGavInEth: BigDecimal
+
+  # move to Comptroller
+
+  # trading
+  trackedAssets: [Asset!]!
+  trades: [Trade!]! @derivedFrom(field: "vault")
+  # TODO (after release): deriveFrom or use separate AuthUser entity
+  authUsers: [Account!]!
+
+  investments: [Investment!]! @derivedFrom(field: "vault")
+  investmentCount: Int!
+  sharesChanges: [SharesChangeInterface!]! @derivedFrom(field: "vault")
+  feeSharesChanges: [FeeSharesChangeInterface!]! @derivedFrom(field: "vault")
+  investmentSharesChanges: [InvestmentSharesChangeInterface!]! @derivedFrom(field: "vault")
+
+  # vault state
+  shares: ShareState!
+  sharesHistory: [ShareState!]! @derivedFrom(field: "vault")
+  portfolio: PortfolioState!
+  portfolioHistory: [PortfolioState!]! @derivedFrom(field: "vault")
+  feeState: FeeState!
+  feeStateHistory: [FeeState!]! @derivedFrom(field: "vault")
+  calculations: CalculationState!
+  calculationsHistory: [CalculationState!]! @derivedFrom(field: "vault")
+  state: VaultState!
+  stateHistory: [VaultState!]! @derivedFrom(field: "vault")
+  firstInvestmentState: VaultState
+
+  # periodic states
+  hourlyStates: [HourlyVaultState!]! @derivedFrom(field: "vault")
+  dailyStates: [DailyVaultState!]! @derivedFrom(field: "vault")
+  monthlyStates: [MonthlyVaultState!]! @derivedFrom(field: "vault")
+
+  events: [VaultEventInterface!]! @derivedFrom(field: "vault")
+  migrations: [Migration!] @derivedFrom(field: "vault")
+}
+
+type ComptrollerProxy @entity {
+  id: ID!
+  vault: Vault
+  creator: Account!
+  timestamp: BigInt!
+  activationTime: BigInt!
+  destructionTime: BigInt
+  denominationAsset: Asset!
+  sharesActionTimelock: BigInt!
+  feeManagerConfigData: String!
+  policyManagerConfigData: String!
+  release: Release!
+  status: ComptrollerProxyStatus!
+  feeSettings: [FeeSettingInterface!]! @derivedFrom(field: "comptroller")
+  policySettings: [PolicySettingInterface!]! @derivedFrom(field: "comptroller")
+}
+
+type HourlyVaultState implements PeriodicVaultStateInterface @entity {
+  id: ID!
+  vault: Vault!
+  start: BigInt!
+  end: BigInt!
+  first: VaultState!
+  last: VaultState!
+}
+
+type DailyVaultState implements PeriodicVaultStateInterface @entity {
+  id: ID!
+  vault: Vault!
+  start: BigInt!
+  end: BigInt!
+  first: VaultState!
+  last: VaultState!
+}
+
+type MonthlyVaultState implements PeriodicVaultStateInterface @entity {
+  id: ID!
+  vault: Vault!
+  start: BigInt!
+  end: BigInt!
+  first: VaultState!
+  last: VaultState!
+}
+
+type Migration @entity {
+  id: ID!
+  prevRelease: Release!
+  nextRelease: Release!
+  vault: Vault!
+  executableTimestamp: BigInt!
+  executed: Boolean!
+  cancelled: Boolean!
+  nextAccessor: ComptrollerProxy!
+}
+
+type Release @entity {
+  id: ID!
+  current: Boolean!
+  open: BigInt!
+  close: BigInt
+  vaults: [Vault!] @derivedFrom(field: "release")
+  network: Network!
+  # contracts
+  # TODO: make contracts
+  adapterBlacklist: String!
+  adapterWhitelist: String!
+  aggregatedDerivativePriceFeed: String!
+  alphaHomoraV1Adapter: String!
+  aaveAdapter: String!
+  assetBlacklist: String!
+  assetWhitelist: String!
+  buySharesCallerWhitelist: String!
+  chaiAdapter: String!
+  chaiIntegratee: String!
+  chainlinkPriceFeed: String!
+  compoundAdapter: String!
+  comptrollerLib: String!
+  dispatcher: String!
+  entranceRateBurnFee: String!
+  entranceRateDirectFee: String!
+  feeManager: String!
+  fundActionsWrapper: String!
+  fundDeployer: String!
+  guaranteedRedemption: String!
+  idleAdapter: String!
+  idlePriceFeed: String!
+  integrationManager: String!
+  investorWhitelist: String!
+  kyberAdapter: String!
+  kyberIntegratee: String!
+  managementFee: String!
+  maxConcentration: String!
+  minMaxInvestment: String!
+  paraSwapAdapter: String!
+  paraSwapV4Adapter: String!
+  performanceFee: String!
+  policyManager: String!
+  synthetixAdapter: String!
+  synthetixAddressResolver: String!
+  synthetixDelegateApprovals: String!
+  synthetixIntegratee: String!
+  trackedAssetsAdapter: String!
+  uniswapV2Adapter: String!
+  uniswapV2Integratee: String!
+  valueInterpreter: String!
+  vaultLib: String!
+  wethToken: String!
+  zeroExV2Adapter: String!
+  aavePriceFeed: String!
+  alphaHomoraV1PriceFeed: String!
+  chaiPriceFeed: String!
+  compoundPriceFeed: String!
+  curvePriceFeed: String!
+  curveExchangeAdapter: String!
+  curveLiquidityAaveAdapter: String!
+  curveLiquiditySethAdapter: String!
+  curveLiquidityStethAdapter: String!
+  lidoStethPriceFeed: String!
+  stakehoundEthPriceFeed: String!
+  synthetixPriceFeed: String!
+  uniswapV2PoolPriceFeed: String!
+  wdgldPriceFeed: String!
+}
+
+type Account @entity {
+  id: ID!
+  firstSeen: BigInt!
+
+  manager: Boolean!
+  managerSince: BigInt
+  managements: [Vault!]! @derivedFrom(field: "manager")
+
+  investor: Boolean!
+  investorSince: BigInt
+  investments: [Investment!]! @derivedFrom(field: "investor")
+
+  sharesChanges: [SharesChangeInterface!]! @derivedFrom(field: "investor")
+  feeSharesChanges: [FeeSharesChangeInterface!]! @derivedFrom(field: "investor")
+  investmentSharesChanges: [InvestmentSharesChangeInterface!]! @derivedFrom(field: "investor")
+  whitelisted: [InvestorWhitelistSetting!]! @derivedFrom(field: "listed")
+}
+
+type Investment @entity {
+  id: ID!
+  since: BigInt!
+  vault: Vault!
+  investor: Account!
+  shares: BigDecimal!
+  state: InvestmentState!
+  stateHistory: [InvestmentState!]! @derivedFrom(field: "investment")
+}
+
+type InvestmentState @entity {
+  id: ID!
+  timestamp: BigInt!
+  vault: Vault!
+  investor: Account!
+  investment: Investment!
+  shares: BigDecimal!
+  changes: [SharesChangeInterface!]! @derivedFrom(field: "investmentState")
+  vaultState: VaultState!
+}
+
+type Fee @entity {
+  id: ID!
+  feeManager: FeeManager!
+  identifier: String!
+  settings: [FeeSettingInterface!]! @derivedFrom(field: "fee")
+}
+
+type ManagementFeeSetting implements FeeSettingInterface @entity {
+  id: ID!
+  fee: Fee!
+  comptroller: ComptrollerProxy!
+  scaledPerSecondRate: BigInt!
+  timestamp: BigInt!
+  events: [VaultEventInterface!]!
+}
+
+type PerformanceFeeSetting implements FeeSettingInterface @entity {
+  id: ID!
+  fee: Fee!
+  comptroller: ComptrollerProxy!
+  rate: BigDecimal!
+  period: BigInt!
+  activated: BigInt!
+  timestamp: BigInt!
+  events: [VaultEventInterface!]!
+}
+
+type EntranceRateDirectFeeSetting implements FeeSettingInterface @entity {
+  id: ID!
+  fee: Fee!
+  comptroller: ComptrollerProxy!
+  rate: BigDecimal!
+  timestamp: BigInt!
+  events: [VaultEventInterface!]!
+}
+
+type EntranceRateBurnFeeSetting implements FeeSettingInterface @entity {
+  id: ID!
+  fee: Fee!
+  comptroller: ComptrollerProxy!
+  rate: BigDecimal!
+  timestamp: BigInt!
+  events: [VaultEventInterface!]!
+}
+
+type IntegrationAdapter @entity {
+  id: ID!
+  integrationManager: IntegrationManager!
+  identifier: String!
+  blacklisted: [AdapterBlacklistSetting!]! @derivedFrom(field: "adapters")
+  whitelisted: [AdapterWhitelistSetting!]! @derivedFrom(field: "adapters")
+}
+
+type Policy @entity {
+  id: ID!
+  policyManager: PolicyManager!
+  identifier: String!
+  settings: [PolicySettingInterface!]! @derivedFrom(field: "policy")
+}
+
+type AdapterBlacklistSetting implements PolicySettingInterface @entity {
+  id: ID!
+  policy: Policy!
+  comptroller: ComptrollerProxy!
+  listed: [String!]!
+  adapters: [IntegrationAdapter]!
+  timestamp: BigInt!
+  enabled: Boolean!
+  events: [VaultEventInterface!]!
+}
+
+type AdapterWhitelistSetting implements PolicySettingInterface @entity {
+  id: ID!
+  policy: Policy!
+  comptroller: ComptrollerProxy!
+  listed: [String!]!
+  adapters: [IntegrationAdapter]!
+  timestamp: BigInt!
+  enabled: Boolean!
+  events: [VaultEventInterface!]!
+}
+
+type AssetBlacklistSetting implements PolicySettingInterface @entity {
+  id: ID!
+  policy: Policy!
+  comptroller: ComptrollerProxy!
+  listed: [String!]!
+  assets: [Asset]!
+  timestamp: BigInt!
+  enabled: Boolean!
+  events: [VaultEventInterface!]!
+}
+
+type AssetWhitelistSetting implements PolicySettingInterface @entity {
+  id: ID!
+  policy: Policy!
+  comptroller: ComptrollerProxy!
+  listed: [String!]!
+  assets: [Asset]!
+  timestamp: BigInt!
+  enabled: Boolean!
+  events: [VaultEventInterface!]!
+}
+
+type BuySharesCallerWhitelistSetting implements PolicySettingInterface @entity {
+  id: ID!
+  policy: Policy!
+  comptroller: ComptrollerProxy!
+  listed: [String!]!
+  timestamp: BigInt!
+  enabled: Boolean!
+  events: [VaultEventInterface!]!
+}
+
+type GuaranteedRedemptionSetting implements PolicySettingInterface @entity {
+  id: ID!
+  policy: Policy!
+  comptroller: ComptrollerProxy!
+  startTimestamp: BigInt!
+  duration: BigInt!
+  timestamp: BigInt!
+  enabled: Boolean!
+  events: [VaultEventInterface!]!
+}
+
+type InvestorWhitelistSetting implements PolicySettingInterface @entity {
+  id: ID!
+  policy: Policy!
+  comptroller: ComptrollerProxy!
+  listed: [Account!]!
+  timestamp: BigInt!
+  enabled: Boolean!
+  events: [VaultEventInterface!]!
+}
+
+type MaxConcentrationSetting implements PolicySettingInterface @entity {
+  id: ID!
+  policy: Policy!
+  comptroller: ComptrollerProxy!
+  maxConcentration: BigDecimal!
+  timestamp: BigInt!
+  enabled: Boolean!
+  events: [VaultEventInterface!]!
+}
+
+type MinMaxInvestmentSetting implements PolicySettingInterface @entity {
+  id: ID!
+  policy: Policy!
+  comptroller: ComptrollerProxy!
+  minInvestmentAmount: BigDecimal!
+  maxInvestmentAmount: BigDecimal!
+  timestamp: BigInt!
+  enabled: Boolean!
+  events: [VaultEventInterface!]!
+}
+
+type UnknownPolicySetting implements PolicySettingInterface @entity {
+  id: ID!
+  policy: Policy!
+  comptroller: ComptrollerProxy!
+  timestamp: BigInt!
+  enabled: Boolean!
+  events: [VaultEventInterface!]!
+}
+
+type ShareState implements VaultStateInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  totalSupply: BigDecimal!
+  outstandingForFees: BigDecimal!
+  events: [VaultEventInterface!]!
+}
+
+type PortfolioState implements VaultStateInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  holdings: [HoldingState!]!
+  events: [VaultEventInterface!]!
+}
+
+type HoldingState implements VaultStateInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  asset: Asset!
+  price: AssetPrice
+  amount: BigDecimal!
+  events: [VaultEventInterface!]!
+}
+
+type CalculationState implements VaultStateInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  gav: BigDecimal!
+  totalSupply: BigDecimal!
+  grossSharePrice: BigDecimal!
+  netSharePrice: BigDecimal!
+  events: [VaultEventInterface!]!
+}
+
+type VaultState implements VaultStateInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  shares: ShareState!
+  portfolio: PortfolioState!
+  feeState: FeeState!
+  calculations: CalculationState!
+  currencyPrices: [CurrencyPrice!]!
+  investmentCount: Int!
+  events: [VaultEventInterface!]!
+}
+
+type FeeState implements VaultStateInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  feeStates: [IndividualFeeStateInterface!]!
+  events: [VaultEventInterface!]!
+}
+
+type ManagementFeeState implements VaultStateInterface & IndividualFeeStateInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  fee: Fee!
+  lastSettled: BigInt!
+  totalSharesPaidOut: BigDecimal!
+  events: [VaultEventInterface!]!
+}
+
+type PerformanceFeeState implements VaultStateInterface & IndividualFeeStateInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  fee: Fee!
+  lastPaid: BigInt!
+  grossSharePrice: BigDecimal!
+  aggregateValueDue: BigDecimal!
+  highWaterMark: BigDecimal!
+  sharesOutstanding: BigDecimal!
+  events: [VaultEventInterface!]!
+}
+
+type EntranceRateDirectFeeState implements VaultStateInterface & IndividualFeeStateInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  fee: Fee!
+  lastSettled: BigInt!
+  events: [VaultEventInterface!]!
+}
+
+type EntranceRateBurnFeeState implements VaultStateInterface & IndividualFeeStateInterface @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: BigInt!
+  fee: Fee!
+  lastSettled: BigInt!
+  events: [VaultEventInterface!]!
+}
+
+type TokenSwapTrade implements Trade @entity {
+  id: ID!
+  vault: Vault!
+  adapter: IntegrationAdapter!
+  method: IntegrationMethod!
+  incomingAssetAmount: AssetAmount!
+  outgoingAssetAmount: AssetAmount!
+  price: BigDecimal!
+  timestamp: BigInt!
+  vaultState: VaultState!
+}
+
+type MultiTokenSwapTrade implements Trade @entity {
+  id: ID!
+  vault: Vault!
+  adapter: IntegrationAdapter!
+  method: IntegrationMethod!
+  incomingAssetAmounts: [AssetAmount!]!
+  outgoingAssetAmounts: [AssetAmount!]!
+  timestamp: BigInt!
+  vaultState: VaultState!
+}
+
+type LendTrade implements Trade @entity {
+  id: ID!
+  vault: Vault!
+  adapter: IntegrationAdapter!
+  method: IntegrationMethod!
+  incomingAssetAmount: AssetAmount!
+  outgoingAssetAmount: AssetAmount!
+  price: BigDecimal!
+  timestamp: BigInt!
+  vaultState: VaultState!
+}
+
+type MultiLendTrade implements Trade @entity {
+  id: ID!
+  vault: Vault!
+  adapter: IntegrationAdapter!
+  method: IntegrationMethod!
+  incomingAssetAmounts: [AssetAmount!]!
+  outgoingAssetAmounts: [AssetAmount!]!
+  timestamp: BigInt!
+  vaultState: VaultState!
+}
+
+type RedeemTrade implements Trade @entity {
+  id: ID!
+  vault: Vault!
+  adapter: IntegrationAdapter!
+  method: IntegrationMethod!
+  incomingAssetAmount: AssetAmount!
+  outgoingAssetAmount: AssetAmount!
+  price: BigDecimal!
+  timestamp: BigInt!
+  vaultState: VaultState!
+}
+
+type MultiRedeemTrade implements Trade @entity {
+  id: ID!
+  vault: Vault!
+  adapter: IntegrationAdapter!
+  method: IntegrationMethod!
+  incomingAssetAmounts: [AssetAmount!]!
+  outgoingAssetAmounts: [AssetAmount!]!
+  timestamp: BigInt!
+  vaultState: VaultState!
+}
+
+type AddTrackedAssetsTrade implements Trade @entity {
+  id: ID!
+  vault: Vault!
+  adapter: IntegrationAdapter!
+  method: IntegrationMethod!
+  incomingAssetAmounts: [AssetAmount!]!
+  timestamp: BigInt!
+  vaultState: VaultState!
+}
+
+type ApproveAssetsTrade implements Trade @entity {
+  id: ID!
+  vault: Vault!
+  adapter: IntegrationAdapter!
+  method: IntegrationMethod!
+  incomingAssets: [Asset!]!
+  timestamp: BigInt!
+  vaultState: VaultState!
+}
+
+type StakeTrade implements Trade @entity {
+  id: ID!
+  vault: Vault!
+  adapter: IntegrationAdapter!
+  method: IntegrationMethod!
+  incomingAssetAmount: AssetAmount!
+  outgoingAssetAmount: AssetAmount!
+  timestamp: BigInt!
+  vaultState: VaultState!
+}
+
+type UnstakeTrade implements Trade @entity {
+  id: ID!
+  vault: Vault!
+  adapter: IntegrationAdapter!
+  method: IntegrationMethod!
+  incomingAssetAmount: AssetAmount!
+  outgoingAssetAmount: AssetAmount!
+  timestamp: BigInt!
+  vaultState: VaultState!
+}
+
+type ClaimRewardsTrade implements Trade @entity {
+  id: ID!
+  vault: Vault!
+  adapter: IntegrationAdapter!
+  method: IntegrationMethod!
+  incomingAssetAmounts: [AssetAmount!]!
+  timestamp: BigInt!
+  vaultState: VaultState!
+}
+
+type ClaimRewardsAndReinvestTrade implements Trade @entity {
+  id: ID!
+  vault: Vault!
+  adapter: IntegrationAdapter!
+  method: IntegrationMethod!
+  incomingAssetAmount: AssetAmount!
+  timestamp: BigInt!
+  vaultState: VaultState!
+}
+
+type ClaimRewardsAndSwapTrade implements Trade @entity {
+  id: ID!
+  vault: Vault!
+  adapter: IntegrationAdapter!
+  method: IntegrationMethod!
+  incomingAssetAmount: AssetAmount!
+  timestamp: BigInt!
+  vaultState: VaultState!
+}
+
+type LendAndStakeTrade implements Trade @entity {
+  id: ID!
+  vault: Vault!
+  adapter: IntegrationAdapter!
+  method: IntegrationMethod!
+  incomingAssetAmount: AssetAmount!
+  outgoingAssetAmounts: [AssetAmount!]!
+  timestamp: BigInt!
+  vaultState: VaultState!
+}
+
+type UnstakeAndRedeemTrade implements Trade @entity {
+  id: ID!
+  vault: Vault!
+  adapter: IntegrationAdapter!
+  method: IntegrationMethod!
+  incomingAssetAmounts: [AssetAmount!]!
+  outgoingAssetAmount: AssetAmount!
+  timestamp: BigInt!
+  vaultState: VaultState!
+}
+
+#################################################
+# Assets and prices
+#################################################
+
+type Asset @entity {
+  id: ID!
+  name: String!
+  symbol: String!
+  decimals: Int!
+  type: AssetType!
+  removed: Boolean!
+
+  # Details for certain derivative assets
+  derivativeType: DerivativeType
+  underlyingAsset: Asset
+  curvePoolAssetDetails: CurvePoolAssetDetail
+  uniswapV2PoolAssetDetails: UniswapV2PoolAssetDetail
+
+  # Vault references
+  trackingVaults: [Vault!]! @derivedFrom(field: "trackedAssets")
+  blacklisted: [AssetBlacklistSetting!]! @derivedFrom(field: "assets")
+  whitelisted: [AssetWhitelistSetting!]! @derivedFrom(field: "assets")
+
+  # network-wide values
+  networkAssetHolding: NetworkAssetHolding
+  networkAssetHoldingHistory: [NetworkAssetHolding!]! @derivedFrom(field: "asset")
+}
+
+type CurvePoolAssetDetail @entity {
+  id: ID!
+  pool: String!
+  gauge: String!
+  lpToken: Asset!
+  gaugeToken: Asset!
+  curveAssetType: CurveAssetType!
+  invariantProxyAsset: Asset!
+  numberOfTokens: Int!
+  token0: Asset!
+  token1: Asset!
+  token2: Asset
+}
+
+type UniswapV2PoolAssetDetail @entity {
+  id: ID!
+  token0: Asset!
+  token1: Asset!
+}
+
+type AssetAmount @entity {
+  id: ID!
+  asset: Asset!
+  amount: BigDecimal!
+  price: AssetPrice!
+  currency: CurrencyPrice!
+}
+
+type AssetPrice @entity {
+  id: ID!
+  asset: Asset!
+  price: BigDecimal!
+  valid: Boolean!
+  timestamp: BigInt!
+}
+
+type CurrencyPrice @entity {
+  id: ID!
+  timestamp: BigInt!
+  aud: BigDecimal!
+  btc: BigDecimal!
+  chf: BigDecimal!
+  eur: BigDecimal!
+  gbp: BigDecimal!
+  jpy: BigDecimal!
+  usd: BigDecimal!
+}
+
+#################################################
+# Network stats
+#################################################
+
+type Network @entity {
+  id: ID!
+  timestamp: BigInt!
+  currentRelease: Release
+  releases: [Release!] @derivedFrom(field: "network")
+  state: NetworkState!
+  stateHistory: [NetworkState!]! @derivedFrom(field: "network")
+}
+
+type NetworkState @entity {
+  id: ID!
+  network: Network!
+  timestamp: BigInt!
+  # TODO : derived from
+  assetHoldings: [NetworkAssetHolding!]!
+  vaults: Int!
+  managers: Int!
+  investors: Int!
+  investments: Int!
+}
+
+type NetworkAssetHolding @entity {
+  id: ID!
+  timestamp: BigInt!
+  asset: Asset!
+  amount: BigDecimal!
+}

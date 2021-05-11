@@ -9,6 +9,8 @@ export let ONE_HOUR = BigInt.fromI32(3600);
 export let ONE_DAY = BigInt.fromI32(86400);
 export let ONE = BigInt.fromI32(1);
 
+export let ETH = Address.fromString('0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE');
+
 // Unix timestamps of month start dates between July 2015 and February 2032 (200 months).
 export let MONTHS: BigInt[] = [
   BigInt.fromI32(1435708800),
