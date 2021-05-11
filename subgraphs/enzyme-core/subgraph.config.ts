@@ -526,13 +526,6 @@ function source(options: SourceOptions): DataSourceDeclaration {
   };
 }
 
-interface TemplateOptions {
-  name: string;
-  events: string[];
-  block?: number;
-  address?: string;
-}
-
 function template(name: string, events: string[]) {
   return source({ name, events }) as DataSourceTemplateDeclaration;
 }
@@ -601,166 +594,167 @@ export const configure: Configurator<Variables> = (variables) => {
     ],
   };
 
-  const releases: SourceOptions[][] = [variables.releaseA, variables.releaseB]
-    .map((release) => [
-      {
-        name: 'FundDeployer',
-        block: variables.block,
-        address: release.fundDeployerAddress,
-        events: [
-          'ComptrollerLibSet(address)',
-          'ComptrollerProxyDeployed(indexed address,address,indexed address,uint256,bytes,bytes,indexed bool)',
-          'NewFundCreated(indexed address,address,address,indexed address,string,indexed address,uint256,bytes,bytes)',
-          'ReleaseStatusSet(indexed uint8,indexed uint8)',
-          'VaultCallDeregistered(indexed address,bytes4)',
-          'VaultCallRegistered(indexed address,bytes4)',
-        ],
-      },
-      {
-        name: 'FeeManager',
-        block: variables.block,
-        address: release.feeManagerAddress,
-        events: [
-          'AllSharesOutstandingForcePaidForFund(indexed address,address,uint256)',
-          'FeeDeregistered(indexed address,indexed string)',
-          'FeeEnabledForFund(indexed address,indexed address,bytes)',
-          'FeeRegistered(indexed address,indexed string,uint8[],uint8[],bool,bool)',
-          'FeeSettledForFund(indexed address,indexed address,indexed uint8,address,address,uint256)',
-          'FeesRecipientSetForFund(indexed address,address,address)',
-          'SharesOutstandingPaidForFund(indexed address,indexed address,uint256)',
-        ],
-      },
-      {
-        name: 'EntranceRateDirectFee',
-        block: variables.block,
-        address: release.entranceRateDirectFeeAddress,
-        events: ['FundSettingsAdded(indexed address,uint256)', 'Settled(indexed address,indexed address,uint256)'],
-      },
-      {
-        name: 'EntranceRateBurnFee',
-        block: variables.block,
-        address: release.entranceRateBurnFeeAddress,
-        events: ['FundSettingsAdded(indexed address,uint256)', 'Settled(indexed address,indexed address,uint256)'],
-      },
-      {
-        name: 'ManagementFee',
-        block: variables.block,
-        address: release.managementFeeAddress,
-        events: ['FundSettingsAdded(indexed address,uint256)', 'Settled(indexed address,uint256,uint256)'],
-      },
-      {
-        name: 'PerformanceFee',
-        block: variables.block,
-        address: release.performanceFeeAddress,
-        events: [
-          'ActivatedForFund(indexed address,uint256)',
-          'FundSettingsAdded(indexed address,uint256,uint256)',
-          'LastSharePriceUpdated(indexed address,uint256,uint256)',
-          'PaidOut(indexed address,uint256,uint256,uint256)',
-          'PerformanceUpdated(indexed address,uint256,uint256,int256)',
-        ],
-      },
-      {
-        name: 'IntegrationManager',
-        block: variables.block,
-        address: release.integrationManagerAddress,
-        events: [
-          'AdapterDeregistered(indexed address,indexed string)',
-          'AdapterRegistered(indexed address,indexed string)',
-          'AuthUserAddedForFund(indexed address,indexed address)',
-          'AuthUserRemovedForFund(indexed address,indexed address)',
-          'CallOnIntegrationExecutedForFund(indexed address,address,address,indexed address,indexed bytes4,bytes,address[],uint256[],address[],uint256[])',
-        ],
-      },
-      {
-        name: 'PolicyManager',
-        block: variables.block,
-        address: release.policyManagerAddress,
-        events: [
-          'PolicyDeregistered(indexed address,indexed string)',
-          'PolicyDisabledForFund(indexed address,indexed address)',
-          'PolicyEnabledForFund(indexed address,indexed address,bytes)',
-          'PolicyRegistered(indexed address,indexed string,uint8[])',
-        ],
-      },
-      {
-        name: 'AdapterBlacklist',
-        block: variables.block,
-        address: release.adapterBlacklistAddress,
-        events: ['AddressesAdded(indexed address,address[])', 'AddressesRemoved(indexed address,address[])'],
-      },
-      {
-        name: 'AdapterWhitelist',
-        block: variables.block,
-        address: release.adapterWhitelistAddress,
-        events: ['AddressesAdded(indexed address,address[])', 'AddressesRemoved(indexed address,address[])'],
-      },
-      {
-        name: 'AssetBlacklist',
-        block: variables.block,
-        address: release.assetBlacklistAddress,
-        events: ['AddressesAdded(indexed address,address[])', 'AddressesRemoved(indexed address,address[])'],
-      },
-      {
-        name: 'AssetWhitelist',
-        block: variables.block,
-        address: release.assetWhitelistAddress,
-        events: ['AddressesAdded(indexed address,address[])', 'AddressesRemoved(indexed address,address[])'],
-      },
-      {
-        name: 'GuaranteedRedemption',
-        block: variables.block,
-        address: release.guaranteedRedemptionAddress,
-        events: [
-          'AdapterAdded(address)',
-          'AdapterRemoved(address)',
-          'FundSettingsSet(indexed address,uint256,uint256)',
-          'RedemptionWindowBufferSet(uint256,uint256)',
-        ],
-      },
-      {
-        name: 'InvestorWhitelist',
-        block: variables.block,
-        address: release.investorWhitelistAddress,
-        events: ['AddressesAdded(indexed address,address[])', 'AddressesRemoved(indexed address,address[])'],
-      },
-      {
-        name: 'MaxConcentration',
-        block: variables.block,
-        address: release.maxConcentrationAddress,
-        events: ['MaxConcentrationSet(indexed address,uint256)'],
-      },
-      {
-        name: 'MinMaxInvestment',
-        block: variables.block,
-        address: release.minMaxInvestmentAddress,
-        events: ['FundSettingsSet(indexed address,uint256,uint256)'],
-      },
-      {
-        name: 'AggregatedDerivativePriceFeed',
-        block: variables.block,
-        address: release.aggregatedDerivativePriceFeedAddress,
-        events: [
-          'DerivativeAdded(indexed address,address)',
-          'DerivativeRemoved(indexed address)',
-          'DerivativeUpdated(indexed address,address,address)',
-        ],
-      },
-      {
-        name: 'ChainlinkPriceFeed',
-        block: variables.block,
-        address: release.chainlinkPriceFeedAddress,
-        events: [
-          'EthUsdAggregatorSet(address,address)',
-          'PrimitiveAdded(indexed address,address,uint8,uint256)',
-          'PrimitiveRemoved(indexed address)',
-          'PrimitiveUpdated(indexed address,address,address)',
-        ],
-      },
-    ])
-    .map((release, index) => release.map((source) => ({ ...source, suffix: `${index}` })));
+  const releases: SourceOptions[][] = [variables.releaseA, variables.releaseB].map((release) => [
+    {
+      name: 'FundDeployer',
+      block: variables.block,
+      address: release.fundDeployerAddress,
+      events: [
+        'ComptrollerLibSet(address)',
+        'ComptrollerProxyDeployed(indexed address,address,indexed address,uint256,bytes,bytes,indexed bool)',
+        'NewFundCreated(indexed address,address,address,indexed address,string,indexed address,uint256,bytes,bytes)',
+        'ReleaseStatusSet(indexed uint8,indexed uint8)',
+        'VaultCallDeregistered(indexed address,bytes4)',
+        'VaultCallRegistered(indexed address,bytes4)',
+      ],
+    },
+    {
+      name: 'FeeManager',
+      block: variables.block,
+      address: release.feeManagerAddress,
+      events: [
+        'AllSharesOutstandingForcePaidForFund(indexed address,address,uint256)',
+        'FeeDeregistered(indexed address,indexed string)',
+        'FeeEnabledForFund(indexed address,indexed address,bytes)',
+        'FeeRegistered(indexed address,indexed string,uint8[],uint8[],bool,bool)',
+        'FeeSettledForFund(indexed address,indexed address,indexed uint8,address,address,uint256)',
+        'FeesRecipientSetForFund(indexed address,address,address)',
+        'SharesOutstandingPaidForFund(indexed address,indexed address,uint256)',
+      ],
+    },
+    {
+      name: 'EntranceRateDirectFee',
+      block: variables.block,
+      address: release.entranceRateDirectFeeAddress,
+      events: ['FundSettingsAdded(indexed address,uint256)', 'Settled(indexed address,indexed address,uint256)'],
+    },
+    {
+      name: 'EntranceRateBurnFee',
+      block: variables.block,
+      address: release.entranceRateBurnFeeAddress,
+      events: ['FundSettingsAdded(indexed address,uint256)', 'Settled(indexed address,indexed address,uint256)'],
+    },
+    {
+      name: 'ManagementFee',
+      block: variables.block,
+      address: release.managementFeeAddress,
+      events: ['FundSettingsAdded(indexed address,uint256)', 'Settled(indexed address,uint256,uint256)'],
+    },
+    {
+      name: 'PerformanceFee',
+      block: variables.block,
+      address: release.performanceFeeAddress,
+      events: [
+        'ActivatedForFund(indexed address,uint256)',
+        'FundSettingsAdded(indexed address,uint256,uint256)',
+        'LastSharePriceUpdated(indexed address,uint256,uint256)',
+        'PaidOut(indexed address,uint256,uint256,uint256)',
+        'PerformanceUpdated(indexed address,uint256,uint256,int256)',
+      ],
+    },
+    {
+      name: 'IntegrationManager',
+      block: variables.block,
+      address: release.integrationManagerAddress,
+      events: [
+        'AdapterDeregistered(indexed address,indexed string)',
+        'AdapterRegistered(indexed address,indexed string)',
+        'AuthUserAddedForFund(indexed address,indexed address)',
+        'AuthUserRemovedForFund(indexed address,indexed address)',
+        'CallOnIntegrationExecutedForFund(indexed address,address,address,indexed address,indexed bytes4,bytes,address[],uint256[],address[],uint256[])',
+      ],
+    },
+    {
+      name: 'PolicyManager',
+      block: variables.block,
+      address: release.policyManagerAddress,
+      events: [
+        'PolicyDeregistered(indexed address,indexed string)',
+        'PolicyDisabledForFund(indexed address,indexed address)',
+        'PolicyEnabledForFund(indexed address,indexed address,bytes)',
+        'PolicyRegistered(indexed address,indexed string,uint8[])',
+      ],
+    },
+    {
+      name: 'AdapterBlacklist',
+      block: variables.block,
+      address: release.adapterBlacklistAddress,
+      events: ['AddressesAdded(indexed address,address[])', 'AddressesRemoved(indexed address,address[])'],
+    },
+    {
+      name: 'AdapterWhitelist',
+      block: variables.block,
+      address: release.adapterWhitelistAddress,
+      events: ['AddressesAdded(indexed address,address[])', 'AddressesRemoved(indexed address,address[])'],
+    },
+    {
+      name: 'AssetBlacklist',
+      block: variables.block,
+      address: release.assetBlacklistAddress,
+      events: ['AddressesAdded(indexed address,address[])', 'AddressesRemoved(indexed address,address[])'],
+    },
+    {
+      name: 'AssetWhitelist',
+      block: variables.block,
+      address: release.assetWhitelistAddress,
+      events: ['AddressesAdded(indexed address,address[])', 'AddressesRemoved(indexed address,address[])'],
+    },
+    {
+      name: 'GuaranteedRedemption',
+      block: variables.block,
+      address: release.guaranteedRedemptionAddress,
+      events: [
+        'AdapterAdded(address)',
+        'AdapterRemoved(address)',
+        'FundSettingsSet(indexed address,uint256,uint256)',
+        'RedemptionWindowBufferSet(uint256,uint256)',
+      ],
+    },
+    {
+      name: 'InvestorWhitelist',
+      block: variables.block,
+      address: release.investorWhitelistAddress,
+      events: ['AddressesAdded(indexed address,address[])', 'AddressesRemoved(indexed address,address[])'],
+    },
+    {
+      name: 'MaxConcentration',
+      block: variables.block,
+      address: release.maxConcentrationAddress,
+      events: ['MaxConcentrationSet(indexed address,uint256)'],
+    },
+    {
+      name: 'MinMaxInvestment',
+      block: variables.block,
+      address: release.minMaxInvestmentAddress,
+      events: ['FundSettingsSet(indexed address,uint256,uint256)'],
+    },
+    {
+      name: 'AggregatedDerivativePriceFeed',
+      block: variables.block,
+      address: release.aggregatedDerivativePriceFeedAddress,
+      events: [
+        'DerivativeAdded(indexed address,address)',
+        'DerivativeRemoved(indexed address)',
+        'DerivativeUpdated(indexed address,address,address)',
+      ],
+    },
+    {
+      name: 'ChainlinkPriceFeed',
+      block: variables.block,
+      address: release.chainlinkPriceFeedAddress,
+      events: [
+        'EthUsdAggregatorSet(address,address)',
+        'PrimitiveAdded(indexed address,address,uint8,uint256)',
+        'PrimitiveRemoved(indexed address)',
+        'PrimitiveUpdated(indexed address,address,address)',
+      ],
+    },
+  ]);
 
-  const sources = [dispatcher, ...releases[0], ...releases[1]].map((options) => source(options));
+  // @ts-ignore
+  const flattened = releases.flatMap((release, index) => release.map((options) => ({ ...options, suffix: index })));
+  const sources = [dispatcher, ...flattened].map((options) => source(options));
+
   const templates = [
     template('VaultLib', [
       'AccessorSet(address,address)',

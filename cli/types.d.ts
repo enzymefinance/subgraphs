@@ -10,6 +10,7 @@ declare module '@enzymefinance/subgraph-cli' {
 
   export interface ManifestValues {
     sources: DataSourceDeclaration[];
+    network: string;
     templates?: DataSourceTemplateDeclaration[];
     abis?: AbiDeclaration[];
   }
@@ -23,7 +24,7 @@ declare module '@enzymefinance/subgraph-cli' {
     destination: string;
   }
 
-  export type Configurator<TVariables> = (variables: TVariables) => ManifestValues;
+  export type Configurator<TVariables> = (variables: TVariables) => Omit<ManifestValues, 'network'>;
 
   export interface AbiDeclaration {
     name: string;

@@ -38,6 +38,7 @@ class SubgraphLoader<TVariables = any> {
       file: `@enzymefinance/subgraph-utils/abis/${name}.json`,
     }));
 
+    manifest.network = context.network;
     manifest.abis = [...(manifest.abis ?? []), ...abis]
       .filter((item, index, array) => array.findIndex((inner) => inner.name === item.name) === index)
       .map((item) => ({
