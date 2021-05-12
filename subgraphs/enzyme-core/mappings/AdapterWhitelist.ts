@@ -32,13 +32,12 @@ export function handleAddressesAdded(event: AddressesAdded): void {
 
 export function handleAddressesRemoved(event: AddressesRemoved): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
-  let vault = comptroller.getVaultProxy();
-  let fund = useVault(vault.toHex());
+  let vault = useVault(comptroller.getVaultProxy().toHex());
   let policy = ensurePolicy(event.address);
   let items = event.params.items.map<string>((item) => item.toHex());
 
   let addressesRemoved = new AdapterWhitelistAddressesRemovedEvent(uniqueEventId(event));
-  addressesRemoved.vault = fund.id;
+  addressesRemoved.vault = vault.id;
   addressesRemoved.timestamp = event.block.timestamp;
   addressesRemoved.transaction = ensureTransaction(event).id;
   addressesRemoved.comptrollerProxy = event.params.comptrollerProxy.toHex();

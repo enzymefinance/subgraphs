@@ -40,13 +40,13 @@ export function handleAllSharesOutstandingForcePaidForFund(event: AllSharesOutst
     return;
   }
 
-  let fund = useVault(comptrollerProxy.vault);
-  let investor = ensureAccount(Address.fromString(fund.manager), event);
-  let investmentState = trackInvestmentState(investor, fund, event);
+  let vault = useVault(comptrollerProxy.vault);
+  let investor = ensureAccount(Address.fromString(vault.manager), event);
+  let investmentState = trackInvestmentState(investor, vault, event);
   let shares = toBigDecimal(event.params.sharesDue);
 
   let settled = new AllSharesOutstandingForcePaidForFundEvent(uniqueEventId(event));
-  settled.vault = fund.id;
+  settled.vault = vault.id;
   settled.type = 'AllSharesOutstandingForcePaidForFund';
   settled.investor = investor.id;
   settled.timestamp = event.block.timestamp;
@@ -56,14 +56,14 @@ export function handleAllSharesOutstandingForcePaidForFund(event: AllSharesOutst
   settled.comptrollerProxy = event.params.comptrollerProxy.toHex();
   settled.payee = event.params.payee.toHex();
   settled.sharesDue = shares;
-  settled.calculations = calculationStateId(fund, event);
-  settled.vaultState = fund.state;
+  settled.calculations = calculationStateId(vault, event);
+  settled.vaultState = vault.state;
   settled.save();
 
-  trackShareState(fund, event, settled);
+  trackShareState(vault, event, settled);
   // TODO: what do we need to do for fees here (if anything)?
   // trackFeeState(fund, fee, event, settled);
-  trackCalculationState(fund, event, settled);
+  trackCalculationState(vault, event, settled);
 }
 
 export function handleFeeDeregistered(event: FeeDeregistered): void {
@@ -92,11 +92,11 @@ export function handleFeeRegistered(event: FeeRegistered): void {
 
 export function handleFeeEnabledForFund(event: FeeEnabledForFund): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
-  let fundId = comptroller.getVaultProxy().toHex();
+  let vaultId = comptroller.getVaultProxy().toHex();
   let fee = ensureFee(event.params.fee);
 
   let enabled = new FeeEnabledForFundEvent(uniqueEventId(event));
-  enabled.vault = fundId;
+  enabled.vault = vaultId;
   enabled.timestamp = event.block.timestamp;
   enabled.transaction = ensureTransaction(event).id;
   enabled.fee = fee.id;
@@ -114,14 +114,14 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
   let payer = ensureAccount(event.params.payer, event);
   let payee = ensureAccount(event.params.payee, event);
 
-  let fund = useVault(comptrollerProxy.vault);
+  let vault = useVault(comptrollerProxy.vault);
   let investor = payer.id != ZERO_ADDRESS.toHex() ? payer : payee;
-  let investmentState = trackInvestmentState(investor, fund, event);
+  let investmentState = trackInvestmentState(investor, vault, event);
   let fee = ensureFee(event.params.fee);
   let shares = toBigDecimal(event.params.sharesDue);
 
   let settled = new FeeSettledForFundEvent(uniqueEventId(event));
-  settled.vault = fund.id;
+  settled.vault = vault.id;
   settled.type = 'FeeSettledForFund';
   settled.investor = investor.id;
   settled.timestamp = event.block.timestamp;
@@ -134,13 +134,13 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
   settled.payee = event.params.payee.toHex();
   settled.settlementType = settlementType(event.params.settlementType);
   settled.sharesDue = shares;
-  settled.calculations = calculationStateId(fund, event);
-  settled.vaultState = fund.state;
+  settled.calculations = calculationStateId(vault, event);
+  settled.vaultState = vault.state;
   settled.save();
 
-  trackShareState(fund, event, settled);
-  trackFeeState(fund, fee, BigDecimal.fromString('0'), event, settled);
-  trackCalculationState(fund, event, settled);
+  trackShareState(vault, event, settled);
+  trackFeeState(vault, fee, BigDecimal.fromString('0'), event, settled);
+  trackCalculationState(vault, event, settled);
 }
 
 export function handleSharesOutstandingPaidForFund(event: SharesOutstandingPaidForFund): void {
@@ -149,14 +149,14 @@ export function handleSharesOutstandingPaidForFund(event: SharesOutstandingPaidF
     return;
   }
 
-  let fund = useVault(comptrollerProxy.vault);
-  let investor = ensureAccount(Address.fromString(fund.manager), event);
-  let investmentState = trackInvestmentState(investor, fund, event);
+  let vault = useVault(comptrollerProxy.vault);
+  let investor = ensureAccount(Address.fromString(vault.manager), event);
+  let investmentState = trackInvestmentState(investor, vault, event);
   let fee = ensureFee(event.params.fee);
   let shares = toBigDecimal(event.params.sharesDue);
 
   let sharesPaid = new SharesOutstandingPaidForFundEvent(uniqueEventId(event));
-  sharesPaid.vault = fund.id;
+  sharesPaid.vault = vault.id;
   sharesPaid.type = 'SharesOutstandingPaidForFund';
   sharesPaid.investor = investor.id;
   sharesPaid.timestamp = event.block.timestamp;
@@ -166,21 +166,21 @@ export function handleSharesOutstandingPaidForFund(event: SharesOutstandingPaidF
   sharesPaid.comptrollerProxy = event.params.comptrollerProxy.toHex();
   sharesPaid.fee = fee.id;
   sharesPaid.sharesDue = toBigDecimal(event.params.sharesDue);
-  sharesPaid.calculations = calculationStateId(fund, event);
-  sharesPaid.vaultState = fund.state;
+  sharesPaid.calculations = calculationStateId(vault, event);
+  sharesPaid.vaultState = vault.state;
   sharesPaid.save();
 
-  trackShareState(fund, event, sharesPaid);
-  trackFeeState(fund, fee, BigDecimal.fromString('0'), event, sharesPaid);
+  trackShareState(vault, event, sharesPaid);
+  trackFeeState(vault, fee, BigDecimal.fromString('0'), event, sharesPaid);
 
   // we only need to look at Performance Fee here, since it is the only Fee that pays out SharesOutstanding
   if (fee.identifier == 'PERFORMANCE') {
-    let performanceFeeState = ensurePerformanceFeeState(fund, fee, event, sharesPaid);
+    let performanceFeeState = ensurePerformanceFeeState(vault, fee, event, sharesPaid);
     performanceFeeState.sharesOutstanding = performanceFeeState.sharesOutstanding.minus(shares);
     performanceFeeState.save();
   }
 
-  trackCalculationState(fund, event, sharesPaid);
+  trackCalculationState(vault, event, sharesPaid);
 }
 
 export function handleFeesRecipientSetForFund(event: FeesRecipientSetForFund): void {

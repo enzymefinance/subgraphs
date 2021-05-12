@@ -110,11 +110,11 @@ export function handleMigrationExecuted(event: MigrationExecuted): void {
   migrationExecution.executableTimestamp = event.params.executableTimestamp;
   migrationExecution.save();
 
-  let fund = useVault(event.params.vaultProxy.toHex());
-  let prevAccessor = fund.accessor;
-  fund.release = ensureRelease(event.params.nextFundDeployer.toHex(), event).id;
-  fund.accessor = ensureComptrollerProxy(Address.fromString(migration.nextAccessor), event).id;
-  fund.save();
+  let vault = useVault(event.params.vaultProxy.toHex());
+  let prevAccessor = vault.accessor;
+  vault.release = ensureRelease(event.params.nextFundDeployer.toHex(), event).id;
+  vault.accessor = ensureComptrollerProxy(Address.fromString(migration.nextAccessor), event).id;
+  vault.save();
 
   migration.executed = true;
   migration.save();

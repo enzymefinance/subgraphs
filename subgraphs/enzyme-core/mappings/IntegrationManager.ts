@@ -50,36 +50,36 @@ export function handleAdapterDeregistered(event: AdapterDeregistered): void {
 
 export function handleAuthUserAddedForFund(event: AuthUserAddedForFund): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
-  let fund = useVault(comptroller.getVaultProxy().toHex());
+  let vault = useVault(comptroller.getVaultProxy().toHex());
   let account = ensureAccount(event.params.account, event);
 
   let userAdded = new AuthUserAddedForFundEvent(uniqueEventId(event));
-  userAdded.vault = fund.id;
+  userAdded.vault = vault.id;
   userAdded.timestamp = event.block.timestamp;
   userAdded.transaction = ensureTransaction(event).id;
   userAdded.save();
 
-  fund.authUsers = arrayUnique<string>(fund.authUsers.concat([account.id]));
-  fund.save();
+  vault.authUsers = arrayUnique<string>(vault.authUsers.concat([account.id]));
+  vault.save();
 }
 
 export function handleAuthUserRemovedForFund(event: AuthUserRemovedForFund): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
-  let fund = useVault(comptroller.getVaultProxy().toHex());
+  let vault = useVault(comptroller.getVaultProxy().toHex());
   let account = ensureAccount(event.params.account, event);
 
   let userRemoved = new AuthUserRemovedForFundEvent(uniqueEventId(event));
-  userRemoved.vault = fund.id;
+  userRemoved.vault = vault.id;
   userRemoved.timestamp = event.block.timestamp;
   userRemoved.transaction = ensureTransaction(event).id;
   userRemoved.save();
 
-  fund.authUsers = arrayDiff<string>(fund.authUsers, [account.id]);
-  fund.save();
+  vault.authUsers = arrayDiff<string>(vault.authUsers, [account.id]);
+  vault.save();
 }
 
 export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationExecutedForFund): void {
-  let fund = useVault(event.params.vaultProxy.toHex());
+  let vault = useVault(event.params.vaultProxy.toHex());
 
   let adapter = ensureIntegrationAdapter(event.params.adapter);
   let integrationSelector = event.params.selector.toHexString();
@@ -107,7 +107,7 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
   }
 
   let execution = new CallOnIntegrationExecutedForFundEvent(uniqueEventId(event));
-  execution.vault = fund.id;
+  execution.vault = vault.id;
   execution.adapter = adapter.id;
   execution.selector = integrationSelector;
   execution.integrationData = event.params.integrationData.toHexString();
@@ -120,7 +120,7 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
   execution.save();
 
   trackTrade(
-    fund,
+    vault,
     adapter,
     integrationSelector,
     incomingAssets,
@@ -129,6 +129,6 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
     outgoingAssetAmounts,
     event,
   );
-  trackPortfolioState(fund, event, execution);
-  trackCalculationState(fund, event, execution);
+  trackPortfolioState(vault, event, execution);
+  trackCalculationState(vault, event, execution);
 }

@@ -12,48 +12,48 @@ import { createShareState } from './ShareState';
 import { createVaultState } from './VaultState';
 
 export function useVault(id: string): Vault {
-  let fund = Vault.load(id) as Vault;
-  if (fund == null) {
+  let vault = Vault.load(id) as Vault;
+  if (vault == null) {
     logCritical('Failed to load fund {}.', [id]);
   }
 
-  return fund;
+  return vault;
 }
 
 export function createVault(event: NewFundCreated): Vault {
   let id = event.params.vaultProxy.toHex();
 
-  let fund = new Vault(id);
+  let vault = new Vault(id);
   let shares = createShareState(
-    fund,
+    vault,
     { totalSupply: BigDecimal.fromString('0'), outstandingForFees: BigDecimal.fromString('0') },
     event,
     null,
   );
-  let portfolio = createPortfolioState([], fund, event, null);
+  let portfolio = createPortfolioState([], vault, event, null);
 
-  let feeState = createFeeState([], fund, event, null);
-  let calculations = createCalculationState(fund, event, null);
-  let state = createVaultState(shares, portfolio, feeState, calculations, 0, fund, event);
+  let feeState = createFeeState([], vault, event, null);
+  let calculations = createCalculationState(vault, event, null);
+  let state = createVaultState(shares, portfolio, feeState, calculations, 0, vault, event);
 
-  fund.name = event.params.fundName;
-  fund.inception = event.block.timestamp;
-  fund.release = ensureRelease(event.address.toHex(), event).id;
-  fund.accessor = event.params.comptrollerProxy.toHex();
-  fund.manager = ensureManager(event.params.fundOwner, event).id;
-  fund.creator = ensureAccount(event.params.creator, event).id;
-  fund.authUsers = new Array<string>();
-  fund.trackedAssets = new Array<string>();
-  fund.investmentCount = 0;
-  fund.shares = shares.id;
-  fund.portfolio = portfolio.id;
-  fund.feeState = feeState.id;
-  fund.calculations = calculations.id;
-  fund.state = state.id;
+  vault.name = event.params.fundName;
+  vault.inception = event.block.timestamp;
+  vault.release = ensureRelease(event.address.toHex(), event).id;
+  vault.accessor = event.params.comptrollerProxy.toHex();
+  vault.manager = ensureManager(event.params.fundOwner, event).id;
+  vault.creator = ensureAccount(event.params.creator, event).id;
+  vault.authUsers = new Array<string>();
+  vault.trackedAssets = new Array<string>();
+  vault.investmentCount = 0;
+  vault.shares = shares.id;
+  vault.portfolio = portfolio.id;
+  vault.feeState = feeState.id;
+  vault.calculations = calculations.id;
+  vault.state = state.id;
 
-  fund.save();
+  vault.save();
 
   trackNetworkFunds(event);
 
-  return fund;
+  return vault;
 }

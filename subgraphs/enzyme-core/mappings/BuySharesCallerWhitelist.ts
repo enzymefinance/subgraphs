@@ -13,12 +13,12 @@ import {
 
 export function handleAddressesAdded(event: AddressesAdded): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
-  let fundId = comptroller.getVaultProxy().toHex();
+  let vaultId = comptroller.getVaultProxy().toHex();
   let policy = ensurePolicy(event.address);
   let items = event.params.items.map<string>((item) => item.toHex());
 
   let addressesAdded = new BuySharesCallerWhitelistAddressesAddedEvent(uniqueEventId(event));
-  addressesAdded.vault = fundId; // fund does not exist yet
+  addressesAdded.vault = vaultId; // fund does not exist yet
   addressesAdded.timestamp = event.block.timestamp;
   addressesAdded.transaction = ensureTransaction(event).id;
   addressesAdded.comptrollerProxy = event.params.comptrollerProxy.toHex();
@@ -34,13 +34,12 @@ export function handleAddressesAdded(event: AddressesAdded): void {
 
 export function handleAddressesRemoved(event: AddressesRemoved): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
-  let vault = comptroller.getVaultProxy();
-  let fund = useVault(vault.toHex());
+  let vault = useVault(comptroller.getVaultProxy().toHex());
   let policy = ensurePolicy(event.address);
   let items = event.params.items.map<string>((item) => item.toHex());
 
   let addressesRemoved = new BuySharesCallerWhitelistAddressesRemovedEvent(uniqueEventId(event));
-  addressesRemoved.vault = fund.id;
+  addressesRemoved.vault = vault.id;
   addressesRemoved.timestamp = event.block.timestamp;
   addressesRemoved.transaction = ensureTransaction(event).id;
   addressesRemoved.comptrollerProxy = event.params.comptrollerProxy.toHex();

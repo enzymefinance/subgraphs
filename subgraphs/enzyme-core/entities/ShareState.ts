@@ -66,10 +66,10 @@ export function useShareState(id: string): ShareState {
 }
 
 export function trackShareState(fund: Vault, event: ethereum.Event, cause: Entity): ShareState {
-  let fundAddress = Address.fromString(fund.id);
-  let contract = VaultLibContract.bind(fundAddress);
+  let vaultAddress = Address.fromString(fund.id);
+  let contract = VaultLibContract.bind(vaultAddress);
   let totalSupply = contract.totalSupply();
-  let outstanding = contract.balanceOf(fundAddress);
+  let outstanding = contract.balanceOf(vaultAddress);
 
   let shareState = ensureShareState(fund, event, cause);
   shareState.totalSupply = toBigDecimal(totalSupply);

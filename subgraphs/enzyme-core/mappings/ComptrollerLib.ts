@@ -32,11 +32,11 @@ import {
 } from '../generated/schema';
 
 export function handleSharesBought(event: SharesBought): void {
-  let fund = useVault(dataSource.context().getString('vaultProxy'));
+  let vault = useVault(dataSource.context().getString('vaultProxy'));
   let investor = ensureInvestor(event.params.buyer, event);
-  let investmentState = trackInvestmentState(investor, fund, event);
-  let investment = ensureInvestment(investor, fund, investmentState.id, event);
-  let comptrollerProxy = ensureComptrollerProxy(Address.fromString(fund.accessor), event);
+  let investmentState = trackInvestmentState(investor, vault, event);
+  let investment = ensureInvestment(investor, vault, investmentState.id, event);
+  let comptrollerProxy = ensureComptrollerProxy(Address.fromString(vault.accessor), event);
   let asset = ensureAsset(Address.fromString(comptrollerProxy.denominationAsset));
   let shares = toBigDecimal(event.params.sharesReceived);
   let amount = toBigDecimal(event.params.investmentAmount, asset.decimals);
@@ -51,20 +51,20 @@ export function handleSharesBought(event: SharesBought): void {
   addition.shares = shares;
   addition.timestamp = event.block.timestamp;
   addition.transaction = ensureTransaction(event).id;
-  addition.calculations = calculationStateId(fund, event);
-  addition.vaultState = fund.state;
+  addition.calculations = calculationStateId(vault, event);
+  addition.vaultState = vault.state;
   addition.save();
 
-  trackPortfolioState(fund, event, addition);
-  trackShareState(fund, event, addition);
-  trackCalculationState(fund, event, addition);
+  trackPortfolioState(vault, event, addition);
+  trackShareState(vault, event, addition);
+  trackCalculationState(vault, event, addition);
 }
 
 export function handleSharesRedeemed(event: SharesRedeemed): void {
-  let fund = useVault(dataSource.context().getString('vaultProxy'));
+  let vault = useVault(dataSource.context().getString('vaultProxy'));
   let investor = ensureInvestor(event.params.redeemer, event);
-  let investmentState = trackInvestmentState(investor, fund, event);
-  let investment = ensureInvestment(investor, fund, investmentState.id, event);
+  let investmentState = trackInvestmentState(investor, vault, event);
+  let investment = ensureInvestment(investor, vault, investmentState.id, event);
   let shares = toBigDecimal(event.params.sharesQuantity);
   let assets = event.params.receivedAssets.map<Asset>((id) => ensureAsset(id));
   let qtys = event.params.receivedAssetQuantities;
@@ -85,13 +85,13 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
   redemption.withdrawAssetAmounts = assetAmounts.map<string>((assetAmount) => assetAmount.id);
   redemption.timestamp = event.block.timestamp;
   redemption.transaction = ensureTransaction(event).id;
-  redemption.calculations = calculationStateId(fund, event);
-  redemption.vaultState = fund.state;
+  redemption.calculations = calculationStateId(vault, event);
+  redemption.vaultState = vault.state;
   redemption.save();
 
-  trackPortfolioState(fund, event, redemption);
-  trackShareState(fund, event, redemption);
-  trackCalculationState(fund, event, redemption);
+  trackPortfolioState(vault, event, redemption);
+  trackShareState(vault, event, redemption);
+  trackCalculationState(vault, event, redemption);
 }
 
 export function handleVaultProxySet(event: VaultProxySet): void {
@@ -104,10 +104,10 @@ export function handleVaultProxySet(event: VaultProxySet): void {
 }
 
 export function handleOverridePauseSet(event: OverridePauseSet): void {
-  let fund = useVault(dataSource.context().getString('vaultProxy'));
+  let vault = useVault(dataSource.context().getString('vaultProxy'));
 
   let overridePauseSet = new OverridePauseSetEvent(uniqueEventId(event));
-  overridePauseSet.vault = fund.id;
+  overridePauseSet.vault = vault.id;
   overridePauseSet.timestamp = event.block.timestamp;
   overridePauseSet.transaction = ensureTransaction(event).id;
   overridePauseSet.overridePause = event.params.overridePause;
@@ -115,10 +115,10 @@ export function handleOverridePauseSet(event: OverridePauseSet): void {
 }
 
 export function handleMigratedSharesDuePaid(event: MigratedSharesDuePaid): void {
-  let fund = useVault(dataSource.context().getString('vaultProxy'));
+  let vault = useVault(dataSource.context().getString('vaultProxy'));
 
   let paid = new MigratedSharesDuePaidEvent(uniqueEventId(event));
-  paid.vault = fund.id;
+  paid.vault = vault.id;
   paid.timestamp = event.block.timestamp;
   paid.transaction = ensureTransaction(event).id;
   paid.sharesDue = toBigDecimal(event.params.sharesDue);
@@ -126,10 +126,10 @@ export function handleMigratedSharesDuePaid(event: MigratedSharesDuePaid): void 
 }
 
 export function handlePreRedeemSharesHookFailed(event: PreRedeemSharesHookFailed): void {
-  let fund = useVault(dataSource.context().getString('vaultProxy'));
+  let vault = useVault(dataSource.context().getString('vaultProxy'));
 
   let hookFailed = new PreRedeemSharesHookFailedEvent(uniqueEventId(event));
-  hookFailed.vault = fund.id;
+  hookFailed.vault = vault.id;
   hookFailed.timestamp = event.block.timestamp;
   hookFailed.sharesQuantity = toBigDecimal(event.params.sharesQuantity);
   hookFailed.redeemer = ensureAccount(event.params.redeemer, event).id;

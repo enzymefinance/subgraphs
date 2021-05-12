@@ -78,40 +78,40 @@ export function handleOwnerSet(event: OwnerSet): void {
 }
 
 export function handleTrackedAssetAdded(event: TrackedAssetAdded): void {
-  let fund = useVault(event.address.toHex());
+  let vault = useVault(event.address.toHex());
   let asset = ensureAsset(event.params.asset);
 
   let trackedAssetAddition = new TrackedAssetAddedEvent(uniqueEventId(event));
   trackedAssetAddition.asset = asset.id;
-  trackedAssetAddition.vault = fund.id;
+  trackedAssetAddition.vault = vault.id;
   trackedAssetAddition.timestamp = event.block.timestamp;
   trackedAssetAddition.transaction = ensureTransaction(event).id;
   trackedAssetAddition.save();
 
-  fund.trackedAssets = arrayUnique<string>(fund.trackedAssets.concat([asset.id]));
-  fund.save();
+  vault.trackedAssets = arrayUnique<string>(vault.trackedAssets.concat([asset.id]));
+  vault.save();
 
-  trackPortfolioState(fund, event, trackedAssetAddition);
-  trackCalculationState(fund, event, trackedAssetAddition);
+  trackPortfolioState(vault, event, trackedAssetAddition);
+  trackCalculationState(vault, event, trackedAssetAddition);
 }
 
 export function handleTrackedAssetRemoved(event: TrackedAssetRemoved): void {
-  let fund = useVault(event.address.toHex());
+  let vault = useVault(event.address.toHex());
   let asset = ensureAsset(event.params.asset);
 
   let trackedAssetRemoval = new TrackedAssetRemovedEvent(uniqueEventId(event));
   trackedAssetRemoval.asset = asset.id;
-  trackedAssetRemoval.vault = fund.id;
+  trackedAssetRemoval.vault = vault.id;
   trackedAssetRemoval.timestamp = event.block.timestamp;
-  trackedAssetRemoval.account = ensureAccount(Address.fromString(fund.manager), event).id;
+  trackedAssetRemoval.account = ensureAccount(Address.fromString(vault.manager), event).id;
   trackedAssetRemoval.transaction = ensureTransaction(event).id;
   trackedAssetRemoval.save();
 
-  fund.trackedAssets = arrayDiff<string>(fund.trackedAssets, [asset.id]);
-  fund.save();
+  vault.trackedAssets = arrayDiff<string>(vault.trackedAssets, [asset.id]);
+  vault.save();
 
-  trackPortfolioState(fund, event, trackedAssetRemoval);
-  trackCalculationState(fund, event, trackedAssetRemoval);
+  trackPortfolioState(vault, event, trackedAssetRemoval);
+  trackCalculationState(vault, event, trackedAssetRemoval);
 }
 
 export function handleVaultLibSet(event: VaultLibSet): void {

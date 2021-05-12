@@ -11,12 +11,12 @@ import { MinMaxInvestmentFundSettingsSetEvent } from '../generated/schema';
 
 export function handleFundSettingsSet(event: FundSettingsSet): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
-  let fundId = comptroller.getVaultProxy().toHex(); // fund entity may not exist yet
+  let vaultId = comptroller.getVaultProxy().toHex(); // fund entity may not exist yet
   let policy = ensurePolicy(event.address);
   let denominationAsset = ensureAsset(comptroller.getDenominationAsset());
 
   let settingsSet = new MinMaxInvestmentFundSettingsSetEvent(uniqueEventId(event));
-  settingsSet.vault = fundId;
+  settingsSet.vault = vaultId;
   settingsSet.timestamp = event.block.timestamp;
   settingsSet.transaction = ensureTransaction(event).id;
   settingsSet.comptrollerProxy = event.params.comptrollerProxy.toHex();

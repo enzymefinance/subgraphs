@@ -11,7 +11,7 @@ import { InvestorWhitelistAddressesAddedEvent, InvestorWhitelistAddressesRemoved
 
 export function handleAddressesAdded(event: AddressesAdded): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
-  let fundId = comptroller.getVaultProxy().toHex();
+  let vaultId = comptroller.getVaultProxy().toHex();
   let policy = ensurePolicy(event.address);
 
   let newAddresses = event.params.items;
@@ -21,7 +21,7 @@ export function handleAddressesAdded(event: AddressesAdded): void {
   }
 
   let addressesAdded = new InvestorWhitelistAddressesAddedEvent(uniqueEventId(event));
-  addressesAdded.vault = fundId; // fund may not exist yet
+  addressesAdded.vault = vaultId; // fund may not exist yet
   addressesAdded.timestamp = event.block.timestamp;
   addressesAdded.transaction = ensureTransaction(event).id;
   addressesAdded.comptrollerProxy = event.params.comptrollerProxy.toHex();

@@ -117,12 +117,12 @@ export function handlePaidOut(event: PaidOut): void {
     return;
   }
 
-  let fund = useVault(comptrollerProxy.vault);
+  let vault = useVault(comptrollerProxy.vault);
   let fee = ensureFee(event.address);
   let denominationAsset = ensureAsset(Address.fromString(comptrollerProxy.denominationAsset));
 
   let paidOut = new PerformanceFeePaidOutEvent(uniqueEventId(event));
-  paidOut.vault = fund.id;
+  paidOut.vault = vault.id;
   paidOut.timestamp = event.block.timestamp;
   paidOut.transaction = ensureTransaction(event).id;
   paidOut.comptrollerProxy = event.params.comptrollerProxy.toHex();
@@ -130,9 +130,9 @@ export function handlePaidOut(event: PaidOut): void {
   paidOut.nextHighWaterMark = toBigDecimal(event.params.nextHighWaterMark, denominationAsset.decimals);
   paidOut.save();
 
-  trackFeeState(fund, fee, BigDecimal.fromString('0'), event, paidOut);
+  trackFeeState(vault, fee, BigDecimal.fromString('0'), event, paidOut);
 
-  let performanceFeeState = usePerformanceFeeState(performanceFeeStateId(fund, event));
+  let performanceFeeState = usePerformanceFeeState(performanceFeeStateId(vault, event));
   performanceFeeState.highWaterMark = toBigDecimal(event.params.nextHighWaterMark, denominationAsset.decimals);
   performanceFeeState.lastPaid = event.block.timestamp;
   // AggregateValueDue is not emitted, but it is always set to zero just before the event is emitted
@@ -147,12 +147,12 @@ export function handlePerformanceUpdated(event: PerformanceUpdated): void {
     return;
   }
 
-  let fund = useVault(comptrollerProxy.vault);
+  let vault = useVault(comptrollerProxy.vault);
   let fee = ensureFee(event.address);
   let denominationAsset = ensureAsset(Address.fromString(comptrollerProxy.denominationAsset));
 
   let updated = new PerformanceFeePerformanceUpdatedEvent(uniqueEventId(event));
-  updated.vault = fund.id;
+  updated.vault = vault.id;
   updated.timestamp = event.block.timestamp;
   updated.transaction = ensureTransaction(event).id;
   updated.comptrollerProxy = event.params.comptrollerProxy.toHex();
@@ -161,9 +161,9 @@ export function handlePerformanceUpdated(event: PerformanceUpdated): void {
   updated.sharesOutstandingDiff = toBigDecimal(event.params.sharesOutstandingDiff);
   updated.save();
 
-  trackFeeState(fund, fee, BigDecimal.fromString('0'), event, updated);
+  trackFeeState(vault, fee, BigDecimal.fromString('0'), event, updated);
 
-  let performanceFeeState = usePerformanceFeeState(performanceFeeStateId(fund, event));
+  let performanceFeeState = usePerformanceFeeState(performanceFeeStateId(vault, event));
   performanceFeeState.aggregateValueDue = toBigDecimal(event.params.nextAggregateValueDue, denominationAsset.decimals);
   performanceFeeState.sharesOutstanding = performanceFeeState.sharesOutstanding.plus(
     toBigDecimal(event.params.sharesOutstandingDiff),

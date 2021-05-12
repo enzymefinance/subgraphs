@@ -56,11 +56,11 @@ export function handlePolicyEnabledForFund(event: PolicyEnabledForFund): void {
 
 export function handlePolicyDisabledForFund(event: PolicyDisabledForFund): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
-  let fundId = comptroller.getVaultProxy().toHex();
+  let vaultId = comptroller.getVaultProxy().toHex();
   let policy = ensurePolicy(event.params.policy);
 
   let enabled = new PolicyDisabledForFundEvent(uniqueEventId(event));
-  enabled.vault = fundId;
+  enabled.vault = vaultId;
   enabled.timestamp = event.block.timestamp;
   enabled.transaction = ensureTransaction(event).id;
   enabled.policy = policy.id;

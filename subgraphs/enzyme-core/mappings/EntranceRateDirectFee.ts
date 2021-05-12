@@ -34,12 +34,12 @@ export function handleFundSettingsAdded(event: FundSettingsAdded): void {
 
 export function handleSettled(event: Settled): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
-  let fund = useVault(comptroller.getVaultProxy().toHex());
+  let vault = useVault(comptroller.getVaultProxy().toHex());
   let fee = ensureFee(event.address);
   let shares = toBigDecimal(event.params.sharesQuantity);
 
   let settled = new EntranceRateDirectFeeSettledEvent(uniqueEventId(event));
-  settled.vault = fund.id;
+  settled.vault = vault.id;
   settled.timestamp = event.block.timestamp;
   settled.transaction = ensureTransaction(event).id;
   settled.comptrollerProxy = event.params.comptrollerProxy.toHex();
@@ -47,9 +47,9 @@ export function handleSettled(event: Settled): void {
   settled.payer = event.params.payer.toHex();
   settled.save();
 
-  trackFeeState(fund, fee, BigDecimal.fromString('0'), event, settled);
+  trackFeeState(vault, fee, BigDecimal.fromString('0'), event, settled);
 
-  let entranceRateDirectFeeState = useEntranceRateDirectFeeState(entranceRateDirectFeeStateId(fund, event));
+  let entranceRateDirectFeeState = useEntranceRateDirectFeeState(entranceRateDirectFeeStateId(vault, event));
   entranceRateDirectFeeState.lastSettled = event.block.timestamp;
   entranceRateDirectFeeState.save();
 }
