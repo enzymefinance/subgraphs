@@ -17,7 +17,6 @@ interface NetworkEventInterface {
 interface VaultEventInterface {
   id: ID!
   vault: Vault!
-  # comptroller: ComptrollerProxy!
   timestamp: BigInt!
   transaction: Transaction!
 }

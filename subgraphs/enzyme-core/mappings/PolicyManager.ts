@@ -40,20 +40,18 @@ export function handlePolicyDeregistered(event: PolicyDeregistered): void {
 
 export function handlePolicyEnabledForFund(event: PolicyEnabledForFund): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
-  let fundId = comptroller.getVaultProxy().toHex();
+  let vaultId = comptroller.getVaultProxy().toHex();
   let policy = ensurePolicy(event.params.policy);
 
   let enabled = new PolicyEnabledForFundEvent(uniqueEventId(event));
-  enabled.vault = fundId;
+  enabled.vault = vaultId;
   enabled.timestamp = event.block.timestamp;
   enabled.transaction = ensureTransaction(event).id;
   enabled.policy = policy.id;
   enabled.settingsData = event.params.settingsData.toHexString();
   enabled.save();
 
-  trackPolicySettingEnabled(fundId, policy);
-
-  // frontend queries need to filter out policies that belong to the current release
+  trackPolicySettingEnabled(event.params.comptrollerProxy.toHex(), policy);
 }
 
 export function handlePolicyDisabledForFund(event: PolicyDisabledForFund): void {
@@ -68,5 +66,5 @@ export function handlePolicyDisabledForFund(event: PolicyDisabledForFund): void 
   enabled.policy = policy.id;
   enabled.save();
 
-  trackPolicySettingDisabled(fundId, policy);
+  trackPolicySettingDisabled(event.params.comptrollerProxy.toHex(), policy);
 }
