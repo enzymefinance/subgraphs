@@ -19,6 +19,17 @@ export const contexts: Contexts<Variables> = {
       chainlinkPriceFeedBlock: 24710056,
     },
   },
+  mainnet: {
+    local: false,
+    name: 'enzymefinance/asset-prices',
+    network: 'mainnet',
+    variables: {
+      aggregatedDerivativePriceFeed: '0xCFb6F4C08856986d13839B1907b5c645EE95388F',
+      aggregatedDerivativePriceFeedBlock: 11636552,
+      chainlinkPriceFeed: '0xfB3A9655F5feA18caC92021E83550F829ae6F7F7',
+      chainlinkPriceFeedBlock: 11636534,
+    },
+  },
 };
 
 export const templates: Template[] = [
