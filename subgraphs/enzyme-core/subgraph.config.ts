@@ -496,6 +496,7 @@ export const configure: Configurator<Variables> = (variables) => {
     '@enzymefinance/protocol/artifacts/AlphaHomoraV1PriceFeed.json',
     '@enzymefinance/protocol/artifacts/AssetBlacklist.json',
     '@enzymefinance/protocol/artifacts/AssetWhitelist.json',
+    '@enzymefinance/protocol/artifacts/BuySharesCallerWhitelist.json',
     '@enzymefinance/protocol/artifacts/ChainlinkPriceFeed.json',
     '@enzymefinance/protocol/artifacts/ChaiPriceFeed.json',
     '@enzymefinance/protocol/artifacts/CompoundAdapter.json',
@@ -652,6 +653,12 @@ export const configure: Configurator<Variables> = (variables) => {
       name: 'AssetWhitelist',
       block: variables.block,
       address: release.assetWhitelistAddress,
+      events: ['AddressesAdded(indexed address,address[])', 'AddressesRemoved(indexed address,address[])'],
+    },
+    {
+      name: 'BuySharesCallerWhitelist',
+      block: variables.block,
+      address: release.buySharesCallerWhitelistAddress,
       events: ['AddressesAdded(indexed address,address[])', 'AddressesRemoved(indexed address,address[])'],
     },
     {
