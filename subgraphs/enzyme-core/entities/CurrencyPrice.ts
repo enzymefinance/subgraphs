@@ -16,13 +16,12 @@ export function ensureCurrencyPrice(event: ethereum.Event): CurrencyPrice {
   }
 
   let ethUsd = getLatestEthUsdPrice();
-  let btcEth = getLatestBtcEthPrice();
 
   // All prices are vs. ETH
   currencyPrice = new CurrencyPrice(id);
   currencyPrice.timestamp = event.block.timestamp;
   currencyPrice.aud = getLatestCurrencyPrice('aud').div(ethUsd);
-  currencyPrice.btc = btcEth;
+  currencyPrice.btc = getLatestBtcEthPrice();
   currencyPrice.chf = getLatestCurrencyPrice('chf').div(ethUsd);
   currencyPrice.eur = getLatestCurrencyPrice('eur').div(ethUsd);
   currencyPrice.gbp = getLatestCurrencyPrice('gbp').div(ethUsd);

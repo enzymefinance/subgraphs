@@ -1,5 +1,6 @@
 import { Address, log } from '@graphprotocol/graph-ts';
 import { AavePriceFeedContract } from '../generated/AavePriceFeedContract';
+import { releaseAddressesA, releaseAddressesB } from '../generated/addresses';
 import { AlphaHomoraV1PriceFeedContract } from '../generated/AlphaHomoraV1PriceFeedContract';
 import { ChaiPriceFeedContract } from '../generated/ChaiPriceFeedContract';
 import { CompoundPriceFeedContract } from '../generated/CompoundPriceFeedContract';
@@ -7,7 +8,6 @@ import { IdlePriceFeedContract } from '../generated/IdlePriceFeedContract';
 import { Asset } from '../generated/schema';
 import { StakehoundEthPriceFeedContract } from '../generated/StakehoundEthPriceFeedContract';
 import { SynthetixPriceFeedContract } from '../generated/SynthetixPriceFeedContract';
-import { releaseAddressesA, releaseAddressesB } from '../utils/addresses';
 import { checkCurvePoolAssetDetail } from './CurvePoolAssetDetail';
 import { checkUniswapV2PoolAssetDetail } from './UniswapV2PoolAssetDetail';
 

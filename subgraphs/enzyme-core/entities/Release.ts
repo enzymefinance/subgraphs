@@ -1,6 +1,5 @@
 import { Address, ethereum } from '@graphprotocol/graph-ts';
 import { logCritical } from '../../../utils/utils/logging';
-import { Release } from '../generated/schema';
 import {
   chaiIntegrateeAddress,
   dispatcherAddress,
@@ -13,7 +12,8 @@ import {
   synthetixIntegrateeAddress,
   uniswapV2IntegrateeAddress,
   wethTokenAddress,
-} from '../utils/addresses';
+} from '../generated/addresses';
+import { Release } from '../generated/schema';
 import { networkId, useNetwork } from './Network';
 
 export function createRelease(address: Address, event: ethereum.Event): Release {

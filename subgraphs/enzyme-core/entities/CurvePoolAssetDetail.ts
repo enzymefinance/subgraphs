@@ -1,10 +1,10 @@
 import { Address } from '@graphprotocol/graph-ts';
 import { ETH } from '../../../utils/constants';
+import { releaseAddressesA, releaseAddressesB, wethTokenAddress } from '../generated/addresses';
 import { CurvePriceFeedContract } from '../generated/CurvePriceFeedContract';
 import { CurveRegistryContract } from '../generated/CurveRegistryContract';
 import { ICurveAddressProviderContract } from '../generated/ICurveAddressProviderContract';
 import { Asset, CurvePoolAssetDetail } from '../generated/schema';
-import { releaseAddressesA, releaseAddressesB, wethTokenAddress } from '../utils/addresses';
 
 export function checkCurvePoolAssetDetail(derivative: Asset, derivativePriceFeedAddress: Address): void {
   let address = Address.fromString(derivative.id);
