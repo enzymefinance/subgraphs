@@ -1,5 +1,5 @@
+import { uniqueEventId } from '@enzymefinance/subgraph-utils';
 import { BigDecimal, ethereum } from '@graphprotocol/graph-ts';
-import { uniqueEventId } from '../../../utils/utils/id';
 import { Asset, AssetAmount } from '../generated/schema';
 import { ensureAssetPrice } from './AssetPrice';
 import { ensureCurrencyPrice } from './CurrencyPrice';

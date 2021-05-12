@@ -1,4 +1,4 @@
-import { logCritical } from '../../../utils/utils/logging';
+import { logCritical } from '@enzymefinance/subgraph-utils';
 import { MigrationSignaled } from '../generated/DispatcherContract';
 import { Migration } from '../generated/schema';
 import { ensureComptrollerProxy } from './ComptrollerProxy';

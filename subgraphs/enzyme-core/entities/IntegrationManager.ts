@@ -1,5 +1,5 @@
+import { logCritical } from '@enzymefinance/subgraph-utils';
 import { Address } from '@graphprotocol/graph-ts';
-import { logCritical } from '../../../utils/utils/logging';
 import { IntegrationManagerContract } from '../generated/IntegrationManagerContract';
 import { IntegrationManager } from '../generated/schema';
 

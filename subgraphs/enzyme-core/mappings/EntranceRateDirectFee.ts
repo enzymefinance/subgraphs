@@ -1,7 +1,5 @@
+import { arrayUnique, toBigDecimal, uniqueEventId } from '@enzymefinance/subgraph-utils';
 import { BigDecimal } from '@graphprotocol/graph-ts';
-import { arrayUnique } from '../../../utils/utils/array';
-import { uniqueEventId } from '../../../utils/utils/id';
-import { toBigDecimal } from '../../../utils/utils/math';
 import { ensureEntranceRateDirectFeeSetting } from '../entities/EntranceRateDirectFeeSetting';
 import { entranceRateDirectFeeStateId, useEntranceRateDirectFeeState } from '../entities/EntranceRateDirectFeeState';
 import { ensureFee } from '../entities/Fee';

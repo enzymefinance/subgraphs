@@ -1,5 +1,5 @@
+import { uniqueEventId } from '@enzymefinance/subgraph-utils';
 import { DataSourceContext } from '@graphprotocol/graph-ts';
-import { uniqueEventId } from '../../../utils/utils/id';
 import { ensureAccount, ensureManager } from '../entities/Account';
 import { ensureAsset } from '../entities/Asset';
 import { ensureComptrollerProxy } from '../entities/ComptrollerProxy';

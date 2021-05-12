@@ -1,5 +1,5 @@
+import { tokenSymbol } from '@enzymefinance/subgraph-utils';
 import { Address, log } from '@graphprotocol/graph-ts';
-import { tokenSymbol } from '../../../utils/utils/token';
 import { releaseAddressesA, releaseAddressesB } from '../generated/addresses';
 import { Asset, UniswapV2PoolAssetDetail } from '../generated/schema';
 import { UniswapV2PoolPriceFeedContract } from '../generated/UniswapV2PoolPriceFeedContract';

@@ -1,5 +1,5 @@
+import { logCritical } from '@enzymefinance/subgraph-utils';
 import { BigDecimal, Entity, ethereum } from '@graphprotocol/graph-ts';
-import { logCritical } from '../../../utils/utils/logging';
 import { Asset, HoldingState, Vault } from '../generated/schema';
 
 function holdingStateId(asset: Asset, vault: Vault, event: ethereum.Event): string {

@@ -1,5 +1,5 @@
+import { toBigDecimal } from '@enzymefinance/subgraph-utils';
 import { Address, BigDecimal, BigInt, ethereum } from '@graphprotocol/graph-ts';
-import { toBigDecimal } from '../../../utils/utils/math';
 import { Asset, AssetPrice } from '../generated/schema';
 import { ValueInterpreterContract } from '../generated/ValueInterpreterContract';
 import { useCurrentRelease } from './Release';

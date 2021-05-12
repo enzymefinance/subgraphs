@@ -1,7 +1,5 @@
+import { toBigDecimal, uniqueEventId, ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
 import { Address, BigDecimal } from '@graphprotocol/graph-ts';
-import { ZERO_ADDRESS } from '../../../utils/constants';
-import { uniqueEventId } from '../../../utils/utils/id';
-import { toBigDecimal } from '../../../utils/utils/math';
 import { ensureAccount } from '../entities/Account';
 import { calculationStateId, trackCalculationState } from '../entities/CalculationState';
 import { ensureComptrollerProxy } from '../entities/ComptrollerProxy';

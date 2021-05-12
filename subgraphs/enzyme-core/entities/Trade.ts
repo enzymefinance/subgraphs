@@ -1,4 +1,4 @@
-import { uniqueEventId } from '../../../utils/utils/id';
+import { uniqueEventId } from '@enzymefinance/subgraph-utils';
 import { CallOnIntegrationExecutedForFund } from '../generated/IntegrationManagerContract';
 import {
   AddTrackedAssetsTrade,

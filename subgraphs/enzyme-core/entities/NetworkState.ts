@@ -1,6 +1,5 @@
+import { dayOpenTime, logCritical } from '@enzymefinance/subgraph-utils';
 import { ethereum } from '@graphprotocol/graph-ts';
-import { logCritical } from '../../../utils/utils/logging';
-import { dayOpenTime } from '../../../utils/utils/time';
 import { NetworkState } from '../generated/schema';
 import { ensureNetwork, networkId } from './Network';
 

@@ -1,7 +1,5 @@
+import { arrayDiff, arrayUnique, dayOpenTime, isSameDay, logCritical } from '@enzymefinance/subgraph-utils';
 import { Address, BigDecimal, ethereum } from '@graphprotocol/graph-ts';
-import { arrayDiff, arrayUnique } from '../../../utils/utils/array';
-import { logCritical } from '../../../utils/utils/logging';
-import { dayOpenTime, isSameDay } from '../../../utils/utils/time';
 import { Asset, HoldingState, NetworkAssetHolding } from '../generated/schema';
 import { ensureAsset } from './Asset';
 import { ensureNetwork, networkId } from './Network';

@@ -1,4 +1,4 @@
-import { uniqueEventId } from '../../../utils/utils/id';
+import { uniqueEventId } from '@enzymefinance/subgraph-utils';
 import { ensureAsset } from '../entities/Asset';
 import { ensureTransaction } from '../entities/Transaction';
 import {

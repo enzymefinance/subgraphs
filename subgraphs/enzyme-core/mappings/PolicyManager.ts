@@ -1,4 +1,4 @@
-import { uniqueEventId } from '../../../utils/utils/id';
+import { uniqueEventId } from '@enzymefinance/subgraph-utils';
 import { ensurePolicy } from '../entities/Policy';
 import { trackPolicySettingDisabled, trackPolicySettingEnabled } from '../entities/PolicySetting';
 import { ensureTransaction } from '../entities/Transaction';

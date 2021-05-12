@@ -1,5 +1,5 @@
+import { toBigDecimal } from '@enzymefinance/subgraph-utils';
 import { BigDecimal, ethereum } from '@graphprotocol/graph-ts';
-import { toBigDecimal } from '../../../utils/utils/math';
 import { IChainlinkAggregatorContract } from '../generated/IChainlinkAggregatorContract';
 import { CurrencyPrice } from '../generated/schema';
 import { aggregatorAddressForCurrency, BTCETH_AGGREGATOR, ETHUSD_AGGREGATOR } from '../utils/aggregatorAddresses';

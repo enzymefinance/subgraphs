@@ -1,6 +1,5 @@
+import { uniqueEventId, ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
 import { Address, DataSourceContext } from '@graphprotocol/graph-ts';
-import { ZERO_ADDRESS } from '../../../utils/constants';
-import { uniqueEventId } from '../../../utils/utils/id';
 import { ensureManager } from '../entities/Account';
 import { ensureComptrollerProxy } from '../entities/ComptrollerProxy';
 import { ensureMigration, generateMigrationId, useMigration } from '../entities/Migration';

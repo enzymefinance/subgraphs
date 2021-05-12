@@ -1,5 +1,5 @@
+import { logCritical } from '@enzymefinance/subgraph-utils';
 import { Address } from '@graphprotocol/graph-ts';
-import { logCritical } from '../../../utils/utils/logging';
 import { MinMaxInvestmentContract } from '../generated/MinMaxInvestmentContract';
 import { Policy } from '../generated/schema';
 import { ensurePolicyManager } from './PolicyManager';

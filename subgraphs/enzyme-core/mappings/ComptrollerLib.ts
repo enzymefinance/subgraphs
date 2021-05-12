@@ -1,6 +1,5 @@
+import { toBigDecimal, uniqueEventId } from '@enzymefinance/subgraph-utils';
 import { Address, dataSource } from '@graphprotocol/graph-ts';
-import { uniqueEventId } from '../../../utils/utils/id';
-import { toBigDecimal } from '../../../utils/utils/math';
 import { ensureAccount, ensureInvestor } from '../entities/Account';
 import { ensureAsset } from '../entities/Asset';
 import { createAssetAmount } from '../entities/AssetAmount';

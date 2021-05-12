@@ -1,5 +1,5 @@
+import { ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
 import { Address, BigInt, ethereum } from '@graphprotocol/graph-ts';
-import { ZERO_ADDRESS } from '../../../utils/constants';
 import { ComptrollerProxy } from '../generated/schema';
 
 export function ensureComptrollerProxy(address: Address, event: ethereum.Event): ComptrollerProxy {

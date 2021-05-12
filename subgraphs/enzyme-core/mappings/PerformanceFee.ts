@@ -1,8 +1,5 @@
+import { arrayUnique, logCritical, toBigDecimal, uniqueEventId } from '@enzymefinance/subgraph-utils';
 import { Address, BigDecimal } from '@graphprotocol/graph-ts';
-import { arrayUnique } from '../../../utils/utils/array';
-import { uniqueEventId } from '../../../utils/utils/id';
-import { logCritical } from '../../../utils/utils/logging';
-import { toBigDecimal } from '../../../utils/utils/math';
 import { ensureAsset } from '../entities/Asset';
 import { ensureComptrollerProxy } from '../entities/ComptrollerProxy';
 import { ensureFee } from '../entities/Fee';

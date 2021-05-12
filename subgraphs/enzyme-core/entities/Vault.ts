@@ -1,5 +1,5 @@
+import { logCritical } from '@enzymefinance/subgraph-utils';
 import { BigDecimal } from '@graphprotocol/graph-ts';
-import { logCritical } from '../../../utils/utils/logging';
 import { NewFundCreated } from '../generated/FundDeployerContract';
 import { Vault } from '../generated/schema';
 import { ensureAccount, ensureManager } from './Account';

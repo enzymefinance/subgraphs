@@ -1,5 +1,5 @@
+import { ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
 import { Address } from '@graphprotocol/graph-ts';
-import { ZERO_ADDRESS } from '../../../utils/constants';
 
 export let ETHUSD_AGGREGATOR = Address.fromString('0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419');
 

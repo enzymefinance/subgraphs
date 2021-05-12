@@ -1,6 +1,5 @@
+import { arrayUnique, logCritical } from '@enzymefinance/subgraph-utils';
 import { BigDecimal, Entity, ethereum } from '@graphprotocol/graph-ts';
-import { arrayUnique } from '../../../utils/utils/array';
-import { logCritical } from '../../../utils/utils/logging';
 import { Fee, FeeState, Vault } from '../generated/schema';
 import { ensureEntranceRateBurnFeeState } from './EntranceRateBurnFeeState';
 import { ensureEntranceRateDirectFeeState } from './EntranceRateDirectFeeState';

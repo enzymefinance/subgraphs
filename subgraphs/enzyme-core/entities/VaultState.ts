@@ -1,5 +1,5 @@
+import { logCritical } from '@enzymefinance/subgraph-utils';
 import { ethereum } from '@graphprotocol/graph-ts';
-import { logCritical } from '../../../utils/utils/logging';
 import { CalculationState, FeeState, PortfolioState, ShareState, Vault, VaultState } from '../generated/schema';
 import { useCalculationState } from './CalculationState';
 import { ensureCurrencyPrice } from './CurrencyPrice';

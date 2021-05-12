@@ -1,6 +1,5 @@
+import { logCritical, tokenName, tokenSymbol } from '@enzymefinance/subgraph-utils';
 import { Address } from '@graphprotocol/graph-ts';
-import { logCritical } from '../../../utils/utils/logging';
-import { tokenName, tokenSymbol } from '../../../utils/utils/token';
 import { ERC20Contract } from '../generated/ERC20Contract';
 import { Asset } from '../generated/schema';
 

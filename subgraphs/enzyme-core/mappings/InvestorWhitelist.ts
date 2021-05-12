@@ -1,5 +1,4 @@
-import { arrayDiff, arrayUnique } from '../../../utils/utils/array';
-import { uniqueEventId } from '../../../utils/utils/id';
+import { arrayDiff, arrayUnique, uniqueEventId } from '@enzymefinance/subgraph-utils';
 import { ensureAccount } from '../entities/Account';
 import { ensureInvestorWhitelistSetting } from '../entities/InvestorWhitelistSetting';
 import { ensurePolicy } from '../entities/Policy';

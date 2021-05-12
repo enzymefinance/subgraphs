@@ -1,7 +1,5 @@
+import { arrayUnique, logCritical, toBigDecimal } from '@enzymefinance/subgraph-utils';
 import { Address, Entity, ethereum } from '@graphprotocol/graph-ts';
-import { arrayUnique } from '../../../utils/utils/array';
-import { logCritical } from '../../../utils/utils/logging';
-import { toBigDecimal } from '../../../utils/utils/math';
 import { ERC20Contract } from '../generated/ERC20Contract';
 import { HoldingState, PortfolioState, Vault } from '../generated/schema';
 import { VaultLibContract } from '../generated/VaultLibContract';

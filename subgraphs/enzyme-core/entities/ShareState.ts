@@ -1,7 +1,5 @@
+import { arrayUnique, logCritical, toBigDecimal } from '@enzymefinance/subgraph-utils';
 import { Address, BigDecimal, Entity, ethereum } from '@graphprotocol/graph-ts';
-import { arrayUnique } from '../../../utils/utils/array';
-import { logCritical } from '../../../utils/utils/logging';
-import { toBigDecimal } from '../../../utils/utils/math';
 import { ShareState, Vault } from '../generated/schema';
 import { VaultLibContract } from '../generated/VaultLibContract';
 import { ensureVaultState, useVaultState } from './VaultState';

@@ -1,6 +1,4 @@
-import { arrayUnique } from '../../../utils/utils/array';
-import { uniqueEventId } from '../../../utils/utils/id';
-import { toBigDecimal } from '../../../utils/utils/math';
+import { arrayUnique, toBigDecimal, uniqueEventId } from '@enzymefinance/subgraph-utils';
 import { ensureAsset } from '../entities/Asset';
 import { ensureMinMaxInvestmentSetting } from '../entities/MinMaxInvestmentSetting';
 import { ensurePolicy } from '../entities/Policy';

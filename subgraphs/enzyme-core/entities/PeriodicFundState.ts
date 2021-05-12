@@ -1,5 +1,11 @@
+import {
+  dayCloseTime,
+  dayOpenTime,
+  hourCloseTime,
+  hourOpenTime,
+  monthOpenAndClose,
+} from '@enzymefinance/subgraph-utils';
 import { BigInt, ethereum } from '@graphprotocol/graph-ts';
-import { dayCloseTime, dayOpenTime, hourCloseTime, hourOpenTime, monthOpenAndClose } from '../../../utils/utils/time';
 import { DailyVaultState, HourlyVaultState, MonthlyVaultState, Vault, VaultState } from '../generated/schema';
 
 export function periodicFundStateId(vault: Vault, start: BigInt, type: string): string {

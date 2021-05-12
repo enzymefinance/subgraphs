@@ -1,5 +1,5 @@
+import { toBigDecimal } from '@enzymefinance/subgraph-utils';
 import { ethereum } from '@graphprotocol/graph-ts';
-import { toBigDecimal } from '../../../utils/utils/math';
 import { Transaction } from '../generated/schema';
 
 export function transactionId(tx: ethereum.Transaction): string {

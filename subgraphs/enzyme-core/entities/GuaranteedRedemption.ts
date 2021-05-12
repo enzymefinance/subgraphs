@@ -1,5 +1,5 @@
+import { logCritical } from '@enzymefinance/subgraph-utils';
 import { Address } from '@graphprotocol/graph-ts';
-import { logCritical } from '../../../utils/utils/logging';
 import { GuaranteedRedemptionContract } from '../generated/GuaranteedRedemptionContract';
 import { GuaranteedRedemption } from '../generated/schema';
 

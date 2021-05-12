@@ -1,5 +1,5 @@
+import { ETH } from '@enzymefinance/subgraph-utils';
 import { Address } from '@graphprotocol/graph-ts';
-import { ETH } from '../../../utils/constants';
 import { releaseAddressesA, releaseAddressesB, wethTokenAddress } from '../generated/addresses';
 import { CurvePriceFeedContract } from '../generated/CurvePriceFeedContract';
 import { CurveRegistryContract } from '../generated/CurveRegistryContract';

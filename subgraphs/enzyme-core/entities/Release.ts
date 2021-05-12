@@ -1,5 +1,5 @@
+import { logCritical } from '@enzymefinance/subgraph-utils';
 import { Address, ethereum } from '@graphprotocol/graph-ts';
-import { logCritical } from '../../../utils/utils/logging';
 import {
   chaiIntegrateeAddress,
   dispatcherAddress,
