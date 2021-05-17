@@ -1,6 +1,7 @@
 import { toBigDecimal } from '@enzymefinance/subgraph-utils';
 import { Address, BigInt, BigDecimal } from '@graphprotocol/graph-ts';
-import { Asset } from '../generated/schema';
+import { ValueInterpreterContract } from '../../generated/ValueInterpreterContract';
+import { Asset } from '../../generated/schema';
 
 export function fetchAssetPrice(asset: Asset, valueInterpreter: Address): BigDecimal {
   let contract = ValueInterpreterContract.bind(valueInterpreter);

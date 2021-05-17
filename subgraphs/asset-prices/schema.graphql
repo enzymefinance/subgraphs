@@ -7,35 +7,48 @@ type Asset @entity {
   name: String!
   symbol: String!
   decimals: Int!
+  registrations: [AssetRegistration!]!
 
   # Latest price and windows
-  price: AssetPrice
-  hourly: HourlyAssetPriceWindow
-  daily: DailyAssetPriceWindow
-  monthly: MonthlyAssetPriceWindow
+  price: Price!
+  hourly: HourlyPriceWindow!
+  daily: DailyPriceWindow!
+  monthly: MonthlyPriceWindow!
 
   # Historical prices and windows
-  priceHistory: [AssetPrice!]! @derivedFrom(field: "asset")
-  hourlyHistory: [HourlyAssetPriceWindow!]! @derivedFrom(field: "asset")
-  dailyHistory: [DailyAssetPriceWindow!]! @derivedFrom(field: "asset")
-  monthlyHistory: [MonthlyAssetPriceWindow!]! @derivedFrom(field: "asset")
+  priceHistory: [Price!]! @derivedFrom(field: "asset")
+  hourlyHistory: [HourlyPriceWindow!]! @derivedFrom(field: "asset")
+  dailyHistory: [DailyPriceWindow!]! @derivedFrom(field: "asset")
+  monthlyHistory: [MonthlyPriceWindow!]! @derivedFrom(field: "asset")
 }
 
 #################################################
 # Asset prices
 #################################################
 
-type AssetPrice @entity {
+type Price @entity {
   id: ID!
+  """The asset this price belongs to."""
   asset: Asset!
+  """The block number at which the price was updated."""
+  block: BigInt!
+  """The timestamp at which the price was updated."""
   timestamp: BigInt!
+  """The asset price in eth."""
   eth: BigDecimal!
+  """The asset price in btc."""
   btc: BigDecimal!
+  """The asset price in usd."""
   usd: BigDecimal!
+  """The asset price in eur."""
   eur: BigDecimal!
+  """The asset price in aud."""
   aud: BigDecimal!
+  """The asset price in chf."""
   chf: BigDecimal!
+  """The asset price in gbp."""
   gbp: BigDecimal!
+  """The asset price in jpy."""
   jpy: BigDecimal!
 }
 
@@ -43,82 +56,166 @@ type AssetPrice @entity {
 # Asset price windows
 #################################################
 
+enum PriceWindowType {
+  HOURLY
+  DAILY
+  MONTHLY
+}
+
 interface PriceWindow {
   id: ID!
+  type: PriceWindowType!
   asset: Asset!
   from: BigInt!
   to: BigInt!
-  open: AssetPrice!
-  close: AssetPrice!
+  open: Price!
+  close: Price!
 }
 
-type HourlyAssetPriceWindow implements PriceWindow @entity {
+type HourlyPriceWindow implements PriceWindow @entity {
   id: ID!
+  type: PriceWindowType!
   asset: Asset!
-  group: HourlyPriceWindowGroup!
   from: BigInt!
   to: BigInt!
-  open: AssetPrice!
-  close: AssetPrice!
+  open: Price!
+  close: Price!
 }
 
-type DailyAssetPriceWindow implements PriceWindow @entity {
+type DailyPriceWindow implements PriceWindow @entity {
   id: ID!
+  type: PriceWindowType!
   asset: Asset!
-  group: DailyPriceWindowGroup!
   from: BigInt!
   to: BigInt!
-  open: AssetPrice!
-  close: AssetPrice!
+  open: Price!
+  close: Price!
 }
 
-type MonthlyAssetPriceWindow implements PriceWindow @entity {
+type MonthlyPriceWindow implements PriceWindow @entity {
   id: ID!
+  type: PriceWindowType!
   asset: Asset!
-  group: MonthlyPriceWindowGroup!
   from: BigInt!
   to: BigInt!
-  open: AssetPrice!
-  close: AssetPrice!
-}
-
-#################################################
-# Asset and currency price window groups
-#################################################
-
-interface PriceWindowGroup {
-  id: ID!
-  from: BigInt!
-  to: BigInt!
-}
-
-type HourlyPriceWindowGroup implements PriceWindowGroup @entity {
-  id: ID!
-  from: BigInt!
-  to: BigInt!
-  windows: [HourlyAssetPriceWindow!]! @derivedFrom(field: "group")
-}
-
-type DailyPriceWindowGroup implements PriceWindowGroup @entity {
-  id: ID!
-  from: BigInt!
-  to: BigInt!
-  windows: [DailyAssetPriceWindow!]! @derivedFrom(field: "group")
-}
-
-type MonthlyPriceWindowGroup implements PriceWindowGroup @entity {
-  id: ID!
-  from: BigInt!
-  to: BigInt!
-  windows: [MonthlyAssetPriceWindow!]! @derivedFrom(field: "group")
+  open: Price!
+  close: Price!
 }
 
 #################################################
 # Currencies
 #################################################
 
+enum CurrencyType {
+  BTC
+  USD
+  EUR
+  AUD
+  CHF
+  GBP
+  JPY
+}
+
 type Currency @entity {
   id: ID!
-  timestamp: BigInt!
-  eth: BigDecimal!
+  """The asset price in btc."""
+  btc: BigDecimal!
+  """The asset price in usd."""
+  usd: BigDecimal!
+  """The asset price in eur."""
+  eur: BigDecimal!
+  """The asset price in aud."""
+  aud: BigDecimal!
+  """The asset price in chf."""
+  chf: BigDecimal!
+  """The asset price in gbp."""
+  gbp: BigDecimal!
+  """The asset price in jpy."""
+  jpy: BigDecimal!
+}
+
+#################################################
+# Chainlink aggregators & proxies
+#################################################
+
+enum AggregatorType {
+  ETH
+  USD
+}
+
+type AggregatorProxy @entity {
+  id: ID!
+  """The assets currently controlled by this aggregator proxy."""
+  registrations: [Registration!]!
+}
+
+type Aggregator @entity {
+  id: ID!
+  type: AggregatorType!
+  """The chainlink aggregator proxies currently pointing at this aggregator."""
+  proxies: [AggregatorProxy!]!
+}
+
+#################################################
+# Asset registrations
+#################################################
+
+enum RegistrationType {
+  CURRENCY
+  PRIMITIVE
+  DERIVATIVE
+}
+
+interface Registration {
+  id: ID!
+  """The type of the registration entry."""
+  type: RegistrationType!
+}
+
+interface AssetRegistration {
+  id: ID!
+  """The type of the registration entry."""
+  type: RegistrationType!
+  """The registered asset."""
+  asset: Asset!
+}
+
+interface AggregatorRegistration {
+  id: ID!
+  """The type of the registration entry."""
+  type: RegistrationType!
+  """The registered aggregator proxy."""
+  proxy: AggregatorProxy!
+}
+
+type CurrencyRegistration implements Registration & AggregatorRegistration @entity {
+  id: ID!
+  """The type of the registration entry."""
+  type: RegistrationType!
+  """The contract that registered the aggregator."""
+  currency: CurrencyType!
+  """The registered aggregator proxy."""
+  proxy: AggregatorProxy!
+}
+
+type PrimitiveRegistration implements Registration & AssetRegistration & AggregatorRegistration @entity {
+  id: ID!
+  """The type of the registration entry."""
+  type: RegistrationType!
+  """The contract that registered the aggregator."""
+  issuer: String!
+  """The registered asset."""
+  asset: Asset!
+  """The registered aggregator proxy."""
+  proxy: AggregatorProxy!
+}
+
+type DerivativeRegistration implements Registration & AssetRegistration @entity {
+  id: ID!
+  """The type of the registration entry."""
+  type: RegistrationType!
+  """The contract that registered the aggregator."""
+  issuer: String!
+  """The registered asset."""
+  asset: Asset!
 }

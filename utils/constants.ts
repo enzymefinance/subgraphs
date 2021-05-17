@@ -1,4 +1,4 @@
-import { Address, BigInt, Bytes } from '@graphprotocol/graph-ts';
+import { Address, BigDecimal, BigInt, Bytes } from '@graphprotocol/graph-ts';
 
 export let ZERO_ADDRESS = Address.fromString('0x0000000000000000000000000000000000000000');
 export let ZERO_HASH = Bytes.fromHexString('0x0000000000000000000000000000000000000000000000000000000000000000');
@@ -7,7 +7,11 @@ export let ONE_MINUTE = BigInt.fromI32(60);
 export let TEN_MINUTES = BigInt.fromI32(600);
 export let ONE_HOUR = BigInt.fromI32(3600);
 export let ONE_DAY = BigInt.fromI32(86400);
-export let ONE = BigInt.fromI32(1);
+
+export let ZERO_BI = BigInt.fromI32(0);
+export let ONE_BI = BigInt.fromI32(1);
+export let ZERO_BD = ZERO_BI.toBigDecimal();
+export let ONE_BD = ONE_BI.toBigDecimal();
 
 export let ETH = Address.fromString('0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE');
 

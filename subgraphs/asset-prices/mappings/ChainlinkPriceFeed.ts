@@ -1,13 +1,14 @@
-import { PrimitiveAdded, PrimitiveRemoved, PrimitiveUpdated } from '../generated/ChainlinkPriceFeedContract';
+import { PrimitiveAdded, PrimitiveUpdated, PrimitiveRemoved } from '../generated/ChainlinkPriceFeedContract';
+import { createOrUpdatePrimitiveRegistration, removePrimitiveRegistration } from './entities/Registration';
 
 export function handlePrimitiveAdded(event: PrimitiveAdded): void {
-  // TODO
-}
-
-export function handlePrimitiveRemoved(event: PrimitiveRemoved): void {
-  // TODO
+  createOrUpdatePrimitiveRegistration(event.params.primitive, event.address, event.params.aggregator);
 }
 
 export function handlePrimitiveUpdated(event: PrimitiveUpdated): void {
-  // TODO
+  createOrUpdatePrimitiveRegistration(event.params.primitive, event.address, event.params.nextAggregator);
+}
+
+export function handlePrimitiveRemoved(event: PrimitiveRemoved): void {
+  removePrimitiveRegistration(event.params.primitive, event.address);
 }

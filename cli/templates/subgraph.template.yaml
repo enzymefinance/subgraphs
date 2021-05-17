@@ -40,6 +40,7 @@ dataSources:
           handler: {{handler}}
         {{/each}}
       {{/if}}
+
   {{/each}}
 
 {{#if templates}}
@@ -75,5 +76,6 @@ templates:
           handler: {{handler}}
         {{/each}}
       {{/if}}
+
   {{/each}}
 {{/if}}
