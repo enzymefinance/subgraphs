@@ -199,6 +199,7 @@ enum ShareChangeType {
   FeeSettledForFund
   AllSharesOutstandingForcePaidForFund
   SharesOutstandingPaidForFund
+  MigratedSharesDuePaid
 }
 
 enum IntegrationMethod {
@@ -467,6 +468,21 @@ type SharesOutstandingPaidForFundEvent implements EventInterface & FundEventInte
   comptrollerProxy: String!
   fee: Fee!
   sharesDue: BigDecimal!
+  calculations: CalculationState!
+  fundState: FundState!
+}
+
+type MigratedSharesDuePaidEvent implements EventInterface & FundEventInterface & SharesChangeInterface & FeeSharesChangeInterface
+  @entity {
+  id: ID!
+  fund: Fund!
+  type: ShareChangeType!
+  investor: Account!
+  timestamp: BigInt!
+  transaction: Transaction!
+  investmentState: InvestmentState!
+  shares: BigDecimal!
+  comptrollerProxy: String!
   calculations: CalculationState!
   fundState: FundState!
 }
@@ -790,14 +806,6 @@ type OverridePauseSetEvent implements EventInterface & FundEventInterface @entit
   timestamp: BigInt!
   transaction: Transaction!
   overridePause: Boolean!
-}
-
-type MigratedSharesDuePaidEvent implements EventInterface & FundEventInterface @entity {
-  id: ID!
-  fund: Fund!
-  timestamp: BigInt!
-  transaction: Transaction!
-  sharesDue: BigDecimal!
 }
 
 type PreRedeemSharesHookFailedEvent implements EventInterface & FundEventInterface @entity {

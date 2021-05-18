@@ -13,6 +13,7 @@ import { logCritical } from '../utils/logCritical';
 import { toBigDecimal } from '../utils/toBigDecimal';
 
 // TODO: handle activatedForFund
+// (requires new protocol package with event ABI)
 
 export function handleFundSettingsAdded(event: FundSettingsAdded): void {
   let fee = ensureFee(event.address);

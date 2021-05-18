@@ -117,12 +117,26 @@ export function handleOverridePauseSet(event: OverridePauseSet): void {
 export function handleMigratedSharesDuePaid(event: MigratedSharesDuePaid): void {
   let fund = useFund(dataSource.context().getString('vaultProxy'));
 
+  let manager = ensureInvestor(Address.fromString(fund.manager), event);
+  let investmentState = trackInvestmentState(manager, fund, event);
+
   let paid = new MigratedSharesDuePaidEvent(genericId(event));
   paid.fund = fund.id;
+  paid.type = 'MigratedSharesDuePaid';
   paid.timestamp = event.block.timestamp;
   paid.transaction = ensureTransaction(event).id;
-  paid.sharesDue = toBigDecimal(event.params.sharesDue);
+  paid.investor = manager.id;
+  paid.investmentState = investmentState.id;
+  paid.shares = toBigDecimal(event.params.sharesDue);
+  paid.comptrollerProxy = event.address.toHex();
+  paid.calculations = calculationStateId(fund, event);
+  paid.fundState = fund.state;
   paid.save();
+
+  trackShareState(fund, event, paid);
+  // TODO: do we need to call (?) (only for PerformanceFee)
+  // trackFeeState(fund, fee, BigDecimal.fromString('0'), event, paid);
+  trackCalculationState(fund, event, paid);
 }
 
 export function handlePreRedeemSharesHookFailed(event: PreRedeemSharesHookFailed): void {
