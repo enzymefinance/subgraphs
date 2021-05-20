@@ -178,4 +178,6 @@ type Updater @entity {
   id: ID!
   """The progress within the current round. Once the progress exceeds the derivative count a new round is started."""
   progress: Int!
+  """The block number at which we ran the last derivative update."""
+  block: BigInt!
 }
