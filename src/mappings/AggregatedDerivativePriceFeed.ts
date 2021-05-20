@@ -1,6 +1,7 @@
 import { ensureAsset } from '../entities/Asset';
 import { fetchAssetPrice, trackAssetPrice } from '../entities/AssetPrice';
 import { checkDerivativeType } from '../entities/DerivativeType';
+import { releaseFromPriceFeed } from '../entities/Release';
 import { ensureTransaction } from '../entities/Transaction';
 import {
   DerivativeAdded,
@@ -13,27 +14,14 @@ import { arrayUnique } from '../utils/arrayUnique';
 import { ensureCron, triggerCron } from '../utils/cronManager';
 import { genericId } from '../utils/genericId';
 
-let temporaryDerivatives: Array<string> = [
-  '0x0258f474786ddfd37abce6df6bbb1dd5dfc4434a',
-  '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599',
-  '0x607f4c5bb672230e8672085532f7e901544a7375',
-  '0xa0b73e1ff0b80914ab6fe0444e65848c4c34450b',
-  '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-  '0xdac17f958d2ee523a2206206994597c13d831ec7',
-];
-
 export function handleDerivativeAdded(event: DerivativeAdded): void {
   let derivative = ensureAsset(event.params.derivative);
-  derivative.removed = false;
-  derivative.save();
-
-  for (let i: i32 = 0; i < temporaryDerivatives.length; i++) {
-    if (derivative.id == temporaryDerivatives[i]) {
-      return;
-    }
-  }
-
   derivative.type = 'DERIVATIVE';
+
+  let release = releaseFromPriceFeed(event);
+  if (release != null) {
+    derivative.releases = arrayUnique<string>(derivative.releases.concat([release.id]));
+  }
   derivative.save();
 
   checkDerivativeType(derivative, event.params.priceFeed);
@@ -59,7 +47,11 @@ export function handleDerivativeAdded(event: DerivativeAdded): void {
 
 export function handleDerivativeRemoved(event: DerivativeRemoved): void {
   let derivative = ensureAsset(event.params.derivative);
-  derivative.removed = true;
+
+  let release = releaseFromPriceFeed(event);
+  if (release != null) {
+    derivative.releases = arrayDiff<string>(derivative.releases, [release.id]);
+  }
   derivative.save();
 
   let derivativeRemoved = new DerivativeRemovedEvent(genericId(event));

@@ -121,3 +121,25 @@ export function useCurrentRelease(): Release {
 
   return release;
 }
+
+export function releaseFromPriceFeed(event: ethereum.Event): Release | null {
+  let priceFeed = event.address;
+
+  let release: Release;
+  if (
+    priceFeed.equals(releaseAddressesA.chainlinkPriceFeedAddress) ||
+    priceFeed.equals(releaseAddressesA.aggregatedDerivativePriceFeedAddress)
+  ) {
+    release = ensureRelease(releaseAddressesA.fundDeployerAddress.toHex(), event);
+  } else if (
+    priceFeed.equals(releaseAddressesB.chainlinkPriceFeedAddress) ||
+    priceFeed.equals(releaseAddressesB.aggregatedDerivativePriceFeedAddress)
+  ) {
+    release = ensureRelease(releaseAddressesB.fundDeployerAddress.toHex(), event);
+  } else {
+    logCritical('Release with PriceFeed {} not found.', [priceFeed.toHex()]);
+    return null;
+  }
+
+  return release;
+}

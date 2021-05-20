@@ -1290,7 +1290,8 @@ type Release @entity {
   current: Boolean!
   open: BigInt!
   close: BigInt
-  funds: [Fund!] @derivedFrom(field: "release")
+  funds: [Fund!]! @derivedFrom(field: "release")
+  assets: [Asset!]! @derivedFrom(field: "releases")
   network: Network!
   # contracts
   # TODO: make contracts
@@ -1859,7 +1860,8 @@ type Asset @entity {
   symbol: String!
   decimals: Int!
   type: AssetType!
-  removed: Boolean!
+
+  releases: [Release!]!
 
   # Details for certain derivative assets
   derivativeType: DerivativeType
