@@ -1,4 +1,5 @@
 import { BigDecimal, BigInt } from '@graphprotocol/graph-ts';
+import { ZERO_BD, ZERO_BI } from '../constants';
 
 export function toBigDecimal(quantity: BigInt, decimals: i32 = 18): BigDecimal {
   return quantity.divDecimal(
@@ -8,17 +9,39 @@ export function toBigDecimal(quantity: BigInt, decimals: i32 = 18): BigDecimal {
   );
 }
 
-export function averageBigDecimal(prices: BigDecimal[]): BigDecimal {
-  let sum = BigDecimal.fromString('0');
-  for (let i = 0; i < prices.length; i++) {
-    sum = sum.plus(prices[i]);
+export function minBigDecimal(values: BigDecimal[]): BigDecimal {
+  let min = ZERO_BD;
+  for (let i = 0; i < values.length; i++) {
+    if (min.gt(values[i])) {
+      min = values[i];
+    }
   }
 
-  return sum.div(BigDecimal.fromString(BigInt.fromI32(prices.length).toString()));
+  return min;
 }
 
-export function medianBigDecimal(prices: BigDecimal[]): BigDecimal {
-  let sorted = prices.sort((a, b) => {
+export function maxBigDecimal(values: BigDecimal[]): BigDecimal {
+  let max = ZERO_BD;
+  for (let i = 0; i < values.length; i++) {
+    if (max.lt(values[i])) {
+      max = values[i];
+    }
+  }
+
+  return max;
+}
+
+export function averageBigDecimal(values: BigDecimal[]): BigDecimal {
+  let sum = ZERO_BD;
+  for (let i = 0; i < values.length; i++) {
+    sum = sum.plus(values[i]);
+  }
+
+  return sum.div(BigDecimal.fromString(BigInt.fromI32(values.length).toString()));
+}
+
+export function medianBigDecimal(values: BigDecimal[]): BigDecimal {
+  let sorted = values.sort((a, b) => {
     return a.equals(b) ? 0 : a.gt(b) ? 1 : -1;
   });
 
@@ -30,17 +53,39 @@ export function medianBigDecimal(prices: BigDecimal[]): BigDecimal {
   return sorted[mid - 1];
 }
 
-export function averageBigInt(prices: BigInt[]): BigInt {
-  let sum = BigInt.fromString('0');
-  for (let i = 0; i < prices.length; i++) {
-    sum = sum.plus(prices[i]);
+export function minBigInt(values: BigInt[]): BigInt {
+  let min = ZERO_BI;
+  for (let i = 0; i < values.length; i++) {
+    if (min.gt(values[i])) {
+      min = values[i];
+    }
   }
 
-  return sum.div(BigInt.fromI32(prices.length));
+  return min;
 }
 
-export function medianBigInt(prices: BigInt[]): BigInt {
-  let sorted = prices.sort((a, b) => {
+export function maxBigInt(values: BigInt[]): BigInt {
+  let max = ZERO_BI;
+  for (let i = 0; i < values.length; i++) {
+    if (max.lt(values[i])) {
+      max = values[i];
+    }
+  }
+
+  return max;
+}
+
+export function averageBigInt(values: BigInt[]): BigInt {
+  let sum = ZERO_BI;
+  for (let i = 0; i < values.length; i++) {
+    sum = sum.plus(values[i]);
+  }
+
+  return sum.div(BigInt.fromI32(values.length));
+}
+
+export function medianBigInt(values: BigInt[]): BigInt {
+  let sorted = values.sort((a, b) => {
     return a.equals(b) ? 0 : a.gt(b) ? 1 : -1;
   });
 
@@ -50,4 +95,20 @@ export function medianBigInt(prices: BigInt[]): BigInt {
   }
 
   return sorted[mid - 1];
+}
+
+export function saveDivideBigDecimal(a: BigDecimal, b: BigDecimal): BigDecimal {
+  if (a.equals(ZERO_BD) || b.equals(ZERO_BD)) {
+    return ZERO_BD;
+  }
+
+  return a.div(b);
+}
+
+export function saveDivideBigInt(a: BigInt, b: BigInt): BigInt {
+  if (a.equals(ZERO_BI) || b.equals(ZERO_BI)) {
+    return ZERO_BI;
+  }
+
+  return a.div(b);
 }

@@ -1,4 +1,3 @@
-import { toBigDecimal } from '@enzymefinance/subgraph-utils';
 import { Address } from '@graphprotocol/graph-ts';
 import { AggregatorProxyContract } from '../../generated/AggregatorProxyContract';
 

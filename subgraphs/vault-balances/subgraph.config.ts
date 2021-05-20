@@ -5,18 +5,11 @@ interface Variables {
   dispatcher: string;
 }
 
+const name = 'enzymefinance/vault-balances';
+
 export const contexts: Contexts<Variables> = {
-  local: {
-    local: true,
-    name: 'enzymefinance/vault-balances',
-    network: 'kovan',
-    variables: {
-      dispatcher: '0xba9493530494958EC2DeED9c8BB34004ff37Ad28',
-      block: 24710049,
-    },
-  },
   kovan: {
-    name: 'enzymefinance/vault-balances-kovan',
+    name: `${name}-kovan`,
     network: 'kovan',
     variables: {
       dispatcher: '0xba9493530494958EC2DeED9c8BB34004ff37Ad28',
@@ -24,11 +17,20 @@ export const contexts: Contexts<Variables> = {
     },
   },
   mainnet: {
-    name: 'enzymefinance/vault-balances',
+    name,
     network: 'mainnet',
     variables: {
       dispatcher: '0xC3DC853dD716bd5754f421ef94fdCbac3902ab32',
       block: 11636493,
+    },
+  },
+  local: {
+    local: true,
+    name,
+    network: 'kovan',
+    variables: {
+      dispatcher: '0xba9493530494958EC2DeED9c8BB34004ff37Ad28',
+      block: 24710049,
     },
   },
 };

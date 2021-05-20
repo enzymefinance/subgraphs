@@ -11,9 +11,6 @@ export function getOrCreateAsset(address: Address): Asset {
 
     asset = new Asset(id);
     asset.price = '';
-    asset.hourly = '';
-    asset.daily = '';
-    asset.monthly = '';
     asset.name = tokenName(address);
     asset.symbol = tokenSymbol(address);
     asset.decimals = decimals == -1 ? 18 : decimals;

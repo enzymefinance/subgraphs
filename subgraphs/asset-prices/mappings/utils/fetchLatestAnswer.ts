@@ -1,5 +1,5 @@
-import { toBigDecimal, ZERO_BD } from '@enzymefinance/subgraph-utils';
 import { Address, BigDecimal } from '@graphprotocol/graph-ts';
+import { toBigDecimal, ZERO_BD } from '@enzymefinance/subgraph-utils';
 import { AggregatorProxyContract } from '../../generated/AggregatorProxyContract';
 import { Aggregator } from '../../generated/schema';
 

@@ -1,5 +1,5 @@
-import { logCritical, ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
 import { Address } from '@graphprotocol/graph-ts';
+import { logCritical, ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
 import {
   audCurrencyAggregatorAddress,
   btcCurrencyAggregatorAddress,

@@ -33,20 +33,26 @@ class SubgraphLoader<TVariables = any> {
       throw new Error(`Invalid context ${context}. Available contexts: ${Object.keys(this.contexts).join(', ')}`);
     }
 
-    const manifest = this.configure(context.variables) as ManifestValues;
+    const configuration = this.configure(context.variables);
     const abis = [
       '@enzymefinance/subgraph-utils/abis/ERC20.json',
       '@enzymefinance/subgraph-utils/abis/ERC20NameBytes.json',
       '@enzymefinance/subgraph-utils/abis/ERC20SymbolBytes.json',
     ];
 
+    const manifest: ManifestValues = {
+      network: context.network,
+      sources: [],
+      abis: [],
+    };
+
     manifest.network = context.network;
-    manifest.abis = [...(manifest.abis ?? []), ...abis]
+    manifest.abis = [...(configuration.abis ?? []), ...abis]
       .map((item) => abi(item, this.root))
       .filter((item, index, array) => array.findIndex((inner) => inner.name === item.name) === index);
 
-    manifest.sources = manifest.sources.map((item) => source(item));
-    manifest.templates = manifest.templates?.map((item) => template(item));
+    manifest.sources = configuration.sources.map((item) => source(item));
+    manifest.templates = configuration.templates?.map((item) => template(item));
 
     const environment: Environment<TVariables> = {
       name: context.name,
