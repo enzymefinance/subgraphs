@@ -1,3 +1,4 @@
+import { ZERO_BI } from '@enzymefinance/subgraph-utils';
 import { Address, ethereum } from '@graphprotocol/graph-ts';
 import { Asset, DerivativeRegistration, Registry, Updater } from '../../generated/schema';
 import { updateForDerivativeRegistration } from '../utils/updateForRegistration';
@@ -8,6 +9,7 @@ export function getOrCreateUpdater(): Updater {
   let updater = Updater.load('UPDATER') as Updater;
   if (updater == null) {
     updater = new Updater('UPDATER');
+    updater.block = ZERO_BI;
     updater.progress = 0;
     updater.save();
   }
