@@ -1,5 +1,5 @@
 import { store, Address, Entity, Value, ethereum } from '@graphprotocol/graph-ts';
-import { arrayUnique, arrayDiff } from '@enzymefinance/subgraph-utils';
+import { arrayUnique, arrayDiff, ONE_DAY } from '@enzymefinance/subgraph-utils';
 import {
   PrimitiveRegistration,
   DerivativeRegistration,
@@ -113,13 +113,16 @@ export function removeDerivativeRegistration(assetAddress: Address, issuerAddres
   removeRegistrationFromAsset(assetAddress, registrationId);
 }
 
-export function getUpdatedAggregator(aggregatorAddress: Address): Aggregator {
+export function getUpdatedAggregator(aggregatorAddress: Address, event: ethereum.Event): Aggregator {
+  // Only check for aggregator updates once every 24 hours.
   let aggregator = getOrCreateAggregator(aggregatorAddress);
-  let proxies = aggregator.proxies.map<AggregatorProxy>((id) => getOrCreateAggregatorProxy(Address.fromString(id)));
+  if (aggregator.updated.plus(ONE_DAY).gt(event.block.timestamp)) {
+    return aggregator;
+  }
 
+  let proxies = aggregator.proxies;
   for (let i: i32 = 0; i < proxies.length; i++) {
-    let proxy = proxies[i];
-    let address = Address.fromString(proxy.id);
+    let address = Address.fromString(proxies[i]);
     let unwrapped = unwrapAggregator(address);
 
     // Check if the proxy has been pointed at a new aggregator.
@@ -129,9 +132,11 @@ export function getUpdatedAggregator(aggregatorAddress: Address): Aggregator {
 
       // Remove the reference on the old aggregator.
       aggregator.proxies = arrayDiff<string>(aggregator.proxies, [aggregatorAddress.toHex()]);
-      aggregator.save();
     }
   }
+
+  aggregator.updated = event.block.timestamp;
+  aggregator.save();
 
   return aggregator;
 }

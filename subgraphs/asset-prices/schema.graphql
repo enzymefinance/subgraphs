@@ -74,6 +74,8 @@ type Aggregator @entity {
   type: AggregatorType!
   """The chainlink aggregator proxies currently pointing at this aggregator."""
   proxies: [AggregatorProxy!]!
+  """The last time the proxies were checked for updates."""
+  updated: BigInt!
 }
 
 #################################################

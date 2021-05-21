@@ -1,3 +1,4 @@
+import { ZERO_BI } from '@enzymefinance/subgraph-utils';
 import { Address } from '@graphprotocol/graph-ts';
 import { AggregatorProxy, Aggregator } from '../../generated/schema';
 import { ChainlinkAggregatorDataSource } from '../../generated/templates';
@@ -22,6 +23,7 @@ export function getOrCreateAggregator(aggregatorAddress: Address): Aggregator {
     aggregator = new Aggregator(aggregatorAddress.toHex());
     aggregator.type = fetchAggregatorType(aggregatorAddress);
     aggregator.proxies = [];
+    aggregator.updated = ZERO_BI;
     aggregator.save();
 
     // If the aggregator entity doesn't exist yet, we also need to spawn the data source.

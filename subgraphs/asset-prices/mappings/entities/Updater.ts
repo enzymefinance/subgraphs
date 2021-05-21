@@ -61,6 +61,11 @@ export function updateDerivativeRegistry(asset: Asset): void {
   }
 }
 
+// We assume that the number of derivatives exceeds the number of primitives by a factor of ~2.
+// Hence, for every primitive update, we also update 2 derivatives. If this proportion changes
+// significantly in the future, this number could be adjusted.
+const DERIVATIVE_UPDATE_BATCH_SIZE = 2;
+
 export function updateDerivativePrices(event: ethereum.Event): void {
   let updater = getOrCreateUpdater();
   // Only run the derivative update once per block.
@@ -75,11 +80,8 @@ export function updateDerivativePrices(event: ethereum.Event): void {
     return;
   }
 
-  // Update the next batch of derivatives. We assume that the number of derivatives exceeds the
-  // number of primitives by a factor of ~3. Hence, for every primitive update, we also update
-  // 3 derivatives. If this proportion changes significantly in the future, this number could
-  // be adjusted.
-  for (let i: i32 = 0; i < 3; i++) {
+  // Update the next batch of derivatives.
+  for (let i: i32 = 0; i < DERIVATIVE_UPDATE_BATCH_SIZE; i++) {
     updater.progress = updater.progress + 1 >= derivatives.length ? 0 : updater.progress + 1;
     let derivative = getOrCreateAsset(Address.fromString(derivatives[updater.progress]));
     let registrations = derivative.registrations;

@@ -1,42 +1,24 @@
-import { ethereum, Address } from '@graphprotocol/graph-ts';
+import { ethereum, Address, BigDecimal } from '@graphprotocol/graph-ts';
 import { ONE_BD, ZERO_BD } from '@enzymefinance/subgraph-utils';
 import { PrimitiveRegistration, CurrencyRegistration, DerivativeRegistration, Asset } from '../../generated/schema';
 import { getOrCreateAsset } from '../entities/Asset';
 import { getOrCreateCurrency } from '../entities/Currency';
 import { getLatestAssetPrice, updateAssetPrice } from '../entities/AssetPrice';
 import {
-  getLatestCurrencyValue,
   getLatestCurrencyValueInEth,
   getLatestCurrencyValueInUsd,
   updateCurrencyValue,
 } from '../entities/CurrencyValue';
 import { toEth } from './toEth';
-import { fetchLatestAnswer } from './fetchLatestAnswer';
-import { getOrCreateAggregator } from '../entities/Aggregator';
-import { getCurrencyAggregator } from './getCurrencyAggregator';
 import { fetchAssetPrice } from './fetchAssetPrice';
 import { Registration } from '../entities/Registration';
 
-export function updateForRegistration(registration: Registration, event: ethereum.Event): void {
-  if (registration.type == 'CURRENCY') {
-    updateForCurrencyRegistration(registration as CurrencyRegistration, event);
-  } else if (registration.type == 'PRIMITIVE') {
-    updateForPrimitiveRegistration(registration as PrimitiveRegistration, event);
-  } else if (registration.type == 'DERIVATIVE') {
-    updateForDerivativeRegistration(registration as DerivativeRegistration, event);
-  }
-}
-
-export function updateForCurrencyRegistration(registration: CurrencyRegistration, event: ethereum.Event): void {
+export function updateForCurrencyRegistration(
+  registration: CurrencyRegistration,
+  event: ethereum.Event,
+  value: BigDecimal,
+): void {
   let currency = getOrCreateCurrency(registration.currency);
-  let latest = getLatestCurrencyValue(currency);
-
-  // Skip the update if there has already been an update for this currency in this block.
-  if (latest != null && latest.block.equals(event.block.number)) {
-    return;
-  }
-
-  let value = fetchLatestAnswer(getOrCreateAggregator(getCurrencyAggregator(currency.id)));
   if (currency.id == 'USD') {
     updateCurrencyValue(currency, value, ONE_BD, event).eth;
 
@@ -70,14 +52,22 @@ export function updateForCurrencyRegistration(registration: CurrencyRegistration
   }
 }
 
-export function updateForPrimitiveRegistration(registration: PrimitiveRegistration, event: ethereum.Event): void {
+export function updateForPrimitiveRegistration(
+  registration: PrimitiveRegistration,
+  event: ethereum.Event,
+  value: BigDecimal | null = null,
+): void {
   let asset = getOrCreateAsset(Address.fromString(registration.asset));
   // Skip the update if the given registration is not the active registration for this asset.
   if (!isActiveRegistration(registration as Registration, asset)) {
     return;
   }
 
-  updateAssetPriceWithValueInterpreter(asset, Address.fromString(registration.interpreter), event);
+  if (value == null) {
+    updateAssetPriceWithValueInterpreter(asset, Address.fromString(registration.interpreter), event);
+  } else {
+    updateAssetPrice(asset, value as BigDecimal, event);
+  }
 }
 
 export function updateForDerivativeRegistration(registration: DerivativeRegistration, event: ethereum.Event): void {
