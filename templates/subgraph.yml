@@ -187,6 +187,8 @@ dataSources:
           handler: handleFundSettingsAdded
         - event: Settled(indexed address,uint256,uint256)
           handler: handleSettled
+        - event: ActivatedForMigratedFund(indexed address)
+          handler: handleActivatedForMigratedFund
 
   - name: PerformanceFeeDataSource{{id}}
     kind: ethereum/contract
@@ -768,8 +770,6 @@ dataSources:
           file: ./node_modules/@enzymefinance/protocol/artifacts/AavePriceFeed.json
         - name: AlphaHomoraV1PriceFeedContract
           file: ./node_modules/@enzymefinance/protocol/artifacts/AlphaHomoraV1PriceFeed.json
-        - name: ChaiPriceFeedContract
-          file: ./node_modules/@enzymefinance/protocol/artifacts/ChaiPriceFeed.json
         - name: CompoundPriceFeedContract
           file: ./node_modules/@enzymefinance/protocol/artifacts/CompoundPriceFeed.json
         - name: CurvePriceFeedContract

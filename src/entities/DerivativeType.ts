@@ -2,7 +2,6 @@ import { Address, log } from '@graphprotocol/graph-ts';
 import { releaseAddressesA, releaseAddressesB } from '../addresses';
 import { AavePriceFeedContract } from '../generated/AavePriceFeedContract';
 import { AlphaHomoraV1PriceFeedContract } from '../generated/AlphaHomoraV1PriceFeedContract';
-import { ChaiPriceFeedContract } from '../generated/ChaiPriceFeedContract';
 import { CompoundPriceFeedContract } from '../generated/CompoundPriceFeedContract';
 import { IdlePriceFeedContract } from '../generated/IdlePriceFeedContract';
 import { Asset } from '../generated/schema';
@@ -15,7 +14,6 @@ export function checkDerivativeType(derivative: Asset, derivativePriceFeedAddres
   // simple derivative types
   checkAaveDerivativeType(derivative, derivativePriceFeedAddress);
   checkAlphaDerivativeType(derivative, derivativePriceFeedAddress);
-  checkChaiDerivativeType(derivative, derivativePriceFeedAddress);
   checkCompoundDerivativeType(derivative, derivativePriceFeedAddress);
   checkIdleDerivativeType(derivative, derivativePriceFeedAddress);
   checkStakehoundDerivativeType(derivative, derivativePriceFeedAddress);
@@ -80,35 +78,6 @@ function checkAlphaDerivativeType(derivative: Asset, derivativePriceFeedAddress:
   }
 
   derivative.derivativeType = 'Alpha';
-  derivative.underlyingAsset = underlying.value.toHex();
-  derivative.save();
-}
-
-function checkChaiDerivativeType(derivative: Asset, derivativePriceFeedAddress: Address): void {
-  let address = Address.fromString(derivative.id);
-
-  if (
-    derivativePriceFeedAddress.notEqual(releaseAddressesA.chaiPriceFeedAddress) &&
-    derivativePriceFeedAddress.notEqual(releaseAddressesB.chaiPriceFeedAddress)
-  ) {
-    return;
-  }
-
-  let priceFeedContract = ChaiPriceFeedContract.bind(derivativePriceFeedAddress);
-  let isSupported = priceFeedContract.try_isSupportedAsset(address);
-
-  if (isSupported.reverted || isSupported.value == false) {
-    return;
-  }
-
-  let underlying = priceFeedContract.try_getDai();
-
-  if (underlying.reverted) {
-    log.warning('Reverted getDai for asset {}', [derivative.id]);
-    return;
-  }
-
-  derivative.derivativeType = 'Chai';
   derivative.underlyingAsset = underlying.value.toHex();
   derivative.save();
 }

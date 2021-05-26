@@ -16,6 +16,7 @@ export function ensureComptrollerProxy(address: Address, event: ethereum.Event):
   comptrollerProxy.sharesActionTimelock = BigInt.fromI32(0);
   comptrollerProxy.feeManagerConfigData = '';
   comptrollerProxy.policyManagerConfigData = '';
+  comptrollerProxy.authUsers = new Array<string>();
   comptrollerProxy.release = zeroAddress.toHex();
   comptrollerProxy.status = 'FREE';
   comptrollerProxy.save();

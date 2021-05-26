@@ -321,6 +321,7 @@ type TrackedAssetRemovedEvent implements EventInterface & FundEventInterface @en
 type AuthUserAddedForFundEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
+  comptrollerProxy: ComptrollerProxy!
   timestamp: BigInt!
   transaction: Transaction!
 }
@@ -328,6 +329,7 @@ type AuthUserAddedForFundEvent implements EventInterface & FundEventInterface @e
 type AuthUserRemovedForFundEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
+  comptrollerProxy: ComptrollerProxy!
   timestamp: BigInt!
   transaction: Transaction!
 }
@@ -713,6 +715,14 @@ type ManagementFeeSettledEvent implements EventInterface & FundEventInterface @e
   comptroller: ComptrollerProxy!
   sharesDue: BigDecimal!
   secondsSinceSettlement: BigInt!
+}
+
+type ManagementFeeActivatedForMigratedFundEvent implements EventInterface & FundEventInterface @entity {
+  id: ID!
+  fund: Fund!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptroller: ComptrollerProxy!
 }
 
 type PerformanceFeeSettingsAddedEvent implements EventInterface & ComptrollerEventInterface @entity {
@@ -1193,13 +1203,9 @@ type Fund @entity {
   lastKnowGavInEth: BigDecimal
   sharesRequestor: SharesRequestor
 
-  # move to Comptroller
-
   # trading
   trackedAssets: [Asset!]!
   trades: [Trade!]! @derivedFrom(field: "fund")
-  # TODO (after release): deriveFrom or use separate AuthUser entity
-  authUsers: [Account!]!
 
   investments: [Investment!]! @derivedFrom(field: "fund")
   investmentCount: Int!
@@ -1242,6 +1248,7 @@ type ComptrollerProxy @entity {
   feeManagerConfigData: String!
   policyManagerConfigData: String!
   release: Release!
+  authUsers: [Account!]!
   status: ComptrollerProxyStatus!
   feeSettings: [FeeSettingInterface!]! @derivedFrom(field: "comptroller")
   policySettings: [PolicySettingInterface!]! @derivedFrom(field: "comptroller")
@@ -1367,6 +1374,8 @@ type Account @entity {
   investor: Boolean!
   investorSince: BigInt
   investments: [Investment!]! @derivedFrom(field: "investor")
+
+  authorizedForComptroller: [ComptrollerProxy!]! @derivedFrom(field: "authUsers")
 
   sharesRequests: [SharesRequest!]! @derivedFrom(field: "account")
 

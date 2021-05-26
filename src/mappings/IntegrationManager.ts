@@ -2,6 +2,7 @@ import { ensureAccount } from '../entities/Account';
 import { ensureAsset } from '../entities/Asset';
 import { createAssetAmount } from '../entities/AssetAmount';
 import { trackCalculationState } from '../entities/CalculationState';
+import { ensureComptrollerProxy } from '../entities/ComptrollerProxy';
 import { useFund } from '../entities/Fund';
 import { ensureIntegrationAdapter } from '../entities/IntegrationAdapter';
 import { trackPortfolioState } from '../entities/PortfolioState';
@@ -52,31 +53,35 @@ export function handleAdapterDeregistered(event: AdapterDeregistered): void {
 export function handleAuthUserAddedForFund(event: AuthUserAddedForFund): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let fund = useFund(comptroller.getVaultProxy().toHex());
+  let comptrollerProxy = ensureComptrollerProxy(event.params.comptrollerProxy, event);
   let account = ensureAccount(event.params.account, event);
 
   let userAdded = new AuthUserAddedForFundEvent(genericId(event));
   userAdded.fund = fund.id;
+  userAdded.comptrollerProxy = comptrollerProxy.id;
   userAdded.timestamp = event.block.timestamp;
   userAdded.transaction = ensureTransaction(event).id;
   userAdded.save();
 
-  fund.authUsers = arrayUnique<string>(fund.authUsers.concat([account.id]));
-  fund.save();
+  comptrollerProxy.authUsers = arrayUnique<string>(comptrollerProxy.authUsers.concat([account.id]));
+  comptrollerProxy.save();
 }
 
 export function handleAuthUserRemovedForFund(event: AuthUserRemovedForFund): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let fund = useFund(comptroller.getVaultProxy().toHex());
+  let comptrollerProxy = ensureComptrollerProxy(event.params.comptrollerProxy, event);
   let account = ensureAccount(event.params.account, event);
 
   let userRemoved = new AuthUserRemovedForFundEvent(genericId(event));
   userRemoved.fund = fund.id;
+  userRemoved.comptrollerProxy = comptrollerProxy.id;
   userRemoved.timestamp = event.block.timestamp;
   userRemoved.transaction = ensureTransaction(event).id;
   userRemoved.save();
 
-  fund.authUsers = arrayDiff<string>(fund.authUsers, [account.id]);
-  fund.save();
+  comptrollerProxy.authUsers = arrayDiff<string>(comptrollerProxy.authUsers, [account.id]);
+  comptrollerProxy.save();
 }
 
 export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationExecutedForFund): void {
