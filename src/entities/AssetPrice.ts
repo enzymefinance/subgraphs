@@ -1,6 +1,6 @@
 import { Address, BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 import { wethTokenAddress } from '../addresses';
-import { Asset, AssetPrice } from '../generated/schema';
+import { Asset, AssetPrice, Release } from '../generated/schema';
 import { ValueInterpreterContract } from '../generated/ValueInterpreterContract';
 import { logCritical } from '../utils/logCritical';
 import { toBigDecimal } from '../utils/toBigDecimal';
@@ -9,7 +9,7 @@ import {
   updateHourlyAssetPriceCandle,
   updateMonthlyAssetPriceCandle,
 } from './AssetPriceCandle';
-import { useCurrentRelease } from './Release';
+import { useNetwork } from './Network';
 
 export function assetPriceId(asset: Asset, timestamp: BigInt): string {
   return asset.id + '/' + timestamp.toString();
@@ -75,7 +75,17 @@ export function trackAssetPrice(asset: Asset, timestamp: BigInt, price: BigDecim
 }
 
 export function fetchAssetPrice(asset: Asset): BigDecimal {
-  let release = useCurrentRelease();
+  let network = useNetwork();
+
+  let releaseAddress = network.currentRelease;
+  if (releaseAddress == null) {
+    return BigDecimal.fromString('0');
+  }
+
+  let release = Release.load(releaseAddress);
+  if (release == null) {
+    return BigDecimal.fromString('0');
+  }
 
   // Whenever a new (derivative) asset is registered, we need to fetch its current price immediately.
   let contract = ValueInterpreterContract.bind(Address.fromString(release.valueInterpreter));

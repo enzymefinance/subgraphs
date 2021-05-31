@@ -132,8 +132,6 @@ dataSources:
           file: ./node_modules/@enzymefinance/protocol/artifacts/ManagementFee.json
         - name: PerformanceFeeContract
           file: ./node_modules/@enzymefinance/protocol/artifacts/PerformanceFee.json
-        - name: FundActionsWrapperContract
-          file: ./node_modules/@enzymefinance/protocol/artifacts/FundActionsWrapper.json
       eventHandlers:
         - event: AllSharesOutstandingForcePaidForFund(indexed address,address,uint256)
           handler: handleAllSharesOutstandingForcePaidForFund
@@ -654,8 +652,6 @@ dataSources:
           file: ./node_modules/@enzymefinance/protocol/artifacts/IIntegrationAdapter.json
         - name: CompoundAdapter
           file: ./node_modules/@enzymefinance/protocol/artifacts/CompoundAdapter.json
-        - name: FundActionsWrapperContract
-          file: ./node_modules/@enzymefinance/protocol/artifacts/FundActionsWrapper.json
       eventHandlers:
         - event: AdapterDeregistered(indexed address,indexed string)
           handler: handleAdapterDeregistered
@@ -818,8 +814,6 @@ templates:
           file: ./src/utils/abis/ERC20NameBytes.json
         - name: ERC20SymbolBytesContract
           file: ./src/utils/abis/ERC20SymbolBytes.json
-        - name: FundActionsWrapperContract
-          file: ./node_modules/@enzymefinance/protocol/artifacts/FundActionsWrapper.json
       eventHandlers:
         - event: AccessorSet(address,address)
           handler: handleAccessorSet
@@ -862,8 +856,6 @@ templates:
           file: ./src/utils/abis/ERC20NameBytes.json
         - name: ERC20SymbolBytesContract
           file: ./src/utils/abis/ERC20SymbolBytes.json
-        - name: FundActionsWrapperContract
-          file: ./node_modules/@enzymefinance/protocol/artifacts/FundActionsWrapper.json
       eventHandlers:
         - event: MigratedSharesDuePaid(uint256)
           handler: handleMigratedSharesDuePaid

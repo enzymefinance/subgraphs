@@ -39,7 +39,6 @@ interface SharesChangeInterface {
   shares: BigDecimal!
   fundState: FundState!
   transaction: Transaction!
-  calculations: CalculationState!
 }
 
 interface FeeSharesChangeInterface {
@@ -52,7 +51,6 @@ interface FeeSharesChangeInterface {
   shares: BigDecimal!
   fundState: FundState!
   transaction: Transaction!
-  calculations: CalculationState!
 }
 
 interface InvestmentSharesChangeInterface {
@@ -65,7 +63,6 @@ interface InvestmentSharesChangeInterface {
   shares: BigDecimal!
   fundState: FundState!
   transaction: Transaction!
-  calculations: CalculationState!
 }
 
 interface FundStateInterface {
@@ -273,7 +270,6 @@ type SharesBoughtEvent implements EventInterface & FundEventInterface & SharesCh
   timestamp: BigInt!
   fundState: FundState!
   transaction: Transaction!
-  calculations: CalculationState!
 }
 
 type SharesRedeemedEvent implements EventInterface & FundEventInterface & SharesChangeInterface & InvestmentSharesChangeInterface
@@ -288,7 +284,6 @@ type SharesRedeemedEvent implements EventInterface & FundEventInterface & Shares
   timestamp: BigInt!
   fundState: FundState!
   transaction: Transaction!
-  calculations: CalculationState!
 }
 
 type AssetWithdrawnEvent implements EventInterface & FundEventInterface @entity {
@@ -322,6 +317,7 @@ type AuthUserAddedForFundEvent implements EventInterface & FundEventInterface @e
   id: ID!
   fund: Fund!
   comptrollerProxy: ComptrollerProxy!
+  user: Account!
   timestamp: BigInt!
   transaction: Transaction!
 }
@@ -330,6 +326,7 @@ type AuthUserRemovedForFundEvent implements EventInterface & FundEventInterface 
   id: ID!
   fund: Fund!
   comptrollerProxy: ComptrollerProxy!
+  user: Account!
   timestamp: BigInt!
   transaction: Transaction!
 }
@@ -436,7 +433,6 @@ type FeeSettledForFundEvent implements EventInterface & FundEventInterface & Sha
   payee: String!
   settlementType: SettlementType!
   sharesDue: BigDecimal!
-  calculations: CalculationState!
   fundState: FundState!
 }
 
@@ -453,7 +449,6 @@ type AllSharesOutstandingForcePaidForFundEvent implements EventInterface & FundE
   comptrollerProxy: String!
   payee: String!
   sharesDue: BigDecimal!
-  calculations: CalculationState!
   fundState: FundState!
 }
 
@@ -470,7 +465,6 @@ type SharesOutstandingPaidForFundEvent implements EventInterface & FundEventInte
   comptrollerProxy: String!
   fee: Fee!
   sharesDue: BigDecimal!
-  calculations: CalculationState!
   fundState: FundState!
 }
 
@@ -485,7 +479,6 @@ type MigratedSharesDuePaidEvent implements EventInterface & FundEventInterface &
   investmentState: InvestmentState!
   shares: BigDecimal!
   comptrollerProxy: String!
-  calculations: CalculationState!
   fundState: FundState!
 }
 
@@ -1221,8 +1214,6 @@ type Fund @entity {
   portfolioHistory: [PortfolioState!]! @derivedFrom(field: "fund")
   feeState: FeeState!
   feeStateHistory: [FeeState!]! @derivedFrom(field: "fund")
-  calculations: CalculationState!
-  calculationsHistory: [CalculationState!]! @derivedFrom(field: "fund")
   state: FundState!
   stateHistory: [FundState!]! @derivedFrom(field: "fund")
   firstInvestmentState: FundState
@@ -1375,6 +1366,7 @@ type Account @entity {
   investorSince: BigInt
   investments: [Investment!]! @derivedFrom(field: "investor")
 
+  authUser: Boolean!
   authorizedForComptroller: [ComptrollerProxy!]! @derivedFrom(field: "authUsers")
 
   sharesRequests: [SharesRequest!]! @derivedFrom(field: "account")
@@ -1598,17 +1590,6 @@ type HoldingState implements FundStateInterface @entity {
   events: [FundEventInterface!]!
 }
 
-type CalculationState implements FundStateInterface @entity {
-  id: ID!
-  fund: Fund!
-  timestamp: BigInt!
-  gav: BigDecimal!
-  totalSupply: BigDecimal!
-  grossSharePrice: BigDecimal!
-  netSharePrice: BigDecimal!
-  events: [FundEventInterface!]!
-}
-
 type FundState implements FundStateInterface @entity {
   id: ID!
   fund: Fund!
@@ -1616,7 +1597,6 @@ type FundState implements FundStateInterface @entity {
   shares: ShareState!
   portfolio: PortfolioState!
   feeState: FeeState!
-  calculations: CalculationState!
   currencyPrices: [CurrencyPrice!]!
   investmentCount: Int!
   events: [FundEventInterface!]!

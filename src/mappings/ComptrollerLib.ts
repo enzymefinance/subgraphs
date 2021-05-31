@@ -2,7 +2,6 @@ import { Address, dataSource } from '@graphprotocol/graph-ts';
 import { ensureAccount, ensureInvestor } from '../entities/Account';
 import { ensureAsset } from '../entities/Asset';
 import { createAssetAmount } from '../entities/AssetAmount';
-import { calculationStateId, trackCalculationState } from '../entities/CalculationState';
 import { ensureComptrollerProxy } from '../entities/ComptrollerProxy';
 import { useFund } from '../entities/Fund';
 import { ensureInvestment } from '../entities/Investment';
@@ -51,13 +50,11 @@ export function handleSharesBought(event: SharesBought): void {
   addition.shares = shares;
   addition.timestamp = event.block.timestamp;
   addition.transaction = ensureTransaction(event).id;
-  addition.calculations = calculationStateId(fund, event);
   addition.fundState = fund.state;
   addition.save();
 
   trackPortfolioState(fund, event, addition);
   trackShareState(fund, event, addition);
-  trackCalculationState(fund, event, addition);
 }
 
 export function handleSharesRedeemed(event: SharesRedeemed): void {
@@ -85,13 +82,11 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
   redemption.payoutAssetAmounts = assetAmounts.map<string>((assetAmount) => assetAmount.id);
   redemption.timestamp = event.block.timestamp;
   redemption.transaction = ensureTransaction(event).id;
-  redemption.calculations = calculationStateId(fund, event);
   redemption.fundState = fund.state;
   redemption.save();
 
   trackPortfolioState(fund, event, redemption);
   trackShareState(fund, event, redemption);
-  trackCalculationState(fund, event, redemption);
 }
 
 export function handleVaultProxySet(event: VaultProxySet): void {
@@ -129,14 +124,12 @@ export function handleMigratedSharesDuePaid(event: MigratedSharesDuePaid): void 
   paid.investmentState = investmentState.id;
   paid.shares = toBigDecimal(event.params.sharesDue);
   paid.comptrollerProxy = event.address.toHex();
-  paid.calculations = calculationStateId(fund, event);
   paid.fundState = fund.state;
   paid.save();
 
   trackShareState(fund, event, paid);
   // TODO: do we need to call (?) (only for PerformanceFee)
   // trackFeeState(fund, fee, BigDecimal.fromString('0'), event, paid);
-  trackCalculationState(fund, event, paid);
 }
 
 export function handlePreRedeemSharesHookFailed(event: PreRedeemSharesHookFailed): void {

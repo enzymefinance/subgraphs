@@ -1,7 +1,6 @@
 import { ensureAccount } from '../entities/Account';
 import { ensureAsset } from '../entities/Asset';
 import { createAssetAmount } from '../entities/AssetAmount';
-import { trackCalculationState } from '../entities/CalculationState';
 import { ensureComptrollerProxy } from '../entities/ComptrollerProxy';
 import { useFund } from '../entities/Fund';
 import { ensureIntegrationAdapter } from '../entities/IntegrationAdapter';
@@ -55,10 +54,13 @@ export function handleAuthUserAddedForFund(event: AuthUserAddedForFund): void {
   let fund = useFund(comptroller.getVaultProxy().toHex());
   let comptrollerProxy = ensureComptrollerProxy(event.params.comptrollerProxy, event);
   let account = ensureAccount(event.params.account, event);
+  account.authUser = true;
+  account.save();
 
   let userAdded = new AuthUserAddedForFundEvent(genericId(event));
   userAdded.fund = fund.id;
   userAdded.comptrollerProxy = comptrollerProxy.id;
+  userAdded.user = account.id;
   userAdded.timestamp = event.block.timestamp;
   userAdded.transaction = ensureTransaction(event).id;
   userAdded.save();
@@ -76,6 +78,7 @@ export function handleAuthUserRemovedForFund(event: AuthUserRemovedForFund): voi
   let userRemoved = new AuthUserRemovedForFundEvent(genericId(event));
   userRemoved.fund = fund.id;
   userRemoved.comptrollerProxy = comptrollerProxy.id;
+  userRemoved.user = account.id;
   userRemoved.timestamp = event.block.timestamp;
   userRemoved.transaction = ensureTransaction(event).id;
   userRemoved.save();
@@ -136,5 +139,4 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
     event,
   );
   trackPortfolioState(fund, event, execution);
-  trackCalculationState(fund, event, execution);
 }

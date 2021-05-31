@@ -1,7 +1,6 @@
 import { ethereum } from '@graphprotocol/graph-ts';
-import { CalculationState, FeeState, Fund, FundState, PortfolioState, ShareState } from '../generated/schema';
+import { FeeState, Fund, FundState, PortfolioState, ShareState } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
-import { useCalculationState } from './CalculationState';
 import { loadCurrentCurrencyPrices } from './CurrencyPrice';
 import { useFeeState } from './FeeState';
 import { trackDailyFundState, trackHourlyFundState, trackMonthlyFundState } from './PeriodicFundState';
@@ -16,7 +15,6 @@ export function createFundState(
   shares: ShareState,
   portfolio: PortfolioState,
   feeState: FeeState,
-  calculations: CalculationState,
   investmentCount: number,
   fund: Fund,
   event: ethereum.Event,
@@ -27,7 +25,6 @@ export function createFundState(
   state.shares = shares.id;
   state.portfolio = portfolio.id;
   state.feeState = feeState.id;
-  state.calculations = calculations.id;
   state.events = new Array<string>();
   state.investmentCount = investmentCount as i32;
   state.currencyPrices = loadCurrentCurrencyPrices().map<string>((price) => price.id);
@@ -46,9 +43,8 @@ export function ensureFundState(fund: Fund, event: ethereum.Event): FundState {
   let shares = useShareState(previous.shares);
   let holdings = usePortfolioState(previous.portfolio);
   let feeState = useFeeState(previous.feeState);
-  let calculations = useCalculationState(previous.calculations);
   let investmentCount = previous.investmentCount;
-  let state = createFundState(shares, holdings, feeState, calculations, investmentCount, fund, event);
+  let state = createFundState(shares, holdings, feeState, investmentCount, fund, event);
 
   fund.state = state.id;
   fund.save();

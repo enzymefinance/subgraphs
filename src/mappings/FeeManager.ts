@@ -1,7 +1,6 @@
 import { Address, BigDecimal } from '@graphprotocol/graph-ts';
 import { zeroAddress } from '../constants';
 import { ensureAccount } from '../entities/Account';
-import { calculationStateId, trackCalculationState } from '../entities/CalculationState';
 import { ensureComptrollerProxy } from '../entities/ComptrollerProxy';
 import { ensureFee } from '../entities/Fee';
 import { trackFeeState } from '../entities/FeeState';
@@ -56,14 +55,12 @@ export function handleAllSharesOutstandingForcePaidForFund(event: AllSharesOutst
   settled.comptrollerProxy = event.params.comptrollerProxy.toHex();
   settled.payee = event.params.payee.toHex();
   settled.sharesDue = shares;
-  settled.calculations = calculationStateId(fund, event);
   settled.fundState = fund.state;
   settled.save();
 
   trackShareState(fund, event, settled);
   // TODO: what do we need to do for fees here (if anything)?
   // trackFeeState(fund, fee, event, settled);
-  trackCalculationState(fund, event, settled);
 }
 
 export function handleFeeDeregistered(event: FeeDeregistered): void {
@@ -134,13 +131,11 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
   settled.payee = event.params.payee.toHex();
   settled.settlementType = getSettlementType(event.params.settlementType);
   settled.sharesDue = shares;
-  settled.calculations = calculationStateId(fund, event);
   settled.fundState = fund.state;
   settled.save();
 
   trackShareState(fund, event, settled);
   trackFeeState(fund, fee, BigDecimal.fromString('0'), event, settled);
-  trackCalculationState(fund, event, settled);
 }
 
 export function handleSharesOutstandingPaidForFund(event: SharesOutstandingPaidForFund): void {
@@ -166,7 +161,6 @@ export function handleSharesOutstandingPaidForFund(event: SharesOutstandingPaidF
   sharesPaid.comptrollerProxy = event.params.comptrollerProxy.toHex();
   sharesPaid.fee = fee.id;
   sharesPaid.sharesDue = toBigDecimal(event.params.sharesDue);
-  sharesPaid.calculations = calculationStateId(fund, event);
   sharesPaid.fundState = fund.state;
   sharesPaid.save();
 
@@ -179,8 +173,6 @@ export function handleSharesOutstandingPaidForFund(event: SharesOutstandingPaidF
     performanceFeeState.sharesOutstanding = performanceFeeState.sharesOutstanding.minus(shares);
     performanceFeeState.save();
   }
-
-  trackCalculationState(fund, event, sharesPaid);
 }
 
 export function handleFeesRecipientSetForFund(event: FeesRecipientSetForFund): void {

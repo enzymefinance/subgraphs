@@ -42,6 +42,7 @@ export function ensureAccount(accountAddress: Address, event: ethereum.Event): A
   account.firstSeen = event.block.timestamp;
   account.manager = false;
   account.investor = false;
+  account.authUser = false;
   account.save();
 
   return account;

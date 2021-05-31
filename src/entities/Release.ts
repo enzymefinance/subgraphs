@@ -14,7 +14,7 @@ import {
 } from '../addresses';
 import { Release } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
-import { networkId, useNetwork } from './Network';
+import { networkId } from './Network';
 
 export function createRelease(address: Address, event: ethereum.Event): Release {
   let release = new Release(address.toHex());
@@ -41,7 +41,8 @@ export function createRelease(address: Address, event: ethereum.Event): Release 
   release.aaveAdapter = releaseAddresses.aaveAdapterAddress.toHex();
   release.assetBlacklist = releaseAddresses.assetBlacklistAddress.toHex();
   release.assetWhitelist = releaseAddresses.assetWhitelistAddress.toHex();
-  release.authUserExecutedSharesRequestorFactory = releaseAddresses.authUserExecutedSharesRequestorFactoryAddress.toHex();
+  release.authUserExecutedSharesRequestorFactory =
+    releaseAddresses.authUserExecutedSharesRequestorFactoryAddress.toHex();
   release.buySharesCallerWhitelist = releaseAddresses.buySharesCallerWhitelistAddress.toHex();
   release.chaiAdapter = releaseAddresses.chaiAdapterAddress.toHex();
   release.chaiIntegratee = chaiIntegrateeAddress.toHex();
@@ -104,22 +105,6 @@ export function ensureRelease(id: string, event: ethereum.Event): Release {
   }
 
   return createRelease(Address.fromString(id), event);
-}
-
-export function useCurrentRelease(): Release {
-  let network = useNetwork();
-
-  if (network.currentRelease == null) {
-    logCritical('Network {} does not have a current release', [networkId]);
-  }
-
-  let release = Release.load(network.currentRelease as string) as Release;
-
-  if (release == null) {
-    logCritical('Release {} does not exist', [network.currentRelease as string]);
-  }
-
-  return release;
 }
 
 export function releaseFromPriceFeed(event: ethereum.Event): Release | null {

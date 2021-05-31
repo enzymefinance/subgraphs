@@ -3,7 +3,6 @@ import { NewFundCreated } from '../generated/FundDeployerContract';
 import { Fund } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
 import { ensureAccount, ensureManager } from './Account';
-import { createCalculationState } from './CalculationState';
 import { createFeeState } from './FeeState';
 import { createFundState } from './FundState';
 import { trackNetworkFunds } from './NetworkState';
@@ -33,8 +32,7 @@ export function createFund(event: NewFundCreated): Fund {
   let portfolio = createPortfolioState([], fund, event, null);
 
   let feeState = createFeeState([], fund, event, null);
-  let calculations = createCalculationState(fund, event, null);
-  let state = createFundState(shares, portfolio, feeState, calculations, 0, fund, event);
+  let state = createFundState(shares, portfolio, feeState, 0, fund, event);
 
   fund.name = event.params.fundName;
   fund.inception = event.block.timestamp;
@@ -47,7 +45,6 @@ export function createFund(event: NewFundCreated): Fund {
   fund.shares = shares.id;
   fund.portfolio = portfolio.id;
   fund.feeState = feeState.id;
-  fund.calculations = calculations.id;
   fund.state = state.id;
 
   fund.save();
