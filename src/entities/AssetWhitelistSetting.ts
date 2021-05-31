@@ -2,8 +2,8 @@ import { BigInt } from '@graphprotocol/graph-ts';
 import { AssetWhitelistSetting, Policy } from '../generated/schema';
 import { policySettingId } from './PolicySetting';
 
-export function ensureAssetWhitelistSetting(fundId: string, policy: Policy): AssetWhitelistSetting {
-  let id = policySettingId(fundId, policy);
+export function ensureAssetWhitelistSetting(comptrollerProxyId: string, policy: Policy): AssetWhitelistSetting {
+  let id = policySettingId(comptrollerProxyId, policy);
   let setting = AssetWhitelistSetting.load(id) as AssetWhitelistSetting;
 
   if (setting) {
@@ -12,7 +12,7 @@ export function ensureAssetWhitelistSetting(fundId: string, policy: Policy): Ass
 
   setting = new AssetWhitelistSetting(id);
   setting.policy = policy.id;
-  setting.fund = fundId;
+  setting.comptroller = comptrollerProxyId;
   setting.listed = new Array<string>();
   setting.assets = new Array<string>();
   setting.events = new Array<string>();

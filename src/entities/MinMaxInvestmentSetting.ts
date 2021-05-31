@@ -2,8 +2,8 @@ import { BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 import { MinMaxInvestmentSetting, Policy } from '../generated/schema';
 import { policySettingId } from './PolicySetting';
 
-export function ensureMinMaxInvestmentSetting(fundId: string, policy: Policy): MinMaxInvestmentSetting {
-  let id = policySettingId(fundId, policy);
+export function ensureMinMaxInvestmentSetting(comptrollerProxyId: string, policy: Policy): MinMaxInvestmentSetting {
+  let id = policySettingId(comptrollerProxyId, policy);
   let setting = MinMaxInvestmentSetting.load(id) as MinMaxInvestmentSetting;
 
   if (setting) {
@@ -12,7 +12,7 @@ export function ensureMinMaxInvestmentSetting(fundId: string, policy: Policy): M
 
   setting = new MinMaxInvestmentSetting(id);
   setting.policy = policy.id;
-  setting.fund = fundId;
+  setting.comptroller = comptrollerProxyId;
   setting.minInvestmentAmount = BigDecimal.fromString('0');
   setting.maxInvestmentAmount = BigDecimal.fromString('0');
   setting.events = new Array<string>();

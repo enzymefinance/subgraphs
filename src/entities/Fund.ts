@@ -3,8 +3,6 @@ import { NewFundCreated } from '../generated/FundDeployerContract';
 import { Fund } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
 import { ensureAccount, ensureManager } from './Account';
-import { ensureAsset } from './Asset';
-import { createCalculationState } from './CalculationState';
 import { createFeeState } from './FeeState';
 import { createFundState } from './FundState';
 import { trackNetworkFunds } from './NetworkState';
@@ -34,8 +32,7 @@ export function createFund(event: NewFundCreated): Fund {
   let portfolio = createPortfolioState([], fund, event, null);
 
   let feeState = createFeeState([], fund, event, null);
-  let calculations = createCalculationState(fund, event, null);
-  let state = createFundState(shares, portfolio, feeState, calculations, 0, fund, event);
+  let state = createFundState(shares, portfolio, feeState, 0, fund, event);
 
   fund.name = event.params.fundName;
   fund.inception = event.block.timestamp;
@@ -43,16 +40,13 @@ export function createFund(event: NewFundCreated): Fund {
   fund.accessor = event.params.comptrollerProxy.toHex();
   fund.manager = ensureManager(event.params.fundOwner, event).id;
   fund.creator = ensureAccount(event.params.creator, event).id;
-  fund.authUsers = new Array<string>();
   fund.trackedAssets = new Array<string>();
   fund.investmentCount = 0;
   fund.shares = shares.id;
   fund.portfolio = portfolio.id;
   fund.feeState = feeState.id;
-  fund.calculations = calculations.id;
   fund.state = state.id;
-  fund.denominationAsset = ensureAsset(event.params.denominationAsset).id;
-  fund.sharesActionTimelock = event.params.sharesActionTimelock;
+
   fund.save();
 
   trackNetworkFunds(event);

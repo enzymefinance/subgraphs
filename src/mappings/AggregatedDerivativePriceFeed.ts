@@ -1,6 +1,7 @@
 import { ensureAsset } from '../entities/Asset';
 import { fetchAssetPrice, trackAssetPrice } from '../entities/AssetPrice';
 import { checkDerivativeType } from '../entities/DerivativeType';
+import { releaseFromPriceFeed } from '../entities/Release';
 import { ensureTransaction } from '../entities/Transaction';
 import {
   DerivativeAdded,
@@ -15,11 +16,15 @@ import { genericId } from '../utils/genericId';
 
 export function handleDerivativeAdded(event: DerivativeAdded): void {
   let derivative = ensureAsset(event.params.derivative);
-  derivative.removed = false;
   derivative.type = 'DERIVATIVE';
+
+  let release = releaseFromPriceFeed(event);
+  if (release != null) {
+    derivative.releases = arrayUnique<string>(derivative.releases.concat([release.id]));
+  }
   derivative.save();
 
-  checkDerivativeType(derivative);
+  checkDerivativeType(derivative, event.params.priceFeed);
 
   let derivativeAdded = new DerivativeAddedEvent(genericId(event));
   derivativeAdded.derivative = derivative.id;
@@ -42,7 +47,11 @@ export function handleDerivativeAdded(event: DerivativeAdded): void {
 
 export function handleDerivativeRemoved(event: DerivativeRemoved): void {
   let derivative = ensureAsset(event.params.derivative);
-  derivative.removed = true;
+
+  let release = releaseFromPriceFeed(event);
+  if (release != null) {
+    derivative.releases = arrayDiff<string>(derivative.releases, [release.id]);
+  }
   derivative.save();
 
   let derivativeRemoved = new DerivativeRemovedEvent(genericId(event));

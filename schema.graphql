@@ -17,6 +17,14 @@ interface NetworkEventInterface {
 interface FundEventInterface {
   id: ID!
   fund: Fund!
+  # comptroller: ComptrollerProxy!
+  timestamp: BigInt!
+  transaction: Transaction!
+}
+
+interface ComptrollerEventInterface {
+  id: ID!
+  comptroller: ComptrollerProxy!
   timestamp: BigInt!
   transaction: Transaction!
 }
@@ -31,7 +39,6 @@ interface SharesChangeInterface {
   shares: BigDecimal!
   fundState: FundState!
   transaction: Transaction!
-  calculations: CalculationState!
 }
 
 interface FeeSharesChangeInterface {
@@ -44,7 +51,6 @@ interface FeeSharesChangeInterface {
   shares: BigDecimal!
   fundState: FundState!
   transaction: Transaction!
-  calculations: CalculationState!
 }
 
 interface InvestmentSharesChangeInterface {
@@ -57,7 +63,6 @@ interface InvestmentSharesChangeInterface {
   shares: BigDecimal!
   fundState: FundState!
   transaction: Transaction!
-  calculations: CalculationState!
 }
 
 interface FundStateInterface {
@@ -70,7 +75,7 @@ interface FundStateInterface {
 interface FeeSettingInterface {
   id: ID!
   fee: Fee!
-  fund: Fund!
+  comptroller: ComptrollerProxy!
   timestamp: BigInt!
   events: [FundEventInterface!]!
 }
@@ -78,7 +83,7 @@ interface FeeSettingInterface {
 interface PolicySettingInterface {
   id: ID!
   policy: Policy!
-  fund: Fund!
+  comptroller: ComptrollerProxy!
   timestamp: BigInt!
   enabled: Boolean!
   events: [FundEventInterface!]!
@@ -191,6 +196,7 @@ enum ShareChangeType {
   FeeSettledForFund
   AllSharesOutstandingForcePaidForFund
   SharesOutstandingPaidForFund
+  MigratedSharesDuePaid
 }
 
 enum IntegrationMethod {
@@ -215,6 +221,13 @@ enum SharesRequestType {
   EXECUTED
 }
 
+enum ComptrollerProxyStatus {
+  FREE
+  SIGNALLED
+  COMMITTED
+  DESTRUCTED
+}
+
 #################################################
 # Low-level fund event entities
 #################################################
@@ -223,7 +236,7 @@ type NewFundCreatedEvent implements EventInterface & FundEventInterface @entity 
   id: ID!
   fund: Fund!
   timestamp: BigInt!
-  comptrollerProxy: String!
+  comptroller: ComptrollerProxy!
   vaultProxy: Fund!
   creator: Account!
   fundOwner: Account!
@@ -233,19 +246,6 @@ type NewFundCreatedEvent implements EventInterface & FundEventInterface @entity 
   feeManagerConfigData: String!
   policyManagerConfigData: String!
   transaction: Transaction!
-}
-
-type ComptrollerProxyDeployedEvent implements EventInterface & FundEventInterface @entity {
-  id: ID!
-  fund: Fund!
-  timestamp: BigInt!
-  comptrollerProxy: String!
-  transaction: Transaction!
-  denominationAsset: Asset!
-  sharesActionTimelock: BigInt!
-  feeManagerConfigData: String!
-  policyManagerConfigData: String!
-  forMigration: Boolean!
 }
 
 type VaultProxySetEvent implements EventInterface & FundEventInterface @entity {
@@ -270,7 +270,6 @@ type SharesBoughtEvent implements EventInterface & FundEventInterface & SharesCh
   timestamp: BigInt!
   fundState: FundState!
   transaction: Transaction!
-  calculations: CalculationState!
 }
 
 type SharesRedeemedEvent implements EventInterface & FundEventInterface & SharesChangeInterface & InvestmentSharesChangeInterface
@@ -285,7 +284,6 @@ type SharesRedeemedEvent implements EventInterface & FundEventInterface & Shares
   timestamp: BigInt!
   fundState: FundState!
   transaction: Transaction!
-  calculations: CalculationState!
 }
 
 type AssetWithdrawnEvent implements EventInterface & FundEventInterface @entity {
@@ -318,6 +316,8 @@ type TrackedAssetRemovedEvent implements EventInterface & FundEventInterface @en
 type AuthUserAddedForFundEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
+  comptrollerProxy: ComptrollerProxy!
+  user: Account!
   timestamp: BigInt!
   transaction: Transaction!
 }
@@ -325,6 +325,8 @@ type AuthUserAddedForFundEvent implements EventInterface & FundEventInterface @e
 type AuthUserRemovedForFundEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
+  comptrollerProxy: ComptrollerProxy!
+  user: Account!
   timestamp: BigInt!
   transaction: Transaction!
 }
@@ -431,7 +433,6 @@ type FeeSettledForFundEvent implements EventInterface & FundEventInterface & Sha
   payee: String!
   settlementType: SettlementType!
   sharesDue: BigDecimal!
-  calculations: CalculationState!
   fundState: FundState!
 }
 
@@ -448,7 +449,6 @@ type AllSharesOutstandingForcePaidForFundEvent implements EventInterface & FundE
   comptrollerProxy: String!
   payee: String!
   sharesDue: BigDecimal!
-  calculations: CalculationState!
   fundState: FundState!
 }
 
@@ -465,7 +465,20 @@ type SharesOutstandingPaidForFundEvent implements EventInterface & FundEventInte
   comptrollerProxy: String!
   fee: Fee!
   sharesDue: BigDecimal!
-  calculations: CalculationState!
+  fundState: FundState!
+}
+
+type MigratedSharesDuePaidEvent implements EventInterface & FundEventInterface & SharesChangeInterface & FeeSharesChangeInterface
+  @entity {
+  id: ID!
+  fund: Fund!
+  type: ShareChangeType!
+  investor: Account!
+  timestamp: BigInt!
+  transaction: Transaction!
+  investmentState: InvestmentState!
+  shares: BigDecimal!
+  comptrollerProxy: String!
   fundState: FundState!
 }
 
@@ -679,12 +692,11 @@ type MinMaxInvestmentFundSettingsSetEvent implements EventInterface & FundEventI
   maxInvestmentAmount: BigDecimal!
 }
 
-type ManagementFeeSettingsAddedEvent implements EventInterface & FundEventInterface @entity {
+type ManagementFeeSettingsAddedEvent implements EventInterface & ComptrollerEventInterface @entity {
   id: ID!
-  fund: Fund!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: String!
+  comptroller: ComptrollerProxy!
   scaledPerSecondRate: BigInt!
 }
 
@@ -693,17 +705,24 @@ type ManagementFeeSettledEvent implements EventInterface & FundEventInterface @e
   fund: Fund!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: String!
+  comptroller: ComptrollerProxy!
   sharesDue: BigDecimal!
   secondsSinceSettlement: BigInt!
 }
 
-type PerformanceFeeSettingsAddedEvent implements EventInterface & FundEventInterface @entity {
+type ManagementFeeActivatedForMigratedFundEvent implements EventInterface & FundEventInterface @entity {
   id: ID!
   fund: Fund!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: String!
+  comptroller: ComptrollerProxy!
+}
+
+type PerformanceFeeSettingsAddedEvent implements EventInterface & ComptrollerEventInterface @entity {
+  id: ID!
+  timestamp: BigInt!
+  transaction: Transaction!
+  comptroller: ComptrollerProxy!
   rate: BigDecimal!
   period: BigInt!
 }
@@ -748,12 +767,11 @@ type PerformanceFeePerformanceUpdatedEvent implements EventInterface & FundEvent
   sharesOutstandingDiff: BigDecimal!
 }
 
-type EntranceRateDirectFeeSettingsAddedEvent implements EventInterface & FundEventInterface @entity {
+type EntranceRateDirectFeeSettingsAddedEvent implements EventInterface & ComptrollerEventInterface @entity {
   id: ID!
-  fund: Fund!
+  comptroller: ComptrollerProxy!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: String!
   rate: BigDecimal!
 }
 
@@ -767,12 +785,11 @@ type EntranceRateDirectFeeSettledEvent implements EventInterface & FundEventInte
   payer: Account!
 }
 
-type EntranceRateBurnFeeSettingsAddedEvent implements EventInterface & FundEventInterface @entity {
+type EntranceRateBurnFeeSettingsAddedEvent implements EventInterface & ComptrollerEventInterface @entity {
   id: ID!
-  fund: Fund!
+  comptroller: ComptrollerProxy!
   timestamp: BigInt!
   transaction: Transaction!
-  comptrollerProxy: String!
   rate: BigDecimal!
 }
 
@@ -792,14 +809,6 @@ type OverridePauseSetEvent implements EventInterface & FundEventInterface @entit
   timestamp: BigInt!
   transaction: Transaction!
   overridePause: Boolean!
-}
-
-type MigratedSharesDuePaidEvent implements EventInterface & FundEventInterface @entity {
-  id: ID!
-  fund: Fund!
-  timestamp: BigInt!
-  transaction: Transaction!
-  sharesDue: BigDecimal!
 }
 
 type PreRedeemSharesHookFailedEvent implements EventInterface & FundEventInterface @entity {
@@ -879,6 +888,19 @@ type VaultProxyDeployedEvent implements EventInterface & FundEventInterface & Ne
   vaultLib: String!
   accessor: String!
   fundName: String!
+}
+
+type ComptrollerProxyDeployedEvent implements EventInterface & NetworkEventInterface @entity {
+  id: ID!
+  timestamp: BigInt!
+  creator: Account!
+  comptrollerProxy: String!
+  transaction: Transaction!
+  denominationAsset: Asset!
+  sharesActionTimelock: BigInt!
+  feeManagerConfigData: String!
+  policyManagerConfigData: String!
+  forMigration: Boolean!
 }
 
 type ComptrollerLibSetEvent implements EventInterface & NetworkEventInterface @entity {
@@ -1139,16 +1161,19 @@ type Transaction @entity {
 
 type IntegrationManager @entity {
   id: ID!
+  release: Release!
   adapters: [IntegrationAdapter!]! @derivedFrom(field: "integrationManager")
 }
 
 type PolicyManager @entity {
   id: ID!
+  release: Release!
   policies: [Policy!]! @derivedFrom(field: "policyManager")
 }
 
 type FeeManager @entity {
   id: ID!
+  release: Release!
   fees: [Fee!]! @derivedFrom(field: "feeManager")
 }
 
@@ -1160,29 +1185,20 @@ type GuaranteedRedemption @entity {
 
 type Fund @entity {
   id: ID!
-  accessor: String!
+  accessor: ComptrollerProxy!
+  comptrollerProxies: [ComptrollerProxy!]! @derivedFrom(field: "fund")
   name: String!
   inception: BigInt!
   creator: Account!
   release: Release!
   manager: Account!
   migrator: String
-  denominationAsset: Asset!
-  sharesActionTimelock: BigInt!
   lastKnowGavInEth: BigDecimal
   sharesRequestor: SharesRequestor
-
-  # policies
-  policies: [PolicySettingInterface!]! @derivedFrom(field: "fund")
-
-  # fees
-  fees: [FeeSettingInterface!]! @derivedFrom(field: "fund")
 
   # trading
   trackedAssets: [Asset!]!
   trades: [Trade!]! @derivedFrom(field: "fund")
-  # TODO (after release): deriveFrom or use separate AuthUser entity
-  authUsers: [Account!]!
 
   investments: [Investment!]! @derivedFrom(field: "fund")
   investmentCount: Int!
@@ -1198,8 +1214,6 @@ type Fund @entity {
   portfolioHistory: [PortfolioState!]! @derivedFrom(field: "fund")
   feeState: FeeState!
   feeStateHistory: [FeeState!]! @derivedFrom(field: "fund")
-  calculations: CalculationState!
-  calculationsHistory: [CalculationState!]! @derivedFrom(field: "fund")
   state: FundState!
   stateHistory: [FundState!]! @derivedFrom(field: "fund")
   firstInvestmentState: FundState
@@ -1211,6 +1225,24 @@ type Fund @entity {
 
   events: [FundEventInterface!]! @derivedFrom(field: "fund")
   migrations: [Migration!] @derivedFrom(field: "fund")
+}
+
+type ComptrollerProxy @entity {
+  id: ID!
+  fund: Fund
+  creator: Account!
+  timestamp: BigInt!
+  activationTime: BigInt!
+  destructionTime: BigInt
+  denominationAsset: Asset!
+  sharesActionTimelock: BigInt!
+  feeManagerConfigData: String!
+  policyManagerConfigData: String!
+  release: Release!
+  authUsers: [Account!]!
+  status: ComptrollerProxyStatus!
+  feeSettings: [FeeSettingInterface!]! @derivedFrom(field: "comptroller")
+  policySettings: [PolicySettingInterface!]! @derivedFrom(field: "comptroller")
 }
 
 type HourlyFundState implements PeriodicFundStateInterface @entity {
@@ -1248,7 +1280,7 @@ type Migration @entity {
   executableTimestamp: BigInt!
   executed: Boolean!
   cancelled: Boolean!
-  nextAccessor: String!
+  nextAccessor: ComptrollerProxy!
 }
 
 type Release @entity {
@@ -1256,9 +1288,11 @@ type Release @entity {
   current: Boolean!
   open: BigInt!
   close: BigInt
-  funds: [Fund!] @derivedFrom(field: "release")
+  funds: [Fund!]! @derivedFrom(field: "release")
+  assets: [Asset!]! @derivedFrom(field: "releases")
   network: Network!
   # contracts
+  # TODO: make contracts
   adapterBlacklist: String!
   adapterWhitelist: String!
   aggregatedDerivativePriceFeed: String!
@@ -1332,6 +1366,9 @@ type Account @entity {
   investorSince: BigInt
   investments: [Investment!]! @derivedFrom(field: "investor")
 
+  authUser: Boolean!
+  authorizedForComptroller: [ComptrollerProxy!]! @derivedFrom(field: "authUsers")
+
   sharesRequests: [SharesRequest!]! @derivedFrom(field: "account")
 
   sharesChanges: [SharesChangeInterface!]! @derivedFrom(field: "investor")
@@ -1371,7 +1408,7 @@ type Fee @entity {
 type ManagementFeeSetting implements FeeSettingInterface @entity {
   id: ID!
   fee: Fee!
-  fund: Fund!
+  comptroller: ComptrollerProxy!
   scaledPerSecondRate: BigInt!
   timestamp: BigInt!
   events: [FundEventInterface!]!
@@ -1380,7 +1417,7 @@ type ManagementFeeSetting implements FeeSettingInterface @entity {
 type PerformanceFeeSetting implements FeeSettingInterface @entity {
   id: ID!
   fee: Fee!
-  fund: Fund!
+  comptroller: ComptrollerProxy!
   rate: BigDecimal!
   period: BigInt!
   activated: BigInt!
@@ -1391,7 +1428,7 @@ type PerformanceFeeSetting implements FeeSettingInterface @entity {
 type EntranceRateDirectFeeSetting implements FeeSettingInterface @entity {
   id: ID!
   fee: Fee!
-  fund: Fund!
+  comptroller: ComptrollerProxy!
   rate: BigDecimal!
   timestamp: BigInt!
   events: [FundEventInterface!]!
@@ -1400,7 +1437,7 @@ type EntranceRateDirectFeeSetting implements FeeSettingInterface @entity {
 type EntranceRateBurnFeeSetting implements FeeSettingInterface @entity {
   id: ID!
   fee: Fee!
-  fund: Fund!
+  comptroller: ComptrollerProxy!
   rate: BigDecimal!
   timestamp: BigInt!
   events: [FundEventInterface!]!
@@ -1424,7 +1461,7 @@ type Policy @entity {
 type AdapterBlacklistSetting implements PolicySettingInterface @entity {
   id: ID!
   policy: Policy!
-  fund: Fund!
+  comptroller: ComptrollerProxy!
   listed: [String!]!
   adapters: [IntegrationAdapter]!
   timestamp: BigInt!
@@ -1435,7 +1472,7 @@ type AdapterBlacklistSetting implements PolicySettingInterface @entity {
 type AdapterWhitelistSetting implements PolicySettingInterface @entity {
   id: ID!
   policy: Policy!
-  fund: Fund!
+  comptroller: ComptrollerProxy!
   listed: [String!]!
   adapters: [IntegrationAdapter]!
   timestamp: BigInt!
@@ -1446,7 +1483,7 @@ type AdapterWhitelistSetting implements PolicySettingInterface @entity {
 type AssetBlacklistSetting implements PolicySettingInterface @entity {
   id: ID!
   policy: Policy!
-  fund: Fund!
+  comptroller: ComptrollerProxy!
   listed: [String!]!
   assets: [Asset]!
   timestamp: BigInt!
@@ -1457,7 +1494,7 @@ type AssetBlacklistSetting implements PolicySettingInterface @entity {
 type AssetWhitelistSetting implements PolicySettingInterface @entity {
   id: ID!
   policy: Policy!
-  fund: Fund!
+  comptroller: ComptrollerProxy!
   listed: [String!]!
   assets: [Asset]!
   timestamp: BigInt!
@@ -1468,7 +1505,7 @@ type AssetWhitelistSetting implements PolicySettingInterface @entity {
 type BuySharesCallerWhitelistSetting implements PolicySettingInterface @entity {
   id: ID!
   policy: Policy!
-  fund: Fund!
+  comptroller: ComptrollerProxy!
   listed: [String!]!
   timestamp: BigInt!
   enabled: Boolean!
@@ -1478,7 +1515,7 @@ type BuySharesCallerWhitelistSetting implements PolicySettingInterface @entity {
 type GuaranteedRedemptionSetting implements PolicySettingInterface @entity {
   id: ID!
   policy: Policy!
-  fund: Fund!
+  comptroller: ComptrollerProxy!
   startTimestamp: BigInt!
   duration: BigInt!
   timestamp: BigInt!
@@ -1489,7 +1526,7 @@ type GuaranteedRedemptionSetting implements PolicySettingInterface @entity {
 type InvestorWhitelistSetting implements PolicySettingInterface @entity {
   id: ID!
   policy: Policy!
-  fund: Fund!
+  comptroller: ComptrollerProxy!
   listed: [Account!]!
   timestamp: BigInt!
   enabled: Boolean!
@@ -1499,7 +1536,7 @@ type InvestorWhitelistSetting implements PolicySettingInterface @entity {
 type MaxConcentrationSetting implements PolicySettingInterface @entity {
   id: ID!
   policy: Policy!
-  fund: Fund!
+  comptroller: ComptrollerProxy!
   maxConcentration: BigDecimal!
   timestamp: BigInt!
   enabled: Boolean!
@@ -1509,7 +1546,7 @@ type MaxConcentrationSetting implements PolicySettingInterface @entity {
 type MinMaxInvestmentSetting implements PolicySettingInterface @entity {
   id: ID!
   policy: Policy!
-  fund: Fund!
+  comptroller: ComptrollerProxy!
   minInvestmentAmount: BigDecimal!
   maxInvestmentAmount: BigDecimal!
   timestamp: BigInt!
@@ -1520,7 +1557,7 @@ type MinMaxInvestmentSetting implements PolicySettingInterface @entity {
 type UnknownPolicySetting implements PolicySettingInterface @entity {
   id: ID!
   policy: Policy!
-  fund: Fund!
+  comptroller: ComptrollerProxy!
   timestamp: BigInt!
   enabled: Boolean!
   events: [FundEventInterface!]!
@@ -1553,17 +1590,6 @@ type HoldingState implements FundStateInterface @entity {
   events: [FundEventInterface!]!
 }
 
-type CalculationState implements FundStateInterface @entity {
-  id: ID!
-  fund: Fund!
-  timestamp: BigInt!
-  gav: BigDecimal!
-  totalSupply: BigDecimal!
-  grossSharePrice: BigDecimal!
-  netSharePrice: BigDecimal!
-  events: [FundEventInterface!]!
-}
-
 type FundState implements FundStateInterface @entity {
   id: ID!
   fund: Fund!
@@ -1571,7 +1597,6 @@ type FundState implements FundStateInterface @entity {
   shares: ShareState!
   portfolio: PortfolioState!
   feeState: FeeState!
-  calculations: CalculationState!
   currencyPrices: [CurrencyPrice!]!
   investmentCount: Int!
   events: [FundEventInterface!]!
@@ -1824,7 +1849,8 @@ type Asset @entity {
   symbol: String!
   decimals: Int!
   type: AssetType!
-  removed: Boolean!
+
+  releases: [Release!]!
 
   # Details for certain derivative assets
   derivativeType: DerivativeType
@@ -1845,7 +1871,7 @@ type Asset @entity {
   monthlyHistory: [MonthlyAssetPriceCandle!]! @derivedFrom(field: "asset")
 
   # Fund references
-  denominatedFunds: [Fund!]! @derivedFrom(field: "denominationAsset")
+  # denominatedFunds: [Fund!]! @derivedFrom(field: "denominationAsset")
   trackingFunds: [Fund!]! @derivedFrom(field: "trackedAssets")
   blacklisted: [AssetBlacklistSetting!]! @derivedFrom(field: "assets")
   whitelisted: [AssetWhitelistSetting!]! @derivedFrom(field: "assets")

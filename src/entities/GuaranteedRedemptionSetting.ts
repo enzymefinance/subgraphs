@@ -2,8 +2,11 @@ import { BigInt } from '@graphprotocol/graph-ts';
 import { GuaranteedRedemptionSetting, Policy } from '../generated/schema';
 import { policySettingId } from './PolicySetting';
 
-export function ensureGuaranteedRedemptionSetting(fundId: string, policy: Policy): GuaranteedRedemptionSetting {
-  let id = policySettingId(fundId, policy);
+export function ensureGuaranteedRedemptionSetting(
+  comptrollerProxyId: string,
+  policy: Policy,
+): GuaranteedRedemptionSetting {
+  let id = policySettingId(comptrollerProxyId, policy);
   let setting = GuaranteedRedemptionSetting.load(id) as GuaranteedRedemptionSetting;
 
   if (setting) {
@@ -12,7 +15,7 @@ export function ensureGuaranteedRedemptionSetting(fundId: string, policy: Policy
 
   setting = new GuaranteedRedemptionSetting(id);
   setting.policy = policy.id;
-  setting.fund = fundId;
+  setting.comptroller = comptrollerProxyId;
   setting.startTimestamp = BigInt.fromI32(0);
   setting.duration = BigInt.fromI32(0);
   setting.events = new Array<string>();

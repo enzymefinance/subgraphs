@@ -2,8 +2,8 @@ import { BigInt } from '@graphprotocol/graph-ts';
 import { InvestorWhitelistSetting, Policy } from '../generated/schema';
 import { policySettingId } from './PolicySetting';
 
-export function ensureInvestorWhitelistSetting(fundId: string, policy: Policy): InvestorWhitelistSetting {
-  let id = policySettingId(fundId, policy);
+export function ensureInvestorWhitelistSetting(comptrollerProxyId: string, policy: Policy): InvestorWhitelistSetting {
+  let id = policySettingId(comptrollerProxyId, policy);
   let setting = InvestorWhitelistSetting.load(id) as InvestorWhitelistSetting;
 
   if (setting) {
@@ -12,7 +12,7 @@ export function ensureInvestorWhitelistSetting(fundId: string, policy: Policy): 
 
   setting = new InvestorWhitelistSetting(id);
   setting.policy = policy.id;
-  setting.fund = fundId;
+  setting.comptroller = comptrollerProxyId;
   setting.listed = new Array<string>();
   setting.events = new Array<string>();
   setting.timestamp = BigInt.fromI32(0);

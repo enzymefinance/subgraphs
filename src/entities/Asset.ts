@@ -25,8 +25,8 @@ export function ensureAsset(address: Address): Asset {
   asset.symbol = symbol;
   asset.decimals = decimalsCall.value;
   asset.type = 'UNKNOWN';
+  asset.releases = new Array<string>();
   asset.networkAssetHolding = '';
-  asset.removed = false;
   asset.save();
 
   return asset;

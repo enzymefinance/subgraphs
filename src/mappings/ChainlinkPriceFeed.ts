@@ -4,7 +4,6 @@ import {
   btcChainlinkAggregatorAddress,
   chfChainlinkAggregatorAddress,
   eurChainlinkAggregatorAddress,
-  fundDeployerAddress,
   gbpChainlinkAggregatorAddress,
   jpyChainlinkAggregatorAddress,
   wethTokenAddress,
@@ -20,7 +19,7 @@ import {
 import { ensureCurrency } from '../entities/Currency';
 import { trackCurrencyPrice } from '../entities/CurrencyPrice';
 import { ensureNetwork } from '../entities/Network';
-import { ensureRelease } from '../entities/Release';
+import { releaseFromPriceFeed } from '../entities/Release';
 import { ensureTransaction } from '../entities/Transaction';
 import { ChainlinkAggregatorContract } from '../generated/ChainlinkAggregatorContract';
 import { ChainlinkAggregatorProxyContract } from '../generated/ChainlinkAggregatorProxyContract';
@@ -60,16 +59,10 @@ export function unwrapAggregator(address: Address): Address {
 }
 
 export function handleEthUsdAggregatorSet(event: EthUsdAggregatorSet): void {
-  // NOTE: This is the first event on mainnet.
+  // NOTE: This is the first event on mainnet, so we need to register the network and the release
   ensureNetwork(event);
 
-  let network = ensureNetwork(event);
-
-  // Set up release (each new fund deployer is a release)
-  let release = ensureRelease(fundDeployerAddress.toHex(), event);
-
-  network.currentRelease = release.id;
-  network.save();
+  let release = releaseFromPriceFeed(event);
 
   let ethUsdAggregatorSet = new EthUsdAggregatorSetEvent(genericId(event));
   ethUsdAggregatorSet.timestamp = event.block.timestamp;
@@ -88,10 +81,11 @@ export function handleEthUsdAggregatorSet(event: EthUsdAggregatorSet): void {
 
   // Create WETH manually
   let weth = ensureAsset(wethTokenAddress);
-  if (weth.type != 'ETH') {
-    weth.type = 'ETH';
-    weth.save();
+  weth.type = 'ETH';
+  if (release != null) {
+    weth.releases = arrayUnique<string>(weth.releases.concat([release.id]));
   }
+  weth.save();
 
   // Aggregators for currencies
   let audProxy = audChainlinkAggregatorAddress;
@@ -163,8 +157,12 @@ export function handleEthUsdAggregatorSet(event: EthUsdAggregatorSet): void {
 
 export function handlePrimitiveAdded(event: PrimitiveAdded): void {
   let primitive = ensureAsset(event.params.primitive);
-  primitive.removed = false;
   primitive.type = event.params.rateAsset == 1 ? 'USD' : 'ETH';
+
+  let release = releaseFromPriceFeed(event);
+  if (release != null) {
+    primitive.releases = arrayUnique<string>(primitive.releases.concat([release.id]));
+  }
   primitive.save();
 
   let primitivePriceFeedAdded = new PrimitiveAddedEvent(genericId(event));
@@ -212,7 +210,11 @@ export function handlePrimitiveAdded(event: PrimitiveAdded): void {
 
 export function handlePrimitiveRemoved(event: PrimitiveRemoved): void {
   let primitive = ensureAsset(event.params.primitive);
-  primitive.removed = true;
+
+  let release = releaseFromPriceFeed(event);
+  if (release != null) {
+    primitive.releases = arrayDiff<string>(primitive.releases, [release.id]);
+  }
   primitive.save();
 
   let primitivePriceFeedRemoved = new PrimitiveRemovedEvent(genericId(event));

@@ -1,5 +1,5 @@
 import { ensureMaxConcentrationSetting } from '../entities/MaxConcentrationSetting';
-import { usePolicy } from '../entities/Policy';
+import { ensurePolicy } from '../entities/Policy';
 import { ensureTransaction } from '../entities/Transaction';
 import { ComptrollerLibContract } from '../generated/ComptrollerLibContract';
 import { MaxConcentrationSet } from '../generated/MaxConcentrationContract';
@@ -11,7 +11,7 @@ import { toBigDecimal } from '../utils/toBigDecimal';
 export function handleMaxConcentrationSet(event: MaxConcentrationSet): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let vault = comptroller.getVaultProxy();
-  let policy = usePolicy(event.address.toHex());
+  let policy = ensurePolicy(event.address);
   let value = toBigDecimal(event.params.value);
 
   let maxConcentration = new MaxConcentrationSetEvent(genericId(event));
@@ -22,7 +22,7 @@ export function handleMaxConcentrationSet(event: MaxConcentrationSet): void {
   maxConcentration.value = value;
   maxConcentration.save();
 
-  let setting = ensureMaxConcentrationSetting(vault.toHex(), policy);
+  let setting = ensureMaxConcentrationSetting(event.params.comptrollerProxy.toHex(), policy);
   setting.maxConcentration = value;
   setting.events = arrayUnique<string>(setting.events.concat([maxConcentration.id]));
   setting.timestamp = event.block.timestamp;

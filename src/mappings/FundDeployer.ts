@@ -1,10 +1,11 @@
 import { DataSourceContext } from '@graphprotocol/graph-ts';
 import { ensureAccount, ensureManager } from '../entities/Account';
 import { ensureAsset } from '../entities/Asset';
+import { ensureComptrollerProxy } from '../entities/ComptrollerProxy';
 import { createFund } from '../entities/Fund';
 import { ensureNetwork } from '../entities/Network';
+import { ensureRelease } from '../entities/Release';
 import { ensureTransaction } from '../entities/Transaction';
-import { ComptrollerLibContract } from '../generated/ComptrollerLibContract';
 import {
   ComptrollerLibSet,
   ComptrollerProxyDeployed,
@@ -30,7 +31,7 @@ export function handleNewFundCreated(event: NewFundCreated): void {
   let fundCreation = new NewFundCreatedEvent(genericId(event));
   fundCreation.timestamp = event.block.timestamp;
   fundCreation.fund = event.params.vaultProxy.toHex();
-  fundCreation.comptrollerProxy = event.params.comptrollerProxy.toHex();
+  fundCreation.comptroller = event.params.comptrollerProxy.toHex();
   fundCreation.vaultProxy = event.params.vaultProxy.toHex();
   fundCreation.fundOwner = manager.id;
   fundCreation.fundName = event.params.fundName;
@@ -42,13 +43,19 @@ export function handleNewFundCreated(event: NewFundCreated): void {
   fundCreation.transaction = ensureTransaction(event).id;
   fundCreation.save();
 
-  createFund(event);
+  let fund = createFund(event);
 
   let comptrollerContext = new DataSourceContext();
   comptrollerContext.setString('vaultProxy', event.params.vaultProxy.toHex());
 
   VaultLibDataSource.create(event.params.vaultProxy);
   ComptrollerLibDataSource.createWithContext(event.params.comptrollerProxy, comptrollerContext);
+
+  let comptrollerProxy = ensureComptrollerProxy(event.params.comptrollerProxy, event);
+  comptrollerProxy.fund = fund.id;
+  comptrollerProxy.activationTime = event.block.timestamp;
+  comptrollerProxy.status = 'COMMITTED';
+  comptrollerProxy.save();
 }
 
 export function handleComptrollerLibSet(event: ComptrollerLibSet): void {
@@ -60,12 +67,9 @@ export function handleComptrollerLibSet(event: ComptrollerLibSet): void {
 }
 
 export function handleComptrollerProxyDeployed(event: ComptrollerProxyDeployed): void {
-  let comptrollerProxy = ComptrollerLibContract.bind(event.params.comptrollerProxy);
-  let vaultProxy = comptrollerProxy.getVaultProxy();
-
   let comptrollerProxyDeployment = new ComptrollerProxyDeployedEvent(genericId(event));
   comptrollerProxyDeployment.timestamp = event.block.timestamp;
-  comptrollerProxyDeployment.fund = vaultProxy.toHex();
+  comptrollerProxyDeployment.creator = ensureManager(event.params.creator, event).id;
   comptrollerProxyDeployment.comptrollerProxy = event.params.comptrollerProxy.toHex();
   comptrollerProxyDeployment.transaction = ensureTransaction(event).id;
   comptrollerProxyDeployment.denominationAsset = ensureAsset(event.params.denominationAsset).id;
@@ -74,6 +78,20 @@ export function handleComptrollerProxyDeployed(event: ComptrollerProxyDeployed):
   comptrollerProxyDeployment.policyManagerConfigData = event.params.policyManagerConfigData.toHexString();
   comptrollerProxyDeployment.forMigration = event.params.forMigration;
   comptrollerProxyDeployment.save();
+
+  // datasource for new comptroller is created either in the NewFundCreated event (for new funds)
+  // or in the MigrationExecuted event (for migrations)
+
+  let comptrollerProxy = ensureComptrollerProxy(event.params.comptrollerProxy, event);
+  comptrollerProxy.creator = ensureManager(event.params.creator, event).id;
+  comptrollerProxy.timestamp = event.block.timestamp;
+  comptrollerProxy.denominationAsset = ensureAsset(event.params.denominationAsset).id;
+  comptrollerProxy.sharesActionTimelock = event.params.sharesActionTimelock;
+  comptrollerProxy.feeManagerConfigData = event.params.feeManagerConfigData.toHexString();
+  comptrollerProxy.policyManagerConfigData = event.params.policyManagerConfigData.toHexString();
+  comptrollerProxy.release = ensureRelease(event.address.toHex(), event).id;
+  comptrollerProxy.status = 'FREE';
+  comptrollerProxy.save();
 }
 
 export function handleReleaseStatusSet(event: ReleaseStatusSet): void {
@@ -83,8 +101,6 @@ export function handleReleaseStatusSet(event: ReleaseStatusSet): void {
   statusSet.prevStatus = event.params.prevStatus;
   statusSet.nextStatus = event.params.nextStatus;
   statusSet.save();
-
-  // TODO: set release status in entity
 }
 
 export function handleVaultCallDeregistered(event: VaultCallDeregistered): void {

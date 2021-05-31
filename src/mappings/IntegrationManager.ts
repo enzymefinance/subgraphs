@@ -1,9 +1,9 @@
 import { ensureAccount } from '../entities/Account';
 import { ensureAsset } from '../entities/Asset';
 import { createAssetAmount } from '../entities/AssetAmount';
-import { trackCalculationState } from '../entities/CalculationState';
+import { ensureComptrollerProxy } from '../entities/ComptrollerProxy';
 import { useFund } from '../entities/Fund';
-import { ensureIntegrationAdapter, useIntegrationAdapter } from '../entities/IntegrationAdapter';
+import { ensureIntegrationAdapter } from '../entities/IntegrationAdapter';
 import { trackPortfolioState } from '../entities/PortfolioState';
 import { trackTrade } from '../entities/Trade';
 import { ensureTransaction } from '../entities/Transaction';
@@ -30,7 +30,7 @@ import { genericId } from '../utils/genericId';
 import { toBigDecimal } from '../utils/toBigDecimal';
 
 export function handleAdapterRegistered(event: AdapterRegistered): void {
-  let adapter = ensureIntegrationAdapter(event.params.adapter, event.address);
+  let adapter = ensureIntegrationAdapter(event.params.adapter);
 
   let registration = new AdapterRegisteredEvent(genericId(event));
   registration.timestamp = event.block.timestamp;
@@ -44,7 +44,7 @@ export function handleAdapterDeregistered(event: AdapterDeregistered): void {
   let deregistration = new AdapterDeregisteredEvent(genericId(event));
   deregistration.timestamp = event.block.timestamp;
   deregistration.transaction = ensureTransaction(event).id;
-  deregistration.integrationAdapter = useIntegrationAdapter(event.params.adapter.toHex()).id;
+  deregistration.integrationAdapter = ensureIntegrationAdapter(event.params.adapter).id;
   deregistration.identifier = event.params.identifier.toHex();
   deregistration.save();
 }
@@ -52,37 +52,45 @@ export function handleAdapterDeregistered(event: AdapterDeregistered): void {
 export function handleAuthUserAddedForFund(event: AuthUserAddedForFund): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let fund = useFund(comptroller.getVaultProxy().toHex());
+  let comptrollerProxy = ensureComptrollerProxy(event.params.comptrollerProxy, event);
   let account = ensureAccount(event.params.account, event);
+  account.authUser = true;
+  account.save();
 
   let userAdded = new AuthUserAddedForFundEvent(genericId(event));
   userAdded.fund = fund.id;
+  userAdded.comptrollerProxy = comptrollerProxy.id;
+  userAdded.user = account.id;
   userAdded.timestamp = event.block.timestamp;
   userAdded.transaction = ensureTransaction(event).id;
   userAdded.save();
 
-  fund.authUsers = arrayUnique<string>(fund.authUsers.concat([account.id]));
-  fund.save();
+  comptrollerProxy.authUsers = arrayUnique<string>(comptrollerProxy.authUsers.concat([account.id]));
+  comptrollerProxy.save();
 }
 
 export function handleAuthUserRemovedForFund(event: AuthUserRemovedForFund): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let fund = useFund(comptroller.getVaultProxy().toHex());
+  let comptrollerProxy = ensureComptrollerProxy(event.params.comptrollerProxy, event);
   let account = ensureAccount(event.params.account, event);
 
   let userRemoved = new AuthUserRemovedForFundEvent(genericId(event));
   userRemoved.fund = fund.id;
+  userRemoved.comptrollerProxy = comptrollerProxy.id;
+  userRemoved.user = account.id;
   userRemoved.timestamp = event.block.timestamp;
   userRemoved.transaction = ensureTransaction(event).id;
   userRemoved.save();
 
-  fund.authUsers = arrayDiff<string>(fund.authUsers, [account.id]);
-  fund.save();
+  comptrollerProxy.authUsers = arrayDiff<string>(comptrollerProxy.authUsers, [account.id]);
+  comptrollerProxy.save();
 }
 
 export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationExecutedForFund): void {
   let fund = useFund(event.params.vaultProxy.toHex());
 
-  let adapter = useIntegrationAdapter(event.params.adapter.toHex());
+  let adapter = ensureIntegrationAdapter(event.params.adapter);
   let integrationSelector = event.params.selector.toHexString();
 
   // TODO: fix this (asset amounts and assets don't have to be the same lenght, e.g. approveAssetsTrade)
@@ -131,5 +139,4 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
     event,
   );
   trackPortfolioState(fund, event, execution);
-  trackCalculationState(fund, event, execution);
 }

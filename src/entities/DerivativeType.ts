@@ -1,16 +1,7 @@
 import { Address, log } from '@graphprotocol/graph-ts';
-import {
-  aavePriceFeedAddress,
-  alphaHomoraV1PriceFeedAddress,
-  chaiPriceFeedAddress,
-  compoundPriceFeedAddress,
-  idlePriceFeedAddress,
-  stakehoundEthPriceFeedAddress,
-  synthetixPriceFeedAddress,
-} from '../addresses';
+import { releaseAddressesA, releaseAddressesB } from '../addresses';
 import { AavePriceFeedContract } from '../generated/AavePriceFeedContract';
 import { AlphaHomoraV1PriceFeedContract } from '../generated/AlphaHomoraV1PriceFeedContract';
-import { ChaiPriceFeedContract } from '../generated/ChaiPriceFeedContract';
 import { CompoundPriceFeedContract } from '../generated/CompoundPriceFeedContract';
 import { IdlePriceFeedContract } from '../generated/IdlePriceFeedContract';
 import { Asset } from '../generated/schema';
@@ -19,25 +10,31 @@ import { SynthetixPriceFeedContract } from '../generated/SynthetixPriceFeedContr
 import { checkCurvePoolAssetDetail } from './CurvePoolAssetDetail';
 import { checkUniswapV2PoolAssetDetail } from './UniswapV2PoolAssetDetail';
 
-export function checkDerivativeType(derivative: Asset): void {
+export function checkDerivativeType(derivative: Asset, derivativePriceFeedAddress: Address): void {
   // simple derivative types
-  checkAaveDerivativeType(derivative);
-  checkAlphaDerivativeType(derivative);
-  checkChaiDerivativeType(derivative);
-  checkCompoundDerivativeType(derivative);
-  checkIdleDerivativeType(derivative);
-  checkStakehoundDerivativeType(derivative);
-  checkSynthetixDerivativeType(derivative);
+  checkAaveDerivativeType(derivative, derivativePriceFeedAddress);
+  checkAlphaDerivativeType(derivative, derivativePriceFeedAddress);
+  checkCompoundDerivativeType(derivative, derivativePriceFeedAddress);
+  checkIdleDerivativeType(derivative, derivativePriceFeedAddress);
+  checkStakehoundDerivativeType(derivative, derivativePriceFeedAddress);
+  checkSynthetixDerivativeType(derivative, derivativePriceFeedAddress);
 
   // more complex derivative types
-  checkCurvePoolAssetDetail(derivative);
-  checkUniswapV2PoolAssetDetail(derivative);
+  checkCurvePoolAssetDetail(derivative, derivativePriceFeedAddress);
+  checkUniswapV2PoolAssetDetail(derivative, derivativePriceFeedAddress);
 }
 
-function checkAaveDerivativeType(derivative: Asset): void {
+function checkAaveDerivativeType(derivative: Asset, derivativePriceFeedAddress: Address): void {
   let address = Address.fromString(derivative.id);
 
-  let priceFeedContract = AavePriceFeedContract.bind(aavePriceFeedAddress);
+  if (
+    derivativePriceFeedAddress.notEqual(releaseAddressesA.aavePriceFeedAddress) &&
+    derivativePriceFeedAddress.notEqual(releaseAddressesB.aavePriceFeedAddress)
+  ) {
+    return;
+  }
+
+  let priceFeedContract = AavePriceFeedContract.bind(derivativePriceFeedAddress);
   let isSupported = priceFeedContract.try_isSupportedAsset(address);
 
   if (isSupported.reverted || isSupported.value == false) {
@@ -56,10 +53,17 @@ function checkAaveDerivativeType(derivative: Asset): void {
   derivative.save();
 }
 
-function checkAlphaDerivativeType(derivative: Asset): void {
+function checkAlphaDerivativeType(derivative: Asset, derivativePriceFeedAddress: Address): void {
   let address = Address.fromString(derivative.id);
 
-  let priceFeedContract = AlphaHomoraV1PriceFeedContract.bind(alphaHomoraV1PriceFeedAddress);
+  if (
+    derivativePriceFeedAddress.notEqual(releaseAddressesA.alphaHomoraV1PriceFeedAddress) &&
+    derivativePriceFeedAddress.notEqual(releaseAddressesB.alphaHomoraV1PriceFeedAddress)
+  ) {
+    return;
+  }
+
+  let priceFeedContract = AlphaHomoraV1PriceFeedContract.bind(derivativePriceFeedAddress);
   let isSupported = priceFeedContract.try_isSupportedAsset(address);
 
   if (isSupported.reverted || isSupported.value == false) {
@@ -78,32 +82,17 @@ function checkAlphaDerivativeType(derivative: Asset): void {
   derivative.save();
 }
 
-function checkChaiDerivativeType(derivative: Asset): void {
+function checkCompoundDerivativeType(derivative: Asset, derivativePriceFeedAddress: Address): void {
   let address = Address.fromString(derivative.id);
 
-  let priceFeedContract = ChaiPriceFeedContract.bind(chaiPriceFeedAddress);
-  let isSupported = priceFeedContract.try_isSupportedAsset(address);
-
-  if (isSupported.reverted || isSupported.value == false) {
+  if (
+    derivativePriceFeedAddress.notEqual(releaseAddressesA.compoundPriceFeedAddress) &&
+    derivativePriceFeedAddress.notEqual(releaseAddressesB.compoundPriceFeedAddress)
+  ) {
     return;
   }
 
-  let underlying = priceFeedContract.try_getDai();
-
-  if (underlying.reverted) {
-    log.warning('Reverted getDai for asset {}', [derivative.id]);
-    return;
-  }
-
-  derivative.derivativeType = 'Chai';
-  derivative.underlyingAsset = underlying.value.toHex();
-  derivative.save();
-}
-
-function checkCompoundDerivativeType(derivative: Asset): void {
-  let address = Address.fromString(derivative.id);
-
-  let priceFeedContract = CompoundPriceFeedContract.bind(compoundPriceFeedAddress);
+  let priceFeedContract = CompoundPriceFeedContract.bind(derivativePriceFeedAddress);
   let isSupported = priceFeedContract.try_isSupportedAsset(address);
 
   if (isSupported.reverted || isSupported.value == false) {
@@ -122,10 +111,17 @@ function checkCompoundDerivativeType(derivative: Asset): void {
   derivative.save();
 }
 
-function checkIdleDerivativeType(derivative: Asset): void {
+function checkIdleDerivativeType(derivative: Asset, derivativePriceFeedAddress: Address): void {
   let address = Address.fromString(derivative.id);
 
-  let priceFeedContract = IdlePriceFeedContract.bind(idlePriceFeedAddress);
+  if (
+    derivativePriceFeedAddress.notEqual(releaseAddressesA.idlePriceFeedAddress) &&
+    derivativePriceFeedAddress.notEqual(releaseAddressesB.idlePriceFeedAddress)
+  ) {
+    return;
+  }
+
+  let priceFeedContract = IdlePriceFeedContract.bind(derivativePriceFeedAddress);
   let isSupported = priceFeedContract.try_isSupportedAsset(address);
 
   if (isSupported.reverted || isSupported.value == false) {
@@ -144,10 +140,17 @@ function checkIdleDerivativeType(derivative: Asset): void {
   derivative.save();
 }
 
-function checkStakehoundDerivativeType(derivative: Asset): void {
+function checkStakehoundDerivativeType(derivative: Asset, derivativePriceFeedAddress: Address): void {
   let address = Address.fromString(derivative.id);
 
-  let priceFeedContract = StakehoundEthPriceFeedContract.bind(stakehoundEthPriceFeedAddress);
+  if (
+    derivativePriceFeedAddress.notEqual(releaseAddressesA.stakehoundEthPriceFeedAddress) &&
+    derivativePriceFeedAddress.notEqual(releaseAddressesB.stakehoundEthPriceFeedAddress)
+  ) {
+    return;
+  }
+
+  let priceFeedContract = StakehoundEthPriceFeedContract.bind(derivativePriceFeedAddress);
   let isSupported = priceFeedContract.try_isSupportedAsset(address);
 
   if (isSupported.reverted || isSupported.value == false) {
@@ -166,10 +169,17 @@ function checkStakehoundDerivativeType(derivative: Asset): void {
   derivative.save();
 }
 
-function checkSynthetixDerivativeType(derivative: Asset): void {
+function checkSynthetixDerivativeType(derivative: Asset, derivativePriceFeedAddress: Address): void {
   let address = Address.fromString(derivative.id);
 
-  let priceFeedContract = SynthetixPriceFeedContract.bind(synthetixPriceFeedAddress);
+  if (
+    derivativePriceFeedAddress.notEqual(releaseAddressesA.synthetixPriceFeedAddress) &&
+    derivativePriceFeedAddress.notEqual(releaseAddressesB.synthetixPriceFeedAddress)
+  ) {
+    return;
+  }
+
+  let priceFeedContract = SynthetixPriceFeedContract.bind(derivativePriceFeedAddress);
   let isSupported = priceFeedContract.try_isSupportedAsset(address);
 
   if (isSupported.reverted || isSupported.value == false) {

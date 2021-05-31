@@ -11,8 +11,8 @@ import { ensureMinMaxInvestmentSetting } from './MinMaxInvestmentSetting';
 import { PolicySetting } from './PolicySettingEntity';
 import { ensureUnknownPolicySetting } from './UnknownPolicySetting';
 
-export function policySettingId(fundId: string, policy: Policy): string {
-  return fundId + '/' + policy.id;
+export function policySettingId(comptrollerProxyId: string, policy: Policy): string {
+  return comptrollerProxyId + '/' + policy.id;
 }
 
 export function trackPolicySettingEnabled(fundId: string, policy: Policy): void {

@@ -2,7 +2,7 @@ import { Address, dataSource } from '@graphprotocol/graph-ts';
 import { ensureAccount, ensureInvestor } from '../entities/Account';
 import { ensureAsset } from '../entities/Asset';
 import { createAssetAmount } from '../entities/AssetAmount';
-import { calculationStateId, trackCalculationState } from '../entities/CalculationState';
+import { ensureComptrollerProxy } from '../entities/ComptrollerProxy';
 import { useFund } from '../entities/Fund';
 import { ensureInvestment } from '../entities/Investment';
 import { trackInvestmentState } from '../entities/InvestmentState';
@@ -35,7 +35,8 @@ export function handleSharesBought(event: SharesBought): void {
   let investor = ensureInvestor(event.params.buyer, event);
   let investmentState = trackInvestmentState(investor, fund, event);
   let investment = ensureInvestment(investor, fund, investmentState.id, event);
-  let asset = ensureAsset(Address.fromString(fund.denominationAsset));
+  let comptrollerProxy = ensureComptrollerProxy(Address.fromString(fund.accessor), event);
+  let asset = ensureAsset(Address.fromString(comptrollerProxy.denominationAsset));
   let shares = toBigDecimal(event.params.sharesReceived);
 
   let addition = new SharesBoughtEvent(genericId(event));
@@ -49,13 +50,11 @@ export function handleSharesBought(event: SharesBought): void {
   addition.shares = shares;
   addition.timestamp = event.block.timestamp;
   addition.transaction = ensureTransaction(event).id;
-  addition.calculations = calculationStateId(fund, event);
   addition.fundState = fund.state;
   addition.save();
 
   trackPortfolioState(fund, event, addition);
   trackShareState(fund, event, addition);
-  trackCalculationState(fund, event, addition);
 }
 
 export function handleSharesRedeemed(event: SharesRedeemed): void {
@@ -83,13 +82,11 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
   redemption.payoutAssetAmounts = assetAmounts.map<string>((assetAmount) => assetAmount.id);
   redemption.timestamp = event.block.timestamp;
   redemption.transaction = ensureTransaction(event).id;
-  redemption.calculations = calculationStateId(fund, event);
   redemption.fundState = fund.state;
   redemption.save();
 
   trackPortfolioState(fund, event, redemption);
   trackShareState(fund, event, redemption);
-  trackCalculationState(fund, event, redemption);
 }
 
 export function handleVaultProxySet(event: VaultProxySet): void {
@@ -115,12 +112,24 @@ export function handleOverridePauseSet(event: OverridePauseSet): void {
 export function handleMigratedSharesDuePaid(event: MigratedSharesDuePaid): void {
   let fund = useFund(dataSource.context().getString('vaultProxy'));
 
+  let manager = ensureInvestor(Address.fromString(fund.manager), event);
+  let investmentState = trackInvestmentState(manager, fund, event);
+
   let paid = new MigratedSharesDuePaidEvent(genericId(event));
   paid.fund = fund.id;
+  paid.type = 'MigratedSharesDuePaid';
   paid.timestamp = event.block.timestamp;
   paid.transaction = ensureTransaction(event).id;
-  paid.sharesDue = toBigDecimal(event.params.sharesDue);
+  paid.investor = manager.id;
+  paid.investmentState = investmentState.id;
+  paid.shares = toBigDecimal(event.params.sharesDue);
+  paid.comptrollerProxy = event.address.toHex();
+  paid.fundState = fund.state;
   paid.save();
+
+  trackShareState(fund, event, paid);
+  // TODO: do we need to call (?) (only for PerformanceFee)
+  // trackFeeState(fund, fee, BigDecimal.fromString('0'), event, paid);
 }
 
 export function handlePreRedeemSharesHookFailed(event: PreRedeemSharesHookFailed): void {

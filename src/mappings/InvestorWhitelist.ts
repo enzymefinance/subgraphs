@@ -1,7 +1,7 @@
 import { ensureAccount } from '../entities/Account';
 import { useFund } from '../entities/Fund';
 import { ensureInvestorWhitelistSetting } from '../entities/InvestorWhitelistSetting';
-import { usePolicy } from '../entities/Policy';
+import { ensurePolicy } from '../entities/Policy';
 import { ensureTransaction } from '../entities/Transaction';
 import { ComptrollerLibContract } from '../generated/ComptrollerLibContract';
 import { AddressesAdded, AddressesRemoved } from '../generated/InvestorWhitelistContract';
@@ -13,7 +13,7 @@ import { genericId } from '../utils/genericId';
 export function handleAddressesAdded(event: AddressesAdded): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let fundId = comptroller.getVaultProxy().toHex();
-  let policy = usePolicy(event.address.toHex());
+  let policy = ensurePolicy(event.address);
 
   let newAddresses = event.params.items;
   let items: string[] = new Array<string>();
@@ -29,7 +29,7 @@ export function handleAddressesAdded(event: AddressesAdded): void {
   addressesAdded.items = items;
   addressesAdded.save();
 
-  let setting = ensureInvestorWhitelistSetting(fundId, policy);
+  let setting = ensureInvestorWhitelistSetting(event.params.comptrollerProxy.toHex(), policy);
   setting.listed = arrayUnique<string>(setting.listed.concat(items));
   setting.events = arrayUnique<string>(setting.events.concat([addressesAdded.id]));
   setting.timestamp = event.block.timestamp;
@@ -40,7 +40,7 @@ export function handleAddressesRemoved(event: AddressesRemoved): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let vault = comptroller.getVaultProxy();
   let fund = useFund(vault.toHex());
-  let policy = usePolicy(event.address.toHex());
+  let policy = ensurePolicy(event.address);
   let items = event.params.items.map<string>((item) => ensureAccount(item, event).id);
 
   let addressesRemoved = new InvestorWhitelistAddressesRemovedEvent(genericId(event));
@@ -51,7 +51,7 @@ export function handleAddressesRemoved(event: AddressesRemoved): void {
   addressesRemoved.items = items;
   addressesRemoved.save();
 
-  let setting = ensureInvestorWhitelistSetting(fund.id, policy);
+  let setting = ensureInvestorWhitelistSetting(event.params.comptrollerProxy.toHex(), policy);
   setting.listed = arrayDiff<string>(setting.listed, items);
   setting.events = arrayUnique<string>(setting.events.concat([addressesRemoved.id]));
   setting.timestamp = event.block.timestamp;

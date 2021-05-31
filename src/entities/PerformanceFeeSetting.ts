@@ -2,8 +2,8 @@ import { BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 import { Fee, PerformanceFeeSetting } from '../generated/schema';
 import { feeSettingId } from '../utils/feeSettingId';
 
-export function ensurePerformanceFeeSetting(fundId: string, fee: Fee): PerformanceFeeSetting {
-  let id = feeSettingId(fundId, fee);
+export function ensurePerformanceFeeSetting(comptrollerProxyId: string, fee: Fee): PerformanceFeeSetting {
+  let id = feeSettingId(comptrollerProxyId, fee);
   let setting = PerformanceFeeSetting.load(id) as PerformanceFeeSetting;
 
   if (setting) {
@@ -12,7 +12,7 @@ export function ensurePerformanceFeeSetting(fundId: string, fee: Fee): Performan
 
   setting = new PerformanceFeeSetting(id);
   setting.fee = fee.id;
-  setting.fund = fundId;
+  setting.comptroller = comptrollerProxyId;
   setting.rate = BigDecimal.fromString('0');
   setting.period = BigInt.fromI32(0);
   setting.activated = BigInt.fromI32(0);

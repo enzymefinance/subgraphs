@@ -2,8 +2,8 @@ import { BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 import { EntranceRateBurnFeeSetting, Fee } from '../generated/schema';
 import { feeSettingId } from '../utils/feeSettingId';
 
-export function ensureEntranceRateBurnFeeSetting(fundId: string, fee: Fee): EntranceRateBurnFeeSetting {
-  let id = feeSettingId(fundId, fee);
+export function ensureEntranceRateBurnFeeSetting(comptrollerId: string, fee: Fee): EntranceRateBurnFeeSetting {
+  let id = feeSettingId(comptrollerId, fee);
   let setting = EntranceRateBurnFeeSetting.load(id) as EntranceRateBurnFeeSetting;
 
   if (setting) {
@@ -12,7 +12,7 @@ export function ensureEntranceRateBurnFeeSetting(fundId: string, fee: Fee): Entr
 
   setting = new EntranceRateBurnFeeSetting(id);
   setting.fee = fee.id;
-  setting.fund = fundId;
+  setting.comptroller = comptrollerId;
   setting.rate = BigDecimal.fromString('0');
   setting.events = new Array<string>();
   setting.timestamp = BigInt.fromI32(0);

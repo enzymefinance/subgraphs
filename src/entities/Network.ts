@@ -1,5 +1,6 @@
 import { ethereum } from '@graphprotocol/graph-ts';
 import { Network } from '../generated/schema';
+import { logCritical } from '../utils/logCritical';
 import { createNetworkState } from './NetworkState';
 
 export let networkId = 'ENZYME';
@@ -23,4 +24,13 @@ export function ensureNetwork(event: ethereum.Event): Network {
   }
 
   return createNetwork(event);
+}
+
+export function useNetwork(): Network {
+  let network = Network.load(networkId) as Network;
+
+  if (network == null) {
+    logCritical('Network {} does not exist', [networkId]);
+  }
+  return network;
 }

@@ -1,7 +1,7 @@
 import { BigDecimal } from '@graphprotocol/graph-ts';
 import { ensureEntranceRateDirectFeeSetting } from '../entities/EntranceRateDirectFeeSetting';
 import { entranceRateDirectFeeStateId, useEntranceRateDirectFeeState } from '../entities/EntranceRateDirectFeeState';
-import { useFee } from '../entities/Fee';
+import { ensureFee } from '../entities/Fee';
 import { trackFeeState } from '../entities/FeeState';
 import { useFund } from '../entities/Fund';
 import { ensureTransaction } from '../entities/Transaction';
@@ -15,14 +15,13 @@ import { toBigDecimal } from '../utils/toBigDecimal';
 export function handleFundSettingsAdded(event: FundSettingsAdded): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let vault = comptroller.getVaultProxy();
-  let fee = useFee(event.address.toHex());
+  let fee = ensureFee(event.address);
   let rate = toBigDecimal(event.params.rate);
 
   let feeSettings = new EntranceRateDirectFeeSettingsAddedEvent(genericId(event));
-  feeSettings.fund = vault.toHex(); // fund does not exist yet
   feeSettings.timestamp = event.block.timestamp;
   feeSettings.transaction = ensureTransaction(event).id;
-  feeSettings.comptrollerProxy = event.params.comptrollerProxy.toHex();
+  feeSettings.comptroller = event.params.comptrollerProxy.toHex();
   feeSettings.rate = rate;
   feeSettings.save();
 
@@ -36,7 +35,7 @@ export function handleFundSettingsAdded(event: FundSettingsAdded): void {
 export function handleSettled(event: Settled): void {
   let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
   let fund = useFund(comptroller.getVaultProxy().toHex());
-  let fee = useFee(event.address.toHex());
+  let fee = ensureFee(event.address);
   let shares = toBigDecimal(event.params.sharesQuantity);
 
   let settled = new EntranceRateDirectFeeSettledEvent(genericId(event));
