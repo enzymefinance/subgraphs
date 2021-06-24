@@ -7,6 +7,7 @@ import { IdlePriceFeedContract } from '../generated/IdlePriceFeedContract';
 import { Asset } from '../generated/schema';
 import { StakehoundEthPriceFeedContract } from '../generated/StakehoundEthPriceFeedContract';
 import { SynthetixPriceFeedContract } from '../generated/SynthetixPriceFeedContract';
+import { YearnVaultV2PriceFeedContract } from '../generated/YearnVaultV2PriceFeedContract';
 import { checkCurvePoolAssetDetail } from './CurvePoolAssetDetail';
 import { checkUniswapV2PoolAssetDetail } from './UniswapV2PoolAssetDetail';
 
@@ -201,7 +202,7 @@ function checkYearnVaultV2DerivativeType(derivative: Asset, derivativePriceFeedA
     return;
   }
 
-  let priceFeedContract = IdlePriceFeedContract.bind(derivativePriceFeedAddress);
+  let priceFeedContract = YearnVaultV2PriceFeedContract.bind(derivativePriceFeedAddress);
   let isSupported = priceFeedContract.try_isSupportedAsset(address);
 
   if (isSupported.reverted || isSupported.value == false) {
@@ -215,7 +216,7 @@ function checkYearnVaultV2DerivativeType(derivative: Asset, derivativePriceFeedA
     return;
   }
 
-  derivative.derivativeType = 'Idle';
+  derivative.derivativeType = 'Yearn';
   derivative.underlyingAsset = underlying.value.toHex();
   derivative.save();
 }

@@ -152,6 +152,7 @@ enum DerivativeType {
   Stakehound
   Synthetix
   UniswapPool
+  Yearn
 }
 
 enum ChainlinkAggregatorProxyType {

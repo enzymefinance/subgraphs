@@ -63,6 +63,7 @@ interface Release {
   stakehoundEthPriceFeed: string;
   synthetixPriceFeed: string;
   uniswapV2PoolPriceFeed: string;
+  yearnVaultV2PriceFeed: string;
   wdgldPriceFeed: string;
 
   // Peripheral
@@ -102,6 +103,7 @@ interface Release {
   synthetixAdapter: string;
   trackedAssetsAdapter: string;
   uniswapV2Adapter: string;
+  yearnVaultV2Adapter: string;
   zeroExV2Adapter: string;
 }
 
@@ -148,6 +150,7 @@ async function fetchDeployment(source: string): Promise<DeploymentWithMetadata> 
           synthetixPriceFeed: kovanA.contracts.SynthetixPriceFeed.address,
           uniswapV2PoolPriceFeed: kovanA.contracts.UniswapV2PoolPriceFeed.address,
           wdgldPriceFeed: '0x0000000000000000000000000000000000000000',
+          yearnVaultV2PriceFeed: '0x0000000000000000000000000000000000000000',
 
           // Peripheral
           fundActionsWrapper: kovanA.contracts.FundActionsWrapper.address,
@@ -186,6 +189,7 @@ async function fetchDeployment(source: string): Promise<DeploymentWithMetadata> 
           synthetixAdapter: kovanA.contracts.SynthetixAdapter.address,
           trackedAssetsAdapter: kovanA.contracts.TrackedAssetsAdapter.address,
           uniswapV2Adapter: kovanA.contracts.UniswapV2Adapter.address,
+          yearnVaultV2Adapter: '0x0000000000000000000000000000000000000000',
           zeroExV2Adapter: kovanA.contracts.ZeroExV2Adapter.address,
         },
         {
@@ -216,6 +220,7 @@ async function fetchDeployment(source: string): Promise<DeploymentWithMetadata> 
           synthetixPriceFeed: kovanB.contracts.SynthetixPriceFeed.address,
           uniswapV2PoolPriceFeed: kovanB.contracts.UniswapV2PoolPriceFeed.address,
           wdgldPriceFeed: '0x0000000000000000000000000000000000000000',
+          yearnVaultV2PriceFeed: '0x0000000000000000000000000000000000000000',
 
           // Peripheral
           fundActionsWrapper: kovanB.contracts.FundActionsWrapper.address,
@@ -254,6 +259,7 @@ async function fetchDeployment(source: string): Promise<DeploymentWithMetadata> 
           synthetixAdapter: kovanB.contracts.SynthetixAdapter.address,
           trackedAssetsAdapter: kovanB.contracts.TrackedAssetsAdapter.address,
           uniswapV2Adapter: kovanB.contracts.UniswapV2Adapter.address,
+          yearnVaultV2Adapter: '0x0000000000000000000000000000000000000000',
           zeroExV2Adapter: kovanB.contracts.ZeroExV2Adapter.address,
         },
       ],
@@ -316,6 +322,7 @@ async function fetchDeployment(source: string): Promise<DeploymentWithMetadata> 
           synthetixPriceFeed: mainnetA.contracts.SynthetixPriceFeed.address,
           uniswapV2PoolPriceFeed: mainnetA.contracts.UniswapV2PoolPriceFeed.address,
           wdgldPriceFeed: mainnetA.contracts.WdgldPriceFeed.address,
+          yearnVaultV2PriceFeed: '0x0000000000000000000000000000000000000000',
 
           // Peripheral
           fundActionsWrapper: mainnetA.contracts.FundActionsWrapper.address,
@@ -354,6 +361,7 @@ async function fetchDeployment(source: string): Promise<DeploymentWithMetadata> 
           paraSwapV4Adapter: mainnetA.contracts.ParaSwapV4Adapter.address,
           synthetixAdapter: mainnetA.contracts.SynthetixAdapter.address,
           uniswapV2Adapter: mainnetA.contracts.UniswapV2Adapter.address,
+          yearnVaultV2Adapter: '0x0000000000000000000000000000000000000000',
           zeroExV2Adapter: mainnetA.contracts.ZeroExV2Adapter.address,
         },
         // B is FundDeployer xxxx -
@@ -385,6 +393,7 @@ async function fetchDeployment(source: string): Promise<DeploymentWithMetadata> 
           synthetixPriceFeed: mainnetB.contracts.SynthetixPriceFeed.address,
           uniswapV2PoolPriceFeed: mainnetB.contracts.UniswapV2PoolPriceFeed.address,
           wdgldPriceFeed: mainnetB.contracts.WdgldPriceFeed.address,
+          yearnVaultV2PriceFeed: mainnetB.contracts.YearnVaultV2PriceFeed.address,
 
           // Peripheral
           fundActionsWrapper: mainnetB.contracts.FundActionsWrapper.address,
@@ -423,6 +432,7 @@ async function fetchDeployment(source: string): Promise<DeploymentWithMetadata> 
           paraSwapV4Adapter: mainnetB.contracts.ParaSwapV4Adapter.address,
           synthetixAdapter: mainnetB.contracts.SynthetixAdapter.address,
           uniswapV2Adapter: mainnetB.contracts.UniswapV2Adapter.address,
+          yearnVaultV2Adapter: mainnetB.contracts.YearnVaultV2Adapter.address,
           zeroExV2Adapter: mainnetB.contracts.ZeroExV2Adapter.address,
         },
       ],

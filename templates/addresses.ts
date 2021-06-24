@@ -89,7 +89,7 @@ export let releaseAddressesA: ReleaseAddresses = {
   synthetixPriceFeedAddress: Address.fromString('{{releases.0.synthetixPriceFeed}}'),
   uniswapV2PoolPriceFeedAddress: Address.fromString('{{releases.0.uniswapV2PoolPriceFeed}}'),
   wdgldPriceFeedAddress: Address.fromString('{{releases.0.wdgldPriceFeed}}'),
-  yearnVaultV2PriceFeedAddress: zeroAddress,
+  yearnVaultV2PriceFeedAddress: Address.fromString('{{releases.0.yearnVaultV2PriceFeed}}'),
 
   // Peripheral
   fundActionsWrapperAddress: Address.fromString('{{releases.0.fundActionsWrapper}}'),
@@ -130,7 +130,7 @@ export let releaseAddressesA: ReleaseAddresses = {
   synthetixAdapterAddress: Address.fromString('{{releases.0.synthetixAdapter}}'),
   trackedAssetsAdapterAddress: Address.fromString('{{releases.0.trackedAssetsAdapter}}'),
   uniswapV2AdapterAddress: Address.fromString('{{releases.0.uniswapV2Adapter}}'),
-  yearnVaultV2AdapterAddress: zeroAddress,
+  yearnVaultV2AdapterAddress: Address.fromString('{{releases.0.yearnVaultV2Adapter}}'),
   zeroExV2AdapterAddress: Address.fromString('{{releases.0.zeroExV2Adapter}}'),
 };
 
@@ -158,8 +158,8 @@ export let releaseAddressesB: ReleaseAddresses = {
   stakehoundEthPriceFeedAddress: Address.fromString('{{releases.1.stakehoundEthPriceFeed}}'),
   synthetixPriceFeedAddress: Address.fromString('{{releases.1.synthetixPriceFeed}}'),
   uniswapV2PoolPriceFeedAddress: Address.fromString('{{releases.1.uniswapV2PoolPriceFeed}}'),
-  yearnVaultV2PriceFeedAddress: zeroAddress,
   wdgldPriceFeedAddress: Address.fromString('{{releases.1.wdgldPriceFeed}}'),
+  yearnVaultV2PriceFeedAddress: Address.fromString('{{releases.1.yearnVaultV2PriceFeed}}'),
 
   // Peripheral
   fundActionsWrapperAddress: Address.fromString('{{releases.1.fundActionsWrapper}}'),
@@ -200,7 +200,7 @@ export let releaseAddressesB: ReleaseAddresses = {
   synthetixAdapterAddress: Address.fromString('{{releases.1.synthetixAdapter}}'),
   trackedAssetsAdapterAddress: Address.fromString('{{releases.1.trackedAssetsAdapter}}'),
   uniswapV2AdapterAddress: Address.fromString('{{releases.1.uniswapV2Adapter}}'),
-  yearnVaultV2AdapterAddress: zeroAddress,
+  yearnVaultV2AdapterAddress: Address.fromString('{{releases.1.yearnVaultV2Adapter}}'),
   zeroExV2AdapterAddress: Address.fromString('{{releases.1.zeroExV2Adapter}}'),
 };
 
