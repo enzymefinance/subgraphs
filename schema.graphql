@@ -1335,6 +1335,7 @@ type Release @entity {
   trackedAssetsAdapter: String!
   uniswapV2Adapter: String!
   uniswapV2Integratee: String!
+  yearnVaultV2Adapter: String!
   valueInterpreter: String!
   vaultLib: String!
   wethToken: String!
@@ -1353,6 +1354,7 @@ type Release @entity {
   synthetixPriceFeed: String!
   uniswapV2PoolPriceFeed: String!
   wdgldPriceFeed: String!
+  yearnVaultV2PriceFeed: String!
 }
 
 type Account @entity {
