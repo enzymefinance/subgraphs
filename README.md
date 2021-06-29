@@ -26,4 +26,4 @@ Please note that all repositories hosted under this organization follow our [Cod
 
 [yarn]: https://yarnpkg.com
 [node]: https://nodejs.org
-[coc]: https://github.com/enzymefinance/enzymejs/blob/master/CODE_OF_CONDUCT.md
+[coc]: https://github.com/enzymefinance/protocol/blob/current/CODE_OF_CONDUCT.md
