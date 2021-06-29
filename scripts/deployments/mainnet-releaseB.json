@@ -14407,18 +14407,46 @@
       ]
     },
     "TrackedAssetsAdapter": {
-      "address": "0x2e8b6455cb06463a523d3318f2cdc6a55ed45118",
+      "address": "0xeA05F4a383adCE7F1E9cC1b6029B51d7260E53aa",
       "abi": [
         {
           "inputs": [
             {
               "internalType": "address",
+              "name": "_fundDeployer",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
               "name": "_integrationManager",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "_valueInterpreter",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "_wethToken",
               "type": "address"
             }
           ],
           "stateMutability": "nonpayable",
           "type": "constructor"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "nextDustToleranceInWeth",
+              "type": "uint256"
+            }
+          ],
+          "name": "DustToleranceInWethSet",
+          "type": "event"
         },
         {
           "inputs": [],
@@ -14526,6 +14554,19 @@
         },
         {
           "inputs": [],
+          "name": "REMOVE_TRACKED_ASSETS_SELECTOR",
+          "outputs": [
+            {
+              "internalType": "bytes4",
+              "name": "",
+              "type": "bytes4"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
           "name": "STAKE_SELECTOR",
           "outputs": [
             {
@@ -14601,11 +14642,76 @@
         },
         {
           "inputs": [],
+          "name": "getDustToleranceInWeth",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "dustToleranceInWeth_",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "getFundDeployer",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "fundDeployer_",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
           "name": "getIntegrationManager",
           "outputs": [
             {
               "internalType": "address",
               "name": "integrationManager_",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "getOwner",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "owner_",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "getValueInterpreter",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "valueInterpreter_",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "getWethToken",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "wethToken_",
               "type": "address"
             }
           ],
@@ -14668,11 +14774,44 @@
           ],
           "stateMutability": "view",
           "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_vaultProxy",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes",
+              "name": "_encodedCallArgs",
+              "type": "bytes"
+            },
+            {
+              "internalType": "bytes",
+              "name": "",
+              "type": "bytes"
+            }
+          ],
+          "name": "removeTrackedAssets",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_nextDustToleranceInWeth",
+              "type": "uint256"
+            }
+          ],
+          "name": "setDustToleranceInWeth",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
         }
-      ],
-      "linkedData": {
-        "type": "ADAPTER"
-      }
+      ]
     },
     "UniswapV2Adapter": {
       "address": "0x8481150a0f36c98EE859e6C7B46d61FDD836768f",
