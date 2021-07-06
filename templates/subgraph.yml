@@ -782,6 +782,8 @@ dataSources:
           file: ./node_modules/@enzymefinance/protocol/artifacts/SynthetixPriceFeed.json
         - name: UniswapV2PoolPriceFeedContract
           file: ./node_modules/@enzymefinance/protocol/artifacts/UniswapV2PoolPriceFeed.json
+        - name: YearnVaultV2PriceFeedContract
+          file: ./node_modules/@enzymefinance/protocol/artifacts/YearnVaultV2PriceFeed.json
       eventHandlers:
         - event: DerivativeAdded(indexed address,address)
           handler: handleDerivativeAdded

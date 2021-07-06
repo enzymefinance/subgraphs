@@ -32,18 +32,18 @@ export function createRelease(address: Address, event: ethereum.Event): Release 
     return release;
   }
 
+  releaseAddresses.authUserExecutedSharesRequestorFactoryAddress.toHex();
+  release.aaveAdapter = releaseAddresses.aaveAdapterAddress.toHex();
   release.aavePriceFeed = releaseAddresses.aavePriceFeedAddress.toHex();
   release.adapterBlacklist = releaseAddresses.adapterBlacklistAddress.toHex();
   release.adapterWhitelist = releaseAddresses.adapterWhitelistAddress.toHex();
   release.aggregatedDerivativePriceFeed = releaseAddresses.aggregatedDerivativePriceFeedAddress.toHex();
   release.alphaHomoraV1Adapter = releaseAddresses.alphaHomoraV1AdapterAddress.toHex();
   release.alphaHomoraV1PriceFeed = releaseAddresses.alphaHomoraV1PriceFeedAddress.toHex();
-  release.aaveAdapter = releaseAddresses.aaveAdapterAddress.toHex();
   release.assetBlacklist = releaseAddresses.assetBlacklistAddress.toHex();
   release.assetWhitelist = releaseAddresses.assetWhitelistAddress.toHex();
-  release.authUserExecutedSharesRequestorFactory =
-    releaseAddresses.authUserExecutedSharesRequestorFactoryAddress.toHex();
-  release.buySharesCallerWhitelist = releaseAddresses.buySharesCallerWhitelistAddress.toHex();
+  release.authUserExecutedSharesRequestorFactory = release.buySharesCallerWhitelist =
+    releaseAddresses.buySharesCallerWhitelistAddress.toHex();
   release.chaiAdapter = releaseAddresses.chaiAdapterAddress.toHex();
   release.chaiIntegratee = chaiIntegrateeAddress.toHex();
   release.chainlinkPriceFeed = releaseAddresses.chainlinkPriceFeedAddress.toHex();
@@ -51,11 +51,11 @@ export function createRelease(address: Address, event: ethereum.Event): Release 
   release.compoundAdapter = releaseAddresses.compoundAdapterAddress.toHex();
   release.compoundPriceFeed = releaseAddresses.compoundPriceFeedAddress.toHex();
   release.comptrollerLib = releaseAddresses.comptrollerLibAddress.toHex();
-  release.curvePriceFeed = releaseAddresses.curvePriceFeedAddress.toHex();
   release.curveExchangeAdapter = releaseAddresses.curveExchangeAdapterAddress.toHex();
   release.curveLiquidityAaveAdapter = releaseAddresses.curveLiquidityAaveAdapterAddress.toHex();
   release.curveLiquiditySethAdapter = releaseAddresses.curveLiquiditySethAdapterAddress.toHex();
   release.curveLiquidityStethAdapter = releaseAddresses.curveLiquidityStethAdapterAddress.toHex();
+  release.curvePriceFeed = releaseAddresses.curvePriceFeedAddress.toHex();
   release.dispatcher = dispatcherAddress.toHex();
   release.entranceRateBurnFee = releaseAddresses.entranceRateBurnFeeAddress.toHex();
   release.entranceRateDirectFee = releaseAddresses.entranceRateDirectFeeAddress.toHex();
@@ -91,6 +91,8 @@ export function createRelease(address: Address, event: ethereum.Event): Release 
   release.vaultLib = releaseAddresses.vaultLibAddress.toHex();
   release.wdgldPriceFeed = releaseAddresses.wdgldPriceFeedAddress.toHex();
   release.wethToken = wethTokenAddress.toHex();
+  release.yearnVaultV2Adapter = releaseAddresses.yearnVaultV2AdapterAddress.toHex();
+  release.yearnVaultV2PriceFeed = releaseAddresses.yearnVaultV2PriceFeedAddress.toHex();
   release.zeroExV2Adapter = releaseAddresses.zeroExV2AdapterAddress.toHex();
   release.save();
 
