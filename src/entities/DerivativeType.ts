@@ -7,6 +7,7 @@ import { IdlePriceFeedContract } from '../generated/IdlePriceFeedContract';
 import { Asset } from '../generated/schema';
 import { StakehoundEthPriceFeedContract } from '../generated/StakehoundEthPriceFeedContract';
 import { SynthetixPriceFeedContract } from '../generated/SynthetixPriceFeedContract';
+import { YearnVaultV2PriceFeedContract } from '../generated/YearnVaultV2PriceFeedContract';
 import { checkCurvePoolAssetDetail } from './CurvePoolAssetDetail';
 import { checkUniswapV2PoolAssetDetail } from './UniswapV2PoolAssetDetail';
 
@@ -18,6 +19,7 @@ export function checkDerivativeType(derivative: Asset, derivativePriceFeedAddres
   checkIdleDerivativeType(derivative, derivativePriceFeedAddress);
   checkStakehoundDerivativeType(derivative, derivativePriceFeedAddress);
   checkSynthetixDerivativeType(derivative, derivativePriceFeedAddress);
+  checkYearnVaultV2DerivativeType(derivative, derivativePriceFeedAddress);
 
   // more complex derivative types
   checkCurvePoolAssetDetail(derivative, derivativePriceFeedAddress);
@@ -187,5 +189,34 @@ function checkSynthetixDerivativeType(derivative: Asset, derivativePriceFeedAddr
   }
 
   derivative.derivativeType = 'Synthetix';
+  derivative.save();
+}
+
+function checkYearnVaultV2DerivativeType(derivative: Asset, derivativePriceFeedAddress: Address): void {
+  let address = Address.fromString(derivative.id);
+
+  if (
+    derivativePriceFeedAddress.notEqual(releaseAddressesA.yearnVaultV2PriceFeedAddress) &&
+    derivativePriceFeedAddress.notEqual(releaseAddressesB.yearnVaultV2PriceFeedAddress)
+  ) {
+    return;
+  }
+
+  let priceFeedContract = YearnVaultV2PriceFeedContract.bind(derivativePriceFeedAddress);
+  let isSupported = priceFeedContract.try_isSupportedAsset(address);
+
+  if (isSupported.reverted || isSupported.value == false) {
+    return;
+  }
+
+  let underlying = priceFeedContract.try_getUnderlyingForDerivative(address);
+
+  if (underlying.reverted) {
+    log.warning('Reverted getUnderlyingForDerivative for asset {}', [derivative.id]);
+    return;
+  }
+
+  derivative.derivativeType = 'Yearn';
+  derivative.underlyingAsset = underlying.value.toHex();
   derivative.save();
 }
