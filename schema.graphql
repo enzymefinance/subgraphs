@@ -202,6 +202,7 @@ enum ShareChangeType {
 
 enum IntegrationMethod {
   ADD_TRACKED_ASSETS
+  REMOVE_TRACKED_ASSETS
   APPROVE_ASSETS
   TAKE_ORDER
   LEND
@@ -1729,6 +1730,16 @@ type AddTrackedAssetsTrade implements Trade @entity {
   adapter: IntegrationAdapter!
   method: IntegrationMethod!
   incomingAssetAmounts: [AssetAmount!]!
+  timestamp: BigInt!
+  fundState: FundState!
+}
+
+type RemoveTrackedAssetsTrade implements Trade @entity {
+  id: ID!
+  fund: Fund!
+  adapter: IntegrationAdapter!
+  method: IntegrationMethod!
+  outgoingAssetAmounts: [AssetAmount!]!
   timestamp: BigInt!
   fundState: FundState!
 }

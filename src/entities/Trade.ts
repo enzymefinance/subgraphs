@@ -1,6 +1,7 @@
 import { CallOnIntegrationExecutedForFund } from '../generated/IntegrationManagerContract';
 import {
   AddTrackedAssetsTrade,
+  RemoveTrackedAssetsTrade,
   ApproveAssetsTrade,
   Asset,
   AssetAmount,
@@ -31,6 +32,7 @@ import {
   lendAndStakeType,
   lendType,
   redeemType,
+  removeTrackedAssetsType,
   stakeType,
   takeOrderType,
   unstakeAndRedeemType,
@@ -144,6 +146,19 @@ export function trackTrade(
     trade.adapter = adapter.id;
     trade.method = tradeType;
     trade.incomingAssetAmounts = incomingAssetAmounts.map<string>((assetAmount) => assetAmount.id);
+    trade.timestamp = event.block.timestamp;
+    trade.fundState = fund.state;
+    trade.save();
+
+    return;
+  }
+
+  if (tradeType == removeTrackedAssetsType) {
+    let trade = new RemoveTrackedAssetsTrade(genericId(event));
+    trade.fund = fund.id;
+    trade.adapter = adapter.id;
+    trade.method = tradeType;
+    trade.outgoingAssetAmounts = outgoingAssetAmounts.map<string>((assetAmount) => assetAmount.id);
     trade.timestamp = event.block.timestamp;
     trade.fundState = fund.state;
     trade.save();
