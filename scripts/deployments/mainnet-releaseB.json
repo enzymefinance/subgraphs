@@ -3,7 +3,7 @@
   "chainId": "1",
   "contracts": {
     "AaveAdapter": {
-      "address": "0x14c6b99affc61e9b0753146f3437a223d0c58279",
+      "address": "0x32d0CB26C2964749bd5D10Ba93695e52b4B57eA3",
       "abi": [
         {
           "inputs": [
