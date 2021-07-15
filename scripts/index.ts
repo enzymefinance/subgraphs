@@ -68,7 +68,6 @@ interface Release {
 
   // Peripheral
   fundActionsWrapper: string;
-  authUserExecutedSharesRequestorFactory: string;
 
   // Fees
   managementFee: string;
@@ -154,7 +153,6 @@ async function fetchDeployment(source: string): Promise<DeploymentWithMetadata> 
 
           // Peripheral
           fundActionsWrapper: kovanA.contracts.FundActionsWrapper.address,
-          authUserExecutedSharesRequestorFactory: kovanA.contracts.AuthUserExecutedSharesRequestorFactory.address,
 
           // Fees
           managementFee: kovanA.contracts.ManagementFee.address,
@@ -224,7 +222,6 @@ async function fetchDeployment(source: string): Promise<DeploymentWithMetadata> 
 
           // Peripheral
           fundActionsWrapper: kovanB.contracts.FundActionsWrapper.address,
-          authUserExecutedSharesRequestorFactory: kovanB.contracts.AuthUserExecutedSharesRequestorFactory.address,
 
           // Fees
           managementFee: kovanB.contracts.ManagementFee.address,
@@ -326,7 +323,6 @@ async function fetchDeployment(source: string): Promise<DeploymentWithMetadata> 
 
           // Peripheral
           fundActionsWrapper: mainnetA.contracts.FundActionsWrapper.address,
-          authUserExecutedSharesRequestorFactory: mainnetA.contracts.AuthUserExecutedSharesRequestorFactory.address,
 
           // Fees
           managementFee: mainnetA.contracts.ManagementFee.address,
@@ -397,7 +393,6 @@ async function fetchDeployment(source: string): Promise<DeploymentWithMetadata> 
 
           // Peripheral
           fundActionsWrapper: mainnetB.contracts.FundActionsWrapper.address,
-          authUserExecutedSharesRequestorFactory: '0x0000000000000000000000000000000000000000',
 
           // Fees
           managementFee: mainnetB.contracts.ManagementFee.address,
@@ -463,25 +458,24 @@ async function fetchDeployment(source: string): Promise<DeploymentWithMetadata> 
 yargs
   .command('flatten', 'Flatten the generated code.', () => {
     const generated = path.resolve(__dirname, '..', 'src', 'generated');
-    const globbed = glob.sync('**/*', { cwd: path.join(generated) });
+    const globbed = glob.sync('**/*', { cwd: path.join(generated), absolute: true });
     const files = globbed.filter((item) => {
-      const stats = fs.statSync(path.join(generated, item));
+      const stats = fs.statSync(item);
       return stats.isFile();
     });
 
     const directories = globbed.filter((item) => {
-      const stats = fs.statSync(path.join(generated, item));
+      const stats = fs.statSync(item);
       return stats.isDirectory();
     });
 
     files.forEach((item) => {
-      const from = path.join(generated, item);
       const to = path.join(generated, path.basename(item));
-      fs.renameSync(from, to);
+      fs.renameSync(item, to);
     });
 
     directories.forEach((item) => {
-      fs.rmdirSync(path.join(generated, item), { recursive: true });
+      fs.rmSync(item, { recursive: true, force: true });
     });
   })
   .command(

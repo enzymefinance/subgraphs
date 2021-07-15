@@ -1,17 +1,16 @@
 import { ensurePolicy } from '../entities/Policy';
-import { trackPolicySettingDisabled, trackPolicySettingEnabled } from '../entities/PolicySetting';
+import { trackPolicySettingEnabled, trackPolicySettingDisabled } from '../entities/PolicySetting';
 import { ensureTransaction } from '../entities/Transaction';
-import { ComptrollerLibContract } from '../generated/ComptrollerLibContract';
 import {
   PolicyDeregistered,
-  PolicyDisabledForFund,
   PolicyEnabledForFund,
+  PolicyDisabledForFund,
   PolicyRegistered,
 } from '../generated/PolicyManagerContract';
 import {
   PolicyDeregisteredEvent,
-  PolicyDisabledForFundEvent,
   PolicyEnabledForFundEvent,
+  PolicyDisabledForFundEvent,
   PolicyRegisteredEvent,
 } from '../generated/schema';
 import { genericId } from '../utils/genericId';
@@ -19,7 +18,6 @@ import { getPolicyHook } from '../utils/getPolicyHook';
 
 export function handlePolicyRegistered(event: PolicyRegistered): void {
   let policy = ensurePolicy(event.params.policy);
-
   let registration = new PolicyRegisteredEvent(genericId(event));
   registration.timestamp = event.block.timestamp;
   registration.transaction = ensureTransaction(event).id;
@@ -39,34 +37,28 @@ export function handlePolicyDeregistered(event: PolicyDeregistered): void {
 }
 
 export function handlePolicyEnabledForFund(event: PolicyEnabledForFund): void {
-  let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
-  let fundId = comptroller.getVaultProxy().toHex();
   let policy = ensurePolicy(event.params.policy);
-
   let enabled = new PolicyEnabledForFundEvent(genericId(event));
-  enabled.fund = fundId;
+  enabled.comptroller = event.params.comptrollerProxy.toHex();
   enabled.timestamp = event.block.timestamp;
   enabled.transaction = ensureTransaction(event).id;
   enabled.policy = policy.id;
   enabled.settingsData = event.params.settingsData.toHexString();
   enabled.save();
 
-  trackPolicySettingEnabled(fundId, policy);
+  trackPolicySettingEnabled(event.params.comptrollerProxy.toHex(), policy);
 
   // frontend queries need to filter out policies that belong to the current release
 }
 
 export function handlePolicyDisabledForFund(event: PolicyDisabledForFund): void {
-  let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
-  let fundId = comptroller.getVaultProxy().toHex();
   let policy = ensurePolicy(event.params.policy);
+  let disabled = new PolicyDisabledForFundEvent(genericId(event));
+  disabled.comptroller = event.params.comptrollerProxy.toHex();
+  disabled.timestamp = event.block.timestamp;
+  disabled.transaction = ensureTransaction(event).id;
+  disabled.policy = policy.id;
+  disabled.save();
 
-  let enabled = new PolicyDisabledForFundEvent(genericId(event));
-  enabled.fund = fundId;
-  enabled.timestamp = event.block.timestamp;
-  enabled.transaction = ensureTransaction(event).id;
-  enabled.policy = policy.id;
-  enabled.save();
-
-  trackPolicySettingDisabled(fundId, policy);
+  trackPolicySettingDisabled(event.params.comptrollerProxy.toHex(), policy);
 }
