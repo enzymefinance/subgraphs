@@ -32,7 +32,6 @@ export function createRelease(address: Address, event: ethereum.Event): Release 
     return release;
   }
 
-  releaseAddresses.authUserExecutedSharesRequestorFactoryAddress.toHex();
   release.aaveAdapter = releaseAddresses.aaveAdapterAddress.toHex();
   release.aavePriceFeed = releaseAddresses.aavePriceFeedAddress.toHex();
   release.adapterBlacklist = releaseAddresses.adapterBlacklistAddress.toHex();
@@ -42,8 +41,7 @@ export function createRelease(address: Address, event: ethereum.Event): Release 
   release.alphaHomoraV1PriceFeed = releaseAddresses.alphaHomoraV1PriceFeedAddress.toHex();
   release.assetBlacklist = releaseAddresses.assetBlacklistAddress.toHex();
   release.assetWhitelist = releaseAddresses.assetWhitelistAddress.toHex();
-  release.authUserExecutedSharesRequestorFactory = release.buySharesCallerWhitelist =
-    releaseAddresses.buySharesCallerWhitelistAddress.toHex();
+  release.buySharesCallerWhitelist = releaseAddresses.buySharesCallerWhitelistAddress.toHex();
   release.chaiAdapter = releaseAddresses.chaiAdapterAddress.toHex();
   release.chaiIntegratee = chaiIntegrateeAddress.toHex();
   release.chainlinkPriceFeed = releaseAddresses.chainlinkPriceFeedAddress.toHex();

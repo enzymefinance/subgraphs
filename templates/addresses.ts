@@ -31,7 +31,6 @@ export class ReleaseAddresses {
   wdgldPriceFeedAddress: Address;
   yearnVaultV2PriceFeedAddress: Address;
   fundActionsWrapperAddress: Address;
-  authUserExecutedSharesRequestorFactoryAddress: Address;
   managementFeeAddress: Address;
   performanceFeeAddress: Address;
   entranceRateBurnFeeAddress: Address;
@@ -93,9 +92,6 @@ export let releaseAddressesA: ReleaseAddresses = {
 
   // Peripheral
   fundActionsWrapperAddress: Address.fromString('{{releases.0.fundActionsWrapper}}'),
-  authUserExecutedSharesRequestorFactoryAddress: Address.fromString(
-    '{{releases.0.authUserExecutedSharesRequestorFactory}}',
-  ),
 
   // Fees
   managementFeeAddress: Address.fromString('{{releases.0.managementFee}}'),
@@ -163,9 +159,6 @@ export let releaseAddressesB: ReleaseAddresses = {
 
   // Peripheral
   fundActionsWrapperAddress: Address.fromString('{{releases.1.fundActionsWrapper}}'),
-  authUserExecutedSharesRequestorFactoryAddress: Address.fromString(
-    '{{releases.1.authUserExecutedSharesRequestorFactory}}',
-  ),
 
   // Fees
   managementFeeAddress: Address.fromString('{{releases.1.managementFee}}'),
