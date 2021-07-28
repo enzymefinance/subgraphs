@@ -9,9 +9,9 @@
   },
   "dependencies": {
     "@chainlink/contracts": "^0.1.7",
-    "@enzymefinance/protocol": "^2.0.0",
+    "@enzymefinance/protocol": "^2.0.10",
     "@enzymefinance/subgraph-utils": "^0.0.0",
-    "@graphprotocol/graph-ts": "^0.20.0",
+    "@graphprotocol/graph-ts": "^0.20.1",
     "@openzeppelin/contracts": "^3.4.1"
   }
 }

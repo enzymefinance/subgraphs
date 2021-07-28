@@ -96,7 +96,11 @@ class Subgraph<TVariables = any> {
     });
 
     const files = globbed.filter((item) => fs.statSync(item).isFile());
-    const directories = globbed.filter((item) => fs.statSync(item).isDirectory());
+
+    // Filter out child directories.
+    const directories = globbed
+      .filter((item) => fs.statSync(item).isDirectory())
+      .filter((outer, _, array) => !array.some((inner) => inner !== outer && outer.startsWith(inner)));
 
     files.forEach((item) => fs.renameSync(item, path.join(cwd, path.basename(item))));
     directories.forEach((item) => fs.rmdirSync(item, { recursive: true }));
