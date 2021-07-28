@@ -103,7 +103,7 @@ class Subgraph<TVariables = any> {
       .filter((outer, _, array) => !array.some((inner) => inner !== outer && outer.startsWith(inner)));
 
     files.forEach((item) => fs.renameSync(item, path.join(cwd, path.basename(item))));
-    directories.forEach((item) => fs.rmdirSync(item, { recursive: true }));
+    directories.forEach((item) => fs.rmSync(item, { recursive: true }));
 
     this.templates.forEach((template) => {
       const templateFile = path.join(this.root, template.template);
