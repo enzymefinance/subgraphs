@@ -42,7 +42,6 @@ dataSources:
       {{/if}}
 
   {{/each}}
-
 {{#if templates}}
 templates:
   {{#each templates}}

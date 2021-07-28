@@ -6,18 +6,25 @@
     "utils",
     "cli"
   ],
+  "preconstruct": {
+    "packages": [
+      "utils",
+      "cli"
+    ]
+  },
   "scripts": {
-    "postinstall": "lerna bootstrap",
+    "postinstall": "manypkg check",
     "prepare": "husky install",
     "format": "prettier --write \"{*,**/*}.{ts,js}\"",
     "lint": "prettier --list-different \"{*,**/*}.{ts,js}\""
   },
   "dependencies": {
+    "@changesets/cli": "^2.16.0",
     "@enzymefinance/prettier-config": "^1.0.4",
+    "@manypkg/cli": "^0.18.0",
     "@types/node": "^16.4.5",
     "husky": "^6.0.0",
     "jest": "^27.0.6",
-    "lerna": "^4.0.0",
     "lint-staged": "^11.1.1",
     "prettier": "^2.3.2"
   },

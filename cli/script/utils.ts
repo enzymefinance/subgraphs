@@ -11,7 +11,6 @@ import {
   DataSourceTemplateDeclarationLike,
   AbiDeclarationLike,
 } from '@enzymefinance/subgraph-cli';
-import { string } from 'yargs';
 
 export function abi(abi: AbiDeclarationLike, root: string): AbiDeclaration {
   const file = typeof abi === 'string' ? abi : abi.file;

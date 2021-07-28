@@ -1,5 +1,5 @@
 import { Address, BigDecimal, log } from '@graphprotocol/graph-ts';
-import { tokenDecimals, tokenBalance, tokenName, tokenSymbol } from '../../../utils';
+import { tokenDecimals, tokenBalance, tokenName, tokenSymbol } from '@enzymefinance/subgraph-utils';
 import { Asset, IgnoreAsset } from '../generated/schema';
 
 export function ensureAsset(address: Address): Asset | null {

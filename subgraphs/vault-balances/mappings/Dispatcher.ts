@@ -1,3 +1,4 @@
+import { BigInt } from '@graphprotocol/graph-ts';
 import { VaultProxyDeployed } from '../generated/DispatcherContract';
 import { Vault } from '../generated/schema';
 import { VaultDataSource } from '../generated/templates';
@@ -11,6 +12,8 @@ export function handleVaultProxyDeployed(event: VaultProxyDeployed): void {
   }
 
   let vault = new Vault(id);
+  vault.timestamp = event.block.timestamp;
+  vault.portfolio = [];
   vault.save();
 
   // Spawn the data source for the vault proxy to observe tracked assets and external positions.

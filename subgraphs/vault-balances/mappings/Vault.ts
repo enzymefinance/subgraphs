@@ -1,6 +1,6 @@
 import { log } from '@graphprotocol/graph-ts';
 import { ensureAsset } from '../entities/Asset';
-import { updateHolding } from '../entities/Holding';
+import { updateExternalPosition, updateTrackedAsset } from '../entities/Holding';
 import {
   TrackedAssetAdded,
   TrackedAssetRemoved,
@@ -22,7 +22,7 @@ export function handleTrackedAssetAdded(event: TrackedAssetAdded): void {
     return;
   }
 
-  let holding = updateHolding(vault as Vault, asset as Asset, event.block.timestamp);
+  let holding = updateTrackedAsset(vault as Vault, asset as Asset, event.block.timestamp, true);
   holding.tracked = true;
   holding.save();
 }
@@ -40,7 +40,7 @@ export function handleTrackedAssetRemoved(event: TrackedAssetRemoved): void {
     return;
   }
 
-  let holding = updateHolding(vault as Vault, asset as Asset, event.block.timestamp);
+  let holding = updateTrackedAsset(vault as Vault, asset as Asset, event.block.timestamp, false);
   holding.tracked = false;
   holding.save();
 }
@@ -58,7 +58,7 @@ export function handleExternalPositionAdded(event: ExternalPositionAdded): void 
     return;
   }
 
-  let holding = updateHolding(vault as Vault, asset as Asset, event.block.timestamp);
+  let holding = updateExternalPosition(vault as Vault, asset as Asset, event.block.timestamp, true);
   holding.external = true;
   holding.save();
 }
@@ -76,7 +76,7 @@ export function handleExternalPositionRemoved(event: ExternalPositionRemoved): v
     return;
   }
 
-  let holding = updateHolding(vault as Vault, asset as Asset, event.block.timestamp);
+  let holding = updateExternalPosition(vault as Vault, asset as Asset, event.block.timestamp, false);
   holding.external = false;
   holding.save();
 }

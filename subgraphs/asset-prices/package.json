@@ -8,7 +8,7 @@
     "deploy": "enzyme-graph deploy"
   },
   "dependencies": {
-    "@chainlink/contracts": "^0.1.6",
+    "@chainlink/contracts": "^0.1.7",
     "@enzymefinance/protocol": "^2.0.10",
     "@enzymefinance/subgraph-cli": "^0.0.0",
     "@enzymefinance/subgraph-utils": "^0.0.0",

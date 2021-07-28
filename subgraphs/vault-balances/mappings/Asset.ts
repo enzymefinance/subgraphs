@@ -2,13 +2,18 @@ import { toBigDecimal, ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
 import { Transfer } from '../generated/ERC20Contract';
 import { Asset, IncomingTransfer, OutgoingTransfer, Vault } from '../generated/schema';
 import { ensureAsset } from '../entities/Asset';
-import { updateHolding } from '../entities/Holding';
+import { updateHoldingBalance } from '../entities/Holding';
 
 export function transferId(event: Transfer, suffix: string): string {
   return event.transaction.hash.toHex() + '/' + event.logIndex.toString() + '/' + suffix;
 }
 
 export function handleTransfer(event: Transfer): void {
+  // Ignore events where the transfer value is zero.
+  if (event.params.value.isZero()) {
+    return;
+  }
+
   // Ignore fee share transfers. They are first minted for the vault itself (first case) and
   // then transferred to the manager when they are claimed (second case).
   // NOTE: If we ever want to support a fund buying shares of itself (apparently that's
@@ -48,7 +53,7 @@ export function handleTransfer(event: Transfer): void {
 
 function handleIncomingTransfer(event: Transfer, asset: Asset, vault: Vault): void {
   let from = event.params.from.toHex();
-  let holding = updateHolding(vault, asset, event.block.timestamp);
+  let holding = updateHoldingBalance(vault, asset, event.block.timestamp);
   let amount = toBigDecimal(event.params.value, asset.decimals);
 
   let transfer = new IncomingTransfer(transferId(event, 'incoming'));
@@ -66,7 +71,7 @@ function handleIncomingTransfer(event: Transfer, asset: Asset, vault: Vault): vo
 
 function handleOutgoingTransfer(event: Transfer, asset: Asset, vault: Vault): void {
   let to = event.params.to.toHex();
-  let holding = updateHolding(vault, asset, event.block.timestamp);
+  let holding = updateHoldingBalance(vault, asset, event.block.timestamp);
   let amount = toBigDecimal(event.params.value, asset.decimals);
 
   let transfer = new OutgoingTransfer(transferId(event, 'outgoing'));
