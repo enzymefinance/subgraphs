@@ -12,7 +12,8 @@ export function handlePrimitiveAdded{{nameSuffix}}(event: PrimitiveAdded): void 
 
   let valueInterpreter = Address.fromString('{{valueInterpreter}}');
   let registrationPriority = {{registrationPriority}};
-  let registration = createOrUpdatePrimitiveRegistration(event.params.primitive, event.address, event.params.aggregator, valueInterpreter, registrationPriority);
+  let quoteCurrency = event.params.rateAsset == 0 ? 'ETH' : 'USD';
+  let registration = createOrUpdatePrimitiveRegistration(event.params.primitive, event.address, event.params.aggregator, valueInterpreter, registrationPriority, quoteCurrency);
   updateForPrimitiveRegistration(registration, event);
 }
 

@@ -12,7 +12,8 @@ import { getCurrencyAggregator } from '../utils/getCurrencyAggregator';
 import { unwrapAggregator } from '../utils/unwrapAggregator';
 import { getOrCreateAggregatorProxy, getOrCreateAggregator } from './Aggregator';
 import { getOrCreateAsset } from './Asset';
-import { updateDerivativeRegistry } from './Updater';
+import { updateDerivativeRegistry } from './DerivativeRegistry';
+import { updateUsdQuotedPrimitiveRegistry } from './UsdQuotedPrimitiveRegistry';
 
 export function createCurrencyRegistration(currencyId: string): CurrencyRegistration {
   let registrationId = currencyRegistrationId(currencyId);
@@ -67,12 +68,14 @@ export function createOrUpdatePrimitiveRegistration(
   proxyAddress: Address,
   valueInterpreterAddress: Address,
   registrationPriority: number,
+  quoteCurrency: string | null = null,
 ): PrimitiveRegistration {
-  removePrimitiveRegistration(assetAddress, issuerAddress);
+  let previous = removePrimitiveRegistration(assetAddress, issuerAddress);
 
   let registrationId = primitiveRegistrationId(assetAddress, issuerAddress);
   let registration = new PrimitiveRegistration(registrationId);
   registration.type = 'PRIMITIVE';
+  registration.quote = quoteCurrency == null ? (previous == null ? 'ETH' : previous.quote) : quoteCurrency;
   registration.issuer = issuerAddress.toHex();
   registration.asset = assetAddress.toHex();
   registration.proxy = proxyAddress.toHex();
@@ -88,29 +91,39 @@ export function createOrUpdatePrimitiveRegistration(
   return registration;
 }
 
-export function removePrimitiveRegistration(assetAddress: Address, issuerAddress: Address): void {
+export function removePrimitiveRegistration(
+  assetAddress: Address,
+  issuerAddress: Address,
+): PrimitiveRegistration | null {
   let registrationId = primitiveRegistrationId(assetAddress, issuerAddress);
   let registration = PrimitiveRegistration.load(registrationId);
   if (registration == null) {
-    return;
+    return null;
   }
 
   // Delete the registration entity.
   store.remove('PrimitiveRegistration', registration.id);
   removeRegistrationFromAggregatorProxy(Address.fromString(registration.proxy), registrationId);
   removeRegistrationFromAsset(assetAddress, registrationId);
+
+  return registration;
 }
 
-export function removeDerivativeRegistration(assetAddress: Address, issuerAddress: Address): void {
+export function removeDerivativeRegistration(
+  assetAddress: Address,
+  issuerAddress: Address,
+): DerivativeRegistration | null {
   let registrationId = primitiveRegistrationId(assetAddress, issuerAddress);
   let registration = DerivativeRegistration.load(registrationId);
   if (registration == null) {
-    return;
+    return null;
   }
 
   // Delete the registration entity.
   store.remove('DerivativeRegistration', registration.id);
   removeRegistrationFromAsset(assetAddress, registrationId);
+
+  return registration;
 }
 
 export function getUpdatedAggregator(aggregatorAddress: Address, event: ethereum.Event): Aggregator {
@@ -141,6 +154,12 @@ export function getUpdatedAggregator(aggregatorAddress: Address, event: ethereum
   return aggregator;
 }
 
+export function getActiveRegistration(asset: Asset): Registration | null {
+  let registrations = asset.registrations;
+  let registration: Registration | null = registrations.length > 0 ? Registration.load(registrations[0]) : null;
+  return registration;
+}
+
 function addRegistrationToAsset(assetAddress: Address, registrationId: string): Asset {
   // Update registrations sorted by priority.
   let asset = getOrCreateAsset(assetAddress);
@@ -153,6 +172,7 @@ function addRegistrationToAsset(assetAddress: Address, registrationId: string): 
   asset.save();
 
   updateDerivativeRegistry(asset);
+  updateUsdQuotedPrimitiveRegistry(asset);
 
   return asset;
 }

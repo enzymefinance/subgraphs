@@ -3,12 +3,12 @@ import { Address } from '@graphprotocol/graph-ts';
 import { AnswerUpdated } from '../generated/AggregatorInterfaceContract';
 import { AggregatorProxy, CurrencyRegistration, PrimitiveRegistration } from '../generated/schema';
 import { getOrCreateAsset } from './entities/Asset';
+import { updateAssetPrice } from './entities/AssetPrice';
 import { getOrCreateCurrency } from './entities/Currency';
 import { getLatestCurrencyValueInEth } from './entities/CurrencyValue';
 import { getUpdatedAggregator, Registration } from './entities/Registration';
 import { updateDerivativePrices } from './entities/Updater';
-import { toEth } from './utils/toEth';
-import { updateForCurrencyRegistration, updateForPrimitiveRegistration } from './utils/updateForRegistration';
+import { updateForCurrencyRegistration } from './utils/updateForRegistration';
 
 export function handleAnswerUpdated(event: AnswerUpdated): void {
   let aggregator = getUpdatedAggregator(event.address, event);
@@ -35,11 +35,9 @@ export function handleAnswerUpdated(event: AnswerUpdated): void {
     .filter((registration) => registration.type == 'CURRENCY')
     .map<CurrencyRegistration>((registration) => registration as CurrencyRegistration);
 
-  let decimals = aggregator.type == 'USD' ? 8 : 18;
-  let value = toBigDecimal(event.params.current, decimals);
-
+  let value = toBigDecimal(event.params.current, aggregator.decimals);
   for (let i: i32 = 0; i < currencies.length; i++) {
-    updateForCurrencyRegistration(currencies[i], event, value);
+    updateForCurrencyRegistration((currencies as Array<CurrencyRegistration>)[i], event, value);
   }
 
   // Only run updates for assets where the triggered registration is the highest priority.
@@ -52,13 +50,16 @@ export function handleAnswerUpdated(event: AnswerUpdated): void {
       return registrations.length > 0 && registrations[0] == registration.id;
     });
 
-  if (aggregator.type == 'USD') {
-    let usdEth = getLatestCurrencyValueInEth(getOrCreateCurrency('USD'));
-    value = saveDivideBigDecimal(value, usdEth);
+  // Aggregators with 8 decimals are USD based by convention.
+  if (aggregator.decimals == 8) {
+    let usd = getOrCreateCurrency('USD');
+    value = saveDivideBigDecimal(value, getLatestCurrencyValueInEth(usd));
   }
 
   for (let i: i32 = 0; i < primitives.length; i++) {
-    updateForPrimitiveRegistration(primitives[i], event, value);
+    let registration = primitives[i];
+    let asset = getOrCreateAsset(Address.fromString(registration.asset));
+    updateAssetPrice(asset, value, event);
   }
 
   // Trigger the derivative update side-effect on every chainlink aggregator update.

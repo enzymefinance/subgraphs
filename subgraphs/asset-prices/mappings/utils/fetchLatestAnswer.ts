@@ -10,6 +10,5 @@ export function fetchLatestAnswer(aggregator: Aggregator): BigDecimal {
     return ZERO_BD;
   }
 
-  let decimals = aggregator.type == 'USD' ? 8 : 18;
-  return toBigDecimal(result.value, decimals);
+  return toBigDecimal(result.value, aggregator.decimals);
 }

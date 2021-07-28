@@ -1,6 +1,7 @@
-import { BigDecimal, ethereum } from '@graphprotocol/graph-ts';
-import { uniqueSortableEventId } from '@enzymefinance/subgraph-utils';
+import { Address, BigDecimal, ethereum } from '@graphprotocol/graph-ts';
+import { uniqueSortableEventId, ZERO_BD } from '@enzymefinance/subgraph-utils';
 import { Asset, AssetPrice } from '../../generated/schema';
+import { fetchAssetPrice } from '../utils/fetchAssetPrice';
 
 function assetPriceId(asset: Asset, event: ethereum.Event): string {
   return asset.id + '/' + event.block.number.toString();
@@ -22,6 +23,17 @@ export function updateAssetPrice(asset: Asset, price: BigDecimal, event: ethereu
   }
 
   return entity;
+}
+
+export function updateAssetPriceWithValueInterpreter(asset: Asset, interpreter: Address, event: ethereum.Event): void {
+  // Skip the update if there has already been a non-zero update for this asset in this block.
+  let latest = getLatestAssetPrice(asset);
+  if (latest != null && latest.block.equals(event.block.number) && !latest.price.equals(ZERO_BD)) {
+    return;
+  }
+
+  let value = fetchAssetPrice(asset, interpreter);
+  updateAssetPrice(asset, value, event);
 }
 
 export function getLatestAssetPrice(asset: Asset): AssetPrice | null {

@@ -1,14 +1,15 @@
 import { ZERO_BI } from '@enzymefinance/subgraph-utils';
 import { Address, ethereum } from '@graphprotocol/graph-ts';
-import { Asset, DerivativeRegistration, Registry, Updater } from '../../generated/schema';
-import { updateForDerivativeRegistration } from '../utils/updateForRegistration';
+import { DerivativeRegistration, DerivativeUpdater } from '../../generated/schema';
 import { getOrCreateAsset } from './Asset';
-import { Registration } from './Registration';
+import { updateAssetPriceWithValueInterpreter } from './AssetPrice';
+import { getOrCreateDerivativeRegistry } from './DerivativeRegistry';
+import { getActiveRegistration } from './Registration';
 
-export function getOrCreateUpdater(): Updater {
-  let updater = Updater.load('UPDATER') as Updater;
+export function getOrCreateDerivativeUpdater(): DerivativeUpdater {
+  let updater = DerivativeUpdater.load('UPDATER') as DerivativeUpdater;
   if (updater == null) {
-    updater = new Updater('UPDATER');
+    updater = new DerivativeUpdater('UPDATER');
     updater.block = ZERO_BI;
     updater.progress = 0;
     updater.save();
@@ -17,81 +18,31 @@ export function getOrCreateUpdater(): Updater {
   return updater;
 }
 
-export function getOrCreateRegistry(): Registry {
-  let registry = Registry.load('REGISTRY') as Registry;
-  if (registry == null) {
-    registry = new Registry('REGISTRY');
-    registry.derivatives = [];
-    registry.save();
-  }
-
-  return registry;
-}
-
-export function updateDerivativeRegistry(asset: Asset): void {
-  let registry = getOrCreateRegistry();
-
-  // Grab the first registration (highest priority) for the asset.
-  let registrations = asset.registrations;
-  let registration: Registration | null = registrations.length > 0 ? Registration.load(registrations[0]) : null;
-
-  // Check if the first registration is a derivative registration.
-  let shouldBeRegistered = registration != null && registration.type == 'DERIVATIVE';
-  let isRegistered = registry.derivatives.includes(asset.id);
-
-  if (shouldBeRegistered && !isRegistered) {
-    // Add the derivative to the registry.
-    registry.derivatives = registry.derivatives.concat([asset.id]);
-    registry.save();
-  } else if (!shouldBeRegistered && isRegistered) {
-    let index = registry.derivatives.findIndex((item) => item == asset.id);
-
-    // Remove the derivative from the registry.
-    registry.derivatives = registry.derivatives.splice(index, 1);
-    registry.save();
-
-    // If the position of the derivative in the registry was before the current progress mark,
-    // we must reduce the progress by one in order to not skip the update for the next
-    // derivative in the list.
-    let updater = getOrCreateUpdater();
-    if (index < updater.progress) {
-      updater.progress = Math.max(0, updater.progress - 1) as i32;
-      updater.save();
-    }
-  }
-}
-
-// We assume that the number of derivatives exceeds the number of primitives by a factor of ~2.
-// Hence, for every primitive update, we also update 2 derivatives. If this proportion changes
+// We assume that the number of assets exceeds the number of primitives by a factor of ~2.
+// Hence, for every primitive update, we also update 2 assets. If this proportion changes
 // significantly in the future, this number could be adjusted.
 const DERIVATIVE_UPDATE_BATCH_SIZE = 2;
 
 export function updateDerivativePrices(event: ethereum.Event): void {
-  let updater = getOrCreateUpdater();
+  let updater = getOrCreateDerivativeUpdater();
   // Only run the derivative update once per block.
   if (updater.block.equals(event.block.number)) {
     return;
   }
 
-  let registry = getOrCreateRegistry();
-  let derivatives = registry.derivatives;
+  let registry = getOrCreateDerivativeRegistry();
+  let assets = registry.assets;
   // Exit early if there are no derivatives.
-  if (!derivatives.length) {
+  if (!assets.length) {
     return;
   }
 
   // Update the next batch of derivatives.
   for (let i: i32 = 0; i < DERIVATIVE_UPDATE_BATCH_SIZE; i++) {
-    updater.progress = updater.progress + 1 >= derivatives.length ? 0 : updater.progress + 1;
-    let derivative = getOrCreateAsset(Address.fromString(derivatives[updater.progress]));
-    let registrations = derivative.registrations;
-    let registration: Registration | null = registrations.length > 0 ? Registration.load(registrations[0]) : null;
-
-    if (registration == null || registration.type != 'DERIVATIVE') {
-      return;
-    }
-
-    updateForDerivativeRegistration(registration as DerivativeRegistration, event);
+    updater.progress = updater.progress + 1 >= assets.length ? 0 : updater.progress + 1;
+    let asset = getOrCreateAsset(Address.fromString(assets[updater.progress]));
+    let registration = getActiveRegistration(asset) as DerivativeRegistration;
+    updateAssetPriceWithValueInterpreter(asset, Address.fromString(registration.interpreter), event);
   }
 
   updater.block = event.block.number;

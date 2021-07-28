@@ -1,8 +1,8 @@
 import { ZERO_BI } from '@enzymefinance/subgraph-utils';
 import { Address } from '@graphprotocol/graph-ts';
+import { AggregatorProxyContract } from '../../generated/AggregatorProxyContract';
 import { AggregatorProxy, Aggregator } from '../../generated/schema';
 import { ChainlinkAggregatorDataSource } from '../../generated/templates';
-import { fetchAggregatorType } from '../utils/fetchAggregatorType';
 
 export function getOrCreateAggregatorProxy(proxyAddress: Address): AggregatorProxy {
   let proxy = AggregatorProxy.load(proxyAddress.toHex()) as AggregatorProxy;
@@ -20,8 +20,11 @@ export function getOrCreateAggregator(aggregatorAddress: Address): Aggregator {
   let aggregator = Aggregator.load(aggregatorAddress.toHex()) as Aggregator;
 
   if (aggregator == null) {
+    let contract = AggregatorProxyContract.bind(aggregatorAddress);
+    let result = contract.try_decimals();
+
     aggregator = new Aggregator(aggregatorAddress.toHex());
-    aggregator.type = fetchAggregatorType(aggregatorAddress);
+    aggregator.decimals = result.reverted ? 18 : result.value;
     aggregator.proxies = [];
     aggregator.updated = ZERO_BI;
     aggregator.save();
