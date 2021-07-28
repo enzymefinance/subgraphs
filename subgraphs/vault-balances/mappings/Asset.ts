@@ -1,14 +1,8 @@
-import { Address, BigDecimal, BigInt, log } from '@graphprotocol/graph-ts';
-import {
-  toBigDecimal,
-  tokenBalance,
-  tokenDecimals,
-  tokenName,
-  tokenSymbol,
-  ZERO_ADDRESS,
-} from '@enzymefinance/subgraph-utils';
+import { toBigDecimal, ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
 import { Transfer } from '../generated/ERC20Contract';
-import { Asset, Holding, IgnoreAsset, IncomingTransfer, OutgoingTransfer, Vault } from '../generated/schema';
+import { Asset, IncomingTransfer, OutgoingTransfer, Vault } from '../generated/schema';
+import { ensureAsset } from '../entities/Asset';
+import { updateHolding } from '../entities/Holding';
 
 export function transferId(event: Transfer, suffix: string): string {
   return event.transaction.hash.toHex() + '/' + event.logIndex.toString() + '/' + suffix;
@@ -86,84 +80,4 @@ function handleOutgoingTransfer(event: Transfer, asset: Asset, vault: Vault): vo
   transfer.timestamp = event.block.timestamp;
   transfer.transaction = event.transaction.hash.toHex();
   transfer.save();
-}
-
-function ensureAsset(address: Address): Asset | null {
-  let id = address.toHex();
-  let asset = Asset.load(id) as Asset;
-
-  if (asset == null) {
-    let ignore = IgnoreAsset.load(id);
-    if (ignore != null) {
-      log.error('ignoring asset {} (blacklisted)', [id]);
-      return null;
-    }
-
-    // Check if we can call .decimals() on this contract.
-    let decimals = tokenDecimals(address);
-    if (decimals == -1) {
-      log.error('ignoring asset {} (cannot fetch decimals)', [id]);
-
-      let ignore = new IgnoreAsset(id);
-      ignore.save();
-
-      return null;
-    }
-
-    // Check if we can call .balanceOf() on this contract.
-    let vitalik = Address.fromString('0xab5801a7d398351b8be11c439e05c5b3259aec9b');
-    let balance = tokenBalance(address, vitalik);
-    if (balance == null) {
-      log.error('ignoring asset {} (cannot fetch balances)', [id]);
-
-      let ignore = new IgnoreAsset(id);
-      ignore.save();
-
-      return null;
-    }
-
-    let name = tokenName(address);
-    let symbol = tokenSymbol(address);
-
-    asset = new Asset(id);
-    asset.name = name;
-    asset.symbol = symbol;
-    asset.decimals = decimals;
-    asset.total = BigDecimal.fromString('0');
-    asset.save();
-  }
-
-  return asset;
-}
-
-function updateHolding(vault: Vault, asset: Asset, timestamp: BigInt): Holding {
-  let id = vault.id + '/' + asset.id;
-  let holding = Holding.load(id) as Holding;
-
-  if (holding == null) {
-    holding = new Holding(id);
-    holding.asset = asset.id;
-    holding.vault = vault.id;
-    holding.balance = BigDecimal.fromString('0');
-  }
-
-  let vaultAddress = Address.fromString(vault.id);
-  let assetAddress = Address.fromString(asset.id);
-
-  // TODO: Is it reasonable to assume that we can default this to `0` if the balance cannot be fetched.
-  let balanceOrNull = tokenBalance(assetAddress, vaultAddress);
-  let currentBalance =
-    balanceOrNull == null ? BigDecimal.fromString('0') : toBigDecimal(balanceOrNull as BigInt, asset.decimals);
-  let previousBalance = holding.balance;
-
-  // Update the vault balance.
-  holding.balance = currentBalance;
-  holding.updated = timestamp;
-  holding.save();
-
-  // Update the total value locked (in the entire network) of this asset.
-  asset.total = asset.total.minus(previousBalance).plus(currentBalance);
-  asset.save();
-
-  return holding;
 }

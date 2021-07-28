@@ -36,7 +36,7 @@ export const contexts: Contexts<Variables> = {
 };
 
 export const configure: Configurator<Variables> = (variables) => ({
-  abis: ['@enzymefinance/protocol/artifacts/Dispatcher.json'],
+  abis: ['@enzymefinance/protocol/artifacts/Dispatcher.json', '../../utils/abis/AssetTrackingVault.json'],
   sources: [
     {
       name: 'Dispatcher',
@@ -49,6 +49,18 @@ export const configure: Configurator<Variables> = (variables) => ({
       abi: 'ERC20Contract', // Inherited from global abis.
       block: variables.block,
       events: ['Transfer(indexed address,indexed address,uint256)'],
+    },
+  ],
+  templates: [
+    {
+      name: 'Vault',
+      abi: 'AssetTrackingVaultContract',
+      events: [
+        'ExternalPositionAdded(indexed address)',
+        'ExternalPositionRemoved(indexed address)',
+        'TrackedAssetAdded(address)',
+        'TrackedAssetRemoved(address)',
+      ],
     },
   ],
 });

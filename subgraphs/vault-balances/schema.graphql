@@ -16,7 +16,7 @@ type Asset @entity {
   transfers: [Transfer!]! @derivedFrom(field: "asset")
 }
 
-type IgnoreAsset @entity  {
+type IgnoreAsset @entity {
   id: ID!
 }
 
@@ -26,6 +26,8 @@ type Holding @entity {
   asset: Asset!
   balance: BigDecimal!
   updated: BigInt!
+  tracked: Boolean!
+  external: Boolean!
   transfers: [Transfer!]! @derivedFrom(field: "holding")
   incoming: [IncomingTransfer!]! @derivedFrom(field: "holding")
   outgoing: [OutgoingTransfer!]! @derivedFrom(field: "holding")
