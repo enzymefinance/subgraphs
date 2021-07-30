@@ -1,13 +1,13 @@
 import { Address, BigDecimal, log } from '@graphprotocol/graph-ts';
 import { tokenDecimals, tokenBalance, tokenName, tokenSymbol } from '@enzymefinance/subgraph-utils';
-import { Asset, IgnoreAsset } from '../generated/schema';
+import { Asset, IgnoredAsset } from '../generated/schema';
 
 export function ensureAsset(address: Address): Asset | null {
   let id = address.toHex();
   let asset = Asset.load(id) as Asset;
 
   if (asset == null) {
-    let ignore = IgnoreAsset.load(id);
+    let ignore = IgnoredAsset.load(id);
     if (ignore != null) {
       log.error('ignoring asset {} (blacklisted)', [id]);
       return null;
@@ -18,7 +18,7 @@ export function ensureAsset(address: Address): Asset | null {
     if (decimals == -1) {
       log.error('ignoring asset {} (cannot fetch decimals)', [id]);
 
-      let ignore = new IgnoreAsset(id);
+      let ignore = new IgnoredAsset(id);
       ignore.save();
 
       return null;
@@ -30,7 +30,7 @@ export function ensureAsset(address: Address): Asset | null {
     if (balance == null) {
       log.error('ignoring asset {} (cannot fetch balances)', [id]);
 
-      let ignore = new IgnoreAsset(id);
+      let ignore = new IgnoredAsset(id);
       ignore.save();
 
       return null;

@@ -1,4 +1,3 @@
-import { BigInt } from '@graphprotocol/graph-ts';
 import { VaultProxyDeployed } from '../generated/DispatcherContract';
 import { Vault } from '../generated/schema';
 import { VaultDataSource } from '../generated/templates';

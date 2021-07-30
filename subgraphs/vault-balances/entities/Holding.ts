@@ -1,4 +1,4 @@
-import { BigDecimal, Address, BigInt, Entity } from '@graphprotocol/graph-ts';
+import { BigDecimal, Address, BigInt } from '@graphprotocol/graph-ts';
 import { tokenBalance, toBigDecimal, hourCloseTime, dayCloseTime, monthCloseTime } from '@enzymefinance/subgraph-utils';
 import {
   Vault,
@@ -39,7 +39,7 @@ function createHistoricalHolding(holding: CurrentHolding): HistoricalHolding {
   historical.tracked = holding.tracked;
   historical.external = holding.external;
   historical.portfolio = holding.portfolio;
-  historical.holding = holding.id;
+  historical.current = holding.id;
   historical.save();
 
   return historical;

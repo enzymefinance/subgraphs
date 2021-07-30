@@ -1,4 +1,4 @@
-type IgnoreAsset @entity {
+type IgnoredAsset @entity {
   id: ID!
 }
 
@@ -15,14 +15,12 @@ type Asset @entity {
 type Vault @entity {
   id: ID!
   timestamp: BigInt!
-
+  holdings: [CurrentHolding!]! @derivedFrom(field: "vault")
   portfolio: [HistoricalHolding!]!
   hourly: [HourlyPortfolio!]! @derivedFrom(field: "vault")
   daily: [DailyPortfolio!]! @derivedFrom(field: "vault")
   weekly: [WeeklyPortfolio!]! @derivedFrom(field: "vault")
   monthly: [MonthlyPortfolio!]! @derivedFrom(field: "vault")
-
-  holdings: [CurrentHolding!]! @derivedFrom(field: "vault")
   transfers: [Transfer!]! @derivedFrom(field: "vault")
   incoming: [IncomingTransfer!]! @derivedFrom(field: "vault")
   outgoing: [OutgoingTransfer!]! @derivedFrom(field: "vault")
@@ -90,7 +88,7 @@ type CurrentHolding implements Holding @entity {
   external: Boolean!
   portfolio: Boolean!
 
-  history: [HistoricalHolding!]! @derivedFrom(field: "holding")
+  history: [HistoricalHolding!]! @derivedFrom(field: "current")
   transfers: [Transfer!]! @derivedFrom(field: "holding")
   incoming: [IncomingTransfer!]! @derivedFrom(field: "holding")
   outgoing: [OutgoingTransfer!]! @derivedFrom(field: "holding")
@@ -107,7 +105,7 @@ type HistoricalHolding implements Holding @entity {
   external: Boolean!
   portfolio: Boolean!
 
-  holding: CurrentHolding!
+  current: CurrentHolding!
 }
 
 enum TransferType {
