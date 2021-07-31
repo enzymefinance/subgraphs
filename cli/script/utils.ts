@@ -15,7 +15,9 @@ import {
 export function abi(abi: AbiDeclarationLike, root: string): AbiDeclaration {
   const file = typeof abi === 'string' ? abi : abi.file;
   const name = typeof abi === 'string' ? `${path.basename(file, '.json')}Contract` : abi.name;
-  return { name, file: path.relative(root, require.resolve(file)) };
+  const relative = path.relative(root, file.startsWith('.') ? file : require.resolve(file));
+
+  return { name, file: relative };
 }
 
 export function event(event: EventHandlerDeclarationLike): EventHandlerDeclaration {
