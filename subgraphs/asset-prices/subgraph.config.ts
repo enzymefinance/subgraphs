@@ -1,15 +1,26 @@
-import { Configurator, Contexts, Template } from '@enzymefinance/subgraph-cli';
+import { Configurator, Contexts, DataSourceDeclarationLike, Template } from '@enzymefinance/subgraph-cli';
 
 interface Variables {
-  releases: {
-    nameSuffix: string;
-    registrationPriority: number;
-    valueInterpreter: string;
-    aggregatedDerivativePriceFeed: string;
-    aggregatedDerivativePriceFeedBlock: number;
-    chainlinkPriceFeed: string;
-    chainlinkPriceFeedBlock: number;
-  }[];
+  releaseConfiguration: {
+    v2?: {
+      valueInterpreter: string;
+      derivativePriceFeed: string;
+      derivativePriceFeedBlock: number;
+      primitivePriceFeed: string;
+      primitivePriceFeedBlock: number;
+    };
+    v3?: {
+      valueInterpreter: string;
+      derivativePriceFeed: string;
+      derivativePriceFeedBlock: number;
+      primitivePriceFeed: string;
+      primitivePriceFeedBlock: number;
+    };
+    v4?: {
+      valueInterpreter: string;
+      valueInterpreterBlock: number;
+    };
+  };
   currencyAggregatorProxies: {
     USD: string;
     BTC: string;
@@ -25,26 +36,23 @@ interface Variables {
 const name = 'enzymefinance/asset-prices';
 
 const mainnet: Variables = {
-  releases: [
-    {
-      nameSuffix: 'A',
-      registrationPriority: 1,
+  releaseConfiguration: {
+    v2: {
       valueInterpreter: '0x6618bF56E1C7b6c8310Bfe4096013bEd8F191628',
-      aggregatedDerivativePriceFeed: '0xCFb6F4C08856986d13839B1907b5c645EE95388F',
-      aggregatedDerivativePriceFeedBlock: 11636552,
-      chainlinkPriceFeed: '0xfB3A9655F5feA18caC92021E83550F829ae6F7F7',
-      chainlinkPriceFeedBlock: 11636534,
+      derivativePriceFeed: '0xCFb6F4C08856986d13839B1907b5c645EE95388F',
+      derivativePriceFeedBlock: 11636552,
+      primitivePriceFeed: '0xfB3A9655F5feA18caC92021E83550F829ae6F7F7',
+      primitivePriceFeedBlock: 11636534,
     },
-    {
-      nameSuffix: 'B',
-      registrationPriority: 2,
+    v3: {
       valueInterpreter: '0x10a5624840Ac07287f756777DF1DEC34d2C2d654',
-      aggregatedDerivativePriceFeed: '0x2E45f9B3fd5871cCaf4eB415dFCcbDD126F57C4f',
-      aggregatedDerivativePriceFeedBlock: 12388007,
-      chainlinkPriceFeed: '0x1fad8faf11E027f8630F394599830dBeb97004EE',
-      chainlinkPriceFeedBlock: 12387843,
+      derivativePriceFeed: '0x2E45f9B3fd5871cCaf4eB415dFCcbDD126F57C4f',
+      derivativePriceFeedBlock: 12388007,
+      primitivePriceFeed: '0x1fad8faf11E027f8630F394599830dBeb97004EE',
+      primitivePriceFeedBlock: 12387843,
     },
-  ],
+    // TODO: Add v4 contracts.
+  },
   currencyAggregatorProxies: {
     USD: '0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419',
     BTC: '0xF4030086522a5bEEa4988F8cA5B36dbC97BeE88c',
@@ -58,26 +66,23 @@ const mainnet: Variables = {
 };
 
 const kovan: Variables = {
-  releases: [
-    {
-      nameSuffix: 'A',
-      registrationPriority: 1,
+  releaseConfiguration: {
+    v2: {
       valueInterpreter: '0xFEE7aEE3907d1657fd2BdcBba8909AF40a144421',
-      aggregatedDerivativePriceFeed: '0x1899F9e144A0D47cC1471e797C2b7930adf530b3',
-      aggregatedDerivativePriceFeedBlock: 24710069,
-      chainlinkPriceFeed: '0x1dbf40Fc502A61a09c38F5D0f4D07f42AC507606',
-      chainlinkPriceFeedBlock: 24710056,
+      derivativePriceFeed: '0x1899F9e144A0D47cC1471e797C2b7930adf530b3',
+      derivativePriceFeedBlock: 24710069,
+      primitivePriceFeed: '0x1dbf40Fc502A61a09c38F5D0f4D07f42AC507606',
+      primitivePriceFeedBlock: 24710056,
     },
-    {
-      nameSuffix: 'B',
-      registrationPriority: 2,
+    v3: {
       valueInterpreter: '0x92D1D329de7633B788bD4A9727192C2F498e2cA7',
-      aggregatedDerivativePriceFeed: '0x5304c3f2c2433e5e37732B46604eEB39725a4883',
-      aggregatedDerivativePriceFeedBlock: 24710610,
-      chainlinkPriceFeed: '0x5A49D2a6420362bE3E396C59Fe9280c9f9588Ec3',
-      chainlinkPriceFeedBlock: 24710598,
+      derivativePriceFeed: '0x5304c3f2c2433e5e37732B46604eEB39725a4883',
+      derivativePriceFeedBlock: 24710610,
+      primitivePriceFeed: '0x5A49D2a6420362bE3E396C59Fe9280c9f9588Ec3',
+      primitivePriceFeedBlock: 24710598,
     },
-  ],
+    // TODO: Add v4 contracts.
+  },
   currencyAggregatorProxies: {
     USD: '0x9326BFA02ADD2366b30bacB125260Af641031331',
     BTC: '0x6135b13325bfC4B00278B4abC5e20bbce2D6580e',
@@ -111,16 +116,8 @@ export const contexts: Contexts<Variables> = {
 
 export const templates: Template[] = [
   {
-    template: 'templates/addresses.ts',
-    destination: 'generated/addresses.ts',
-  },
-  {
-    template: 'templates/mappings/AggregatedDerivativePriceFeed.ts',
-    destination: 'mappings/AggregatedDerivativePriceFeed.ts',
-  },
-  {
-    template: 'templates/mappings/ChainlinkPriceFeed.ts',
-    destination: 'mappings/ChainlinkPriceFeed.ts',
+    template: 'templates/configuration.ts',
+    destination: 'generated/configuration.ts',
   },
 ];
 
@@ -128,50 +125,137 @@ export const configure: Configurator<Variables> = (variables: Variables) => {
   const abis = [
     '@chainlink/contracts/abi/v0.6/AggregatorInterface.json',
     '@chainlink/contracts/abi/v0.6/AggregatorProxy.json',
-    '@enzymefinance/protocol/artifacts/AggregatedDerivativePriceFeed.json',
-    '@enzymefinance/protocol/artifacts/ChainlinkPriceFeed.json',
-    '@enzymefinance/protocol/artifacts/ValueInterpreter.json',
+    './abis/DerivativePriceFeed.json',
+    './abis/PrimitivePriceFeed.json',
+    './abis/CombinedPriceFeed.json',
+    './abis/ValueInterpreter.json',
+    './abis/ValueInterpreterLegacy.json',
   ];
 
-  // @ts-ignore
-  const sources = variables.releases.flatMap((release) => [
-    {
-      name: 'AggregatedDerivativePriceFeed',
-      version: release.nameSuffix,
-      address: release.aggregatedDerivativePriceFeed,
-      block: release.aggregatedDerivativePriceFeedBlock,
+  const sources: DataSourceDeclarationLike[] = [];
+
+  if (variables.releaseConfiguration.v2) {
+    sources.push({
+      name: 'DerivativePriceFeed',
+      version: 'V2',
+      file: 'mappings/v2/DerivativePriceFeed.ts',
+      address: variables.releaseConfiguration.v2.derivativePriceFeed,
+      block: variables.releaseConfiguration.v2.derivativePriceFeedBlock,
       events: [
         {
           event: 'DerivativeAdded(indexed address,address)',
-          handler: `handleDerivativeAdded${release.nameSuffix}`,
+          handler: 'handleDerivativeAdded',
         },
         {
           event: 'DerivativeRemoved(indexed address)',
-          handler: `handleDerivativeAdded${release.nameSuffix}`,
+          handler: 'handleDerivativeRemoved',
         },
       ],
-    },
-    {
-      name: 'ChainlinkPriceFeed',
-      version: release.nameSuffix,
-      address: release.chainlinkPriceFeed,
-      block: release.chainlinkPriceFeedBlock,
+    });
+
+    sources.push({
+      name: 'PrimitivePriceFeed',
+      version: 'V2',
+      file: 'mappings/v2/PrimitivePriceFeed.ts',
+      address: variables.releaseConfiguration.v2.primitivePriceFeed,
+      block: variables.releaseConfiguration.v2.primitivePriceFeedBlock,
       events: [
         {
           event: 'PrimitiveAdded(indexed address,address,uint8,uint256)',
-          handler: `handlePrimitiveAdded${release.nameSuffix}`,
+          handler: 'handlePrimitiveAdded',
         },
         {
           event: 'PrimitiveUpdated(indexed address,address,address)',
-          handler: `handlePrimitiveUpdated${release.nameSuffix}`,
+          handler: 'handlePrimitiveUpdated',
         },
         {
           event: 'PrimitiveRemoved(indexed address)',
-          handler: `handlePrimitiveRemoved${release.nameSuffix}`,
+          handler: 'handlePrimitiveRemoved',
+        },
+        {
+          event: 'StalePrimitiveRemoved(indexed address)',
+          handler: 'handleStalePrimitiveRemoved',
         },
       ],
-    },
-  ]);
+    });
+  }
+
+  if (variables.releaseConfiguration.v3) {
+    sources.push({
+      name: 'DerivativePriceFeed',
+      version: 'V3',
+      file: 'mappings/v3/DerivativePriceFeed.ts',
+      address: variables.releaseConfiguration.v3.derivativePriceFeed,
+      block: variables.releaseConfiguration.v3.derivativePriceFeedBlock,
+      events: [
+        {
+          event: 'DerivativeAdded(indexed address,address)',
+          handler: 'handleDerivativeAdded',
+        },
+        {
+          event: 'DerivativeRemoved(indexed address)',
+          handler: 'handleDerivativeRemoved',
+        },
+      ],
+    });
+
+    sources.push({
+      name: 'PrimitivePriceFeed',
+      version: 'V3',
+      file: 'mappings/v3/PrimitivePriceFeed.ts',
+      address: variables.releaseConfiguration.v3.primitivePriceFeed,
+      block: variables.releaseConfiguration.v3.primitivePriceFeedBlock,
+      events: [
+        {
+          event: 'PrimitiveAdded(indexed address,address,uint8,uint256)',
+          handler: 'handlePrimitiveAdded',
+        },
+        {
+          event: 'PrimitiveUpdated(indexed address,address,address)',
+          handler: 'handlePrimitiveUpdated',
+        },
+        {
+          event: 'PrimitiveRemoved(indexed address)',
+          handler: 'handlePrimitiveRemoved',
+        },
+        {
+          event: 'StalePrimitiveRemoved(indexed address)',
+          handler: 'handleStalePrimitiveRemoved',
+        },
+      ],
+    });
+  }
+
+  if (variables.releaseConfiguration.v4) {
+    sources.push({
+      name: 'CombinedPriceFeed',
+      file: 'mappings/v4/CombinedPriceFeed.ts',
+      address: variables.releaseConfiguration.v4.valueInterpreter,
+      block: variables.releaseConfiguration.v4.valueInterpreterBlock,
+      events: [
+        {
+          event: 'DerivativeAdded(indexed address,address)',
+          handler: 'handleDerivativeAdded',
+        },
+        {
+          event: 'DerivativeRemoved(indexed address)',
+          handler: 'handleDerivativeRemoved',
+        },
+        {
+          event: 'PrimitiveAdded(indexed address,address,uint8,uint256)',
+          handler: 'handlePrimitiveAdded',
+        },
+        {
+          event: 'PrimitiveRemoved(indexed address)',
+          handler: 'handlePrimitiveRemoved',
+        },
+        {
+          event: 'StalePrimitiveRemoved(indexed address)',
+          handler: 'handleStalePrimitiveRemoved',
+        },
+      ],
+    });
+  }
 
   const templates = [
     {

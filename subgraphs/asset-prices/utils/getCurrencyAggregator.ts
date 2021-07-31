@@ -8,7 +8,7 @@ import {
   gbpCurrencyAggregatorAddress,
   jpyCurrencyAggregatorAddress,
   usdCurrencyAggregatorAddress,
-} from '../../generated/addresses';
+} from '../generated/configuration';
 
 export function getCurrencyAggregator(currency: string): Address {
   if (currency == 'USD') {

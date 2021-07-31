@@ -1,4 +1,4 @@
-import { Currency } from '../../generated/schema';
+import { Currency } from '../generated/schema';
 
 export function getOrCreateCurrency(id: string): Currency {
   let currency = Currency.load(id) as Currency;

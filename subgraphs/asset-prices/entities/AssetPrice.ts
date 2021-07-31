@@ -1,6 +1,6 @@
 import { Address, BigDecimal, ethereum } from '@graphprotocol/graph-ts';
 import { uniqueSortableEventId, ZERO_BD } from '@enzymefinance/subgraph-utils';
-import { Asset, AssetPrice } from '../../generated/schema';
+import { Asset, AssetPrice } from '../generated/schema';
 import { fetchAssetPrice } from '../utils/fetchAssetPrice';
 
 function assetPriceId(asset: Asset, event: ethereum.Event): string {

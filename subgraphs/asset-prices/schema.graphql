@@ -2,48 +2,131 @@
 # Assets & asset prices
 #################################################
 
-type _Schema_
-  @fulltext(
-    name: "assetSearch",
-    language: en
-    algorithm: rank,
-    include: [
-      {
-        entity: "Asset",
-        fields: [
-          { name: "name" }
-        ]
-      }
-    ]
-  )
-
-interface AssetInterface {
-  price: AssetPrice!
-}
-
-type Asset implements AssetInterface @entity {
+type Asset @entity {
   id: ID!
   name: String!
   symbol: String!
   decimals: Int!
+  """
+  The current (latest) price of the asset.
+  """
   price: AssetPrice!
-  prices: [AssetPrice!]! @derivedFrom(field: "asset")
-  """A list of active registrations for this asset. Used to run batched updates for derivative assets."""
+  """
+  Historical prices recorded for the asset.
+  """
+  history: [AssetPrice!]! @derivedFrom(field: "asset")
+  """
+  Hourly time windows for historical asset prices (may contain gaps).
+  """
+  hourly: [HourlyAssetPrice!]! @derivedFrom(field: "asset")
+  """
+  Daily time windows for historical asset prices (may contain gaps).
+  """
+  daily: [DailyAssetPrice!]! @derivedFrom(field: "asset")
+  """
+  Monthly time windows for historical asset prices (may contain gaps).
+  """
+  monthly: [MonthlyAssetPrice!]! @derivedFrom(field: "asset")
+  """
+  A list of active registrations for this asset. Used to run batched updates for derivative assets.
+  """
   registrations: [AssetRegistration!]!
 }
 
 type AssetPrice @entity {
   id: ID!
-  """Unique incremental identifier for sorting & scraping data with exactly-once guarantees."""
+  """
+  Unique incremental identifier for sorting & scraping data with exactly-once guarantees.
+  """
   incremental: String!
-  """The asset this price belongs to."""
+  """
+  The asset this price belongs to.
+  """
   asset: Asset!
-  """The block number at which the price was updated."""
+  """
+  The block number at which the price was updated.
+  """
   block: BigInt!
-  """The timestamp at which the price was updated."""
+  """
+  The timestamp at which the price was updated.
+  """
   timestamp: BigInt!
-  """The asset price in ETH."""
+  """
+  The asset price in ETH.
+  """
   price: BigDecimal!
+}
+
+type HourlyAssetPrice @entity {
+  id: ID!
+  """
+  The asset this price belongs to.
+  """
+  asset: Asset!
+  """
+  The block number at which the price was updated.
+  """
+  block: BigInt!
+  """
+  The timestamp at which the price was updated.
+  """
+  timestamp: BigInt!
+  """
+  The asset price in ETH.
+  """
+  price: BigDecimal!
+  """
+  The closing time of the time window.
+  """
+  close: BigInt!
+}
+
+type DailyAssetPrice @entity {
+  id: ID!
+  """
+  The asset this price belongs to.
+  """
+  asset: Asset!
+  """
+  The block number at which the price was updated.
+  """
+  block: BigInt!
+  """
+  The timestamp at which the price was updated.
+  """
+  timestamp: BigInt!
+  """
+  The asset price in ETH.
+  """
+  price: BigDecimal!
+  """
+  The closing time of the time window.
+  """
+  close: BigInt!
+}
+
+type MonthlyAssetPrice @entity {
+  id: ID!
+  """
+  The asset this price belongs to.
+  """
+  asset: Asset!
+  """
+  The block number at which the price was updated.
+  """
+  block: BigInt!
+  """
+  The timestamp at which the price was updated.
+  """
+  timestamp: BigInt!
+  """
+  The asset price in ETH.
+  """
+  price: BigDecimal!
+  """
+  The closing time of the time window.
+  """
+  close: BigInt!
 }
 
 #################################################
@@ -52,24 +135,150 @@ type AssetPrice @entity {
 
 type Currency @entity {
   id: ID!
+  """
+  The current (latest) value of the currency.
+  """
   value: CurrencyValue!
-  values: [CurrencyValue!]! @derivedFrom(field: "currency")
+  """
+  Historical values recorded for the currency.
+  """
+  history: [CurrencyValue!]! @derivedFrom(field: "currency")
+  """
+  Hourly time windows for historical currency values (may contain gaps).
+  """
+  hourly: [HourlyCurrencyValue!]! @derivedFrom(field: "currency")
+  """
+  Daily time windows for historical currency values (may contain gaps).
+  """
+  daily: [DailyCurrencyValue!]! @derivedFrom(field: "currency")
+  """
+  Monthly time windows for historical currency values (may contain gaps).
+  """
+  monthly: [MonthlyCurrencyValue!]! @derivedFrom(field: "currency")
 }
 
 type CurrencyValue @entity {
   id: ID!
-  """Unique incremental identifier for sorting & scraping data with exactly-once guarantees."""
+  """
+  Unique incremental identifier for sorting & scraping data with exactly-once guarantees.
+  """
   incremental: String!
-  """The currency key."""
+  """
+  The currency key.
+  """
   currency: Currency!
-  """The block number at which the currency value was updated."""
+  """
+  The block number at which the currency value was updated.
+  """
   block: BigInt!
-  """The timestamp at which the currency value was updated."""
+  """
+  The timestamp at which the currency value was updated.
+  """
   timestamp: BigInt!
-  """The currency value represented in ETH."""
+  """
+  The currency value represented in ETH.
+  """
   eth: BigDecimal!
-  """The currency value represented in USD."""
+  """
+  The currency value represented in USD.
+  """
   usd: BigDecimal!
+}
+
+type HourlyCurrencyValue @entity {
+  id: ID!
+  """
+  Unique incremental identifier for sorting & scraping data with exactly-once guarantees.
+  """
+  incremental: String!
+  """
+  The currency key.
+  """
+  currency: Currency!
+  """
+  The block number at which the currency value was updated.
+  """
+  block: BigInt!
+  """
+  The timestamp at which the currency value was updated.
+  """
+  timestamp: BigInt!
+  """
+  The currency value represented in ETH.
+  """
+  eth: BigDecimal!
+  """
+  The currency value represented in USD.
+  """
+  usd: BigDecimal!
+  """
+  The closing time of the time window.
+  """
+  close: BigInt!
+}
+
+type DailyCurrencyValue @entity {
+  id: ID!
+  """
+  Unique incremental identifier for sorting & scraping data with exactly-once guarantees.
+  """
+  incremental: String!
+  """
+  The currency key.
+  """
+  currency: Currency!
+  """
+  The block number at which the currency value was updated.
+  """
+  block: BigInt!
+  """
+  The timestamp at which the currency value was updated.
+  """
+  timestamp: BigInt!
+  """
+  The currency value represented in ETH.
+  """
+  eth: BigDecimal!
+  """
+  The currency value represented in USD.
+  """
+  usd: BigDecimal!
+  """
+  The closing time of the time window.
+  """
+  close: BigInt!
+}
+
+type MonthlyCurrencyValue @entity {
+  id: ID!
+  """
+  Unique incremental identifier for sorting & scraping data with exactly-once guarantees.
+  """
+  incremental: String!
+  """
+  The currency key.
+  """
+  currency: Currency!
+  """
+  The block number at which the currency value was updated.
+  """
+  block: BigInt!
+  """
+  The timestamp at which the currency value was updated.
+  """
+  timestamp: BigInt!
+  """
+  The currency value represented in ETH.
+  """
+  eth: BigDecimal!
+  """
+  The currency value represented in USD.
+  """
+  usd: BigDecimal!
+  """
+  The closing time of the time window.
+  """
+  close: BigInt!
 }
 
 #################################################
@@ -78,17 +287,25 @@ type CurrencyValue @entity {
 
 type AggregatorProxy @entity {
   id: ID!
-  """The assets currently controlled by this aggregator proxy."""
+  """
+  The assets currently controlled by this aggregator proxy.
+  """
   registrations: [Registration!]!
 }
 
 type Aggregator @entity {
   id: ID!
-  """The number of decimal places."""
+  """
+  The number of decimal places.
+  """
   decimals: Int!
-  """The chainlink aggregator proxies currently pointing at this aggregator."""
+  """
+  The chainlink aggregator proxies currently pointing at this aggregator.
+  """
   proxies: [AggregatorProxy!]!
-  """The last time the proxies were checked for updates."""
+  """
+  The last time the proxies were checked for updates.
+  """
   updated: BigInt!
 }
 
@@ -109,75 +326,125 @@ enum RateAsset {
 
 interface Registration {
   id: ID!
-  """The type of the registration entry."""
+  """
+  The type of the registration entry.
+  """
   type: RegistrationType!
-  """Used for sorting the registrations before invoking updates on their behalf."""
+  """
+  Used for sorting the registrations before invoking updates on their behalf.
+  """
   priority: Int!
 }
 
 interface AssetRegistration {
   id: ID!
-  """The type of the registration entry."""
+  """
+  The type of the registration entry.
+  """
   type: RegistrationType!
-  """The registered asset."""
+  """
+  The registered asset.
+  """
   asset: Asset!
-  """The value interpreter contract address."""
+  """
+  The value interpreter contract address.
+  """
   interpreter: String!
-  """Used for sorting the registrations before invoking updates on their behalf."""
+  """
+  Used for sorting the registrations before invoking updates on their behalf.
+  """
   priority: Int!
 }
 
 interface AggregatorRegistration {
   id: ID!
-  """The type of the registration entry."""
+  """
+  The type of the registration entry.
+  """
   type: RegistrationType!
-  """The registered aggregator proxy."""
+  """
+  The registered aggregator proxy.
+  """
   proxy: AggregatorProxy!
-  """Used for sorting the registrations before invoking updates on their behalf."""
+  """
+  Used for sorting the registrations before invoking updates on their behalf.
+  """
   priority: Int!
 }
 
 type CurrencyRegistration implements Registration & AggregatorRegistration @entity {
   id: ID!
-  """The type of the registration entry."""
+  """
+  The type of the registration entry.
+  """
   type: RegistrationType!
-  """The registered currency."""
+  """
+  The registered currency.
+  """
   currency: Currency!
-  """The registered aggregator proxy."""
+  """
+  The registered aggregator proxy.
+  """
   proxy: AggregatorProxy!
-  """Used for sorting the registrations before invoking updates on their behalf."""
+  """
+  Used for sorting the registrations before invoking updates on their behalf.
+  """
   priority: Int!
 }
 
 type PrimitiveRegistration implements Registration & AssetRegistration & AggregatorRegistration @entity {
   id: ID!
-  """The type of the registration entry."""
+  """
+  The type of the registration entry.
+  """
   type: RegistrationType!
-  """The quote asset (ETH or USD)."""
+  """
+  The quote asset (ETH or USD).
+  """
   quote: RateAsset!
-  """The contract that registered the aggregator."""
+  """
+  The contract that registered the aggregator.
+  """
   issuer: String!
-  """The registered asset."""
+  """
+  The registered asset.
+  """
   asset: Asset!
-  """The registered aggregator proxy."""
+  """
+  The registered aggregator proxy.
+  """
   proxy: AggregatorProxy!
-  """The value interpreter contract address."""
+  """
+  The value interpreter contract address.
+  """
   interpreter: String!
-  """Used for sorting the registrations before invoking updates on their behalf."""
+  """
+  Used for sorting the registrations before invoking updates on their behalf.
+  """
   priority: Int!
 }
 
 type DerivativeRegistration implements Registration & AssetRegistration @entity {
   id: ID!
-  """The type of the registration entry."""
+  """
+  The type of the registration entry.
+  """
   type: RegistrationType!
-  """The contract that registered the aggregator."""
+  """
+  The contract that registered the aggregator.
+  """
   issuer: String!
-  """The registered asset."""
+  """
+  The registered asset.
+  """
   asset: Asset!
-  """The value interpreter contract address."""
+  """
+  The value interpreter contract address.
+  """
   interpreter: String!
-  """Used for sorting the registrations before invoking updates on their behalf."""
+  """
+  Used for sorting the registrations before invoking updates on their behalf.
+  """
   priority: Int!
 }
 
@@ -191,7 +458,9 @@ is updated.
 """
 type UsdQuotedPrimitiveRegistry @entity {
   id: ID!
-  """The list of usd quoted primitives for which to perform updates as a side-effect whenever the usd price is updated."""
+  """
+  The list of usd quoted primitives for which to perform updates as a side-effect whenever the usd price is updated.
+  """
   assets: [Asset!]!
 }
 
@@ -201,19 +470,25 @@ they do not have their own dedicated data source & events.
 """
 type DerivativeRegistry @entity {
   id: ID!
-  """The list of derivatives for which to perform updates as a side-effect of the observed aggregator updates."""
+  """
+  The list of derivatives for which to perform updates as a side-effect of the observed aggregator updates.
+  """
   assets: [Asset!]!
 }
 
 """
- Storing these in a separate entity instead
+Storing these in a separate entity instead
 of in the Updater entity should help with performance as the list of derivatives can become quite large and
 the Updater entity needs to be updated quite frequently.
 """
 type DerivativeUpdater @entity {
   id: ID!
-  """The progress within the current round. Once the progress exceeds the derivative count a new round is started."""
+  """
+  The progress within the current round. Once the progress exceeds the derivative count a new round is started.
+  """
   progress: Int!
-  """The block number at which we ran the last derivative update."""
+  """
+  The block number at which we ran the last derivative update.
+  """
   block: BigInt!
 }

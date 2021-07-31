@@ -1,5 +1,5 @@
 import { BigDecimal, ethereum } from '@graphprotocol/graph-ts';
-import { Currency } from '../../generated/schema';
+import { Currency } from '../generated/schema';
 import { getOrCreateAggregator } from '../entities/Aggregator';
 import { getOrCreateCurrency } from '../entities/Currency';
 import { updateCurrencyValue } from '../entities/CurrencyValue';

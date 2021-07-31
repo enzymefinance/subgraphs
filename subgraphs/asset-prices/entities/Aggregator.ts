@@ -1,8 +1,8 @@
 import { ZERO_BI } from '@enzymefinance/subgraph-utils';
 import { Address } from '@graphprotocol/graph-ts';
-import { AggregatorProxyContract } from '../../generated/AggregatorProxyContract';
-import { AggregatorProxy, Aggregator } from '../../generated/schema';
-import { ChainlinkAggregatorDataSource } from '../../generated/templates';
+import { AggregatorProxyContract } from '../generated/AggregatorProxyContract';
+import { AggregatorProxy, Aggregator } from '../generated/schema';
+import { ChainlinkAggregatorDataSource } from '../generated/templates';
 
 export function getOrCreateAggregatorProxy(proxyAddress: Address): AggregatorProxy {
   let proxy = AggregatorProxy.load(proxyAddress.toHex()) as AggregatorProxy;

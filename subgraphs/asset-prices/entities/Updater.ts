@@ -1,6 +1,6 @@
 import { ZERO_BI } from '@enzymefinance/subgraph-utils';
 import { Address, ethereum } from '@graphprotocol/graph-ts';
-import { DerivativeRegistration, DerivativeUpdater } from '../../generated/schema';
+import { DerivativeRegistration, DerivativeUpdater } from '../generated/schema';
 import { getOrCreateAsset } from './Asset';
 import { updateAssetPriceWithValueInterpreter } from './AssetPrice';
 import { getOrCreateDerivativeRegistry } from './DerivativeRegistry';

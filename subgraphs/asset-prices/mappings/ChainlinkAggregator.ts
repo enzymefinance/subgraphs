@@ -2,13 +2,13 @@ import { arrayUnique, saveDivideBigDecimal, toBigDecimal } from '@enzymefinance/
 import { Address } from '@graphprotocol/graph-ts';
 import { AnswerUpdated } from '../generated/AggregatorInterfaceContract';
 import { AggregatorProxy, CurrencyRegistration, PrimitiveRegistration } from '../generated/schema';
-import { getOrCreateAsset } from './entities/Asset';
-import { updateAssetPrice } from './entities/AssetPrice';
-import { getOrCreateCurrency } from './entities/Currency';
-import { getLatestCurrencyValueInEth } from './entities/CurrencyValue';
-import { getUpdatedAggregator, Registration } from './entities/Registration';
-import { updateDerivativePrices } from './entities/Updater';
-import { updateForCurrencyRegistration } from './utils/updateForRegistration';
+import { getOrCreateAsset } from '../entities/Asset';
+import { updateAssetPrice } from '../entities/AssetPrice';
+import { getOrCreateCurrency } from '../entities/Currency';
+import { getLatestCurrencyValueInEth } from '../entities/CurrencyValue';
+import { getUpdatedAggregator, Registration } from '../entities/Registration';
+import { updateDerivativePrices } from '../entities/Updater';
+import { updateForCurrencyRegistration } from '../utils/updateForRegistration';
 
 export function handleAnswerUpdated(event: AnswerUpdated): void {
   let aggregator = getUpdatedAggregator(event.address, event);

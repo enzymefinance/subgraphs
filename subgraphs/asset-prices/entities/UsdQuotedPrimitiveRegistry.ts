@@ -1,5 +1,5 @@
 import { arrayDiff } from '@enzymefinance/subgraph-utils';
-import { UsdQuotedPrimitiveRegistry, Asset, PrimitiveRegistration } from '../../generated/schema';
+import { UsdQuotedPrimitiveRegistry, Asset, PrimitiveRegistration } from '../generated/schema';
 import { Registration } from './Registration';
 
 export function getOrCreateUsdQuotedPrimitiveRegistry(): UsdQuotedPrimitiveRegistry {

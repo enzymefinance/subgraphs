@@ -1,5 +1,5 @@
 import { arrayDiff } from '@enzymefinance/subgraph-utils';
-import { DerivativeRegistry, Asset } from '../../generated/schema';
+import { DerivativeRegistry, Asset } from '../generated/schema';
 import { Registration } from './Registration';
 
 export function getOrCreateDerivativeRegistry(): DerivativeRegistry {

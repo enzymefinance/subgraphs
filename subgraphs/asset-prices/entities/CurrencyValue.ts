@@ -1,6 +1,6 @@
 import { Address, BigDecimal, ethereum } from '@graphprotocol/graph-ts';
 import { ONE_BD, saveDivideBigDecimal, uniqueSortableEventId, ZERO_BD } from '@enzymefinance/subgraph-utils';
-import { Currency, CurrencyValue, PrimitiveRegistration } from '../../generated/schema';
+import { Currency, CurrencyValue, PrimitiveRegistration } from '../generated/schema';
 import { getOrCreateCurrency } from './Currency';
 import { getOrCreateUsdQuotedPrimitiveRegistry } from './UsdQuotedPrimitiveRegistry';
 import { getOrCreateAsset } from './Asset';

@@ -1,6 +1,6 @@
 import { Address } from '@graphprotocol/graph-ts';
 import { ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
-import { AggregatorProxyContract } from '../../generated/AggregatorProxyContract';
+import { AggregatorProxyContract } from '../generated/AggregatorProxyContract';
 
 export function unwrapAggregator(address: Address): Address {
   let aggregator = address;

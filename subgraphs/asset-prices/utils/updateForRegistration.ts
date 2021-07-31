@@ -1,5 +1,5 @@
 import { ethereum, Address, BigDecimal } from '@graphprotocol/graph-ts';
-import { PrimitiveRegistration, CurrencyRegistration, DerivativeRegistration, Asset } from '../../generated/schema';
+import { PrimitiveRegistration, CurrencyRegistration, DerivativeRegistration, Asset } from '../generated/schema';
 import { getOrCreateAsset } from '../entities/Asset';
 import { getOrCreateCurrency } from '../entities/Currency';
 import { updateAssetPrice, updateAssetPriceWithValueInterpreter } from '../entities/AssetPrice';

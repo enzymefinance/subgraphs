@@ -1,6 +1,6 @@
 import { Address } from '@graphprotocol/graph-ts';
 import { tokenDecimals, tokenName, tokenSymbol } from '@enzymefinance/subgraph-utils';
-import { Asset } from '../../generated/schema';
+import { Asset } from '../generated/schema';
 
 export function getOrCreateAsset(address: Address): Asset {
   let id = address.toHex();

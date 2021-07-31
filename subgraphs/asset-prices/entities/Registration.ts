@@ -7,7 +7,7 @@ import {
   Aggregator,
   AggregatorProxy,
   Asset,
-} from '../../generated/schema';
+} from '../generated/schema';
 import { getCurrencyAggregator } from '../utils/getCurrencyAggregator';
 import { unwrapAggregator } from '../utils/unwrapAggregator';
 import { getOrCreateAggregatorProxy, getOrCreateAggregator } from './Aggregator';
