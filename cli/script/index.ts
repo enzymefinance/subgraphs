@@ -112,7 +112,11 @@ class Subgraph<TVariables = any> {
       const templateContent = fs.readFileSync(templateFile, 'utf8');
 
       const compile = handlebars.compile(templateContent);
-      const replaced = compile(this.environment.variables);
+      const replaced = compile(this.environment.variables, {
+        helpers: {
+          or: (a: any, b: any) => a ?? b,
+        },
+      });
 
       if (!fs.existsSync(outputDir)) {
         fs.mkdirSync(outputDir, { recursive: true });
