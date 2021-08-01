@@ -1,4 +1,4 @@
-import { store, Address, Entity, Value, ethereum } from '@graphprotocol/graph-ts';
+import { store, Address, Entity, Value, ethereum, BigInt } from '@graphprotocol/graph-ts';
 import { arrayUnique, arrayDiff, ONE_DAY } from '@enzymefinance/subgraph-utils';
 import {
   PrimitiveRegistration,
@@ -26,7 +26,6 @@ export function createCurrencyRegistration(currencyId: string): CurrencyRegistra
   registration = new CurrencyRegistration(registrationId);
   registration.type = 'CURRENCY';
   registration.currency = currencyId;
-  registration.priority = 1000;
   registration.proxy = proxyAddress.toHex();
   registration.save();
 
@@ -37,13 +36,8 @@ export function createCurrencyRegistration(currencyId: string): CurrencyRegistra
   return registration;
 }
 
-export function createDerivativeRegistration(
-  assetAddress: Address,
-  issuerAddress: Address,
-  valueInterpreterAddress: Address,
-  registrationPriority: number,
-): DerivativeRegistration {
-  let registrationId = derivativeRegistrationId(assetAddress, issuerAddress);
+export function createDerivativeRegistration(assetAddress: Address, releaseVersion: number): DerivativeRegistration {
+  let registrationId = derivativeRegistrationId(assetAddress, releaseVersion);
   let registration = DerivativeRegistration.load(registrationId) as DerivativeRegistration;
   if (registration != null) {
     return registration;
@@ -51,10 +45,8 @@ export function createDerivativeRegistration(
 
   registration = new DerivativeRegistration(registrationId);
   registration.type = 'DERIVATIVE';
-  registration.issuer = issuerAddress.toHex();
   registration.asset = assetAddress.toHex();
-  registration.priority = registrationPriority as i32;
-  registration.interpreter = valueInterpreterAddress.toHex();
+  registration.version = releaseVersion as i32;
   registration.save();
 
   addRegistrationToAsset(assetAddress, registrationId);
@@ -64,23 +56,19 @@ export function createDerivativeRegistration(
 
 export function createOrUpdatePrimitiveRegistration(
   assetAddress: Address,
-  issuerAddress: Address,
   proxyAddress: Address,
-  valueInterpreterAddress: Address,
-  registrationPriority: number,
+  releaseVersion: number,
   quoteCurrency: string | null = null,
 ): PrimitiveRegistration {
-  let previous = removePrimitiveRegistration(assetAddress, issuerAddress);
+  let previous = removePrimitiveRegistration(assetAddress, releaseVersion);
 
-  let registrationId = primitiveRegistrationId(assetAddress, issuerAddress);
+  let registrationId = primitiveRegistrationId(assetAddress, releaseVersion);
   let registration = new PrimitiveRegistration(registrationId);
   registration.type = 'PRIMITIVE';
   registration.quote = quoteCurrency == null ? (previous == null ? 'ETH' : previous.quote) : quoteCurrency;
-  registration.issuer = issuerAddress.toHex();
   registration.asset = assetAddress.toHex();
   registration.proxy = proxyAddress.toHex();
-  registration.priority = registrationPriority as i32;
-  registration.interpreter = valueInterpreterAddress.toHex();
+  registration.version = releaseVersion as i32;
   registration.save();
 
   let aggregatorAddress = unwrapAggregator(proxyAddress);
@@ -93,9 +81,9 @@ export function createOrUpdatePrimitiveRegistration(
 
 export function removePrimitiveRegistration(
   assetAddress: Address,
-  issuerAddress: Address,
+  releaseVersion: number,
 ): PrimitiveRegistration | null {
-  let registrationId = primitiveRegistrationId(assetAddress, issuerAddress);
+  let registrationId = primitiveRegistrationId(assetAddress, releaseVersion);
   let registration = PrimitiveRegistration.load(registrationId);
   if (registration == null) {
     return null;
@@ -111,9 +99,9 @@ export function removePrimitiveRegistration(
 
 export function removeDerivativeRegistration(
   assetAddress: Address,
-  issuerAddress: Address,
+  releaseVersion: number,
 ): DerivativeRegistration | null {
-  let registrationId = primitiveRegistrationId(assetAddress, issuerAddress);
+  let registrationId = primitiveRegistrationId(assetAddress, releaseVersion);
   let registration = DerivativeRegistration.load(registrationId);
   if (registration == null) {
     return null;
@@ -154,21 +142,26 @@ export function getUpdatedAggregator(aggregatorAddress: Address, event: ethereum
   return aggregator;
 }
 
-export function getActiveRegistration(asset: Asset): Registration | null {
+export function getActiveRegistration(asset: Asset): AssetRegistration | null {
   let registrations = asset.registrations;
-  let registration: Registration | null = registrations.length > 0 ? Registration.load(registrations[0]) : null;
+  let registration: AssetRegistration | null = null;
+  if (registrations.length) {
+    registration = AssetRegistration.load(registrations[0]);
+  }
+
   return registration;
 }
 
 function addRegistrationToAsset(assetAddress: Address, registrationId: string): Asset {
   // Update registrations sorted by priority.
   let asset = getOrCreateAsset(assetAddress);
-  asset.registrations = arrayUnique<string>(asset.registrations.concat([registrationId]))
-    .map<Registration>((id) => Registration.load(id) as Registration)
+  let registrations = arrayUnique<string>(asset.registrations.concat([registrationId]))
+    .map<AssetRegistration>((id) => AssetRegistration.load(id) as AssetRegistration)
     .filter((registration) => registration != null)
-    .sort((a, b) => b.priority - a.priority)
-    .map<string>((registration) => registration.id);
+    .sort((a, b) => b.version - a.version);
 
+  asset.versions = arrayUnique<i32>(registrations.map<i32>((registration) => registration.version));
+  asset.registrations = registrations.map<string>((registration) => registration.id);
   asset.save();
 
   updateDerivativeRegistry(asset);
@@ -197,7 +190,14 @@ function addProxyToAggregator(proxyAddress: Address, aggregatorAddress: Address)
 
 function removeRegistrationFromAsset(assetAddress: Address, registrationId: string): Asset {
   let asset = getOrCreateAsset(assetAddress);
-  asset.registrations = arrayDiff<string>(asset.registrations, [registrationId]);
+  let removed = arrayDiff<string>(asset.registrations, [registrationId]);
+  let registrations = arrayUnique<string>(removed.concat([registrationId]))
+    .map<AssetRegistration>((id) => AssetRegistration.load(id) as AssetRegistration)
+    .filter((registration) => registration != null)
+    .sort((a, b) => b.version - a.version);
+
+  asset.versions = arrayUnique<i32>(registrations.map<i32>((registration) => registration.version));
+  asset.registrations = registrations.map<string>((registration) => registration.id);
   asset.save();
 
   updateDerivativeRegistry(asset);
@@ -215,12 +215,12 @@ function removeRegistrationFromAggregatorProxy(proxyAddress: Address, registrati
   return proxy;
 }
 
-function primitiveRegistrationId(assetAddress: Address, issuerAddress: Address): string {
-  return 'PRIMITIVE/' + assetAddress.toHex() + '/' + issuerAddress.toHex();
+function primitiveRegistrationId(assetAddress: Address, releaseVersion: number): string {
+  return 'PRIMITIVE/' + assetAddress.toHex() + '/' + BigInt.fromI32(releaseVersion as i32).toString();
 }
 
-function derivativeRegistrationId(assetAddress: Address, issuerAddress: Address): string {
-  return 'DERIVATIVE/' + assetAddress.toHex() + '/' + issuerAddress.toHex();
+function derivativeRegistrationId(assetAddress: Address, releaseVersion: number): string {
+  return 'DERIVATIVE/' + assetAddress.toHex() + '/' + BigInt.fromI32(releaseVersion as i32).toString();
 }
 
 function currencyRegistrationId(currency: string): string {
@@ -304,13 +304,86 @@ export class Registration extends Entity {
   set type(value: string) {
     this.set('type', Value.fromString(value));
   }
+}
 
-  get priority(): i32 {
-    let value = this.get('priority') as Value;
+export class AssetRegistration extends Entity {
+  constructor(id: string, type: string) {
+    super();
+    this.set('id', Value.fromString(id));
+    this.set('type', Value.fromString(type));
+  }
+
+  save(): void {
+    let entity = '';
+    let type = this.type;
+
+    if (type == 'PRIMITIVE') {
+      entity = 'PrimitiveRegistration';
+    } else if (type == 'DERIVATIVE') {
+      entity = 'DerivativeRegistration';
+    } else {
+      return;
+    }
+
+    store.set(entity, this.id, this);
+  }
+
+  static entity(id: string): string | null {
+    let type = id.split('/', 1)[0];
+
+    if (type == 'PRIMITIVE') {
+      return 'PrimitiveRegistration';
+    }
+
+    if (type == 'DERIVATIVE') {
+      return 'DerivativeRegistration';
+    }
+
+    return null;
+  }
+
+  static remove(id: string): void {
+    let entity = this.entity(id);
+    if (entity == null) {
+      return;
+    }
+
+    store.remove(entity, id);
+  }
+
+  static load(id: string): AssetRegistration | null {
+    let entity = this.entity(id);
+    if (entity == null) {
+      return null;
+    }
+
+    return store.get(entity, id) as AssetRegistration | null;
+  }
+
+  get id(): string {
+    let value = this.get('id') as Value;
+    return value.toString();
+  }
+
+  set id(value: string) {
+    this.set('id', Value.fromString(value));
+  }
+
+  get type(): string {
+    let value = this.get('type') as Value;
+    return value.toString();
+  }
+
+  set type(value: string) {
+    this.set('type', Value.fromString(value));
+  }
+
+  get version(): i32 {
+    let value = this.get('version') as Value;
     return value.toI32();
   }
 
-  set priority(value: i32) {
-    this.set('priority', Value.fromI32(value));
+  set version(value: i32) {
+    this.set('version', Value.fromI32(value));
   }
 }

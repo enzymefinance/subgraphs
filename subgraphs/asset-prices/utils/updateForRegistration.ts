@@ -27,7 +27,7 @@ export function updateForPrimitiveRegistration(
   }
 
   if (value == null) {
-    updateAssetPriceWithValueInterpreter(asset, Address.fromString(registration.interpreter), event);
+    updateAssetPriceWithValueInterpreter(asset, registration.version, event);
   } else {
     updateAssetPrice(asset, value as BigDecimal, event);
   }
@@ -40,7 +40,7 @@ export function updateForDerivativeRegistration(registration: DerivativeRegistra
     return;
   }
 
-  updateAssetPriceWithValueInterpreter(asset, Address.fromString(registration.interpreter), event);
+  updateAssetPriceWithValueInterpreter(asset, registration.version, event);
 }
 
 function isActiveRegistration(registration: Registration, asset: Asset): boolean {

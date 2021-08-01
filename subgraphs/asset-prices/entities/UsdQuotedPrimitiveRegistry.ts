@@ -1,6 +1,5 @@
 import { arrayDiff } from '@enzymefinance/subgraph-utils';
 import { UsdQuotedPrimitiveRegistry, Asset, PrimitiveRegistration } from '../generated/schema';
-import { Registration } from './Registration';
 
 export function getOrCreateUsdQuotedPrimitiveRegistry(): UsdQuotedPrimitiveRegistry {
   let registry = UsdQuotedPrimitiveRegistry.load('REGISTRY') as UsdQuotedPrimitiveRegistry;
@@ -18,11 +17,13 @@ export function updateUsdQuotedPrimitiveRegistry(asset: Asset): void {
 
   // Grab the first registration (highest priority) for the asset.
   let registrations = asset.registrations;
-  let registration: Registration | null = registrations.length > 0 ? Registration.load(registrations[0]) : null;
+  let registration: PrimitiveRegistration | null = null;
+  if (registrations.length) {
+    registration = PrimitiveRegistration.load(registrations[0]);
+  }
 
   // Check if the first registration is a primitive registration and if the primitive is quoted using USD.
-  let shouldBeRegistered =
-    registration != null && registration.type == 'PRIMITIVE' && (registration as PrimitiveRegistration).quote == 'USD';
+  let shouldBeRegistered = registration != null && registration.quote == 'USD';
   let isRegistered = registry.assets.includes(asset.id);
 
   if (shouldBeRegistered && !isRegistered) {

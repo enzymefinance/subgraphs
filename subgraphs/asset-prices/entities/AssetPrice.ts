@@ -1,5 +1,5 @@
-import { Address, BigDecimal, ethereum } from '@graphprotocol/graph-ts';
-import { dayCloseTime, hourCloseTime, monthCloseTime, ZERO_BD } from '@enzymefinance/subgraph-utils';
+import { BigDecimal, ethereum } from '@graphprotocol/graph-ts';
+import { dayCloseTime, hourCloseTime, monthCloseTime } from '@enzymefinance/subgraph-utils';
 import { Asset, AssetPrice, DailyAssetPrice, HourlyAssetPrice, MonthlyAssetPrice } from '../generated/schema';
 import { fetchAssetPrice } from '../utils/fetchAssetPrice';
 
@@ -47,8 +47,8 @@ export function updateAssetPrice(asset: Asset, price: BigDecimal, event: ethereu
   return entity;
 }
 
-export function updateAssetPriceWithValueInterpreter(asset: Asset, interpreter: Address, event: ethereum.Event): void {
-  let value = fetchAssetPrice(asset, interpreter);
+export function updateAssetPriceWithValueInterpreter(asset: Asset, version: number, event: ethereum.Event): void {
+  let value = fetchAssetPrice(asset, version);
   updateAssetPrice(asset, value, event);
 }
 

@@ -8,6 +8,10 @@ type Asset @entity {
   symbol: String!
   decimals: Int!
   """
+  The release versions in which this asset is supported.
+  """
+  versions: [Int!]!
+  """
   The current (latest) price of the asset.
   """
   price: AssetPrice!
@@ -278,10 +282,6 @@ interface Registration {
   The type of the registration entry.
   """
   type: RegistrationType!
-  """
-  Used for sorting the registrations before invoking updates on their behalf.
-  """
-  priority: Int!
 }
 
 interface AssetRegistration {
@@ -295,32 +295,12 @@ interface AssetRegistration {
   """
   asset: Asset!
   """
-  The value interpreter contract address.
-  """
-  interpreter: String!
-  """
   Used for sorting the registrations before invoking updates on their behalf.
   """
-  priority: Int!
+  version: Int!
 }
 
-interface AggregatorRegistration {
-  id: ID!
-  """
-  The type of the registration entry.
-  """
-  type: RegistrationType!
-  """
-  The registered aggregator proxy.
-  """
-  proxy: AggregatorProxy!
-  """
-  Used for sorting the registrations before invoking updates on their behalf.
-  """
-  priority: Int!
-}
-
-type CurrencyRegistration implements Registration & AggregatorRegistration @entity {
+type CurrencyRegistration implements Registration @entity {
   id: ID!
   """
   The type of the registration entry.
@@ -334,13 +314,9 @@ type CurrencyRegistration implements Registration & AggregatorRegistration @enti
   The registered aggregator proxy.
   """
   proxy: AggregatorProxy!
-  """
-  Used for sorting the registrations before invoking updates on their behalf.
-  """
-  priority: Int!
 }
 
-type PrimitiveRegistration implements Registration & AssetRegistration & AggregatorRegistration @entity {
+type PrimitiveRegistration implements Registration & AssetRegistration @entity {
   id: ID!
   """
   The type of the registration entry.
@@ -351,10 +327,6 @@ type PrimitiveRegistration implements Registration & AssetRegistration & Aggrega
   """
   quote: RateAsset!
   """
-  The contract that registered the aggregator.
-  """
-  issuer: String!
-  """
   The registered asset.
   """
   asset: Asset!
@@ -363,13 +335,9 @@ type PrimitiveRegistration implements Registration & AssetRegistration & Aggrega
   """
   proxy: AggregatorProxy!
   """
-  The value interpreter contract address.
-  """
-  interpreter: String!
-  """
   Used for sorting the registrations before invoking updates on their behalf.
   """
-  priority: Int!
+  version: Int!
 }
 
 type DerivativeRegistration implements Registration & AssetRegistration @entity {
@@ -379,21 +347,13 @@ type DerivativeRegistration implements Registration & AssetRegistration @entity 
   """
   type: RegistrationType!
   """
-  The contract that registered the aggregator.
-  """
-  issuer: String!
-  """
   The registered asset.
   """
   asset: Asset!
   """
-  The value interpreter contract address.
-  """
-  interpreter: String!
-  """
   Used for sorting the registrations before invoking updates on their behalf.
   """
-  priority: Int!
+  version: Int!
 }
 
 #################################################

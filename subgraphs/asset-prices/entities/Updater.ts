@@ -46,7 +46,7 @@ export function updateDerivativePrices(event: ethereum.Event): void {
     let index = progress.toI32();
     let asset = getOrCreateAsset(Address.fromString(assets[index]));
     let registration = getActiveRegistration(asset) as DerivativeRegistration;
-    updateAssetPriceWithValueInterpreter(asset, Address.fromString(registration.interpreter), event);
+    updateAssetPriceWithValueInterpreter(asset, registration.version, event);
   }
 
   updater.progress = progress.toI32();

@@ -13,7 +13,6 @@ import {
   DailyCurrencyValue,
   HourlyCurrencyValue,
   MonthlyCurrencyValue,
-  PrimitiveRegistration,
 } from '../generated/schema';
 import { getOrCreateCurrency } from './Currency';
 import { getOrCreateUsdQuotedPrimitiveRegistry } from './UsdQuotedPrimitiveRegistry';
@@ -78,8 +77,7 @@ export function updateCurrencyValue(currency: Currency, value: BigDecimal, event
         continue;
       }
 
-      let interpreter = (registration as PrimitiveRegistration).interpreter;
-      updateAssetPriceWithValueInterpreter(asset, Address.fromString(interpreter), event);
+      updateAssetPriceWithValueInterpreter(asset, registration.version, event);
     }
   }
 

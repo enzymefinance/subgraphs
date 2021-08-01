@@ -14,6 +14,7 @@ export function getOrCreateAsset(address: Address): Asset {
     asset.name = tokenName(address);
     asset.symbol = tokenSymbol(address);
     asset.decimals = decimals == -1 ? 18 : decimals;
+    asset.versions = [];
     asset.registrations = [];
     asset.save();
   }

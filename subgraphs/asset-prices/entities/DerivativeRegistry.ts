@@ -1,6 +1,6 @@
 import { arrayDiff } from '@enzymefinance/subgraph-utils';
 import { DerivativeRegistry, Asset } from '../generated/schema';
-import { Registration } from './Registration';
+import { AssetRegistration } from './Registration';
 
 export function getOrCreateDerivativeRegistry(): DerivativeRegistry {
   let registry = DerivativeRegistry.load('REGISTRY') as DerivativeRegistry;
@@ -16,9 +16,12 @@ export function getOrCreateDerivativeRegistry(): DerivativeRegistry {
 export function updateDerivativeRegistry(asset: Asset): void {
   let registry = getOrCreateDerivativeRegistry();
 
-  // Grab the first registration (highest priority) for the asset.
+  // Grab the first registration (highest version) for the asset.
   let registrations = asset.registrations;
-  let registration: Registration | null = registrations.length > 0 ? Registration.load(registrations[0]) : null;
+  let registration: AssetRegistration | null = null;
+  if (registrations.length) {
+    registration = AssetRegistration.load(registrations[0]);
+  }
 
   // Check if the first registration is a derivative registration.
   let shouldBeRegistered = registration != null && registration.type == 'DERIVATIVE';
