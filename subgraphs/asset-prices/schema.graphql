@@ -40,10 +40,6 @@ type AssetPrice @entity {
   """
   asset: Asset!
   """
-  The block number at which the price was updated.
-  """
-  block: BigInt!
-  """
   The timestamp at which the price was updated.
   """
   timestamp: BigInt!
@@ -59,10 +55,6 @@ type HourlyAssetPrice @entity {
   The asset this price belongs to.
   """
   asset: Asset!
-  """
-  The block number at which the price was updated.
-  """
-  block: BigInt!
   """
   The timestamp at which the price was updated.
   """
@@ -84,10 +76,6 @@ type DailyAssetPrice @entity {
   """
   asset: Asset!
   """
-  The block number at which the price was updated.
-  """
-  block: BigInt!
-  """
   The timestamp at which the price was updated.
   """
   timestamp: BigInt!
@@ -107,10 +95,6 @@ type MonthlyAssetPrice @entity {
   The asset this price belongs to.
   """
   asset: Asset!
-  """
-  The block number at which the price was updated.
-  """
-  block: BigInt!
   """
   The timestamp at which the price was updated.
   """
@@ -160,10 +144,6 @@ type CurrencyValue @entity {
   """
   currency: Currency!
   """
-  The block number at which the currency value was updated.
-  """
-  block: BigInt!
-  """
   The timestamp at which the currency value was updated.
   """
   timestamp: BigInt!
@@ -183,10 +163,6 @@ type HourlyCurrencyValue @entity {
   The currency key.
   """
   currency: Currency!
-  """
-  The block number at which the currency value was updated.
-  """
-  block: BigInt!
   """
   The timestamp at which the currency value was updated.
   """
@@ -212,10 +188,6 @@ type DailyCurrencyValue @entity {
   """
   currency: Currency!
   """
-  The block number at which the currency value was updated.
-  """
-  block: BigInt!
-  """
   The timestamp at which the currency value was updated.
   """
   timestamp: BigInt!
@@ -239,10 +211,6 @@ type MonthlyCurrencyValue @entity {
   The currency key.
   """
   currency: Currency!
-  """
-  The block number at which the currency value was updated.
-  """
-  block: BigInt!
   """
   The timestamp at which the currency value was updated.
   """

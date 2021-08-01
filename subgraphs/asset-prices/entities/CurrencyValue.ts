@@ -34,7 +34,6 @@ export function updateCurrencyValue(currency: Currency, value: BigDecimal, event
   let usd = isUsd ? ONE_BD : value;
 
   entity.currency = currency.id;
-  entity.block = event.block.number;
   entity.timestamp = event.block.timestamp;
   entity.eth = eth;
   entity.usd = usd;
@@ -87,7 +86,6 @@ export function updateCurrencyValue(currency: Currency, value: BigDecimal, event
   let hour = hourCloseTime(event.block.timestamp);
   let hourly = new HourlyCurrencyValue(currency.id + '/hourly/' + hour.toString());
   hourly.currency = entity.currency;
-  hourly.block = entity.block;
   hourly.timestamp = entity.timestamp;
   hourly.usd = entity.usd;
   hourly.eth = entity.eth;
@@ -97,7 +95,6 @@ export function updateCurrencyValue(currency: Currency, value: BigDecimal, event
   let day = dayCloseTime(event.block.timestamp);
   let daily = new DailyCurrencyValue(currency.id + '/daily/' + day.toString());
   daily.currency = entity.currency;
-  daily.block = entity.block;
   daily.timestamp = entity.timestamp;
   daily.usd = entity.usd;
   daily.eth = entity.eth;
@@ -107,7 +104,6 @@ export function updateCurrencyValue(currency: Currency, value: BigDecimal, event
   let month = monthCloseTime(event.block.timestamp);
   let monthly = new MonthlyCurrencyValue(currency.id + '/monthly/' + month.toString());
   monthly.currency = entity.currency;
-  monthly.block = entity.block;
   monthly.timestamp = entity.timestamp;
   monthly.usd = entity.usd;
   monthly.eth = entity.eth;
