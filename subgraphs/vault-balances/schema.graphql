@@ -26,14 +26,7 @@ type Vault @entity {
   outgoing: [OutgoingTransfer!]! @derivedFrom(field: "vault")
 }
 
-interface Portfolio {
-  id: ID!
-  vault: Vault!
-  holdings: [HistoricalHolding!]!
-  timestamp: BigInt!
-}
-
-type HourlyPortfolio implements Portfolio @entity {
+type HourlyPortfolio @entity {
   id: ID!
   vault: Vault!
   holdings: [HistoricalHolding!]!
@@ -41,7 +34,7 @@ type HourlyPortfolio implements Portfolio @entity {
   close: BigInt!
 }
 
-type DailyPortfolio implements Portfolio @entity {
+type DailyPortfolio @entity {
   id: ID!
   vault: Vault!
   holdings: [HistoricalHolding!]!
@@ -49,7 +42,7 @@ type DailyPortfolio implements Portfolio @entity {
   close: BigInt!
 }
 
-type WeeklyPortfolio implements Portfolio @entity {
+type WeeklyPortfolio @entity {
   id: ID!
   vault: Vault!
   holdings: [HistoricalHolding!]!
@@ -57,7 +50,7 @@ type WeeklyPortfolio implements Portfolio @entity {
   close: BigInt!
 }
 
-type MonthlyPortfolio implements Portfolio @entity {
+type MonthlyPortfolio @entity {
   id: ID!
   vault: Vault!
   holdings: [HistoricalHolding!]!
