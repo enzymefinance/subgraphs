@@ -36,10 +36,6 @@ type Asset @entity {
 type AssetPrice @entity {
   id: ID!
   """
-  Unique incremental identifier for sorting & scraping data with exactly-once guarantees.
-  """
-  incremental: String!
-  """
   The asset this price belongs to.
   """
   asset: Asset!
@@ -160,10 +156,6 @@ type Currency @entity {
 type CurrencyValue @entity {
   id: ID!
   """
-  Unique incremental identifier for sorting & scraping data with exactly-once guarantees.
-  """
-  incremental: String!
-  """
   The currency key.
   """
   currency: Currency!
@@ -187,10 +179,6 @@ type CurrencyValue @entity {
 
 type HourlyCurrencyValue @entity {
   id: ID!
-  """
-  Unique incremental identifier for sorting & scraping data with exactly-once guarantees.
-  """
-  incremental: String!
   """
   The currency key.
   """
@@ -220,10 +208,6 @@ type HourlyCurrencyValue @entity {
 type DailyCurrencyValue @entity {
   id: ID!
   """
-  Unique incremental identifier for sorting & scraping data with exactly-once guarantees.
-  """
-  incremental: String!
-  """
   The currency key.
   """
   currency: Currency!
@@ -251,10 +235,6 @@ type DailyCurrencyValue @entity {
 
 type MonthlyCurrencyValue @entity {
   id: ID!
-  """
-  Unique incremental identifier for sorting & scraping data with exactly-once guarantees.
-  """
-  incremental: String!
   """
   The currency key.
   """

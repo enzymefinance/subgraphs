@@ -1,6 +1,6 @@
 import { Address, BigDecimal, ethereum } from '@graphprotocol/graph-ts';
-import { uniqueSortableEventId, ZERO_BD } from '@enzymefinance/subgraph-utils';
-import { Asset, AssetPrice } from '../generated/schema';
+import { dayCloseTime, hourCloseTime, monthCloseTime, ZERO_BD } from '@enzymefinance/subgraph-utils';
+import { Asset, AssetPrice, DailyAssetPrice, HourlyAssetPrice, MonthlyAssetPrice } from '../generated/schema';
 import { fetchAssetPrice } from '../utils/fetchAssetPrice';
 
 function assetPriceId(asset: Asset, event: ethereum.Event): string {
@@ -10,7 +10,6 @@ function assetPriceId(asset: Asset, event: ethereum.Event): string {
 export function updateAssetPrice(asset: Asset, price: BigDecimal, event: ethereum.Event): AssetPrice {
   let id = assetPriceId(asset, event);
   let entity = new AssetPrice(id);
-  entity.incremental = uniqueSortableEventId(event);
   entity.asset = asset.id;
   entity.block = event.block.number;
   entity.timestamp = event.block.timestamp;
@@ -21,6 +20,33 @@ export function updateAssetPrice(asset: Asset, price: BigDecimal, event: ethereu
     asset.price = entity.id;
     asset.save();
   }
+
+  let hour = hourCloseTime(event.block.timestamp);
+  let hourly = new HourlyAssetPrice(asset.id + '/hourly/' + hour.toString());
+  hourly.asset = entity.asset;
+  hourly.block = entity.block;
+  hourly.timestamp = entity.timestamp;
+  hourly.price = price;
+  hourly.close = hour;
+  hourly.save();
+
+  let day = dayCloseTime(event.block.timestamp);
+  let daily = new DailyAssetPrice(asset.id + '/daily/' + day.toString());
+  daily.asset = entity.asset;
+  daily.block = entity.block;
+  daily.timestamp = entity.timestamp;
+  daily.price = price;
+  daily.close = day;
+  daily.save();
+
+  let month = monthCloseTime(event.block.timestamp);
+  let monthly = new MonthlyAssetPrice(asset.id + '/monthly/' + month.toString());
+  monthly.asset = entity.asset;
+  monthly.block = entity.block;
+  monthly.timestamp = entity.timestamp;
+  monthly.price = price;
+  monthly.close = month;
+  monthly.save();
 
   return entity;
 }
