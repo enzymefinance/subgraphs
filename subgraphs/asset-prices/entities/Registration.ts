@@ -201,6 +201,7 @@ function removeRegistrationFromAsset(assetAddress: Address, registrationId: stri
   asset.save();
 
   updateDerivativeRegistry(asset);
+  updateUsdQuotedPrimitiveRegistry(asset);
 
   return asset;
 }
