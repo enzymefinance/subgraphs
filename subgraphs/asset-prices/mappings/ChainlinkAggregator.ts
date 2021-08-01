@@ -12,10 +12,6 @@ import { updateForCurrencyRegistration } from '../utils/updateForRegistration';
 
 export function handleAnswerUpdated(event: AnswerUpdated): void {
   let aggregator = getUpdatedAggregator(event.address, event);
-  if (aggregator.proxies.length == 0) {
-    return;
-  }
-
   let proxies: Array<AggregatorProxy> = aggregator.proxies
     .map<AggregatorProxy>((id) => AggregatorProxy.load(id) as AggregatorProxy)
     .filter((item) => item != null);
@@ -30,14 +26,19 @@ export function handleAnswerUpdated(event: AnswerUpdated): void {
     .map<Registration>((id) => Registration.load(id) as Registration)
     .filter((registration) => registration != null);
 
+  if (registrations.length == 0) {
+    return;
+  }
+
   // Always update all currency registrations.
-  let currencies = registrations
+  let currencies: Array<CurrencyRegistration> = registrations
     .filter((registration) => registration.type == 'CURRENCY')
     .map<CurrencyRegistration>((registration) => registration as CurrencyRegistration);
 
   let value = toBigDecimal(event.params.current, aggregator.decimals);
   for (let i: i32 = 0; i < currencies.length; i++) {
-    updateForCurrencyRegistration((currencies as Array<CurrencyRegistration>)[i], event, value);
+    let currency = currencies[i];
+    updateForCurrencyRegistration(currency, event, value);
   }
 
   // Only run updates for assets where the triggered registration is the highest priority.

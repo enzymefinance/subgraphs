@@ -12,11 +12,12 @@ function currencyValueId(currency: Currency, event: ethereum.Event): string {
 }
 
 export function updateCurrencyValue(currency: Currency, value: BigDecimal, event: ethereum.Event): CurrencyValue {
+  let isUsd = currency.id == 'USD';
+
   let id = currencyValueId(currency, event);
   let entity = new CurrencyValue(id);
-  let eth =
-    currency.id == 'USD' ? value : saveDivideBigDecimal(getLatestCurrencyValueInEth(getOrCreateCurrency('USD')), value);
-  let usd = currency.id == 'USD' ? ONE_BD : value;
+  let eth = isUsd ? value : saveDivideBigDecimal(getLatestCurrencyValueInEth(getOrCreateCurrency('USD')), value);
+  let usd = isUsd ? ONE_BD : value;
 
   entity.incremental = uniqueSortableEventId(event);
   entity.currency = currency.id;
@@ -31,7 +32,7 @@ export function updateCurrencyValue(currency: Currency, value: BigDecimal, event
     currency.save();
   }
 
-  if (currency.id == 'USD') {
+  if (isUsd) {
     let btc = getOrCreateCurrency('BTC');
     let btcUsd = getLatestCurrencyValueInUsd(btc);
     updateCurrencyValue(btc, btcUsd, event);
@@ -60,8 +61,13 @@ export function updateCurrencyValue(currency: Currency, value: BigDecimal, event
     let primitives = registry.assets;
     for (let i: i32 = 0; i < primitives.length; i++) {
       let asset = getOrCreateAsset(Address.fromString(primitives[i]));
-      let registration = getActiveRegistration(asset) as PrimitiveRegistration;
-      updateAssetPriceWithValueInterpreter(asset, Address.fromString(registration.interpreter), event);
+      let registration = getActiveRegistration(asset);
+      if (registration == null) {
+        continue;
+      }
+
+      let interpreter = (registration as PrimitiveRegistration).interpreter;
+      updateAssetPriceWithValueInterpreter(asset, Address.fromString(interpreter), event);
     }
   }
 
