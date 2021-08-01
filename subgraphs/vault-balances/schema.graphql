@@ -19,7 +19,6 @@ type Vault @entity {
   portfolio: [HistoricalHolding!]!
   hourly: [HourlyPortfolio!]! @derivedFrom(field: "vault")
   daily: [DailyPortfolio!]! @derivedFrom(field: "vault")
-  weekly: [WeeklyPortfolio!]! @derivedFrom(field: "vault")
   monthly: [MonthlyPortfolio!]! @derivedFrom(field: "vault")
   transfers: [Transfer!]! @derivedFrom(field: "vault")
   incoming: [IncomingTransfer!]! @derivedFrom(field: "vault")
@@ -35,14 +34,6 @@ type HourlyPortfolio @entity {
 }
 
 type DailyPortfolio @entity {
-  id: ID!
-  vault: Vault!
-  holdings: [HistoricalHolding!]!
-  timestamp: BigInt!
-  close: BigInt!
-}
-
-type WeeklyPortfolio @entity {
   id: ID!
   vault: Vault!
   holdings: [HistoricalHolding!]!
