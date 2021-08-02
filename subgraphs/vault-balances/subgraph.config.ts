@@ -40,7 +40,7 @@ export const contexts: Contexts<Variables> = {
 };
 
 export const configure: Configurator<Variables> = (variables) => ({
-  abis: ['@enzymefinance/protocol/artifacts/Dispatcher.json', '../../utils/abis/AssetTrackingVault.json'],
+  abis: ['./abis/Dispatcher.json', './abis/AssetTrackingVault.json'],
   sources: [
     {
       name: 'Dispatcher',
