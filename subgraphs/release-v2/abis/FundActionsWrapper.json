@@ -1,0 +1,182 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_feeManager",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_weth",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_who",
+        "type": "address"
+      }
+    ],
+    "name": "accountHasMaxWethAllowance",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "hasMaxWethAllowance_",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_comptrollerProxy",
+        "type": "address"
+      }
+    ],
+    "name": "calcNetShareValueForFund",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "netShareValue_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "isValid_",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_comptrollerProxy",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_denominationAsset",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_buyer",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_minSharesQuantity",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_exchange",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_exchangeApproveTarget",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_exchangeData",
+        "type": "bytes"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_minInvestmentAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "exchangeAndBuyShares",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "sharesReceivedAmount_",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_comptrollerProxy",
+        "type": "address"
+      }
+    ],
+    "name": "getContinuousFeesForFund",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "continuousFees_",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getFeeManager",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "feeManager_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getWethToken",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "wethToken_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_comptrollerProxy",
+        "type": "address"
+      },
+      {
+        "internalType": "address[]",
+        "name": "_fees",
+        "type": "address[]"
+      }
+    ],
+    "name": "invokeContinuousFeeHookAndPayoutSharesOutstandingForFund",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "stateMutability": "payable",
+    "type": "receive"
+  }
+]

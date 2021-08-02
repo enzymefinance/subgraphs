@@ -1,0 +1,16 @@
+{
+  "name": "@enzymefinance/release-v2-subgraph",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "codegen": "enzyme-graph codegen",
+    "build": "enzyme-graph build",
+    "deploy": "enzyme-graph deploy"
+  },
+  "dependencies": {
+    "@enzymefinance/protocol": "^2.0.10",
+    "@enzymefinance/subgraph-cli": "^0.0.0",
+    "@enzymefinance/subgraph-utils": "^0.0.0",
+    "@graphprotocol/graph-ts": "^0.20.1"
+  }
+}
