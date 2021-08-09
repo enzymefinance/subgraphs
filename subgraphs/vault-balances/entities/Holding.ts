@@ -1,107 +1,40 @@
 import { BigDecimal, Address, BigInt } from '@graphprotocol/graph-ts';
-import { tokenBalance, toBigDecimal, hourCloseTime, dayCloseTime, monthCloseTime } from '@enzymefinance/subgraph-utils';
-import {
-  Vault,
-  Asset,
-  CurrentHolding,
-  HistoricalHolding,
-  HourlyPortfolio,
-  DailyPortfolio,
-  MonthlyPortfolio,
-} from '../generated/schema';
+import { tokenBalance, toBigDecimal, arrayDiff } from '@enzymefinance/subgraph-utils';
+import { Vault, Asset, Holding } from '../generated/schema';
 
-function getOrCreateHolding(vault: Vault, asset: Asset, timestamp: BigInt): CurrentHolding {
+function getOrCreateHolding(vault: Vault, asset: Asset, timestamp: BigInt): Holding {
   let id = vault.id + '/' + asset.id;
-  let holding = CurrentHolding.load(id);
+  let holding = Holding.load(id);
 
   if (holding == null) {
-    holding = new CurrentHolding(id);
+    holding = new Holding(id);
     holding.asset = asset.id;
     holding.vault = vault.id;
     holding.tracked = false;
     holding.external = false;
     holding.portfolio = false;
-    holding.timestamp = timestamp;
+    holding.updated = timestamp;
     holding.balance = BigDecimal.fromString('0');
     holding.save();
   }
 
-  return holding as CurrentHolding;
+  return holding as Holding;
 }
 
-function createHistoricalHolding(holding: CurrentHolding): HistoricalHolding {
-  // Create a historical snapshot of the holding entity.
-  let historical = new HistoricalHolding(holding.id + '/' + holding.timestamp.toString());
-  historical.vault = holding.vault;
-  historical.asset = holding.asset;
-  historical.timestamp = holding.timestamp;
-  historical.balance = holding.balance;
-  historical.tracked = holding.tracked;
-  historical.external = holding.external;
-  historical.portfolio = holding.portfolio;
-  historical.current = holding.id;
-  historical.save();
-
-  return historical;
-}
-
-function maintainPortfolioHistory(vault: Vault, holding: CurrentHolding): void {
-  let historical = createHistoricalHolding(holding);
-  // Bail out early if the historical record is already registered in the current portfolio.
-  if (historical.portfolio && vault.portfolio.includes(historical.id)) {
-    return;
+function maintainPortfolio(vault: Vault, holding: Holding): void {
+  // Bail out early if the holding entity is already registered in the current portfolio.
+  let included = vault.portfolio.includes(holding.id);
+  if (holding.portfolio && !included) {
+    vault.portfolio = vault.portfolio.concat([holding.id]);
+  } else if (!holding.portfolio && included) {
+    vault.portfolio = arrayDiff<string>(vault.portfolio, [holding.id]);
   }
 
-  // The asset address is the second segment of the id. This is more efficient than loading
-  // the holding entity and then retrieveing the asset id from that.
-  let assets = vault.portfolio.map<string>((item) => item.split('/')[1]);
-  // Bail out early if the asset is not supposed to be tracked but already isn't anyways.
-  if (!historical.portfolio && !assets.includes(historical.asset)) {
-    return;
-  }
-
-  // Clean up the existing portfolio (remove the asset that corresponds to the one from the
-  // historical holding record).
-  let previous = vault.portfolio;
-  let portfolio = new Array<string>();
-  for (let i: i32 = 0; i < previous.length; i++) {
-    let current = previous[i];
-    let asset = current.split('/')[1];
-    if (historical.asset != asset) {
-      portfolio.push(current);
-    }
-  }
-
-  vault.portfolio = historical.portfolio ? portfolio.concat([historical.id]) : portfolio;
-  vault.timestamp = historical.timestamp;
+  vault.updated = holding.updated;
   vault.save();
-
-  let hour = hourCloseTime(historical.timestamp);
-  let hourlyPortfolio = new HourlyPortfolio(vault.id + '/hourly/' + hour.toString());
-  hourlyPortfolio.timestamp = historical.timestamp;
-  hourlyPortfolio.vault = vault.id;
-  hourlyPortfolio.holdings = vault.portfolio;
-  hourlyPortfolio.close = hour;
-  hourlyPortfolio.save();
-
-  let day = dayCloseTime(historical.timestamp);
-  let dailyPortfolio = new DailyPortfolio(vault.id + '/daily/' + day.toString());
-  dailyPortfolio.timestamp = historical.timestamp;
-  dailyPortfolio.vault = vault.id;
-  dailyPortfolio.holdings = vault.portfolio;
-  dailyPortfolio.close = day;
-  dailyPortfolio.save();
-
-  let month = monthCloseTime(historical.timestamp);
-  let monthlyPortfolio = new MonthlyPortfolio(vault.id + '/monthly/' + month.toString());
-  monthlyPortfolio.timestamp = historical.timestamp;
-  monthlyPortfolio.vault = vault.id;
-  monthlyPortfolio.holdings = vault.portfolio;
-  monthlyPortfolio.close = month;
-  monthlyPortfolio.save();
 }
 
-export function updateHoldingBalance(vault: Vault, asset: Asset, timestamp: BigInt): CurrentHolding {
+export function updateHoldingBalance(vault: Vault, asset: Asset, timestamp: BigInt): Holding {
   let holding = getOrCreateHolding(vault, asset, timestamp);
 
   // TODO: Is it reasonable to assume that we can default this to `0` if the balance cannot be fetched.
@@ -112,7 +45,7 @@ export function updateHoldingBalance(vault: Vault, asset: Asset, timestamp: BigI
 
   // Update the holding balance.
   holding.balance = currentBalance;
-  holding.timestamp = timestamp;
+  holding.updated = timestamp;
   holding.save();
 
   // Update the total value locked (in the entire network) of this asset.
@@ -120,36 +53,27 @@ export function updateHoldingBalance(vault: Vault, asset: Asset, timestamp: BigI
   asset.save();
 
   // Create a historical snapshot of the holding entity.
-  maintainPortfolioHistory(vault, holding);
+  maintainPortfolio(vault, holding);
 
   return holding;
 }
 
-export function updateTrackedAsset(vault: Vault, asset: Asset, timestamp: BigInt, tracked: boolean): CurrentHolding {
+export function updateTrackedAsset(vault: Vault, asset: Asset, timestamp: BigInt, tracked: boolean): void {
   let holding = getOrCreateHolding(vault, asset, timestamp);
   holding.tracked = tracked;
   holding.portfolio = holding.tracked || holding.external;
   holding.save();
 
   // Create a historical snapshot of the holding entity.
-  maintainPortfolioHistory(vault, holding);
-
-  return holding;
+  maintainPortfolio(vault, holding);
 }
 
-export function updateExternalPosition(
-  vault: Vault,
-  asset: Asset,
-  timestamp: BigInt,
-  external: boolean,
-): CurrentHolding {
+export function updateExternalPosition(vault: Vault, asset: Asset, timestamp: BigInt, external: boolean): void {
   let holding = getOrCreateHolding(vault, asset, timestamp);
   holding.external = external;
   holding.portfolio = holding.tracked || holding.external;
   holding.save();
 
   // Create a historical snapshot of the holding entity.
-  maintainPortfolioHistory(vault, holding);
-
-  return holding;
+  maintainPortfolio(vault, holding);
 }

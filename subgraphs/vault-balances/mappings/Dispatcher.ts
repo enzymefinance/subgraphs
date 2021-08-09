@@ -11,7 +11,7 @@ export function handleVaultProxyDeployed(event: VaultProxyDeployed): void {
   }
 
   let vault = new Vault(id);
-  vault.timestamp = event.block.timestamp;
+  vault.updated = event.block.timestamp;
   vault.portfolio = [];
   vault.save();
 

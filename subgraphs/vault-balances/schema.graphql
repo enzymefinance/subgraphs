@@ -8,88 +8,34 @@ type Asset @entity {
   symbol: String!
   name: String!
   total: BigDecimal!
-  holdings: [CurrentHolding!]! @derivedFrom(field: "asset")
+  holdings: [Holding!]! @derivedFrom(field: "asset")
   transfers: [Transfer!]! @derivedFrom(field: "asset")
+  incoming: [IncomingTransfer!]! @derivedFrom(field: "asset")
+  outgoing: [OutgoingTransfer!]! @derivedFrom(field: "asset")
 }
 
 type Vault @entity {
   id: ID!
-  timestamp: BigInt!
-  holdings: [CurrentHolding!]! @derivedFrom(field: "vault")
-  portfolio: [HistoricalHolding!]!
-  hourly: [HourlyPortfolio!]! @derivedFrom(field: "vault")
-  daily: [DailyPortfolio!]! @derivedFrom(field: "vault")
-  monthly: [MonthlyPortfolio!]! @derivedFrom(field: "vault")
+  updated: BigInt!
+  portfolio: [Holding!]!
+  holdings: [Holding!]! @derivedFrom(field: "vault")
   transfers: [Transfer!]! @derivedFrom(field: "vault")
   incoming: [IncomingTransfer!]! @derivedFrom(field: "vault")
   outgoing: [OutgoingTransfer!]! @derivedFrom(field: "vault")
 }
 
-type HourlyPortfolio @entity {
-  id: ID!
-  vault: Vault!
-  holdings: [HistoricalHolding!]!
-  timestamp: BigInt!
-  close: BigInt!
-}
-
-type DailyPortfolio @entity {
-  id: ID!
-  vault: Vault!
-  holdings: [HistoricalHolding!]!
-  timestamp: BigInt!
-  close: BigInt!
-}
-
-type MonthlyPortfolio @entity {
-  id: ID!
-  vault: Vault!
-  holdings: [HistoricalHolding!]!
-  timestamp: BigInt!
-  close: BigInt!
-}
-
-interface Holding {
+type Holding @entity {
   id: ID!
   vault: Vault!
   asset: Asset!
   balance: BigDecimal!
-  timestamp: BigInt!
-
+  updated: BigInt!
   tracked: Boolean!
   external: Boolean!
   portfolio: Boolean!
-}
-
-type CurrentHolding implements Holding @entity {
-  id: ID!
-  vault: Vault!
-  asset: Asset!
-  balance: BigDecimal!
-  timestamp: BigInt!
-
-  tracked: Boolean!
-  external: Boolean!
-  portfolio: Boolean!
-
-  history: [HistoricalHolding!]! @derivedFrom(field: "current")
   transfers: [Transfer!]! @derivedFrom(field: "holding")
   incoming: [IncomingTransfer!]! @derivedFrom(field: "holding")
   outgoing: [OutgoingTransfer!]! @derivedFrom(field: "holding")
-}
-
-type HistoricalHolding implements Holding @entity {
-  id: ID!
-  vault: Vault!
-  asset: Asset!
-  balance: BigDecimal!
-  timestamp: BigInt!
-
-  tracked: Boolean!
-  external: Boolean!
-  portfolio: Boolean!
-
-  current: CurrentHolding!
 }
 
 enum TransferType {
@@ -103,7 +49,7 @@ interface Transfer {
   type: TransferType!
   asset: Asset!
   vault: Vault!
-  holding: CurrentHolding!
+  holding: Holding!
   amount: BigDecimal!
   balance: BigDecimal!
   transaction: String!
@@ -115,7 +61,7 @@ type OutgoingTransfer implements Transfer @entity {
   type: TransferType!
   asset: Asset!
   vault: Vault!
-  holding: CurrentHolding!
+  holding: Holding!
   recipient: String!
   amount: BigDecimal!
   balance: BigDecimal!
@@ -128,7 +74,7 @@ type IncomingTransfer implements Transfer @entity {
   type: TransferType!
   asset: Asset!
   vault: Vault!
-  holding: CurrentHolding!
+  holding: Holding!
   sender: String!
   amount: BigDecimal!
   balance: BigDecimal!

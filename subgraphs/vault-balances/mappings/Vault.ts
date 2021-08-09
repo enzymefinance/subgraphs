@@ -22,9 +22,7 @@ export function handleTrackedAssetAdded(event: TrackedAssetAdded): void {
     return;
   }
 
-  let holding = updateTrackedAsset(vault as Vault, asset as Asset, event.block.timestamp, true);
-  holding.tracked = true;
-  holding.save();
+  updateTrackedAsset(vault as Vault, asset as Asset, event.block.timestamp, true);
 }
 
 export function handleTrackedAssetRemoved(event: TrackedAssetRemoved): void {
@@ -40,9 +38,7 @@ export function handleTrackedAssetRemoved(event: TrackedAssetRemoved): void {
     return;
   }
 
-  let holding = updateTrackedAsset(vault as Vault, asset as Asset, event.block.timestamp, false);
-  holding.tracked = false;
-  holding.save();
+  updateTrackedAsset(vault as Vault, asset as Asset, event.block.timestamp, false);
 }
 
 export function handleExternalPositionAdded(event: ExternalPositionAdded): void {
@@ -58,9 +54,7 @@ export function handleExternalPositionAdded(event: ExternalPositionAdded): void 
     return;
   }
 
-  let holding = updateExternalPosition(vault as Vault, asset as Asset, event.block.timestamp, true);
-  holding.external = true;
-  holding.save();
+  updateExternalPosition(vault as Vault, asset as Asset, event.block.timestamp, true);
 }
 
 export function handleExternalPositionRemoved(event: ExternalPositionRemoved): void {
@@ -76,7 +70,5 @@ export function handleExternalPositionRemoved(event: ExternalPositionRemoved): v
     return;
   }
 
-  let holding = updateExternalPosition(vault as Vault, asset as Asset, event.block.timestamp, false);
-  holding.external = false;
-  holding.save();
+  updateExternalPosition(vault as Vault, asset as Asset, event.block.timestamp, false);
 }
