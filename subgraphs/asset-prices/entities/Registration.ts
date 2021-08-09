@@ -36,7 +36,11 @@ export function createCurrencyRegistration(currencyId: string): CurrencyRegistra
   return registration;
 }
 
-export function createDerivativeRegistration(assetAddress: Address, releaseVersion: number): DerivativeRegistration {
+export function createDerivativeRegistration(
+  assetAddress: Address,
+  releaseVersion: number,
+  event: ethereum.Event,
+): DerivativeRegistration {
   let registrationId = derivativeRegistrationId(assetAddress, releaseVersion);
   let registration = DerivativeRegistration.load(registrationId) as DerivativeRegistration;
   if (registration != null) {
@@ -49,7 +53,7 @@ export function createDerivativeRegistration(assetAddress: Address, releaseVersi
   registration.version = releaseVersion as i32;
   registration.save();
 
-  addRegistrationToAsset(assetAddress, registrationId);
+  addRegistrationToAsset(assetAddress, registrationId, releaseVersion, event);
 
   return registration;
 }
@@ -58,10 +62,10 @@ export function createOrUpdatePrimitiveRegistration(
   assetAddress: Address,
   proxyAddress: Address,
   releaseVersion: number,
+  event: ethereum.Event,
   quoteCurrency: string | null = null,
 ): PrimitiveRegistration {
-  let previous = removePrimitiveRegistration(assetAddress, releaseVersion);
-
+  let previous = removePrimitiveRegistration(assetAddress, releaseVersion, event);
   let registrationId = primitiveRegistrationId(assetAddress, releaseVersion);
   let registration = new PrimitiveRegistration(registrationId);
   registration.type = 'PRIMITIVE';
@@ -74,7 +78,7 @@ export function createOrUpdatePrimitiveRegistration(
   let aggregatorAddress = unwrapAggregator(proxyAddress);
   addRegistrationToAggregatorProxy(proxyAddress, registrationId);
   addProxyToAggregator(proxyAddress, aggregatorAddress);
-  addRegistrationToAsset(assetAddress, registrationId);
+  addRegistrationToAsset(assetAddress, registrationId, releaseVersion, event);
 
   return registration;
 }
@@ -82,6 +86,7 @@ export function createOrUpdatePrimitiveRegistration(
 export function removePrimitiveRegistration(
   assetAddress: Address,
   releaseVersion: number,
+  event: ethereum.Event,
 ): PrimitiveRegistration | null {
   let registrationId = primitiveRegistrationId(assetAddress, releaseVersion);
   let registration = PrimitiveRegistration.load(registrationId);
@@ -92,7 +97,7 @@ export function removePrimitiveRegistration(
   // Delete the registration entity.
   store.remove('PrimitiveRegistration', registration.id);
   removeRegistrationFromAggregatorProxy(Address.fromString(registration.proxy), registrationId);
-  removeRegistrationFromAsset(assetAddress, registrationId);
+  removeRegistrationFromAsset(assetAddress, registrationId, releaseVersion, event);
 
   return registration;
 }
@@ -100,6 +105,7 @@ export function removePrimitiveRegistration(
 export function removeDerivativeRegistration(
   assetAddress: Address,
   releaseVersion: number,
+  event: ethereum.Event,
 ): DerivativeRegistration | null {
   let registrationId = primitiveRegistrationId(assetAddress, releaseVersion);
   let registration = DerivativeRegistration.load(registrationId);
@@ -109,7 +115,7 @@ export function removeDerivativeRegistration(
 
   // Delete the registration entity.
   store.remove('DerivativeRegistration', registration.id);
-  removeRegistrationFromAsset(assetAddress, registrationId);
+  removeRegistrationFromAsset(assetAddress, registrationId, releaseVersion, event);
 
   return registration;
 }
@@ -152,9 +158,14 @@ export function getActiveRegistration(asset: Asset): AssetRegistration | null {
   return registration;
 }
 
-function addRegistrationToAsset(assetAddress: Address, registrationId: string): Asset {
+function addRegistrationToAsset(
+  assetAddress: Address,
+  registrationId: string,
+  releaseVersion: number,
+  event: ethereum.Event,
+): Asset {
   // Update registrations sorted by priority.
-  let asset = getOrCreateAsset(assetAddress);
+  let asset = getOrCreateAsset(assetAddress, releaseVersion, event);
   let registrations = arrayUnique<string>(asset.registrations.concat([registrationId]))
     .map<AssetRegistration>((id) => AssetRegistration.load(id) as AssetRegistration)
     .filter((registration) => registration != null)
@@ -188,8 +199,13 @@ function addProxyToAggregator(proxyAddress: Address, aggregatorAddress: Address)
   return aggregator;
 }
 
-function removeRegistrationFromAsset(assetAddress: Address, registrationId: string): Asset {
-  let asset = getOrCreateAsset(assetAddress);
+function removeRegistrationFromAsset(
+  assetAddress: Address,
+  registrationId: string,
+  releaseVersion: number,
+  event: ethereum.Event,
+): Asset {
+  let asset = getOrCreateAsset(assetAddress, releaseVersion, event);
   let removed = arrayDiff<string>(asset.registrations, [registrationId]);
   let registrations = arrayUnique<string>(removed.concat([registrationId]))
     .map<AssetRegistration>((id) => AssetRegistration.load(id) as AssetRegistration)
@@ -376,6 +392,15 @@ export class AssetRegistration extends Entity {
 
   set type(value: string) {
     this.set('type', Value.fromString(value));
+  }
+
+  get asset(): string {
+    let value = this.get('asset') as Value;
+    return value.toString();
+  }
+
+  set asset(value: string) {
+    this.set('asset', Value.fromString(value));
   }
 
   get version(): i32 {

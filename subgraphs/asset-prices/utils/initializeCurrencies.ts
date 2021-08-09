@@ -1,8 +1,7 @@
 import { BigDecimal, ethereum } from '@graphprotocol/graph-ts';
+import { ONE_BD, saveDivideBigDecimal } from '@enzymefinance/subgraph-utils';
 import { Currency } from '../generated/schema';
 import { getOrCreateAggregator } from '../entities/Aggregator';
-import { getOrCreateCurrency } from '../entities/Currency';
-import { updateCurrencyValue } from '../entities/CurrencyValue';
 import { createCurrencyRegistration } from '../entities/Registration';
 import { fetchLatestAnswer } from './fetchLatestAnswer';
 import { getCurrencyAggregator } from './getCurrencyAggregator';
@@ -20,30 +19,37 @@ export function initializeCurrencies(event: ethereum.Event): void {
   createCurrencyRegistration('GBP');
   createCurrencyRegistration('JPY');
 
-  // Note: We must initialize USD first because the other currencies are quoted against USD.
-  let usd = getOrCreateCurrency('USD');
-  updateCurrencyValue(usd, fetchLatestCurrencyValue(usd), event);
+  let usdEth = fetchLatestCurrencyAggregatorAnswer('USD');
+  createCurrency('USD', usdEth, ONE_BD, event);
 
-  let btc = getOrCreateCurrency('BTC');
-  updateCurrencyValue(btc, fetchLatestCurrencyValue(btc), event);
+  let btcUsd = fetchLatestCurrencyAggregatorAnswer('BTC');
+  createCurrency('BTC', saveDivideBigDecimal(btcUsd, usdEth), btcUsd, event);
 
-  let eur = getOrCreateCurrency('EUR');
-  updateCurrencyValue(eur, fetchLatestCurrencyValue(eur), event);
+  let eurUsd = fetchLatestCurrencyAggregatorAnswer('EUR');
+  createCurrency('EUR', saveDivideBigDecimal(eurUsd, usdEth), eurUsd, event);
 
-  let aud = getOrCreateCurrency('AUD');
-  updateCurrencyValue(aud, fetchLatestCurrencyValue(aud), event);
+  let audUsd = fetchLatestCurrencyAggregatorAnswer('AUD');
+  createCurrency('AUD', saveDivideBigDecimal(audUsd, usdEth), audUsd, event);
 
-  let chf = getOrCreateCurrency('CHF');
-  updateCurrencyValue(chf, fetchLatestCurrencyValue(chf), event);
+  let chfUsd = fetchLatestCurrencyAggregatorAnswer('CHF');
+  createCurrency('CHF', saveDivideBigDecimal(chfUsd, usdEth), chfUsd, event);
 
-  let gbp = getOrCreateCurrency('GBP');
-  updateCurrencyValue(gbp, fetchLatestCurrencyValue(gbp), event);
+  let gbpUsd = fetchLatestCurrencyAggregatorAnswer('GBP');
+  createCurrency('GBP', saveDivideBigDecimal(gbpUsd, usdEth), gbpUsd, event);
 
-  let jpy = getOrCreateCurrency('JPY');
-  updateCurrencyValue(jpy, fetchLatestCurrencyValue(jpy), event);
+  let jpyUsd = fetchLatestCurrencyAggregatorAnswer('JPY');
+  createCurrency('JPY', saveDivideBigDecimal(jpyUsd, usdEth), jpyUsd, event);
 }
 
-function fetchLatestCurrencyValue(currency: Currency): BigDecimal {
-  let aggregator = getOrCreateAggregator(getCurrencyAggregator(currency.id));
+function createCurrency(id: string, eth: BigDecimal, usd: BigDecimal, event: ethereum.Event): void {
+  let currency = new Currency(id);
+  currency.updated = event.block.timestamp;
+  currency.usd = usd;
+  currency.eth = eth;
+  currency.save();
+}
+
+function fetchLatestCurrencyAggregatorAnswer(currency: string): BigDecimal {
+  let aggregator = getOrCreateAggregator(getCurrencyAggregator(currency));
   return fetchLatestAnswer(aggregator);
 }

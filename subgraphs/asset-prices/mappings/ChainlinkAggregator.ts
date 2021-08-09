@@ -1,11 +1,8 @@
 import { arrayUnique, saveDivideBigDecimal, toBigDecimal } from '@enzymefinance/subgraph-utils';
-import { Address } from '@graphprotocol/graph-ts';
 import { AnswerUpdated } from '../generated/AggregatorInterfaceContract';
 import { AggregatorProxy, CurrencyRegistration, PrimitiveRegistration } from '../generated/schema';
-import { getOrCreateAsset } from '../entities/Asset';
-import { updateAssetPrice } from '../entities/AssetPrice';
+import { getAsset, updateAssetPrice } from '../entities/Asset';
 import { getOrCreateCurrency } from '../entities/Currency';
-import { getLatestCurrencyValueInEth } from '../entities/CurrencyValue';
 import { getUpdatedAggregator, Registration } from '../entities/Registration';
 import { updateDerivativePrices } from '../entities/Updater';
 import { updateForCurrencyRegistration } from '../utils/updateForRegistration';
@@ -46,20 +43,20 @@ export function handleAnswerUpdated(event: AnswerUpdated): void {
     .filter((registration) => registration.type == 'PRIMITIVE')
     .map<PrimitiveRegistration>((registration) => registration as PrimitiveRegistration)
     .filter((registration) => {
-      let asset = getOrCreateAsset(Address.fromString(registration.asset));
+      let asset = getAsset(registration.asset);
       let registrations = asset.registrations;
       return registrations.length > 0 && registrations[0] == registration.id;
     });
 
   // Aggregators with 8 decimals are USD based by convention.
   if (aggregator.decimals == 8) {
-    let usd = getOrCreateCurrency('USD');
-    value = saveDivideBigDecimal(value, getLatestCurrencyValueInEth(usd));
+    let usd = getOrCreateCurrency('USD', event);
+    value = saveDivideBigDecimal(value, usd.eth);
   }
 
   for (let i: i32 = 0; i < primitives.length; i++) {
     let registration = primitives[i];
-    let asset = getOrCreateAsset(Address.fromString(registration.asset));
+    let asset = getAsset(registration.asset);
     updateAssetPrice(asset, value, event);
   }
 

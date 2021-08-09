@@ -12,23 +12,29 @@ export function handlePrimitiveAdded(event: PrimitiveAdded): void {
   initializeCurrencies(event);
 
   let quote = event.params.rateAsset == 0 ? 'ETH' : 'USD';
-  let registration = createOrUpdatePrimitiveRegistration(event.params.primitive, event.params.aggregator, 2, quote);
+  let registration = createOrUpdatePrimitiveRegistration(
+    event.params.primitive,
+    event.params.aggregator,
+    2,
+    event,
+    quote,
+  );
   updateForPrimitiveRegistration(registration, event);
 }
 
 export function handlePrimitiveUpdated(event: PrimitiveUpdated): void {
   initializeCurrencies(event);
 
-  let registration = createOrUpdatePrimitiveRegistration(event.params.primitive, event.params.nextAggregator, 2);
+  let registration = createOrUpdatePrimitiveRegistration(event.params.primitive, event.params.nextAggregator, 2, event);
   updateForPrimitiveRegistration(registration, event);
 }
 
 export function handlePrimitiveRemoved(event: PrimitiveRemoved): void {
   initializeCurrencies(event);
-  removePrimitiveRegistration(event.params.primitive, 2);
+  removePrimitiveRegistration(event.params.primitive, 2, event);
 }
 
 export function handleStalePrimitiveRemoved(event: StalePrimitiveRemoved): void {
   initializeCurrencies(event);
-  removePrimitiveRegistration(event.params.primitive, 2);
+  removePrimitiveRegistration(event.params.primitive, 2, event);
 }

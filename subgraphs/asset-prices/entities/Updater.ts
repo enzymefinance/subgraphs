@@ -1,8 +1,7 @@
 import { ZERO_BI } from '@enzymefinance/subgraph-utils';
-import { Address, BigInt, ethereum } from '@graphprotocol/graph-ts';
+import { BigInt, ethereum } from '@graphprotocol/graph-ts';
 import { DerivativeRegistration, DerivativeUpdater } from '../generated/schema';
-import { getOrCreateAsset } from './Asset';
-import { updateAssetPriceWithValueInterpreter } from './AssetPrice';
+import { getAsset, updateAssetPriceWithValueInterpreter } from './Asset';
 import { getOrCreateDerivativeRegistry } from './DerivativeRegistry';
 import { getActiveRegistration } from './Registration';
 
@@ -44,7 +43,7 @@ export function updateDerivativePrices(event: ethereum.Event): void {
   for (let i: i32 = 0; i < DERIVATIVE_UPDATE_BATCH_SIZE; i++) {
     progress = progress.plus(BigInt.fromI32(1)).mod(limit);
     let index = progress.toI32();
-    let asset = getOrCreateAsset(Address.fromString(assets[index]));
+    let asset = getAsset(assets[index]);
     let registration = getActiveRegistration(asset) as DerivativeRegistration;
     updateAssetPriceWithValueInterpreter(asset, registration.version, event);
   }

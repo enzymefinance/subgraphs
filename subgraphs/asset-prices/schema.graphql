@@ -2,155 +2,54 @@
 # Assets & asset prices
 #################################################
 
+"""
+A registered asset.
+"""
 type Asset @entity {
   id: ID!
+  """
+  The name of this asset.
+  """
   name: String!
+  """
+  The symbol of this asset.
+  """
   symbol: String!
+  """
+  The number of decimal places for this asset.
+  """
   decimals: Int!
   """
   The release versions in which this asset is supported.
   """
   versions: [Int!]!
   """
-  The current (latest) price of the asset.
+  The timestamp at which the asset price was updated.
   """
-  price: AssetPrice!
+  updated: BigInt!
   """
-  Historical prices recorded for the asset.
+  The asset price in ETH.
   """
-  history: [AssetPrice!]! @derivedFrom(field: "asset")
-  """
-  Hourly time windows for historical asset prices (may contain gaps).
-  """
-  hourly: [HourlyAssetPrice!]! @derivedFrom(field: "asset")
-  """
-  Daily time windows for historical asset prices (may contain gaps).
-  """
-  daily: [DailyAssetPrice!]! @derivedFrom(field: "asset")
-  """
-  Monthly time windows for historical asset prices (may contain gaps).
-  """
-  monthly: [MonthlyAssetPrice!]! @derivedFrom(field: "asset")
+  price: BigDecimal!
   """
   A list of active registrations for this asset. Used to run batched updates for derivative assets.
   """
   registrations: [AssetRegistration!]!
 }
 
-type AssetPrice @entity {
-  id: ID!
-  """
-  The asset this price belongs to.
-  """
-  asset: Asset!
-  """
-  The timestamp at which the price was updated.
-  """
-  timestamp: BigInt!
-  """
-  The asset price in ETH.
-  """
-  price: BigDecimal!
-}
-
-type HourlyAssetPrice @entity {
-  id: ID!
-  """
-  The asset this price belongs to.
-  """
-  asset: Asset!
-  """
-  The timestamp at which the price was updated.
-  """
-  timestamp: BigInt!
-  """
-  The asset price in ETH.
-  """
-  price: BigDecimal!
-  """
-  The closing time of the time window.
-  """
-  close: BigInt!
-}
-
-type DailyAssetPrice @entity {
-  id: ID!
-  """
-  The asset this price belongs to.
-  """
-  asset: Asset!
-  """
-  The timestamp at which the price was updated.
-  """
-  timestamp: BigInt!
-  """
-  The asset price in ETH.
-  """
-  price: BigDecimal!
-  """
-  The closing time of the time window.
-  """
-  close: BigInt!
-}
-
-type MonthlyAssetPrice @entity {
-  id: ID!
-  """
-  The asset this price belongs to.
-  """
-  asset: Asset!
-  """
-  The timestamp at which the price was updated.
-  """
-  timestamp: BigInt!
-  """
-  The asset price in ETH.
-  """
-  price: BigDecimal!
-  """
-  The closing time of the time window.
-  """
-  close: BigInt!
-}
-
 #################################################
 # Currencies & currency values
 #################################################
 
+"""
+The supported currencies are USD, BTC, EUR, CHF, GBP, AUD and JPY.
+"""
 type Currency @entity {
   id: ID!
   """
-  The current (latest) value of the currency.
-  """
-  value: CurrencyValue!
-  """
-  Historical values recorded for the currency.
-  """
-  history: [CurrencyValue!]! @derivedFrom(field: "currency")
-  """
-  Hourly time windows for historical currency values (may contain gaps).
-  """
-  hourly: [HourlyCurrencyValue!]! @derivedFrom(field: "currency")
-  """
-  Daily time windows for historical currency values (may contain gaps).
-  """
-  daily: [DailyCurrencyValue!]! @derivedFrom(field: "currency")
-  """
-  Monthly time windows for historical currency values (may contain gaps).
-  """
-  monthly: [MonthlyCurrencyValue!]! @derivedFrom(field: "currency")
-}
-
-type CurrencyValue @entity {
-  id: ID!
-  """
-  The currency key.
-  """
-  currency: Currency!
-  """
   The timestamp at which the currency value was updated.
   """
-  timestamp: BigInt!
+  updated: BigInt!
   """
   The currency value represented in ETH.
   """
@@ -159,84 +58,15 @@ type CurrencyValue @entity {
   The currency value represented in USD.
   """
   usd: BigDecimal!
-}
-
-type HourlyCurrencyValue @entity {
-  id: ID!
-  """
-  The currency key.
-  """
-  currency: Currency!
-  """
-  The timestamp at which the currency value was updated.
-  """
-  timestamp: BigInt!
-  """
-  The currency value represented in ETH.
-  """
-  eth: BigDecimal!
-  """
-  The currency value represented in USD.
-  """
-  usd: BigDecimal!
-  """
-  The closing time of the time window.
-  """
-  close: BigInt!
-}
-
-type DailyCurrencyValue @entity {
-  id: ID!
-  """
-  The currency key.
-  """
-  currency: Currency!
-  """
-  The timestamp at which the currency value was updated.
-  """
-  timestamp: BigInt!
-  """
-  The currency value represented in ETH.
-  """
-  eth: BigDecimal!
-  """
-  The currency value represented in USD.
-  """
-  usd: BigDecimal!
-  """
-  The closing time of the time window.
-  """
-  close: BigInt!
-}
-
-type MonthlyCurrencyValue @entity {
-  id: ID!
-  """
-  The currency key.
-  """
-  currency: Currency!
-  """
-  The timestamp at which the currency value was updated.
-  """
-  timestamp: BigInt!
-  """
-  The currency value represented in ETH.
-  """
-  eth: BigDecimal!
-  """
-  The currency value represented in USD.
-  """
-  usd: BigDecimal!
-  """
-  The closing time of the time window.
-  """
-  close: BigInt!
 }
 
 #################################################
 # Chainlink aggregators & proxies
 #################################################
 
+"""
+Chainlink aggregator proxy.
+"""
 type AggregatorProxy @entity {
   id: ID!
   """
@@ -245,6 +75,9 @@ type AggregatorProxy @entity {
   registrations: [Registration!]!
 }
 
+"""
+Chainlink aggregator.
+"""
 type Aggregator @entity {
   id: ID!
   """
