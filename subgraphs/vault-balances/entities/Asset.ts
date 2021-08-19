@@ -2,16 +2,6 @@ import { Address, log } from '@graphprotocol/graph-ts';
 import { tokenDecimals, tokenBalance } from '@enzymefinance/subgraph-utils';
 import { Asset, IgnoredAsset } from '../generated/schema';
 
-function supportsDecimalsCall(address: Address): boolean {
-  let decimals = tokenDecimals(address);
-  if (decimals == -1) {
-    log.error('cannot fetch decimals for asset {}', [address.toHex()]);
-    return false;
-  }
-
-  return true;
-}
-
 function supportBalanceOfCall(address: Address): boolean {
   let vitalik = Address.fromString('0xab5801a7d398351b8be11c439e05c5b3259aec9b');
   let balance = tokenBalance(address, vitalik);
@@ -35,14 +25,15 @@ export function ensureAsset(address: Address): Asset | null {
     }
 
     // Check if we can call .decimals() on this contract.
-    if (!(supportsDecimalsCall(address) && supportBalanceOfCall(address))) {
+    if (!supportBalanceOfCall(address)) {
       log.error('ignoring asset {} (unsupported)', [id]);
       let ignore = new IgnoredAsset(id);
       ignore.save();
     }
 
+    let decimals = tokenDecimals(address);
     asset = new Asset(id);
-    asset.decimals = tokenDecimals(address);
+    asset.decimals = decimals == -1 ? 18 : decimals;
     asset.save();
   }
 
