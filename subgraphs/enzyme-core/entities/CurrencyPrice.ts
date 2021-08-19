@@ -10,26 +10,26 @@ export function currencyPriceId(event: ethereum.Event): string {
 
 export function ensureCurrencyPrice(event: ethereum.Event): CurrencyPrice {
   let id = currencyPriceId(event);
-  let currencyPrice = CurrencyPrice.load(id) as CurrencyPrice;
-  if (currencyPrice) {
-    return currencyPrice;
+  let currencyValue = CurrencyPrice.load(id) as CurrencyPrice;
+  if (currencyValue) {
+    return currencyValue;
   }
 
   let ethUsd = getLatestEthUsdPrice();
 
   // All prices are vs. ETH
-  currencyPrice = new CurrencyPrice(id);
-  currencyPrice.timestamp = event.block.timestamp;
-  currencyPrice.aud = getLatestCurrencyPrice('aud').div(ethUsd);
-  currencyPrice.btc = getLatestBtcEthPrice();
-  currencyPrice.chf = getLatestCurrencyPrice('chf').div(ethUsd);
-  currencyPrice.eur = getLatestCurrencyPrice('eur').div(ethUsd);
-  currencyPrice.gbp = getLatestCurrencyPrice('gbp').div(ethUsd);
-  currencyPrice.jpy = getLatestCurrencyPrice('jpy').div(ethUsd);
-  currencyPrice.usd = BigDecimal.fromString('1').div(ethUsd);
-  currencyPrice.save();
+  currencyValue = new CurrencyPrice(id);
+  currencyValue.timestamp = event.block.timestamp;
+  currencyValue.ethAud = ethUsd.div(getLatestCurrencyPrice('aud'));
+  currencyValue.ethBtc = BigDecimal.fromString('1').div(getLatestBtcEthPrice());
+  currencyValue.ethChf = ethUsd.div(getLatestCurrencyPrice('chf'));
+  currencyValue.ethEur = ethUsd.div(getLatestCurrencyPrice('eur'));
+  currencyValue.ethGbp = ethUsd.div(getLatestCurrencyPrice('gbp'));
+  currencyValue.ethJpy = ethUsd.div(getLatestCurrencyPrice('jpy'));
+  currencyValue.ethUsd = ethUsd;
+  currencyValue.save();
 
-  return currencyPrice;
+  return currencyValue;
 }
 
 function getLatestEthUsdPrice(): BigDecimal {

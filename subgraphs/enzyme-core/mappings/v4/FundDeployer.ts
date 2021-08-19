@@ -1,0 +1,170 @@
+import { Address, DataSourceContext } from '@graphprotocol/graph-ts';
+import { ensureAccount, ensureOwner } from '../../entities/Account';
+import { ensureAsset } from '../../entities/Asset';
+import { ensureComptroller } from '../../entities/Comptroller';
+import { trackNetworkFunds } from '../../entities/Network';
+import { ensureProtocolFee } from '../../entities/ProtocolFee';
+import { generateReconfigurationId, useReconfiguraton } from '../../entities/Reconfiguration';
+import { ensureRelease } from '../../entities/Release';
+import { createVault, useVault } from '../../entities/Vault';
+import {
+  BuySharesOnBehalfCallerDeregistered,
+  BuySharesOnBehalfCallerRegistered,
+  ComptrollerLibSet,
+  ComptrollerProxyDeployed,
+  MigrationRequestCreated,
+  NewFundCreated,
+  ProtocolFeeTrackerSet,
+  ReconfigurationRequestCancelled,
+  ReconfigurationRequestCreated,
+  ReconfigurationRequestExecuted,
+  ReconfigurationTimelockSet,
+  ReleaseIsLive,
+  VaultCallDeregistered,
+  VaultCallRegistered,
+  VaultLibSet,
+} from '../../generated/FundDeployer4Contract';
+import { Reconfiguration } from '../../generated/schema';
+import { ComptrollerLib4DataSource, VaultLib4DataSource } from '../../generated/templates';
+import { VaultLib4Contract } from '../../generated/VaultLib4Contract';
+
+export function handleNewFundCreated(event: NewFundCreated): void {
+  let vaultContract = VaultLib4Contract.bind(event.address);
+  let fundName = vaultContract.name();
+  let owner = vaultContract.getOwner();
+  let protocolFee = vaultContract.getProtocolFeeTracker();
+
+  let vault = createVault(
+    event.params.vaultProxy,
+    fundName,
+    event.block.timestamp,
+    ensureRelease(event.address, event),
+    ensureComptroller(event.params.comptrollerProxy, event),
+    ensureOwner(owner, event),
+    ensureAccount(event.params.creator, event),
+  );
+
+  vault.protocolFee = ensureProtocolFee(event.params.vaultProxy, protocolFee).id;
+  vault.save();
+
+  trackNetworkFunds(event);
+
+  let comptrollerContext = new DataSourceContext();
+  comptrollerContext.setString('vaultProxy', event.params.vaultProxy.toHex());
+
+  VaultLib4DataSource.create(event.params.vaultProxy);
+  ComptrollerLib4DataSource.createWithContext(event.params.comptrollerProxy, comptrollerContext);
+
+  let comptroller = ensureComptroller(event.params.comptrollerProxy, event);
+  comptroller.vault = vault.id;
+  comptroller.activation = event.block.timestamp;
+  comptroller.status = 'COMMITTED';
+  comptroller.save();
+}
+
+export function handleComptrollerProxyDeployed(event: ComptrollerProxyDeployed): void {
+  // datasource for new comptroller is created either in the NewFundCreated event (for new funds)
+  // or in the MigrationExecuted event (for migrations) or in the ReconfigurationRequestExecuted (for reconfigurations)
+
+  let comptroller = ensureComptroller(event.params.comptrollerProxy, event);
+  comptroller.creator = ensureAccount(event.params.creator, event).id;
+  comptroller.creation = event.block.timestamp;
+  comptroller.denomination = ensureAsset(event.params.denominationAsset).id;
+  comptroller.release = ensureRelease(event.address, event).id;
+  comptroller.status = 'FREE';
+  comptroller.save();
+}
+
+export function handleReleaseIsLive(event: ReleaseIsLive): void {
+  let release = ensureRelease(event.address, event);
+  release.isLive = true;
+  release.save();
+}
+
+export function handleMigrationRequestCreated(event: MigrationRequestCreated): void {
+  // TODO: do we need to handle this? It's just a wrapper around for creating a comptroller and signalling migration
+}
+
+export function handleReconfigurationRequestCancelled(event: ReconfigurationRequestCancelled): void {
+  let reconfigurationId = generateReconfigurationId(
+    event.params.vaultProxy,
+    event.address,
+    event.params.nextComptrollerProxy,
+  );
+
+  let reconfiguration = useReconfiguraton(reconfigurationId);
+  reconfiguration.cancelled = true;
+  reconfiguration.cancelledTimestamp = event.block.timestamp;
+  reconfiguration.save();
+
+  let comptrollerProxy = ensureComptroller(Address.fromString(reconfiguration.comptroller), event);
+  comptrollerProxy.vault = null;
+  comptrollerProxy.status = 'DESTRUCTED';
+  comptrollerProxy.save();
+}
+
+export function handleReconfigurationRequestCreated(event: ReconfigurationRequestCreated): void {
+  let reconfigurationId = generateReconfigurationId(
+    event.params.vaultProxy,
+    event.address,
+    event.params.comptrollerProxy,
+  );
+
+  let reconfiguration = new Reconfiguration(reconfigurationId);
+  reconfiguration.vault = useVault(event.params.vaultProxy.toHex()).id;
+  reconfiguration.comptroller = ensureComptroller(event.params.comptrollerProxy, event).id;
+  reconfiguration.release = ensureRelease(event.address, event).id;
+  reconfiguration.executableTimestamp = event.params.executableTimestamp;
+  reconfiguration.cancelled = false;
+  reconfiguration.executed = false;
+  reconfiguration.save();
+
+  let vault = useVault(event.params.vaultProxy.toHex());
+
+  let comptrollerProxy = ensureComptroller(event.params.comptrollerProxy, event);
+  comptrollerProxy.vault = vault.id;
+  comptrollerProxy.status = 'SIGNALLED';
+  comptrollerProxy.save();
+}
+
+export function handleReconfigurationRequestExecuted(event: ReconfigurationRequestExecuted): void {
+  let reconfigurationId = generateReconfigurationId(
+    event.params.vaultProxy,
+    event.address,
+    event.params.nextComptrollerProxy,
+  );
+
+  let reconfiguration = useReconfiguraton(reconfigurationId);
+  reconfiguration.executed = true;
+  reconfiguration.executedTimestamp = event.block.timestamp;
+  reconfiguration.save();
+
+  let vault = useVault(event.params.vaultProxy.toHex());
+  let prevAccessor = vault.comptroller;
+  vault.comptroller = ensureComptroller(event.params.nextComptrollerProxy, event).id;
+  vault.save();
+
+  // start monitoring the Comptroller Proxy
+  let comptrollerContext = new DataSourceContext();
+  comptrollerContext.setString('vaultProxy', event.params.vaultProxy.toHex());
+  ComptrollerLib4DataSource.createWithContext(event.params.nextComptrollerProxy, comptrollerContext);
+
+  let comptrollerProxy = ensureComptroller(event.params.nextComptrollerProxy, event);
+  comptrollerProxy.activation = event.block.timestamp;
+  comptrollerProxy.status = 'COMMITTED';
+  comptrollerProxy.save();
+
+  let prevComptrollerProxy = ensureComptroller(event.params.prevComptrollerProxy, event);
+  prevComptrollerProxy.destruction = event.block.timestamp;
+  prevComptrollerProxy.status = 'DESTRUCTED';
+  prevComptrollerProxy.save();
+}
+
+export function handleBuySharesOnBehalfCallerDeregistered(event: BuySharesOnBehalfCallerDeregistered): void {}
+export function handleBuySharesOnBehalfCallerRegistered(event: BuySharesOnBehalfCallerRegistered): void {}
+export function handleComptrollerLibSet(event: ComptrollerLibSet): void {}
+export function handleProtocolFeeTrackerSet(event: ProtocolFeeTrackerSet): void {}
+export function handleReconfigurationTimelockSet(event: ReconfigurationTimelockSet): void {}
+export function handleVaultCallDeregistered(event: VaultCallDeregistered): void {}
+export function handleVaultCallRegistered(event: VaultCallRegistered): void {}
+export function handleVaultLibSet(event: VaultLibSet): void {}

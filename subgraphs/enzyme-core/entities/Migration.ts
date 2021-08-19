@@ -1,9 +1,6 @@
 import { logCritical } from '@enzymefinance/subgraph-utils';
-import { MigrationSignaled } from '../generated/DispatcherContract';
+import { Address, BigInt } from '@graphprotocol/graph-ts';
 import { Migration } from '../generated/schema';
-import { ensureComptrollerProxy } from './ComptrollerProxy';
-import { ensureRelease } from './Release';
-import { useVault } from './Vault';
 
 export function useMigration(id: string): Migration {
   let migration = Migration.load(id) as Migration;
@@ -14,39 +11,18 @@ export function useMigration(id: string): Migration {
   return migration;
 }
 
-export function ensureMigration(event: MigrationSignaled): Migration {
-  let id = generateMigrationId(
-    event.params.vaultProxy.toHex(),
-    event.params.prevFundDeployer.toHex(),
-    event.params.nextFundDeployer.toHex(),
-    event.params.executableTimestamp.toString(),
-  );
-
-  let migration = Migration.load(id) as Migration;
-  if (migration) {
-    return migration;
-  }
-
-  migration = new Migration(id);
-  migration.prevRelease = ensureRelease(event.params.prevFundDeployer.toHex(), event).id;
-  migration.nextRelease = ensureRelease(event.params.nextFundDeployer.toHex(), event).id;
-  migration.vault = useVault(event.params.vaultProxy.toHex()).id;
-  migration.executableTimestamp = event.params.executableTimestamp;
-  migration.cancelled = false;
-  migration.executed = false;
-  migration.nextAccessor = ensureComptrollerProxy(event.params.nextVaultAccessor, event).id;
-  migration.save();
-
-  return migration;
-}
-
 // Uniquely identifies a signaled migration.
 export function generateMigrationId(
-  vaultProxy: string,
-  prevFundDeployer: string,
-  nextFundDeployer: string,
-  executableTimestamp: string,
+  vaultProxy: Address,
+  prevFundDeployer: Address,
+  nextFundDeployer: Address,
+  executableTimestamp: BigInt,
 ): string {
-  let arr: Array<string> = [vaultProxy, prevFundDeployer, nextFundDeployer, executableTimestamp];
+  let arr: Array<string> = [
+    vaultProxy.toHex(),
+    prevFundDeployer.toHex(),
+    nextFundDeployer.toHex(),
+    executableTimestamp.toString(),
+  ];
   return arr.join('/');
 }

@@ -14,12 +14,23 @@ export function createAssetAmount(
   suffix: string,
   event: ethereum.Event,
 ): AssetAmount {
+  let assetPrice = ensureAssetPrice(asset, event);
+  let currencyPrice = ensureCurrencyPrice(event);
+  let assetValueEth = amount.times(assetPrice.price);
+
   let id = assetAmountId(asset, suffix, event);
   let assetAmount = new AssetAmount(id);
   assetAmount.asset = asset.id;
   assetAmount.amount = amount;
-  assetAmount.price = ensureAssetPrice(asset, event).id;
-  assetAmount.currency = ensureCurrencyPrice(event).id;
+  assetAmount.valueAud = assetValueEth.times(currencyPrice.ethAud);
+  assetAmount.valueBtc = assetValueEth.times(currencyPrice.ethBtc);
+  assetAmount.valueChf = assetValueEth.times(currencyPrice.ethChf);
+  assetAmount.valueEth = assetValueEth;
+  assetAmount.valueEur = assetValueEth.times(currencyPrice.ethEur);
+  assetAmount.valueGbp = assetValueEth.times(currencyPrice.ethGbp);
+  assetAmount.valueJpy = assetValueEth.times(currencyPrice.ethJpy);
+  assetAmount.valueUsd = assetValueEth.times(currencyPrice.ethUsd);
+  assetAmount.timestamp = event.block.timestamp;
   assetAmount.save();
 
   return assetAmount;

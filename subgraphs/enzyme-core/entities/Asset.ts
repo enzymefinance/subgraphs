@@ -22,9 +22,6 @@ export function ensureAsset(address: Address): Asset {
   asset.name = name;
   asset.symbol = symbol;
   asset.decimals = decimalsCall.value;
-  asset.type = 'UNKNOWN';
-  asset.networkAssetHolding = '';
-  asset.removed = false;
   asset.save();
 
   return asset;

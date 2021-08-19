@@ -1,0 +1,573 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_dispatcher",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_fundDeployer",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_valueInterpreter",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_feeManager",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_integrationManager",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_policyManager",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_primitivePriceFeed",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_synthetixPriceFeed",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_synthetixAddressResolver",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "sharesDue",
+        "type": "uint256"
+      }
+    ],
+    "name": "MigratedSharesDuePaid",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bool",
+        "name": "overridePause",
+        "type": "bool"
+      }
+    ],
+    "name": "OverridePauseSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "bytes",
+        "name": "failureReturnData",
+        "type": "bytes"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "redeemer",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "sharesQuantity",
+        "type": "uint256"
+      }
+    ],
+    "name": "PreRedeemSharesHookFailed",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "caller",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "buyer",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "investmentAmount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "sharesIssued",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "sharesReceived",
+        "type": "uint256"
+      }
+    ],
+    "name": "SharesBought",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "redeemer",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "sharesQuantity",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address[]",
+        "name": "receivedAssets",
+        "type": "address[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256[]",
+        "name": "receivedAssetQuantities",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "SharesRedeemed",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "vaultProxy",
+        "type": "address"
+      }
+    ],
+    "name": "VaultProxySet",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_vaultProxy",
+        "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "_isMigration",
+        "type": "bool"
+      }
+    ],
+    "name": "activate",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "_buyers",
+        "type": "address[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "_investmentAmounts",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "_minSharesQuantities",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "buyShares",
+    "outputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "sharesReceivedAmounts_",
+        "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bool",
+        "name": "_requireFinality",
+        "type": "bool"
+      }
+    ],
+    "name": "calcGav",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "gav_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "isValid_",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bool",
+        "name": "_requireFinality",
+        "type": "bool"
+      }
+    ],
+    "name": "calcGrossShareValue",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "grossShareValue_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "isValid_",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_extension",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_actionId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_callArgs",
+        "type": "bytes"
+      }
+    ],
+    "name": "callOnExtension",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes",
+        "name": "_feeManagerConfigData",
+        "type": "bytes"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_policyManagerConfigData",
+        "type": "bytes"
+      }
+    ],
+    "name": "configureExtensions",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "destruct",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getDenominationAsset",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "denominationAsset_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getLibRoutes",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "dispatcher_",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "feeManager_",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "fundDeployer_",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "integrationManager_",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "policyManager_",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "primitivePriceFeed_",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "valueInterpreter_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getOverridePause",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "overridePause_",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getSharesActionTimelock",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "sharesActionTimelock_",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getSynthetixAddressResolver",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "synthetixAddressResolver_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getSynthetixPriceFeed",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "synthetixPriceFeed_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getVaultProxy",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "vaultProxy_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_denominationAsset",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_sharesActionTimelock",
+        "type": "uint256"
+      }
+    ],
+    "name": "init",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "enum IComptroller.VaultAction",
+        "name": "_action",
+        "type": "uint8"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_actionData",
+        "type": "bytes"
+      }
+    ],
+    "name": "permissionedVaultAction",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "redeemShares",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "payoutAssets_",
+        "type": "address[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "payoutAmounts_",
+        "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_sharesQuantity",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address[]",
+        "name": "_additionalAssets",
+        "type": "address[]"
+      },
+      {
+        "internalType": "address[]",
+        "name": "_assetsToSkip",
+        "type": "address[]"
+      }
+    ],
+    "name": "redeemSharesDetailed",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "payoutAssets_",
+        "type": "address[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "payoutAmounts_",
+        "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bool",
+        "name": "_nextOverridePause",
+        "type": "bool"
+      }
+    ],
+    "name": "setOverridePause",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_contract",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes4",
+        "name": "_selector",
+        "type": "bytes4"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_encodedArgs",
+        "type": "bytes"
+      }
+    ],
+    "name": "vaultCallOnContract",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

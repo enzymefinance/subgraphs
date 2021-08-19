@@ -36,6 +36,7 @@ declare module '@enzymefinance/subgraph-cli' {
   export interface AbiDeclaration {
     name: string;
     file: string;
+    version?: string;
   }
 
   export type EventHandlerDeclarationLike = EventHandlerDeclaration | string;
@@ -77,6 +78,7 @@ declare module '@enzymefinance/subgraph-cli' {
   }
 
   export interface DataSourceTemplateDeclarationLike extends DataSourceTemplateDeclaration {
+    version?: string;
     abi?: string;
     file?: string;
     events?: EventHandlerDeclarationLike[];

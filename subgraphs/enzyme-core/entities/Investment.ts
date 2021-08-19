@@ -1,12 +1,14 @@
-import { BigDecimal, ethereum } from '@graphprotocol/graph-ts';
+import { logCritical, toBigDecimal } from '@enzymefinance/subgraph-utils';
+import { Address, BigDecimal, ethereum } from '@graphprotocol/graph-ts';
+import { ERC20Contract } from '../generated/ERC20Contract';
 import { Account, Investment, Vault } from '../generated/schema';
-import { trackNetworkInvestments } from './NetworkState';
+import { trackNetworkInvestments } from './Network';
 
-function investmentId(investor: Account, vault: Vault): string {
-  return vault.id + '/' + investor.id;
+function investmentId(participant: Account, vault: Vault): string {
+  return vault.id + '/' + participant.id;
 }
 
-export function ensureInvestment(investor: Account, vault: Vault, stateId: string, event: ethereum.Event): Investment {
+export function ensureInvestment(investor: Account, vault: Vault, event: ethereum.Event): Investment {
   let id = investmentId(investor, vault);
 
   let investment = Investment.load(id) as Investment;
@@ -18,7 +20,6 @@ export function ensureInvestment(investor: Account, vault: Vault, stateId: strin
   investment.vault = vault.id;
   investment.investor = investor.id;
   investment.shares = BigDecimal.fromString('0');
-  investment.state = stateId;
   investment.since = event.block.timestamp;
   investment.save();
 
@@ -28,4 +29,15 @@ export function ensureInvestment(investor: Account, vault: Vault, stateId: strin
   trackNetworkInvestments(event);
 
   return investment;
+}
+
+export function trackInvestmentBalance(vault: Vault, investment: Investment): void {
+  let vaultProxy = ERC20Contract.bind(Address.fromString(vault.id));
+  let balanceCall = vaultProxy.try_balanceOf(Address.fromString(investment.investor));
+  if (balanceCall.reverted) {
+    logCritical('balanceOf() reverted for account {} on vault {}', [investment.investor, vault.id]);
+  }
+
+  investment.shares = toBigDecimal(balanceCall.value);
+  investment.save();
 }

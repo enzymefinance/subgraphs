@@ -1,9 +1,9 @@
+import { Configurator, Context, Contexts, Environment, ManifestValues, Template } from '@enzymefinance/subgraph-cli';
 import fs from 'fs';
 import glob from 'glob';
+import handlebars from 'handlebars';
 import path from 'path';
 import yargs from 'yargs';
-import handlebars from 'handlebars';
-import { Configurator, Context, Contexts, Environment, ManifestValues, Template } from '@enzymefinance/subgraph-cli';
 import { abi, source, template } from './utils';
 
 const graph = require('@graphprotocol/graph-cli/src/cli').run as (args?: string[]) => Promise<void>;
@@ -204,11 +204,11 @@ yargs
     'Compile the subgraph code into the wasm runtimes.',
     () => {},
     async ({ subgraph }) => {
-      console.log('Generating subgraph manifest');
-      await subgraph.generateManifest();
+      // console.log('Generating subgraph manifest');
+      // await subgraph.generateManifest();
 
-      console.log('Generating code');
-      await subgraph.generateCode();
+      // console.log('Generating code');
+      // await subgraph.generateCode();
 
       console.log('Generating code');
       await subgraph.buildSubgraph();
@@ -219,11 +219,11 @@ yargs
     'Deploy the subgraph.',
     () => {},
     async ({ subgraph }) => {
-      console.log('Generating subgraph manifest');
-      await subgraph.generateManifest();
+      // console.log('Generating subgraph manifest');
+      // await subgraph.generateManifest();
 
-      console.log('Generating code');
-      await subgraph.generateCode();
+      // console.log('Generating code');
+      // await subgraph.generateCode();
 
       console.log('Deploying subgraph');
       await subgraph.createSubgraph();

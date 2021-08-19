@@ -1,0 +1,529 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_fundDeployer",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "comptrollerProxy",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "payee",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "sharesDue",
+        "type": "uint256"
+      }
+    ],
+    "name": "AllSharesOutstandingForcePaidForFund",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "fee",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "string",
+        "name": "identifier",
+        "type": "string"
+      }
+    ],
+    "name": "FeeDeregistered",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "comptrollerProxy",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "fee",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes",
+        "name": "settingsData",
+        "type": "bytes"
+      }
+    ],
+    "name": "FeeEnabledForFund",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "fee",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "string",
+        "name": "identifier",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum IFeeManager.FeeHook[]",
+        "name": "implementedHooksForSettle",
+        "type": "uint8[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum IFeeManager.FeeHook[]",
+        "name": "implementedHooksForUpdate",
+        "type": "uint8[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "usesGavOnSettle",
+        "type": "bool"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "usesGavOnUpdate",
+        "type": "bool"
+      }
+    ],
+    "name": "FeeRegistered",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "comptrollerProxy",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "fee",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "enum IFeeManager.SettlementType",
+        "name": "settlementType",
+        "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "payer",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "payee",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "sharesDue",
+        "type": "uint256"
+      }
+    ],
+    "name": "FeeSettledForFund",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "comptrollerProxy",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "prevFeesRecipient",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "nextFeesRecipient",
+        "type": "address"
+      }
+    ],
+    "name": "FeesRecipientSetForFund",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "comptrollerProxy",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "fee",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "sharesDue",
+        "type": "uint256"
+      }
+    ],
+    "name": "SharesOutstandingPaidForFund",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "name": "activateForFund",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "deactivateForFund",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "_fees",
+        "type": "address[]"
+      }
+    ],
+    "name": "deregisterFees",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_fee",
+        "type": "address"
+      },
+      {
+        "internalType": "enum IFeeManager.FeeHook",
+        "name": "_hook",
+        "type": "uint8"
+      }
+    ],
+    "name": "feeSettlesOnHook",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "settlesOnHook_",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_fee",
+        "type": "address"
+      },
+      {
+        "internalType": "enum IFeeManager.FeeHook",
+        "name": "_hook",
+        "type": "uint8"
+      }
+    ],
+    "name": "feeUpdatesOnHook",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "updatesOnHook_",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_fee",
+        "type": "address"
+      }
+    ],
+    "name": "feeUsesGavOnSettle",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "usesGav_",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_fee",
+        "type": "address"
+      }
+    ],
+    "name": "feeUsesGavOnUpdate",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "usesGav_",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_comptrollerProxy",
+        "type": "address"
+      }
+    ],
+    "name": "getEnabledFeesForFund",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "enabledFees_",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_comptrollerProxy",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_fee",
+        "type": "address"
+      }
+    ],
+    "name": "getFeeSharesOutstandingForFund",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "sharesOutstanding_",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getFundDeployer",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "fundDeployer_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getOwner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "owner_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getRegisteredFees",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "registeredFees_",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_comptrollerProxy",
+        "type": "address"
+      }
+    ],
+    "name": "getVaultProxyForFund",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "vaultProxy_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "enum IFeeManager.FeeHook",
+        "name": "_hook",
+        "type": "uint8"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_settlementData",
+        "type": "bytes"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_gav",
+        "type": "uint256"
+      }
+    ],
+    "name": "invokeHook",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_fee",
+        "type": "address"
+      }
+    ],
+    "name": "isRegisteredFee",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "isRegisteredFee_",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_actionId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_callArgs",
+        "type": "bytes"
+      }
+    ],
+    "name": "receiveCallFromComptroller",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "_fees",
+        "type": "address[]"
+      }
+    ],
+    "name": "registerFees",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes",
+        "name": "_configData",
+        "type": "bytes"
+      }
+    ],
+    "name": "setConfigForFund",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

@@ -1,12 +1,11 @@
-import { uniqueEventId, ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
+import { ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
 import { Address, DataSourceContext } from '@graphprotocol/graph-ts';
-import { ensureManager } from '../entities/Account';
-import { ensureComptrollerProxy } from '../entities/ComptrollerProxy';
-import { ensureMigration, generateMigrationId, useMigration } from '../entities/Migration';
+import { ensureComptroller } from '../entities/Comptroller';
+import { generateMigrationId, useMigration } from '../entities/Migration';
 import { ensureNetwork } from '../entities/Network';
 import { ensureRelease } from '../entities/Release';
-import { ensureTransaction } from '../entities/Transaction';
 import { useVault } from '../entities/Vault';
+import { release3Addresses, release4Addresses } from '../generated/addresses';
 import {
   CurrentFundDeployerSet,
   MigrationCancelled,
@@ -21,43 +20,18 @@ import {
   SharesTokenSymbolSet,
   VaultProxyDeployed,
 } from '../generated/DispatcherContract';
-import {
-  DispatcherOwnershipTransferredEvent,
-  FundDeployerSetEvent,
-  MigrationCancelledEvent,
-  MigrationExecutedEvent,
-  MigrationInCancelHookFailedEvent,
-  MigrationOutHookFailedEvent,
-  MigrationSignaledEvent,
-  MigrationTimelockSetEvent,
-  NominatedOwnerRemovedEvent,
-  NominatedOwnerSetEvent,
-  SharesTokenSymbolSetEvent,
-  VaultProxyDeployedEvent,
-} from '../generated/schema';
-import { ComptrollerLibDataSource } from '../generated/templates';
+import { Migration } from '../generated/schema';
+import { ComptrollerLib3DataSource, ComptrollerLib4DataSource } from '../generated/templates';
 
 export function handleCurrentFundDeployerSet(event: CurrentFundDeployerSet): void {
-  // NOTE: This is the first event on kovan.
   let network = ensureNetwork(event);
-
-  // Set up release (each new fund deployer is a release)
-  let release = ensureRelease(event.params.nextFundDeployer.toHex(), event);
+  let release = ensureRelease(event.params.nextFundDeployer, event);
 
   network.currentRelease = release.id;
   network.save();
 
-  let fundDeployerSet = new FundDeployerSetEvent(uniqueEventId(event));
-  fundDeployerSet.timestamp = event.block.timestamp;
-  fundDeployerSet.transaction = ensureTransaction(event).id;
-  if (event.params.prevFundDeployer != ZERO_ADDRESS) {
-    fundDeployerSet.prevFundDeployer = event.params.prevFundDeployer.toHex();
-  }
-  fundDeployerSet.nextFundDeployer = event.params.nextFundDeployer.toHex();
-  fundDeployerSet.save();
-
   if (!event.params.prevFundDeployer.equals(ZERO_ADDRESS)) {
-    let prevRelease = ensureRelease(event.params.prevFundDeployer.toHex(), event);
+    let prevRelease = ensureRelease(event.params.prevFundDeployer, event);
     prevRelease.current = false;
     prevRelease.close = event.block.timestamp;
     prevRelease.save();
@@ -65,172 +39,123 @@ export function handleCurrentFundDeployerSet(event: CurrentFundDeployerSet): voi
 }
 
 export function handleMigrationCancelled(event: MigrationCancelled): void {
-  let migrationCancellation = new MigrationCancelledEvent(uniqueEventId(event));
   let migrationId = generateMigrationId(
-    event.params.vaultProxy.toHex(),
-    event.params.prevFundDeployer.toHex(),
-    event.params.nextFundDeployer.toHex(),
-    event.params.executableTimestamp.toString(),
+    event.params.vaultProxy,
+    event.params.prevFundDeployer,
+    event.params.nextFundDeployer,
+    event.params.executableTimestamp,
   );
 
   let migration = useMigration(migrationId);
-
-  migrationCancellation.vault = useVault(event.params.vaultProxy.toHex()).id;
-  migrationCancellation.timestamp = event.block.timestamp;
-  migrationCancellation.transaction = ensureTransaction(event).id;
-  migrationCancellation.migration = migration.id;
-  migrationCancellation.executableTimestamp = event.params.executableTimestamp;
-  migrationCancellation.save();
-
   migration.cancelled = true;
+  migration.cancelledTimestamp = event.block.timestamp;
   migration.save();
 
-  let comptrollerProxy = ensureComptrollerProxy(Address.fromString(migration.nextAccessor), event);
+  let comptrollerProxy = ensureComptroller(Address.fromString(migration.comptroller), event);
   comptrollerProxy.vault = null;
   comptrollerProxy.status = 'FREE';
   comptrollerProxy.save();
 }
 
 export function handleMigrationExecuted(event: MigrationExecuted): void {
-  let migrationExecution = new MigrationExecutedEvent(uniqueEventId(event));
   let migrationId = generateMigrationId(
-    event.params.vaultProxy.toHex(),
-    event.params.prevFundDeployer.toHex(),
-    event.params.nextFundDeployer.toHex(),
-    event.params.executableTimestamp.toString(),
+    event.params.vaultProxy,
+    event.params.prevFundDeployer,
+    event.params.nextFundDeployer,
+    event.params.executableTimestamp,
   );
 
   let migration = useMigration(migrationId);
-
-  migrationExecution.vault = useVault(event.params.vaultProxy.toHex()).id;
-  migrationExecution.timestamp = event.block.timestamp;
-  migrationExecution.transaction = ensureTransaction(event).id;
-  migrationExecution.migration = migration.id;
-  migrationExecution.executableTimestamp = event.params.executableTimestamp;
-  migrationExecution.save();
+  migration.executed = true;
+  migration.executedTimestamp = event.block.timestamp;
+  migration.save();
 
   let vault = useVault(event.params.vaultProxy.toHex());
-  let prevAccessor = vault.accessor;
-  vault.release = ensureRelease(event.params.nextFundDeployer.toHex(), event).id;
-  vault.accessor = ensureComptrollerProxy(Address.fromString(migration.nextAccessor), event).id;
+  let prevAccessor = vault.comptroller;
+  vault.release = ensureRelease(event.params.nextFundDeployer, event).id;
+  vault.comptroller = ensureComptroller(Address.fromString(migration.comptroller), event).id;
   vault.save();
-
-  migration.executed = true;
-  migration.save();
 
   // start monitoring the Comptroller Proxy
   let comptrollerContext = new DataSourceContext();
   comptrollerContext.setString('vaultProxy', event.params.vaultProxy.toHex());
-  ComptrollerLibDataSource.createWithContext(event.params.nextVaultAccessor, comptrollerContext);
 
-  let comptrollerProxy = ensureComptrollerProxy(Address.fromString(migration.nextAccessor), event);
-  comptrollerProxy.activationTime = event.block.timestamp;
+  if (event.params.nextFundDeployer.equals(release3Addresses.fundDeployerAddress)) {
+    ComptrollerLib3DataSource.createWithContext(event.params.nextVaultAccessor, comptrollerContext);
+  }
+
+  if (event.params.nextFundDeployer.equals(release4Addresses.fundDeployerAddress)) {
+    ComptrollerLib4DataSource.createWithContext(event.params.nextVaultAccessor, comptrollerContext);
+  }
+
+  let comptrollerProxy = ensureComptroller(Address.fromString(migration.comptroller), event);
+  comptrollerProxy.activation = event.block.timestamp;
   comptrollerProxy.status = 'COMMITTED';
   comptrollerProxy.save();
 
-  let prevComptrollerProxy = ensureComptrollerProxy(Address.fromString(prevAccessor), event);
-  prevComptrollerProxy.destructionTime = event.block.timestamp;
+  let prevComptrollerProxy = ensureComptroller(Address.fromString(prevAccessor), event);
+  prevComptrollerProxy.destruction = event.block.timestamp;
   prevComptrollerProxy.status = 'DESTRUCTED';
   prevComptrollerProxy.save();
 }
 
 export function handleMigrationSignaled(event: MigrationSignaled): void {
+  let migrationId = generateMigrationId(
+    event.params.vaultProxy,
+    event.params.prevFundDeployer,
+    event.params.nextFundDeployer,
+    event.params.executableTimestamp,
+  );
+
+  let migration = new Migration(migrationId);
+  migration.vault = useVault(event.params.vaultProxy.toHex()).id;
+  migration.comptroller = ensureComptroller(event.params.nextVaultAccessor, event).id;
+  migration.prevRelease = ensureRelease(event.params.prevFundDeployer, event).id;
+  migration.nextRelease = ensureRelease(event.params.nextFundDeployer, event).id;
+  migration.executableTimestamp = event.params.executableTimestamp;
+  migration.cancelled = false;
+  migration.executed = false;
+  migration.save();
+
   let vault = useVault(event.params.vaultProxy.toHex());
 
-  let migrationSignaling = new MigrationSignaledEvent(uniqueEventId(event));
-  migrationSignaling.vault = vault.id;
-  migrationSignaling.timestamp = event.block.timestamp;
-  migrationSignaling.transaction = ensureTransaction(event).id;
-  migrationSignaling.migration = ensureMigration(event).id;
-  migrationSignaling.save();
-
-  let comptrollerProxy = ensureComptrollerProxy(event.params.nextVaultAccessor, event);
+  let comptrollerProxy = ensureComptroller(event.params.nextVaultAccessor, event);
   comptrollerProxy.vault = vault.id;
   comptrollerProxy.status = 'SIGNALLED';
   comptrollerProxy.save();
 }
 
-export function handleMigrationInCancelHookFailed(event: MigrationInCancelHookFailed): void {
-  let cancelHookFailed = new MigrationInCancelHookFailedEvent(uniqueEventId(event));
-  cancelHookFailed.vault = useVault(event.params.vaultProxy.toHex()).id;
-  cancelHookFailed.timestamp = event.block.timestamp;
-  cancelHookFailed.transaction = ensureTransaction(event).id;
-
-  cancelHookFailed.vaultProxy = event.params.vaultProxy.toHex();
-  cancelHookFailed.prevFundDeployer = event.params.prevFundDeployer.toHex();
-  cancelHookFailed.nextFundDeployer = event.params.nextFundDeployer.toHex();
-  cancelHookFailed.nextVaultLib = event.params.nextVaultLib.toHex();
-  cancelHookFailed.nextVaultAccessor = event.params.nextVaultAccessor.toHex();
-  cancelHookFailed.failureReturnData = event.params.failureReturnData.toHexString();
-  cancelHookFailed.save();
-}
-
-export function handleMigrationOutHookFailed(event: MigrationOutHookFailed): void {
-  let outHookFailed = new MigrationOutHookFailedEvent(uniqueEventId(event));
-  outHookFailed.vault = useVault(event.params.vaultProxy.toHex()).id;
-  outHookFailed.timestamp = event.block.timestamp;
-  outHookFailed.transaction = ensureTransaction(event).id;
-
-  outHookFailed.vaultProxy = event.params.vaultProxy.toHex();
-  outHookFailed.prevFundDeployer = event.params.prevFundDeployer.toHex();
-  outHookFailed.nextFundDeployer = event.params.nextFundDeployer.toHex();
-  outHookFailed.nextVaultLib = event.params.nextVaultLib.toHex();
-  outHookFailed.nextVaultAccessor = event.params.nextVaultAccessor.toHex();
-  outHookFailed.failureReturnData = event.params.failureReturnData.toHexString();
-  outHookFailed.save();
-}
-
 export function handleMigrationTimelockSet(event: MigrationTimelockSet): void {
-  let timelockSet = new MigrationTimelockSetEvent(uniqueEventId(event));
-  timelockSet.transaction = ensureTransaction(event).id;
-  timelockSet.timestamp = event.block.timestamp;
-  timelockSet.prevTimelock = event.params.prevTimelock;
-  timelockSet.nextTimelock = event.params.nextTimelock;
-  timelockSet.save();
+  let network = ensureNetwork(event);
+  network.migrationTimelock = event.params.nextTimelock.toI32();
+  network.save();
 }
 
 export function handleSharesTokenSymbolSet(event: SharesTokenSymbolSet): void {
-  let symbolSet = new SharesTokenSymbolSetEvent(uniqueEventId(event));
-  symbolSet.transaction = ensureTransaction(event).id;
-  symbolSet.timestamp = event.block.timestamp;
-  symbolSet.sharesTokenSymbol = event.params._nextSymbol;
-  symbolSet.save();
+  let network = ensureNetwork(event);
+  network.sharesTokenSymbol = event.params._nextSymbol;
+  network.save();
 }
 
 export function handleNominatedOwnerRemoved(event: NominatedOwnerRemoved): void {
-  let ownerRemoved = new NominatedOwnerRemovedEvent(uniqueEventId(event));
-  ownerRemoved.transaction = ensureTransaction(event).id;
-  ownerRemoved.timestamp = event.block.timestamp;
-  ownerRemoved.nominatedOwner = event.params.nominatedOwner.toHex();
-  ownerRemoved.save();
+  let network = ensureNetwork(event);
+  network.nominatedOwner = null;
+  network.save();
 }
 
 export function handleNominatedOwnerSet(event: NominatedOwnerSet): void {
-  let ownerSet = new NominatedOwnerSetEvent(uniqueEventId(event));
-  ownerSet.transaction = ensureTransaction(event).id;
-  ownerSet.timestamp = event.block.timestamp;
-  ownerSet.nominatedOwner = event.params.nominatedOwner.toHex();
-  ownerSet.save();
+  let network = ensureNetwork(event);
+  network.nominatedOwner = event.params.nominatedOwner.toHex();
+  network.save();
 }
 
 export function handleOwnershipTransferred(event: OwnershipTransferred): void {
-  let transferred = new DispatcherOwnershipTransferredEvent(uniqueEventId(event));
-  transferred.transaction = ensureTransaction(event).id;
-  transferred.timestamp = event.block.timestamp;
-  transferred.prevOwner = event.params.prevOwner.toHex();
-  transferred.nextOwner = event.params.nextOwner.toHex();
-  transferred.save();
+  let network = ensureNetwork(event);
+  network.owner = event.params.nextOwner.toHex();
+  network.nominatedOwner = null;
+  network.save();
 }
 
-export function handleVaultProxyDeployed(event: VaultProxyDeployed): void {
-  let vaultDeployment = new VaultProxyDeployedEvent(uniqueEventId(event));
-  vaultDeployment.vault = event.params.vaultProxy.toHex();
-  vaultDeployment.timestamp = event.block.timestamp;
-  vaultDeployment.transaction = ensureTransaction(event).id;
-  vaultDeployment.fundDeployer = event.params.fundDeployer.toHex();
-  vaultDeployment.owner = ensureManager(event.params.owner, event).id;
-  vaultDeployment.vaultLib = event.params.vaultLib.toHex();
-  vaultDeployment.accessor = event.params.vaultAccessor.toHex();
-  vaultDeployment.fundName = event.params.fundName;
-  vaultDeployment.save();
-}
+export function handleMigrationInCancelHookFailed(event: MigrationInCancelHookFailed): void {}
+export function handleMigrationOutHookFailed(event: MigrationOutHookFailed): void {}
+export function handleVaultProxyDeployed(event: VaultProxyDeployed): void {}

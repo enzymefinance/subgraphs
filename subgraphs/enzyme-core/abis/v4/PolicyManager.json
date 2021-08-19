@@ -1,0 +1,348 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_fundDeployer",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_gasRelayPaymasterFactory",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "comptrollerProxy",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "policy",
+        "type": "address"
+      }
+    ],
+    "name": "PolicyDisabledForFund",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "comptrollerProxy",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "policy",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes",
+        "name": "settingsData",
+        "type": "bytes"
+      }
+    ],
+    "name": "PolicyEnabledForFund",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bool",
+        "name": "_isMigratedFund",
+        "type": "bool"
+      }
+    ],
+    "name": "activateForFund",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "deactivateForFund",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_comptrollerProxy",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_policy",
+        "type": "address"
+      }
+    ],
+    "name": "disablePolicyForFund",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_comptrollerProxy",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_policy",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_settingsData",
+        "type": "bytes"
+      }
+    ],
+    "name": "enablePolicyForFund",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_comptrollerProxy",
+        "type": "address"
+      }
+    ],
+    "name": "getEnabledPoliciesForFund",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "enabledPolicies_",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_comptrollerProxy",
+        "type": "address"
+      },
+      {
+        "internalType": "enum IPolicyManager.PolicyHook",
+        "name": "_hook",
+        "type": "uint8"
+      }
+    ],
+    "name": "getEnabledPoliciesOnHookForFund",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "enabledPolicies_",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getFundDeployer",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "fundDeployer_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getGasRelayPaymasterFactory",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "gasRelayPaymasterFactory_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getGasRelayTrustedForwarder",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "trustedForwarder_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getOwner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "owner_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_comptrollerProxy",
+        "type": "address"
+      }
+    ],
+    "name": "getVaultProxyForFund",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "vaultProxy_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_comptrollerProxy",
+        "type": "address"
+      },
+      {
+        "internalType": "enum IPolicyManager.PolicyHook",
+        "name": "_hook",
+        "type": "uint8"
+      },
+      {
+        "internalType": "address",
+        "name": "_policy",
+        "type": "address"
+      }
+    ],
+    "name": "policyIsEnabledOnHookForFund",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "isEnabled_",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
+      }
+    ],
+    "name": "receiveCallFromComptroller",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes",
+        "name": "_configData",
+        "type": "bytes"
+      }
+    ],
+    "name": "setConfigForFund",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_comptrollerProxy",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_policy",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_settingsData",
+        "type": "bytes"
+      }
+    ],
+    "name": "updatePolicySettingsForFund",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_comptrollerProxy",
+        "type": "address"
+      },
+      {
+        "internalType": "enum IPolicyManager.PolicyHook",
+        "name": "_hook",
+        "type": "uint8"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_validationData",
+        "type": "bytes"
+      }
+    ],
+    "name": "validatePolicies",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

@@ -1,20 +1,21 @@
-import path from 'path';
 import {
   AbiDeclaration,
-  EventHandlerDeclaration,
-  DataSourceDeclaration,
-  DataSourceTemplateDeclaration,
-  DataSourceDeclarationLike,
-  EventHandlerDeclarationLike,
+  AbiDeclarationLike,
   CallHandlerDeclaration,
   CallHandlerDeclarationLike,
+  DataSourceDeclaration,
+  DataSourceDeclarationLike,
+  DataSourceTemplateDeclaration,
   DataSourceTemplateDeclarationLike,
-  AbiDeclarationLike,
+  EventHandlerDeclaration,
+  EventHandlerDeclarationLike,
 } from '@enzymefinance/subgraph-cli';
+import path from 'path';
 
 export function abi(abi: AbiDeclarationLike, root: string): AbiDeclaration {
   const file = typeof abi === 'string' ? abi : abi.file;
-  const name = typeof abi === 'string' ? `${path.basename(file, '.json')}Contract` : abi.name;
+  const name =
+    typeof abi === 'string' ? `${path.basename(file, '.json')}Contract` : `${abi.name}${abi.version ?? ''}Contract`;
   const relative = path.relative(root, file.startsWith('.') ? file : require.resolve(file));
 
   return { name, file: relative };
@@ -46,8 +47,8 @@ export function source(source: DataSourceDeclarationLike): DataSourceDeclaration
 
   return {
     name: `${source.name}${source.version ?? ''}DataSource`,
-    abi: source.abi ?? `${source.name}Contract`,
-    file: source.file ?? `mappings/${source.name}.ts`,
+    abi: source.abi ?? `${source.name}${source.version ?? ''}Contract`,
+    file: source.file ?? `mappings${source.version ? '/v' + source.version : ''}/${source.name}.ts`,
     ...(events ? { events } : undefined),
     ...(calls ? { calls } : undefined),
     ...(address ? { address } : undefined),
@@ -60,9 +61,9 @@ export function template(template: DataSourceTemplateDeclarationLike): DataSourc
   const calls = template.calls?.map((item) => call(item));
 
   return {
-    name: `${template.name}DataSource`,
-    abi: template.abi ?? `${template.name}Contract`,
-    file: template.file ?? `mappings/${template.name}.ts`,
+    name: `${template.name}${template.version ?? ''}DataSource`,
+    abi: template.abi ?? `${template.name}${template.version ?? ''}Contract`,
+    file: template.file ?? `mappings${template.version ? '/v' + template.version : ''}/${template.name}.ts`,
     ...(events ? { events } : undefined),
     ...(calls ? { calls } : undefined),
   };
