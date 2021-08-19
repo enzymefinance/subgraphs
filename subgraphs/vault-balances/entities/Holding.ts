@@ -11,9 +11,7 @@ function getOrCreateHolding(vault: Vault, asset: Asset, timestamp: BigInt): Hold
     holding.asset = asset.id;
     holding.vault = vault.id;
     holding.tracked = false;
-    holding.external = false;
-    holding.portfolio = false;
-    holding.updated = timestamp;
+    holding.updated = timestamp.toI32();
     holding.balance = BigDecimal.fromString('0');
     holding.save();
   }
@@ -24,9 +22,9 @@ function getOrCreateHolding(vault: Vault, asset: Asset, timestamp: BigInt): Hold
 function maintainPortfolio(vault: Vault, holding: Holding): void {
   // Bail out early if the holding entity is already registered in the current portfolio.
   let included = vault.portfolio.includes(holding.id);
-  if (holding.portfolio && !included) {
+  if (holding.tracked && !included) {
     vault.portfolio = vault.portfolio.concat([holding.id]);
-  } else if (!holding.portfolio && included) {
+  } else if (!holding.tracked && included) {
     vault.portfolio = arrayDiff<string>(vault.portfolio, [holding.id]);
   }
 
@@ -45,7 +43,7 @@ export function updateHoldingBalance(vault: Vault, asset: Asset, timestamp: BigI
 
   // Update the holding balance.
   holding.balance = currentBalance;
-  holding.updated = timestamp;
+  holding.updated = timestamp.toI32();
   holding.save();
 
   // Update the total value locked (in the entire network) of this asset.
@@ -61,17 +59,6 @@ export function updateHoldingBalance(vault: Vault, asset: Asset, timestamp: BigI
 export function updateTrackedAsset(vault: Vault, asset: Asset, timestamp: BigInt, tracked: boolean): void {
   let holding = getOrCreateHolding(vault, asset, timestamp);
   holding.tracked = tracked;
-  holding.portfolio = holding.tracked || holding.external;
-  holding.save();
-
-  // Create a historical snapshot of the holding entity.
-  maintainPortfolio(vault, holding);
-}
-
-export function updateExternalPosition(vault: Vault, asset: Asset, timestamp: BigInt, external: boolean): void {
-  let holding = getOrCreateHolding(vault, asset, timestamp);
-  holding.external = external;
-  holding.portfolio = holding.tracked || holding.external;
   holding.save();
 
   // Create a historical snapshot of the holding entity.

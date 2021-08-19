@@ -16,7 +16,8 @@ type Asset @entity {
 
 type Vault @entity {
   id: ID!
-  updated: BigInt!
+  version: Bytes!
+  updated: Int!
   portfolio: [Holding!]!
   holdings: [Holding!]! @derivedFrom(field: "vault")
   transfers: [Transfer!]! @derivedFrom(field: "vault")
@@ -29,10 +30,8 @@ type Holding @entity {
   vault: Vault!
   asset: Asset!
   balance: BigDecimal!
-  updated: BigInt!
+  updated: Int!
   tracked: Boolean!
-  external: Boolean!
-  portfolio: Boolean!
   transfers: [Transfer!]! @derivedFrom(field: "holding")
   incoming: [IncomingTransfer!]! @derivedFrom(field: "holding")
   outgoing: [OutgoingTransfer!]! @derivedFrom(field: "holding")
@@ -45,38 +44,38 @@ enum TransferType {
 
 interface Transfer {
   id: ID!
-  timestamp: BigInt!
+  timestamp: Int!
   type: TransferType!
   asset: Asset!
   vault: Vault!
   holding: Holding!
   amount: BigDecimal!
   balance: BigDecimal!
-  transaction: String!
+  transaction: Bytes!
 }
 
 type OutgoingTransfer implements Transfer @entity {
   id: ID!
-  timestamp: BigInt!
+  timestamp: Int!
   type: TransferType!
   asset: Asset!
   vault: Vault!
   holding: Holding!
-  recipient: String!
+  recipient: Bytes!
   amount: BigDecimal!
   balance: BigDecimal!
-  transaction: String!
+  transaction: Bytes!
 }
 
 type IncomingTransfer implements Transfer @entity {
   id: ID!
-  timestamp: BigInt!
+  timestamp: Int!
   type: TransferType!
   asset: Asset!
   vault: Vault!
   holding: Holding!
-  sender: String!
+  sender: Bytes!
   amount: BigDecimal!
   balance: BigDecimal!
-  transaction: String!
+  transaction: Bytes!
 }

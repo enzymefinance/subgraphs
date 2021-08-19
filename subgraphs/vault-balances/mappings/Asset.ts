@@ -52,7 +52,6 @@ export function handleTransfer(event: Transfer): void {
 }
 
 function handleIncomingTransfer(event: Transfer, asset: Asset, vault: Vault): void {
-  let from = event.params.from.toHex();
   let holding = updateHoldingBalance(vault, asset, event.block.timestamp);
   let amount = toBigDecimal(event.params.value, asset.decimals);
 
@@ -63,14 +62,13 @@ function handleIncomingTransfer(event: Transfer, asset: Asset, vault: Vault): vo
   transfer.holding = holding.id;
   transfer.balance = holding.balance;
   transfer.amount = amount;
-  transfer.sender = from;
-  transfer.timestamp = event.block.timestamp;
-  transfer.transaction = event.transaction.hash.toHex();
+  transfer.sender = event.params.from;
+  transfer.transaction = event.transaction.hash;
+  transfer.timestamp = event.block.timestamp.toI32();
   transfer.save();
 }
 
 function handleOutgoingTransfer(event: Transfer, asset: Asset, vault: Vault): void {
-  let to = event.params.to.toHex();
   let holding = updateHoldingBalance(vault, asset, event.block.timestamp);
   let amount = toBigDecimal(event.params.value, asset.decimals);
 
@@ -81,8 +79,8 @@ function handleOutgoingTransfer(event: Transfer, asset: Asset, vault: Vault): vo
   transfer.holding = holding.id;
   transfer.balance = holding.balance;
   transfer.amount = amount;
-  transfer.recipient = to;
-  transfer.timestamp = event.block.timestamp;
-  transfer.transaction = event.transaction.hash.toHex();
+  transfer.recipient = event.params.to;
+  transfer.transaction = event.transaction.hash;
+  transfer.timestamp = event.block.timestamp.toI32();
   transfer.save();
 }

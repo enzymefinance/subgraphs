@@ -40,13 +40,16 @@ export const contexts: Contexts<Variables> = {
 };
 
 export const configure: Configurator<Variables> = (variables) => ({
-  abis: ['./abis/Dispatcher.json', './abis/AssetTrackingVault.json'],
+  abis: ['./abis/Dispatcher.json', './abis/Vault.json'],
   sources: [
     {
       name: 'Dispatcher',
       block: variables.dispatcherBlock,
       address: variables.dispatcher,
-      events: ['VaultProxyDeployed(indexed address,indexed address,address,indexed address,address,string)'],
+      events: [
+        'VaultProxyDeployed(indexed address,indexed address,address,indexed address,address,string)',
+        'MigrationExecuted(indexed address,indexed address,indexed address,address,address,uint256)',
+      ],
     },
     {
       name: 'Asset',
@@ -58,15 +61,8 @@ export const configure: Configurator<Variables> = (variables) => ({
   templates: [
     {
       name: 'Vault',
-      abi: 'AssetTrackingVaultContract',
-      events: [
-        'ExternalPositionAdded(indexed address)',
-        'ExternalPositionRemoved(indexed address)',
-        'TrackedAssetAdded(address)',
-        'TrackedAssetAdded(indexed address)',
-        'TrackedAssetRemoved(address)',
-        'TrackedAssetRemoved(indexed address)',
-      ],
+      abi: 'VaultContract',
+      events: ['TrackedAssetAdded(address)', 'TrackedAssetRemoved(address)'],
     },
   ],
 });
