@@ -61,7 +61,6 @@ export const configure: Configurator<Variables> = (variables) => ({
   templates: [
     {
       name: 'Vault',
-      abi: 'VaultContract',
       events: ['TrackedAssetAdded(address)', 'TrackedAssetRemoved(address)'],
     },
   ],
