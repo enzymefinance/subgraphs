@@ -13,6 +13,6 @@ export function handleFundSettingsSet(event: FundSettingsSet): void {
   let setting = ensureMinMaxInvestmentPolicy(event.params.comptrollerProxy, event.address, event);
   setting.minInvestmentAmount = minInvestmentAmount;
   setting.maxInvestmentAmount = maxInvestmentAmount;
-  setting.updatedAt = event.block.timestamp;
+  setting.updatedAt = event.block.timestamp.toI32();
   setting.save();
 }

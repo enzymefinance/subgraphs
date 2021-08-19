@@ -23,7 +23,7 @@ export function ensureAssetPrice(asset: Asset, event: ethereum.Event): AssetPric
 
   assetPrice = new AssetPrice(id);
   assetPrice.asset = asset.id;
-  assetPrice.timestamp = event.block.timestamp;
+  assetPrice.timestamp = event.block.timestamp.toI32();
   assetPrice.price = currentAssetPrice;
   assetPrice.save();
 

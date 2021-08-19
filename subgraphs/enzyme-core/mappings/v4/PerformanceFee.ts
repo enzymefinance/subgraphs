@@ -19,7 +19,7 @@ export function handleActivatedForFund(event: ActivatedForFund): void {
   let denominationAsset = ensureAsset(comptroller.getDenominationAsset());
 
   let fee = ensurePerformanceFee(event.params.comptrollerProxy, event.address, event);
-  fee.activatedAt = event.block.timestamp;
+  fee.activatedAt = event.block.timestamp.toI32();
   fee.highWaterMark = toBigDecimal(event.params.highWaterMark, denominationAsset.decimals);
   fee.save();
 }
@@ -27,7 +27,7 @@ export function handleActivatedForFund(event: ActivatedForFund): void {
 export function handleFundSettingsAdded(event: FundSettingsAdded): void {
   let fee = ensurePerformanceFee(event.params.comptrollerProxy, event.address, event);
   fee.rate = toBigDecimal(event.params.rate, 5);
-  fee.period = event.params.period;
+  fee.period = event.params.period.toI32();
   fee.save();
 }
 
@@ -48,7 +48,7 @@ export function handlePaidOut(event: PaidOut): void {
   fee.highWaterMark = toBigDecimal(event.params.nextHighWaterMark, denominationAsset.decimals);
   // AggregateValueDue is not emitted, but it is always set to zero in the protocol just before the event is emitted
   fee.aggregateValueDue = BigDecimal.fromString('0');
-  fee.lastPaid = event.block.timestamp;
+  fee.lastPaid = event.block.timestamp.toI32();
   fee.save();
 }
 

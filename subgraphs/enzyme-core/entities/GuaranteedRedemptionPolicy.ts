@@ -1,4 +1,4 @@
-import { Address, BigInt, ethereum } from '@graphprotocol/graph-ts';
+import { Address, ethereum } from '@graphprotocol/graph-ts';
 import { GuaranteedRedemptionPolicy } from '../generated/schema';
 import { policyId } from './Policy';
 
@@ -15,11 +15,11 @@ export function ensureGuaranteedRedemptionPolicy(
   }
 
   policy = new GuaranteedRedemptionPolicy(id);
-  policy.policy = policyAddress.toHex();
+  policy.policy = policyAddress;
   policy.comptroller = comptrollerAddress.toHex();
-  policy.startTimestamp = BigInt.fromI32(0);
-  policy.duration = BigInt.fromI32(0);
-  policy.createdAt = event.block.timestamp;
+  policy.startTimestamp = 0;
+  policy.duration = 0;
+  policy.createdAt = event.block.timestamp.toI32();
   policy.enabled = true;
   policy.settings = '';
   policy.save();

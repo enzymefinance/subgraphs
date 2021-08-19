@@ -46,7 +46,7 @@ export function handleSharesBought(event: SharesBought): void {
   addition.depositAssetAmount = createAssetAmount(asset, amount, 'deposit', event).id;
   addition.sharesIssued = toBigDecimal(event.params.sharesIssued);
   addition.shares = shares;
-  addition.timestamp = event.block.timestamp;
+  addition.timestamp = event.block.timestamp.toI32();
   addition.save();
 
   trackVaultTotalSupply(vault);
@@ -75,7 +75,7 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
   redemption.type = 'SharesRedeemed';
   redemption.shares = shares;
   redemption.payoutAssetAmounts = assetAmounts.map<string>((assetAmount) => assetAmount.id);
-  redemption.timestamp = event.block.timestamp;
+  redemption.timestamp = event.block.timestamp.toI32();
   redemption.save();
 }
 
@@ -91,7 +91,7 @@ export function handleMigratedSharesDuePaid(event: MigratedSharesDuePaid): void 
   sharesDuePaid.investment = investment.id;
   sharesDuePaid.type = 'FeeSharesReceived';
   sharesDuePaid.shares = shares;
-  sharesDuePaid.timestamp = event.block.timestamp;
+  sharesDuePaid.timestamp = event.block.timestamp.toI32();
   sharesDuePaid.save();
 }
 

@@ -1,4 +1,4 @@
-import { Address, BigInt, ethereum } from '@graphprotocol/graph-ts';
+import { Address, ethereum } from '@graphprotocol/graph-ts';
 import { Account } from '../generated/schema';
 import { trackNetworkInvestors, trackNetworkManagers } from './Network';
 
@@ -16,10 +16,10 @@ export function ensureAccount(accountAddress: Address, event: ethereum.Event): A
   account.isAssetManager = false;
   account.isInvestor = false;
 
-  account.ownerSince = BigInt.fromI32(0);
-  account.authUserSince = BigInt.fromI32(0);
-  account.assetManagerSince = BigInt.fromI32(0);
-  account.investorSince = BigInt.fromI32(0);
+  account.ownerSince = 0;
+  account.authUserSince = 0;
+  account.assetManagerSince = 0;
+  account.investorSince = 0;
   account.save();
 
   return account;
@@ -30,7 +30,7 @@ export function ensureOwner(ownerAddress: Address, event: ethereum.Event): Accou
 
   if (!account.isOwner) {
     account.isOwner = true;
-    account.ownerSince = event.block.timestamp;
+    account.ownerSince = event.block.timestamp.toI32();
     account.save();
 
     trackNetworkManagers(event);
@@ -44,7 +44,7 @@ export function ensureAuthUser(investorAddress: Address, event: ethereum.Event):
 
   if (!account.isAuthUser) {
     account.isAuthUser = true;
-    account.authUserSince = event.block.timestamp;
+    account.authUserSince = event.block.timestamp.toI32();
     account.save();
   }
 
@@ -56,7 +56,7 @@ export function ensureAssetManager(investorAddress: Address, event: ethereum.Eve
 
   if (!account.isAssetManager) {
     account.isAssetManager = true;
-    account.assetManagerSince = event.block.timestamp;
+    account.assetManagerSince = event.block.timestamp.toI32();
     account.save();
   }
 
@@ -68,7 +68,7 @@ export function ensureInvestor(investorAddress: Address, event: ethereum.Event):
 
   if (!account.isInvestor) {
     account.isInvestor = true;
-    account.investorSince = event.block.timestamp;
+    account.investorSince = event.block.timestamp.toI32();
     account.save();
 
     trackNetworkInvestors(event);

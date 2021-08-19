@@ -86,7 +86,7 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
     paid.investor = payeeAccount.id;
     paid.investment = payeeInvestment.id;
     paid.type = 'FeeSharesPaid';
-    paid.timestamp = event.block.timestamp;
+    paid.timestamp = event.block.timestamp.toI32();
     paid.shares = shares;
     paid.fee = feeId(event.params.comptrollerProxy, event.params.fee);
     paid.save();
@@ -99,7 +99,7 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
     received.investor = payerAccount.id;
     received.investment = payerInvestment.id;
     received.type = 'FeeSharesReceived';
-    received.timestamp = event.block.timestamp;
+    received.timestamp = event.block.timestamp.toI32();
     received.shares = shares;
     received.fee = feeId(event.params.comptrollerProxy, event.params.fee);
     received.save();
@@ -113,7 +113,7 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
     received.investor = investor.id;
     received.investment = investment.id;
     received.type = 'FeeSharesReceived';
-    received.timestamp = event.block.timestamp;
+    received.timestamp = event.block.timestamp.toI32();
     received.shares = shares;
     received.fee = feeId(event.params.comptrollerProxy, event.params.fee);
     received.save();
@@ -127,7 +127,7 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
     burned.investor = investor.id;
     burned.investment = investment.id;
     burned.type = 'FeeSharesBurned';
-    burned.timestamp = event.block.timestamp;
+    burned.timestamp = event.block.timestamp.toI32();
     burned.shares = shares;
     burned.fee = feeId(event.params.comptrollerProxy, event.params.fee);
     burned.save();
@@ -141,7 +141,7 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
     allocated.investor = investor.id;
     allocated.investment = investment.id;
     allocated.type = 'FeeSharesAllocationChanged';
-    allocated.timestamp = event.block.timestamp;
+    allocated.timestamp = event.block.timestamp.toI32();
     allocated.shares = shares;
     allocated.fee = feeId(event.params.comptrollerProxy, event.params.fee);
     allocated.save();
@@ -155,7 +155,7 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
     allocated.investor = investor.id;
     allocated.investment = investment.id;
     allocated.type = 'FeeSharesAllocationChanged';
-    allocated.timestamp = event.block.timestamp;
+    allocated.timestamp = event.block.timestamp.toI32();
     allocated.shares = BigDecimal.fromString('0').minus(shares);
     allocated.fee = feeId(event.params.comptrollerProxy, event.params.fee);
     allocated.save();
@@ -178,7 +178,7 @@ export function handleAllSharesOutstandingForcePaidForFund(event: AllSharesOutst
   paidOut.investor = investor.id;
   paidOut.investment = investment.id;
   paidOut.type = 'FeeSharesReceived';
-  paidOut.timestamp = event.block.timestamp;
+  paidOut.timestamp = event.block.timestamp.toI32();
   paidOut.shares = shares;
   paidOut.fee = null;
   paidOut.save();
@@ -200,7 +200,7 @@ export function handleSharesOutstandingPaidForFund(event: SharesOutstandingPaidF
   paidOut.investor = investor.id;
   paidOut.investment = investment.id;
   paidOut.type = 'FeeSharesReceived';
-  paidOut.timestamp = event.block.timestamp;
+  paidOut.timestamp = event.block.timestamp.toI32();
   paidOut.shares = shares;
   paidOut.fee = feeId(event.params.comptrollerProxy, event.params.fee);
   paidOut.save();

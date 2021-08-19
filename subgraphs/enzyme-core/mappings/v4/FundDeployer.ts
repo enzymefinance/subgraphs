@@ -57,7 +57,7 @@ export function handleNewFundCreated(event: NewFundCreated): void {
 
   let comptroller = ensureComptroller(event.params.comptrollerProxy, event);
   comptroller.vault = vault.id;
-  comptroller.activation = event.block.timestamp;
+  comptroller.activation = event.block.timestamp.toI32();
   comptroller.status = 'COMMITTED';
   comptroller.save();
 }
@@ -68,7 +68,7 @@ export function handleComptrollerProxyDeployed(event: ComptrollerProxyDeployed):
 
   let comptroller = ensureComptroller(event.params.comptrollerProxy, event);
   comptroller.creator = ensureAccount(event.params.creator, event).id;
-  comptroller.creation = event.block.timestamp;
+  comptroller.creation = event.block.timestamp.toI32();
   comptroller.denomination = ensureAsset(event.params.denominationAsset).id;
   comptroller.release = ensureRelease(event.address, event).id;
   comptroller.status = 'FREE';
@@ -94,7 +94,7 @@ export function handleReconfigurationRequestCancelled(event: ReconfigurationRequ
 
   let reconfiguration = useReconfiguraton(reconfigurationId);
   reconfiguration.cancelled = true;
-  reconfiguration.cancelledTimestamp = event.block.timestamp;
+  reconfiguration.cancelledTimestamp = event.block.timestamp.toI32();
   reconfiguration.save();
 
   let comptrollerProxy = ensureComptroller(Address.fromString(reconfiguration.comptroller), event);
@@ -114,7 +114,7 @@ export function handleReconfigurationRequestCreated(event: ReconfigurationReques
   reconfiguration.vault = useVault(event.params.vaultProxy.toHex()).id;
   reconfiguration.comptroller = ensureComptroller(event.params.comptrollerProxy, event).id;
   reconfiguration.release = ensureRelease(event.address, event).id;
-  reconfiguration.executableTimestamp = event.params.executableTimestamp;
+  reconfiguration.executableTimestamp = event.params.executableTimestamp.toI32();
   reconfiguration.cancelled = false;
   reconfiguration.executed = false;
   reconfiguration.save();
@@ -136,7 +136,7 @@ export function handleReconfigurationRequestExecuted(event: ReconfigurationReque
 
   let reconfiguration = useReconfiguraton(reconfigurationId);
   reconfiguration.executed = true;
-  reconfiguration.executedTimestamp = event.block.timestamp;
+  reconfiguration.executedTimestamp = event.block.timestamp.toI32();
   reconfiguration.save();
 
   let vault = useVault(event.params.vaultProxy.toHex());
@@ -150,12 +150,12 @@ export function handleReconfigurationRequestExecuted(event: ReconfigurationReque
   ComptrollerLib4DataSource.createWithContext(event.params.nextComptrollerProxy, comptrollerContext);
 
   let comptrollerProxy = ensureComptroller(event.params.nextComptrollerProxy, event);
-  comptrollerProxy.activation = event.block.timestamp;
+  comptrollerProxy.activation = event.block.timestamp.toI32();
   comptrollerProxy.status = 'COMMITTED';
   comptrollerProxy.save();
 
   let prevComptrollerProxy = ensureComptroller(event.params.prevComptrollerProxy, event);
-  prevComptrollerProxy.destruction = event.block.timestamp;
+  prevComptrollerProxy.destruction = event.block.timestamp.toI32();
   prevComptrollerProxy.status = 'DESTRUCTED';
   prevComptrollerProxy.save();
 }

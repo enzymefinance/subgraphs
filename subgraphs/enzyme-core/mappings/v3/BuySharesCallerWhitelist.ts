@@ -1,19 +1,16 @@
 import { arrayDiff, arrayUnique } from '@enzymefinance/subgraph-utils';
+import { Bytes } from '@graphprotocol/graph-ts';
 import { ensureBuySharesCallerWhitelistPolicy } from '../../entities/BuySharesCallerWhitelistPolicy';
 import { AddressesAdded, AddressesRemoved } from '../../generated/BuySharesCallerWhitelist3Contract';
 
 export function handleAddressesAdded(event: AddressesAdded): void {
-  let items = event.params.items.map<string>((item) => item.toHex());
-
   let policy = ensureBuySharesCallerWhitelistPolicy(event.params.comptrollerProxy, event.address, event);
-  policy.callers = arrayUnique<string>(policy.callers.concat(items));
+  policy.callers = arrayUnique<Bytes>(policy.callers.concat(event.params.items as Bytes[]));
   policy.save();
 }
 
 export function handleAddressesRemoved(event: AddressesRemoved): void {
-  let items = event.params.items.map<string>((item) => item.toHex());
-
   let policy = ensureBuySharesCallerWhitelistPolicy(event.params.comptrollerProxy, event.address, event);
-  policy.callers = arrayDiff<string>(policy.callers, items);
+  policy.callers = arrayDiff<Bytes>(policy.callers, event.params.items as Bytes[]);
   policy.save();
 }

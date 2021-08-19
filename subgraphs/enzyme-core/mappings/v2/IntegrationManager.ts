@@ -35,7 +35,6 @@ export function handleAuthUserRemovedForFund(event: AuthUserRemovedForFund): voi
 export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationExecutedForFund): void {
   let vault = useVault(event.params.vaultProxy.toHex());
 
-  let adapter = event.params.adapter.toHex();
   let integrationSelector = event.params.selector.toHexString();
 
   let incomingAssets = event.params.incomingAssets.map<Asset>((asset) => ensureAsset(asset));
@@ -59,7 +58,7 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
 
   trackTrade(
     vault,
-    adapter,
+    event.params.adapter,
     integrationSelector,
     incomingAssets,
     outgoingAssets,

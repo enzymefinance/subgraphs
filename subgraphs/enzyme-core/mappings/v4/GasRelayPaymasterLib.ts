@@ -19,7 +19,7 @@ export function handleTransactionRelayed(event: TransactionRelayed): void {
 
   let transaction = new GasRelayerTransaction(uniqueEventId(event));
   transaction.gasRelayer = gasRelayer.id;
-  transaction.authorizer = event.params.authorizer.toHex();
+  transaction.authorizer = event.params.authorizer;
   transaction.invokedSelector = event.params.invokedSelector.toString();
   transaction.successful = event.params.successful;
   transaction.save();

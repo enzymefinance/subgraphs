@@ -37,6 +37,6 @@ export function handleFeePaidForVault(event: FeePaidForVault): void {
 
 export function handleLastPaidSetForVault(event: LastPaidSetForVault): void {
   let protocolFee = ensureProtocolFee(event.params.vaultProxy, event.address);
-  protocolFee.lastPaid = event.params.nextTimestamp;
+  protocolFee.lastPaid = event.params.nextTimestamp.toI32();
   protocolFee.save();
 }

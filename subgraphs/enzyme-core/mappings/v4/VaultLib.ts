@@ -72,7 +72,7 @@ export function handleTransfer(event: Transfer): void {
   transferOut.investment = fromInvestment.id;
   transferOut.type = 'SharesTransferredOut';
   transferOut.shares = shares;
-  transferOut.timestamp = event.block.timestamp;
+  transferOut.timestamp = event.block.timestamp.toI32();
   transferOut.save();
 
   let toInvestor = ensureInvestor(event.params.to, event);
@@ -84,7 +84,7 @@ export function handleTransfer(event: Transfer): void {
   transferIn.investment = toInvestment.id;
   transferIn.type = 'SharesTransferredIn';
   transferIn.shares = shares;
-  transferIn.timestamp = event.block.timestamp;
+  transferIn.timestamp = event.block.timestamp.toI32();
   transferIn.save();
 }
 

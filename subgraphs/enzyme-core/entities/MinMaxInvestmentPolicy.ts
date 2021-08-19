@@ -1,4 +1,4 @@
-import { Address, BigDecimal, BigInt, ethereum } from '@graphprotocol/graph-ts';
+import { Address, BigDecimal, ethereum } from '@graphprotocol/graph-ts';
 import { MinMaxInvestmentPolicy } from '../generated/schema';
 import { policyId } from './Policy';
 
@@ -15,12 +15,12 @@ export function ensureMinMaxInvestmentPolicy(
   }
 
   policy = new MinMaxInvestmentPolicy(id);
-  policy.policy = policyAddress.toHex();
+  policy.policy = policyAddress;
   policy.comptroller = comptrollerAddress.toHex();
   policy.minInvestmentAmount = BigDecimal.fromString('0');
   policy.maxInvestmentAmount = BigDecimal.fromString('0');
-  policy.createdAt = event.block.timestamp;
-  policy.updatedAt = BigInt.fromI32(0);
+  policy.createdAt = event.block.timestamp.toI32();
+  policy.updatedAt = 0;
   policy.enabled = true;
   policy.settings = '';
   policy.save();

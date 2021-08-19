@@ -7,7 +7,7 @@ export function createRelease(address: Address, event: ethereum.Event): Release 
   let release = new Release(address.toHex());
   release.isLive = false;
   release.current = true;
-  release.open = event.block.timestamp;
+  release.open = event.block.timestamp.toI32();
   release.network = networkId;
   release.save();
 

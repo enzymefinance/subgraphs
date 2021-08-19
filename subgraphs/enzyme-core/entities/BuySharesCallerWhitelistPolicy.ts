@@ -1,4 +1,4 @@
-import { Address, BigInt, ethereum } from '@graphprotocol/graph-ts';
+import { Address, Bytes, ethereum } from '@graphprotocol/graph-ts';
 import { BuySharesCallerWhitelistPolicy } from '../generated/schema';
 import { policyId } from './Policy';
 
@@ -15,13 +15,13 @@ export function ensureBuySharesCallerWhitelistPolicy(
   }
 
   policy = new BuySharesCallerWhitelistPolicy(id);
-  policy.policy = policyAddress.toHex();
+  policy.policy = policyAddress;
   policy.comptroller = comptrollerAddress.toHex();
-  policy.callers = new Array<string>();
-  policy.createdAt = event.block.timestamp;
+  policy.callers = new Array<Bytes>();
+  policy.createdAt = event.block.timestamp.toI32();
   policy.enabled = true;
   policy.settings = '';
-  policy.updatedAt = BigInt.fromI32(0);
+  policy.updatedAt = 0;
   policy.save();
 
   return policy;

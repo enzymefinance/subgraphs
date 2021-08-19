@@ -36,7 +36,7 @@ export function handleNewFundCreated(event: NewFundCreated): void {
 
   let comptroller = ensureComptroller(event.params.comptrollerProxy, event);
   comptroller.vault = vault.id;
-  comptroller.activation = event.block.timestamp;
+  comptroller.activation = event.block.timestamp.toI32();
   comptroller.status = 'COMMITTED';
   comptroller.save();
 }
@@ -47,7 +47,7 @@ export function handleComptrollerProxyDeployed(event: ComptrollerProxyDeployed):
 
   let comptroller = ensureComptroller(event.params.comptrollerProxy, event);
   comptroller.creator = ensureAccount(event.params.creator, event).id;
-  comptroller.creation = event.block.timestamp;
+  comptroller.creation = event.block.timestamp.toI32();
   comptroller.denomination = ensureAsset(event.params.denominationAsset).id;
   comptroller.release = ensureRelease(event.address, event).id;
   comptroller.status = 'FREE';

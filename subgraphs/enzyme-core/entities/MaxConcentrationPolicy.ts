@@ -15,10 +15,10 @@ export function ensureMaxConcentrationPolicy(
   }
 
   policy = new MaxConcentrationPolicy(id);
-  policy.policy = policyAddress.toHex();
+  policy.policy = policyAddress;
   policy.comptroller = comptrollerAddress.toHex();
   policy.maxConcentration = BigDecimal.fromString('0');
-  policy.createdAt = event.block.timestamp;
+  policy.createdAt = event.block.timestamp.toI32();
   policy.enabled = true;
   policy.settings = '';
   policy.save();

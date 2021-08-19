@@ -20,7 +20,7 @@ export function ensureInvestment(investor: Account, vault: Vault, event: ethereu
   investment.vault = vault.id;
   investment.investor = investor.id;
   investment.shares = BigDecimal.fromString('0');
-  investment.since = event.block.timestamp;
+  investment.since = event.block.timestamp.toI32();
   investment.save();
 
   vault.investmentCount = vault.investmentCount + 1;

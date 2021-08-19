@@ -30,7 +30,7 @@ export function createAssetAmount(
   assetAmount.valueGbp = assetValueEth.times(currencyPrice.ethGbp);
   assetAmount.valueJpy = assetValueEth.times(currencyPrice.ethJpy);
   assetAmount.valueUsd = assetValueEth.times(currencyPrice.ethUsd);
-  assetAmount.timestamp = event.block.timestamp;
+  assetAmount.timestamp = event.block.timestamp.toI32();
   assetAmount.save();
 
   return assetAmount;

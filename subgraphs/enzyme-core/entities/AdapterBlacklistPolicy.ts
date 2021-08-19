@@ -1,4 +1,4 @@
-import { Address, ethereum } from '@graphprotocol/graph-ts';
+import { Address, Bytes, ethereum } from '@graphprotocol/graph-ts';
 import { AdapterBlacklistPolicy } from '../generated/schema';
 import { policyId } from './Policy';
 
@@ -15,10 +15,10 @@ export function ensureAdapterBlacklistPolicy(
   }
 
   policy = new AdapterBlacklistPolicy(id);
-  policy.policy = policyAddress.toHex();
+  policy.policy = policyAddress;
   policy.comptroller = comptrollerAddress.toHex();
-  policy.adapters = new Array<string>();
-  policy.createdAt = event.block.timestamp;
+  policy.adapters = new Array<Bytes>();
+  policy.createdAt = event.block.timestamp.toI32();
   policy.enabled = true;
   policy.settings = '';
   policy.save();

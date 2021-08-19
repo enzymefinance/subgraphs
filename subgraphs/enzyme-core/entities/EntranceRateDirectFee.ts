@@ -1,4 +1,4 @@
-import { Address, BigDecimal, BigInt, ethereum } from '@graphprotocol/graph-ts';
+import { Address, BigDecimal, ethereum } from '@graphprotocol/graph-ts';
 import { EntranceRateDirectFee } from '../generated/schema';
 import { feeId } from './Fee';
 
@@ -15,12 +15,12 @@ export function ensureEntranceRateDirectFee(
   }
 
   fee = new EntranceRateDirectFee(id);
-  fee.fee = feeAddress.toHex();
+  fee.fee = feeAddress;
   fee.comptroller = comptrollerAddress.toHex();
   fee.rate = BigDecimal.fromString('0');
-  fee.createdAt = event.block.timestamp;
+  fee.createdAt = event.block.timestamp.toI32();
   fee.settings = '';
-  fee.lastSettled = BigInt.fromI32(0);
+  fee.lastSettled = 0;
   fee.save();
 
   return fee;

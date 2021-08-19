@@ -1,4 +1,4 @@
-import { Address, BigDecimal, BigInt, ethereum } from '@graphprotocol/graph-ts';
+import { Address, BigDecimal, ethereum } from '@graphprotocol/graph-ts';
 import { PerformanceFee } from '../generated/schema';
 import { feeId } from './Fee';
 
@@ -15,13 +15,13 @@ export function ensurePerformanceFee(
   }
 
   fee = new PerformanceFee(id);
-  fee.fee = feeAddress.toHex();
+  fee.fee = feeAddress;
   fee.comptroller = comptrollerAddress.toHex();
   fee.rate = BigDecimal.fromString('0');
-  fee.period = BigInt.fromI32(0);
-  fee.activatedAt = BigInt.fromI32(0);
-  fee.createdAt = event.block.timestamp;
-  fee.lastPaid = BigInt.fromI32(0);
+  fee.period = 0;
+  fee.activatedAt = 0;
+  fee.createdAt = event.block.timestamp.toI32();
+  fee.lastPaid = 0;
   fee.settings = '';
   fee.highWaterMark = BigDecimal.fromString('0');
   fee.lastSharePrice = BigDecimal.fromString('0');

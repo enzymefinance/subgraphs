@@ -14,7 +14,7 @@ export function createVault(
 ): Vault {
   let vault = new Vault(address.toHex());
   vault.name = name;
-  vault.inception = inception;
+  vault.inception = inception.toI32();
   vault.release = release.id;
   vault.comptroller = comptroller.id;
   vault.owner = owner.id;

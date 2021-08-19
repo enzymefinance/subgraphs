@@ -9,6 +9,6 @@ export function handleFundSettingsAdded(event: FundSettingsAdded): void {
 
 export function handleSettled(event: Settled): void {
   let fee = ensureManagementFee(event.params.comptrollerProxy, event.address, event);
-  fee.lastSettled = event.block.timestamp;
+  fee.lastSettled = event.block.timestamp.toI32();
   fee.save();
 }

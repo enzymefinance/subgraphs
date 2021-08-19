@@ -19,7 +19,7 @@ export function ensureCurrencyPrice(event: ethereum.Event): CurrencyPrice {
 
   // All prices are vs. ETH
   currencyValue = new CurrencyPrice(id);
-  currencyValue.timestamp = event.block.timestamp;
+  currencyValue.timestamp = event.block.timestamp.toI32();
   currencyValue.ethAud = ethUsd.div(getLatestCurrencyPrice('aud'));
   currencyValue.ethBtc = BigDecimal.fromString('1').div(getLatestBtcEthPrice());
   currencyValue.ethChf = ethUsd.div(getLatestCurrencyPrice('chf'));

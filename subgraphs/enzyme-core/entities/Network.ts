@@ -19,10 +19,10 @@ export function createNetwork(event: ethereum.Event): Network {
   let dispatcher = DispatcherContract.bind(dispatcherAddress);
   network.migrationTimelock = dispatcher.getMigrationTimelock().toI32();
   network.sharesTokenSymbol = dispatcher.getSharesTokenSymbol();
-  network.owner = dispatcher.getOwner().toHex();
+  network.owner = dispatcher.getOwner();
 
   let nominatedOwner = dispatcher.getNominatedOwner();
-  network.nominatedOwner = nominatedOwner.equals(ZERO_ADDRESS) ? null : nominatedOwner.toHex();
+  network.nominatedOwner = nominatedOwner.equals(ZERO_ADDRESS) ? null : nominatedOwner;
 
   network.save();
 

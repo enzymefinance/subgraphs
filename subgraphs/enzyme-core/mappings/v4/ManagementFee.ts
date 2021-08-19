@@ -9,7 +9,7 @@ import {
 
 export function handleActivatedForMigratedFund(event: ActivatedForMigratedFund): void {
   let fee = ensureManagementFee(event.params.comptrollerProxy, event.address, event);
-  fee.scaledPerSecondRate = event.block.timestamp;
+  fee.activatedForMigratedFundAt = event.block.timestamp.toI32();
   fee.save();
 }
 
@@ -29,6 +29,6 @@ export function handleRecipientSetForFund(event: RecipientSetForFund): void {
 
 export function handleSettled(event: Settled): void {
   let fee = ensureManagementFee(event.params.comptrollerProxy, event.address, event);
-  fee.lastSettled = event.block.timestamp;
+  fee.lastSettled = event.block.timestamp.toI32();
   fee.save();
 }

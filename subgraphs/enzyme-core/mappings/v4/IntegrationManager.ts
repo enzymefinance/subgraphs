@@ -15,7 +15,6 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
 
   let vault = useVault(comptroller.vault);
 
-  let adapter = event.params.adapter.toHex();
   let integrationSelector = event.params.selector.toHexString();
 
   let incomingAssets = event.params.incomingAssets.map<Asset>((asset) => ensureAsset(asset));
@@ -39,7 +38,7 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
 
   trackTrade(
     vault,
-    adapter,
+    event.params.adapter,
     integrationSelector,
     incomingAssets,
     outgoingAssets,

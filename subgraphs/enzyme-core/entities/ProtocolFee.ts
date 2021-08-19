@@ -1,4 +1,4 @@
-import { Address, BigDecimal, BigInt } from '@graphprotocol/graph-ts';
+import { Address, BigDecimal } from '@graphprotocol/graph-ts';
 import { ProtocolFee } from '../generated/schema';
 
 export function protocolFeeId(vaultAddress: Address, protocolFeeTrackerAddress: Address): string {
@@ -16,9 +16,9 @@ export function ensureProtocolFee(vaultAddress: Address, protocolFeeTrackerAddre
 
   protocolFee = new ProtocolFee(id);
   protocolFee.vault = vaultAddress.toHex();
-  protocolFee.feeTracker = protocolFeeTrackerAddress.toHex();
+  protocolFee.feeTracker = protocolFeeTrackerAddress;
   protocolFee.rate = BigDecimal.fromString('0');
-  protocolFee.lastPaid = BigInt.fromI32(0);
+  protocolFee.lastPaid = 0;
   protocolFee.save();
 
   return protocolFee;

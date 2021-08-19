@@ -51,8 +51,8 @@ type Network @entity {
 
   sharesTokenSymbol: String!
   migrationTimelock: Int!
-  owner: String!
-  nominatedOwner: String
+  owner: Bytes!
+  nominatedOwner: Bytes
 
   protocolFeeRate: BigDecimal!
   mlnBurned: BigDecimal!
@@ -63,8 +63,8 @@ type Network @entity {
 type Release @entity {
   id: ID!
   current: Boolean!
-  open: BigInt!
-  close: BigInt
+  open: Int!
+  close: Int
   isLive: Boolean!
   network: Network!
   vaults: [Vault!] @derivedFrom(field: "release")
@@ -79,7 +79,7 @@ type Vault @entity {
   name: String!
   comptroller: Comptroller!
   release: Release!
-  inception: BigInt!
+  inception: Int!
 
   creator: Account!
   owner: Account!
@@ -111,9 +111,9 @@ type Comptroller @entity {
   creator: Account!
   release: Release!
   status: ComptrollerStatus!
-  creation: BigInt!
-  activation: BigInt!
-  destruction: BigInt
+  creation: Int!
+  activation: Int!
+  destruction: Int
   denomination: Asset!
   authUsers: [Account!]!
   autoProtocolFeeSharesBuyback: Boolean!
@@ -128,11 +128,11 @@ type Migration @entity {
   comptroller: Comptroller!
   prevRelease: Release!
   nextRelease: Release!
-  executableTimestamp: BigInt!
+  executableTimestamp: Int!
   executed: Boolean!
-  executedTimestamp: BigInt
+  executedTimestamp: Int
   cancelled: Boolean!
-  cancelledTimestamp: BigInt
+  cancelledTimestamp: Int
 }
 
 type Reconfiguration @entity {
@@ -140,11 +140,11 @@ type Reconfiguration @entity {
   vault: Vault!
   comptroller: Comptroller!
   release: Release!
-  executableTimestamp: BigInt!
+  executableTimestamp: Int!
   executed: Boolean!
-  executedTimestamp: BigInt
+  executedTimestamp: Int
   cancelled: Boolean!
-  cancelledTimestamp: BigInt
+  cancelledTimestamp: Int
 }
 
 #################################################
@@ -159,10 +159,10 @@ type Account @entity {
   isAssetManager: Boolean!
   isInvestor: Boolean!
 
-  ownerSince: BigInt!
-  authUserSince: BigInt!
-  assetManagerSince: BigInt!
-  investorSince: BigInt!
+  ownerSince: Int!
+  authUserSince: Int!
+  assetManagerSince: Int!
+  investorSince: Int!
 
   ownerships: [Vault!]! @derivedFrom(field: "owner")
   authUserships: [Comptroller!]! @derivedFrom(field: "authUsers")
@@ -177,7 +177,7 @@ type Account @entity {
 
 type Investment @entity {
   id: ID!
-  since: BigInt!
+  since: Int!
   vault: Vault!
   investor: Account!
   shares: BigDecimal!
@@ -191,7 +191,7 @@ interface SharesChange {
   type: SharesChangeType!
   investor: Account!
   investment: Investment!
-  timestamp: BigInt!
+  timestamp: Int!
   shares: BigDecimal!
 }
 
@@ -204,7 +204,7 @@ type SharesBoughtEvent implements SharesChange @entity {
   shares: BigDecimal!
   depositAssetAmount: AssetAmount!
   sharesIssued: BigDecimal!
-  timestamp: BigInt!
+  timestamp: Int!
 }
 
 type SharesTransferredOutEvent implements SharesChange @entity {
@@ -214,7 +214,7 @@ type SharesTransferredOutEvent implements SharesChange @entity {
   investor: Account!
   investment: Investment!
   shares: BigDecimal!
-  timestamp: BigInt!
+  timestamp: Int!
 }
 
 type SharesTransferredInEvent implements SharesChange @entity {
@@ -224,7 +224,7 @@ type SharesTransferredInEvent implements SharesChange @entity {
   investor: Account!
   investment: Investment!
   shares: BigDecimal!
-  timestamp: BigInt!
+  timestamp: Int!
 }
 
 type SharesRedeemedEvent implements SharesChange @entity {
@@ -235,7 +235,7 @@ type SharesRedeemedEvent implements SharesChange @entity {
   investment: Investment!
   shares: BigDecimal!
   payoutAssetAmounts: [AssetAmount!]!
-  timestamp: BigInt!
+  timestamp: Int!
 }
 
 type FeeSharesPaidEvent implements SharesChange @entity {
@@ -246,7 +246,7 @@ type FeeSharesPaidEvent implements SharesChange @entity {
   investor: Account!
   investment: Investment!
   shares: BigDecimal!
-  timestamp: BigInt!
+  timestamp: Int!
 }
 
 type FeeSharesReceivedEvent implements SharesChange @entity {
@@ -257,7 +257,7 @@ type FeeSharesReceivedEvent implements SharesChange @entity {
   investor: Account!
   investment: Investment!
   shares: BigDecimal!
-  timestamp: BigInt!
+  timestamp: Int!
 }
 
 type FeeSharesBurnedEvent implements SharesChange @entity {
@@ -268,7 +268,7 @@ type FeeSharesBurnedEvent implements SharesChange @entity {
   investor: Account!
   investment: Investment!
   shares: BigDecimal!
-  timestamp: BigInt!
+  timestamp: Int!
 }
 
 type FeeSharesAllocationChangedEvent implements SharesChange @entity {
@@ -279,7 +279,7 @@ type FeeSharesAllocationChangedEvent implements SharesChange @entity {
   investor: Account!
   investment: Investment!
   shares: BigDecimal!
-  timestamp: BigInt!
+  timestamp: Int!
 }
 
 #################################################
@@ -288,78 +288,78 @@ type FeeSharesAllocationChangedEvent implements SharesChange @entity {
 
 interface Fee {
   id: ID!
-  fee: String!
+  fee: Bytes!
   comptroller: Comptroller!
-  createdAt: BigInt!
+  createdAt: Int!
   settings: String!
 }
 
 type EntranceRateBurnFee implements Fee @entity {
   id: ID!
-  fee: String!
+  fee: Bytes!
   comptroller: Comptroller!
-  createdAt: BigInt!
+  createdAt: Int!
   settings: String!
   rate: BigDecimal!
-  lastSettled: BigInt!
+  lastSettled: Int!
 }
 
 type EntranceRateDirectFee implements Fee @entity {
   id: ID!
-  fee: String!
+  fee: Bytes!
   comptroller: Comptroller!
-  createdAt: BigInt!
+  createdAt: Int!
   settings: String!
   rate: BigDecimal!
-  lastSettled: BigInt!
+  lastSettled: Int!
   recipient: Account
 }
 
 type ExitRateBurnFee implements Fee @entity {
   id: ID!
-  fee: String!
+  fee: Bytes!
   comptroller: Comptroller!
-  createdAt: BigInt!
+  createdAt: Int!
   settings: String!
   inKindRate: BigDecimal!
   specificAssetsRate: BigDecimal!
-  lastSettled: BigInt!
+  lastSettled: Int!
 }
 
 type ExitRateDirectFee implements Fee @entity {
   id: ID!
-  fee: String!
+  fee: Bytes!
   comptroller: Comptroller!
-  createdAt: BigInt!
+  createdAt: Int!
   settings: String!
   inKindRate: BigDecimal!
   specificAssetsRate: BigDecimal!
-  lastSettled: BigInt!
+  lastSettled: Int!
   recipient: Account
 }
 
 type ManagementFee implements Fee @entity {
   id: ID!
-  fee: String!
+  fee: Bytes!
   comptroller: Comptroller!
-  createdAt: BigInt!
+  createdAt: Int!
   settings: String!
   scaledPerSecondRate: BigInt!
-  lastSettled: BigInt!
-  activatedForMigratedFundAt: BigInt!
+  lastSettled: Int!
+  activatedForMigratedFundAt: Int!
   recipient: Account
 }
 
 type PerformanceFee implements Fee @entity {
   id: ID!
-  fee: String!
+  fee: Bytes!
   comptroller: Comptroller!
-  createdAt: BigInt!
+  createdAt: Int!
   settings: String!
   rate: BigDecimal!
-  period: BigInt!
-  activatedAt: BigInt!
-  lastPaid: BigInt!
+  period: Int!
+  activatedAt: Int!
+  lastPaid: Int!
   highWaterMark: BigDecimal!
   lastSharePrice: BigDecimal!
   aggregateValueDue: BigDecimal!
@@ -369,10 +369,10 @@ type PerformanceFee implements Fee @entity {
 
 type UnknownFee implements Fee @entity {
   id: ID!
-  fee: String!
+  fee: Bytes!
   comptroller: Comptroller!
-  createdAt: BigInt!
-  lastSettled: BigInt!
+  createdAt: Int!
+  lastSettled: Int!
   settings: String!
 }
 
@@ -382,111 +382,111 @@ type UnknownFee implements Fee @entity {
 
 interface Policy {
   id: ID!
-  policy: String!
+  policy: Bytes!
   comptroller: Comptroller!
-  createdAt: BigInt!
+  createdAt: Int!
   enabled: Boolean!
   settings: String!
 }
 
 type AdapterBlacklistPolicy implements Policy @entity {
   id: ID!
-  policy: String!
+  policy: Bytes!
   comptroller: Comptroller!
-  createdAt: BigInt!
+  createdAt: Int!
   enabled: Boolean!
   settings: String!
-  adapters: [String!]!
+  adapters: [Bytes!]!
 }
 
 type AdapterWhitelistPolicy implements Policy @entity {
   id: ID!
-  policy: String!
+  policy: Bytes!
   comptroller: Comptroller!
-  createdAt: BigInt!
+  createdAt: Int!
   enabled: Boolean!
   settings: String!
-  adapters: [String!]!
+  adapters: [Bytes!]!
 }
 
 type AllowedAdapterIncomingAssetsPolicy implements Policy @entity {
   id: ID!
-  policy: String!
+  policy: Bytes!
   comptroller: Comptroller!
-  createdAt: BigInt!
+  createdAt: Int!
   enabled: Boolean!
   settings: String!
-  assets: [String!]!
+  assets: [Bytes!]!
 }
 
 type AllowedDepositRecipientsPolicy implements Policy @entity {
   id: ID!
-  policy: String!
+  policy: Bytes!
   comptroller: Comptroller!
-  createdAt: BigInt!
+  createdAt: Int!
   enabled: Boolean!
   settings: String!
-  accounts: [String!]!
+  accounts: [Bytes!]!
 }
 
 type AssetBlacklistPolicy implements Policy @entity {
   id: ID!
-  policy: String!
+  policy: Bytes!
   comptroller: Comptroller!
-  createdAt: BigInt!
+  createdAt: Int!
   enabled: Boolean!
   settings: String!
-  assets: [String!]!
+  assets: [Bytes!]!
 }
 
 type AssetWhitelistPolicy implements Policy @entity {
   id: ID!
-  policy: String!
+  policy: Bytes!
   comptroller: Comptroller!
-  createdAt: BigInt!
+  createdAt: Int!
   enabled: Boolean!
   settings: String!
-  assets: [String!]!
+  assets: [Bytes!]!
 }
 
 type BuySharesCallerWhitelistPolicy implements Policy @entity {
   id: ID!
-  policy: String!
+  policy: Bytes!
   comptroller: Comptroller!
-  createdAt: BigInt!
+  createdAt: Int!
   enabled: Boolean!
   settings: String!
-  callers: [String!]!
-  updatedAt: BigInt!
+  callers: [Bytes!]!
+  updatedAt: Int!
 }
 
 type GuaranteedRedemptionPolicy implements Policy @entity {
   id: ID!
-  policy: String!
+  policy: Bytes!
   comptroller: Comptroller!
-  createdAt: BigInt!
+  createdAt: Int!
   enabled: Boolean!
   settings: String!
-  startTimestamp: BigInt!
-  duration: BigInt!
+  startTimestamp: Int!
+  duration: Int!
 }
 
 type InvestorWhitelistPolicy implements Policy @entity {
   id: ID!
-  policy: String!
+  policy: Bytes!
   comptroller: Comptroller!
-  createdAt: BigInt!
+  createdAt: Int!
   enabled: Boolean!
   settings: String!
-  investors: [String!]!
-  updatedAt: BigInt!
+  investors: [Bytes!]!
+  updatedAt: Int!
 }
 
 type MaxConcentrationPolicy implements Policy @entity {
   id: ID!
-  policy: String!
+  policy: Bytes!
   comptroller: Comptroller!
-  createdAt: BigInt!
+  createdAt: Int!
   enabled: Boolean!
   settings: String!
   maxConcentration: BigDecimal!
@@ -494,21 +494,21 @@ type MaxConcentrationPolicy implements Policy @entity {
 
 type MinMaxInvestmentPolicy implements Policy @entity {
   id: ID!
-  policy: String!
+  policy: Bytes!
   comptroller: Comptroller!
-  createdAt: BigInt!
+  createdAt: Int!
   enabled: Boolean!
   settings: String!
   minInvestmentAmount: BigDecimal!
   maxInvestmentAmount: BigDecimal!
-  updatedAt: BigInt!
+  updatedAt: Int!
 }
 
 type UnknownPolicy implements Policy @entity {
   id: ID!
-  policy: String!
+  policy: Bytes!
   comptroller: Comptroller!
-  createdAt: BigInt!
+  createdAt: Int!
   enabled: Boolean!
   settings: String!
 }
@@ -520,13 +520,13 @@ type UnknownPolicy implements Policy @entity {
 type Trade @entity {
   id: ID!
   vault: Vault!
-  adapter: String!
+  adapter: Bytes!
   type: TradeType!
   incomingAssets: [Asset!]!
   outgoingAssets: [Asset!]!
   incomingAssetAmounts: [AssetAmount!]!
   outgoingAssetAmounts: [AssetAmount!]!
-  timestamp: BigInt!
+  timestamp: Int!
 }
 
 #################################################
@@ -558,7 +558,7 @@ type GasRelayerWithdrawn @entity {
 type GasRelayerTransaction @entity {
   id: ID!
   gasRelayer: GasRelayer!
-  authorizer: String!
+  authorizer: Bytes!
   invokedSelector: String!
   successful: Boolean!
 }
@@ -570,9 +570,9 @@ type GasRelayerTransaction @entity {
 type ProtocolFee @entity {
   id: ID!
   vault: Vault!
-  feeTracker: String!
+  feeTracker: Bytes!
   rate: BigDecimal!
-  lastPaid: BigInt!
+  lastPaid: Int!
 }
 
 type ProtocolFeePaid @entity {
@@ -614,19 +614,19 @@ type AssetAmount @entity {
   valueGbp: BigDecimal!
   valueJpy: BigDecimal!
   valueUsd: BigDecimal!
-  timestamp: BigInt!
+  timestamp: Int!
 }
 
 type AssetPrice @entity {
   id: ID!
-  timestamp: BigInt!
+  timestamp: Int!
   asset: Asset!
   price: BigDecimal!
 }
 
 type CurrencyPrice @entity {
   id: ID!
-  timestamp: BigInt!
+  timestamp: Int!
   ethAud: BigDecimal!
   ethBtc: BigDecimal!
   ethChf: BigDecimal!

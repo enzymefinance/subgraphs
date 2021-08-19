@@ -1,4 +1,4 @@
-import { Address, BigInt, ethereum } from '@graphprotocol/graph-ts';
+import { Address, ethereum } from '@graphprotocol/graph-ts';
 import { UnknownFee } from '../generated/schema';
 import { feeId } from './Fee';
 
@@ -11,10 +11,10 @@ export function ensureUnknownFee(comptrollerAddress: Address, feeAddress: Addres
   }
 
   fee = new UnknownFee(id);
-  fee.fee = feeAddress.toHex();
+  fee.fee = feeAddress;
   fee.comptroller = comptrollerAddress.toHex();
-  fee.createdAt = event.block.timestamp;
-  fee.lastSettled = BigInt.fromI32(0);
+  fee.createdAt = event.block.timestamp.toI32();
+  fee.lastSettled = 0;
   fee.settings = '';
   fee.save();
 

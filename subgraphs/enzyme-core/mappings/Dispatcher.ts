@@ -33,7 +33,7 @@ export function handleCurrentFundDeployerSet(event: CurrentFundDeployerSet): voi
   if (!event.params.prevFundDeployer.equals(ZERO_ADDRESS)) {
     let prevRelease = ensureRelease(event.params.prevFundDeployer, event);
     prevRelease.current = false;
-    prevRelease.close = event.block.timestamp;
+    prevRelease.close = event.block.timestamp.toI32();
     prevRelease.save();
   }
 }
@@ -48,7 +48,7 @@ export function handleMigrationCancelled(event: MigrationCancelled): void {
 
   let migration = useMigration(migrationId);
   migration.cancelled = true;
-  migration.cancelledTimestamp = event.block.timestamp;
+  migration.cancelledTimestamp = event.block.timestamp.toI32();
   migration.save();
 
   let comptrollerProxy = ensureComptroller(Address.fromString(migration.comptroller), event);
@@ -67,7 +67,7 @@ export function handleMigrationExecuted(event: MigrationExecuted): void {
 
   let migration = useMigration(migrationId);
   migration.executed = true;
-  migration.executedTimestamp = event.block.timestamp;
+  migration.executedTimestamp = event.block.timestamp.toI32();
   migration.save();
 
   let vault = useVault(event.params.vaultProxy.toHex());
@@ -89,12 +89,12 @@ export function handleMigrationExecuted(event: MigrationExecuted): void {
   }
 
   let comptrollerProxy = ensureComptroller(Address.fromString(migration.comptroller), event);
-  comptrollerProxy.activation = event.block.timestamp;
+  comptrollerProxy.activation = event.block.timestamp.toI32();
   comptrollerProxy.status = 'COMMITTED';
   comptrollerProxy.save();
 
   let prevComptrollerProxy = ensureComptroller(Address.fromString(prevAccessor), event);
-  prevComptrollerProxy.destruction = event.block.timestamp;
+  prevComptrollerProxy.destruction = event.block.timestamp.toI32();
   prevComptrollerProxy.status = 'DESTRUCTED';
   prevComptrollerProxy.save();
 }
@@ -112,7 +112,7 @@ export function handleMigrationSignaled(event: MigrationSignaled): void {
   migration.comptroller = ensureComptroller(event.params.nextVaultAccessor, event).id;
   migration.prevRelease = ensureRelease(event.params.prevFundDeployer, event).id;
   migration.nextRelease = ensureRelease(event.params.nextFundDeployer, event).id;
-  migration.executableTimestamp = event.params.executableTimestamp;
+  migration.executableTimestamp = event.params.executableTimestamp.toI32();
   migration.cancelled = false;
   migration.executed = false;
   migration.save();
@@ -145,13 +145,13 @@ export function handleNominatedOwnerRemoved(event: NominatedOwnerRemoved): void 
 
 export function handleNominatedOwnerSet(event: NominatedOwnerSet): void {
   let network = ensureNetwork(event);
-  network.nominatedOwner = event.params.nominatedOwner.toHex();
+  network.nominatedOwner = event.params.nominatedOwner;
   network.save();
 }
 
 export function handleOwnershipTransferred(event: OwnershipTransferred): void {
   let network = ensureNetwork(event);
-  network.owner = event.params.nextOwner.toHex();
+  network.owner = event.params.nextOwner;
   network.nominatedOwner = null;
   network.save();
 }

@@ -1,4 +1,4 @@
-import { Address, ethereum } from '@graphprotocol/graph-ts';
+import { Address, Bytes, ethereum } from '@graphprotocol/graph-ts';
 import { AssetWhitelistPolicy } from '../generated/schema';
 import { policyId } from './Policy';
 
@@ -15,10 +15,10 @@ export function ensureAssetWhitelistPolicy(
   }
 
   policy = new AssetWhitelistPolicy(id);
-  policy.policy = policyAddress.toHex();
+  policy.policy = policyAddress;
   policy.comptroller = comptrollerAddress.toHex();
-  policy.assets = new Array<string>();
-  policy.createdAt = event.block.timestamp;
+  policy.assets = new Array<Bytes>();
+  policy.createdAt = event.block.timestamp.toI32();
   policy.enabled = true;
   policy.settings = '';
   policy.save();

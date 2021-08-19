@@ -15,12 +15,12 @@ export function ensureManagementFee(
   }
 
   fee = new ManagementFee(id);
-  fee.fee = feeAddress.toHex();
+  fee.fee = feeAddress;
   fee.comptroller = comptrollerAddress.toHex();
   fee.scaledPerSecondRate = BigInt.fromI32(0);
-  fee.createdAt = event.block.timestamp;
-  fee.lastSettled = BigInt.fromI32(0);
-  fee.activatedForMigratedFundAt = BigInt.fromI32(0);
+  fee.createdAt = event.block.timestamp.toI32();
+  fee.lastSettled = 0;
+  fee.activatedForMigratedFundAt = 0;
   fee.settings = '';
   fee.save();
 
