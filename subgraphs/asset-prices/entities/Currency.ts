@@ -22,7 +22,7 @@ export function getOrCreateCurrency(id: string, event: ethereum.Event): Currency
 }
 
 function doUpdateCurrency(currency: Currency, eth: BigDecimal, usd: BigDecimal, event: ethereum.Event): void {
-  currency.updated = event.block.timestamp;
+  currency.updated = event.block.number.toI32();
   currency.usd = usd;
   currency.eth = eth;
   currency.save();

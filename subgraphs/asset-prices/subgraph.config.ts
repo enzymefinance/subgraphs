@@ -136,9 +136,9 @@ export const configure: Configurator<Variables> = (variables: Variables) => {
 
   if (variables.releaseConfiguration.v2) {
     sources.push({
+      abi: 'DerivativePriceFeedContract',
       name: 'DerivativePriceFeed',
-      version: 'V2',
-      file: 'mappings/v2/DerivativePriceFeed.ts',
+      version: '2',
       address: variables.releaseConfiguration.v2.derivativePriceFeed,
       block: variables.releaseConfiguration.v2.derivativePriceFeedBlock,
       events: [
@@ -154,9 +154,9 @@ export const configure: Configurator<Variables> = (variables: Variables) => {
     });
 
     sources.push({
+      abi: 'PrimitivePriceFeedContract',
       name: 'PrimitivePriceFeed',
-      version: 'V2',
-      file: 'mappings/v2/PrimitivePriceFeed.ts',
+      version: '2',
       address: variables.releaseConfiguration.v2.primitivePriceFeed,
       block: variables.releaseConfiguration.v2.primitivePriceFeedBlock,
       events: [
@@ -182,9 +182,9 @@ export const configure: Configurator<Variables> = (variables: Variables) => {
 
   if (variables.releaseConfiguration.v3) {
     sources.push({
+      abi: 'DerivativePriceFeedContract',
       name: 'DerivativePriceFeed',
-      version: 'V3',
-      file: 'mappings/v3/DerivativePriceFeed.ts',
+      version: '3',
       address: variables.releaseConfiguration.v3.derivativePriceFeed,
       block: variables.releaseConfiguration.v3.derivativePriceFeedBlock,
       events: [
@@ -200,9 +200,9 @@ export const configure: Configurator<Variables> = (variables: Variables) => {
     });
 
     sources.push({
+      abi: 'PrimitivePriceFeedContract',
       name: 'PrimitivePriceFeed',
-      version: 'V3',
-      file: 'mappings/v3/PrimitivePriceFeed.ts',
+      version: '3',
       address: variables.releaseConfiguration.v3.primitivePriceFeed,
       block: variables.releaseConfiguration.v3.primitivePriceFeedBlock,
       events: [
@@ -228,8 +228,9 @@ export const configure: Configurator<Variables> = (variables: Variables) => {
 
   if (variables.releaseConfiguration.v4) {
     sources.push({
+      abi: 'CombinedPriceFeedContract',
       name: 'CombinedPriceFeed',
-      file: 'mappings/v4/CombinedPriceFeed.ts',
+      version: '4',
       address: variables.releaseConfiguration.v4.valueInterpreter,
       block: variables.releaseConfiguration.v4.valueInterpreterBlock,
       events: [

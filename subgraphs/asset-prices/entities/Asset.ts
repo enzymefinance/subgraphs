@@ -1,5 +1,5 @@
 import { Address, BigDecimal, ethereum, log } from '@graphprotocol/graph-ts';
-import { tokenDecimals, tokenName, tokenSymbol } from '@enzymefinance/subgraph-utils';
+import { tokenDecimals } from '@enzymefinance/subgraph-utils';
 import { Asset } from '../generated/schema';
 import { fetchAssetPrice } from '../utils/fetchAssetPrice';
 
@@ -9,14 +9,10 @@ export function getOrCreateAsset(address: Address, version: number, event: ether
 
   if (asset == null) {
     let decimals = tokenDecimals(address);
-
     asset = new Asset(id);
-    asset.name = tokenName(address);
-    asset.symbol = tokenSymbol(address);
     asset.decimals = decimals == -1 ? 18 : decimals;
-    asset.versions = [version as i32];
     asset.registrations = [];
-    asset.updated = event.block.timestamp;
+    asset.updated = event.block.number.toI32();
     asset.price = fetchAssetPrice(asset, version);
     asset.save();
   }
@@ -34,7 +30,7 @@ export function getAsset(assetAddress: string): Asset {
 }
 
 export function updateAssetPrice(asset: Asset, price: BigDecimal, event: ethereum.Event): void {
-  asset.updated = event.block.timestamp;
+  asset.updated = event.block.number.toI32();
   asset.price = price;
   asset.save();
 }

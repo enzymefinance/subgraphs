@@ -8,29 +8,17 @@ A registered asset.
 type Asset @entity {
   id: ID!
   """
-  The name of this asset.
-  """
-  name: String!
-  """
-  The symbol of this asset.
-  """
-  symbol: String!
-  """
   The number of decimal places for this asset.
   """
   decimals: Int!
   """
-  The release versions in which this asset is supported.
-  """
-  versions: [Int!]!
-  """
-  The timestamp at which the asset price was updated.
-  """
-  updated: BigInt!
-  """
   The asset price in ETH.
   """
   price: BigDecimal!
+  """
+  The block number at which the asset price was updated.
+  """
+  updated: Int!
   """
   A list of active registrations for this asset. Used to run batched updates for derivative assets.
   """
@@ -47,10 +35,6 @@ The supported currencies are USD, BTC, EUR, CHF, GBP, AUD and JPY.
 type Currency @entity {
   id: ID!
   """
-  The timestamp at which the currency value was updated.
-  """
-  updated: BigInt!
-  """
   The currency value represented in ETH.
   """
   eth: BigDecimal!
@@ -58,6 +42,10 @@ type Currency @entity {
   The currency value represented in USD.
   """
   usd: BigDecimal!
+  """
+  The block number at which the currency value was updated.
+  """
+  updated: Int!
 }
 
 #################################################
@@ -89,9 +77,9 @@ type Aggregator @entity {
   """
   proxies: [AggregatorProxy!]!
   """
-  The last time the proxies were checked for updates.
+  The timestamp at which proxies were last checked for updates.
   """
-  updated: BigInt!
+  updated: Int!
 }
 
 #################################################
@@ -231,5 +219,5 @@ type DerivativeUpdater @entity {
   """
   The block number at which we ran the last derivative update.
   """
-  block: BigInt!
+  block: Int!
 }

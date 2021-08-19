@@ -123,7 +123,7 @@ export function removeDerivativeRegistration(
 export function getUpdatedAggregator(aggregatorAddress: Address, event: ethereum.Event): Aggregator {
   // Only check for aggregator updates once every 24 hours.
   let aggregator = getOrCreateAggregator(aggregatorAddress);
-  if (aggregator.updated.plus(ONE_DAY).gt(event.block.timestamp)) {
+  if (BigInt.fromI32(aggregator.updated).plus(ONE_DAY).gt(event.block.timestamp)) {
     return aggregator;
   }
 
@@ -142,7 +142,7 @@ export function getUpdatedAggregator(aggregatorAddress: Address, event: ethereum
     }
   }
 
-  aggregator.updated = event.block.timestamp;
+  aggregator.updated = event.block.timestamp.toI32();
   aggregator.save();
 
   return aggregator;
@@ -171,7 +171,6 @@ function addRegistrationToAsset(
     .filter((registration) => registration != null)
     .sort((a, b) => b.version - a.version);
 
-  asset.versions = arrayUnique<i32>(registrations.map<i32>((registration) => registration.version));
   asset.registrations = registrations.map<string>((registration) => registration.id);
   asset.save();
 
@@ -212,7 +211,6 @@ function removeRegistrationFromAsset(
     .filter((registration) => registration != null)
     .sort((a, b) => b.version - a.version);
 
-  asset.versions = arrayUnique<i32>(registrations.map<i32>((registration) => registration.version));
   asset.registrations = registrations.map<string>((registration) => registration.id);
   asset.save();
 

@@ -1,4 +1,3 @@
-import { ZERO_BI } from '@enzymefinance/subgraph-utils';
 import { Address } from '@graphprotocol/graph-ts';
 import { AggregatorProxyContract } from '../generated/AggregatorProxyContract';
 import { AggregatorProxy, Aggregator } from '../generated/schema';
@@ -26,7 +25,7 @@ export function getOrCreateAggregator(aggregatorAddress: Address): Aggregator {
     aggregator = new Aggregator(aggregatorAddress.toHex());
     aggregator.decimals = result.reverted ? 18 : result.value;
     aggregator.proxies = [];
-    aggregator.updated = ZERO_BI;
+    aggregator.updated = 0;
     aggregator.save();
 
     // If the aggregator entity doesn't exist yet, we also need to spawn the data source.

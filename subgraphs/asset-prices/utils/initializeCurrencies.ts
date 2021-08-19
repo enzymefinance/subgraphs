@@ -43,7 +43,7 @@ export function initializeCurrencies(event: ethereum.Event): void {
 
 function createCurrency(id: string, eth: BigDecimal, usd: BigDecimal, event: ethereum.Event): void {
   let currency = new Currency(id);
-  currency.updated = event.block.timestamp;
+  currency.updated = event.block.number.toI32();
   currency.usd = usd;
   currency.eth = eth;
   currency.save();

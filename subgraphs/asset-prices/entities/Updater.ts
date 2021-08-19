@@ -9,7 +9,7 @@ export function getOrCreateDerivativeUpdater(): DerivativeUpdater {
   let updater = DerivativeUpdater.load('UPDATER') as DerivativeUpdater;
   if (updater == null) {
     updater = new DerivativeUpdater('UPDATER');
-    updater.block = ZERO_BI;
+    updater.block = 0;
     updater.progress = 0;
     updater.save();
   }
@@ -25,7 +25,7 @@ const DERIVATIVE_UPDATE_BATCH_SIZE = 2;
 export function updateDerivativePrices(event: ethereum.Event): void {
   let updater = getOrCreateDerivativeUpdater();
   // Only run the derivative update once per block.
-  if (updater.block.equals(event.block.number)) {
+  if (BigInt.fromI32(updater.block).equals(event.block.number)) {
     return;
   }
 
@@ -49,6 +49,6 @@ export function updateDerivativePrices(event: ethereum.Event): void {
   }
 
   updater.progress = progress.toI32();
-  updater.block = event.block.number;
+  updater.block = event.block.number.toI32();
   updater.save();
 }
