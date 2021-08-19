@@ -1,8 +1,8 @@
-import { BigDecimal, Address, BigInt } from '@graphprotocol/graph-ts';
+import { BigDecimal, Address, BigInt, ethereum } from '@graphprotocol/graph-ts';
 import { tokenBalance, toBigDecimal, arrayDiff } from '@enzymefinance/subgraph-utils';
 import { Vault, Asset, Holding } from '../generated/schema';
 
-function getOrCreateHolding(vault: Vault, asset: Asset, timestamp: BigInt): Holding {
+export function getOrCreateHolding(vault: Vault, asset: Asset, event: ethereum.Event): Holding {
   let id = vault.id + '/' + asset.id;
   let holding = Holding.load(id);
 
@@ -11,7 +11,7 @@ function getOrCreateHolding(vault: Vault, asset: Asset, timestamp: BigInt): Hold
     holding.asset = asset.id;
     holding.vault = vault.id;
     holding.tracked = false;
-    holding.updated = timestamp.toI32();
+    holding.updated = event.block.number.toI32();
     holding.balance = BigDecimal.fromString('0');
     holding.save();
   }
@@ -32,23 +32,18 @@ function maintainPortfolio(vault: Vault, holding: Holding): void {
   vault.save();
 }
 
-export function updateHoldingBalance(vault: Vault, asset: Asset, timestamp: BigInt): Holding {
-  let holding = getOrCreateHolding(vault, asset, timestamp);
+export function updateHoldingBalance(vault: Vault, asset: Asset, event: ethereum.Event): Holding {
+  let holding = getOrCreateHolding(vault, asset, event);
 
   // TODO: Is it reasonable to assume that we can default this to `0` if the balance cannot be fetched.
   let balanceOrNull = tokenBalance(Address.fromString(asset.id), Address.fromString(vault.id));
   let currentBalance =
     balanceOrNull == null ? BigDecimal.fromString('0') : toBigDecimal(balanceOrNull as BigInt, asset.decimals);
-  let previousBalance = holding.balance;
 
   // Update the holding balance.
   holding.balance = currentBalance;
-  holding.updated = timestamp.toI32();
+  holding.updated = event.block.number.toI32();
   holding.save();
-
-  // Update the total value locked (in the entire network) of this asset.
-  asset.total = asset.total.minus(previousBalance).plus(currentBalance);
-  asset.save();
 
   // Create a historical snapshot of the holding entity.
   maintainPortfolio(vault, holding);
@@ -56,8 +51,8 @@ export function updateHoldingBalance(vault: Vault, asset: Asset, timestamp: BigI
   return holding;
 }
 
-export function updateTrackedAsset(vault: Vault, asset: Asset, timestamp: BigInt, tracked: boolean): void {
-  let holding = getOrCreateHolding(vault, asset, timestamp);
+export function updateTrackedAsset(vault: Vault, asset: Asset, event: ethereum.Event, tracked: boolean): void {
+  let holding = getOrCreateHolding(vault, asset, event);
   holding.tracked = tracked;
   holding.save();
 

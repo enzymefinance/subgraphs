@@ -2,7 +2,7 @@ import { toBigDecimal, ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
 import { Transfer } from '../generated/ERC20Contract';
 import { Asset, IncomingTransfer, OutgoingTransfer, Vault } from '../generated/schema';
 import { ensureAsset } from '../entities/Asset';
-import { updateHoldingBalance } from '../entities/Holding';
+import { getOrCreateHolding, updateHoldingBalance } from '../entities/Holding';
 
 export function transferId(event: Transfer, suffix: string): string {
   return event.transaction.hash.toHex() + '/' + event.logIndex.toString() + '/' + suffix;
@@ -52,35 +52,41 @@ export function handleTransfer(event: Transfer): void {
 }
 
 function handleIncomingTransfer(event: Transfer, asset: Asset, vault: Vault): void {
-  let holding = updateHoldingBalance(vault, asset, event.block.timestamp);
+  let before = getOrCreateHolding(vault, asset, event).balance;
+  let holding = updateHoldingBalance(vault, asset, event);
   let amount = toBigDecimal(event.params.value, asset.decimals);
 
   let transfer = new IncomingTransfer(transferId(event, 'incoming'));
-  transfer.type = 'IN';
+  transfer.type = 'INCOMING';
   transfer.vault = vault.id;
   transfer.asset = asset.id;
   transfer.holding = holding.id;
-  transfer.balance = holding.balance;
   transfer.amount = amount;
+  transfer.before = before;
+  transfer.after = holding.balance;
   transfer.sender = event.params.from;
   transfer.transaction = event.transaction.hash;
   transfer.timestamp = event.block.timestamp.toI32();
+  transfer.block = event.block.number.toI32();
   transfer.save();
 }
 
 function handleOutgoingTransfer(event: Transfer, asset: Asset, vault: Vault): void {
-  let holding = updateHoldingBalance(vault, asset, event.block.timestamp);
+  let before = getOrCreateHolding(vault, asset, event).balance;
+  let holding = updateHoldingBalance(vault, asset, event);
   let amount = toBigDecimal(event.params.value, asset.decimals);
 
   let transfer = new OutgoingTransfer(transferId(event, 'outgoing'));
-  transfer.type = 'OUT';
+  transfer.type = 'OUTGOING';
   transfer.vault = vault.id;
   transfer.asset = asset.id;
   transfer.holding = holding.id;
-  transfer.balance = holding.balance;
   transfer.amount = amount;
+  transfer.before = before;
+  transfer.after = holding.balance;
   transfer.recipient = event.params.to;
   transfer.transaction = event.transaction.hash;
   transfer.timestamp = event.block.timestamp.toI32();
+  transfer.block = event.block.number.toI32();
   transfer.save();
 }

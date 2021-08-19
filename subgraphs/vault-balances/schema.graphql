@@ -1,81 +1,270 @@
+"""
+An unsupported (hence ignored) asset.
+"""
 type IgnoredAsset @entity {
   id: ID!
 }
 
+"""
+A monitored asset.
+"""
 type Asset @entity {
+  """
+  The address of the asset.
+  """
   id: ID!
+  """
+  The number of decimal places for the asset.
+  """
   decimals: Int!
-  symbol: String!
-  name: String!
-  total: BigDecimal!
+  """
+  The current per-vault holdings for the asset.
+  """
   holdings: [Holding!]! @derivedFrom(field: "asset")
+  """
+  Incoming and outgoing ransfers for the asset.
+  """
   transfers: [Transfer!]! @derivedFrom(field: "asset")
+  """
+  Incoming transfers for the asset.
+  """
   incoming: [IncomingTransfer!]! @derivedFrom(field: "asset")
+  """
+  Outgoing transfers for the asset.
+  """
   outgoing: [OutgoingTransfer!]! @derivedFrom(field: "asset")
 }
 
+"""
+A vault.
+"""
 type Vault @entity {
+  """
+  The address of the vault.
+  """
   id: ID!
+  """
+  The address of the current version of the vault.
+  """
   version: Bytes!
+  """
+  The block number at which the last balance change was recorded.
+  """
   updated: Int!
+  """
+  The current portfolio (tracked assets) of the vault.
+  """
   portfolio: [Holding!]!
+  """
+  The current holdings (tracked and untracked assets) of the vault.
+  """
   holdings: [Holding!]! @derivedFrom(field: "vault")
+  """
+  Incoming and outgoing transfers.
+  """
   transfers: [Transfer!]! @derivedFrom(field: "vault")
+  """
+  Incoming transfers.
+  """
   incoming: [IncomingTransfer!]! @derivedFrom(field: "vault")
+  """
+  Outgoing transfers.
+  """
   outgoing: [OutgoingTransfer!]! @derivedFrom(field: "vault")
 }
 
+"""
+A holding (asset held by a vault).
+"""
 type Holding @entity {
   id: ID!
+  """
+  The owning vault.
+  """
   vault: Vault!
+  """
+  The held asset.
+  """
   asset: Asset!
+  """
+  The vault's asset balance.
+  """
   balance: BigDecimal!
+  """
+  The block number at which the last balance change was recorded.
+  """
   updated: Int!
+  """
+  Whether the asset is currently tracked in the vault
+  """
   tracked: Boolean!
+  """
+  Incoming and outgoing transfers.
+  """
   transfers: [Transfer!]! @derivedFrom(field: "holding")
+  """
+  Incoming transfers.
+  """
   incoming: [IncomingTransfer!]! @derivedFrom(field: "holding")
+  """
+  Incoming transfers.
+  """
   outgoing: [OutgoingTransfer!]! @derivedFrom(field: "holding")
 }
 
+"""
+The transfer direction (incoming or outgoing).
+"""
 enum TransferType {
-  IN
-  OUT
+  INCOMING
+  OUTGOING
 }
 
+"""
+Shared interface for incoming and outgoing transfers.
+"""
 interface Transfer {
   id: ID!
+  """
+  The time at which the transfer occurred.
+  """
   timestamp: Int!
+  """
+  The block number at which the transfer occurred.
+  """
+  block: Int!
+  """
+  The transfer direction (incoming or outgoing).
+  """
   type: TransferType!
+  """
+  The transferred asset.
+  """
   asset: Asset!
-  vault: Vault!
+  """
+  The affected holding.
+  """
   holding: Holding!
+  """
+  The affected vault.
+  """
+  vault: Vault!
+  """
+  The transferred amount.
+  """
   amount: BigDecimal!
-  balance: BigDecimal!
+  """
+  The balance before the transfer.
+  """
+  before: BigDecimal!
+  """
+  The balance after the transfer.
+  """
+  after: BigDecimal!
+  """
+  The transaction hash.
+  """
   transaction: Bytes!
 }
 
+"""
+Outgoing transfers (transfers where an asset leaves a vault).
+"""
 type OutgoingTransfer implements Transfer @entity {
   id: ID!
+  """
+  The time at which the transfer occurred.
+  """
   timestamp: Int!
+  """
+  The block number at which the transfer occurred.
+  """
+  block: Int!
+  """
+  The transfer direction (incoming or outgoing).
+  """
   type: TransferType!
+  """
+  The transferred asset.
+  """
   asset: Asset!
-  vault: Vault!
+  """
+  The affected holding.
+  """
   holding: Holding!
+  """
+  The affected vault (payer).
+  """
+  vault: Vault!
+  """
+  The address of the recipient.
+  """
   recipient: Bytes!
+  """
+  The transferred amount.
+  """
   amount: BigDecimal!
-  balance: BigDecimal!
+  """
+  The balance before the transfer.
+  """
+  before: BigDecimal!
+  """
+  The balance after the transfer.
+  """
+  after: BigDecimal!
+  """
+  The transaction hash.
+  """
   transaction: Bytes!
 }
 
+"""
+Incoming transfers (transfers where an asset enters a vault).
+"""
 type IncomingTransfer implements Transfer @entity {
   id: ID!
+  """
+  The time at which the transfer occurred.
+  """
   timestamp: Int!
+  """
+  The block number at which the transfer occurred.
+  """
+  block: Int!
+  """
+  The transfer direction (incoming or outgoing).
+  """
   type: TransferType!
+  """
+  The transferred asset.
+  """
   asset: Asset!
-  vault: Vault!
+  """
+  The affected holding.
+  """
   holding: Holding!
+  """
+  The affected vault (payer).
+  """
+  vault: Vault!
+  """
+  The address of the sender.
+  """
   sender: Bytes!
+  """
+  The transferred amount.
+  """
   amount: BigDecimal!
-  balance: BigDecimal!
+  """
+  The balance before the transfer.
+  """
+  before: BigDecimal!
+  """
+  The balance after the transfer.
+  """
+  after: BigDecimal!
+  """
+  The transaction hash.
+  """
   transaction: Bytes!
 }

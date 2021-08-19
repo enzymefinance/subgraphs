@@ -1,6 +1,27 @@
-import { Address, BigDecimal, log } from '@graphprotocol/graph-ts';
-import { tokenDecimals, tokenBalance, tokenName, tokenSymbol } from '@enzymefinance/subgraph-utils';
+import { Address, log } from '@graphprotocol/graph-ts';
+import { tokenDecimals, tokenBalance } from '@enzymefinance/subgraph-utils';
 import { Asset, IgnoredAsset } from '../generated/schema';
+
+function supportsDecimalsCall(address: Address): boolean {
+  let decimals = tokenDecimals(address);
+  if (decimals == -1) {
+    log.error('cannot fetch decimals for asset {}', [address.toHex()]);
+    return false;
+  }
+
+  return true;
+}
+
+function supportBalanceOfCall(address: Address): boolean {
+  let vitalik = Address.fromString('0xab5801a7d398351b8be11c439e05c5b3259aec9b');
+  let balance = tokenBalance(address, vitalik);
+  if (balance == null) {
+    log.error('cannot fetch balances for asset {}', [address.toHex()]);
+    return false;
+  }
+
+  return true;
+}
 
 export function ensureAsset(address: Address): Asset | null {
   let id = address.toHex();
@@ -14,36 +35,14 @@ export function ensureAsset(address: Address): Asset | null {
     }
 
     // Check if we can call .decimals() on this contract.
-    let decimals = tokenDecimals(address);
-    if (decimals == -1) {
-      log.error('ignoring asset {} (cannot fetch decimals)', [id]);
-
+    if (!(supportsDecimalsCall(address) && supportBalanceOfCall(address))) {
+      log.error('ignoring asset {} (unsupported)', [id]);
       let ignore = new IgnoredAsset(id);
       ignore.save();
-
-      return null;
     }
-
-    // Check if we can call .balanceOf() on this contract.
-    let vitalik = Address.fromString('0xab5801a7d398351b8be11c439e05c5b3259aec9b');
-    let balance = tokenBalance(address, vitalik);
-    if (balance == null) {
-      log.error('ignoring asset {} (cannot fetch balances)', [id]);
-
-      let ignore = new IgnoredAsset(id);
-      ignore.save();
-
-      return null;
-    }
-
-    let name = tokenName(address);
-    let symbol = tokenSymbol(address);
 
     asset = new Asset(id);
-    asset.name = name;
-    asset.symbol = symbol;
-    asset.decimals = decimals;
-    asset.total = BigDecimal.fromString('0');
+    asset.decimals = tokenDecimals(address);
     asset.save();
   }
 
