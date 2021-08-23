@@ -1268,6 +1268,7 @@ type Release @entity {
   curvePriceFeed: String!
   curveExchangeAdapter: String!
   curveLiquidityAaveAdapter: String!
+  curveLiquidityEursAdapter: String!
   curveLiquiditySethAdapter: String!
   curveLiquidityStethAdapter: String!
   lidoStethPriceFeed: String!

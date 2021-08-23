@@ -93,6 +93,7 @@ interface Release {
   compoundAdapter: string;
   curveExchangeAdapter: string;
   curveLiquidityAaveAdapter: string;
+  curveLiquidityEursAdapter: string;
   curveLiquiditySethAdapter: string;
   curveLiquidityStethAdapter: string;
   idleAdapter: string;
@@ -178,6 +179,7 @@ async function fetchDeployment(source: string): Promise<DeploymentWithMetadata> 
           compoundAdapter: kovanA.contracts.CompoundAdapter.address,
           curveExchangeAdapter: '0x0000000000000000000000000000000000000000',
           curveLiquidityAaveAdapter: '0x0000000000000000000000000000000000000000',
+          curveLiquidityEursAdapter: '0x0000000000000000000000000000000000000000',
           curveLiquiditySethAdapter: '0x0000000000000000000000000000000000000000',
           curveLiquidityStethAdapter: '0x0000000000000000000000000000000000000000',
           idleAdapter: '0x0000000000000000000000000000000000000000',
@@ -247,6 +249,7 @@ async function fetchDeployment(source: string): Promise<DeploymentWithMetadata> 
           compoundAdapter: kovanB.contracts.CompoundAdapter.address,
           curveExchangeAdapter: '0x0000000000000000000000000000000000000000',
           curveLiquidityAaveAdapter: '0x0000000000000000000000000000000000000000',
+          curveLiquidityEursAdapter: '0x0000000000000000000000000000000000000000',
           curveLiquiditySethAdapter: '0x0000000000000000000000000000000000000000',
           curveLiquidityStethAdapter: '0x0000000000000000000000000000000000000000',
           idleAdapter: '0x0000000000000000000000000000000000000000',
@@ -346,6 +349,7 @@ async function fetchDeployment(source: string): Promise<DeploymentWithMetadata> 
           alphaHomoraV1Adapter: mainnetA.contracts.AlphaHomoraV1Adapter.address,
           curveExchangeAdapter: mainnetA.contracts.CurveExchangeAdapter.address,
           curveLiquidityAaveAdapter: mainnetA.contracts.CurveLiquidityAaveAdapter.address,
+          curveLiquidityEursAdapter: '0x0000000000000000000000000000000000000000',
           curveLiquiditySethAdapter: mainnetA.contracts.CurveLiquiditySethAdapter.address,
           curveLiquidityStethAdapter: mainnetA.contracts.CurveLiquidityStethAdapter.address,
           trackedAssetsAdapter: mainnetA.contracts.TrackedAssetsAdapter.address,
@@ -416,6 +420,7 @@ async function fetchDeployment(source: string): Promise<DeploymentWithMetadata> 
           alphaHomoraV1Adapter: mainnetB.contracts.AlphaHomoraV1Adapter.address,
           curveExchangeAdapter: mainnetB.contracts.CurveExchangeAdapter.address,
           curveLiquidityAaveAdapter: mainnetB.contracts.CurveLiquidityAaveAdapter.address,
+          curveLiquidityEursAdapter: mainnetB.contracts.CurveLiquidityEursAdapter.address,
           curveLiquiditySethAdapter: mainnetB.contracts.CurveLiquiditySethAdapter.address,
           curveLiquidityStethAdapter: mainnetB.contracts.CurveLiquidityStethAdapter.address,
           trackedAssetsAdapter: mainnetB.contracts.TrackedAssetsAdapter.address,

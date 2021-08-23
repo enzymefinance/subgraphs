@@ -51,6 +51,7 @@ export function createRelease(address: Address, event: ethereum.Event): Release 
   release.comptrollerLib = releaseAddresses.comptrollerLibAddress.toHex();
   release.curveExchangeAdapter = releaseAddresses.curveExchangeAdapterAddress.toHex();
   release.curveLiquidityAaveAdapter = releaseAddresses.curveLiquidityAaveAdapterAddress.toHex();
+  release.curveLiquidityEursAdapter = releaseAddresses.curveLiquidityEursAdapterAddress.toHex();
   release.curveLiquiditySethAdapter = releaseAddresses.curveLiquiditySethAdapterAddress.toHex();
   release.curveLiquidityStethAdapter = releaseAddresses.curveLiquidityStethAdapterAddress.toHex();
   release.curvePriceFeed = releaseAddresses.curvePriceFeedAddress.toHex();
