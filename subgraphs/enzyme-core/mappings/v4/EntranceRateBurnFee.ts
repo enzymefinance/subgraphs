@@ -4,7 +4,7 @@ import { FundSettingsAdded, Settled } from '../../generated/EntranceRateBurnFee4
 
 export function handleFundSettingsAdded(event: FundSettingsAdded): void {
   let fee = ensureEntranceRateBurnFee(event.params.comptrollerProxy, event.address, event);
-  fee.rate = toBigDecimal(event.params.rate, 5);
+  fee.rate = toBigDecimal(event.params.rate, 4);
   fee.save();
 }
 

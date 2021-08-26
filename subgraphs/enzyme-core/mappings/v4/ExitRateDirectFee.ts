@@ -5,8 +5,8 @@ import { FundSettingsAdded, RecipientSetForFund, Settled } from '../../generated
 
 export function handleFundSettingsAdded(event: FundSettingsAdded): void {
   let fee = ensureExitRateDirectFee(event.params.comptrollerProxy, event.address, event);
-  fee.inKindRate = toBigDecimal(event.params.inKindRate, 5);
-  fee.specificAssetsRate = toBigDecimal(event.params.specificAssetsRate, 5);
+  fee.inKindRate = toBigDecimal(event.params.inKindRate, 4);
+  fee.specificAssetsRate = toBigDecimal(event.params.specificAssetsRate, 4);
   fee.save();
 }
 

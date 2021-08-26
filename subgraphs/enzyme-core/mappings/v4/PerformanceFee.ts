@@ -26,7 +26,7 @@ export function handleActivatedForFund(event: ActivatedForFund): void {
 
 export function handleFundSettingsAdded(event: FundSettingsAdded): void {
   let fee = ensurePerformanceFee(event.params.comptrollerProxy, event.address, event);
-  fee.rate = toBigDecimal(event.params.rate, 5);
+  fee.rate = toBigDecimal(event.params.rate, 4);
   fee.period = event.params.period.toI32();
   fee.save();
 }

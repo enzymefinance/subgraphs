@@ -5,7 +5,7 @@ import { FundSettingsAdded, RecipientSetForFund, Settled } from '../../generated
 
 export function handleFundSettingsAdded(event: FundSettingsAdded): void {
   let fee = ensureEntranceRateDirectFee(event.params.comptrollerProxy, event.address, event);
-  fee.rate = toBigDecimal(event.params.rate, 5);
+  fee.rate = toBigDecimal(event.params.rate, 4);
   fee.save();
 }
 export function handleRecipientSetForFund(event: RecipientSetForFund): void {

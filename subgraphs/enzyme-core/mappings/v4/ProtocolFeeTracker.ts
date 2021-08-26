@@ -15,19 +15,19 @@ export function handleInitializedForVault(event: InitializedForVault): void {
   let rate = protocolFeeTrackerContract.getFeeBpsForVault(event.params.vaultProxy);
 
   let protocolFee = ensureProtocolFee(event.params.vaultProxy, event.address);
-  protocolFee.rate = toBigDecimal(rate, 5);
+  protocolFee.rate = toBigDecimal(rate, 4);
   protocolFee.save();
 }
 
 export function handleFeeBpsDefaultSet(event: FeeBpsDefaultSet): void {
   let network = ensureNetwork(event);
-  network.protocolFeeRate = toBigDecimal(event.params.nextFeeBpsDefault, 5);
+  network.protocolFeeRate = toBigDecimal(event.params.nextFeeBpsDefault, 4);
   network.save();
 }
 
 export function handleFeeBpsOverrideSetForVault(event: FeeBpsOverrideSetForVault): void {
   let protocolFee = ensureProtocolFee(event.params.vaultProxy, event.address);
-  protocolFee.rate = toBigDecimal(event.params.nextFeeBpsOverride, 5);
+  protocolFee.rate = toBigDecimal(event.params.nextFeeBpsOverride, 4);
   protocolFee.save();
 }
 
