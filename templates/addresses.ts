@@ -1,5 +1,4 @@
 import { Address } from '@graphprotocol/graph-ts';
-import { zeroAddress } from '../src/constants';
 
 // NOTE: We consider addresses for a release to be immutable. Hence, we
 // can statically define these in the code and don't need to spawn dynamic
@@ -50,6 +49,7 @@ export class ReleaseAddresses {
   compoundAdapterAddress: Address;
   curveExchangeAdapterAddress: Address;
   curveLiquidityAaveAdapterAddress: Address;
+  curveLiquidityEursAdapterAddress: Address;
   curveLiquiditySethAdapterAddress: Address;
   curveLiquidityStethAdapterAddress: Address;
   idleAdapterAddress: Address;
@@ -117,6 +117,7 @@ export let releaseAddressesA: ReleaseAddresses = {
   compoundAdapterAddress: Address.fromString('{{releases.0.compoundAdapter}}'),
   curveExchangeAdapterAddress: Address.fromString('{{releases.0.curveExchangeAdapter}}'),
   curveLiquidityAaveAdapterAddress: Address.fromString('{{releases.0.curveLiquidityAaveAdapter}}'),
+  curveLiquidityEursAdapterAddress: Address.fromString('{{releases.0.curveLiquidityEursAdapter}}'),
   curveLiquiditySethAdapterAddress: Address.fromString('{{releases.0.curveLiquiditySethAdapter}}'),
   curveLiquidityStethAdapterAddress: Address.fromString('{{releases.0.curveLiquidityStethAdapter}}'),
   idleAdapterAddress: Address.fromString('{{releases.0.idleAdapter}}'),
@@ -184,6 +185,7 @@ export let releaseAddressesB: ReleaseAddresses = {
   compoundAdapterAddress: Address.fromString('{{releases.1.compoundAdapter}}'),
   curveExchangeAdapterAddress: Address.fromString('{{releases.1.curveExchangeAdapter}}'),
   curveLiquidityAaveAdapterAddress: Address.fromString('{{releases.1.curveLiquidityAaveAdapter}}'),
+  curveLiquidityEursAdapterAddress: Address.fromString('{{releases.1.curveLiquidityEursAdapter}}'),
   curveLiquiditySethAdapterAddress: Address.fromString('{{releases.1.curveLiquiditySethAdapter}}'),
   curveLiquidityStethAdapterAddress: Address.fromString('{{releases.1.curveLiquidityStethAdapter}}'),
   idleAdapterAddress: Address.fromString('{{releases.1.idleAdapter}}'),
