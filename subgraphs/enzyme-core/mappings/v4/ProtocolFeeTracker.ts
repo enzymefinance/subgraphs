@@ -1,6 +1,6 @@
 import { toBigDecimal } from '../../../../utils';
 import { ensureNetwork } from '../../entities/Network';
-import { ensureProtocolFee } from '../../entities/ProtocolFee';
+import { createProtocolFee, useProtocolFee } from '../../entities/ProtocolFee';
 import {
   FeeBpsDefaultSet,
   FeeBpsOverrideSetForVault,
@@ -14,7 +14,7 @@ export function handleInitializedForVault(event: InitializedForVault): void {
   let protocolFeeTrackerContract = ProtocolFeeTracker4Contract.bind(event.address);
   let rate = protocolFeeTrackerContract.getFeeBpsForVault(event.params.vaultProxy);
 
-  let protocolFee = ensureProtocolFee(event.params.vaultProxy, event.address);
+  let protocolFee = createProtocolFee(event.params.vaultProxy, event.address);
   protocolFee.rate = toBigDecimal(rate, 4);
   protocolFee.save();
 }
@@ -26,7 +26,7 @@ export function handleFeeBpsDefaultSet(event: FeeBpsDefaultSet): void {
 }
 
 export function handleFeeBpsOverrideSetForVault(event: FeeBpsOverrideSetForVault): void {
-  let protocolFee = ensureProtocolFee(event.params.vaultProxy, event.address);
+  let protocolFee = useProtocolFee(event.params.vaultProxy, event.address);
   protocolFee.rate = toBigDecimal(event.params.nextFeeBpsOverride, 4);
   protocolFee.save();
 }
@@ -36,7 +36,7 @@ export function handleFeePaidForVault(event: FeePaidForVault): void {
 }
 
 export function handleLastPaidSetForVault(event: LastPaidSetForVault): void {
-  let protocolFee = ensureProtocolFee(event.params.vaultProxy, event.address);
+  let protocolFee = useProtocolFee(event.params.vaultProxy, event.address);
   protocolFee.lastPaid = event.params.nextTimestamp.toI32();
   protocolFee.save();
 }

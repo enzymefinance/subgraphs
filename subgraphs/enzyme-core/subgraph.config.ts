@@ -6,7 +6,6 @@ import { sourcesV3 } from './config/v3/sources';
 import { abisV4 } from './config/v4/abis';
 import { sourcesV4 } from './config/v4/sources';
 import { kovanContext } from './contexts/kovan';
-import { localMainnetContext } from './contexts/local-mainnet';
 import { mainnetContext } from './contexts/mainnet';
 import { Release2Addresses, Release3Addresses, Release4Addresses } from './contexts/types';
 
@@ -14,13 +13,22 @@ export interface Variables {
   block: number;
   dispatcherAddress: string;
   wethTokenAddress: string;
+  chainlinkAggregatorAddresses: {
+    audUsd: string;
+    btcEth: string;
+    btcusd: string;
+    chfusd: string;
+    ethUsd: string;
+    eurUsd: string;
+    gbpUsd: string;
+    jpyUsd: string;
+  };
   release2: Release2Addresses;
   release3: Release3Addresses;
   release4: Release4Addresses;
 }
 
 export const contexts: Contexts<Variables> = {
-  localMainnet: localMainnetContext,
   kovan: kovanContext,
   mainnet: mainnetContext,
 };

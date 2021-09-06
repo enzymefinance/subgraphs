@@ -1,10 +1,10 @@
 import { toBigDecimal, uniqueEventId } from '@enzymefinance/subgraph-utils';
 import { Address, dataSource } from '@graphprotocol/graph-ts';
-import { ensureInvestor } from '../../entities/Account';
+import { ensureDepositor } from '../../entities/Account';
 import { ensureAsset } from '../../entities/Asset';
 import { createAssetAmount } from '../../entities/AssetAmount';
 import { ensureComptroller } from '../../entities/Comptroller';
-import { ensureInvestment } from '../../entities/Investment';
+import { ensureDeposit } from '../../entities/Deposit';
 import { useVault } from '../../entities/Vault';
 import {
   MigratedSharesDuePaid,
@@ -24,8 +24,8 @@ import {
 
 export function handleSharesBought(event: SharesBought): void {
   let vault = useVault(dataSource.context().getString('vaultProxy'));
-  let investor = ensureInvestor(event.params.buyer, event);
-  let investment = ensureInvestment(investor, vault, event);
+  let depositor = ensureDepositor(event.params.buyer, event);
+  let deposit = ensureDeposit(depositor, vault, event);
 
   let comptrollerProxy = ensureComptroller(Address.fromString(vault.comptroller), event);
   let asset = ensureAsset(Address.fromString(comptrollerProxy.denomination));
@@ -34,8 +34,8 @@ export function handleSharesBought(event: SharesBought): void {
 
   let addition = new SharesBoughtEvent(uniqueEventId(event));
   addition.vault = vault.id;
-  addition.investor = investor.id;
-  addition.investment = investment.id;
+  addition.depositor = depositor.id;
+  addition.deposit = deposit.id;
   addition.type = 'SharesBought';
   addition.depositAssetAmount = createAssetAmount(asset, amount, 'deposit', event).id;
   addition.sharesIssued = toBigDecimal(event.params.sharesIssued);
@@ -46,8 +46,8 @@ export function handleSharesBought(event: SharesBought): void {
 
 export function handleSharesRedeemed(event: SharesRedeemed): void {
   let vault = useVault(dataSource.context().getString('vaultProxy'));
-  let investor = ensureInvestor(event.params.redeemer, event);
-  let investment = ensureInvestment(investor, vault, event);
+  let depositor = ensureDepositor(event.params.redeemer, event);
+  let deposit = ensureDeposit(depositor, vault, event);
   let shares = toBigDecimal(event.params.sharesQuantity);
   let assets = event.params.receivedAssets.map<Asset>((id) => ensureAsset(id));
   let qtys = event.params.receivedAssetQuantities;
@@ -61,8 +61,8 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
 
   let redemption = new SharesRedeemedEvent(uniqueEventId(event));
   redemption.vault = vault.id;
-  redemption.investor = investor.id;
-  redemption.investment = investment.id;
+  redemption.depositor = depositor.id;
+  redemption.deposit = deposit.id;
   redemption.type = 'SharesRedeemed';
   redemption.shares = shares;
   redemption.payoutAssetAmounts = assetAmounts.map<string>((assetAmount) => assetAmount.id);
@@ -72,14 +72,14 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
 
 export function handleMigratedSharesDuePaid(event: MigratedSharesDuePaid): void {
   let vault = useVault(dataSource.context().getString('vaultProxy'));
-  let investor = ensureInvestor(Address.fromString(vault.owner), event);
-  let investment = ensureInvestment(investor, vault, event);
+  let depositor = ensureDepositor(Address.fromString(vault.owner), event);
+  let deposit = ensureDeposit(depositor, vault, event);
   let shares = toBigDecimal(event.params.sharesDue);
 
   let sharesDuePaid = new FeeSharesReceivedEvent(uniqueEventId(event));
   sharesDuePaid.vault = vault.id;
-  sharesDuePaid.investor = investor.id;
-  sharesDuePaid.investment = investment.id;
+  sharesDuePaid.depositor = depositor.id;
+  sharesDuePaid.deposit = deposit.id;
   sharesDuePaid.type = 'FeeSharesReceived';
   sharesDuePaid.shares = shares;
   sharesDuePaid.timestamp = event.block.timestamp.toI32();

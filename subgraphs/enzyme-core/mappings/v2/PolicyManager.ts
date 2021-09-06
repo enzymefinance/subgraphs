@@ -3,10 +3,10 @@ import { ensureAdapterWhitelistPolicy } from '../../entities/AdapterWhitelistPol
 import { ensureAssetBlacklistPolicy } from '../../entities/AssetBlacklistPolicy';
 import { ensureAssetWhitelistPolicy } from '../../entities/AssetWhitelistPolicy';
 import { ensureBuySharesCallerWhitelistPolicy } from '../../entities/BuySharesCallerWhitelistPolicy';
+import { ensureDepositorWhitelistPolicy } from '../../entities/DepositorWhitelistPolicy';
 import { ensureGuaranteedRedemptionPolicy } from '../../entities/GuaranteedRedemptionPolicy';
-import { ensureInvestorWhitelistPolicy } from '../../entities/InvestorWhitelistPolicy';
 import { ensureMaxConcentrationPolicy } from '../../entities/MaxConcentrationPolicy';
-import { ensureMinMaxInvestmentPolicy } from '../../entities/MinMaxInvestmentPolicy';
+import { ensureMinMaxDepositPolicy } from '../../entities/MinMaxDepositPolicy';
 import { ensureUnknownPolicy } from '../../entities/UnknownPolicy';
 import { release2Addresses } from '../../generated/addresses';
 import {
@@ -69,7 +69,7 @@ export function handlePolicyEnabledForFund(event: PolicyEnabledForFund): void {
   }
 
   if (event.params.policy.equals(release2Addresses.investorWhitelistAddress)) {
-    let policy = ensureInvestorWhitelistPolicy(comptrollerAddress, policyAddress, event);
+    let policy = ensureDepositorWhitelistPolicy(comptrollerAddress, policyAddress, event);
     policy.enabled = true;
     policy.settings = event.params.settingsData.toHex();
     policy.save();
@@ -85,7 +85,7 @@ export function handlePolicyEnabledForFund(event: PolicyEnabledForFund): void {
   }
 
   if (event.params.policy.equals(release2Addresses.minMaxInvestmentAddress)) {
-    let policy = ensureMinMaxInvestmentPolicy(comptrollerAddress, policyAddress, event);
+    let policy = ensureMinMaxDepositPolicy(comptrollerAddress, policyAddress, event);
     policy.enabled = true;
     policy.settings = event.params.settingsData.toHex();
     policy.save();
@@ -145,7 +145,7 @@ export function handlePolicyDisabledForFund(event: PolicyDisabledForFund): void 
   }
 
   if (event.params.policy.equals(release2Addresses.investorWhitelistAddress)) {
-    let policy = ensureInvestorWhitelistPolicy(comptrollerAddress, policyAddress, event);
+    let policy = ensureDepositorWhitelistPolicy(comptrollerAddress, policyAddress, event);
     policy.enabled = false;
     policy.save();
     return;
@@ -159,7 +159,7 @@ export function handlePolicyDisabledForFund(event: PolicyDisabledForFund): void 
   }
 
   if (event.params.policy.equals(release2Addresses.minMaxInvestmentAddress)) {
-    let policy = ensureMinMaxInvestmentPolicy(comptrollerAddress, policyAddress, event);
+    let policy = ensureMinMaxDepositPolicy(comptrollerAddress, policyAddress, event);
     policy.enabled = false;
     policy.save();
     return;

@@ -1,6 +1,6 @@
 import { arrayDiff, arrayUnique, toBigDecimal, uniqueEventId, ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
-import { ensureAccount, ensureAssetManager, ensureInvestor, ensureOwner } from '../../entities/Account';
-import { ensureInvestment, trackInvestmentBalance } from '../../entities/Investment';
+import { ensureAccount, ensureAssetManager, ensureDepositor, ensureOwner } from '../../entities/Account';
+import { ensureDeposit, trackDepositBalance } from '../../entities/Deposit';
 import { useNetwork } from '../../entities/Network';
 import { trackVaultTotalSupply, useVault } from '../../entities/Vault';
 import {
@@ -35,18 +35,18 @@ export function handleTransfer(event: Transfer): void {
   let vault = useVault(event.address.toHex());
   trackVaultTotalSupply(vault);
 
-  // only track investment balance if not zero address
+  // only track deposit balance if not zero address
   if (event.params.from.notEqual(ZERO_ADDRESS)) {
-    let fromInvestor = ensureInvestor(event.params.from, event);
-    let fromInvestment = ensureInvestment(fromInvestor, vault, event);
-    trackInvestmentBalance(vault, fromInvestment);
+    let fromInvestor = ensureDepositor(event.params.from, event);
+    let fromInvestment = ensureDeposit(fromInvestor, vault, event);
+    trackDepositBalance(vault, fromInvestment);
   }
 
-  // only track investment balance if not zero address
+  // only track deposit balance if not zero address
   if (event.params.to.notEqual(ZERO_ADDRESS)) {
-    let toInvestor = ensureInvestor(event.params.to, event);
-    let toInvestment = ensureInvestment(toInvestor, vault, event);
-    trackInvestmentBalance(vault, toInvestment);
+    let toInvestor = ensureDepositor(event.params.to, event);
+    let toInvestment = ensureDeposit(toInvestor, vault, event);
+    trackDepositBalance(vault, toInvestment);
   }
 
   if (
@@ -63,25 +63,25 @@ export function handleTransfer(event: Transfer): void {
 
   let shares = toBigDecimal(event.params.value);
 
-  let fromInvestor = ensureInvestor(event.params.from, event);
-  let fromInvestment = ensureInvestment(fromInvestor, vault, event);
+  let fromInvestor = ensureDepositor(event.params.from, event);
+  let fromInvestment = ensureDeposit(fromInvestor, vault, event);
 
   let transferOut = new SharesTransferredOutEvent(uniqueEventId(event, 'SharesTransferredOut'));
   transferOut.vault = vault.id;
-  transferOut.investor = fromInvestor.id;
-  transferOut.investment = fromInvestment.id;
+  transferOut.depositor = fromInvestor.id;
+  transferOut.deposit = fromInvestment.id;
   transferOut.type = 'SharesTransferredOut';
   transferOut.shares = shares;
   transferOut.timestamp = event.block.timestamp.toI32();
   transferOut.save();
 
-  let toInvestor = ensureInvestor(event.params.to, event);
-  let toInvestment = ensureInvestment(toInvestor, vault, event);
+  let toInvestor = ensureDepositor(event.params.to, event);
+  let toInvestment = ensureDeposit(toInvestor, vault, event);
 
   let transferIn = new SharesTransferredInEvent(uniqueEventId(event, 'SharesTransferredIn'));
   transferIn.vault = vault.id;
-  transferIn.investor = toInvestor.id;
-  transferIn.investment = toInvestment.id;
+  transferIn.depositor = toInvestor.id;
+  transferIn.deposit = toInvestment.id;
   transferIn.type = 'SharesTransferredIn';
   transferIn.shares = shares;
   transferIn.timestamp = event.block.timestamp.toI32();

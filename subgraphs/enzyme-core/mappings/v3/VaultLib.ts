@@ -1,7 +1,7 @@
 import { arrayDiff, arrayUnique, ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
-import { ensureInvestor, ensureOwner } from '../../entities/Account';
+import { ensureDepositor, ensureOwner } from '../../entities/Account';
 import { ensureAsset } from '../../entities/Asset';
-import { ensureInvestment, trackInvestmentBalance } from '../../entities/Investment';
+import { ensureDeposit, trackDepositBalance } from '../../entities/Deposit';
 import { trackVaultTotalSupply, useVault } from '../../entities/Vault';
 import {
   AccessorSet,
@@ -62,14 +62,14 @@ export function handleTransfer(event: Transfer): void {
   trackVaultTotalSupply(vault);
 
   if (event.params.from.notEqual(ZERO_ADDRESS)) {
-    let fromInvestor = ensureInvestor(event.params.from, event);
-    let fromInvestment = ensureInvestment(fromInvestor, vault, event);
-    trackInvestmentBalance(vault, fromInvestment);
+    let fromInvestor = ensureDepositor(event.params.from, event);
+    let fromInvestment = ensureDeposit(fromInvestor, vault, event);
+    trackDepositBalance(vault, fromInvestment);
   }
 
   if (event.params.to.notEqual(ZERO_ADDRESS)) {
-    let toInvestor = ensureInvestor(event.params.to, event);
-    let toInvestment = ensureInvestment(toInvestor, vault, event);
-    trackInvestmentBalance(vault, toInvestment);
+    let toInvestor = ensureDepositor(event.params.to, event);
+    let toInvestment = ensureDeposit(toInvestor, vault, event);
+    trackDepositBalance(vault, toInvestment);
   }
 }

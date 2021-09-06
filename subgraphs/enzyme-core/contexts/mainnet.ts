@@ -8,6 +8,16 @@ export const mainnetContext: Context<Variables> = {
     block: 11636493,
     dispatcherAddress: '0xC3DC853dD716bd5754f421ef94fdCbac3902ab32',
     wethTokenAddress: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+    chainlinkAggregatorAddresses: {
+      audUsd: '0x77F9710E7d0A19669A13c055F62cd80d313dF022',
+      btcEth: '0xdeb288F737066589598e9214E782fa5A8eD689e8',
+      btcusd: '0xF4030086522a5bEEa4988F8cA5B36dbC97BeE88c',
+      chfusd: '0x449d117117838fFA61263B61dA6301AA2a88B13A',
+      ethUsd: '0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419',
+      eurUsd: '0xb49f677943BC038e9857d61E7d053CaA2C1734C1',
+      gbpUsd: '0x5c0Ab2d9b5a7ed9f470386e82BB36A3613cDd4b5',
+      jpyUsd: '0xBcE206caE7f0ec07b545EddE332A47C2F75bbeb3',
+    },
     release2: {
       fundDeployerAddress: '0x9134C9975244b46692Ad9A7Da36DBa8734Ec6DA3',
       vaultLibAddress: '0xAC3fe07F51C51153E181bE892e4e37326EEA13Da',

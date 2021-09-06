@@ -2,12 +2,12 @@ import { previousUniqueEventId, toBigDecimal, uniqueEventId } from '@enzymefinan
 import { BigDecimal, store } from '@graphprotocol/graph-ts';
 import { ensureAccount } from '../../entities/Account';
 import { ensureComptroller } from '../../entities/Comptroller';
+import { ensureDeposit } from '../../entities/Deposit';
 import { ensureEntranceRateBurnFee } from '../../entities/EntranceRateBurnFee';
 import { ensureEntranceRateDirectFee } from '../../entities/EntranceRateDirectFee';
 import { ensureExitRateBurnFee } from '../../entities/ExitRateBurnFee';
 import { ensureExitRateDirectFee } from '../../entities/ExitRateDirectFee';
 import { feeId } from '../../entities/Fee';
-import { ensureInvestment } from '../../entities/Investment';
 import { ensureManagementFee } from '../../entities/ManagementFee';
 import { ensurePerformanceFee } from '../../entities/PerformanceFee';
 import { ensureUnknownFee } from '../../entities/UnknownFee';
@@ -89,14 +89,14 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
   // Differentiate between settlement types
   let feeSettlementType = settlementType(event.params.settlementType);
   if (feeSettlementType == 'Direct') {
-    // Direct - payment of fee shares from an investor to the fee recipient
+    // Direct - payment of fee shares from an depositor to the fee recipient
     let payeeAccount = ensureAccount(event.params.payee, event);
-    let payeeInvestment = ensureInvestment(payeeAccount, vault, event);
+    let payeeDeposit = ensureDeposit(payeeAccount, vault, event);
 
     let paid = new FeeSharesPaidEvent(uniqueEventId(event, 'FeeSharesPaid'));
     paid.vault = vault.id;
-    paid.investor = payeeAccount.id;
-    paid.investment = payeeInvestment.id;
+    paid.depositor = payeeAccount.id;
+    paid.deposit = payeeDeposit.id;
     paid.type = 'FeeSharesPaid';
     paid.timestamp = event.block.timestamp.toI32();
     paid.shares = shares;
@@ -104,12 +104,12 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
     paid.save();
 
     let payerAccount = ensureAccount(event.params.payer, event);
-    let payerInvestment = ensureInvestment(payerAccount, vault, event);
+    let payerDeposit = ensureDeposit(payerAccount, vault, event);
 
     let received = new FeeSharesReceivedEvent(uniqueEventId(event, 'FeeSharesReceived'));
     received.vault = vault.id;
-    received.investor = payerAccount.id;
-    received.investment = payerInvestment.id;
+    received.depositor = payerAccount.id;
+    received.deposit = payerDeposit.id;
     received.type = 'FeeSharesReceived';
     received.timestamp = event.block.timestamp.toI32();
     received.shares = shares;
@@ -124,27 +124,27 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
     store.remove('SharesTransferredInEvent', transferInId);
   } else if (feeSettlementType == 'Mint') {
     // Mint - mint new shares for fee recipient
-    let investor = ensureAccount(event.params.payee, event);
-    let investment = ensureInvestment(investor, vault, event);
+    let depositor = ensureAccount(event.params.payee, event);
+    let deposit = ensureDeposit(depositor, vault, event);
 
     let received = new FeeSharesReceivedEvent(uniqueEventId(event));
     received.vault = vault.id;
-    received.investor = investor.id;
-    received.investment = investment.id;
+    received.depositor = depositor.id;
+    received.deposit = deposit.id;
     received.type = 'FeeSharesReceived';
     received.timestamp = event.block.timestamp.toI32();
     received.shares = shares;
     received.fee = feeId(event.params.comptrollerProxy, event.params.fee);
     received.save();
   } else if (feeSettlementType == 'Burn') {
-    // Burn - burn shares of investor
-    let investor = ensureAccount(event.params.payer, event);
-    let investment = ensureInvestment(investor, vault, event);
+    // Burn - burn shares of depositor
+    let depositor = ensureAccount(event.params.payer, event);
+    let deposit = ensureDeposit(depositor, vault, event);
 
     let burned = new FeeSharesBurnedEvent(uniqueEventId(event));
     burned.vault = vault.id;
-    burned.investor = investor.id;
-    burned.investment = investment.id;
+    burned.depositor = depositor.id;
+    burned.deposit = deposit.id;
     burned.type = 'FeeSharesBurned';
     burned.timestamp = event.block.timestamp.toI32();
     burned.shares = shares;
@@ -152,13 +152,13 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
     burned.save();
   } else if (feeSettlementType == 'MintSharesOutstanding') {
     // MintSharesOutstanding - Allocate fee shares (vault is temporary owner)
-    let investor = ensureAccount(event.params.payee, event);
-    let investment = ensureInvestment(investor, vault, event);
+    let depositor = ensureAccount(event.params.payee, event);
+    let deposit = ensureDeposit(depositor, vault, event);
 
     let allocated = new FeeSharesAllocationChangedEvent(uniqueEventId(event));
     allocated.vault = vault.id;
-    allocated.investor = investor.id;
-    allocated.investment = investment.id;
+    allocated.depositor = depositor.id;
+    allocated.deposit = deposit.id;
     allocated.type = 'FeeSharesAllocationChanged';
     allocated.timestamp = event.block.timestamp.toI32();
     allocated.shares = shares;
@@ -166,13 +166,13 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
     allocated.save();
   } else if (feeSettlementType == 'BurnSharesOutstanding') {
     // BurnSharesOutstanding - Remove allocated fee shares (from vault as temporary owner)
-    let investor = ensureAccount(event.params.payee, event);
-    let investment = ensureInvestment(investor, vault, event);
+    let depositor = ensureAccount(event.params.payee, event);
+    let deposit = ensureDeposit(depositor, vault, event);
 
     let allocated = new FeeSharesAllocationChangedEvent(uniqueEventId(event));
     allocated.vault = vault.id;
-    allocated.investor = investor.id;
-    allocated.investment = investment.id;
+    allocated.depositor = depositor.id;
+    allocated.deposit = deposit.id;
     allocated.type = 'FeeSharesAllocationChanged';
     allocated.timestamp = event.block.timestamp.toI32();
     allocated.shares = BigDecimal.fromString('0').minus(shares);
@@ -188,14 +188,14 @@ export function handleSharesOutstandingPaidForFund(event: SharesOutstandingPaidF
   }
 
   let vault = useVault(comptrollerProxy.vault);
-  let investor = ensureAccount(event.params.payee, event);
+  let depositor = ensureAccount(event.params.payee, event);
   let shares = toBigDecimal(event.params.sharesDue);
-  let investment = ensureInvestment(investor, vault, event);
+  let deposit = ensureDeposit(depositor, vault, event);
 
   let paidOut = new FeeSharesReceivedEvent(uniqueEventId(event));
   paidOut.vault = vault.id;
-  paidOut.investor = investor.id;
-  paidOut.investment = investment.id;
+  paidOut.depositor = depositor.id;
+  paidOut.deposit = deposit.id;
   paidOut.type = 'FeeSharesReceived';
   paidOut.timestamp = event.block.timestamp.toI32();
   paidOut.shares = shares;

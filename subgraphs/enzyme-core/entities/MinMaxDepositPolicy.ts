@@ -1,24 +1,24 @@
 import { Address, BigDecimal, ethereum } from '@graphprotocol/graph-ts';
-import { MinMaxInvestmentPolicy } from '../generated/schema';
+import { MinMaxDepositPolicy } from '../generated/schema';
 import { policyId } from './Policy';
 
-export function ensureMinMaxInvestmentPolicy(
+export function ensureMinMaxDepositPolicy(
   comptrollerAddress: Address,
   policyAddress: Address,
   event: ethereum.Event,
-): MinMaxInvestmentPolicy {
+): MinMaxDepositPolicy {
   let id = policyId(comptrollerAddress, policyAddress);
-  let policy = MinMaxInvestmentPolicy.load(id) as MinMaxInvestmentPolicy;
+  let policy = MinMaxDepositPolicy.load(id) as MinMaxDepositPolicy;
 
   if (policy) {
     return policy;
   }
 
-  policy = new MinMaxInvestmentPolicy(id);
+  policy = new MinMaxDepositPolicy(id);
   policy.policy = policyAddress;
   policy.comptroller = comptrollerAddress.toHex();
-  policy.minInvestmentAmount = BigDecimal.fromString('0');
-  policy.maxInvestmentAmount = BigDecimal.fromString('0');
+  policy.minDepositAmount = BigDecimal.fromString('0');
+  policy.maxDepositAmount = BigDecimal.fromString('0');
   policy.createdAt = event.block.timestamp.toI32();
   policy.updatedAt = 0;
   policy.enabled = true;

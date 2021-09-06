@@ -16,20 +16,46 @@
     "postinstall": "manypkg check",
     "prepare": "husky install",
     "format": "prettier --write \"{*,**/*}.{ts,js}\"",
-    "lint": "prettier --list-different \"{*,**/*}.{ts,js}\""
+    "lint": "prettier --list-different \"{*,**/*}.{ts,js}\"",
+    "test": "jest"
   },
   "dependencies": {
-    "@changesets/cli": "^2.16.0",
+    "@changesets/cli": "^2.17.0",
+    "@enzymefinance/babel-config": "^1.0.14",
+    "@enzymefinance/ethers": "^1.0.0",
+    "@enzymefinance/hardhat": "^1.0.0",
     "@enzymefinance/prettier-config": "^1.0.4",
+    "@enzymefinance/protocol": "^4.0.0-next.0",
+    "@enzymefinance/testutils": "^4.0.0-next.0",
     "@manypkg/cli": "^0.18.0",
-    "@types/node": "^16.4.5",
-    "husky": "^6.0.0",
-    "jest": "^27.0.6",
-    "lint-staged": "^11.1.1",
+    "@types/jest": "^27.0.1",
+    "@types/node": "^16.7.10",
+    "dotenv": "^10.0.0",
+    "graphql-request": "^3.5.0",
+    "husky": "^7.0.2",
+    "jest": "^27.1.0",
+    "lint-staged": "^11.1.2",
     "prettier": "^2.3.2"
   },
   "prettier": "@enzymefinance/prettier-config",
   "lint-staged": {
     "*.{ts,js}": "prettier --write"
+  },
+  "jest": {
+    "preset": "@enzymefinance/hardhat",
+    "transform": {
+      "^.+\\.(js|jsx|ts|tsx)$": "babel-jest"
+    },
+    "globals": {
+      "ts-jest": {
+        "babelConfig": true,
+        "diagnostics": false
+      }
+    },
+    "testTimeout": 300000,
+    "testEnvironment": "node",
+    "setupFiles": [
+      "dotenv/config"
+    ]
   }
 }

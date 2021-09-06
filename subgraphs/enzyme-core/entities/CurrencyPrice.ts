@@ -1,8 +1,9 @@
 import { toBigDecimal } from '@enzymefinance/subgraph-utils';
 import { BigDecimal, ethereum } from '@graphprotocol/graph-ts';
+import { chainlinkAggregatorAddresses } from '../generated/addresses';
 import { IChainlinkAggregatorContract } from '../generated/IChainlinkAggregatorContract';
 import { CurrencyPrice } from '../generated/schema';
-import { aggregatorAddressForCurrency, BTCETH_AGGREGATOR, ETHUSD_AGGREGATOR } from '../utils/aggregatorAddresses';
+import { aggregatorAddressForCurrency } from '../utils/aggregatorAddresses';
 
 export function currencyPriceId(event: ethereum.Event): string {
   return event.block.timestamp.toString();
@@ -16,16 +17,24 @@ export function ensureCurrencyPrice(event: ethereum.Event): CurrencyPrice {
   }
 
   let ethUsd = getLatestEthUsdPrice();
+  let btcEth = getLatestBtcEthPrice();
+  let audUsd = getLatestCurrencyPrice('aud');
+  let chfUsd = getLatestCurrencyPrice('chf');
+  let eurUsd = getLatestCurrencyPrice('eur');
+  let gbpUsd = getLatestCurrencyPrice('gbp');
+  let jpyUsd = getLatestCurrencyPrice('jpy');
 
   // All prices are vs. ETH
   currencyValue = new CurrencyPrice(id);
   currencyValue.timestamp = event.block.timestamp.toI32();
-  currencyValue.ethAud = ethUsd.div(getLatestCurrencyPrice('aud'));
-  currencyValue.ethBtc = BigDecimal.fromString('1').div(getLatestBtcEthPrice());
-  currencyValue.ethChf = ethUsd.div(getLatestCurrencyPrice('chf'));
-  currencyValue.ethEur = ethUsd.div(getLatestCurrencyPrice('eur'));
-  currencyValue.ethGbp = ethUsd.div(getLatestCurrencyPrice('gbp'));
-  currencyValue.ethJpy = ethUsd.div(getLatestCurrencyPrice('jpy'));
+  currencyValue.ethAud = audUsd.lt(BigDecimal.fromString('0')) ? ethUsd.div(audUsd) : BigDecimal.fromString('0');
+  currencyValue.ethBtc = btcEth.lt(BigDecimal.fromString('0'))
+    ? BigDecimal.fromString('1').div(btcEth)
+    : BigDecimal.fromString('0');
+  currencyValue.ethChf = chfUsd.lt(BigDecimal.fromString('0')) ? ethUsd.div(chfUsd) : BigDecimal.fromString('0');
+  currencyValue.ethEur = eurUsd.lt(BigDecimal.fromString('0')) ? ethUsd.div(eurUsd) : BigDecimal.fromString('0');
+  currencyValue.ethGbp = gbpUsd.lt(BigDecimal.fromString('0')) ? ethUsd.div(gbpUsd) : BigDecimal.fromString('0');
+  currencyValue.ethJpy = jpyUsd.lt(BigDecimal.fromString('0')) ? ethUsd.div(jpyUsd) : BigDecimal.fromString('0');
   currencyValue.ethUsd = ethUsd;
   currencyValue.save();
 
@@ -33,7 +42,7 @@ export function ensureCurrencyPrice(event: ethereum.Event): CurrencyPrice {
 }
 
 function getLatestEthUsdPrice(): BigDecimal {
-  let aggregator = IChainlinkAggregatorContract.bind(ETHUSD_AGGREGATOR);
+  let aggregator = IChainlinkAggregatorContract.bind(chainlinkAggregatorAddresses.ethUsdAddress);
   let latestAnswer = aggregator.try_latestAnswer();
 
   if (latestAnswer.reverted) {
@@ -59,7 +68,7 @@ function getLatestCurrencyPrice(currency: string): BigDecimal {
 }
 
 function getLatestBtcEthPrice(): BigDecimal {
-  let aggregator = IChainlinkAggregatorContract.bind(BTCETH_AGGREGATOR);
+  let aggregator = IChainlinkAggregatorContract.bind(chainlinkAggregatorAddresses.btcEthAddress);
   let latestAnswer = aggregator.try_latestAnswer();
 
   if (latestAnswer.reverted) {

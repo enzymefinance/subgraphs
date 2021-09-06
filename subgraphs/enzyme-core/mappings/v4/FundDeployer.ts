@@ -3,7 +3,7 @@ import { ensureAccount, ensureOwner } from '../../entities/Account';
 import { ensureAsset } from '../../entities/Asset';
 import { ensureComptroller } from '../../entities/Comptroller';
 import { trackNetworkFunds } from '../../entities/Network';
-import { ensureProtocolFee } from '../../entities/ProtocolFee';
+import { useProtocolFee } from '../../entities/ProtocolFee';
 import { generateReconfigurationId, useReconfiguraton } from '../../entities/Reconfiguration';
 import { ensureRelease } from '../../entities/Release';
 import { createVault, useVault } from '../../entities/Vault';
@@ -29,7 +29,7 @@ import { ComptrollerLib4DataSource, VaultLib4DataSource } from '../../generated/
 import { VaultLib4Contract } from '../../generated/VaultLib4Contract';
 
 export function handleNewFundCreated(event: NewFundCreated): void {
-  let vaultContract = VaultLib4Contract.bind(event.address);
+  let vaultContract = VaultLib4Contract.bind(event.params.vaultProxy);
   let fundName = vaultContract.name();
   let owner = vaultContract.getOwner();
   let protocolFee = vaultContract.getProtocolFeeTracker();
@@ -44,7 +44,7 @@ export function handleNewFundCreated(event: NewFundCreated): void {
     ensureAccount(event.params.creator, event),
   );
 
-  vault.protocolFee = ensureProtocolFee(event.params.vaultProxy, protocolFee).id;
+  vault.protocolFee = useProtocolFee(event.params.vaultProxy, protocolFee).id;
   vault.save();
 
   trackNetworkFunds(event);
@@ -72,6 +72,7 @@ export function handleComptrollerProxyDeployed(event: ComptrollerProxyDeployed):
   comptroller.denomination = ensureAsset(event.params.denominationAsset).id;
   comptroller.release = ensureRelease(event.address, event).id;
   comptroller.status = 'FREE';
+  comptroller.sharesActionTimelock = event.params.sharesActionTimelock.toI32();
   comptroller.save();
 }
 

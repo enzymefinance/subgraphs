@@ -10,8 +10,8 @@ export function createNetwork(event: ethereum.Event): Network {
   let network = new Network(networkId);
   network.vaults = 0;
   network.managers = 0;
-  network.investors = 0;
-  network.investments = 0;
+  network.depositors = 0;
+  network.deposits = 0;
 
   network.protocolFeeRate = BigDecimal.fromString('0');
   network.mlnBurned = BigDecimal.fromString('0');
@@ -60,14 +60,14 @@ export function trackNetworkManagers(event: ethereum.Event): void {
   network.save();
 }
 
-export function trackNetworkInvestors(event: ethereum.Event): void {
+export function trackNetworkDepositors(event: ethereum.Event): void {
   let network = ensureNetwork(event);
-  network.investors = network.investors + 1;
+  network.depositors = network.depositors + 1;
   network.save();
 }
 
-export function trackNetworkInvestments(event: ethereum.Event): void {
+export function trackNetworkDeposits(event: ethereum.Event): void {
   let network = ensureNetwork(event);
-  network.investments = network.investments + 1;
+  network.deposits = network.deposits + 1;
   network.save();
 }

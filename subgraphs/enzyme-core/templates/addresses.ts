@@ -192,3 +192,25 @@ export let dispatcherAddress = Address.fromString('{{dispatcherAddress}}');
 
 // External
 export let wethTokenAddress = Address.fromString('{{wethTokenAddress}}');
+
+export class ChainlinkAggregatorAddresses {
+  audUsdAddress: Address;
+  btcEthAddress: Address;
+  btcusdAddress: Address;
+  chfusdAddress: Address;
+  ethUsdAddress: Address;
+  eurUsdAddress: Address;
+  gbpUsdAddress: Address;
+  jpyUsdAddress: Address;
+}
+
+export let chainlinkAggregatorAddresses: ChainlinkAggregatorAddresses = {
+  audUsdAddress: Address.fromString('{{chainlinkAggregatorAddresses.audUsd}}'),
+  btcEthAddress: Address.fromString('{{chainlinkAggregatorAddresses.btcEth}}'),
+  btcusdAddress: Address.fromString('{{chainlinkAggregatorAddresses.btcusd}}'),
+  chfusdAddress: Address.fromString('{{chainlinkAggregatorAddresses.chfusd}}'),
+  ethUsdAddress: Address.fromString('{{chainlinkAggregatorAddresses.ethUsd}}'),
+  eurUsdAddress: Address.fromString('{{chainlinkAggregatorAddresses.eurUsd}}'),
+  gbpUsdAddress: Address.fromString('{{chainlinkAggregatorAddresses.gbpUsd}}'),
+  jpyUsdAddress: Address.fromString('{{chainlinkAggregatorAddresses.jpyUsd}}'),
+};

@@ -8,6 +8,16 @@ export const kovanContext: Context<Variables> = {
     block: 26943646,
     dispatcherAddress: '0xdA048Eb415a8d43cAE7802350ADE332CF4211429',
     wethTokenAddress: '0xd0a1e359811322d97991e03f863a0c30c2cf029c',
+    chainlinkAggregatorAddresses: {
+      audUsd: '0x5813A90f826e16dB392abd2aF7966313fc1fd5B8',
+      btcEth: '0xF7904a295A029a3aBDFFB6F12755974a958C7C25',
+      btcusd: '0x6135b13325bfC4B00278B4abC5e20bbce2D6580e',
+      chfusd: '0xed0616BeF04D374969f302a34AE4A63882490A8C',
+      ethUsd: '0x9326BFA02ADD2366b30bacB125260Af641031331',
+      eurUsd: '0x0c15Ab9A0DB086e062194c273CC79f41597Bbf13',
+      gbpUsd: '0x28b0061f44E6A9780224AA61BEc8C3Fcb0d37de9',
+      jpyUsd: '0xD627B1eF3AC23F1d3e576FA6206126F3c1Bd0942',
+    },
     release2: {
       fundDeployerAddress: '0x0000000000000000000000000000000000000000',
       vaultLibAddress: '0x0000000000000000000000000000000000000000',

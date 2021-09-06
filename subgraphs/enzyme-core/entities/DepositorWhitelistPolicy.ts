@@ -1,23 +1,23 @@
 import { Address, Bytes, ethereum } from '@graphprotocol/graph-ts';
-import { InvestorWhitelistPolicy } from '../generated/schema';
+import { DepositorWhitelistPolicy } from '../generated/schema';
 import { policyId } from './Policy';
 
-export function ensureInvestorWhitelistPolicy(
+export function ensureDepositorWhitelistPolicy(
   comptrollerAddress: Address,
   policyAddress: Address,
   event: ethereum.Event,
-): InvestorWhitelistPolicy {
+): DepositorWhitelistPolicy {
   let id = policyId(comptrollerAddress, policyAddress);
-  let policy = InvestorWhitelistPolicy.load(id) as InvestorWhitelistPolicy;
+  let policy = DepositorWhitelistPolicy.load(id) as DepositorWhitelistPolicy;
 
   if (policy) {
     return policy;
   }
 
-  policy = new InvestorWhitelistPolicy(id);
+  policy = new DepositorWhitelistPolicy(id);
   policy.policy = policyAddress;
   policy.comptroller = comptrollerAddress.toHex();
-  policy.investors = new Array<Bytes>();
+  policy.depositors = new Array<Bytes>();
   policy.createdAt = event.block.timestamp.toI32();
   policy.updatedAt = 0;
   policy.enabled = true;

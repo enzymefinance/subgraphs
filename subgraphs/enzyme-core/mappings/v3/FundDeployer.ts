@@ -51,6 +51,7 @@ export function handleComptrollerProxyDeployed(event: ComptrollerProxyDeployed):
   comptroller.denomination = ensureAsset(event.params.denominationAsset).id;
   comptroller.release = ensureRelease(event.address, event).id;
   comptroller.status = 'FREE';
+  comptroller.sharesActionTimelock = event.params.sharesActionTimelock.toI32();
   comptroller.save();
 }
 

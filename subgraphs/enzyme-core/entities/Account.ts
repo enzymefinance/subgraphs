@@ -1,6 +1,6 @@
 import { Address, ethereum } from '@graphprotocol/graph-ts';
 import { Account } from '../generated/schema';
-import { trackNetworkInvestors, trackNetworkManagers } from './Network';
+import { trackNetworkDepositors, trackNetworkManagers } from './Network';
 
 export function ensureAccount(accountAddress: Address, event: ethereum.Event): Account {
   let account = Account.load(accountAddress.toHex()) as Account;
@@ -14,12 +14,12 @@ export function ensureAccount(accountAddress: Address, event: ethereum.Event): A
   account.isOwner = false;
   account.isAuthUser = false;
   account.isAssetManager = false;
-  account.isInvestor = false;
+  account.isDepositor = false;
 
   account.ownerSince = 0;
   account.authUserSince = 0;
   account.assetManagerSince = 0;
-  account.investorSince = 0;
+  account.depositorSince = 0;
   account.save();
 
   return account;
@@ -63,15 +63,15 @@ export function ensureAssetManager(investorAddress: Address, event: ethereum.Eve
   return account;
 }
 
-export function ensureInvestor(investorAddress: Address, event: ethereum.Event): Account {
+export function ensureDepositor(investorAddress: Address, event: ethereum.Event): Account {
   let account = ensureAccount(investorAddress, event);
 
-  if (!account.isInvestor) {
-    account.isInvestor = true;
-    account.investorSince = event.block.timestamp.toI32();
+  if (!account.isDepositor) {
+    account.isDepositor = true;
+    account.depositorSince = event.block.timestamp.toI32();
     account.save();
 
-    trackNetworkInvestors(event);
+    trackNetworkDepositors(event);
   }
 
   return account;

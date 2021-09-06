@@ -46,8 +46,8 @@ type Network @entity {
   currentRelease: Release
   vaults: Int!
   managers: Int!
-  investors: Int!
-  investments: Int!
+  depositors: Int!
+  deposits: Int!
 
   sharesTokenSymbol: String!
   migrationTimelock: Int!
@@ -91,7 +91,7 @@ type Vault @entity {
   trackedAssets: [Asset!]!
 
   totalSupply: BigDecimal!
-  investmentCount: Int!
+  depositCount: Int!
 
   protocolFee: ProtocolFee
   protocolFeeSharesPaid: [ProtocolFeePaid!]! @derivedFrom(field: "vault")
@@ -99,7 +99,7 @@ type Vault @entity {
 
   comptrollers: [Comptroller!]! @derivedFrom(field: "vault")
   trades: [Trade!]! @derivedFrom(field: "vault")
-  investments: [Investment!]! @derivedFrom(field: "vault")
+  deposits: [Deposit!]! @derivedFrom(field: "vault")
   migrations: [Migration!]! @derivedFrom(field: "vault")
   reconfigurations: [Reconfiguration!]! @derivedFrom(field: "vault")
   sharesChanges: [SharesChange!]! @derivedFrom(field: "vault")
@@ -118,6 +118,7 @@ type Comptroller @entity {
   authUsers: [Account!]!
   autoProtocolFeeSharesBuyback: Boolean!
   gasRelayer: GasRelayer
+  sharesActionTimelock: Int!
   fees: [Fee!]! @derivedFrom(field: "comptroller")
   policies: [Policy!]! @derivedFrom(field: "comptroller")
 }
@@ -157,40 +158,40 @@ type Account @entity {
   isOwner: Boolean!
   isAuthUser: Boolean!
   isAssetManager: Boolean!
-  isInvestor: Boolean!
+  isDepositor: Boolean!
 
   ownerSince: Int!
   authUserSince: Int!
   assetManagerSince: Int!
-  investorSince: Int!
+  depositorSince: Int!
 
   ownerships: [Vault!]! @derivedFrom(field: "owner")
   authUserships: [Comptroller!]! @derivedFrom(field: "authUsers")
   assetManagements: [Vault!]! @derivedFrom(field: "assetManagers")
-  investments: [Investment!]! @derivedFrom(field: "investor")
-  sharesChanges: [SharesChange!]! @derivedFrom(field: "investor")
+  deposits: [Deposit!]! @derivedFrom(field: "depositor")
+  sharesChanges: [SharesChange!]! @derivedFrom(field: "depositor")
 }
 
 #################################################
-# Investment / Shares Changes
+# Deposit / Shares Changes
 #################################################
 
-type Investment @entity {
+type Deposit @entity {
   id: ID!
   since: Int!
   vault: Vault!
-  investor: Account!
+  depositor: Account!
   shares: BigDecimal!
 
-  sharesChanges: [SharesChange!]! @derivedFrom(field: "investment")
+  sharesChanges: [SharesChange!]! @derivedFrom(field: "deposit")
 }
 
 interface SharesChange {
   id: ID!
   vault: Vault!
   type: SharesChangeType!
-  investor: Account!
-  investment: Investment!
+  depositor: Account!
+  deposit: Deposit!
   timestamp: Int!
   shares: BigDecimal!
 }
@@ -199,8 +200,8 @@ type SharesBoughtEvent implements SharesChange @entity {
   id: ID!
   vault: Vault!
   type: SharesChangeType!
-  investor: Account!
-  investment: Investment!
+  depositor: Account!
+  deposit: Deposit!
   shares: BigDecimal!
   depositAssetAmount: AssetAmount!
   sharesIssued: BigDecimal!
@@ -211,8 +212,8 @@ type SharesTransferredOutEvent implements SharesChange @entity {
   id: ID!
   vault: Vault!
   type: SharesChangeType!
-  investor: Account!
-  investment: Investment!
+  depositor: Account!
+  deposit: Deposit!
   shares: BigDecimal!
   timestamp: Int!
 }
@@ -221,8 +222,8 @@ type SharesTransferredInEvent implements SharesChange @entity {
   id: ID!
   vault: Vault!
   type: SharesChangeType!
-  investor: Account!
-  investment: Investment!
+  depositor: Account!
+  deposit: Deposit!
   shares: BigDecimal!
   timestamp: Int!
 }
@@ -231,8 +232,8 @@ type SharesRedeemedEvent implements SharesChange @entity {
   id: ID!
   vault: Vault!
   type: SharesChangeType!
-  investor: Account!
-  investment: Investment!
+  depositor: Account!
+  deposit: Deposit!
   shares: BigDecimal!
   payoutAssetAmounts: [AssetAmount!]!
   timestamp: Int!
@@ -243,8 +244,8 @@ type FeeSharesPaidEvent implements SharesChange @entity {
   vault: Vault!
   type: SharesChangeType!
   fee: Fee
-  investor: Account!
-  investment: Investment!
+  depositor: Account!
+  deposit: Deposit!
   shares: BigDecimal!
   timestamp: Int!
 }
@@ -254,8 +255,8 @@ type FeeSharesReceivedEvent implements SharesChange @entity {
   vault: Vault!
   type: SharesChangeType!
   fee: Fee
-  investor: Account!
-  investment: Investment!
+  depositor: Account!
+  deposit: Deposit!
   shares: BigDecimal!
   timestamp: Int!
 }
@@ -265,8 +266,8 @@ type FeeSharesBurnedEvent implements SharesChange @entity {
   vault: Vault!
   type: SharesChangeType!
   fee: Fee
-  investor: Account!
-  investment: Investment!
+  depositor: Account!
+  deposit: Deposit!
   shares: BigDecimal!
   timestamp: Int!
 }
@@ -276,8 +277,8 @@ type FeeSharesAllocationChangedEvent implements SharesChange @entity {
   vault: Vault!
   type: SharesChangeType!
   fee: Fee
-  investor: Account!
-  investment: Investment!
+  depositor: Account!
+  deposit: Deposit!
   shares: BigDecimal!
   timestamp: Int!
 }
@@ -471,14 +472,14 @@ type GuaranteedRedemptionPolicy implements Policy @entity {
   duration: Int!
 }
 
-type InvestorWhitelistPolicy implements Policy @entity {
+type DepositorWhitelistPolicy implements Policy @entity {
   id: ID!
   policy: Bytes!
   comptroller: Comptroller!
   createdAt: Int!
   enabled: Boolean!
   settings: String!
-  investors: [Bytes!]!
+  depositors: [Bytes!]!
   updatedAt: Int!
 }
 
@@ -492,15 +493,15 @@ type MaxConcentrationPolicy implements Policy @entity {
   maxConcentration: BigDecimal!
 }
 
-type MinMaxInvestmentPolicy implements Policy @entity {
+type MinMaxDepositPolicy implements Policy @entity {
   id: ID!
   policy: Bytes!
   comptroller: Comptroller!
   createdAt: Int!
   enabled: Boolean!
   settings: String!
-  minInvestmentAmount: BigDecimal!
-  maxInvestmentAmount: BigDecimal!
+  minDepositAmount: BigDecimal!
+  maxDepositAmount: BigDecimal!
   updatedAt: Int!
 }
 

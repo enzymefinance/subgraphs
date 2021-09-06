@@ -21,10 +21,9 @@ export function createVault(
   vault.creator = creator.id;
   vault.assetManagers = new Array<string>();
   vault.trackedAssets = new Array<string>();
-  vault.investmentCount = 0;
   vault.freelyTransferableShares = false;
   vault.totalSupply = BigDecimal.fromString('0');
-  vault.investmentCount = 0;
+  vault.depositCount = 0;
   vault.save();
 
   return vault;
