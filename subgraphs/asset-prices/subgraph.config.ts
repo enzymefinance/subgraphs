@@ -21,6 +21,10 @@ interface Variables {
       valueInterpreterBlock: number;
     };
   };
+  testnetConfiguration?: {
+    treasuryController: string;
+    treasuryControllerBlock: number;
+  };
   currencyAggregatorProxies: {
     USD: string;
     BTC: string;
@@ -67,21 +71,25 @@ const mainnet: Variables = {
 
 const kovan: Variables = {
   releaseConfiguration: {
-    v2: {
-      valueInterpreter: '0xFEE7aEE3907d1657fd2BdcBba8909AF40a144421',
-      derivativePriceFeed: '0x1899F9e144A0D47cC1471e797C2b7930adf530b3',
-      derivativePriceFeedBlock: 24710069,
-      primitivePriceFeed: '0x1dbf40Fc502A61a09c38F5D0f4D07f42AC507606',
-      primitivePriceFeedBlock: 24710056,
-    },
-    v3: {
-      valueInterpreter: '0x92D1D329de7633B788bD4A9727192C2F498e2cA7',
-      derivativePriceFeed: '0x5304c3f2c2433e5e37732B46604eEB39725a4883',
-      derivativePriceFeedBlock: 24710610,
-      primitivePriceFeed: '0x5A49D2a6420362bE3E396C59Fe9280c9f9588Ec3',
-      primitivePriceFeedBlock: 24710598,
-    },
-    // TODO: Add v4 contracts.
+    // v2: {
+    //   valueInterpreter: '0xFEE7aEE3907d1657fd2BdcBba8909AF40a144421',
+    //   derivativePriceFeed: '0x1899F9e144A0D47cC1471e797C2b7930adf530b3',
+    //   derivativePriceFeedBlock: 24710069,
+    //   primitivePriceFeed: '0x1dbf40Fc502A61a09c38F5D0f4D07f42AC507606',
+    //   primitivePriceFeedBlock: 24710056,
+    // },
+    // v3: {
+    //   valueInterpreter: '0x92D1D329de7633B788bD4A9727192C2F498e2cA7',
+    //   derivativePriceFeed: '0x5304c3f2c2433e5e37732B46604eEB39725a4883',
+    //   derivativePriceFeedBlock: 24710610,
+    //   primitivePriceFeed: '0x5A49D2a6420362bE3E396C59Fe9280c9f9588Ec3',
+    //   primitivePriceFeedBlock: 24710598,
+    // },
+    // // TODO: Add v4 contracts.
+  },
+  testnetConfiguration: {
+    treasuryController: '0x073ED0f00aC96d9469F874FeC7f07D8b9dF32c61',
+    treasuryControllerBlock: 26943651,
   },
   currencyAggregatorProxies: {
     USD: '0x9326BFA02ADD2366b30bacB125260Af641031331',
@@ -130,6 +138,7 @@ export const configure: Configurator<Variables> = (variables: Variables) => {
     './abis/CombinedPriceFeed.json',
     './abis/ValueInterpreter.json',
     './abis/ValueInterpreterLegacy.json',
+    './abis/TestnetTreasuryController.json',
   ];
 
   const sources: DataSourceDeclarationLike[] = [];
@@ -253,6 +262,25 @@ export const configure: Configurator<Variables> = (variables: Variables) => {
         {
           event: 'StalePrimitiveRemoved(indexed address)',
           handler: 'handleStalePrimitiveRemoved',
+        },
+      ],
+    });
+  }
+
+  if (variables.testnetConfiguration) {
+    sources.push({
+      abi: 'TestnetTreasuryControllerContract',
+      name: 'TestnetTreasuryController',
+      address: variables.testnetConfiguration.treasuryController,
+      block: variables.testnetConfiguration.treasuryControllerBlock,
+      events: [
+        {
+          event: 'TokenDeployed(indexed address,string,string,uint8)',
+          handler: 'handleTokenDeployed',
+        },
+        {
+          event: 'PriceUpdated(indexed address,uint256)',
+          handler: 'handlePriceUpdated',
         },
       ],
     });

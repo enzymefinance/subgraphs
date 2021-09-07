@@ -13,7 +13,7 @@ export function getOrCreateAsset(address: Address, version: number, event: ether
     asset.decimals = decimals == -1 ? 18 : decimals;
     asset.registrations = [];
     asset.updated = event.block.number.toI32();
-    asset.price = fetchAssetPrice(asset, version);
+    asset.price = version == 0 ? BigDecimal.fromString('0') : fetchAssetPrice(asset, version);
     asset.save();
   }
 
