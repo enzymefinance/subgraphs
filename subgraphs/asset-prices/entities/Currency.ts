@@ -57,6 +57,6 @@ export function updateCurrency(currency: Currency, value: BigDecimal, event: eth
     }
   } else {
     let usd = getOrCreateCurrency('USD', event);
-    doUpdateCurrency(currency, saveDivideBigDecimal(value, usd.eth), value, event);
+    doUpdateCurrency(currency, saveDivideBigDecimal(usd.eth, value), value, event);
   }
 }
