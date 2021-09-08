@@ -1,11 +1,10 @@
-import { BigDecimal, ethereum, log } from '@graphprotocol/graph-ts';
 import { ONE_BD, saveDivideBigDecimal } from '@enzymefinance/subgraph-utils';
+import { BigDecimal, ethereum, log } from '@graphprotocol/graph-ts';
 import { Currency } from '../generated/schema';
-import { getOrCreateUsdQuotedPrimitiveRegistry } from './UsdQuotedPrimitiveRegistry';
-import { getAsset } from './Asset';
-import { updateAssetPriceWithValueInterpreter } from './Asset';
-import { getActiveRegistration } from './Registration';
 import { initializeCurrencies } from '../utils/initializeCurrencies';
+import { getAsset, updateAssetPriceWithValueInterpreter } from './Asset';
+import { getActiveRegistration } from './Registration';
+import { getOrCreateUsdQuotedPrimitiveRegistry } from './UsdQuotedPrimitiveRegistry';
 
 export function getOrCreateCurrency(id: string, event: ethereum.Event): Currency {
   let currency = Currency.load(id) as Currency;
@@ -30,7 +29,7 @@ function doUpdateCurrency(currency: Currency, eth: BigDecimal, usd: BigDecimal, 
 
 export function updateCurrency(currency: Currency, value: BigDecimal, event: ethereum.Event): void {
   if (currency.id == 'USD') {
-    doUpdateCurrency(currency, value, ONE_BD, event);
+    doUpdateCurrency(currency, saveDivideBigDecimal(ONE_BD, value), ONE_BD, event);
 
     let btc = getOrCreateCurrency('BTC', event);
     doUpdateCurrency(btc, saveDivideBigDecimal(btc.usd, value), btc.usd, event);
