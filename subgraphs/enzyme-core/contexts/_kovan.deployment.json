@@ -3,7 +3,7 @@
   "chainId": "42",
   "contracts": {
     "AllowedAdapterIncomingAssetsPolicy": {
-      "address": "0x04b91AB04C61204eF8Ce0ad1aAf04575Ad4F9684",
+      "address": "0x9b6a657617B458E32F9D55B1399ba960E724129e",
       "abi": [
         {
           "inputs": [
@@ -257,7 +257,7 @@
       }
     },
     "AllowedDepositRecipientsPolicy": {
-      "address": "0x72f8594E88Aeb9B7EAaA1465D361fF5E8AA8cd9C",
+      "address": "0x9a270d80E064B5CE9dB406B6B84bB7AB40A29A3a",
       "abi": [
         {
           "inputs": [
@@ -511,7 +511,7 @@
       }
     },
     "AssetFinalityResolver": {
-      "address": "0x17DF625dEe7fC323B3B16b2c7C0F8Fa2e678e669",
+      "address": "0x2a9332516cDb5857A8027Aa607E19136880e644C",
       "abi": [
         {
           "inputs": [
@@ -534,7 +534,7 @@
       ]
     },
     "ComptrollerLib": {
-      "address": "0xD7A47C81d0b7b2fBeb86670DdA85032d764FB380",
+      "address": "0x6460348F4f636276577e3b6CC753E0B679a8065e",
       "abi": [
         {
           "inputs": [
@@ -1479,7 +1479,7 @@
           }
         },
         "primitives": {
-          "mln": "0xf8D304D46d19f6A37c35951f9E559B9fF7Df6793"
+          "mln": "0x7626A5572fF6803FB6eb573Be89464513d450c32"
         },
         "weth": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
         "unsupportedAssets": {},
@@ -1487,7 +1487,7 @@
       }
     },
     "DepositWrapper": {
-      "address": "0x135783aC557D07C9789D250bac8484d999645EE5",
+      "address": "0x442466CcDC3a60DeE9831085d9f554b32b616459",
       "abi": [
         {
           "inputs": [
@@ -1569,7 +1569,7 @@
       ]
     },
     "Dispatcher": {
-      "address": "0xdA048Eb415a8d43cAE7802350ADE332CF4211429",
+      "address": "0x5235b80d1b770f05957344556ecc507683bA40fD",
       "abi": [
         {
           "inputs": [],
@@ -2278,7 +2278,7 @@
       ]
     },
     "EntranceRateBurnFee": {
-      "address": "0x5ea830d309CB7a629C1a9463E3E437550a9a270E",
+      "address": "0x07B0b3835e2348f240Cc9B98055ba1696a6068e7",
       "abi": [
         {
           "inputs": [
@@ -2595,7 +2595,7 @@
       }
     },
     "EntranceRateDirectFee": {
-      "address": "0x95E0B46b1960d83986C119D32B17E5ff4AE56051",
+      "address": "0x8f8ED42F78A664D5779cB858614529E1D437c2Fb",
       "abi": [
         {
           "inputs": [
@@ -2949,7 +2949,7 @@
       }
     },
     "ExitRateBurnFee": {
-      "address": "0x5797eCf5B60048446B2DD9f112f86f4ec10206f4",
+      "address": "0x564473Cb3c681c616db8A65f99af7Bb65Db32471",
       "abi": [
         {
           "inputs": [
@@ -3297,7 +3297,7 @@
       }
     },
     "ExitRateDirectFee": {
-      "address": "0x5182bFC1E501C3f63e96C23E03F85E069bDbBE11",
+      "address": "0x96eeE1bb0f4D048C65a98ecACC31514a11772220",
       "abi": [
         {
           "inputs": [
@@ -3682,7 +3682,7 @@
       }
     },
     "ExternalPositionFactory": {
-      "address": "0xdFaff062AaaE022637B29C7E3Dede1A1135a47b6",
+      "address": "0xa3Dc3BffCd6394721097dF69134E6387226589F5",
       "abi": [
         {
           "inputs": [
@@ -3967,7 +3967,7 @@
       ]
     },
     "ExternalPositionManager": {
-      "address": "0x2516f285C7cE40BB193a1f76a3F61eD8eEFcFc5E",
+      "address": "0xfE17753aEd3e3B70129F70ED34B609Ff46Bfe8C7",
       "abi": [
         {
           "inputs": [
@@ -4298,7 +4298,7 @@
       ]
     },
     "FeeManager": {
-      "address": "0xb10dfB34d7C6C2Ce7815D743b981A5C906F1112E",
+      "address": "0x4CC2a26a2FffdB692Beae2f78aB918Ac745f7887",
       "abi": [
         {
           "inputs": [
@@ -4580,7 +4580,7 @@
       ]
     },
     "FundDeployer": {
-      "address": "0x8014FC071eCae28FE7FB9D4e3f81862fc057498B",
+      "address": "0x8C14892177FF33e51CFf01F1294bDF8F3C0972b3",
       "abi": [
         {
           "inputs": [
@@ -5546,7 +5546,7 @@
       ]
     },
     "GasRelayPaymasterFactory": {
-      "address": "0xdeD12df0c1352f342E9B69C9C5c0f8DF48F281cF",
+      "address": "0x8A9B3673e0217E25011379844128e7BcE754c60A",
       "abi": [
         {
           "inputs": [
@@ -5676,7 +5676,7 @@
       ]
     },
     "GasRelayPaymasterLib": {
-      "address": "0xFd3A62E8d616556d835ecAbB4b9B3cA3d0b31A1C",
+      "address": "0xc7fdE4Ba2C4A5E326888472A6C01Dfb385D2eF32",
       "abi": [
         {
           "inputs": [
@@ -6106,7 +6106,7 @@
       ]
     },
     "GlobalConfigLib": {
-      "address": "0xB430D63a522ea0420Db2CD94F6385f97808d89FA",
+      "address": "0x6Ac0d79705E7778fE0E5a4762ceAA0f5D1778c6F",
       "abi": [
         {
           "anonymous": false,
@@ -6189,7 +6189,7 @@
       ]
     },
     "GlobalConfigProxy": {
-      "address": "0x3161ECe006833a807774615b54496313414815Ba",
+      "address": "0x0DfcAd937321E7027c83A696FB4a21D67c43008A",
       "abi": [
         {
           "inputs": [
@@ -6214,7 +6214,7 @@
       ]
     },
     "GuaranteedRedemptionPolicy": {
-      "address": "0xa6204bf6a9FaC240B074c304b39AF50753A7AE68",
+      "address": "0xD2b1B15584e6e2f0EF89E85700466f7945C52A0D",
       "abi": [
         {
           "inputs": [
@@ -6619,7 +6619,7 @@
       }
     },
     "IntegrationManager": {
-      "address": "0x7bd321AA270F87e1573dA4c2eBB1D47c7ddEA615",
+      "address": "0xCd11FA05615371ceeB3D5B91B2056AF2dc774718",
       "abi": [
         {
           "inputs": [
@@ -6833,7 +6833,7 @@
       ]
     },
     "ManagementFee": {
-      "address": "0x47118c0af2F3d75057b757FD55C4570BF695117a",
+      "address": "0xCef9CAE419c84C4a9C98f56aDF7bbee789926518",
       "abi": [
         {
           "inputs": [
@@ -7199,7 +7199,7 @@
       }
     },
     "MinMaxInvestmentPolicy": {
-      "address": "0x3e70A80A661834FaBC1bA94b703E2C71dBa5bdE8",
+      "address": "0x1AD981E907461A2D23456844bEf08a74143984b4",
       "abi": [
         {
           "inputs": [
@@ -7428,7 +7428,7 @@
       }
     },
     "PerformanceFee": {
-      "address": "0x79EAb2fbDe38Eee51f807a37b2f1377C0db56053",
+      "address": "0x87b9D59053eBb75cA9B27d3D9fa450Bd04FA568E",
       "abi": [
         {
           "inputs": [
@@ -7912,7 +7912,7 @@
       }
     },
     "PolicyManager": {
-      "address": "0xA3162e0a85Ef3c45eeF09C9d2Fd7FaD25896e5e0",
+      "address": "0xA6433dbad11ED31912Dc9e15F2fAC6e8f5de7458",
       "abi": [
         {
           "inputs": [
@@ -8263,7 +8263,7 @@
       ]
     },
     "ProtocolFeeReserveLib": {
-      "address": "0xF546fF0DD7259f15028Cbb32Bd39768382283D00",
+      "address": "0x6686D850b5831291d1994606b0c2115457862D50",
       "abi": [
         {
           "anonymous": false,
@@ -8406,7 +8406,7 @@
       ]
     },
     "ProtocolFeeReserveProxy": {
-      "address": "0xD5d7a1488C20d4EB1665ec697F7E8bE8cBD87fCf",
+      "address": "0xfa9BEaaa0d8FcB79e34C0Ee649cD70dDB3aFa1A1",
       "abi": [
         {
           "inputs": [
@@ -8431,7 +8431,7 @@
       ]
     },
     "ProtocolFeeTracker": {
-      "address": "0x8a1432C72AD82617e78C5F7cc80F363819a1F47a",
+      "address": "0x71c90C52326DC1E7f950F2deCe248F4Eda58Ef54",
       "abi": [
         {
           "inputs": [
@@ -8713,7 +8713,7 @@
       ]
     },
     "TestnetTreasuryController": {
-      "address": "0x073ED0f00aC96d9469F874FeC7f07D8b9dF32c61",
+      "address": "0x50765658E2cFFBF4196D9fdA114c917953e5cCc9",
       "abi": [
         {
           "anonymous": false,
@@ -8971,7 +8971,7 @@
       ]
     },
     "UnpermissionedActionsWrapper": {
-      "address": "0xB84c2298083A5dadd81345a2875C39A027DaDbbe",
+      "address": "0x3DA1EA500d9E21FcC4dE52C0fE46E64e075d7993",
       "abi": [
         {
           "inputs": [
@@ -9056,7 +9056,7 @@
       ]
     },
     "ValueInterpreter": {
-      "address": "0xeE9AF7DD3C2Cc9620deFdFe6f5072295494606F4",
+      "address": "0x6a88597809B8c74971f0575F8922423d8c069860",
       "abi": [
         {
           "inputs": [
@@ -9123,7 +9123,7 @@
           "inputs": [
             {
               "internalType": "address",
-              "name": "_asset",
+              "name": "_baseAsset",
               "type": "address"
             },
             {
@@ -9133,7 +9133,7 @@
             },
             {
               "internalType": "address",
-              "name": "",
+              "name": "_quoteAsset",
               "type": "address"
             }
           ],
@@ -9152,7 +9152,7 @@
           "inputs": [
             {
               "internalType": "address[]",
-              "name": "_assets",
+              "name": "_baseAssets",
               "type": "address[]"
             },
             {
@@ -9162,7 +9162,7 @@
             },
             {
               "internalType": "address",
-              "name": "",
+              "name": "_quoteAsset",
               "type": "address"
             }
           ],
@@ -9270,7 +9270,7 @@
       ]
     },
     "VaultLib": {
-      "address": "0x0954d5301B848B69ED834dd8ac17aCEBbE1f1ceF",
+      "address": "0xd77D0A551320154ecD3DFFc5678914349359C08c",
       "abi": [
         {
           "inputs": [

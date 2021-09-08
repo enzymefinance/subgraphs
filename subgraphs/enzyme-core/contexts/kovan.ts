@@ -5,8 +5,8 @@ export const kovanContext: Context<Variables> = {
   name: 'enzymefinance/enzyme-core-kovan',
   network: 'kovan',
   variables: {
-    block: 26943646,
-    dispatcherAddress: '0xdA048Eb415a8d43cAE7802350ADE332CF4211429',
+    block: 27096029,
+    dispatcherAddress: '0x5235b80d1b770f05957344556ecc507683bA40fD',
     wethTokenAddress: '0xd0a1e359811322d97991e03f863a0c30c2cf029c',
     chainlinkAggregatorAddresses: {
       audUsd: '0x5813A90f826e16dB392abd2aF7966313fc1fd5B8',
@@ -79,39 +79,29 @@ export const kovanContext: Context<Variables> = {
       buySharesCallerWhitelistAddress: '0x0000000000000000000000000000000000000000',
     },
     release4: {
-      fundDeployerAddress: '0x8014FC071eCae28FE7FB9D4e3f81862fc057498B',
-      vaultLibAddress: '0x0954d5301B848B69ED834dd8ac17aCEBbE1f1ceF',
-      comptrollerLibAddress: '0xD7A47C81d0b7b2fBeb86670DdA85032d764FB380',
-      valueInterpreterAddress: '0xeE9AF7DD3C2Cc9620deFdFe6f5072295494606F4',
-      integrationManagerAddress: '0x7bd321AA270F87e1573dA4c2eBB1D47c7ddEA615',
-      policyManagerAddress: '0xA3162e0a85Ef3c45eeF09C9d2Fd7FaD25896e5e0',
-      feeManagerAddress: '0xb10dfB34d7C6C2Ce7815D743b981A5C906F1112E',
-      globalConfigLibAddress: '0xB430D63a522ea0420Db2CD94F6385f97808d89FA',
-
-      // External Positions
-      externalPositionFactoryAddress: '0xdFaff062AaaE022637B29C7E3Dede1A1135a47b6',
-      externalPositionManagerAddress: '0x2516f285C7cE40BB193a1f76a3F61eD8eEFcFc5E',
-
-      // Gas Relayer
-      gasRelayPaymasterFactoryAddress: '0xdeD12df0c1352f342E9B69C9C5c0f8DF48F281cF',
-
-      // Protocol Feed
-      protocolFeeReserveLibAddress: '0xF546fF0DD7259f15028Cbb32Bd39768382283D00',
-      protocolFeeTrackerAddress: '0x8a1432C72AD82617e78C5F7cc80F363819a1F47a',
-
-      // Fees
-      managementFeeAddress: '0x47118c0af2F3d75057b757FD55C4570BF695117a',
-      performanceFeeAddress: '0x79EAb2fbDe38Eee51f807a37b2f1377C0db56053',
-      entranceRateBurnFeeAddress: '0x5ea830d309CB7a629C1a9463E3E437550a9a270E',
-      entranceRateDirectFeeAddress: '0x95E0B46b1960d83986C119D32B17E5ff4AE56051',
-      exitRateBurnFeeAddress: '0x5797eCf5B60048446B2DD9f112f86f4ec10206f4',
-      exitRateDirectFeeAddress: '0x5182bFC1E501C3f63e96C23E03F85E069bDbBE11',
-
-      // Policies
-      allowedAdapterIncomingAssetsPolicyAddress: '0x04b91AB04C61204eF8Ce0ad1aAf04575Ad4F9684',
-      allowedDepositRecipientsPolicyAddress: '0x72f8594E88Aeb9B7EAaA1465D361fF5E8AA8cd9C',
-      guaranteedRedemptionPolicyAddress: '0xa6204bf6a9FaC240B074c304b39AF50753A7AE68',
-      minMaxInvestmentPolicyAddress: '0x3e70A80A661834FaBC1bA94b703E2C71dBa5bdE8',
+      allowedAdapterIncomingAssetsPolicyAddress: '0x9b6a657617B458E32F9D55B1399ba960E724129e',
+      allowedDepositRecipientsPolicyAddress: '0x9a270d80E064B5CE9dB406B6B84bB7AB40A29A3a',
+      comptrollerLibAddress: '0x6460348F4f636276577e3b6CC753E0B679a8065e',
+      entranceRateBurnFeeAddress: '0x07B0b3835e2348f240Cc9B98055ba1696a6068e7',
+      entranceRateDirectFeeAddress: '0x8f8ED42F78A664D5779cB858614529E1D437c2Fb',
+      exitRateBurnFeeAddress: '0x564473Cb3c681c616db8A65f99af7Bb65Db32471',
+      exitRateDirectFeeAddress: '0x96eeE1bb0f4D048C65a98ecACC31514a11772220',
+      externalPositionFactoryAddress: '0xa3Dc3BffCd6394721097dF69134E6387226589F5',
+      externalPositionManagerAddress: '0xfE17753aEd3e3B70129F70ED34B609Ff46Bfe8C7',
+      feeManagerAddress: '0x4CC2a26a2FffdB692Beae2f78aB918Ac745f7887',
+      fundDeployerAddress: '0x8C14892177FF33e51CFf01F1294bDF8F3C0972b3',
+      gasRelayPaymasterFactoryAddress: '0x8A9B3673e0217E25011379844128e7BcE754c60A',
+      globalConfigLibAddress: '0x6Ac0d79705E7778fE0E5a4762ceAA0f5D1778c6F',
+      guaranteedRedemptionPolicyAddress: '0xD2b1B15584e6e2f0EF89E85700466f7945C52A0D',
+      integrationManagerAddress: '0xCd11FA05615371ceeB3D5B91B2056AF2dc774718',
+      managementFeeAddress: '0xCef9CAE419c84C4a9C98f56aDF7bbee789926518',
+      minMaxInvestmentPolicyAddress: '0x1AD981E907461A2D23456844bEf08a74143984b4',
+      performanceFeeAddress: '0x87b9D59053eBb75cA9B27d3D9fa450Bd04FA568E',
+      policyManagerAddress: '0xA6433dbad11ED31912Dc9e15F2fAC6e8f5de7458',
+      protocolFeeReserveLibAddress: '0x6686D850b5831291d1994606b0c2115457862D50',
+      protocolFeeTrackerAddress: '0x71c90C52326DC1E7f950F2deCe248F4Eda58Ef54',
+      valueInterpreterAddress: '0x6a88597809B8c74971f0575F8922423d8c069860',
+      vaultLibAddress: '0xd77D0A551320154ecD3DFFc5678914349359C08c',
     },
   },
 };

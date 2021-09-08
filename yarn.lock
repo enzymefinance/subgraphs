@@ -1635,17 +1635,6 @@
     decimal.js "^10.3.1"
     ethers "^5.4.6"
 
-"@enzymefinance/testutils@^4.0.0-next.0":
-  version "4.0.0-next.0"
-  resolved "https://registry.yarnpkg.com/@enzymefinance/testutils/-/testutils-4.0.0-next.0.tgz#f3a91f0b23672f936eee61f45a0abfd6d4bf4e3b"
-  integrity sha512-FLzvf/EO0+/9szoCuqifpsqc32zMJ6XGtlUgfKpd252arPAneZaVU+t5i5JzVC5Zql66MeLJ/luA+Ww9ldUxtg==
-  dependencies:
-    "@babel/runtime" "^7.15.3"
-    "@enzymefinance/ethers" "^1.0.0"
-    "@enzymefinance/hardhat" "^1.0.0"
-    "@enzymefinance/protocol" "^4.0.0-next.0"
-    ethers "^5.4.6"
-
 "@ethereumjs/block@^3.4.0":
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/@ethereumjs/block/-/block-3.4.0.tgz#4747b0c06220ee10cbdfe1cbde8cbb0677b1b074"

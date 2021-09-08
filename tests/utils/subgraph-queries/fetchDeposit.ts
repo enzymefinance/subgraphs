@@ -12,7 +12,7 @@ export interface Deposit {
 }
 
 const investmentQuery = gql`
-  query Investment($id: ID!, $block: Int!) {
+  query Deposit($id: ID!, $block: Int!) {
     deposit(id: $id, block: { number: $block }) {
       id
       vault {

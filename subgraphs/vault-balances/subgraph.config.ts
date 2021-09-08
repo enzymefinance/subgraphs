@@ -12,8 +12,8 @@ export const contexts: Contexts<Variables> = {
     name: `${name}-kovan`,
     network: 'kovan',
     variables: {
-      dispatcher: '0xdA048Eb415a8d43cAE7802350ADE332CF4211429',
-      start: 26943646,
+      dispatcher: '0x5235b80d1b770f05957344556ecc507683bA40fD',
+      start: 27096029,
     },
   },
   mainnet: {
