@@ -15,7 +15,7 @@ import { getOrCreateAsset } from './Asset';
 import { updateDerivativeRegistry } from './DerivativeRegistry';
 import { updateUsdQuotedPrimitiveRegistry } from './UsdQuotedPrimitiveRegistry';
 
-export function createCurrencyRegistration(currencyId: string): CurrencyRegistration {
+export function createCurrencyRegistration(currencyId: string, event: ethereum.Event): CurrencyRegistration {
   let registrationId = currencyRegistrationId(currencyId);
   let registration = CurrencyRegistration.load(currencyId) as CurrencyRegistration;
   if (registration != null) {
@@ -31,7 +31,7 @@ export function createCurrencyRegistration(currencyId: string): CurrencyRegistra
 
   let aggregatorAddress = unwrapAggregator(proxyAddress);
   addRegistrationToAggregatorProxy(proxyAddress, registrationId);
-  addProxyToAggregator(proxyAddress, aggregatorAddress);
+  addProxyToAggregator(proxyAddress, aggregatorAddress, event);
 
   return registration;
 }
@@ -77,7 +77,7 @@ export function createOrUpdatePrimitiveRegistration(
 
   let aggregatorAddress = unwrapAggregator(proxyAddress);
   addRegistrationToAggregatorProxy(proxyAddress, registrationId);
-  addProxyToAggregator(proxyAddress, aggregatorAddress);
+  addProxyToAggregator(proxyAddress, aggregatorAddress, event);
   addRegistrationToAsset(assetAddress, registrationId, releaseVersion, event);
 
   return registration;
@@ -122,7 +122,7 @@ export function removeDerivativeRegistration(
 
 export function getUpdatedAggregator(aggregatorAddress: Address, event: ethereum.Event): Aggregator {
   // Only check for aggregator updates once every 24 hours.
-  let aggregator = getOrCreateAggregator(aggregatorAddress);
+  let aggregator = getOrCreateAggregator(aggregatorAddress, event);
   if (BigInt.fromI32(aggregator.updated).plus(ONE_DAY).gt(event.block.timestamp)) {
     return aggregator;
   }
@@ -135,7 +135,7 @@ export function getUpdatedAggregator(aggregatorAddress: Address, event: ethereum
     // Check if the proxy has been pointed at a new aggregator.
     if (unwrapped.notEqual(aggregatorAddress)) {
       // Spawn the new aggregator.
-      addProxyToAggregator(address, unwrapped);
+      addProxyToAggregator(address, unwrapped, event);
 
       // Remove the reference on the old aggregator.
       aggregator.proxies = arrayDiff<string>(aggregator.proxies, [aggregatorAddress.toHex()]);
@@ -189,9 +189,9 @@ function addRegistrationToAggregatorProxy(proxyAddress: Address, registrationId:
   return proxy;
 }
 
-function addProxyToAggregator(proxyAddress: Address, aggregatorAddress: Address): Aggregator {
+function addProxyToAggregator(proxyAddress: Address, aggregatorAddress: Address, event: ethereum.Event): Aggregator {
   // Register the aggregator proxy with the aggregator entity.
-  let aggregator = getOrCreateAggregator(aggregatorAddress);
+  let aggregator = getUpdatedAggregator(aggregatorAddress, event);
   aggregator.proxies = arrayUnique<string>(aggregator.proxies.concat([proxyAddress.toHex()]));
   aggregator.save();
 

@@ -28,18 +28,18 @@ export function handleAnswerUpdated(event: AnswerUpdated): void {
   }
 
   // Always update all currency registrations.
-  let currencies: Array<CurrencyRegistration> = registrations
+  let currencyRegistrations: Array<CurrencyRegistration> = registrations
     .filter((registration) => registration.type == 'CURRENCY')
     .map<CurrencyRegistration>((registration) => registration as CurrencyRegistration);
 
   let value = toBigDecimal(event.params.current, aggregator.decimals);
-  for (let i: i32 = 0; i < currencies.length; i++) {
-    let currency = currencies[i];
+  for (let i: i32 = 0; i < currencyRegistrations.length; i++) {
+    let currency = currencyRegistrations[i];
     updateForCurrencyRegistration(currency, event, value);
   }
 
   // Only run updates for assets where the triggered registration is the highest priority.
-  let primitives = registrations
+  let primitiveRegistrations = registrations
     .filter((registration) => registration.type == 'PRIMITIVE')
     .map<PrimitiveRegistration>((registration) => registration as PrimitiveRegistration)
     .filter((registration) => {
@@ -54,8 +54,8 @@ export function handleAnswerUpdated(event: AnswerUpdated): void {
     value = saveDivideBigDecimal(value, usd.eth);
   }
 
-  for (let i: i32 = 0; i < primitives.length; i++) {
-    let registration = primitives[i];
+  for (let i: i32 = 0; i < primitiveRegistrations.length; i++) {
+    let registration = primitiveRegistrations[i];
     let asset = getAsset(registration.asset);
     updateAssetPrice(asset, value, event);
   }

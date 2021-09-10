@@ -73,11 +73,19 @@ type Aggregator @entity {
   """
   decimals: Int!
   """
+  The latest answer.
+  """
+  answer: BigInt!
+  """
+  The timestamp of the latest answer.
+  """
+  timestamp: Int!
+  """
   The chainlink aggregator proxies currently pointing at this aggregator.
   """
   proxies: [AggregatorProxy!]!
   """
-  The timestamp at which proxies were last checked for updates.
+  The timestamp at which the associated proxies were last checked for changes (to detect whether a proxy has been pointed at a different aggregator).
   """
   updated: Int!
 }
