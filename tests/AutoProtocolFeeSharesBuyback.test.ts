@@ -1,10 +1,11 @@
 import { ComptrollerLib, Dispatcher, FundDeployer, StandardToken } from '@enzymefinance/protocol';
 import { providers, utils, Wallet } from 'ethers';
 import { assertEvent } from './utils/assertions';
+import { Deployment, fetchDeployment } from './utils/deployment';
 import { waitForSubgraph } from './utils/subgraph';
 import { fetchDeposit } from './utils/subgraph-queries/fetchDeposit';
 
-describe('Walkthrough', () => {
+describe('Auto PrototolFee Shares Buyback', () => {
   const ethereumNetwork = process.env.ETHEREUM_NETWORK;
   const jsonRpcProvider = process.env.JSONRPC_ENDPOINT;
   const privateKey = process.env.PRIVATE_KEY;
@@ -12,22 +13,32 @@ describe('Walkthrough', () => {
   const provider = new providers.StaticJsonRpcProvider(jsonRpcProvider, ethereumNetwork);
   let signer = new Wallet(privateKey, provider);
 
-  const subgraphStatusEndpoint = 'https://api.thegraph.com/index-node/graphql';
-  const subgraphApi = 'https://api.thegraph.com/subgraphs/name/enzymefinance/enzyme-core-kovan';
-  const subgraphName = 'enzymefinance/enzyme-core-kovan';
+  const subgraphStatusEndpoint = process.env.SUBGRAPH_STATUS_ENDPOINT;
+  const subgraphEndpoint = process.env.SUBGRAPH_ENDPOINT;
+  const subgraphName = process.env.SUBGRAPH_NAME;
+
+  const deploymentEndpoint = process.env.DEPLOYMENT_ENDPOINT;
 
   let dispatcher: Dispatcher;
   let fundDeployerAddress: string;
   let fundDeployer: FundDeployer;
 
+  let deployment: Deployment;
+  let assets: string[];
+
   beforeAll(async () => {
-    dispatcher = new Dispatcher('0x5235b80d1b770f05957344556ecc507683bA40fD', provider);
+    const deploymentWithAssets = await fetchDeployment(deploymentEndpoint);
+
+    deployment = deploymentWithAssets.contracts;
+    assets = deploymentWithAssets.assets;
+
+    dispatcher = new Dispatcher(deployment.dispatcher, provider);
     fundDeployerAddress = await dispatcher.getCurrentFundDeployer();
     fundDeployer = new FundDeployer(fundDeployerAddress, signer);
   });
 
-  it('should autopay protocol fees', async () => {
-    const denominationAsset = new StandardToken('0x7626A5572fF6803FB6eb573Be89464513d450c32', signer); // MLN
+  it.only('should create a vault, deposit and redeem (with auto buyback of fee shares', async () => {
+    const denominationAsset = new StandardToken(deployment.mlnToken, signer); // MLN
 
     // create fund
 
@@ -96,7 +107,7 @@ describe('Walkthrough', () => {
     await waitForSubgraph(subgraphStatusEndpoint, subgraphName, sharesBought.blockNumber);
 
     const investmentId = `${fundCreatedArgs.vaultProxy.toLowerCase()}/${buySharesArgs.buyer.toLowerCase()}`;
-    const subgraphInvestment = await fetchDeposit(subgraphApi, investmentId, sharesBought.blockNumber);
+    const subgraphInvestment = await fetchDeposit(subgraphEndpoint, investmentId, sharesBought.blockNumber);
 
     expect(subgraphInvestment.shares).toEqual(sharesToBuy.toString());
     expect(subgraphInvestment.depositor.isDepositor).toBe(true);
@@ -112,7 +123,7 @@ describe('Walkthrough', () => {
   });
 
   it("should walkthrough a fund's lifecycle", async () => {
-    const denominationAsset = new StandardToken('0xd0a1e359811322d97991e03f863a0c30c2cf029c', signer); // WETH
+    const denominationAsset = new StandardToken(deployment.wethToken, signer); // WETH
 
     // create fund
 
@@ -173,7 +184,7 @@ describe('Walkthrough', () => {
     await waitForSubgraph(subgraphStatusEndpoint, subgraphName, sharesBought.blockNumber);
 
     const investmentId = `${fundCreatedArgs.vaultProxy.toLowerCase()}/${buySharesArgs.buyer.toLowerCase()}`;
-    const subgraphInvestment = await fetchDeposit(subgraphApi, investmentId, sharesBought.blockNumber);
+    const subgraphInvestment = await fetchDeposit(subgraphEndpoint, investmentId, sharesBought.blockNumber);
 
     expect(subgraphInvestment.shares).toEqual(sharesToBuy.toString());
     expect(subgraphInvestment.depositor.isDepositor).toBe(true);
