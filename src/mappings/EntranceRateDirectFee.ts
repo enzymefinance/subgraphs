@@ -13,8 +13,6 @@ import { genericId } from '../utils/genericId';
 import { toBigDecimal } from '../utils/toBigDecimal';
 
 export function handleFundSettingsAdded(event: FundSettingsAdded): void {
-  let comptroller = ComptrollerLibContract.bind(event.params.comptrollerProxy);
-  let vault = comptroller.getVaultProxy();
   let fee = ensureFee(event.address);
   let rate = toBigDecimal(event.params.rate);
 
@@ -25,7 +23,7 @@ export function handleFundSettingsAdded(event: FundSettingsAdded): void {
   feeSettings.rate = rate;
   feeSettings.save();
 
-  let setting = ensureEntranceRateDirectFeeSetting(vault.toHex(), fee);
+  let setting = ensureEntranceRateDirectFeeSetting(event.params.comptrollerProxy.toHex(), fee);
   setting.rate = rate;
   setting.events = arrayUnique<string>(setting.events.concat([feeSettings.id]));
   setting.timestamp = event.block.timestamp;
