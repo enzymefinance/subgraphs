@@ -29,6 +29,7 @@ export function handleSharesBought(event: SharesBought): void {
 
   let comptrollerProxy = ensureComptroller(Address.fromString(vault.comptroller), event);
   let asset = ensureAsset(Address.fromString(comptrollerProxy.denomination));
+  let denominationAsset = asset;
   let shares = toBigDecimal(event.params.sharesReceived);
   let amount = toBigDecimal(event.params.investmentAmount, asset.decimals);
 
@@ -37,7 +38,7 @@ export function handleSharesBought(event: SharesBought): void {
   addition.depositor = depositor.id;
   addition.deposit = deposit.id;
   addition.type = 'SharesBought';
-  addition.depositAssetAmount = createAssetAmount(asset, amount, 'deposit', event).id;
+  addition.depositAssetAmount = createAssetAmount(asset, amount, denominationAsset, 'deposit', event).id;
   addition.sharesIssued = toBigDecimal(event.params.sharesIssued);
   addition.shares = shares;
   addition.timestamp = event.block.timestamp.toI32();
@@ -48,14 +49,17 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
   let vault = useVault(dataSource.context().getString('vaultProxy'));
   let depositor = ensureDepositor(event.params.redeemer, event);
   let deposit = ensureDeposit(depositor, vault, event);
+
+  let comptrollerProxy = ensureComptroller(Address.fromString(vault.comptroller), event);
   let shares = toBigDecimal(event.params.sharesQuantity);
   let assets = event.params.receivedAssets.map<Asset>((id) => ensureAsset(id));
   let qtys = event.params.receivedAssetQuantities;
+  let denominationAsset = ensureAsset(Address.fromString(comptrollerProxy.denomination));
 
   let assetAmounts: AssetAmount[] = new Array<AssetAmount>();
   for (let i: i32 = 0; i < assets.length; i++) {
     let amount = toBigDecimal(qtys[i], assets[i].decimals);
-    let assetAmount = createAssetAmount(assets[i], amount, 'withdraw', event);
+    let assetAmount = createAssetAmount(assets[i], amount, denominationAsset, 'withdraw', event);
     assetAmounts = assetAmounts.concat([assetAmount]);
   }
 

@@ -1,4 +1,5 @@
 import { toBigDecimal } from '@enzymefinance/subgraph-utils';
+import { Address } from '@graphprotocol/graph-ts';
 import { ensureAsset } from '../../entities/Asset';
 import { createAssetAmount } from '../../entities/AssetAmount';
 import { ensureComptroller } from '../../entities/Comptroller';
@@ -17,6 +18,7 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
 
   let integrationSelector = event.params.selector.toHexString();
 
+  let denominationAsset = ensureAsset(Address.fromString(comptroller.denomination));
   let incomingAssets = event.params.incomingAssets.map<Asset>((asset) => ensureAsset(asset));
   let outgoingAssets = event.params.spendAssets.map<Asset>((asset) => ensureAsset(asset));
 
@@ -24,7 +26,7 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
   let incomingAmounts = event.params.incomingAssetAmounts;
   for (let i = 0; i < incomingAmounts.length; i++) {
     let amount = toBigDecimal(incomingAmounts[i], incomingAssets[i].decimals);
-    let assetAmount = createAssetAmount(incomingAssets[i], amount, 'trade/incoming', event);
+    let assetAmount = createAssetAmount(incomingAssets[i], amount, denominationAsset, 'trade/incoming', event);
     incomingAssetAmounts = incomingAssetAmounts.concat([assetAmount]);
   }
 
@@ -32,7 +34,7 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
   let outgoingAmounts = event.params.spendAssetAmounts;
   for (let i = 0; i < outgoingAmounts.length; i++) {
     let amount = toBigDecimal(outgoingAmounts[i], outgoingAssets[i].decimals);
-    let assetAmount = createAssetAmount(outgoingAssets[i], amount, 'trade/outgoing', event);
+    let assetAmount = createAssetAmount(outgoingAssets[i], amount, denominationAsset, 'trade/outgoing', event);
     outgoingAssetAmounts = outgoingAssetAmounts.concat([assetAmount]);
   }
 

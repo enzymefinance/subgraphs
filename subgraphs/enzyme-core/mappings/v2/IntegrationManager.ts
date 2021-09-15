@@ -1,4 +1,5 @@
 import { arrayDiff, arrayUnique, toBigDecimal } from '@enzymefinance/subgraph-utils';
+import { Address } from '@graphprotocol/graph-ts';
 import { ensureAccount, ensureAuthUser } from '../../entities/Account';
 import { ensureAsset } from '../../entities/Asset';
 import { createAssetAmount } from '../../entities/AssetAmount';
@@ -33,7 +34,13 @@ export function handleAuthUserRemovedForFund(event: AuthUserRemovedForFund): voi
 }
 
 export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationExecutedForFund): void {
+  let comptroller = ensureComptroller(event.params.comptrollerProxy, event);
+  if (comptroller.vault == null) {
+    return;
+  }
+
   let vault = useVault(event.params.vaultProxy.toHex());
+  let denominationAsset = ensureAsset(Address.fromString(comptroller.denomination));
 
   let integrationSelector = event.params.selector.toHexString();
 
@@ -44,7 +51,7 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
   let incomingAmounts = event.params.incomingAssetAmounts;
   for (let i = 0; i < incomingAmounts.length; i++) {
     let amount = toBigDecimal(incomingAmounts[i], incomingAssets[i].decimals);
-    let assetAmount = createAssetAmount(incomingAssets[i], amount, 'trade/incoming', event);
+    let assetAmount = createAssetAmount(incomingAssets[i], amount, denominationAsset, 'trade/incoming', event);
     incomingAssetAmounts = incomingAssetAmounts.concat([assetAmount]);
   }
 
@@ -52,7 +59,7 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
   let outgoingAmounts = event.params.outgoingAssetAmounts;
   for (let i = 0; i < outgoingAmounts.length; i++) {
     let amount = toBigDecimal(outgoingAmounts[i], outgoingAssets[i].decimals);
-    let assetAmount = createAssetAmount(outgoingAssets[i], amount, 'trade/outgoing', event);
+    let assetAmount = createAssetAmount(outgoingAssets[i], amount, denominationAsset, 'trade/outgoing', event);
     outgoingAssetAmounts = outgoingAssetAmounts.concat([assetAmount]);
   }
 

@@ -607,6 +607,8 @@ type AssetAmount @entity {
   id: ID!
   asset: Asset!
   amount: BigDecimal!
+  denominationAsset: Asset!
+  valueDenomination: BigDecimal!
   valueAud: BigDecimal!
   valueBtc: BigDecimal!
   valueChf: BigDecimal!

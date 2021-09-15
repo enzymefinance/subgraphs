@@ -1,7 +1,7 @@
 import { logCritical, toBigDecimal, uniqueEventId } from '@enzymefinance/subgraph-utils';
-import { Address, BigInt, ethereum } from '@graphprotocol/graph-ts';
+import { Address, BigDecimal, ethereum } from '@graphprotocol/graph-ts';
 import { CompoundDebtPositionLib4Contract } from '../generated/CompoundDebtPositionLib4Contract';
-import { CompoundDebtPosition, CompoundDebtPositionChange } from '../generated/schema';
+import { Asset, CompoundDebtPosition, CompoundDebtPositionChange } from '../generated/schema';
 import { ensureAsset } from './Asset';
 import { createAssetAmount } from './AssetAmount';
 import { useVault } from './Vault';
@@ -33,13 +33,13 @@ export function createCompoundDebtPosition(
 
 export function createCompoundDebtPositionChange(
   compoundDebtPositionAddress: Address,
-  assetAddress: Address,
-  amount: BigInt,
+  asset: Asset,
+  amount: BigDecimal,
+  denominationAsset: Asset,
   changeType: string,
   event: ethereum.Event,
 ): CompoundDebtPositionChange {
-  let asset = ensureAsset(assetAddress);
-  let assetAmount = createAssetAmount(asset, toBigDecimal(amount, asset.decimals), 'cdp' + changeType, event);
+  let assetAmount = createAssetAmount(asset, amount, denominationAsset, 'cdp' + changeType, event);
 
   let change = new CompoundDebtPositionChange(uniqueEventId(event));
   change.changeType = changeType;
@@ -50,7 +50,7 @@ export function createCompoundDebtPositionChange(
   return change;
 }
 
-export function trackCompoundDebtPositionAssets(id: string, event: ethereum.Event): void {
+export function trackCompoundDebtPositionAssets(id: string, denominationAsset: Asset, event: ethereum.Event): void {
   let cdpContract = CompoundDebtPositionLib4Contract.bind(Address.fromString(id));
 
   let collateral = cdpContract.getManagedAssets();
@@ -60,7 +60,7 @@ export function trackCompoundDebtPositionAssets(id: string, event: ethereum.Even
     let amount = collateral.value1[i];
 
     let asset = ensureAsset(address);
-    let assetAmount = createAssetAmount(asset, toBigDecimal(amount, asset.decimals), 'cdp', event);
+    let assetAmount = createAssetAmount(asset, toBigDecimal(amount, asset.decimals), denominationAsset, 'cdp', event);
     collateralAssetAmounts = collateralAssetAmounts.concat([assetAmount.id]);
   }
 
@@ -71,7 +71,7 @@ export function trackCompoundDebtPositionAssets(id: string, event: ethereum.Even
     let amount = borrowed.value1[i];
 
     let asset = ensureAsset(address);
-    let assetAmount = createAssetAmount(asset, toBigDecimal(amount, asset.decimals), 'cdp', event);
+    let assetAmount = createAssetAmount(asset, toBigDecimal(amount, asset.decimals), denominationAsset, 'cdp', event);
     borrowedAssetAmounts = borrowedAssetAmounts.concat([assetAmount.id]);
   }
 

@@ -11,17 +11,24 @@ export function assetAmountId(asset: Asset, suffix: string, event: ethereum.Even
 export function createAssetAmount(
   asset: Asset,
   amount: BigDecimal,
+  denominationAsset: Asset,
   suffix: string,
   event: ethereum.Event,
 ): AssetAmount {
   let assetPrice = ensureAssetPrice(asset, event);
-  let currencyPrice = ensureCurrencyPrice(event);
+  let denominationAssetPrice = ensureAssetPrice(denominationAsset, event);
+
   let assetValueEth = amount.times(assetPrice.price);
+  let assetValueDenomination = assetValueEth.div(denominationAssetPrice.price);
+
+  let currencyPrice = ensureCurrencyPrice(event);
 
   let id = assetAmountId(asset, suffix, event);
   let assetAmount = new AssetAmount(id);
   assetAmount.asset = asset.id;
   assetAmount.amount = amount;
+  assetAmount.denominationAsset = denominationAsset.id;
+  assetAmount.valueDenomination = assetValueDenomination;
   assetAmount.valueAud = assetValueEth.times(currencyPrice.ethAud);
   assetAmount.valueBtc = assetValueEth.times(currencyPrice.ethBtc);
   assetAmount.valueChf = assetValueEth.times(currencyPrice.ethChf);
