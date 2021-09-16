@@ -4,9 +4,9 @@ import { ensureDepositor } from '../../entities/Account';
 import { ensureAsset } from '../../entities/Asset';
 import { createAssetAmount } from '../../entities/AssetAmount';
 import { ensureComptroller } from '../../entities/Comptroller';
-import { ensureDeposit, trackDepositBalance } from '../../entities/Deposit';
+import { ensureDeposit } from '../../entities/Deposit';
 import { ensureGasRelayer } from '../../entities/GasRelayer';
-import { trackVaultTotalSupply, useVault } from '../../entities/Vault';
+import { useVault } from '../../entities/Vault';
 import {
   AutoProtocolFeeSharesBuybackSet,
   BuyBackMaxProtocolFeeSharesFailed,
@@ -49,9 +49,6 @@ export function handleSharesBought(event: SharesBought): void {
   addition.shares = shares;
   addition.timestamp = event.block.timestamp.toI32();
   addition.save();
-
-  trackVaultTotalSupply(vault);
-  trackDepositBalance(vault, deposit);
 }
 
 export function handleSharesRedeemed(event: SharesRedeemed): void {

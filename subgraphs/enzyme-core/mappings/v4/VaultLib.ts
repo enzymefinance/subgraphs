@@ -33,20 +33,20 @@ import {
 
 export function handleTransfer(event: Transfer): void {
   let vault = useVault(event.address.toHex());
-  trackVaultTotalSupply(vault);
+  trackVaultTotalSupply(vault, event);
 
   // only track deposit balance if not zero address
   if (event.params.from.notEqual(ZERO_ADDRESS)) {
     let fromInvestor = ensureDepositor(event.params.from, event);
     let fromInvestment = ensureDeposit(fromInvestor, vault, event);
-    trackDepositBalance(vault, fromInvestment);
+    trackDepositBalance(vault, fromInvestment, event);
   }
 
   // only track deposit balance if not zero address
   if (event.params.to.notEqual(ZERO_ADDRESS)) {
     let toInvestor = ensureDepositor(event.params.to, event);
     let toInvestment = ensureDeposit(toInvestor, vault, event);
-    trackDepositBalance(vault, toInvestment);
+    trackDepositBalance(vault, toInvestment, event);
   }
 
   if (

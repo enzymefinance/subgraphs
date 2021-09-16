@@ -2,6 +2,7 @@ import { logCritical, toBigDecimal } from '@enzymefinance/subgraph-utils';
 import { Address, BigDecimal, ethereum } from '@graphprotocol/graph-ts';
 import { ERC20Contract } from '../generated/ERC20Contract';
 import { Account, Deposit, Vault } from '../generated/schema';
+import { trackBalanceOfMetric } from './Metric';
 import { trackNetworkDeposits } from './Network';
 
 function depositId(depositor: Account, vault: Vault): string {
@@ -31,13 +32,20 @@ export function ensureDeposit(investor: Account, vault: Vault, event: ethereum.E
   return deposit;
 }
 
-export function trackDepositBalance(vault: Vault, investment: Deposit): void {
-  let vaultProxy = ERC20Contract.bind(Address.fromString(vault.id));
-  let balanceCall = vaultProxy.try_balanceOf(Address.fromString(investment.depositor));
+export function trackDepositBalance(vault: Vault, investment: Deposit, event: ethereum.Event): void {
+  let vaultAddress = Address.fromString(vault.id);
+  let depositorAddress = Address.fromString(investment.depositor);
+
+  let vaultProxy = ERC20Contract.bind(vaultAddress);
+  let balanceCall = vaultProxy.try_balanceOf(depositorAddress);
   if (balanceCall.reverted) {
     logCritical('balanceOf() reverted for account {} on vault {}', [investment.depositor, vault.id]);
   }
 
-  investment.shares = toBigDecimal(balanceCall.value);
+  let balance = toBigDecimal(balanceCall.value);
+
+  investment.shares = balance;
   investment.save();
+
+  trackBalanceOfMetric(vaultAddress, depositorAddress, balance, event);
 }

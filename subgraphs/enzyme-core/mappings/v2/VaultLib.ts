@@ -59,17 +59,17 @@ export function handleApproval(event: Approval): void {}
 
 export function handleTransfer(event: Transfer): void {
   let vault = useVault(event.address.toHex());
-  trackVaultTotalSupply(vault);
+  trackVaultTotalSupply(vault, event);
 
   if (event.params.from.notEqual(ZERO_ADDRESS)) {
     let fromInvestor = ensureDepositor(event.params.from, event);
     let fromInvestment = ensureDeposit(fromInvestor, vault, event);
-    trackDepositBalance(vault, fromInvestment);
+    trackDepositBalance(vault, fromInvestment, event);
   }
 
   if (event.params.to.notEqual(ZERO_ADDRESS)) {
     let toInvestor = ensureDepositor(event.params.to, event);
     let toInvestment = ensureDeposit(toInvestor, vault, event);
-    trackDepositBalance(vault, toInvestment);
+    trackDepositBalance(vault, toInvestment, event);
   }
 }
