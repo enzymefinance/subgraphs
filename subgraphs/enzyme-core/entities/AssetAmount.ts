@@ -19,7 +19,9 @@ export function createAssetAmount(
   let denominationAssetPrice = ensureAssetPrice(denominationAsset, event);
 
   let assetValueEth = amount.times(assetPrice.price);
-  let assetValueDenomination = assetValueEth.div(denominationAssetPrice.price);
+  let assetValueDenomination = denominationAssetPrice.price.notEqual(BigDecimal.fromString('0'))
+    ? assetValueEth.div(denominationAssetPrice.price)
+    : BigDecimal.fromString('0');
 
   let currencyPrice = ensureCurrencyPrice(event);
 
