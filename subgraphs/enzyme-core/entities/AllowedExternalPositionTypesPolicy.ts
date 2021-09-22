@@ -1,25 +1,24 @@
 import { Address, ethereum } from '@graphprotocol/graph-ts';
-import { GuaranteedRedemptionPolicy } from '../generated/schema';
+import { AllowedExternalPositionTypesPolicy } from '../generated/schema';
 import { policyId } from './Policy';
 
-export function ensureGuaranteedRedemptionPolicy(
+export function ensureAllowedExternalPositionTypesPolicy(
   comptrollerAddress: Address,
   policyAddress: Address,
   event: ethereum.Event,
-): GuaranteedRedemptionPolicy {
+): AllowedExternalPositionTypesPolicy {
   let id = policyId(comptrollerAddress, policyAddress);
-  let policy = GuaranteedRedemptionPolicy.load(id) as GuaranteedRedemptionPolicy;
+  let policy = AllowedExternalPositionTypesPolicy.load(id) as AllowedExternalPositionTypesPolicy;
 
   if (policy) {
     return policy;
   }
 
-  policy = new GuaranteedRedemptionPolicy(id);
+  policy = new AllowedExternalPositionTypesPolicy(id);
   policy.policy = policyAddress;
-  policy.type = 'GuaranteedRedemption';
+  policy.type = 'AllowedExternalPositionTypes';
   policy.comptroller = comptrollerAddress.toHex();
-  policy.startTimestamp = 0;
-  policy.duration = 0;
+  policy.externalPositionTypes = new Array<i32>();
   policy.createdAt = event.block.timestamp.toI32();
   policy.enabled = true;
   policy.settings = '';

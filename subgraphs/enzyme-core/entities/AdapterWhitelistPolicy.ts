@@ -16,6 +16,7 @@ export function ensureAdapterWhitelistPolicy(
 
   policy = new AdapterWhitelistPolicy(id);
   policy.policy = policyAddress;
+  policy.type = 'AdapterWhitelist';
   policy.comptroller = comptrollerAddress.toHex();
   policy.adapters = new Array<Bytes>();
   policy.createdAt = event.block.timestamp.toI32();

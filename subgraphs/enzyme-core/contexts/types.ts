@@ -49,9 +49,15 @@ export interface Release3Addresses {
 }
 
 export interface Release4Addresses {
+  addressListRegistryAddress: string;
   allowedAdapterIncomingAssetsPolicyAddress: string;
+  allowedAdaptersPolicyAddress: string;
+  allowedAssetsForRedemptionPolicyAddress: string;
   allowedDepositRecipientsPolicyAddress: string;
+  allowedExternalPositionTypesPolicyAddress: string;
+  allowedSharesTransferRecipientsPolicyAddress: string;
   comptrollerLibAddress: string;
+  cumulativeSlippageTolerancePolicyAddress: string;
   entranceRateBurnFeeAddress: string;
   entranceRateDirectFeeAddress: string;
   exitRateBurnFeeAddress: string;
@@ -66,6 +72,7 @@ export interface Release4Addresses {
   integrationManagerAddress: string;
   managementFeeAddress: string;
   minMaxInvestmentPolicyAddress: string;
+  onlyUntrackDustOrPricelessAssetsPolicyAddress: string;
   performanceFeeAddress: string;
   policyManagerAddress: string;
   protocolFeeReserveLibAddress: string;

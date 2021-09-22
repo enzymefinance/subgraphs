@@ -157,9 +157,9 @@
         "type": "address"
       },
       {
-        "internalType": "address[]",
-        "name": "_assets",
-        "type": "address[]"
+        "internalType": "address",
+        "name": "_adapter",
+        "type": "address"
       }
     ],
     "name": "passesRule",

@@ -1,4 +1,4 @@
-import { Address, Bytes, ethereum } from '@graphprotocol/graph-ts';
+import { Address, ethereum } from '@graphprotocol/graph-ts';
 import { AllowedDepositRecipientsPolicy } from '../generated/schema';
 import { policyId } from './Policy';
 
@@ -16,8 +16,9 @@ export function ensureAllowedDepositRecipientsPolicy(
 
   policy = new AllowedDepositRecipientsPolicy(id);
   policy.policy = policyAddress;
+  policy.type = 'AllowedDepositRecipients';
   policy.comptroller = comptrollerAddress.toHex();
-  policy.accounts = new Array<Bytes>();
+  policy.addressLists = new Array<string>();
   policy.createdAt = event.block.timestamp.toI32();
   policy.enabled = true;
   policy.settings = '';

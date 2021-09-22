@@ -16,6 +16,7 @@ export function ensureAdapterBlacklistPolicy(
 
   policy = new AdapterBlacklistPolicy(id);
   policy.policy = policyAddress;
+  policy.type = 'AdapterBlacklist';
   policy.comptroller = comptrollerAddress.toHex();
   policy.adapters = new Array<Bytes>();
   policy.createdAt = event.block.timestamp.toI32();

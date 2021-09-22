@@ -1,25 +1,24 @@
 import { Address, ethereum } from '@graphprotocol/graph-ts';
-import { GuaranteedRedemptionPolicy } from '../generated/schema';
+import { AllowedSharesTransferRecipientsPolicy } from '../generated/schema';
 import { policyId } from './Policy';
 
-export function ensureGuaranteedRedemptionPolicy(
+export function ensureAllowedSharesTransferRecipientsPolicy(
   comptrollerAddress: Address,
   policyAddress: Address,
   event: ethereum.Event,
-): GuaranteedRedemptionPolicy {
+): AllowedSharesTransferRecipientsPolicy {
   let id = policyId(comptrollerAddress, policyAddress);
-  let policy = GuaranteedRedemptionPolicy.load(id) as GuaranteedRedemptionPolicy;
+  let policy = AllowedSharesTransferRecipientsPolicy.load(id) as AllowedSharesTransferRecipientsPolicy;
 
   if (policy) {
     return policy;
   }
 
-  policy = new GuaranteedRedemptionPolicy(id);
+  policy = new AllowedSharesTransferRecipientsPolicy(id);
   policy.policy = policyAddress;
-  policy.type = 'GuaranteedRedemption';
+  policy.type = 'AllowedSharesTransferRecipients';
   policy.comptroller = comptrollerAddress.toHex();
-  policy.startTimestamp = 0;
-  policy.duration = 0;
+  policy.addressLists = new Array<string>();
   policy.createdAt = event.block.timestamp.toI32();
   policy.enabled = true;
   policy.settings = '';

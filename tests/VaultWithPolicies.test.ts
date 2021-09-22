@@ -1,9 +1,11 @@
 import { randomAddress } from '@enzymefinance/ethers';
 import {
-  allowedAdapterIncomingAssetsPolicyArgs,
-  allowedDepositRecipientsPolicyArgs,
+  addressListRegistryPolicyArgs,
+  AddressListUpdateType,
+  allowedExternalPositionTypesPolicyArgs,
   ComptrollerLib,
   Dispatcher,
+  encodeArgs,
   FundDeployer,
   guaranteedRedemptionPolicyArgs,
   minMaxInvestmentPolicyArgs,
@@ -46,19 +48,61 @@ describe('Vault with Policies', () => {
     fundDeployer = new FundDeployer(fundDeployerAddress, signer);
   });
 
-  it('should create a vault with policies', async () => {
+  it('should create a vault with a lot of policies', async () => {
     const denominationAsset = new StandardToken(deployment.wethToken, signer); // WETH
 
-    // Fee configuration
+    // Policy configuration
 
-    const allowedAdapterIncomingAssetsPolicySettings = allowedAdapterIncomingAssetsPolicyArgs([
-      deployment.wethToken,
-      deployment.mlnToken,
-    ]);
-
-    const allowedDepositRecipientsPolicySettings = allowedDepositRecipientsPolicyArgs({
-      investorsToAdd: [randomAddress(), randomAddress()],
+    const allowedAdapterIncomingAssetsPolicySettings = addressListRegistryPolicyArgs({
+      newListsArgs: [
+        {
+          updateType: AddressListUpdateType.AddAndRemove,
+          initialItems: [deployment.wethToken, deployment.mlnToken],
+        },
+      ],
     });
+
+    const allowedAdaptersPolicySettings = addressListRegistryPolicyArgs({
+      newListsArgs: [
+        {
+          updateType: AddressListUpdateType.None,
+          initialItems: [randomAddress(), randomAddress(), randomAddress()],
+        },
+      ],
+    });
+
+    const allowedAssetsForRedemptionPolicySettings = addressListRegistryPolicyArgs({
+      newListsArgs: [
+        {
+          updateType: AddressListUpdateType.AddAndRemove,
+          initialItems: [randomAddress(), randomAddress(), randomAddress()],
+        },
+      ],
+    });
+
+    const allowedDepositRecipientsPolicySettings = addressListRegistryPolicyArgs({
+      newListsArgs: [
+        {
+          updateType: AddressListUpdateType.AddAndRemove,
+          initialItems: [randomAddress(), randomAddress()],
+        },
+      ],
+    });
+
+    const allowedExternalPositionTypesPolicySettings = allowedExternalPositionTypesPolicyArgs({
+      externalPositionTypeIds: [0],
+    });
+
+    const allowedSharesTransferRecipientsPolicySettings = addressListRegistryPolicyArgs({
+      newListsArgs: [
+        {
+          updateType: AddressListUpdateType.AddAndRemove,
+          initialItems: [randomAddress(), randomAddress()],
+        },
+      ],
+    });
+
+    const cumulativeSlippageTolerancePolicySettings = encodeArgs(['uint256'], [2000]);
 
     const guaranteedRedemptionPolicySettings = guaranteedRedemptionPolicyArgs({
       startTimestamp: BigNumber.from(1000),
@@ -70,17 +114,44 @@ describe('Vault with Policies', () => {
       maxInvestmentAmount: utils.parseEther('1000000'),
     });
 
-    const policies = [
+    const onlyUntrackDustOrPricelessAssetsPolicySettings = '0x';
+
+    console.log(
       deployment.allowedAdapterIncomingAssetsPolicy,
+      deployment.allowedAdaptersPolicy,
+      deployment.allowedAssetsForRedemptionPolicy,
       deployment.allowedDepositRecipientsPolicy,
+      deployment.allowedExternalPositionTypesPolicy,
+      deployment.allowedSharesTransferRecipientsPolicy,
+      deployment.cumulativeSlippageTolerancePolicy,
       deployment.guaranteedRedemptionPolicy,
       deployment.minMaxInvestmentPolicy,
+      deployment.onlyUntrackDustOrPricelessAssetsPolicy,
+    );
+
+    const policies = [
+      deployment.allowedAdapterIncomingAssetsPolicy,
+      deployment.allowedAdaptersPolicy,
+      deployment.allowedAssetsForRedemptionPolicy,
+      deployment.allowedDepositRecipientsPolicy,
+      deployment.allowedExternalPositionTypesPolicy,
+      deployment.allowedSharesTransferRecipientsPolicy,
+      deployment.cumulativeSlippageTolerancePolicy,
+      deployment.guaranteedRedemptionPolicy,
+      deployment.minMaxInvestmentPolicy,
+      deployment.onlyUntrackDustOrPricelessAssetsPolicy,
     ];
     const settings = [
       allowedAdapterIncomingAssetsPolicySettings,
+      allowedAdaptersPolicySettings,
+      allowedAssetsForRedemptionPolicySettings,
       allowedDepositRecipientsPolicySettings,
+      allowedExternalPositionTypesPolicySettings,
+      allowedSharesTransferRecipientsPolicySettings,
+      cumulativeSlippageTolerancePolicySettings,
       guaranteedRedemptionPolicySettings,
       minMaxInvestmentPolicySettings,
+      onlyUntrackDustOrPricelessAssetsPolicySettings,
     ];
 
     const policyManagerConfigData = policyManagerConfigArgs({ policies, settings });

@@ -16,6 +16,7 @@ export function ensureBuySharesCallerWhitelistPolicy(
 
   policy = new BuySharesCallerWhitelistPolicy(id);
   policy.policy = policyAddress;
+  policy.type = 'BuySharesCallerWhitelist';
   policy.comptroller = comptrollerAddress.toHex();
   policy.callers = new Array<Bytes>();
   policy.createdAt = event.block.timestamp.toI32();

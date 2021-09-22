@@ -5,11 +5,6 @@
         "internalType": "address",
         "name": "_policyManager",
         "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_addressListRegistry",
-        "type": "address"
       }
     ],
     "stateMutability": "nonpayable",
@@ -25,20 +20,20 @@
         "type": "address"
       },
       {
-        "indexed": false,
-        "internalType": "uint256[]",
-        "name": "listIds",
-        "type": "uint256[]"
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "externalPositionTypeId",
+        "type": "uint256"
       }
     ],
-    "name": "ListsSetForFund",
+    "name": "AllowedExternalPositionTypeAddedForFund",
     "type": "event"
   },
   {
     "inputs": [
       {
         "internalType": "address",
-        "name": "",
+        "name": "_comptrollerProxy",
         "type": "address"
       }
     ],
@@ -79,32 +74,24 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "getAddressListRegistry",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "addressListRegistry_",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "address",
         "name": "_comptrollerProxy",
         "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_externalPositionTypeId",
+        "type": "uint256"
       }
     ],
-    "name": "getListIdsForFund",
+    "name": "externalPositionTypeIsAllowedForFund",
     "outputs": [
       {
-        "internalType": "uint256[]",
-        "name": "listIds_",
-        "type": "uint256[]"
+        "internalType": "bool",
+        "name": "isAllowed_",
+        "type": "bool"
       }
     ],
     "stateMutability": "view",
@@ -153,30 +140,6 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_comptrollerProxy",
-        "type": "address"
-      },
-      {
-        "internalType": "address[]",
-        "name": "_assets",
-        "type": "address[]"
-      }
-    ],
-    "name": "passesRule",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "isValid_",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
         "name": "",
         "type": "address"
       },
@@ -200,7 +163,7 @@
       },
       {
         "internalType": "enum IPolicyManager.PolicyHook",
-        "name": "",
+        "name": "_hook",
         "type": "uint8"
       },
       {

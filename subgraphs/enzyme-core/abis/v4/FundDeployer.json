@@ -80,18 +80,6 @@
         "internalType": "uint256",
         "name": "sharesActionTimelock",
         "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "bytes",
-        "name": "feeManagerConfigData",
-        "type": "bytes"
-      },
-      {
-        "indexed": false,
-        "internalType": "bytes",
-        "name": "policyManagerConfigData",
-        "type": "bytes"
       }
     ],
     "name": "ComptrollerProxyDeployed",

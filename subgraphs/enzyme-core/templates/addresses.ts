@@ -72,10 +72,17 @@ export class Release4Addresses {
   entranceRateDirectFeeAddress: Address;
   exitRateBurnFeeAddress: Address;
   exitRateDirectFeeAddress: Address;
+  addressListRegistryAddress: Address;
   allowedAdapterIncomingAssetsPolicyAddress: Address;
+  allowedAdaptersPolicyAddress: Address;
+  allowedAssetsForRedemptionPolicyAddress: Address;
   allowedDepositRecipientsPolicyAddress: Address;
+  allowedExternalPositionTypesPolicyAddress: Address;
+  allowedSharesTransferRecipientsPolicyAddress: Address;
+  cumulativeSlippageTolerancePolicyAddress: Address;
   guaranteedRedemptionPolicyAddress: Address;
   minMaxInvestmentPolicyAddress: Address;
+  onlyUntrackDustOrPricelessAssetsPolicyAddress: Address;
   externalPositionFactoryAddress: Address;
   externalPositionManagerAddress: Address;
   gasRelayPaymasterFactoryAddress: Address;
@@ -146,10 +153,6 @@ export let release3Addresses: Release3Addresses = {
 };
 
 export let release4Addresses: Release4Addresses = {
-  // Fees
-
-  // Policies
-
   fundDeployerAddress: Address.fromString('{{release4.fundDeployerAddress}}'),
   vaultLibAddress: Address.fromString('{{release4.vaultLibAddress}}'),
   comptrollerLibAddress: Address.fromString('{{release4.comptrollerLibAddress}}'),
@@ -168,10 +171,17 @@ export let release4Addresses: Release4Addresses = {
   exitRateDirectFeeAddress: Address.fromString('{{release4.exitRateDirectFeeAddress}}'),
 
   // Policies
+  addressListRegistryAddress: Address.fromString('{{release4.addressListRegistryAddress}}'),
+  allowedAdaptersPolicyAddress: Address.fromString('{{release4.allowedAdaptersPolicyAddress}}'),
+  allowedAssetsForRedemptionPolicyAddress: Address.fromString('{{release4.allowedAssetsForRedemptionPolicyAddress}}'),
+  allowedDepositRecipientsPolicyAddress: Address.fromString('{{release4.allowedDepositRecipientsPolicyAddress}}'),
+  allowedExternalPositionTypesPolicyAddress: Address.fromString('{{release4.allowedExternalPositionTypesPolicyAddress}}'),
+  allowedSharesTransferRecipientsPolicyAddress: Address.fromString('{{release4.allowedSharesTransferRecipientsPolicyAddress}}'),
+  cumulativeSlippageTolerancePolicyAddress: Address.fromString('{{release4.cumulativeSlippageTolerancePolicyAddress}}'),
+  onlyUntrackDustOrPricelessAssetsPolicyAddress: Address.fromString('{{release4.onlyUntrackDustOrPricelessAssetsPolicyAddress}}'),
   allowedAdapterIncomingAssetsPolicyAddress: Address.fromString(
     '{{release4.allowedAdapterIncomingAssetsPolicyAddress}}',
   ),
-  allowedDepositRecipientsPolicyAddress: Address.fromString('{{release4.allowedDepositRecipientsPolicyAddress}}'),
   guaranteedRedemptionPolicyAddress: Address.fromString('{{release4.guaranteedRedemptionPolicyAddress}}'),
   minMaxInvestmentPolicyAddress: Address.fromString('{{release4.minMaxInvestmentPolicyAddress}}'),
 

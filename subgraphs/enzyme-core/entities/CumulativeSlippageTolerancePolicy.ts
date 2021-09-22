@@ -1,29 +1,29 @@
 import { Address, BigDecimal, ethereum } from '@graphprotocol/graph-ts';
-import { MinMaxDepositPolicy } from '../generated/schema';
+import { CumulativeSlippageTolerancePolicy } from '../generated/schema';
 import { policyId } from './Policy';
 
-export function ensureMinMaxDepositPolicy(
+export function ensureCumulativeSlippageTolerancePolicy(
   comptrollerAddress: Address,
   policyAddress: Address,
   event: ethereum.Event,
-): MinMaxDepositPolicy {
+): CumulativeSlippageTolerancePolicy {
   let id = policyId(comptrollerAddress, policyAddress);
-  let policy = MinMaxDepositPolicy.load(id) as MinMaxDepositPolicy;
+  let policy = CumulativeSlippageTolerancePolicy.load(id) as CumulativeSlippageTolerancePolicy;
 
   if (policy) {
     return policy;
   }
 
-  policy = new MinMaxDepositPolicy(id);
+  policy = new CumulativeSlippageTolerancePolicy(id);
   policy.policy = policyAddress;
-  policy.type = 'MinMaxDeposit';
+  policy.type = 'CumulativeSlippageTolerance';
   policy.comptroller = comptrollerAddress.toHex();
-  policy.minDepositAmount = BigDecimal.fromString('0');
-  policy.maxDepositAmount = BigDecimal.fromString('0');
   policy.createdAt = event.block.timestamp.toI32();
-  policy.updatedAt = 0;
   policy.enabled = true;
   policy.settings = '';
+  policy.tolerance = BigDecimal.fromString('0');
+  policy.cumulativeSlippage = BigDecimal.fromString('0');
+  policy.lastSlippageTimestamp = 0;
   policy.save();
 
   return policy;

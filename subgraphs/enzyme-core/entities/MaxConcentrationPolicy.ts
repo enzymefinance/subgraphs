@@ -16,6 +16,7 @@ export function ensureMaxConcentrationPolicy(
 
   policy = new MaxConcentrationPolicy(id);
   policy.policy = policyAddress;
+  policy.type = 'MaxConcentration';
   policy.comptroller = comptrollerAddress.toHex();
   policy.maxConcentration = BigDecimal.fromString('0');
   policy.createdAt = event.block.timestamp.toI32();

@@ -1,4 +1,23 @@
 export const abisV4 = [
+  { name: 'AddressListRegistry', version: '4', file: './abis/v4/AddressListRegistry.json' },
+  { name: 'AllowedAdaptersPolicy', version: '4', file: './abis/v4/AllowedAdaptersPolicy.json' },
+  { name: 'AllowedAssetsForRedemptionPolicy', version: '4', file: './abis/v4/AllowedAssetsForRedemptionPolicy.json' },
+  {
+    name: 'AllowedExternalPositionTypesPolicy',
+    version: '4',
+    file: './abis/v4/AllowedExternalPositionTypesPolicy.json',
+  },
+  {
+    name: 'AllowedSharesTransferRecipientsPolicy',
+    version: '4',
+    file: './abis/v4/AllowedSharesTransferRecipientsPolicy.json',
+  },
+  { name: 'CumulativeSlippageTolerancePolicy', version: '4', file: './abis/v4/CumulativeSlippageTolerancePolicy.json' },
+  {
+    name: 'OnlyUntrackDustOrPricelessAssetsPolicy',
+    version: '4',
+    file: './abis/v4/OnlyUntrackDustOrPricelessAssetsPolicy.json',
+  },
   {
     name: 'AllowedAdapterIncomingAssetsPolicy',
     version: '4',

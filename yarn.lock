@@ -1197,7 +1197,7 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.15.3", "@babel/runtime@^7.4.4":
+"@babel/runtime@^7.15.3", "@babel/runtime@^7.15.4", "@babel/runtime@^7.4.4":
   version "7.15.4"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.15.4.tgz#fd17d16bfdf878e6dd02d19753a39fa8a8d9c84a"
   integrity sha512-99catp6bHCaxr4sJ/DbTGgHS4+Rs2RVd2g7iOap6SLGPDknRK9ztKNsE/Fg6QhSeh1FGE5f6gHGQmvvn3I3xhw==
@@ -1625,12 +1625,12 @@
   resolved "https://registry.yarnpkg.com/@enzymefinance/prettier-config/-/prettier-config-1.0.4.tgz#fe2e4663b3886ad49604ca728fbff8e4ada38bec"
   integrity sha512-03ewhgADdFu+0uqdhM1ezSknhxqHV9xLdsvHliRxotqKhZx1Lc87nfpb6kVkGq4KyIToPq0VWzPy3XmA68kcxQ==
 
-"@enzymefinance/protocol@^4.0.0-next.0":
-  version "4.0.0-next.0"
-  resolved "https://registry.yarnpkg.com/@enzymefinance/protocol/-/protocol-4.0.0-next.0.tgz#781d9f4456e52c1135aa688895beefca4b2a2e6f"
-  integrity sha512-Kah1jbUtdYLqNZXm0DrGJoWAK2Tf6B67CoPlUlFFoHfe5mfS8wmOK+yEiQM3siktsVDqA4a31H0Jk/x/7Lvj5A==
+"@enzymefinance/protocol@^4.0.0-next.1":
+  version "4.0.0-next.1"
+  resolved "https://registry.yarnpkg.com/@enzymefinance/protocol/-/protocol-4.0.0-next.1.tgz#271c2a5b2a4237bb89d8ad5adaa24c334d49b111"
+  integrity sha512-w64Wew+r2VQ4pVkjOHHu4dWxSSbRdfgxleUsUBGYI0Qrv4rF1BHHj3gMlXAlaq8g5arS0mdEOyKQlt+qlx2EHg==
   dependencies:
-    "@babel/runtime" "^7.15.3"
+    "@babel/runtime" "^7.15.4"
     "@enzymefinance/ethers" "^1.0.0"
     decimal.js "^10.3.1"
     ethers "^5.4.6"

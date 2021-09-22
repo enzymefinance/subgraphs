@@ -12,6 +12,7 @@ export function ensureUnknownFee(comptrollerAddress: Address, feeAddress: Addres
 
   fee = new UnknownFee(id);
   fee.fee = feeAddress;
+  fee.type = 'Unknown';
   fee.comptroller = comptrollerAddress.toHex();
   fee.createdAt = event.block.timestamp.toI32();
   fee.lastSettled = 0;

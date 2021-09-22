@@ -16,6 +16,7 @@ export function ensurePerformanceFee(
 
   fee = new PerformanceFee(id);
   fee.fee = feeAddress;
+  fee.type = 'Performance';
   fee.comptroller = comptrollerAddress.toHex();
   fee.rate = BigDecimal.fromString('0');
   fee.period = 0;

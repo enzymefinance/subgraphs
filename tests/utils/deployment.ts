@@ -7,9 +7,14 @@ export interface DeploymentWithAssets {
 
 export interface Deployment {
   allowedAdapterIncomingAssetsPolicy: string;
+  allowedAdaptersPolicy: string;
+  allowedAssetsForRedemptionPolicy: string;
   allowedDepositRecipientsPolicy: string;
+  allowedExternalPositionTypesPolicy: string;
+  allowedSharesTransferRecipientsPolicy: string;
   assetFinalityResolver: string;
   comptrollerLib: string;
+  cumulativeSlippageTolerancePolicy: string;
   depositWrapper: string;
   dispatcher: string;
   entranceRateBurnFee: string;
@@ -28,6 +33,7 @@ export interface Deployment {
   managementFee: string;
   minMaxInvestmentPolicy: string;
   mlnToken: string;
+  onlyUntrackDustOrPricelessAssetsPolicy: string;
   performanceFee: string;
   policyManager: string;
   protocolFeeReserveLib: string;
@@ -38,6 +44,7 @@ export interface Deployment {
   valueInterpreter: string;
   vaultLib: string;
   wethToken: string;
+  //
   aaveAdapter: string;
   alphaHomoraV1Adapter: string;
   compoundAdapter: string;

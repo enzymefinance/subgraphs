@@ -1,25 +1,23 @@
 import { Address, ethereum } from '@graphprotocol/graph-ts';
-import { GuaranteedRedemptionPolicy } from '../generated/schema';
+import { OnlyUntrackDustOrPricelessAssetsPolicy } from '../generated/schema';
 import { policyId } from './Policy';
 
-export function ensureGuaranteedRedemptionPolicy(
+export function ensureOnlyUntrackDustOrPricelessAssetsPolicy(
   comptrollerAddress: Address,
   policyAddress: Address,
   event: ethereum.Event,
-): GuaranteedRedemptionPolicy {
+): OnlyUntrackDustOrPricelessAssetsPolicy {
   let id = policyId(comptrollerAddress, policyAddress);
-  let policy = GuaranteedRedemptionPolicy.load(id) as GuaranteedRedemptionPolicy;
+  let policy = OnlyUntrackDustOrPricelessAssetsPolicy.load(id) as OnlyUntrackDustOrPricelessAssetsPolicy;
 
   if (policy) {
     return policy;
   }
 
-  policy = new GuaranteedRedemptionPolicy(id);
+  policy = new OnlyUntrackDustOrPricelessAssetsPolicy(id);
   policy.policy = policyAddress;
-  policy.type = 'GuaranteedRedemption';
+  policy.type = 'OnlyUntrackDustOrPricelessAssets';
   policy.comptroller = comptrollerAddress.toHex();
-  policy.startTimestamp = 0;
-  policy.duration = 0;
   policy.createdAt = event.block.timestamp.toI32();
   policy.enabled = true;
   policy.settings = '';

@@ -1,24 +1,24 @@
-import { Address, Bytes, ethereum } from '@graphprotocol/graph-ts';
-import { AssetWhitelistPolicy } from '../generated/schema';
+import { Address, ethereum } from '@graphprotocol/graph-ts';
+import { AllowedAdaptersPolicy } from '../generated/schema';
 import { policyId } from './Policy';
 
-export function ensureAssetWhitelistPolicy(
+export function ensureAllowedAdaptersPolicy(
   comptrollerAddress: Address,
   policyAddress: Address,
   event: ethereum.Event,
-): AssetWhitelistPolicy {
+): AllowedAdaptersPolicy {
   let id = policyId(comptrollerAddress, policyAddress);
-  let policy = AssetWhitelistPolicy.load(id) as AssetWhitelistPolicy;
+  let policy = AllowedAdaptersPolicy.load(id) as AllowedAdaptersPolicy;
 
   if (policy) {
     return policy;
   }
 
-  policy = new AssetWhitelistPolicy(id);
+  policy = new AllowedAdaptersPolicy(id);
   policy.policy = policyAddress;
-  policy.type = 'AssetWhitelist';
+  policy.type = 'AllowedAdapters';
   policy.comptroller = comptrollerAddress.toHex();
-  policy.assets = new Array<Bytes>();
+  policy.addressLists = new Array<string>();
   policy.createdAt = event.block.timestamp.toI32();
   policy.enabled = true;
   policy.settings = '';

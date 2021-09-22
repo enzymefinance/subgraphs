@@ -66,6 +66,9 @@ type Release @entity {
   open: Int!
   close: Int
   isLive: Boolean!
+
+  dustToleranceInWeth: BigDecimal
+
   network: Network!
   vaults: [Vault!] @derivedFrom(field: "release")
 }
@@ -290,6 +293,7 @@ type FeeSharesAllocationChangedEvent implements SharesChange @entity {
 interface Fee {
   id: ID!
   fee: Bytes!
+  type: FeeType!
   comptroller: Comptroller!
   createdAt: Int!
   settings: String!
@@ -298,6 +302,7 @@ interface Fee {
 type EntranceRateBurnFee implements Fee @entity {
   id: ID!
   fee: Bytes!
+  type: FeeType!
   comptroller: Comptroller!
   createdAt: Int!
   settings: String!
@@ -308,6 +313,7 @@ type EntranceRateBurnFee implements Fee @entity {
 type EntranceRateDirectFee implements Fee @entity {
   id: ID!
   fee: Bytes!
+  type: FeeType!
   comptroller: Comptroller!
   createdAt: Int!
   settings: String!
@@ -319,6 +325,7 @@ type EntranceRateDirectFee implements Fee @entity {
 type ExitRateBurnFee implements Fee @entity {
   id: ID!
   fee: Bytes!
+  type: FeeType!
   comptroller: Comptroller!
   createdAt: Int!
   settings: String!
@@ -330,6 +337,7 @@ type ExitRateBurnFee implements Fee @entity {
 type ExitRateDirectFee implements Fee @entity {
   id: ID!
   fee: Bytes!
+  type: FeeType!
   comptroller: Comptroller!
   createdAt: Int!
   settings: String!
@@ -342,6 +350,7 @@ type ExitRateDirectFee implements Fee @entity {
 type ManagementFee implements Fee @entity {
   id: ID!
   fee: Bytes!
+  type: FeeType!
   comptroller: Comptroller!
   createdAt: Int!
   settings: String!
@@ -354,6 +363,7 @@ type ManagementFee implements Fee @entity {
 type PerformanceFee implements Fee @entity {
   id: ID!
   fee: Bytes!
+  type: FeeType!
   comptroller: Comptroller!
   createdAt: Int!
   settings: String!
@@ -371,10 +381,21 @@ type PerformanceFee implements Fee @entity {
 type UnknownFee implements Fee @entity {
   id: ID!
   fee: Bytes!
+  type: FeeType!
   comptroller: Comptroller!
   createdAt: Int!
   lastSettled: Int!
   settings: String!
+}
+
+enum FeeType {
+  EntranceRateBurn
+  EntranceRateDirect
+  ExitRateBurn
+  ExitRateDirect
+  Management
+  Performance
+  Unknown
 }
 
 #################################################
@@ -384,6 +405,7 @@ type UnknownFee implements Fee @entity {
 interface Policy {
   id: ID!
   policy: Bytes!
+  type: PolicyType!
   comptroller: Comptroller!
   createdAt: Int!
   enabled: Boolean!
@@ -393,6 +415,7 @@ interface Policy {
 type AdapterBlacklistPolicy implements Policy @entity {
   id: ID!
   policy: Bytes!
+  type: PolicyType!
   comptroller: Comptroller!
   createdAt: Int!
   enabled: Boolean!
@@ -403,6 +426,7 @@ type AdapterBlacklistPolicy implements Policy @entity {
 type AdapterWhitelistPolicy implements Policy @entity {
   id: ID!
   policy: Bytes!
+  type: PolicyType!
   comptroller: Comptroller!
   createdAt: Int!
   enabled: Boolean!
@@ -413,26 +437,73 @@ type AdapterWhitelistPolicy implements Policy @entity {
 type AllowedAdapterIncomingAssetsPolicy implements Policy @entity {
   id: ID!
   policy: Bytes!
+  type: PolicyType!
   comptroller: Comptroller!
   createdAt: Int!
   enabled: Boolean!
   settings: String!
-  assets: [Bytes!]!
+  addressLists: [AddressList!]!
+}
+
+type AllowedAdaptersPolicy implements Policy @entity {
+  id: ID!
+  policy: Bytes!
+  type: PolicyType!
+  comptroller: Comptroller!
+  createdAt: Int!
+  enabled: Boolean!
+  settings: String!
+  addressLists: [AddressList!]!
+}
+
+type AllowedAssetsForRedemptionPolicy implements Policy @entity {
+  id: ID!
+  policy: Bytes!
+  type: PolicyType!
+  comptroller: Comptroller!
+  createdAt: Int!
+  enabled: Boolean!
+  settings: String!
+  addressLists: [AddressList!]!
 }
 
 type AllowedDepositRecipientsPolicy implements Policy @entity {
   id: ID!
   policy: Bytes!
+  type: PolicyType!
   comptroller: Comptroller!
   createdAt: Int!
   enabled: Boolean!
   settings: String!
-  accounts: [Bytes!]!
+  addressLists: [AddressList!]!
+}
+
+type AllowedExternalPositionTypesPolicy implements Policy @entity {
+  id: ID!
+  policy: Bytes!
+  type: PolicyType!
+  comptroller: Comptroller!
+  createdAt: Int!
+  enabled: Boolean!
+  settings: String!
+  externalPositionTypes: [Int!]!
+}
+
+type AllowedSharesTransferRecipientsPolicy implements Policy @entity {
+  id: ID!
+  policy: Bytes!
+  type: PolicyType!
+  comptroller: Comptroller!
+  createdAt: Int!
+  enabled: Boolean!
+  settings: String!
+  addressLists: [AddressList!]!
 }
 
 type AssetBlacklistPolicy implements Policy @entity {
   id: ID!
   policy: Bytes!
+  type: PolicyType!
   comptroller: Comptroller!
   createdAt: Int!
   enabled: Boolean!
@@ -443,6 +514,7 @@ type AssetBlacklistPolicy implements Policy @entity {
 type AssetWhitelistPolicy implements Policy @entity {
   id: ID!
   policy: Bytes!
+  type: PolicyType!
   comptroller: Comptroller!
   createdAt: Int!
   enabled: Boolean!
@@ -453,6 +525,7 @@ type AssetWhitelistPolicy implements Policy @entity {
 type BuySharesCallerWhitelistPolicy implements Policy @entity {
   id: ID!
   policy: Bytes!
+  type: PolicyType!
   comptroller: Comptroller!
   createdAt: Int!
   enabled: Boolean!
@@ -461,20 +534,23 @@ type BuySharesCallerWhitelistPolicy implements Policy @entity {
   updatedAt: Int!
 }
 
-type GuaranteedRedemptionPolicy implements Policy @entity {
+type CumulativeSlippageTolerancePolicy implements Policy @entity {
   id: ID!
   policy: Bytes!
+  type: PolicyType!
   comptroller: Comptroller!
   createdAt: Int!
   enabled: Boolean!
   settings: String!
-  startTimestamp: Int!
-  duration: Int!
+  tolerance: BigDecimal!
+  cumulativeSlippage: BigDecimal!
+  lastSlippageTimestamp: Int!
 }
 
 type DepositorWhitelistPolicy implements Policy @entity {
   id: ID!
   policy: Bytes!
+  type: PolicyType!
   comptroller: Comptroller!
   createdAt: Int!
   enabled: Boolean!
@@ -483,9 +559,22 @@ type DepositorWhitelistPolicy implements Policy @entity {
   updatedAt: Int!
 }
 
+type GuaranteedRedemptionPolicy implements Policy @entity {
+  id: ID!
+  policy: Bytes!
+  type: PolicyType!
+  comptroller: Comptroller!
+  createdAt: Int!
+  enabled: Boolean!
+  settings: String!
+  startTimestamp: Int!
+  duration: Int!
+}
+
 type MaxConcentrationPolicy implements Policy @entity {
   id: ID!
   policy: Bytes!
+  type: PolicyType!
   comptroller: Comptroller!
   createdAt: Int!
   enabled: Boolean!
@@ -496,6 +585,7 @@ type MaxConcentrationPolicy implements Policy @entity {
 type MinMaxDepositPolicy implements Policy @entity {
   id: ID!
   policy: Bytes!
+  type: PolicyType!
   comptroller: Comptroller!
   createdAt: Int!
   enabled: Boolean!
@@ -505,13 +595,66 @@ type MinMaxDepositPolicy implements Policy @entity {
   updatedAt: Int!
 }
 
-type UnknownPolicy implements Policy @entity {
+type OnlyUntrackDustOrPricelessAssetsPolicy implements Policy @entity {
   id: ID!
   policy: Bytes!
+  type: PolicyType!
   comptroller: Comptroller!
   createdAt: Int!
   enabled: Boolean!
   settings: String!
+}
+
+type UnknownPolicy implements Policy @entity {
+  id: ID!
+  policy: Bytes!
+  type: PolicyType!
+  comptroller: Comptroller!
+  createdAt: Int!
+  enabled: Boolean!
+  settings: String!
+}
+
+enum PolicyType {
+  AdapterBlacklist
+  AdapterWhitelist
+  AllowedAdapterIncomingAssets
+  AllowedAdapters
+  AllowedAssetsForRedemption
+  AllowedDepositRecipients
+  AllowedExternalPositionTypes
+  AllowedSharesTransferRecipients
+  AssetBlacklist
+  AssetWhitelist
+  BuySharesCallerWhitelist
+  CumulativeSlippageTolerance
+  DepositorWhitelist
+  GuaranteedRedemption
+  MaxConcentration
+  MinMaxDeposit
+  OnlyUntrackDustOrPricelessAssets
+  Unknown
+}
+
+#################################################
+# Address Lists (for various policies)
+#################################################
+
+type AddressList @entity {
+  id: ID!
+  createdAt: Int!
+  updatedAt: Int!
+  creator: Bytes!
+  owner: Bytes!
+  updateType: AddressListUpdateType!
+  items: [Bytes!]!
+}
+
+enum AddressListUpdateType {
+  None
+  AddOnly
+  RemoveOnly
+  AddAndRemove
 }
 
 #################################################

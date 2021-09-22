@@ -1,16 +1,8 @@
-import { arrayDiff, arrayUnique } from '@enzymefinance/subgraph-utils';
-import { Bytes } from '@graphprotocol/graph-ts';
 import { ensureAllowedDepositRecipientsPolicy } from '../../entities/AllowedDepositRecipientsPolicy';
-import { AddressesAdded, AddressesRemoved } from '../../generated/AllowedDepositRecipients4Contract';
+import { ListsSetForFund } from '../../generated/AllowedDepositRecipientsPolicy4Contract';
 
-export function handleAddressesAdded(event: AddressesAdded): void {
+export function handleListsSetForFund(event: ListsSetForFund): void {
   let policy = ensureAllowedDepositRecipientsPolicy(event.params.comptrollerProxy, event.address, event);
-  policy.accounts = arrayUnique<Bytes>(policy.accounts.concat(event.params.items as Bytes[]));
-  policy.save();
-}
-
-export function handleAddressesRemoved(event: AddressesRemoved): void {
-  let policy = ensureAllowedDepositRecipientsPolicy(event.params.comptrollerProxy, event.address, event);
-  policy.accounts = arrayDiff<Bytes>(policy.accounts, event.params.items as Bytes[]);
+  policy.addressLists = event.params.listIds.map<string>((listId) => listId.toString());
   policy.save();
 }

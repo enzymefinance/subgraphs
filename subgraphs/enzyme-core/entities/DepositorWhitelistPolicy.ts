@@ -16,6 +16,7 @@ export function ensureDepositorWhitelistPolicy(
 
   policy = new DepositorWhitelistPolicy(id);
   policy.policy = policyAddress;
+  policy.type = 'DepositorWhitelist';
   policy.comptroller = comptrollerAddress.toHex();
   policy.depositors = new Array<Bytes>();
   policy.createdAt = event.block.timestamp.toI32();

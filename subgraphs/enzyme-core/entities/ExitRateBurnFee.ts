@@ -16,6 +16,7 @@ export function ensureExitRateBurnFee(
 
   fee = new ExitRateBurnFee(id);
   fee.fee = feeAddress;
+  fee.type = 'ExitRateBurn';
   fee.comptroller = comptrollerAddress.toHex();
   fee.inKindRate = BigDecimal.fromString('0');
   fee.specificAssetsRate = BigDecimal.fromString('0');
