@@ -69,7 +69,7 @@ export function createOrUpdatePrimitiveRegistration(
   let registrationId = primitiveRegistrationId(assetAddress, releaseVersion);
   let registration = new PrimitiveRegistration(registrationId);
   registration.type = 'PRIMITIVE';
-  registration.quote = quoteCurrency == null ? (previous == null ? 'ETH' : previous.quote) : quoteCurrency;
+  registration.quote = (!quoteCurrency ? (!previous ? 'ETH' : previous.quote) : quoteCurrency) as string;
   registration.asset = assetAddress.toHex();
   registration.proxy = proxyAddress.toHex();
   registration.version = releaseVersion as i32;

@@ -21,11 +21,11 @@ export function updateForPrimitiveRegistration(
 ): void {
   let asset = getOrCreateAsset(Address.fromString(registration.asset), registration.version, event);
   // Skip the update if the given registration is not the active registration for this asset.
-  if (!isActiveRegistration(registration as Registration, asset)) {
+  if (!isActiveRegistration(changetype<Registration>(registration), asset)) {
     return;
   }
 
-  if (value == null) {
+  if (!value) {
     updateAssetPriceWithValueInterpreter(asset, registration.version, event);
   } else {
     updateAssetPrice(asset, value as BigDecimal, event);
@@ -35,7 +35,7 @@ export function updateForPrimitiveRegistration(
 export function updateForDerivativeRegistration(registration: DerivativeRegistration, event: ethereum.Event): void {
   let asset = getOrCreateAsset(Address.fromString(registration.asset), registration.version, event);
   // Skip the update if the given registration is not the active registration for this asset.
-  if (!isActiveRegistration(registration as Registration, asset)) {
+  if (!isActiveRegistration(changetype<Registration>(registration), asset)) {
     return;
   }
 
