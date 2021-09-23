@@ -45,6 +45,7 @@ export const abisV4 = [
   { name: 'PolicyManager', version: '4', file: './abis/v4/PolicyManager.json' },
   { name: 'ProtocolFeeReserveLib', version: '4', file: './abis/v4/ProtocolFeeReserveLib.json' },
   { name: 'ProtocolFeeTracker', version: '4', file: './abis/v4/ProtocolFeeTracker.json' },
+  { name: 'UnpermissionedActionsWrapper', version: '4', file: './abis/v4/UnpermissionedActionsWrapper.json' },
   { name: 'ValueInterpreter', version: '4', file: './abis/v4/ValueInterpreter.json' },
   { name: 'VaultLib', version: '4', file: './abis/v4/VaultLib.json' },
 ];

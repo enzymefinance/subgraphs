@@ -1,8 +1,6 @@
-import { logCritical, toBigDecimal } from '@enzymefinance/subgraph-utils';
-import { Address, BigDecimal, BigInt, ethereum } from '@graphprotocol/graph-ts';
-import { ERC20Contract } from '../generated/ERC20Contract';
+import { logCritical } from '@enzymefinance/subgraph-utils';
+import { Address, BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 import { Account, Comptroller, Release, Vault } from '../generated/schema';
-import { trackTotalSupplyMetric } from './Metric';
 
 export function createVault(
   address: Address,
@@ -37,22 +35,4 @@ export function useVault(id: string): Vault {
   }
 
   return vault;
-}
-
-export function trackVaultTotalSupply(vault: Vault, event: ethereum.Event): void {
-  let vaultAddress = Address.fromString(vault.id);
-
-  let vaultProxy = ERC20Contract.bind(vaultAddress);
-
-  let totalSupplyCall = vaultProxy.try_totalSupply();
-  if (totalSupplyCall.reverted) {
-    logCritical('totalSupply() reverted for vault{}', [vault.id]);
-  }
-
-  let totalSupply = toBigDecimal(totalSupplyCall.value);
-
-  vault.totalSupply = totalSupply;
-  vault.save();
-
-  trackTotalSupplyMetric(vaultAddress, totalSupply, event);
 }

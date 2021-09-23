@@ -1,8 +1,10 @@
 import { arrayDiff, arrayUnique, toBigDecimal, uniqueEventId, ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
 import { ensureAccount, ensureAssetManager, ensureDepositor, ensureOwner } from '../../entities/Account';
-import { ensureDeposit, trackDepositBalance } from '../../entities/Deposit';
+import { ensureDeposit } from '../../entities/Deposit';
+import { trackDepositMetric } from '../../entities/DepositMetric';
 import { useNetwork } from '../../entities/Network';
-import { trackVaultTotalSupply, useVault } from '../../entities/Vault';
+import { useVault } from '../../entities/Vault';
+import { trackVaultMetric } from '../../entities/VaultMetric';
 import {
   ProtocolFeeBurned,
   ProtocolFeePaid,
@@ -32,21 +34,16 @@ import {
 } from '../../generated/VaultLib4Contract';
 
 export function handleTransfer(event: Transfer): void {
-  let vault = useVault(event.address.toHex());
-  trackVaultTotalSupply(vault, event);
+  trackVaultMetric(event.address, event);
 
   // only track deposit balance if not zero address
   if (event.params.from.notEqual(ZERO_ADDRESS)) {
-    let fromInvestor = ensureDepositor(event.params.from, event);
-    let fromInvestment = ensureDeposit(fromInvestor, vault, event);
-    trackDepositBalance(vault, fromInvestment, event);
+    trackDepositMetric(event.address, event.params.from, event);
   }
 
   // only track deposit balance if not zero address
   if (event.params.to.notEqual(ZERO_ADDRESS)) {
-    let toInvestor = ensureDepositor(event.params.to, event);
-    let toInvestment = ensureDeposit(toInvestor, vault, event);
-    trackDepositBalance(vault, toInvestment, event);
+    trackDepositMetric(event.address, event.params.to, event);
   }
 
   if (
@@ -61,6 +58,7 @@ export function handleTransfer(event: Transfer): void {
     return;
   }
 
+  let vault = useVault(event.address.toHex());
   let shares = toBigDecimal(event.params.value);
 
   let fromInvestor = ensureDepositor(event.params.from, event);
@@ -159,6 +157,8 @@ export function handleTrackedAssetAdded(event: TrackedAssetAdded): void {
   let vault = useVault(event.address.toHex());
   vault.trackedAssets = arrayUnique<string>(vault.trackedAssets.concat([trackedAsset.id]));
   vault.save();
+
+  trackVaultMetric(event.address, event);
 }
 
 export function handleTrackedAssetRemoved(event: TrackedAssetRemoved): void {
@@ -167,6 +167,8 @@ export function handleTrackedAssetRemoved(event: TrackedAssetRemoved): void {
   let vault = useVault(event.address.toHex());
   vault.trackedAssets = arrayDiff<string>(vault.trackedAssets, [trackedAsset.id]);
   vault.save();
+
+  trackVaultMetric(event.address, event);
 }
 
 export function handleProtocolFeePaidInShares(event: ProtocolFeePaidInShares): void {

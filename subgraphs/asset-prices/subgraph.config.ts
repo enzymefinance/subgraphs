@@ -88,8 +88,8 @@ const kovan: Variables = {
     // // TODO: Add v4 contracts.
   },
   testnetConfiguration: {
-    treasuryController: '0x50765658E2cFFBF4196D9fdA114c917953e5cCc9',
-    treasuryControllerBlock: 27096029,
+    treasuryController: '0xd5590aE02a9bD0011d15FdFea75b808A227bC383',
+    treasuryControllerBlock: 27217130,
   },
   currencyAggregatorProxies: {
     USD: '0x9326BFA02ADD2366b30bacB125260Af641031331',

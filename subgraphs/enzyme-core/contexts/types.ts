@@ -1,51 +1,53 @@
 export interface Release2Addresses {
-  fundDeployerAddress: string;
-  vaultLibAddress: string;
-  comptrollerLibAddress: string;
-  valueInterpreterAddress: string;
-  integrationManagerAddress: string;
-  policyManagerAddress: string;
-  feeManagerAddress: string;
-  aggregatedDerivativePriceFeedAddress: string;
-  chainlinkPriceFeedAddress: string;
-  managementFeeAddress: string;
-  performanceFeeAddress: string;
-  entranceRateBurnFeeAddress: string;
-  entranceRateDirectFeeAddress: string;
   adapterBlacklistAddress: string;
   adapterWhitelistAddress: string;
+  aggregatedDerivativePriceFeedAddress: string;
   assetBlacklistAddress: string;
   assetWhitelistAddress: string;
-  investorWhitelistAddress: string;
+  buySharesCallerWhitelistAddress: string;
+  chainlinkPriceFeedAddress: string;
+  comptrollerLibAddress: string;
+  entranceRateBurnFeeAddress: string;
+  entranceRateDirectFeeAddress: string;
+  feeManagerAddress: string;
+  fundActionsWrapperAddress: string;
+  fundDeployerAddress: string;
   guaranteedRedemptionAddress: string;
+  integrationManagerAddress: string;
+  investorWhitelistAddress: string;
+  managementFeeAddress: string;
   maxConcentrationAddress: string;
   minMaxInvestmentAddress: string;
-  buySharesCallerWhitelistAddress: string;
+  performanceFeeAddress: string;
+  policyManagerAddress: string;
+  valueInterpreterAddress: string;
+  vaultLibAddress: string;
 }
 
 export interface Release3Addresses {
-  fundDeployerAddress: string;
-  vaultLibAddress: string;
-  comptrollerLibAddress: string;
-  valueInterpreterAddress: string;
-  integrationManagerAddress: string;
-  policyManagerAddress: string;
-  feeManagerAddress: string;
-  aggregatedDerivativePriceFeedAddress: string;
-  chainlinkPriceFeedAddress: string;
-  managementFeeAddress: string;
-  performanceFeeAddress: string;
-  entranceRateBurnFeeAddress: string;
-  entranceRateDirectFeeAddress: string;
   adapterBlacklistAddress: string;
   adapterWhitelistAddress: string;
+  aggregatedDerivativePriceFeedAddress: string;
   assetBlacklistAddress: string;
   assetWhitelistAddress: string;
-  investorWhitelistAddress: string;
+  buySharesCallerWhitelistAddress: string;
+  chainlinkPriceFeedAddress: string;
+  comptrollerLibAddress: string;
+  entranceRateBurnFeeAddress: string;
+  entranceRateDirectFeeAddress: string;
+  feeManagerAddress: string;
+  fundActionsWrapperAddress: string;
+  fundDeployerAddress: string;
   guaranteedRedemptionAddress: string;
+  integrationManagerAddress: string;
+  investorWhitelistAddress: string;
+  managementFeeAddress: string;
   maxConcentrationAddress: string;
   minMaxInvestmentAddress: string;
-  buySharesCallerWhitelistAddress: string;
+  performanceFeeAddress: string;
+  policyManagerAddress: string;
+  valueInterpreterAddress: string;
+  vaultLibAddress: string;
 }
 
 export interface Release4Addresses {
@@ -77,6 +79,7 @@ export interface Release4Addresses {
   policyManagerAddress: string;
   protocolFeeReserveLibAddress: string;
   protocolFeeTrackerAddress: string;
+  unpermissionedActionsWrapperAddress: string;
   valueInterpreterAddress: string;
   vaultLibAddress: string;
 }

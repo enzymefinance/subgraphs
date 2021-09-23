@@ -1,8 +1,9 @@
 import { arrayDiff, arrayUnique, ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
-import { ensureDepositor, ensureOwner } from '../../entities/Account';
+import { ensureOwner } from '../../entities/Account';
 import { ensureAsset } from '../../entities/Asset';
-import { ensureDeposit, trackDepositBalance } from '../../entities/Deposit';
-import { trackVaultTotalSupply, useVault } from '../../entities/Vault';
+import { trackDepositMetric } from '../../entities/DepositMetric';
+import { useVault } from '../../entities/Vault';
+import { trackVaultMetric } from '../../entities/VaultMetric';
 import {
   AccessorSet,
   Approval,
@@ -43,6 +44,8 @@ export function handleTrackedAssetAdded(event: TrackedAssetAdded): void {
 
   vault.trackedAssets = arrayUnique<string>(vault.trackedAssets.concat([asset.id]));
   vault.save();
+
+  trackVaultMetric(event.address, event);
 }
 
 export function handleTrackedAssetRemoved(event: TrackedAssetRemoved): void {
@@ -51,6 +54,8 @@ export function handleTrackedAssetRemoved(event: TrackedAssetRemoved): void {
 
   vault.trackedAssets = arrayDiff<string>(vault.trackedAssets, [asset.id]);
   vault.save();
+
+  trackVaultMetric(event.address, event);
 }
 
 export function handleVaultLibSet(event: VaultLibSet): void {}
@@ -58,18 +63,13 @@ export function handleVaultLibSet(event: VaultLibSet): void {}
 export function handleApproval(event: Approval): void {}
 
 export function handleTransfer(event: Transfer): void {
-  let vault = useVault(event.address.toHex());
-  trackVaultTotalSupply(vault, event);
+  trackVaultMetric(event.address, event);
 
   if (event.params.from.notEqual(ZERO_ADDRESS)) {
-    let fromInvestor = ensureDepositor(event.params.from, event);
-    let fromInvestment = ensureDeposit(fromInvestor, vault, event);
-    trackDepositBalance(vault, fromInvestment, event);
+    trackDepositMetric(event.address, event.params.from, event);
   }
 
   if (event.params.to.notEqual(ZERO_ADDRESS)) {
-    let toInvestor = ensureDepositor(event.params.to, event);
-    let toInvestment = ensureDeposit(toInvestor, vault, event);
-    trackDepositBalance(vault, toInvestment, event);
+    trackDepositMetric(event.address, event.params.to, event);
   }
 }

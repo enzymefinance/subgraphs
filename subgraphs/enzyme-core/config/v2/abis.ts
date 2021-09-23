@@ -10,6 +10,7 @@ export const abisV2 = [
   { name: 'EntranceRateBurnFee', version: '2', file: './abis/v2/EntranceRateBurnFee.json' },
   { name: 'EntranceRateDirectFee', version: '2', file: './abis/v2/EntranceRateDirectFee.json' },
   { name: 'FeeManager', version: '2', file: './abis/v2/FeeManager.json' },
+  { name: 'FundActionsWrapper', version: '2', file: './abis/v2/FundActionsWrapper.json' },
   { name: 'FundDeployer', version: '2', file: './abis/v2/FundDeployer.json' },
   { name: 'GuaranteedRedemption', version: '2', file: './abis/v2/GuaranteedRedemption.json' },
   { name: 'IntegrationManager', version: '2', file: './abis/v2/IntegrationManager.json' },

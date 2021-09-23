@@ -832,57 +832,29 @@ type CompoundDebtPositionChange @entity {
 
 type MetricCounter @entity {
   id: ID!
-  counter: Int!
+  vaultMetricCounter: Int!
+  depositMetricCounter: Int!
 }
 
-interface Metric {
+type VaultMetric @entity {
   id: ID!
   counter: Int!
   timestamp: Int!
-  type: MetricType!
   vault: Bytes!
+  nav: BigDecimal!
+  navReverted: Boolean!
+  gav: BigDecimal!
+  gavReverted: Boolean!
+  totalSupply: BigDecimal!
+  sharePrice: BigDecimal!
+  denominationAsset: Bytes!
 }
 
-type BalanceOfMetric implements Metric @entity {
+type DepositMetric @entity {
   id: ID!
   counter: Int!
   timestamp: Int!
-  type: MetricType!
   vault: Bytes!
   depositor: Bytes!
   balance: BigDecimal!
-}
-
-type TotalSupplyMetric implements Metric @entity {
-  id: ID!
-  counter: Int!
-  timestamp: Int!
-  type: MetricType!
-  vault: Bytes!
-  totalSupply: BigDecimal!
-}
-
-type VaultOwnerMetric implements Metric @entity {
-  id: ID!
-  counter: Int!
-  timestamp: Int!
-  type: MetricType!
-  vault: Bytes!
-  owner: Bytes!
-}
-
-type VaultAssetManagersMetric implements Metric @entity {
-  id: ID!
-  counter: Int!
-  timestamp: Int!
-  type: MetricType!
-  vault: Bytes!
-  assetManagers: [Bytes!]!
-}
-
-enum MetricType {
-  balanceOf
-  totalSupply
-  vaultOwner
-  assetManagers
 }
