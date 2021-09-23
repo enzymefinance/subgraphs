@@ -1,7 +1,7 @@
 import { toBigDecimal } from '@enzymefinance/subgraph-utils';
 import { BigDecimal, ethereum } from '@graphprotocol/graph-ts';
 import { chainlinkAggregatorAddresses } from '../generated/addresses';
-import { IChainlinkAggregatorContract } from '../generated/IChainlinkAggregatorContract';
+import { ProtocolSdk } from '../generated/contracts/ProtocolSdk';
 import { CurrencyPrice } from '../generated/schema';
 import { aggregatorAddressForCurrency } from '../utils/aggregatorAddresses';
 
@@ -11,7 +11,7 @@ export function currencyPriceId(event: ethereum.Event): string {
 
 export function ensureCurrencyPrice(event: ethereum.Event): CurrencyPrice {
   let id = currencyPriceId(event);
-  let currencyValue = CurrencyPrice.load(id) as CurrencyPrice;
+  let currencyValue = CurrencyPrice.load(id);
   if (currencyValue) {
     return currencyValue;
   }
@@ -42,7 +42,7 @@ export function ensureCurrencyPrice(event: ethereum.Event): CurrencyPrice {
 }
 
 function getLatestEthUsdPrice(): BigDecimal {
-  let aggregator = IChainlinkAggregatorContract.bind(chainlinkAggregatorAddresses.ethUsdAddress);
+  let aggregator = ProtocolSdk.bind(chainlinkAggregatorAddresses.ethUsdAddress);
   let latestAnswer = aggregator.try_latestAnswer();
 
   if (latestAnswer.reverted) {
@@ -55,7 +55,7 @@ function getLatestEthUsdPrice(): BigDecimal {
 }
 
 function getLatestCurrencyPrice(currency: string): BigDecimal {
-  let aggregator = IChainlinkAggregatorContract.bind(aggregatorAddressForCurrency(currency));
+  let aggregator = ProtocolSdk.bind(aggregatorAddressForCurrency(currency));
   let latestAnswer = aggregator.try_latestAnswer();
 
   if (latestAnswer.reverted) {
@@ -68,7 +68,7 @@ function getLatestCurrencyPrice(currency: string): BigDecimal {
 }
 
 function getLatestBtcEthPrice(): BigDecimal {
-  let aggregator = IChainlinkAggregatorContract.bind(chainlinkAggregatorAddresses.btcEthAddress);
+  let aggregator = ProtocolSdk.bind(chainlinkAggregatorAddresses.btcEthAddress);
   let latestAnswer = aggregator.try_latestAnswer();
 
   if (latestAnswer.reverted) {

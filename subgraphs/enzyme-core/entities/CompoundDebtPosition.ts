@@ -1,18 +1,18 @@
 import { logCritical, toBigDecimal, uniqueEventId } from '@enzymefinance/subgraph-utils';
 import { Address, BigDecimal, ethereum } from '@graphprotocol/graph-ts';
-import { CompoundDebtPositionLib4Contract } from '../generated/CompoundDebtPositionLib4Contract';
+import { ProtocolSdk } from '../generated/contracts/ProtocolSdk';
 import { Asset, CompoundDebtPosition, CompoundDebtPositionChange } from '../generated/schema';
 import { ensureAsset } from './Asset';
 import { createAssetAmount } from './AssetAmount';
 import { useVault } from './Vault';
 
 export function useCompoundDebtPosition(id: string): CompoundDebtPosition {
-  let cdp = CompoundDebtPosition.load(id) as CompoundDebtPosition;
+  let cdp = CompoundDebtPosition.load(id);
   if (cdp == null) {
     logCritical('Failed to load fund {}.', [id]);
   }
 
-  return cdp;
+  return cdp as CompoundDebtPosition;
 }
 
 export function createCompoundDebtPosition(
@@ -51,7 +51,7 @@ export function createCompoundDebtPositionChange(
 }
 
 export function trackCompoundDebtPositionAssets(id: string, denominationAsset: Asset, event: ethereum.Event): void {
-  let cdpContract = CompoundDebtPositionLib4Contract.bind(Address.fromString(id));
+  let cdpContract = ProtocolSdk.bind(Address.fromString(id));
 
   let collateral = cdpContract.getManagedAssets();
   let collateralAssetAmounts = new Array<string>();

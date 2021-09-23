@@ -3,7 +3,7 @@ import {
   DerivativeAdded,
   DerivativeRemoved,
   DerivativeUpdated,
-} from '../../generated/AggregatedDerivativePriceFeed2Contract';
+} from '../../generated/contracts/AggregatedDerivativePriceFeed2Events';
 
 export function handleDerivativeAdded(event: DerivativeAdded): void {
   ensureAsset(event.params.derivative);

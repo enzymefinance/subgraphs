@@ -5,7 +5,7 @@ import {
   FundSettingsAdded,
   RecipientSetForFund,
   Settled,
-} from '../../generated/ManagementFee4Contract';
+} from '../../generated/contracts/ManagementFee4Events';
 
 export function handleActivatedForMigratedFund(event: ActivatedForMigratedFund): void {
   let fee = ensureManagementFee(event.params.comptrollerProxy, event.address, event);

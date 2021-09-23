@@ -8,7 +8,7 @@ export function ensureAllowedAdapterIncomingAssetsPolicy(
   event: ethereum.Event,
 ): AllowedAdapterIncomingAssetsPolicy {
   let id = policyId(comptrollerAddress, policyAddress);
-  let policy = AllowedAdapterIncomingAssetsPolicy.load(id) as AllowedAdapterIncomingAssetsPolicy;
+  let policy = AllowedAdapterIncomingAssetsPolicy.load(id);
 
   if (policy) {
     return policy;

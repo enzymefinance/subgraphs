@@ -5,7 +5,7 @@ import {
   FundSettingsSet,
   PricelessAssetBypassed,
   PricelessAssetTimelockStarted,
-} from '../../generated/CumulativeSlippageTolerancePolicy4Contract';
+} from '../../generated/contracts/CumulativeSlippageTolerancePolicy4Events';
 
 export function handleCumulativeSlippageUpdatedForFund(event: CumulativeSlippageUpdatedForFund): void {
   let policy = ensureCumulativeSlippageTolerancePolicy(event.params.comptrollerProxy, event.address, event);

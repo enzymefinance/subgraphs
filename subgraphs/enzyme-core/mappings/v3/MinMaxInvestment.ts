@@ -1,11 +1,11 @@
 import { toBigDecimal } from '@enzymefinance/subgraph-utils';
 import { ensureAsset } from '../../entities/Asset';
 import { ensureMinMaxDepositPolicy } from '../../entities/MinMaxDepositPolicy';
-import { ComptrollerLib3Contract } from '../../generated/ComptrollerLib3Contract';
-import { FundSettingsSet } from '../../generated/MinMaxInvestment3Contract';
+import { ProtocolSdk } from '../../generated/contracts/ProtocolSdk';
+import { FundSettingsSet } from '../../generated/contracts/MinMaxInvestment3Events';
 
 export function handleFundSettingsSet(event: FundSettingsSet): void {
-  let comptroller = ComptrollerLib3Contract.bind(event.params.comptrollerProxy);
+  let comptroller = ProtocolSdk.bind(event.params.comptrollerProxy);
   let denominationAsset = ensureAsset(comptroller.getDenominationAsset());
   let minDepositAmount = toBigDecimal(event.params.minInvestmentAmount, denominationAsset.decimals);
   let maxDepositAmount = toBigDecimal(event.params.maxInvestmentAmount, denominationAsset.decimals);

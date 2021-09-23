@@ -1,4 +1,10 @@
-import { Configurator, Contexts } from '@enzymefinance/subgraph-cli';
+import {
+  Configurator,
+  Contexts,
+  DataSourceTemplateUserDeclaration,
+  DataSourceUserDeclaration,
+  SdkUserDeclaration,
+} from '@enzymefinance/subgraph-cli';
 
 interface Variables {
   dispatcher: string;
@@ -35,29 +41,37 @@ export const contexts: Contexts<Variables> = {
   },
 };
 
-export const configure: Configurator<Variables> = (variables) => ({
-  abis: ['./abis/Dispatcher.json', './abis/Vault.json'],
-  sources: [
+export const configure: Configurator<Variables> = (variables) => {
+  const sdks: SdkUserDeclaration[] = [
+    {
+      name: 'ERC20',
+      abis: {
+        ERC20: 'abis/ERC20.json',
+      },
+      functions: (abis) => [abis.ERC20.getFunction('balanceOf'), abis.ERC20.getFunction('decimals')],
+    },
+  ];
+
+  const sources: DataSourceUserDeclaration[] = [
     {
       name: 'Dispatcher',
       block: variables.start,
       address: variables.dispatcher,
-      events: [
-        'VaultProxyDeployed(indexed address,indexed address,address,indexed address,address,string)',
-        'MigrationExecuted(indexed address,indexed address,indexed address,address,address,uint256)',
-      ],
+      events: (abi) => [abi.getEvent('VaultProxyDeployed'), abi.getEvent('MigrationExecuted')],
     },
     {
-      name: 'Asset',
-      abi: 'ERC20Contract', // Inherited from global abis.
+      name: 'ERC20',
       block: variables.start,
-      events: ['Transfer(indexed address,indexed address,uint256)'],
+      events: (abi) => [abi.getEvent('Transfer')],
     },
-  ],
-  templates: [
+  ];
+
+  const templates: DataSourceTemplateUserDeclaration[] = [
     {
       name: 'Vault',
-      events: ['TrackedAssetAdded(address)', 'TrackedAssetRemoved(address)'],
+      events: (abi) => [abi.getEvent('TrackedAssetAdded'), abi.getEvent('TrackedAssetRemoved')],
     },
-  ],
-});
+  ];
+
+  return { sdks, sources, templates };
+};

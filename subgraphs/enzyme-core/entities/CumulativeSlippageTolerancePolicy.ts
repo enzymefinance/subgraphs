@@ -8,7 +8,7 @@ export function ensureCumulativeSlippageTolerancePolicy(
   event: ethereum.Event,
 ): CumulativeSlippageTolerancePolicy {
   let id = policyId(comptrollerAddress, policyAddress);
-  let policy = CumulativeSlippageTolerancePolicy.load(id) as CumulativeSlippageTolerancePolicy;
+  let policy = CumulativeSlippageTolerancePolicy.load(id);
 
   if (policy) {
     return policy;

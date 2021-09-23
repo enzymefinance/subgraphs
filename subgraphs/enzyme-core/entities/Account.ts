@@ -3,7 +3,7 @@ import { Account } from '../generated/schema';
 import { trackNetworkDepositors, trackNetworkManagers } from './Network';
 
 export function ensureAccount(accountAddress: Address, event: ethereum.Event): Account {
-  let account = Account.load(accountAddress.toHex()) as Account;
+  let account = Account.load(accountAddress.toHex());
 
   if (account) {
     return account;

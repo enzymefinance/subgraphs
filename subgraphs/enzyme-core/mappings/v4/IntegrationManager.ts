@@ -6,7 +6,7 @@ import { ensureComptroller } from '../../entities/Comptroller';
 import { trackTrade } from '../../entities/Trade';
 import { useVault } from '../../entities/Vault';
 import { trackVaultMetric } from '../../entities/VaultMetric';
-import { CallOnIntegrationExecutedForFund } from '../../generated/IntegrationManager4Contract';
+import { CallOnIntegrationExecutedForFund } from '../../generated/contracts/IntegrationManager4Events';
 import { Asset, AssetAmount } from '../../generated/schema';
 
 export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationExecutedForFund): void {
@@ -15,8 +15,7 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
     return;
   }
 
-  let vault = useVault(comptroller.vault);
-
+  let vault = useVault(comptroller.vault as string);
   let integrationSelector = event.params.selector.toHexString();
 
   let denominationAsset = ensureAsset(Address.fromString(comptroller.denomination));

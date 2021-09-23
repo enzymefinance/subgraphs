@@ -8,7 +8,7 @@ export function ensureAllowedDepositRecipientsPolicy(
   event: ethereum.Event,
 ): AllowedDepositRecipientsPolicy {
   let id = policyId(comptrollerAddress, policyAddress);
-  let policy = AllowedDepositRecipientsPolicy.load(id) as AllowedDepositRecipientsPolicy;
+  let policy = AllowedDepositRecipientsPolicy.load(id);
 
   if (policy) {
     return policy;

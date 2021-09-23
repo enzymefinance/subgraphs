@@ -3,17 +3,17 @@ import { Address, BigDecimal } from '@graphprotocol/graph-ts';
 import { ensureAsset } from '../../entities/Asset';
 import { ensureComptroller } from '../../entities/Comptroller';
 import { ensurePerformanceFee } from '../../entities/PerformanceFee';
-import { ComptrollerLib2Contract } from '../../generated/ComptrollerLib2Contract';
+import { ProtocolSdk } from '../../generated/contracts/ProtocolSdk';
 import {
   ActivatedForFund,
   FundSettingsAdded,
   LastSharePriceUpdated,
   PaidOut,
   PerformanceUpdated,
-} from '../../generated/PerformanceFee2Contract';
+} from '../../generated/contracts/PerformanceFee2Events';
 
 export function handleActivatedForFund(event: ActivatedForFund): void {
-  let comptroller = ComptrollerLib2Contract.bind(event.params.comptrollerProxy);
+  let comptroller = ProtocolSdk.bind(event.params.comptrollerProxy);
   let denominationAsset = ensureAsset(comptroller.getDenominationAsset());
 
   let fee = ensurePerformanceFee(event.params.comptrollerProxy, event.address, event);

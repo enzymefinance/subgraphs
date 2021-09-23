@@ -1,10 +1,17 @@
-import { Configurator, Context, Contexts, Environment, ManifestValues, Template } from '@enzymefinance/subgraph-cli';
+import type {
+  Configurator,
+  Context,
+  Contexts,
+  Environment,
+  ManifestValues,
+  Template,
+} from '@enzymefinance/subgraph-cli';
 import fs from 'fs';
 import glob from 'glob';
 import handlebars from 'handlebars';
 import path from 'path';
 import yargs from 'yargs';
-import { abi, source, template } from './utils';
+import { formatEventJson, formatFunctionJson, sdkDeclaration, sourceDeclaration, templateDeclaration } from './utils';
 
 const graph = require('@graphprotocol/graph-cli/src/cli').run as (args?: string[]) => Promise<void>;
 const root = path.join(__dirname, '..');
@@ -34,25 +41,19 @@ class SubgraphLoader<TVariables = any> {
     }
 
     const configuration = this.configure(context.variables);
-    const abis = [
-      '@enzymefinance/subgraph-utils/abis/ERC20.json',
-      '@enzymefinance/subgraph-utils/abis/ERC20NameBytes.json',
-      '@enzymefinance/subgraph-utils/abis/ERC20SymbolBytes.json',
-    ];
 
     const manifest: ManifestValues = {
       network: context.network,
       sources: [],
-      abis: [],
     };
 
     manifest.network = context.network;
-    manifest.abis = [...(configuration.abis ?? []), ...abis]
-      .map((item) => abi(item, this.root))
-      .filter((item, index, array) => array.findIndex((inner) => inner.name === item.name) === index);
+    manifest.sources = configuration.sources
+      .map((item) => sourceDeclaration(item, this.root))
+      .filter((item) => item.address !== '0x0000000000000000000000000000000000000000');
 
-    manifest.sources = configuration.sources.map((item) => source(item));
-    manifest.templates = configuration.templates?.map((item) => template(item));
+    manifest.templates = configuration.templates?.map((item) => templateDeclaration(item, this.root));
+    manifest.sdks = configuration.sdks?.map((item) => sdkDeclaration(item, this.root));
 
     const environment: Environment<TVariables> = {
       name: context.name,
@@ -86,23 +87,59 @@ class Subgraph<TVariables = any> {
     fs.writeFileSync(outputFile, replaced);
   }
 
-  public async generateCode() {
-    await graph(['codegen', '--skip-migrations', 'true']);
+  public async generateAbis() {
+    this.environment.manifest.sources.forEach((source) => {
+      const formattedFragments = source.events.map((event) => formatEventJson(event.fragment));
+      const jsonOutput = JSON.stringify(formattedFragments, undefined, 2);
+      const outputFile = path.join(this.root, source.abi.file);
+      const outputDir = path.dirname(outputFile);
+      if (!fs.existsSync(outputDir)) {
+        fs.mkdirSync(outputDir, { recursive: true });
+      }
 
-    const cwd = path.resolve(this.root, 'generated');
-    const globbed = glob.sync('**/*', {
-      cwd,
-      absolute: true,
+      fs.writeFileSync(outputFile, jsonOutput);
     });
 
-    const files = globbed.filter((item) => fs.statSync(item).isFile());
+    this.environment.manifest.templates?.forEach((template) => {
+      const formattedFragments = template.events.map((event) => formatEventJson(event.fragment));
+      const jsonOutput = JSON.stringify(formattedFragments, undefined, 2);
+      const outputFile = path.join(this.root, template.abi.file);
+      const outputDir = path.dirname(outputFile);
+      if (!fs.existsSync(outputDir)) {
+        fs.mkdirSync(outputDir, { recursive: true });
+      }
 
-    // Filter out child directories.
+      fs.writeFileSync(outputFile, jsonOutput);
+    });
+
+    this.environment.manifest.sdks?.forEach((sdk) => {
+      const formattedFragments = sdk.functions.map((fn) => formatFunctionJson(fn));
+      const jsonOutput = JSON.stringify(formattedFragments, undefined, 2);
+      const outputFile = path.join(this.root, sdk.file);
+      const outputDir = path.dirname(outputFile);
+      if (!fs.existsSync(outputDir)) {
+        fs.mkdirSync(outputDir, { recursive: true });
+      }
+
+      fs.writeFileSync(outputFile, jsonOutput);
+    });
+  }
+
+  public async generateCode() {
+    const generatedDir = path.join(this.root, 'generated');
+    const outputDir = path.join(generatedDir, 'contracts');
+    await graph(['codegen', '--skip-migrations', 'true', '--output-dir', outputDir]);
+
+    fs.renameSync(path.join(outputDir, 'schema.ts'), path.join(generatedDir, 'schema.ts'));
+    fs.renameSync(path.join(outputDir, 'templates.ts'), path.join(generatedDir, 'templates.ts'));
+
+    const globbed = glob.sync('**/*', { cwd: outputDir, absolute: true });
+    const files = globbed.filter((item) => fs.statSync(item).isFile());
     const directories = globbed
       .filter((item) => fs.statSync(item).isDirectory())
       .filter((outer, _, array) => !array.some((inner) => inner !== outer && outer.startsWith(inner)));
 
-    files.forEach((item) => fs.renameSync(item, path.join(cwd, path.basename(item))));
+    files.forEach((item) => fs.renameSync(item, path.join(outputDir, path.basename(item))));
     directories.forEach((item) => fs.rmSync(item, { recursive: true }));
 
     this.templates.forEach((template) => {
@@ -192,6 +229,9 @@ yargs
     'Generate the subgraph manifest and code.',
     () => {},
     async ({ subgraph }) => {
+      console.log('Generating event abis');
+      await subgraph.generateAbis();
+
       console.log('Generating subgraph manifest');
       await subgraph.generateManifest();
 
@@ -204,12 +244,6 @@ yargs
     'Compile the subgraph code into the wasm runtimes.',
     () => {},
     async ({ subgraph }) => {
-      // console.log('Generating subgraph manifest');
-      // await subgraph.generateManifest();
-
-      // console.log('Generating code');
-      // await subgraph.generateCode();
-
       console.log('Generating code');
       await subgraph.buildSubgraph();
     },
@@ -219,12 +253,6 @@ yargs
     'Deploy the subgraph.',
     () => {},
     async ({ subgraph }) => {
-      // console.log('Generating subgraph manifest');
-      // await subgraph.generateManifest();
-
-      // console.log('Generating code');
-      // await subgraph.generateCode();
-
       console.log('Deploying subgraph');
       await subgraph.createSubgraph();
       await subgraph.deploySubgraph();

@@ -8,7 +8,7 @@ export function ensureBuySharesCallerWhitelistPolicy(
   event: ethereum.Event,
 ): BuySharesCallerWhitelistPolicy {
   let id = policyId(comptrollerAddress, policyAddress);
-  let policy = BuySharesCallerWhitelistPolicy.load(id) as BuySharesCallerWhitelistPolicy;
+  let policy = BuySharesCallerWhitelistPolicy.load(id);
 
   if (policy) {
     return policy;

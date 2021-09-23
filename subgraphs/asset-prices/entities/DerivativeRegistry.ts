@@ -3,7 +3,7 @@ import { DerivativeRegistry, Asset } from '../generated/schema';
 import { AssetRegistration } from './Registration';
 
 export function getOrCreateDerivativeRegistry(): DerivativeRegistry {
-  let registry = DerivativeRegistry.load('REGISTRY') as DerivativeRegistry;
+  let registry = DerivativeRegistry.load('REGISTRY');
   if (registry == null) {
     registry = new DerivativeRegistry('REGISTRY');
     registry.assets = [];

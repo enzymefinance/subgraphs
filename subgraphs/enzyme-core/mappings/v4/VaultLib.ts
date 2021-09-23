@@ -31,7 +31,7 @@ import {
   TrackedAssetRemoved,
   Transfer,
   VaultLibSet,
-} from '../../generated/VaultLib4Contract';
+} from '../../generated/contracts/VaultLib4Events';
 
 export function handleTransfer(event: Transfer): void {
   trackVaultMetric(event.address, event);

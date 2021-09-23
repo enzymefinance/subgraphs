@@ -1,4 +1,4 @@
-import { Address, BigDecimal, BigInt, Bytes } from '@graphprotocol/graph-ts';
+import { Address, BigInt, Bytes } from '@graphprotocol/graph-ts';
 
 export let ZERO_ADDRESS = Address.fromString('0x0000000000000000000000000000000000000000');
 export let ZERO_HASH = Bytes.fromHexString('0x0000000000000000000000000000000000000000000000000000000000000000');

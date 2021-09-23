@@ -8,7 +8,7 @@ export function ensureAdapterBlacklistPolicy(
   event: ethereum.Event,
 ): AdapterBlacklistPolicy {
   let id = policyId(comptrollerAddress, policyAddress);
-  let policy = AdapterBlacklistPolicy.load(id) as AdapterBlacklistPolicy;
+  let policy = AdapterBlacklistPolicy.load(id);
 
   if (policy) {
     return policy;

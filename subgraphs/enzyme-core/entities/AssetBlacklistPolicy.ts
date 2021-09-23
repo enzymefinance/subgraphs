@@ -8,7 +8,7 @@ export function ensureAssetBlacklistPolicy(
   event: ethereum.Event,
 ): AssetBlacklistPolicy {
   let id = policyId(comptrollerAddress, policyAddress);
-  let policy = AssetBlacklistPolicy.load(id) as AssetBlacklistPolicy;
+  let policy = AssetBlacklistPolicy.load(id);
 
   if (policy) {
     return policy;

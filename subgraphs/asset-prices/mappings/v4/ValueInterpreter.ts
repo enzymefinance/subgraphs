@@ -4,7 +4,7 @@ import {
   PrimitiveAdded,
   PrimitiveRemoved,
   StalePrimitiveRemoved,
-} from '../../generated/CombinedPriceFeedContract';
+} from '../../generated/contracts/ValueInterpreter4Events';
 import {
   createDerivativeRegistration,
   removeDerivativeRegistration,

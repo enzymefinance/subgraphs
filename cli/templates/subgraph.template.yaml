@@ -8,7 +8,7 @@ dataSources:
     name: {{name}}
     network: {{@root.network}}
     source:
-      abi: {{abi}}
+      abi: {{abi.name}}
       {{#if address}}
       address: '{{{address}}}'
       {{/if}}
@@ -17,12 +17,14 @@ dataSources:
       {{/if}}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities: []
       file: {{file}}
       abis:
-        {{#each @root.abis}}
+        - name: {{abi.name}}
+          file: {{abi.file}}
+        {{#each @root.sdks}}
         - name: {{name}}
           file: {{file}}
         {{/each}}
@@ -30,13 +32,6 @@ dataSources:
       eventHandlers:
         {{#each events}}
         - event: {{event}}
-          handler: {{handler}}
-        {{/each}}
-      {{/if}}
-      {{#if calls}}
-      callHandlers:
-        {{#each calls}}
-        - call: {{call}}
           handler: {{handler}}
         {{/each}}
       {{/if}}
@@ -49,15 +44,17 @@ templates:
     name: {{name}}
     network: {{@root.network}}
     source:
-      abi: {{abi}}
+      abi: {{abi.name}}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities: []
       file: {{file}}
       abis:
-        {{#each @root.abis}}
+        - name: {{abi.name}}
+          file: {{abi.file}}
+        {{#each @root.sdks}}
         - name: {{name}}
           file: {{file}}
         {{/each}}
@@ -65,13 +62,6 @@ templates:
       eventHandlers:
         {{#each events}}
         - event: {{event}}
-          handler: {{handler}}
-        {{/each}}
-      {{/if}}
-      {{#if calls}}
-      callHandlers:
-        {{#each calls}}
-        - call: {{call}}
           handler: {{handler}}
         {{/each}}
       {{/if}}

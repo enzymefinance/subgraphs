@@ -8,7 +8,7 @@ export function ensureAssetWhitelistPolicy(
   event: ethereum.Event,
 ): AssetWhitelistPolicy {
   let id = policyId(comptrollerAddress, policyAddress);
-  let policy = AssetWhitelistPolicy.load(id) as AssetWhitelistPolicy;
+  let policy = AssetWhitelistPolicy.load(id);
 
   if (policy) {
     return policy;

@@ -3,12 +3,12 @@ import { Address, BigInt } from '@graphprotocol/graph-ts';
 import { Migration } from '../generated/schema';
 
 export function useMigration(id: string): Migration {
-  let migration = Migration.load(id) as Migration;
+  let migration = Migration.load(id);
   if (migration == null) {
     logCritical('Failed to load migration {}.', [id]);
   }
 
-  return migration;
+  return migration as Migration;
 }
 
 // Uniquely identifies a signaled migration.

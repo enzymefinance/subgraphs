@@ -8,7 +8,7 @@ export function ensureGuaranteedRedemptionPolicy(
   event: ethereum.Event,
 ): GuaranteedRedemptionPolicy {
   let id = policyId(comptrollerAddress, policyAddress);
-  let policy = GuaranteedRedemptionPolicy.load(id) as GuaranteedRedemptionPolicy;
+  let policy = GuaranteedRedemptionPolicy.load(id);
 
   if (policy) {
     return policy;

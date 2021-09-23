@@ -8,7 +8,7 @@ export function ensureEntranceRateBurnFee(
   event: ethereum.Event,
 ): EntranceRateBurnFee {
   let id = feeId(comptrollerAddress, feeAddress);
-  let fee = EntranceRateBurnFee.load(id) as EntranceRateBurnFee;
+  let fee = EntranceRateBurnFee.load(id);
 
   if (fee) {
     return fee;

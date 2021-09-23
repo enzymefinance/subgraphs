@@ -13,7 +13,7 @@ import {
   AuthUserAddedForFund,
   AuthUserRemovedForFund,
   CallOnIntegrationExecutedForFund,
-} from '../../generated/IntegrationManager2Contract';
+} from '../../generated/contracts/IntegrationManager2Events';
 import { Asset, AssetAmount } from '../../generated/schema';
 
 export function handleAdapterRegistered(event: AdapterRegistered): void {}

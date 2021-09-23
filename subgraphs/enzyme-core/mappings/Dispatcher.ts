@@ -20,7 +20,7 @@ import {
   OwnershipTransferred,
   SharesTokenSymbolSet,
   VaultProxyDeployed,
-} from '../generated/DispatcherContract';
+} from '../generated/contracts/DispatcherEvents';
 import { Migration } from '../generated/schema';
 import { ComptrollerLib3DataSource, ComptrollerLib4DataSource } from '../generated/templates';
 

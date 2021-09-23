@@ -1,5 +1,5 @@
 import { ensureAllowedAssetsForRedemptionPolicy } from '../../entities/AllowedAssetsForRedemptionPolicy';
-import { ListsSetForFund } from '../../generated/AllowedAssetsForRedemptionPolicy4Contract';
+import { ListsSetForFund } from '../../generated/contracts/AllowedAssetsForRedemptionPolicy4Events';
 
 export function handleListsSetForFund(event: ListsSetForFund): void {
   let policy = ensureAllowedAssetsForRedemptionPolicy(event.params.comptrollerProxy, event.address, event);

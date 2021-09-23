@@ -12,7 +12,7 @@ import {
   ReleaseStatusSet,
   VaultCallDeregistered,
   VaultCallRegistered,
-} from '../../generated/FundDeployer3Contract';
+} from '../../generated/contracts/FundDeployer3Events';
 import { ComptrollerLib3DataSource, VaultLib3DataSource } from '../../generated/templates';
 
 export function handleNewFundCreated(event: NewFundCreated): void {

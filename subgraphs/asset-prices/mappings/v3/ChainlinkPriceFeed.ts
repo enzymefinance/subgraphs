@@ -3,7 +3,7 @@ import {
   PrimitiveUpdated,
   PrimitiveRemoved,
   StalePrimitiveRemoved,
-} from '../../generated/PrimitivePriceFeedContract';
+} from '../../generated/contracts/ChainlinkPriceFeed3Events';
 import { createOrUpdatePrimitiveRegistration, removePrimitiveRegistration } from '../../entities/Registration';
 import { initializeCurrencies } from '../../utils/initializeCurrencies';
 import { updateForPrimitiveRegistration } from '../../utils/updateForRegistration';

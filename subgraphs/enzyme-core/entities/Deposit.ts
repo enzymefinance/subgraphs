@@ -9,7 +9,7 @@ function depositId(depositor: Account, vault: Vault): string {
 export function ensureDeposit(depositor: Account, vault: Vault, event: ethereum.Event): Deposit {
   let id = depositId(depositor, vault);
 
-  let deposit = Deposit.load(id) as Deposit;
+  let deposit = Deposit.load(id);
   if (deposit) {
     return deposit;
   }

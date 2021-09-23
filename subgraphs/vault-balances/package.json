@@ -11,6 +11,6 @@
     "@enzymefinance/protocol": "^4.0.0-next.1",
     "@enzymefinance/subgraph-cli": "^0.0.0",
     "@enzymefinance/subgraph-utils": "^0.0.0",
-    "@graphprotocol/graph-ts": "^0.20.1"
+    "@graphprotocol/graph-ts": "^0.22.0"
   }
 }

@@ -8,7 +8,7 @@ export function ensureExitRateDirectFee(
   event: ethereum.Event,
 ): ExitRateDirectFee {
   let id = feeId(comptrollerAddress, feeAddress);
-  let fee = ExitRateDirectFee.load(id) as ExitRateDirectFee;
+  let fee = ExitRateDirectFee.load(id);
 
   if (fee) {
     return fee;

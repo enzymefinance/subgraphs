@@ -23,13 +23,13 @@ import {
   VaultCallDeregistered,
   VaultCallRegistered,
   VaultLibSet,
-} from '../../generated/FundDeployer4Contract';
+} from '../../generated/contracts/FundDeployer4Events';
 import { Reconfiguration } from '../../generated/schema';
 import { ComptrollerLib4DataSource, VaultLib4DataSource } from '../../generated/templates';
-import { VaultLib4Contract } from '../../generated/VaultLib4Contract';
+import { ProtocolSdk } from '../../generated/contracts/ProtocolSdk';
 
 export function handleNewFundCreated(event: NewFundCreated): void {
-  let vaultContract = VaultLib4Contract.bind(event.params.vaultProxy);
+  let vaultContract = ProtocolSdk.bind(event.params.vaultProxy);
   let fundName = vaultContract.name();
   let owner = vaultContract.getOwner();
   let protocolFee = vaultContract.getProtocolFeeTracker();
@@ -141,7 +141,6 @@ export function handleReconfigurationRequestExecuted(event: ReconfigurationReque
   reconfiguration.save();
 
   let vault = useVault(event.params.vaultProxy.toHex());
-  let prevAccessor = vault.comptroller;
   vault.comptroller = ensureComptroller(event.params.nextComptrollerProxy, event).id;
   vault.save();
 

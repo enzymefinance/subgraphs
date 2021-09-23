@@ -1,6 +1,6 @@
 import { toBigDecimal, uniqueEventId } from '@enzymefinance/subgraph-utils';
 import { ensureGasRelayer, trackGasRelayerBalance } from '../../entities/GasRelayer';
-import { Deposited, TransactionRelayed, Withdrawn } from '../../generated/GasRelayPaymasterLib4Contract';
+import { Deposited, TransactionRelayed, Withdrawn } from '../../generated/contracts/GasRelayPaymasterLib4Events';
 import { GasRelayerDeposited, GasRelayerTransaction, GasRelayerWithdrawn } from '../../generated/schema';
 
 export function handleDeposited(event: Deposited): void {

@@ -6,4 +6,3 @@ export * from './utils/logging';
 export * from './utils/math';
 export * from './utils/string';
 export * from './utils/time';
-export * from './utils/token';

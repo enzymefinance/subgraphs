@@ -1,4 +1,11 @@
-import { Configurator, Contexts, DataSourceDeclarationLike, Template } from '@enzymefinance/subgraph-cli';
+import {
+  Configurator,
+  Contexts,
+  DataSourceTemplateUserDeclaration,
+  DataSourceUserDeclaration,
+  SdkUserDeclaration,
+  Template,
+} from '@enzymefinance/subgraph-cli';
 
 interface Variables {
   releaseConfiguration: {
@@ -130,169 +137,103 @@ export const templates: Template[] = [
 ];
 
 export const configure: Configurator<Variables> = (variables: Variables) => {
-  const abis = [
-    '@chainlink/contracts/abi/v0.6/AggregatorInterface.json',
-    '@chainlink/contracts/abi/v0.6/AggregatorProxy.json',
-    './abis/DerivativePriceFeed.json',
-    './abis/PrimitivePriceFeed.json',
-    './abis/CombinedPriceFeed.json',
-    './abis/ValueInterpreter.json',
-    './abis/ValueInterpreterLegacy.json',
-    './abis/TestnetTreasuryController.json',
+  const sources: DataSourceUserDeclaration[] = [];
+  const sdks: SdkUserDeclaration[] = [
+    {
+      name: 'Shared',
+      abis: {
+        ChainlinkAggregator: 'abis/ChainlinkAggregator.json',
+        ValueInterpreterA: 'abis/v2/ValueInterpreter.json',
+        ValueInterpreterB: 'abis/v4/ValueInterpreter.json',
+      },
+      functions: (abis) => [
+        abis.ValueInterpreterA.getFunction('calcCanonicalAssetValue'),
+        abis.ValueInterpreterB.getFunction('calcCanonicalAssetValue'),
+        abis.ChainlinkAggregator.getFunction('aggregator'),
+        abis.ChainlinkAggregator.getFunction('decimals'),
+        abis.ChainlinkAggregator.getFunction('latestTimestamp'),
+        abis.ChainlinkAggregator.getFunction('latestAnswer'),
+      ],
+    },
   ];
-
-  const sources: DataSourceDeclarationLike[] = [];
 
   if (variables.releaseConfiguration.v2) {
     sources.push({
-      abi: 'DerivativePriceFeedContract',
-      name: 'DerivativePriceFeed',
-      version: '2',
+      name: 'AggregatedDerivativePriceFeed',
+      version: 2,
       address: variables.releaseConfiguration.v2.derivativePriceFeed,
       block: variables.releaseConfiguration.v2.derivativePriceFeedBlock,
-      events: [
-        {
-          event: 'DerivativeAdded(indexed address,address)',
-          handler: 'handleDerivativeAdded',
-        },
-        {
-          event: 'DerivativeRemoved(indexed address)',
-          handler: 'handleDerivativeRemoved',
-        },
-      ],
+      events: (abi) => [abi.getEvent('DerivativeAdded'), abi.getEvent('DerivativeRemoved')],
     });
 
     sources.push({
-      abi: 'PrimitivePriceFeedContract',
-      name: 'PrimitivePriceFeed',
-      version: '2',
+      name: 'ChainlinkPriceFeed',
+      version: 2,
       address: variables.releaseConfiguration.v2.primitivePriceFeed,
       block: variables.releaseConfiguration.v2.primitivePriceFeedBlock,
-      events: [
-        {
-          event: 'PrimitiveAdded(indexed address,address,uint8,uint256)',
-          handler: 'handlePrimitiveAdded',
-        },
-        {
-          event: 'PrimitiveUpdated(indexed address,address,address)',
-          handler: 'handlePrimitiveUpdated',
-        },
-        {
-          event: 'PrimitiveRemoved(indexed address)',
-          handler: 'handlePrimitiveRemoved',
-        },
-        {
-          event: 'StalePrimitiveRemoved(indexed address)',
-          handler: 'handleStalePrimitiveRemoved',
-        },
+      events: (abi) => [
+        abi.getEvent('PrimitiveAdded'),
+        abi.getEvent('PrimitiveUpdated'),
+        abi.getEvent('PrimitiveRemoved'),
+        abi.getEvent('StalePrimitiveRemoved'),
       ],
     });
   }
 
   if (variables.releaseConfiguration.v3) {
     sources.push({
-      abi: 'DerivativePriceFeedContract',
-      name: 'DerivativePriceFeed',
-      version: '3',
+      name: 'AggregatedDerivativePriceFeed',
+      version: 3,
       address: variables.releaseConfiguration.v3.derivativePriceFeed,
       block: variables.releaseConfiguration.v3.derivativePriceFeedBlock,
-      events: [
-        {
-          event: 'DerivativeAdded(indexed address,address)',
-          handler: 'handleDerivativeAdded',
-        },
-        {
-          event: 'DerivativeRemoved(indexed address)',
-          handler: 'handleDerivativeRemoved',
-        },
-      ],
+      events: (abi) => [abi.getEvent('DerivativeAdded'), abi.getEvent('DerivativeRemoved')],
     });
 
     sources.push({
-      abi: 'PrimitivePriceFeedContract',
-      name: 'PrimitivePriceFeed',
-      version: '3',
+      name: 'ChainlinkPriceFeed',
+      version: 3,
       address: variables.releaseConfiguration.v3.primitivePriceFeed,
       block: variables.releaseConfiguration.v3.primitivePriceFeedBlock,
-      events: [
-        {
-          event: 'PrimitiveAdded(indexed address,address,uint8,uint256)',
-          handler: 'handlePrimitiveAdded',
-        },
-        {
-          event: 'PrimitiveUpdated(indexed address,address,address)',
-          handler: 'handlePrimitiveUpdated',
-        },
-        {
-          event: 'PrimitiveRemoved(indexed address)',
-          handler: 'handlePrimitiveRemoved',
-        },
-        {
-          event: 'StalePrimitiveRemoved(indexed address)',
-          handler: 'handleStalePrimitiveRemoved',
-        },
+      events: (abi) => [
+        abi.getEvent('PrimitiveAdded'),
+        abi.getEvent('PrimitiveUpdated'),
+        abi.getEvent('PrimitiveRemoved'),
+        abi.getEvent('StalePrimitiveRemoved'),
       ],
     });
   }
 
   if (variables.releaseConfiguration.v4) {
     sources.push({
-      abi: 'CombinedPriceFeedContract',
-      name: 'CombinedPriceFeed',
-      version: '4',
+      name: 'ValueInterpreter',
+      version: 4,
       address: variables.releaseConfiguration.v4.valueInterpreter,
       block: variables.releaseConfiguration.v4.valueInterpreterBlock,
-      events: [
-        {
-          event: 'DerivativeAdded(indexed address,address)',
-          handler: 'handleDerivativeAdded',
-        },
-        {
-          event: 'DerivativeRemoved(indexed address)',
-          handler: 'handleDerivativeRemoved',
-        },
-        {
-          event: 'PrimitiveAdded(indexed address,address,uint8,uint256)',
-          handler: 'handlePrimitiveAdded',
-        },
-        {
-          event: 'PrimitiveRemoved(indexed address)',
-          handler: 'handlePrimitiveRemoved',
-        },
-        {
-          event: 'StalePrimitiveRemoved(indexed address)',
-          handler: 'handleStalePrimitiveRemoved',
-        },
+      events: (abi) => [
+        abi.getEvent('DerivativeAdded'),
+        abi.getEvent('DerivativeRemoved'),
+        abi.getEvent('PrimitiveAdded'),
+        abi.getEvent('PrimitiveRemoved'),
+        abi.getEvent('StalePrimitiveRemoved'),
       ],
     });
   }
 
   if (variables.testnetConfiguration) {
     sources.push({
-      abi: 'TestnetTreasuryControllerContract',
       name: 'TestnetTreasuryController',
       address: variables.testnetConfiguration.treasuryController,
       block: variables.testnetConfiguration.treasuryControllerBlock,
-      events: [
-        {
-          event: 'TokenDeployed(indexed address,string,string,uint8)',
-          handler: 'handleTokenDeployed',
-        },
-        {
-          event: 'PriceUpdated(indexed address,uint256)',
-          handler: 'handlePriceUpdated',
-        },
-      ],
+      events: (abi) => [abi.getEvent('TokenDeployed'), abi.getEvent('PriceUpdated')],
     });
   }
 
-  const templates = [
+  const templates: DataSourceTemplateUserDeclaration[] = [
     {
       name: 'ChainlinkAggregator',
-      abi: 'AggregatorInterfaceContract',
-      events: ['AnswerUpdated(indexed int256,indexed uint256,uint256)'],
+      events: (abi) => [abi.getEvent('AnswerUpdated')],
     },
   ];
 
-  return { abis, sources, templates };
+  return { sdks, sources, templates };
 };

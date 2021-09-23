@@ -8,7 +8,7 @@ export function ensureUnknownPolicy(
   event: ethereum.Event,
 ): UnknownPolicy {
   let id = policyId(comptrollerAddress, policyAddress);
-  let policy = UnknownPolicy.load(id) as UnknownPolicy;
+  let policy = UnknownPolicy.load(id);
 
   if (policy) {
     return policy;

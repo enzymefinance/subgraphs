@@ -1,3 +1,6 @@
+import { utils } from 'ethers';
+import { AbiDeclarationType } from './script/types';
+
 declare module '@enzymefinance/subgraph-cli' {
   export interface Context<TVariables> {
     name: string;
@@ -9,16 +12,16 @@ declare module '@enzymefinance/subgraph-cli' {
   }
 
   export interface Configuration {
-    sources: DataSourceDeclarationLike[];
-    templates?: DataSourceTemplateDeclarationLike[];
-    abis?: AbiDeclarationLike[];
+    sources: DataSourceUserDeclaration[];
+    templates?: DataSourceTemplateUserDeclaration[];
+    sdks?: SdkUserDeclaration[];
   }
 
   export interface ManifestValues {
     network: string;
     sources: DataSourceDeclaration[];
-    abis: AbiDeclaration[];
     templates?: DataSourceTemplateDeclaration[];
+    sdks?: SdkAbiDeclaration[];
   }
 
   export interface Contexts<TVariables> {
@@ -32,57 +35,69 @@ declare module '@enzymefinance/subgraph-cli' {
 
   export type Configurator<TVariables> = (variables: TVariables) => Configuration;
 
-  export type AbiDeclarationLike = AbiDeclaration | string;
-  export interface AbiDeclaration {
-    name: string;
-    file: string;
-    version?: string;
-  }
-
-  export type EventHandlerDeclarationLike = EventHandlerDeclaration | string;
+  export type EventHandlerUserDeclaration = string | utils.EventFragment;
   export interface EventHandlerDeclaration {
     event: string;
     handler: string;
+    fragment: utils.EventFragment;
   }
 
-  export type CallHandlerDeclarationLike = CallHandlerDeclaration | string;
-  export interface CallHandlerDeclaration {
-    call: string;
-    handler: string;
+  export interface AbiDeclaration {
+    type: AbiDeclarationType;
+    name: string;
+    file: string;
+  }
+
+  export interface EventsAbiDeclaration extends AbiDeclaration {
+    type: AbiDeclarationType.EVENTS;
+    events: utils.EventFragment[];
+    interface: utils.Interface;
+  }
+
+  export interface SdkAbiDeclaration extends AbiDeclaration {
+    type: AbiDeclarationType.SDK;
+    functions: utils.FunctionFragment[];
+    interfaces: Record<string, utils.Interface>;
   }
 
   export interface DataSourceDeclaration {
     name: string;
-    abi: string;
     file: string;
+    abi: EventsAbiDeclaration;
+    events: EventHandlerDeclaration[];
     address?: string;
     block?: number;
-    events?: EventHandlerDeclaration[];
-    calls?: CallHandlerDeclaration[];
   }
 
-  export interface DataSourceDeclarationLike extends DataSourceDeclaration {
-    version?: string;
+  export interface DataSourceUserDeclaration {
+    name: string;
     abi?: string;
     file?: string;
-    events?: EventHandlerDeclarationLike[];
-    calls?: CallHandlerDeclarationLike[];
+    version?: strig | number;
+    address?: string;
+    block?: number;
+    events?: ((abi: utils.Interface) => EventHandlerUserDeclaration[]) | EventHandlerUserDeclaration[];
   }
 
   export interface DataSourceTemplateDeclaration {
     name: string;
-    abi: string;
     file: string;
-    events?: EventHandlerDeclaration[];
-    calls?: CallHandlerDeclaration[];
+    abi: EventsAbiDeclaration;
+    events: EventHandlerDeclaration[];
   }
 
-  export interface DataSourceTemplateDeclarationLike extends DataSourceTemplateDeclaration {
-    version?: string;
+  export interface DataSourceTemplateUserDeclaration {
+    name: string;
     abi?: string;
     file?: string;
-    events?: EventHandlerDeclarationLike[];
-    calls?: CallHandlerDeclarationLike[];
+    version?: strig | number;
+    events?: ((abi: utils.Interface) => EventHandlerUserDeclaration[]) | EventHandlerUserDeclaration[];
+  }
+
+  export interface SdkUserDeclaration {
+    name: string;
+    abis?: Record<string, string>;
+    functions: ((abis: Record<string, utils.Interface>) => utils.FunctionFragment[]) | utils.FunctionFragment[];
   }
 
   export interface Environment<TVariables> {

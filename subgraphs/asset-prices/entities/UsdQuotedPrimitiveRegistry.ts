@@ -2,7 +2,7 @@ import { arrayDiff } from '@enzymefinance/subgraph-utils';
 import { UsdQuotedPrimitiveRegistry, Asset, PrimitiveRegistration } from '../generated/schema';
 
 export function getOrCreateUsdQuotedPrimitiveRegistry(): UsdQuotedPrimitiveRegistry {
-  let registry = UsdQuotedPrimitiveRegistry.load('REGISTRY') as UsdQuotedPrimitiveRegistry;
+  let registry = UsdQuotedPrimitiveRegistry.load('REGISTRY');
   if (registry == null) {
     registry = new UsdQuotedPrimitiveRegistry('REGISTRY');
     registry.assets = [];

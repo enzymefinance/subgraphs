@@ -1,5 +1,5 @@
 import { arrayUnique, saveDivideBigDecimal, toBigDecimal } from '@enzymefinance/subgraph-utils';
-import { AnswerUpdated } from '../generated/AggregatorInterfaceContract';
+import { AnswerUpdated } from '../generated/contracts/ChainlinkAggregatorEvents';
 import { AggregatorProxy, CurrencyRegistration, PrimitiveRegistration } from '../generated/schema';
 import { getAsset, updateAssetPrice } from '../entities/Asset';
 import { getOrCreateCurrency } from '../entities/Currency';
@@ -30,7 +30,7 @@ export function handleAnswerUpdated(event: AnswerUpdated): void {
   // Always update all currency registrations.
   let currencyRegistrations: Array<CurrencyRegistration> = registrations
     .filter((registration) => registration.type == 'CURRENCY')
-    .map<CurrencyRegistration>((registration) => registration as CurrencyRegistration);
+    .map<CurrencyRegistration>((registration) => changetype<CurrencyRegistration>(registration));
 
   let value = toBigDecimal(event.params.current, aggregator.decimals);
   for (let i: i32 = 0; i < currencyRegistrations.length; i++) {
@@ -41,7 +41,7 @@ export function handleAnswerUpdated(event: AnswerUpdated): void {
   // Only run updates for assets where the triggered registration is the highest priority.
   let primitiveRegistrations = registrations
     .filter((registration) => registration.type == 'PRIMITIVE')
-    .map<PrimitiveRegistration>((registration) => registration as PrimitiveRegistration)
+    .map<PrimitiveRegistration>((registration) => changetype<PrimitiveRegistration>(registration))
     .filter((registration) => {
       let asset = getAsset(registration.asset);
       let registrations = asset.registrations;

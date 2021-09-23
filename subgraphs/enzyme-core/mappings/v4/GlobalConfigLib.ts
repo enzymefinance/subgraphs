@@ -1,3 +1,3 @@
-import { GlobalConfigLibSet } from '../../generated/GlobalConfigLib4Contract';
+import { GlobalConfigLibSet } from '../../generated/contracts/GlobalConfigLib4Events';
 
 export function handleGlobalConfigLibSet(event: GlobalConfigLibSet): void {}

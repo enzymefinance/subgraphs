@@ -1,0 +1,491 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_dispatcher",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_wethToken",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_ethUsdAggregator",
+        "type": "address"
+      },
+      {
+        "internalType": "address[]",
+        "name": "_primitives",
+        "type": "address[]"
+      },
+      {
+        "internalType": "address[]",
+        "name": "_aggregators",
+        "type": "address[]"
+      },
+      {
+        "internalType": "enum ChainlinkPriceFeed.RateAsset[]",
+        "name": "_rateAssets",
+        "type": "uint8[]"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "prevEthUsdAggregator",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "nextEthUsdAggregator",
+        "type": "address"
+      }
+    ],
+    "name": "EthUsdAggregatorSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "primitive",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "aggregator",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum ChainlinkPriceFeed.RateAsset",
+        "name": "rateAsset",
+        "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "unit",
+        "type": "uint256"
+      }
+    ],
+    "name": "PrimitiveAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "primitive",
+        "type": "address"
+      }
+    ],
+    "name": "PrimitiveRemoved",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "primitive",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "prevAggregator",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "nextAggregator",
+        "type": "address"
+      }
+    ],
+    "name": "PrimitiveUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "primitive",
+        "type": "address"
+      }
+    ],
+    "name": "StalePrimitiveRemoved",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "prevStaleRateThreshold",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "nextStaleRateThreshold",
+        "type": "uint256"
+      }
+    ],
+    "name": "StaleRateThresholdSet",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "_primitives",
+        "type": "address[]"
+      },
+      {
+        "internalType": "address[]",
+        "name": "_aggregators",
+        "type": "address[]"
+      },
+      {
+        "internalType": "enum ChainlinkPriceFeed.RateAsset[]",
+        "name": "_rateAssets",
+        "type": "uint8[]"
+      }
+    ],
+    "name": "addPrimitives",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_baseAsset",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_baseAssetAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_quoteAsset",
+        "type": "address"
+      }
+    ],
+    "name": "calcCanonicalValue",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "quoteAssetAmount_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "isValid_",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_baseAsset",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_baseAssetAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_quoteAsset",
+        "type": "address"
+      }
+    ],
+    "name": "calcLiveValue",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "quoteAssetAmount_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "isValid_",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_primitive",
+        "type": "address"
+      }
+    ],
+    "name": "getAggregatorInfoForPrimitive",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "aggregator",
+            "type": "address"
+          },
+          {
+            "internalType": "enum ChainlinkPriceFeed.RateAsset",
+            "name": "rateAsset",
+            "type": "uint8"
+          }
+        ],
+        "internalType": "struct ChainlinkPriceFeed.AggregatorInfo",
+        "name": "aggregatorInfo_",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getDispatcher",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "dispatcher_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getEthUsdAggregator",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "ethUsdAggregator_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getOwner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "owner_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_primitive",
+        "type": "address"
+      }
+    ],
+    "name": "getRateAssetForPrimitive",
+    "outputs": [
+      {
+        "internalType": "enum ChainlinkPriceFeed.RateAsset",
+        "name": "rateAsset_",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getStaleRateThreshold",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "staleRateThreshold_",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_primitive",
+        "type": "address"
+      }
+    ],
+    "name": "getUnitForPrimitive",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "unit_",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getWethToken",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "wethToken_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_asset",
+        "type": "address"
+      }
+    ],
+    "name": "isSupportedAsset",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "isSupported_",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_aggregator",
+        "type": "address"
+      }
+    ],
+    "name": "rateIsStale",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "rateIsStale_",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "_primitives",
+        "type": "address[]"
+      }
+    ],
+    "name": "removePrimitives",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "_primitives",
+        "type": "address[]"
+      }
+    ],
+    "name": "removeStalePrimitives",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_nextEthUsdAggregator",
+        "type": "address"
+      }
+    ],
+    "name": "setEthUsdAggregator",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_nextStaleRateThreshold",
+        "type": "uint256"
+      }
+    ],
+    "name": "setStaleRateThreshold",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "_primitives",
+        "type": "address[]"
+      },
+      {
+        "internalType": "address[]",
+        "name": "_aggregators",
+        "type": "address[]"
+      }
+    ],
+    "name": "updatePrimitives",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

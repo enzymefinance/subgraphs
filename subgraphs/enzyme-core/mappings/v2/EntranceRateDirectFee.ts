@@ -1,6 +1,6 @@
 import { toBigDecimal } from '@enzymefinance/subgraph-utils';
 import { ensureEntranceRateDirectFee } from '../../entities/EntranceRateDirectFee';
-import { FundSettingsAdded, Settled } from '../../generated/EntranceRateDirectFee2Contract';
+import { FundSettingsAdded, Settled } from '../../generated/contracts/EntranceRateDirectFee2Events';
 
 export function handleFundSettingsAdded(event: FundSettingsAdded): void {
   let fee = ensureEntranceRateDirectFee(event.params.comptrollerProxy, event.address, event);

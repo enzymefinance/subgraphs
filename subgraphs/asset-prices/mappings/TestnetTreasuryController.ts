@@ -1,6 +1,6 @@
 import { toBigDecimal } from '@enzymefinance/subgraph-utils';
 import { getOrCreateAsset, updateAssetPrice } from '../entities/Asset';
-import { PriceUpdated, TokenDeployed } from '../generated/TestnetTreasuryControllerContract';
+import { PriceUpdated, TokenDeployed } from '../generated/contracts/TestnetTreasuryControllerEvents';
 import { initializeCurrencies } from '../utils/initializeCurrencies';
 
 export function handleTokenDeployed(event: TokenDeployed): void {

@@ -8,7 +8,7 @@ export function ensureAllowedExternalPositionTypesPolicy(
   event: ethereum.Event,
 ): AllowedExternalPositionTypesPolicy {
   let id = policyId(comptrollerAddress, policyAddress);
-  let policy = AllowedExternalPositionTypesPolicy.load(id) as AllowedExternalPositionTypesPolicy;
+  let policy = AllowedExternalPositionTypesPolicy.load(id);
 
   if (policy) {
     return policy;

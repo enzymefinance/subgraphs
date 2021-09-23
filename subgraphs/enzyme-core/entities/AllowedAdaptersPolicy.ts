@@ -8,7 +8,7 @@ export function ensureAllowedAdaptersPolicy(
   event: ethereum.Event,
 ): AllowedAdaptersPolicy {
   let id = policyId(comptrollerAddress, policyAddress);
-  let policy = AllowedAdaptersPolicy.load(id) as AllowedAdaptersPolicy;
+  let policy = AllowedAdaptersPolicy.load(id);
 
   if (policy) {
     return policy;

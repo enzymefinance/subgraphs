@@ -8,7 +8,7 @@ export function ensurePerformanceFee(
   event: ethereum.Event,
 ): PerformanceFee {
   let id = feeId(comptrollerAddress, feeAddress);
-  let fee = PerformanceFee.load(id) as PerformanceFee;
+  let fee = PerformanceFee.load(id);
 
   if (fee) {
     return fee;

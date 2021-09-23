@@ -7,7 +7,7 @@ import {
   ListCreated,
   ListOwnerSet,
   ListUpdateTypeSet,
-} from '../../generated/AddressListRegistry4Contract';
+} from '../../generated/contracts/AddressListRegistry4Events';
 import { addressListUpdateType } from '../../utils/addressListUpdateType';
 
 export function handleItemAddedToList(event: ItemAddedToList): void {

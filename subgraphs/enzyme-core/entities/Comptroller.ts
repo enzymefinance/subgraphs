@@ -3,7 +3,7 @@ import { Address, ethereum } from '@graphprotocol/graph-ts';
 import { Comptroller } from '../generated/schema';
 
 export function ensureComptroller(address: Address, event: ethereum.Event): Comptroller {
-  let comptroller = Comptroller.load(address.toHex()) as Comptroller;
+  let comptroller = Comptroller.load(address.toHex());
   if (comptroller) {
     return comptroller;
   }

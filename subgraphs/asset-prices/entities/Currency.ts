@@ -7,17 +7,17 @@ import { getActiveRegistration } from './Registration';
 import { getOrCreateUsdQuotedPrimitiveRegistry } from './UsdQuotedPrimitiveRegistry';
 
 export function getOrCreateCurrency(id: string, event: ethereum.Event): Currency {
-  let currency = Currency.load(id) as Currency;
+  let currency = Currency.load(id);
   if (currency == null) {
     initializeCurrencies(event);
   }
 
-  currency = Currency.load(id) as Currency;
+  currency = Currency.load(id);
   if (currency == null) {
     log.critical('Failed to load currency {}', [id]);
   }
 
-  return currency;
+  return currency as Currency;
 }
 
 function doUpdateCurrency(currency: Currency, eth: BigDecimal, usd: BigDecimal, event: ethereum.Event): void {

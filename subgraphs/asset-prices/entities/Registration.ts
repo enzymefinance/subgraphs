@@ -17,7 +17,7 @@ import { updateUsdQuotedPrimitiveRegistry } from './UsdQuotedPrimitiveRegistry';
 
 export function createCurrencyRegistration(currencyId: string, event: ethereum.Event): CurrencyRegistration {
   let registrationId = currencyRegistrationId(currencyId);
-  let registration = CurrencyRegistration.load(currencyId) as CurrencyRegistration;
+  let registration = CurrencyRegistration.load(currencyId);
   if (registration != null) {
     return registration;
   }
@@ -42,7 +42,7 @@ export function createDerivativeRegistration(
   event: ethereum.Event,
 ): DerivativeRegistration {
   let registrationId = derivativeRegistrationId(assetAddress, releaseVersion);
-  let registration = DerivativeRegistration.load(registrationId) as DerivativeRegistration;
+  let registration = DerivativeRegistration.load(registrationId);
   if (registration != null) {
     return registration;
   }
@@ -298,7 +298,7 @@ export class Registration extends Entity {
       return null;
     }
 
-    return store.get(entity, id) as Registration | null;
+    return changetype<Registration | null>(store.get(entity as string, id));
   }
 
   get id(): string {
@@ -371,7 +371,7 @@ export class AssetRegistration extends Entity {
       return null;
     }
 
-    return store.get(entity, id) as AssetRegistration | null;
+    return changetype<AssetRegistration | null>(store.get(entity as string, id));
   }
 
   get id(): string {

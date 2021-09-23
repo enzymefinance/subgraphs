@@ -4,7 +4,6 @@ import { ensureAccount } from '../../entities/Account';
 import { ensureAsset } from '../../entities/Asset';
 import { ensureComptroller } from '../../entities/Comptroller';
 import { ensurePerformanceFee } from '../../entities/PerformanceFee';
-import { ComptrollerLib4Contract } from '../../generated/ComptrollerLib4Contract';
 import {
   ActivatedForFund,
   FundSettingsAdded,
@@ -12,10 +11,11 @@ import {
   PaidOut,
   PerformanceUpdated,
   RecipientSetForFund,
-} from '../../generated/PerformanceFee4Contract';
+} from '../../generated/contracts/PerformanceFee4Events';
+import { ProtocolSdk } from '../../generated/contracts/ProtocolSdk';
 
 export function handleActivatedForFund(event: ActivatedForFund): void {
-  let comptroller = ComptrollerLib4Contract.bind(event.params.comptrollerProxy);
+  let comptroller = ProtocolSdk.bind(event.params.comptrollerProxy);
   let denominationAsset = ensureAsset(comptroller.getDenominationAsset());
 
   let fee = ensurePerformanceFee(event.params.comptrollerProxy, event.address, event);

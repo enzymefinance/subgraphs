@@ -8,7 +8,7 @@ export function ensureExitRateBurnFee(
   event: ethereum.Event,
 ): ExitRateBurnFee {
   let id = feeId(comptrollerAddress, feeAddress);
-  let fee = ExitRateBurnFee.load(id) as ExitRateBurnFee;
+  let fee = ExitRateBurnFee.load(id);
 
   if (fee) {
     return fee;

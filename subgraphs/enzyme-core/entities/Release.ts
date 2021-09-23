@@ -15,10 +15,9 @@ export function createRelease(address: Address, event: ethereum.Event): Release 
 }
 
 export function ensureRelease(address: Address, event: ethereum.Event): Release {
-  let release = Release.load(address.toHex()) as Release;
-
+  let release = Release.load(address.toHex());
   if (release != null) {
-    return release;
+    return release as Release;
   }
 
   return createRelease(address, event);
@@ -26,16 +25,14 @@ export function ensureRelease(address: Address, event: ethereum.Event): Release 
 
 export function useCurrentRelease(): Release {
   let network = useNetwork();
-
   if (network.currentRelease == null) {
     logCritical('Network {} does not have a current release', [networkId]);
   }
 
-  let release = Release.load(network.currentRelease as string) as Release;
-
+  let release = Release.load(network.currentRelease as string);
   if (release == null) {
     logCritical('Release {} does not exist', [network.currentRelease as string]);
   }
 
-  return release;
+  return release as Release;
 }

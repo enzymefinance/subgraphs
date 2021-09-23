@@ -4,7 +4,7 @@ import { AddressList } from '../generated/schema';
 import { addressListUpdateType } from '../utils/addressListUpdateType';
 
 export function ensureAddressList(id: string, event: ethereum.Event): AddressList {
-  let addressList = AddressList.load(id) as AddressList;
+  let addressList = AddressList.load(id);
 
   if (addressList) {
     return addressList;

@@ -8,7 +8,7 @@ export function ensureOnlyUntrackDustOrPricelessAssetsPolicy(
   event: ethereum.Event,
 ): OnlyUntrackDustOrPricelessAssetsPolicy {
   let id = policyId(comptrollerAddress, policyAddress);
-  let policy = OnlyUntrackDustOrPricelessAssetsPolicy.load(id) as OnlyUntrackDustOrPricelessAssetsPolicy;
+  let policy = OnlyUntrackDustOrPricelessAssetsPolicy.load(id);
 
   if (policy) {
     return policy;

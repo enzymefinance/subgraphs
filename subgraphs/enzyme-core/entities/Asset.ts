@@ -1,27 +1,21 @@
-import { logCritical, tokenName, tokenSymbol } from '@enzymefinance/subgraph-utils';
+import { tokenDecimalsOrThrow, tokenName, tokenSymbol } from '../utils/tokenCalls';
 import { Address } from '@graphprotocol/graph-ts';
-import { ERC20Contract } from '../generated/ERC20Contract';
 import { Asset } from '../generated/schema';
 
 export function ensureAsset(address: Address): Asset {
-  let asset = Asset.load(address.toHex()) as Asset;
+  let asset = Asset.load(address.toHex());
   if (asset) {
     return asset;
   }
 
   let name = tokenName(address);
   let symbol = tokenSymbol(address);
-
-  let contract = ERC20Contract.bind(address);
-  let decimalsCall = contract.try_decimals();
-  if (decimalsCall.reverted) {
-    logCritical('decimals() call reverted for {}', [address.toHex()]);
-  }
+  let decimals = tokenDecimalsOrThrow(address);
 
   asset = new Asset(address.toHex());
   asset.name = name;
   asset.symbol = symbol;
-  asset.decimals = decimalsCall.value;
+  asset.decimals = decimals;
   asset.save();
 
   return asset;
@@ -39,7 +33,7 @@ export function ensureAssets(addresses: Address[]): Asset[] {
 export function extractAssets(ids: string[]): Asset[] {
   let assets: Asset[] = new Array<Asset>();
   for (let i = 0; i < ids.length; i++) {
-    let asset = Asset.load(ids[i]) as Asset;
+    let asset = Asset.load(ids[i]);
     if (asset) {
       assets = assets.concat([asset]);
     }

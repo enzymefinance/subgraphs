@@ -13,7 +13,7 @@ import {
   SharesBought,
   SharesRedeemed,
   VaultProxySet,
-} from '../../generated/ComptrollerLib3Contract';
+} from '../../generated/contracts/ComptrollerLib3Events';
 import {
   Asset,
   AssetAmount,

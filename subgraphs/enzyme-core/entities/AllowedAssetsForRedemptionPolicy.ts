@@ -8,7 +8,7 @@ export function ensureAllowedAssetsForRedemptionPolicy(
   event: ethereum.Event,
 ): AllowedAssetsForRedemptionPolicy {
   let id = policyId(comptrollerAddress, policyAddress);
-  let policy = AllowedAssetsForRedemptionPolicy.load(id) as AllowedAssetsForRedemptionPolicy;
+  let policy = AllowedAssetsForRedemptionPolicy.load(id);
 
   if (policy) {
     return policy;

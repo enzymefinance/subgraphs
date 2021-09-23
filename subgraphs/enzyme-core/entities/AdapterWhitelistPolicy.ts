@@ -8,7 +8,7 @@ export function ensureAdapterWhitelistPolicy(
   event: ethereum.Event,
 ): AdapterWhitelistPolicy {
   let id = policyId(comptrollerAddress, policyAddress);
-  let policy = AdapterWhitelistPolicy.load(id) as AdapterWhitelistPolicy;
+  let policy = AdapterWhitelistPolicy.load(id);
 
   if (policy) {
     return policy;

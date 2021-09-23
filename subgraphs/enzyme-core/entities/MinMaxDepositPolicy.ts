@@ -8,7 +8,7 @@ export function ensureMinMaxDepositPolicy(
   event: ethereum.Event,
 ): MinMaxDepositPolicy {
   let id = policyId(comptrollerAddress, policyAddress);
-  let policy = MinMaxDepositPolicy.load(id) as MinMaxDepositPolicy;
+  let policy = MinMaxDepositPolicy.load(id);
 
   if (policy) {
     return policy;

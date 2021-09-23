@@ -8,7 +8,7 @@ export function ensureManagementFee(
   event: ethereum.Event,
 ): ManagementFee {
   let id = feeId(comptrollerAddress, feeAddress);
-  let fee = ManagementFee.load(id) as ManagementFee;
+  let fee = ManagementFee.load(id);
 
   if (fee) {
     return fee;

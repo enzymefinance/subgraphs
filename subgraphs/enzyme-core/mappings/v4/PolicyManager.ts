@@ -10,7 +10,7 @@ import { ensureMinMaxDepositPolicy } from '../../entities/MinMaxDepositPolicy';
 import { ensureOnlyUntrackDustOrPricelessAssetsPolicy } from '../../entities/OnlyUntrackDustOrPricelessAssetsPolicy';
 import { ensureUnknownPolicy } from '../../entities/UnknownPolicy';
 import { release4Addresses } from '../../generated/addresses';
-import { PolicyDisabledForFund, PolicyEnabledForFund } from '../../generated/PolicyManager4Contract';
+import { PolicyDisabledForFund, PolicyEnabledForFund } from '../../generated/contracts/PolicyManager4Events';
 
 export function handlePolicyEnabledForFund(event: PolicyEnabledForFund): void {
   let comptrollerAddress = event.params.comptrollerProxy;

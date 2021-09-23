@@ -3,12 +3,12 @@ import { Address } from '@graphprotocol/graph-ts';
 import { Reconfiguration } from '../generated/schema';
 
 export function useReconfiguraton(id: string): Reconfiguration {
-  let reconfiguration = Reconfiguration.load(id) as Reconfiguration;
+  let reconfiguration = Reconfiguration.load(id);
   if (reconfiguration == null) {
     logCritical('Failed to load reconfiguration {}.', [id]);
   }
 
-  return reconfiguration;
+  return reconfiguration as Reconfiguration;
 }
 
 // Uniquely identifies a signaled reconfiguration.

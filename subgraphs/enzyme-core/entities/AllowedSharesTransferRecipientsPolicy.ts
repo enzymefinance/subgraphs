@@ -8,7 +8,7 @@ export function ensureAllowedSharesTransferRecipientsPolicy(
   event: ethereum.Event,
 ): AllowedSharesTransferRecipientsPolicy {
   let id = policyId(comptrollerAddress, policyAddress);
-  let policy = AllowedSharesTransferRecipientsPolicy.load(id) as AllowedSharesTransferRecipientsPolicy;
+  let policy = AllowedSharesTransferRecipientsPolicy.load(id);
 
   if (policy) {
     return policy;

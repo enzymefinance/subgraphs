@@ -14,7 +14,7 @@ import {
   TrackedAssetRemoved,
   Transfer,
   VaultLibSet,
-} from '../../generated/VaultLib3Contract';
+} from '../../generated/contracts/VaultLib3Events';
 
 export function handleAccessorSet(event: AccessorSet): void {
   let vault = useVault(event.address.toHex());

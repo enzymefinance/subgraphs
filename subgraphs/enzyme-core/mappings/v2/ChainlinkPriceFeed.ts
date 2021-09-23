@@ -4,7 +4,7 @@ import {
   PrimitiveAdded,
   PrimitiveRemoved,
   PrimitiveUpdated,
-} from '../../generated/ChainlinkPriceFeed2Contract';
+} from '../../generated/contracts/ChainlinkPriceFeed2Events';
 
 export function handleEthUsdAggregatorSet(event: EthUsdAggregatorSet): void {}
 

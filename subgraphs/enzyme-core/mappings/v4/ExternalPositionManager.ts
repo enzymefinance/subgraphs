@@ -7,7 +7,7 @@ import {
   CallOnExternalPositionExecutedForFund,
   ExternalPositionDeployedForFund,
   ExternalPositionTypeInfoUpdated,
-} from '../../generated/ExternalPositionManager4Contract';
+} from '../../generated/contracts/ExternalPositionManager4Events';
 import { CompoundDebtPosition } from '../../generated/schema';
 import { CompoundDebtPositionLib4DataSource } from '../../generated/templates';
 
@@ -34,7 +34,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
   }
 
   if (comptrollerProxy.vault) {
-    trackVaultMetric(Address.fromString(comptrollerProxy.vault), event);
+    trackVaultMetric(Address.fromString(comptrollerProxy.vault as string), event);
   }
 }
 

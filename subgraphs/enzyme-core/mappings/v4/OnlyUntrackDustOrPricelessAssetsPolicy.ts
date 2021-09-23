@@ -2,13 +2,13 @@ import { toBigDecimal } from '@enzymefinance/subgraph-utils';
 import { ensureRelease } from '../../entities/Release';
 import {
   DustToleranceInWethSet,
-  OnlyUntrackDustOrPricelessAssetsPolicy4Contract,
   PricelessAssetBypassed,
   PricelessAssetTimelockStarted,
-} from '../../generated/OnlyUntrackDustOrPricelessAssetsPolicy4Contract';
+} from '../../generated/contracts/OnlyUntrackDustOrPricelessAssetsPolicy4Events';
+import { ProtocolSdk } from '../../generated/contracts/ProtocolSdk';
 
 export function handleDustToleranceInWethSet(event: DustToleranceInWethSet): void {
-  let policy = OnlyUntrackDustOrPricelessAssetsPolicy4Contract.bind(event.address);
+  let policy = ProtocolSdk.bind(event.address);
   let releaseAddress = policy.try_getFundDeployer();
 
   if (releaseAddress.reverted) {

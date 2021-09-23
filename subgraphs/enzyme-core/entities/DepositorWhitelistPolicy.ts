@@ -8,7 +8,7 @@ export function ensureDepositorWhitelistPolicy(
   event: ethereum.Event,
 ): DepositorWhitelistPolicy {
   let id = policyId(comptrollerAddress, policyAddress);
-  let policy = DepositorWhitelistPolicy.load(id) as DepositorWhitelistPolicy;
+  let policy = DepositorWhitelistPolicy.load(id);
 
   if (policy) {
     return policy;

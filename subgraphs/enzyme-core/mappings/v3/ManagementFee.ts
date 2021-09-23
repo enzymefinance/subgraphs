@@ -1,5 +1,5 @@
 import { ensureManagementFee } from '../../entities/ManagementFee';
-import { ActivatedForMigratedFund, FundSettingsAdded, Settled } from '../../generated/ManagementFee3Contract';
+import { ActivatedForMigratedFund, FundSettingsAdded, Settled } from '../../generated/contracts/ManagementFee3Events';
 
 // New event in v3
 export function handleActivatedForMigratedFund(event: ActivatedForMigratedFund): void {

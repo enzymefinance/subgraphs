@@ -4,7 +4,7 @@ import {
   AdapterRemoved,
   FundSettingsSet,
   RedemptionWindowBufferSet,
-} from '../../generated/GuaranteedRedemption3Contract';
+} from '../../generated/contracts/GuaranteedRedemption3Events';
 
 export function handleFundSettingsSet(event: FundSettingsSet): void {
   let policy = ensureGuaranteedRedemptionPolicy(event.params.comptrollerProxy, event.address, event);

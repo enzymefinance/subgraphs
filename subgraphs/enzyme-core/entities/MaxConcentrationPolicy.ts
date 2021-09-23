@@ -8,7 +8,7 @@ export function ensureMaxConcentrationPolicy(
   event: ethereum.Event,
 ): MaxConcentrationPolicy {
   let id = policyId(comptrollerAddress, policyAddress);
-  let policy = MaxConcentrationPolicy.load(id) as MaxConcentrationPolicy;
+  let policy = MaxConcentrationPolicy.load(id);
 
   if (policy) {
     return policy;

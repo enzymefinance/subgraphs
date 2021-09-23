@@ -17,7 +17,7 @@ import {
   FeeEnabledForFund,
   FeeSettledForFund,
   SharesOutstandingPaidForFund,
-} from '../../generated/FeeManager4Contract';
+} from '../../generated/contracts/FeeManager4Events';
 import {
   FeeSharesAllocationChangedEvent,
   FeeSharesBurnedEvent,
@@ -83,7 +83,7 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
     return;
   }
 
-  let vault = useVault(comptrollerProxy.vault);
+  let vault = useVault(comptrollerProxy.vault as string);
   let shares = toBigDecimal(event.params.sharesDue);
 
   // Differentiate between settlement types
@@ -187,7 +187,7 @@ export function handleSharesOutstandingPaidForFund(event: SharesOutstandingPaidF
     return;
   }
 
-  let vault = useVault(comptrollerProxy.vault);
+  let vault = useVault(comptrollerProxy.vault as string);
   let depositor = ensureAccount(event.params.payee, event);
   let shares = toBigDecimal(event.params.sharesDue);
   let deposit = ensureDeposit(depositor, vault, event);

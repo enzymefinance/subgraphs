@@ -14,7 +14,7 @@ import {
   PolicyDisabledForFund,
   PolicyEnabledForFund,
   PolicyRegistered,
-} from '../../generated/PolicyManager3Contract';
+} from '../../generated/contracts/PolicyManager3Events';
 
 export function handlePolicyEnabledForFund(event: PolicyEnabledForFund): void {
   let comptrollerAddress = event.params.comptrollerProxy;

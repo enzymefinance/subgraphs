@@ -21,7 +21,7 @@ export function handleVaultProxyDeployed(event: VaultProxyDeployed): void {
 }
 
 export function handleMigrationExecuted(event: MigrationExecuted): void {
-  let vault = Vault.load(event.params.vaultProxy.toHex()) as Vault;
+  let vault = Vault.load(event.params.vaultProxy.toHex());
 
   // This should never happen but it doesn't hurt to check it nonetheless.
   if (vault == null) {

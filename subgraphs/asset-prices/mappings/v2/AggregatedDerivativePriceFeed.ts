@@ -1,4 +1,4 @@
-import { DerivativeAdded, DerivativeRemoved } from '../../generated/DerivativePriceFeedContract';
+import { DerivativeAdded, DerivativeRemoved } from '../../generated/contracts/AggregatedDerivativePriceFeed2Events';
 import { createDerivativeRegistration, removeDerivativeRegistration } from '../../entities/Registration';
 import { initializeCurrencies } from '../../utils/initializeCurrencies';
 import { updateForDerivativeRegistration } from '../../utils/updateForRegistration';
@@ -6,11 +6,11 @@ import { updateForDerivativeRegistration } from '../../utils/updateForRegistrati
 export function handleDerivativeAdded(event: DerivativeAdded): void {
   initializeCurrencies(event);
 
-  let registration = createDerivativeRegistration(event.params.derivative, 3, event);
+  let registration = createDerivativeRegistration(event.params.derivative, 2, event);
   updateForDerivativeRegistration(registration, event);
 }
 
 export function handleDerivativeRemoved(event: DerivativeRemoved): void {
   initializeCurrencies(event);
-  removeDerivativeRegistration(event.params.derivative, 3, event);
+  removeDerivativeRegistration(event.params.derivative, 2, event);
 }

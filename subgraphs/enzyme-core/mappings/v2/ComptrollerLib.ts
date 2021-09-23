@@ -1,4 +1,4 @@
-import { logCritical, toBigDecimal, uniqueEventId } from '@enzymefinance/subgraph-utils';
+import { toBigDecimal, uniqueEventId } from '@enzymefinance/subgraph-utils';
 import { Address, dataSource } from '@graphprotocol/graph-ts';
 import { ensureDepositor } from '../../entities/Account';
 import { ensureAsset } from '../../entities/Asset';
@@ -13,7 +13,7 @@ import {
   SharesBought,
   SharesRedeemed,
   VaultProxySet,
-} from '../../generated/ComptrollerLib2Contract';
+} from '../../generated/contracts/ComptrollerLib2Events';
 import {
   Asset,
   AssetAmount,
@@ -21,7 +21,6 @@ import {
   SharesBoughtEvent,
   SharesRedeemedEvent,
 } from '../../generated/schema';
-import { VaultLib2Contract } from '../../generated/VaultLib2Contract';
 
 export function handleSharesBought(event: SharesBought): void {
   let vault = useVault(dataSource.context().getString('vaultProxy'));
@@ -44,23 +43,6 @@ export function handleSharesBought(event: SharesBought): void {
   addition.shares = shares;
   addition.timestamp = event.block.timestamp.toI32();
   addition.save();
-
-  let vaultProxy = VaultLib2Contract.bind(Address.fromString(vault.id));
-  let balanceCall = vaultProxy.try_balanceOf(Address.fromString(depositor.id));
-  if (balanceCall.reverted) {
-    logCritical('balanceOf() reverted for account {} on vault {}', [depositor.id, vault.id]);
-  }
-
-  deposit.shares = toBigDecimal(balanceCall.value);
-  deposit.save();
-
-  let totalSupplyCall = vaultProxy.try_totalSupply();
-  if (totalSupplyCall.reverted) {
-    logCritical('totalSupply() reverted for vault{}', [vault.id]);
-  }
-
-  vault.totalSupply = toBigDecimal(totalSupplyCall.value);
-  vault.save();
 }
 
 export function handleSharesRedeemed(event: SharesRedeemed): void {

@@ -1,14 +1,9 @@
-import { logCritical, toBigDecimal } from '@enzymefinance/subgraph-utils';
+import { toBigDecimal } from '@enzymefinance/subgraph-utils';
 import { Address, BigDecimal, ethereum } from '@graphprotocol/graph-ts';
 import { release2Addresses, release3Addresses, release4Addresses } from '../generated/addresses';
-import { ComptrollerLib2Contract } from '../generated/ComptrollerLib2Contract';
-import { ComptrollerLib3Contract } from '../generated/ComptrollerLib3Contract';
-import { ComptrollerLib4Contract } from '../generated/ComptrollerLib4Contract';
-import { ERC20Contract } from '../generated/ERC20Contract';
-import { FundActionsWrapper2Contract } from '../generated/FundActionsWrapper2Contract';
-import { FundActionsWrapper3Contract } from '../generated/FundActionsWrapper3Contract';
+import { ProtocolSdk } from '../generated/contracts/ProtocolSdk';
 import { MetricCounter, VaultMetric } from '../generated/schema';
-import { UnpermissionedActionsWrapper4Contract } from '../generated/UnpermissionedActionsWrapper4Contract';
+import { tokenTotalSupplyOrThrow } from '../utils/tokenCalls';
 import { ensureAsset } from './Asset';
 import { ensureComptroller } from './Comptroller';
 import { useVault } from './Vault';
@@ -33,7 +28,6 @@ export function getVaultMetricCounter(): i32 {
 
 export function trackVaultMetric(vaultAddress: Address, event: ethereum.Event): void {
   let id = vaultAddress.toHex() + '/' + event.block.number.toString();
-
   let metric = VaultMetric.load(id);
 
   if (metric != null) {
@@ -67,15 +61,7 @@ export class VaultQuantities {
 }
 
 export function getVaultQuantities(vaultAddress: Address, event: ethereum.Event): VaultQuantities {
-  let vaultContract = ERC20Contract.bind(vaultAddress);
-
-  let totalSupplyCall = vaultContract.try_totalSupply();
-  if (totalSupplyCall.reverted) {
-    logCritical('totalSupply() reverted for vault{}', [vaultAddress.toHex()]);
-  }
-
-  let totalSupply = toBigDecimal(totalSupplyCall.value);
-
+  let totalSupply = toBigDecimal(tokenTotalSupplyOrThrow(vaultAddress));
   let vault = useVault(vaultAddress.toHex());
   vault.totalSupply = totalSupply;
   vault.save();
@@ -96,7 +82,7 @@ export function getVaultQuantities(vaultAddress: Address, event: ethereum.Event)
 
   // release 2
   if (releaseId == release2Addresses.fundDeployerAddress.toHex()) {
-    let comptrollerContract = ComptrollerLib2Contract.bind(Address.fromString(comptroller.id));
+    let comptrollerContract = ProtocolSdk.bind(Address.fromString(comptroller.id));
     let gavCall = comptrollerContract.try_calcGav(false);
 
     if (!gavCall.reverted && gavCall.value.value1) {
@@ -105,7 +91,7 @@ export function getVaultQuantities(vaultAddress: Address, event: ethereum.Event)
       quantities.gavReverted = true;
     }
 
-    let fundActionsWrapper = FundActionsWrapper2Contract.bind(release2Addresses.fundActionsWrapperAddress);
+    let fundActionsWrapper = ProtocolSdk.bind(release2Addresses.fundActionsWrapperAddress);
     let netSharePriceCall = fundActionsWrapper.try_calcNetShareValueForFund(Address.fromString(comptroller.id));
     if (!netSharePriceCall.reverted && netSharePriceCall.value.value1) {
       quantities.sharePrice = toBigDecimal(netSharePriceCall.value.value0, 18);
@@ -121,7 +107,7 @@ export function getVaultQuantities(vaultAddress: Address, event: ethereum.Event)
 
   // release 3
   if (releaseId == release3Addresses.fundDeployerAddress.toHex()) {
-    let comptrollerContract = ComptrollerLib3Contract.bind(Address.fromString(comptroller.id));
+    let comptrollerContract = ProtocolSdk.bind(Address.fromString(comptroller.id));
     let gavCall = comptrollerContract.try_calcGav(false);
 
     if (!gavCall.reverted && gavCall.value.value1) {
@@ -130,7 +116,7 @@ export function getVaultQuantities(vaultAddress: Address, event: ethereum.Event)
       quantities.gavReverted = true;
     }
 
-    let fundActionsWrapper = FundActionsWrapper3Contract.bind(release3Addresses.fundActionsWrapperAddress);
+    let fundActionsWrapper = ProtocolSdk.bind(release3Addresses.fundActionsWrapperAddress);
     let netSharePriceCall = fundActionsWrapper.try_calcNetShareValueForFund(Address.fromString(comptroller.id));
 
     if (!netSharePriceCall.reverted && netSharePriceCall.value.value1) {
@@ -148,8 +134,8 @@ export function getVaultQuantities(vaultAddress: Address, event: ethereum.Event)
 
   // release 4
   if (releaseId == release4Addresses.fundDeployerAddress.toHex()) {
-    let comptrollerContract = ComptrollerLib4Contract.bind(Address.fromString(comptroller.id));
-    let gavCall = comptrollerContract.try_calcGav(false);
+    let comptrollerContract = ProtocolSdk.bind(Address.fromString(comptroller.id));
+    let gavCall = comptrollerContract.try_calcGav1(false);
 
     if (!gavCall.reverted) {
       quantities.gav = toBigDecimal(gavCall.value, denominationAsset.decimals);
@@ -157,10 +143,8 @@ export function getVaultQuantities(vaultAddress: Address, event: ethereum.Event)
       quantities.gavReverted = true;
     }
 
-    let fundActionsWrapper = UnpermissionedActionsWrapper4Contract.bind(
-      release4Addresses.unpermissionedActionsWrapperAddress,
-    );
-    let netSharePriceCall = fundActionsWrapper.try_calcNetShareValueForFund(Address.fromString(comptroller.id));
+    let fundActionsWrapper = ProtocolSdk.bind(release4Addresses.unpermissionedActionsWrapperAddress);
+    let netSharePriceCall = fundActionsWrapper.try_calcNetShareValueForFund1(Address.fromString(comptroller.id));
 
     if (!netSharePriceCall.reverted) {
       quantities.sharePrice = toBigDecimal(netSharePriceCall.value, 18);

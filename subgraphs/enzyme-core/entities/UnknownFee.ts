@@ -4,7 +4,7 @@ import { feeId } from './Fee';
 
 export function ensureUnknownFee(comptrollerAddress: Address, feeAddress: Address, event: ethereum.Event): UnknownFee {
   let id = feeId(comptrollerAddress, feeAddress);
-  let fee = UnknownFee.load(id) as UnknownFee;
+  let fee = UnknownFee.load(id);
 
   if (fee) {
     return fee;

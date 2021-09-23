@@ -1,5 +1,5 @@
 import { ensureManagementFee } from '../../entities/ManagementFee';
-import { FundSettingsAdded, Settled } from '../../generated/ManagementFee2Contract';
+import { FundSettingsAdded, Settled } from '../../generated/contracts/ManagementFee2Events';
 
 export function handleFundSettingsAdded(event: FundSettingsAdded): void {
   let fee = ensureManagementFee(event.params.comptrollerProxy, event.address, event);

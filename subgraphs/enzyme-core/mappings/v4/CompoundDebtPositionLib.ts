@@ -9,7 +9,7 @@ import {
   BorrowedAssetRepaid,
   CollateralAssetAdded,
   CollateralAssetRemoved,
-} from '../../generated/CompoundDebtPositionLib4Contract';
+} from '../../generated/contracts/CompoundDebtPositionLib4Events';
 
 export function handleAssetBorrowed(event: AssetBorrowed): void {
   let vault = useVault(dataSource.context().getString('vaultProxy'));

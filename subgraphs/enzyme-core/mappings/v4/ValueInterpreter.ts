@@ -7,7 +7,7 @@ import {
   PrimitiveRemoved,
   StalePrimitiveRemoved,
   StaleRateThresholdSet,
-} from '../../generated/ValueInterpreter4Contract';
+} from '../../generated/contracts/ValueInterpreter4Events';
 
 export function handleDerivativeAdded(event: DerivativeAdded): void {
   ensureAsset(event.params.derivative);

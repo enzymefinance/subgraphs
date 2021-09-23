@@ -7,11 +7,11 @@ import {
   FeePaidForVault,
   InitializedForVault,
   LastPaidSetForVault,
-  ProtocolFeeTracker4Contract,
-} from '../../generated/ProtocolFeeTracker4Contract';
+} from '../../generated/contracts/ProtocolFeeTracker4Events';
+import { ProtocolSdk } from '../../generated/contracts/ProtocolSdk';
 
 export function handleInitializedForVault(event: InitializedForVault): void {
-  let protocolFeeTrackerContract = ProtocolFeeTracker4Contract.bind(event.address);
+  let protocolFeeTrackerContract = ProtocolSdk.bind(event.address);
   let rate = protocolFeeTrackerContract.getFeeBpsForVault(event.params.vaultProxy);
 
   let protocolFee = createProtocolFee(event.params.vaultProxy, event.address);
