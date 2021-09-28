@@ -128,8 +128,9 @@ export function handleMigratedSharesDuePaid(event: MigratedSharesDuePaid): void 
   paid.save();
 
   trackShareState(fund, event, paid);
-  // TODO: do we need to call (?) (only for PerformanceFee)
-  // trackFeeState(fund, fee, BigDecimal.fromString('0'), event, paid);
+
+  let vaultAsInvestor = ensureInvestor(Address.fromString(fund.id), event);
+  trackInvestmentState(vaultAsInvestor, fund, event);
 }
 
 export function handlePreRedeemSharesHookFailed(event: PreRedeemSharesHookFailed): void {

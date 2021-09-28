@@ -1,6 +1,6 @@
 import { Address, BigDecimal } from '@graphprotocol/graph-ts';
 import { zeroAddress } from '../constants';
-import { ensureAccount } from '../entities/Account';
+import { ensureAccount, ensureInvestor } from '../entities/Account';
 import { ensureComptrollerProxy } from '../entities/ComptrollerProxy';
 import { ensureFee } from '../entities/Fee';
 import { trackFeeState } from '../entities/FeeState';
@@ -59,8 +59,9 @@ export function handleAllSharesOutstandingForcePaidForFund(event: AllSharesOutst
   settled.save();
 
   trackShareState(fund, event, settled);
-  // TODO: what do we need to do for fees here (if anything)?
-  // trackFeeState(fund, fee, event, settled);
+
+  let vaultAsInvestor = ensureInvestor(Address.fromString(fund.id), event);
+  trackInvestmentState(vaultAsInvestor, fund, event);
 }
 
 export function handleFeeDeregistered(event: FeeDeregistered): void {
@@ -173,6 +174,9 @@ export function handleSharesOutstandingPaidForFund(event: SharesOutstandingPaidF
     performanceFeeState.sharesOutstanding = performanceFeeState.sharesOutstanding.minus(shares);
     performanceFeeState.save();
   }
+
+  let vaultAsInvestor = ensureInvestor(Address.fromString(fund.id), event);
+  trackInvestmentState(vaultAsInvestor, fund, event);
 }
 
 export function handleFeesRecipientSetForFund(event: FeesRecipientSetForFund): void {
