@@ -1,9 +1,10 @@
 import { logCritical, toBigDecimal, uniqueEventId } from '@enzymefinance/subgraph-utils';
 import { Address, BigDecimal, ethereum } from '@graphprotocol/graph-ts';
 import { ProtocolSdk } from '../generated/contracts/ProtocolSdk';
-import { Asset, CompoundDebtPosition, CompoundDebtPositionChange } from '../generated/schema';
+import { Asset, CompoundDebtPosition, CompoundDebtPositionChange, Vault } from '../generated/schema';
 import { ensureAsset } from './Asset';
 import { createAssetAmount } from './AssetAmount';
+import { getActivityCounter } from './Counter';
 import { useVault } from './Vault';
 
 export function useCompoundDebtPosition(id: string): CompoundDebtPosition {
@@ -37,6 +38,7 @@ export function createCompoundDebtPositionChange(
   amount: BigDecimal,
   denominationAsset: Asset,
   changeType: string,
+  vault: Vault,
   event: ethereum.Event,
 ): CompoundDebtPositionChange {
   let assetAmount = createAssetAmount(asset, amount, denominationAsset, 'cdp' + changeType, event);
@@ -45,6 +47,10 @@ export function createCompoundDebtPositionChange(
   change.changeType = changeType;
   change.externalPosition = compoundDebtPositionAddress.toHex();
   change.assetAmount = assetAmount.id;
+  change.vault = vault.id;
+  change.activityCounter = getActivityCounter();
+  change.activityCategories = ['Vault'];
+  change.activityType = 'ExternalPosition';
   change.save();
 
   return change;

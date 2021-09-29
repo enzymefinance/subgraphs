@@ -4,6 +4,7 @@ import { ensureDepositor } from '../../entities/Account';
 import { ensureAsset } from '../../entities/Asset';
 import { createAssetAmount } from '../../entities/AssetAmount';
 import { ensureComptroller } from '../../entities/Comptroller';
+import { getActivityCounter } from '../../entities/Counter';
 import { ensureDeposit } from '../../entities/Deposit';
 import { ensureGasRelayer } from '../../entities/GasRelayer';
 import { useVault } from '../../entities/Vault';
@@ -43,11 +44,14 @@ export function handleSharesBought(event: SharesBought): void {
   addition.vault = vault.id;
   addition.depositor = depositor.id;
   addition.deposit = deposit.id;
-  addition.type = 'SharesBought';
+  addition.sharesChangeType = 'SharesBought';
   addition.depositAssetAmount = createAssetAmount(asset, amount, denominationAsset, 'deposit', event).id;
   addition.sharesIssued = toBigDecimal(event.params.sharesIssued);
   addition.shares = shares;
   addition.timestamp = event.block.timestamp.toI32();
+  addition.activityCounter = getActivityCounter();
+  addition.activityCategories = ['Vault', 'Depositor'];
+  addition.activityType = 'DepositorShares';
   addition.save();
 }
 
@@ -73,10 +77,13 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
   redemption.vault = vault.id;
   redemption.depositor = depositor.id;
   redemption.deposit = deposit.id;
-  redemption.type = 'SharesRedeemed';
+  redemption.sharesChangeType = 'SharesRedeemed';
   redemption.shares = shares;
   redemption.payoutAssetAmounts = assetAmounts.map<string>((assetAmount) => assetAmount.id);
   redemption.timestamp = event.block.timestamp.toI32();
+  redemption.activityCounter = getActivityCounter();
+  redemption.activityCategories = ['Vault', 'Depositor'];
+  redemption.activityType = 'DepositorShares';
   redemption.save();
 }
 
@@ -90,9 +97,12 @@ export function handleMigratedSharesDuePaid(event: MigratedSharesDuePaid): void 
   sharesDuePaid.vault = vault.id;
   sharesDuePaid.depositor = depositor.id;
   sharesDuePaid.deposit = deposit.id;
-  sharesDuePaid.type = 'FeeSharesReceived';
+  sharesDuePaid.sharesChangeType = 'FeeSharesReceived';
   sharesDuePaid.shares = shares;
   sharesDuePaid.timestamp = event.block.timestamp.toI32();
+  sharesDuePaid.activityCounter = getActivityCounter();
+  sharesDuePaid.activityCategories = ['Vault', 'Depositor'];
+  sharesDuePaid.activityType = 'FeeShares';
   sharesDuePaid.save();
 }
 

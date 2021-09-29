@@ -1,28 +1,11 @@
 import { toBigDecimal, ZERO_BD } from '@enzymefinance/subgraph-utils';
 import { Address, ethereum } from '@graphprotocol/graph-ts';
-import { DepositMetric, MetricCounter } from '../generated/schema';
+import { DepositMetric } from '../generated/schema';
 import { tokenBalance } from '../utils/tokenCalls';
 import { ensureDepositor } from './Account';
+import { getDepositMetricCounter } from './Counter';
 import { ensureDeposit } from './Deposit';
 import { useVault } from './Vault';
-
-export function getDepositMetricCounter(): i32 {
-  let counter = MetricCounter.load('metricId');
-
-  if (counter == null) {
-    counter = new MetricCounter('metricId');
-    counter.vaultMetricCounter = 0;
-    counter.depositMetricCounter = 1;
-    counter.save();
-
-    return counter.depositMetricCounter;
-  }
-
-  counter.depositMetricCounter = counter.depositMetricCounter + 1;
-  counter.save();
-
-  return counter.depositMetricCounter;
-}
 
 export function trackDepositMetric(vaultAddress: Address, depositorAddress: Address, event: ethereum.Event): void {
   let id = vaultAddress.toHex() + '/' + depositorAddress.toHex() + '/' + event.block.number.toString();
@@ -42,7 +25,7 @@ export function trackDepositMetric(vaultAddress: Address, depositorAddress: Addr
   deposit.save();
 
   metric = new DepositMetric(id);
-  metric.counter = getDepositMetricCounter();
+  metric.depositMetricCounter = getDepositMetricCounter();
   metric.timestamp = event.block.timestamp.toI32();
   metric.vault = vaultAddress;
   metric.depositor = depositorAddress;

@@ -16,7 +16,7 @@ export function ensureOnlyUntrackDustOrPricelessAssetsPolicy(
 
   policy = new OnlyUntrackDustOrPricelessAssetsPolicy(id);
   policy.policy = policyAddress;
-  policy.type = 'OnlyUntrackDustOrPricelessAssets';
+  policy.policyType = 'OnlyUntrackDustOrPricelessAssets';
   policy.comptroller = comptrollerAddress.toHex();
   policy.createdAt = event.block.timestamp.toI32();
   policy.enabled = true;

@@ -16,7 +16,7 @@ export function ensureAllowedAdapterIncomingAssetsPolicy(
 
   policy = new AllowedAdapterIncomingAssetsPolicy(id);
   policy.policy = policyAddress;
-  policy.type = 'AllowedAdapterIncomingAssets';
+  policy.policyType = 'AllowedAdapterIncomingAssets';
   policy.comptroller = comptrollerAddress.toHex();
   policy.addressLists = new Array<string>();
   policy.createdAt = event.block.timestamp.toI32();

@@ -16,7 +16,7 @@ export function ensureAllowedDepositRecipientsPolicy(
 
   policy = new AllowedDepositRecipientsPolicy(id);
   policy.policy = policyAddress;
-  policy.type = 'AllowedDepositRecipients';
+  policy.policyType = 'AllowedDepositRecipients';
   policy.comptroller = comptrollerAddress.toHex();
   policy.addressLists = new Array<string>();
   policy.createdAt = event.block.timestamp.toI32();

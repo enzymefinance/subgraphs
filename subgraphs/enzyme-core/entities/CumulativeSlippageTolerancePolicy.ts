@@ -16,7 +16,7 @@ export function ensureCumulativeSlippageTolerancePolicy(
 
   policy = new CumulativeSlippageTolerancePolicy(id);
   policy.policy = policyAddress;
-  policy.type = 'CumulativeSlippageTolerance';
+  policy.policyType = 'CumulativeSlippageTolerance';
   policy.comptroller = comptrollerAddress.toHex();
   policy.createdAt = event.block.timestamp.toI32();
   policy.enabled = true;

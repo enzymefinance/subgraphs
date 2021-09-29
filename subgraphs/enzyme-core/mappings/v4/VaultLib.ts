@@ -1,16 +1,11 @@
 import { arrayDiff, arrayUnique, toBigDecimal, uniqueEventId, ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
 import { ensureAccount, ensureAssetManager, ensureDepositor, ensureOwner } from '../../entities/Account';
+import { getActivityCounter } from '../../entities/Counter';
 import { ensureDeposit } from '../../entities/Deposit';
 import { trackDepositMetric } from '../../entities/DepositMetric';
 import { useNetwork } from '../../entities/Network';
 import { useVault } from '../../entities/Vault';
 import { trackVaultMetric } from '../../entities/VaultMetric';
-import {
-  ProtocolFeeBurned,
-  ProtocolFeePaid,
-  SharesTransferredInEvent,
-  SharesTransferredOutEvent,
-} from '../../generated/schema';
 import {
   AccessorSet,
   Approval,
@@ -32,6 +27,16 @@ import {
   Transfer,
   VaultLibSet,
 } from '../../generated/contracts/VaultLib4Events';
+import {
+  ProtocolFeeBurned,
+  ProtocolFeePaid,
+  SharesTransferEvent,
+  SharesTransferredInEvent,
+  SharesTransferredOutEvent,
+  VaultNominatedOwnerRemoved,
+  VaultNominatedOwnerSet,
+  VaultOwnershipTransferred,
+} from '../../generated/schema';
 
 export function handleTransfer(event: Transfer): void {
   trackVaultMetric(event.address, event);
@@ -51,9 +56,9 @@ export function handleTransfer(event: Transfer): void {
     event.params.from.equals(ZERO_ADDRESS) ||
     event.params.to.equals(ZERO_ADDRESS) ||
     // do not track transfers to or from the vault proxy (these are fee shares actions)
-    // TODO: what about protocol fee payments?
     event.params.from.equals(event.address) ||
     event.params.to.equals(event.address)
+    // TODO: what about protocol fee payments?
   ) {
     return;
   }
@@ -68,9 +73,12 @@ export function handleTransfer(event: Transfer): void {
   transferOut.vault = vault.id;
   transferOut.depositor = fromInvestor.id;
   transferOut.deposit = fromInvestment.id;
-  transferOut.type = 'SharesTransferredOut';
+  transferOut.sharesChangeType = 'SharesTransferredOut';
   transferOut.shares = shares;
   transferOut.timestamp = event.block.timestamp.toI32();
+  transferOut.activityCounter = getActivityCounter();
+  transferOut.activityCategories = ['Depositor'];
+  transferOut.activityType = 'DepositorShares';
   transferOut.save();
 
   let toInvestor = ensureDepositor(event.params.to, event);
@@ -80,10 +88,24 @@ export function handleTransfer(event: Transfer): void {
   transferIn.vault = vault.id;
   transferIn.depositor = toInvestor.id;
   transferIn.deposit = toInvestment.id;
-  transferIn.type = 'SharesTransferredIn';
+  transferIn.sharesChangeType = 'SharesTransferredIn';
   transferIn.shares = shares;
   transferIn.timestamp = event.block.timestamp.toI32();
+  transferIn.activityCounter = getActivityCounter();
+  transferIn.activityCategories = ['Depositor'];
+  transferIn.activityType = 'DepositorShares';
   transferIn.save();
+
+  let transfer = new SharesTransferEvent(uniqueEventId(event, 'SharesTransfer'));
+  transfer.vault = vault.id;
+  transfer.from = fromInvestment.id;
+  transfer.to = toInvestor.id;
+  transfer.shares = shares;
+  transfer.timestamp = event.block.timestamp.toI32();
+  transferOut.activityCounter = getActivityCounter();
+  transfer.activityCategories = ['Vault'];
+  transfer.activityType = 'DepositorShares';
+  transfer.save();
 }
 
 export function handleMigratorSet(event: MigratorSet): void {
@@ -129,9 +151,20 @@ export function handleFreelyTransferableSharesSet(event: FreelyTransferableShare
 }
 
 export function handleNominatedOwnerRemoved(event: NominatedOwnerRemoved): void {
+  let nominatedOwner = ensureAccount(event.params.nominatedOwner, event);
+
   let vault = useVault(event.address.toHex());
   vault.nominatedOwner = null;
   vault.save();
+
+  let activity = new VaultNominatedOwnerRemoved(uniqueEventId(event));
+  activity.vault = vault.id;
+  activity.nominatedOwner = nominatedOwner.id;
+  activity.timestamp = event.block.timestamp.toI32();
+  activity.activityCounter = getActivityCounter();
+  activity.activityCategories = ['Vault'];
+  activity.activityType = 'VaultSettings';
+  activity.save();
 }
 
 export function handleNominatedOwnerSet(event: NominatedOwnerSet): void {
@@ -140,15 +173,35 @@ export function handleNominatedOwnerSet(event: NominatedOwnerSet): void {
   let vault = useVault(event.address.toHex());
   vault.nominatedOwner = nominatedOwner.id;
   vault.save();
+
+  let activity = new VaultNominatedOwnerSet(uniqueEventId(event));
+  activity.vault = vault.id;
+  activity.nominatedOwner = nominatedOwner.id;
+  activity.timestamp = event.block.timestamp.toI32();
+  activity.activityCounter = getActivityCounter();
+  activity.activityCategories = ['Vault'];
+  activity.activityType = 'VaultSettings';
+  activity.save();
 }
 
 export function handleOwnershipTransferred(event: OwnershipTransferred): void {
+  let prevOwner = ensureOwner(event.params.prevOwner, event);
   let nextOwner = ensureOwner(event.params.nextOwner, event);
 
   let vault = useVault(event.address.toHex());
   vault.owner = nextOwner.id;
   vault.nominatedOwner = null;
   vault.save();
+
+  let activity = new VaultOwnershipTransferred(uniqueEventId(event));
+  activity.vault = vault.id;
+  activity.prevOwner = prevOwner.id;
+  activity.nextOwner = nextOwner.id;
+  activity.timestamp = event.block.timestamp.toI32();
+  activity.activityCounter = getActivityCounter();
+  activity.activityCategories = ['Vault'];
+  activity.activityType = 'VaultSettings';
+  activity.save();
 }
 
 export function handleTrackedAssetAdded(event: TrackedAssetAdded): void {
@@ -173,17 +226,25 @@ export function handleTrackedAssetRemoved(event: TrackedAssetRemoved): void {
 
 export function handleProtocolFeePaidInShares(event: ProtocolFeePaidInShares): void {
   let feePaid = new ProtocolFeePaid(uniqueEventId(event));
+  feePaid.timestamp = event.block.timestamp.toI32();
   feePaid.vault = event.address.toHex();
   feePaid.shares = toBigDecimal(event.params.sharesAmount);
+  feePaid.activityCounter = getActivityCounter();
+  feePaid.activityCategories = ['Vault'];
+  feePaid.activityType = 'ProtocolFee';
   feePaid.save();
 }
 export function handleProtocolFeeSharesBoughtBack(event: ProtocolFeeSharesBoughtBack): void {
   let mlnBurned = toBigDecimal(event.params.mlnBurned);
 
   let feeBurned = new ProtocolFeeBurned(uniqueEventId(event));
+  feeBurned.timestamp = event.block.timestamp.toI32();
   feeBurned.vault = event.address.toHex();
   feeBurned.sharesBoughtBack = toBigDecimal(event.params.sharesAmount);
   feeBurned.mlnBurned = mlnBurned;
+  feeBurned.activityCounter = getActivityCounter();
+  feeBurned.activityCategories = ['Vault'];
+  feeBurned.activityType = 'ProtocolFee';
   feeBurned.save();
 
   let network = useNetwork();

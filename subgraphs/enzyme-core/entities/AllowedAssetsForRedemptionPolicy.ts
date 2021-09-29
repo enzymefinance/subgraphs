@@ -16,7 +16,7 @@ export function ensureAllowedAssetsForRedemptionPolicy(
 
   policy = new AllowedAssetsForRedemptionPolicy(id);
   policy.policy = policyAddress;
-  policy.type = 'AllowedAssetsForRedemption';
+  policy.policyType = 'AllowedAssetsForRedemption';
   policy.comptroller = comptrollerAddress.toHex();
   policy.addressLists = new Array<string>();
   policy.createdAt = event.block.timestamp.toI32();

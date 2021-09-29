@@ -1,7 +1,9 @@
+import { uniqueEventId } from '@enzymefinance/subgraph-utils';
 import { Address, DataSourceContext } from '@graphprotocol/graph-ts';
 import { ensureAccount, ensureOwner } from '../../entities/Account';
 import { ensureAsset } from '../../entities/Asset';
 import { ensureComptroller } from '../../entities/Comptroller';
+import { getActivityCounter } from '../../entities/Counter';
 import { trackNetworkFunds } from '../../entities/Network';
 import { useProtocolFee } from '../../entities/ProtocolFee';
 import { generateReconfigurationId, useReconfiguraton } from '../../entities/Reconfiguration';
@@ -24,9 +26,14 @@ import {
   VaultCallRegistered,
   VaultLibSet,
 } from '../../generated/contracts/FundDeployer4Events';
-import { Reconfiguration } from '../../generated/schema';
-import { ComptrollerLib4DataSource, VaultLib4DataSource } from '../../generated/templates';
 import { ProtocolSdk } from '../../generated/contracts/ProtocolSdk';
+import {
+  Reconfiguration,
+  VaultReconfigurationCancelled,
+  VaultReconfigurationExecuted,
+  VaultReconfigurationSignalled,
+} from '../../generated/schema';
+import { ComptrollerLib4DataSource, VaultLib4DataSource } from '../../generated/templates';
 
 export function handleNewFundCreated(event: NewFundCreated): void {
   let vaultContract = ProtocolSdk.bind(event.params.vaultProxy);
@@ -102,6 +109,15 @@ export function handleReconfigurationRequestCancelled(event: ReconfigurationRequ
   comptrollerProxy.vault = null;
   comptrollerProxy.status = 'DESTRUCTED';
   comptrollerProxy.save();
+
+  let activity = new VaultReconfigurationCancelled(uniqueEventId(event, 'ReconfigurationCancelled'));
+  activity.timestamp = event.block.timestamp.toI32();
+  activity.vault = event.params.vaultProxy.toHex();
+  activity.reconfiguration = reconfigurationId;
+  activity.activityCounter = getActivityCounter();
+  activity.activityCategories = ['Vault'];
+  activity.activityType = 'VaultSettings';
+  activity.save();
 }
 
 export function handleReconfigurationRequestCreated(event: ReconfigurationRequestCreated): void {
@@ -126,6 +142,16 @@ export function handleReconfigurationRequestCreated(event: ReconfigurationReques
   comptrollerProxy.vault = vault.id;
   comptrollerProxy.status = 'SIGNALLED';
   comptrollerProxy.save();
+
+  let activity = new VaultReconfigurationSignalled(uniqueEventId(event, 'ReconfigurationSignalled'));
+  activity.timestamp = event.block.timestamp.toI32();
+  activity.vault = event.params.vaultProxy.toHex();
+  activity.reconfiguration = reconfigurationId;
+  activity.nextComptroller = comptrollerProxy.id;
+  activity.activityCounter = getActivityCounter();
+  activity.activityCategories = ['Vault'];
+  activity.activityType = 'VaultSettings';
+  activity.save();
 }
 
 export function handleReconfigurationRequestExecuted(event: ReconfigurationRequestExecuted): void {
@@ -158,6 +184,16 @@ export function handleReconfigurationRequestExecuted(event: ReconfigurationReque
   prevComptrollerProxy.destruction = event.block.timestamp.toI32();
   prevComptrollerProxy.status = 'DESTRUCTED';
   prevComptrollerProxy.save();
+
+  let activity = new VaultReconfigurationExecuted(uniqueEventId(event, 'ReconfigurationExexcuted'));
+  activity.timestamp = event.block.timestamp.toI32();
+  activity.vault = event.params.vaultProxy.toHex();
+  activity.reconfiguration = reconfigurationId;
+  activity.nextComptroller = comptrollerProxy.id;
+  activity.activityCounter = getActivityCounter();
+  activity.activityCategories = ['Vault'];
+  activity.activityType = 'VaultSettings';
+  activity.save();
 }
 
 export function handleBuySharesOnBehalfCallerDeregistered(event: BuySharesOnBehalfCallerDeregistered): void {}

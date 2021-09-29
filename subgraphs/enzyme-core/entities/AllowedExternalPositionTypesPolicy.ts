@@ -16,7 +16,7 @@ export function ensureAllowedExternalPositionTypesPolicy(
 
   policy = new AllowedExternalPositionTypesPolicy(id);
   policy.policy = policyAddress;
-  policy.type = 'AllowedExternalPositionTypes';
+  policy.policyType = 'AllowedExternalPositionTypes';
   policy.comptroller = comptrollerAddress.toHex();
   policy.externalPositionTypes = new Array<i32>();
   policy.createdAt = event.block.timestamp.toI32();

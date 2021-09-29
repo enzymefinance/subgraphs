@@ -73,6 +73,36 @@ type Release @entity {
   vaults: [Vault!] @derivedFrom(field: "release")
 }
 
+type NetworkReleaseChanged implements Activity & NetworkActivity @entity {
+  id: ID!
+  timestamp: Int!
+  prevRelease: Release
+  nextRelease: Release!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
+type AssetAdded implements Activity & NetworkActivity @entity {
+  id: ID!
+  timestamp: Int!
+  asset: Asset!
+  release: Release!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
+type AssetRemoved implements Activity & NetworkActivity @entity {
+  id: ID!
+  timestamp: Int!
+  asset: Asset!
+  release: Release!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
 #################################################
 # Vault
 #################################################
@@ -106,6 +136,8 @@ type Vault @entity {
   migrations: [Migration!]! @derivedFrom(field: "vault")
   reconfigurations: [Reconfiguration!]! @derivedFrom(field: "vault")
   sharesChanges: [SharesChange!]! @derivedFrom(field: "vault")
+
+  vaultActivity: [VaultActivity!]! @derivedFrom(field: "vault")
 }
 
 type Comptroller @entity {
@@ -151,6 +183,112 @@ type Reconfiguration @entity {
   cancelledTimestamp: Int
 }
 
+type VaultCreated implements Activity & VaultActivity @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: Int!
+  creator: Account!
+  owner: Account!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
+type VaultMigrationSignalled implements Activity & VaultActivity @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: Int!
+  migration: Migration!
+  nextComptroller: Comptroller!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
+type VaultMigrationCancelled implements Activity & VaultActivity @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: Int!
+  migration: Migration!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
+type VaultMigrationExecuted implements Activity & VaultActivity @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: Int!
+  migration: Migration!
+  nextComptroller: Comptroller!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
+type VaultReconfigurationSignalled implements Activity & VaultActivity @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: Int!
+  reconfiguration: Reconfiguration!
+  nextComptroller: Comptroller!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
+type VaultReconfigurationCancelled implements Activity & VaultActivity @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: Int!
+  reconfiguration: Reconfiguration!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
+type VaultReconfigurationExecuted implements Activity & VaultActivity @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: Int!
+  reconfiguration: Reconfiguration!
+  nextComptroller: Comptroller!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
+type VaultNominatedOwnerSet implements Activity & VaultActivity @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: Int!
+  nominatedOwner: Account!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
+type VaultNominatedOwnerRemoved implements Activity & VaultActivity @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: Int!
+  nominatedOwner: Account!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
+type VaultOwnershipTransferred implements Activity & VaultActivity @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: Int!
+  prevOwner: Account!
+  nextOwner: Account!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
 #################################################
 # Account
 #################################################
@@ -173,6 +311,8 @@ type Account @entity {
   assetManagements: [Vault!]! @derivedFrom(field: "assetManagers")
   deposits: [Deposit!]! @derivedFrom(field: "depositor")
   sharesChanges: [SharesChange!]! @derivedFrom(field: "depositor")
+
+  depositorActivity: [DepositorActivity!]! @derivedFrom(field: "depositor")
 }
 
 #################################################
@@ -192,98 +332,134 @@ type Deposit @entity {
 interface SharesChange {
   id: ID!
   vault: Vault!
-  type: SharesChangeType!
+  sharesChangeType: SharesChangeType!
   depositor: Account!
   deposit: Deposit!
   timestamp: Int!
   shares: BigDecimal!
 }
 
-type SharesBoughtEvent implements SharesChange @entity {
+type SharesBoughtEvent implements Activity & VaultActivity & DepositorActivity & SharesChange @entity {
   id: ID!
   vault: Vault!
-  type: SharesChangeType!
+  sharesChangeType: SharesChangeType!
   depositor: Account!
   deposit: Deposit!
   shares: BigDecimal!
   depositAssetAmount: AssetAmount!
   sharesIssued: BigDecimal!
   timestamp: Int!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
 }
 
-type SharesTransferredOutEvent implements SharesChange @entity {
+type SharesTransferEvent implements Activity & VaultActivity @entity {
   id: ID!
   vault: Vault!
-  type: SharesChangeType!
+  from: Account!
+  to: Account!
+  shares: BigDecimal!
+  timestamp: Int!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
+type SharesTransferredOutEvent implements Activity & DepositorActivity & SharesChange @entity {
+  id: ID!
+  vault: Vault!
+  sharesChangeType: SharesChangeType!
   depositor: Account!
   deposit: Deposit!
   shares: BigDecimal!
   timestamp: Int!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
 }
 
-type SharesTransferredInEvent implements SharesChange @entity {
+type SharesTransferredInEvent implements Activity & DepositorActivity & SharesChange @entity {
   id: ID!
   vault: Vault!
-  type: SharesChangeType!
+  sharesChangeType: SharesChangeType!
   depositor: Account!
   deposit: Deposit!
   shares: BigDecimal!
   timestamp: Int!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
 }
 
-type SharesRedeemedEvent implements SharesChange @entity {
+type SharesRedeemedEvent implements Activity & VaultActivity & DepositorActivity & SharesChange @entity {
   id: ID!
   vault: Vault!
-  type: SharesChangeType!
+  sharesChangeType: SharesChangeType!
   depositor: Account!
   deposit: Deposit!
   shares: BigDecimal!
   payoutAssetAmounts: [AssetAmount!]!
   timestamp: Int!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
 }
 
-type FeeSharesPaidEvent implements SharesChange @entity {
+type FeeSharesPaidEvent implements Activity & VaultActivity & DepositorActivity & SharesChange @entity {
   id: ID!
   vault: Vault!
-  type: SharesChangeType!
+  sharesChangeType: SharesChangeType!
   fee: Fee
   depositor: Account!
   deposit: Deposit!
   shares: BigDecimal!
   timestamp: Int!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
 }
 
-type FeeSharesReceivedEvent implements SharesChange @entity {
+type FeeSharesReceivedEvent implements Activity & VaultActivity & DepositorActivity & SharesChange @entity {
   id: ID!
   vault: Vault!
-  type: SharesChangeType!
+  sharesChangeType: SharesChangeType!
   fee: Fee
   depositor: Account!
   deposit: Deposit!
   shares: BigDecimal!
   timestamp: Int!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
 }
 
-type FeeSharesBurnedEvent implements SharesChange @entity {
+type FeeSharesBurnedEvent implements Activity & VaultActivity & SharesChange @entity {
   id: ID!
   vault: Vault!
-  type: SharesChangeType!
+  sharesChangeType: SharesChangeType!
   fee: Fee
   depositor: Account!
   deposit: Deposit!
   shares: BigDecimal!
   timestamp: Int!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
 }
 
-type FeeSharesAllocationChangedEvent implements SharesChange @entity {
+type FeeSharesAllocationChangedEvent implements Activity & VaultActivity & DepositorActivity & SharesChange @entity {
   id: ID!
   vault: Vault!
-  type: SharesChangeType!
+  sharesChangeType: SharesChangeType!
   fee: Fee
   depositor: Account!
   deposit: Deposit!
   shares: BigDecimal!
   timestamp: Int!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
 }
 
 #################################################
@@ -293,7 +469,7 @@ type FeeSharesAllocationChangedEvent implements SharesChange @entity {
 interface Fee {
   id: ID!
   fee: Bytes!
-  type: FeeType!
+  feeType: FeeType!
   comptroller: Comptroller!
   createdAt: Int!
   settings: String!
@@ -302,7 +478,7 @@ interface Fee {
 type EntranceRateBurnFee implements Fee @entity {
   id: ID!
   fee: Bytes!
-  type: FeeType!
+  feeType: FeeType!
   comptroller: Comptroller!
   createdAt: Int!
   settings: String!
@@ -313,7 +489,7 @@ type EntranceRateBurnFee implements Fee @entity {
 type EntranceRateDirectFee implements Fee @entity {
   id: ID!
   fee: Bytes!
-  type: FeeType!
+  feeType: FeeType!
   comptroller: Comptroller!
   createdAt: Int!
   settings: String!
@@ -325,7 +501,7 @@ type EntranceRateDirectFee implements Fee @entity {
 type ExitRateBurnFee implements Fee @entity {
   id: ID!
   fee: Bytes!
-  type: FeeType!
+  feeType: FeeType!
   comptroller: Comptroller!
   createdAt: Int!
   settings: String!
@@ -337,7 +513,7 @@ type ExitRateBurnFee implements Fee @entity {
 type ExitRateDirectFee implements Fee @entity {
   id: ID!
   fee: Bytes!
-  type: FeeType!
+  feeType: FeeType!
   comptroller: Comptroller!
   createdAt: Int!
   settings: String!
@@ -350,7 +526,7 @@ type ExitRateDirectFee implements Fee @entity {
 type ManagementFee implements Fee @entity {
   id: ID!
   fee: Bytes!
-  type: FeeType!
+  feeType: FeeType!
   comptroller: Comptroller!
   createdAt: Int!
   settings: String!
@@ -363,7 +539,7 @@ type ManagementFee implements Fee @entity {
 type PerformanceFee implements Fee @entity {
   id: ID!
   fee: Bytes!
-  type: FeeType!
+  feeType: FeeType!
   comptroller: Comptroller!
   createdAt: Int!
   settings: String!
@@ -381,7 +557,7 @@ type PerformanceFee implements Fee @entity {
 type UnknownFee implements Fee @entity {
   id: ID!
   fee: Bytes!
-  type: FeeType!
+  feeType: FeeType!
   comptroller: Comptroller!
   createdAt: Int!
   lastSettled: Int!
@@ -405,7 +581,7 @@ enum FeeType {
 interface Policy {
   id: ID!
   policy: Bytes!
-  type: PolicyType!
+  policyType: PolicyType!
   comptroller: Comptroller!
   createdAt: Int!
   enabled: Boolean!
@@ -415,7 +591,7 @@ interface Policy {
 type AdapterBlacklistPolicy implements Policy @entity {
   id: ID!
   policy: Bytes!
-  type: PolicyType!
+  policyType: PolicyType!
   comptroller: Comptroller!
   createdAt: Int!
   enabled: Boolean!
@@ -426,7 +602,7 @@ type AdapterBlacklistPolicy implements Policy @entity {
 type AdapterWhitelistPolicy implements Policy @entity {
   id: ID!
   policy: Bytes!
-  type: PolicyType!
+  policyType: PolicyType!
   comptroller: Comptroller!
   createdAt: Int!
   enabled: Boolean!
@@ -437,7 +613,7 @@ type AdapterWhitelistPolicy implements Policy @entity {
 type AllowedAdapterIncomingAssetsPolicy implements Policy @entity {
   id: ID!
   policy: Bytes!
-  type: PolicyType!
+  policyType: PolicyType!
   comptroller: Comptroller!
   createdAt: Int!
   enabled: Boolean!
@@ -448,7 +624,7 @@ type AllowedAdapterIncomingAssetsPolicy implements Policy @entity {
 type AllowedAdaptersPolicy implements Policy @entity {
   id: ID!
   policy: Bytes!
-  type: PolicyType!
+  policyType: PolicyType!
   comptroller: Comptroller!
   createdAt: Int!
   enabled: Boolean!
@@ -459,7 +635,7 @@ type AllowedAdaptersPolicy implements Policy @entity {
 type AllowedAssetsForRedemptionPolicy implements Policy @entity {
   id: ID!
   policy: Bytes!
-  type: PolicyType!
+  policyType: PolicyType!
   comptroller: Comptroller!
   createdAt: Int!
   enabled: Boolean!
@@ -470,7 +646,7 @@ type AllowedAssetsForRedemptionPolicy implements Policy @entity {
 type AllowedDepositRecipientsPolicy implements Policy @entity {
   id: ID!
   policy: Bytes!
-  type: PolicyType!
+  policyType: PolicyType!
   comptroller: Comptroller!
   createdAt: Int!
   enabled: Boolean!
@@ -481,7 +657,7 @@ type AllowedDepositRecipientsPolicy implements Policy @entity {
 type AllowedExternalPositionTypesPolicy implements Policy @entity {
   id: ID!
   policy: Bytes!
-  type: PolicyType!
+  policyType: PolicyType!
   comptroller: Comptroller!
   createdAt: Int!
   enabled: Boolean!
@@ -492,7 +668,7 @@ type AllowedExternalPositionTypesPolicy implements Policy @entity {
 type AllowedSharesTransferRecipientsPolicy implements Policy @entity {
   id: ID!
   policy: Bytes!
-  type: PolicyType!
+  policyType: PolicyType!
   comptroller: Comptroller!
   createdAt: Int!
   enabled: Boolean!
@@ -503,7 +679,7 @@ type AllowedSharesTransferRecipientsPolicy implements Policy @entity {
 type AssetBlacklistPolicy implements Policy @entity {
   id: ID!
   policy: Bytes!
-  type: PolicyType!
+  policyType: PolicyType!
   comptroller: Comptroller!
   createdAt: Int!
   enabled: Boolean!
@@ -514,7 +690,7 @@ type AssetBlacklistPolicy implements Policy @entity {
 type AssetWhitelistPolicy implements Policy @entity {
   id: ID!
   policy: Bytes!
-  type: PolicyType!
+  policyType: PolicyType!
   comptroller: Comptroller!
   createdAt: Int!
   enabled: Boolean!
@@ -525,7 +701,7 @@ type AssetWhitelistPolicy implements Policy @entity {
 type BuySharesCallerWhitelistPolicy implements Policy @entity {
   id: ID!
   policy: Bytes!
-  type: PolicyType!
+  policyType: PolicyType!
   comptroller: Comptroller!
   createdAt: Int!
   enabled: Boolean!
@@ -537,7 +713,7 @@ type BuySharesCallerWhitelistPolicy implements Policy @entity {
 type CumulativeSlippageTolerancePolicy implements Policy @entity {
   id: ID!
   policy: Bytes!
-  type: PolicyType!
+  policyType: PolicyType!
   comptroller: Comptroller!
   createdAt: Int!
   enabled: Boolean!
@@ -550,7 +726,7 @@ type CumulativeSlippageTolerancePolicy implements Policy @entity {
 type DepositorWhitelistPolicy implements Policy @entity {
   id: ID!
   policy: Bytes!
-  type: PolicyType!
+  policyType: PolicyType!
   comptroller: Comptroller!
   createdAt: Int!
   enabled: Boolean!
@@ -562,7 +738,7 @@ type DepositorWhitelistPolicy implements Policy @entity {
 type GuaranteedRedemptionPolicy implements Policy @entity {
   id: ID!
   policy: Bytes!
-  type: PolicyType!
+  policyType: PolicyType!
   comptroller: Comptroller!
   createdAt: Int!
   enabled: Boolean!
@@ -574,7 +750,7 @@ type GuaranteedRedemptionPolicy implements Policy @entity {
 type MaxConcentrationPolicy implements Policy @entity {
   id: ID!
   policy: Bytes!
-  type: PolicyType!
+  policyType: PolicyType!
   comptroller: Comptroller!
   createdAt: Int!
   enabled: Boolean!
@@ -585,7 +761,7 @@ type MaxConcentrationPolicy implements Policy @entity {
 type MinMaxDepositPolicy implements Policy @entity {
   id: ID!
   policy: Bytes!
-  type: PolicyType!
+  policyType: PolicyType!
   comptroller: Comptroller!
   createdAt: Int!
   enabled: Boolean!
@@ -598,7 +774,7 @@ type MinMaxDepositPolicy implements Policy @entity {
 type OnlyUntrackDustOrPricelessAssetsPolicy implements Policy @entity {
   id: ID!
   policy: Bytes!
-  type: PolicyType!
+  policyType: PolicyType!
   comptroller: Comptroller!
   createdAt: Int!
   enabled: Boolean!
@@ -608,7 +784,7 @@ type OnlyUntrackDustOrPricelessAssetsPolicy implements Policy @entity {
 type UnknownPolicy implements Policy @entity {
   id: ID!
   policy: Bytes!
-  type: PolicyType!
+  policyType: PolicyType!
   comptroller: Comptroller!
   createdAt: Int!
   enabled: Boolean!
@@ -661,16 +837,68 @@ enum AddressListUpdateType {
 # Trading
 #################################################
 
-type Trade @entity {
+type Trade implements Activity & VaultActivity @entity {
   id: ID!
   vault: Vault!
   adapter: Bytes!
-  type: TradeType!
+  tradeType: TradeType!
   incomingAssets: [Asset!]!
   outgoingAssets: [Asset!]!
   incomingAssetAmounts: [AssetAmount!]!
   outgoingAssetAmounts: [AssetAmount!]!
   timestamp: Int!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
+#################################################
+# External Positions
+#################################################
+
+interface ExternalPosition {
+  id: ID!
+  vault: Vault!
+  type: Int!
+  active: Boolean!
+
+  changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
+}
+
+interface ExternalPositionChange {
+  id: ID!
+  externalPosition: ExternalPosition!
+}
+
+type CompoundDebtPosition implements ExternalPosition @entity {
+  id: ID!
+  vault: Vault!
+  type: Int!
+  active: Boolean!
+
+  collateralAmounts: [AssetAmount!]!
+  borrowedAmounts: [AssetAmount!]!
+
+  changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
+}
+
+enum CompoundDebtPositionChangeType {
+  AssetBorrowed
+  BorrowedAssetRepaid
+  CollateralAssetAdded
+  CollateralAssetRemoved
+}
+
+type CompoundDebtPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: Int!
+  externalPosition: ExternalPosition!
+  changeType: CompoundDebtPositionChangeType!
+  assetAmount: AssetAmount!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
 }
 
 #################################################
@@ -721,15 +949,23 @@ type ProtocolFee @entity {
 
 type ProtocolFeePaid @entity {
   id: ID!
+  timestamp: Int!
   vault: Vault!
   shares: BigDecimal!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
 }
 
 type ProtocolFeeBurned @entity {
   id: ID!
+  timestamp: Int!
   vault: Vault!
   sharesBoughtBack: BigDecimal!
   mlnBurned: BigDecimal!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
 }
 
 #################################################
@@ -783,62 +1019,75 @@ type CurrencyPrice @entity {
 }
 
 #################################################
-# External Positions
+# Activity interfaces
 #################################################
 
-interface ExternalPosition {
+enum ActivityCategory {
+  Network
+  Vault
+  Depositor
+}
+
+enum ActivityType {
+  Assets
+  DepositorShares
+  ExternalPosition
+  FeeShares
+  NetworkSettings
+  ProtocolFee
+  Trade
+  VaultSettings
+}
+
+interface Activity {
   id: ID!
+  timestamp: Int!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
+interface NetworkActivity {
+  id: ID!
+  timestamp: Int!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
+interface VaultActivity {
+  id: ID!
+  timestamp: Int!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
   vault: Vault!
-  type: Int!
-  active: Boolean!
-
-  changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
 }
 
-interface ExternalPositionChange {
+interface DepositorActivity {
   id: ID!
-  externalPosition: ExternalPosition!
-}
-
-type CompoundDebtPosition implements ExternalPosition @entity {
-  id: ID!
+  timestamp: Int!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
   vault: Vault!
-  type: Int!
-  active: Boolean!
-
-  collateralAmounts: [AssetAmount!]!
-  borrowedAmounts: [AssetAmount!]!
-
-  changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
-}
-
-enum CompoundDebtPositionChangeType {
-  AssetBorrowed
-  BorrowedAssetRepaid
-  CollateralAssetAdded
-  CollateralAssetRemoved
-}
-
-type CompoundDebtPositionChange @entity {
-  id: ID!
-  externalPosition: ExternalPosition!
-  changeType: CompoundDebtPositionChangeType!
-  assetAmount: AssetAmount!
+  depositor: Account!
 }
 
 #################################################
 # Metrics
 #################################################
 
-type MetricCounter @entity {
+type Counter @entity {
   id: ID!
-  vaultMetricCounter: Int!
+  activityCounter: Int!
   depositMetricCounter: Int!
+  vaultMetricCounter: Int!
 }
 
 type VaultMetric @entity {
   id: ID!
-  counter: Int!
+  vaultMetricCounter: Int!
   timestamp: Int!
   vault: Bytes!
   nav: BigDecimal!
@@ -852,7 +1101,7 @@ type VaultMetric @entity {
 
 type DepositMetric @entity {
   id: ID!
-  counter: Int!
+  depositMetricCounter: Int!
   timestamp: Int!
   vault: Bytes!
   depositor: Bytes!

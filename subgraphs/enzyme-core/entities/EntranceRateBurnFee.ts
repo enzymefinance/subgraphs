@@ -16,7 +16,7 @@ export function ensureEntranceRateBurnFee(
 
   fee = new EntranceRateBurnFee(id);
   fee.fee = feeAddress;
-  fee.type = 'EntranceRateBurn';
+  fee.feeType = 'EntranceRateBurn';
   fee.comptroller = comptrollerAddress.toHex();
   fee.rate = BigDecimal.fromString('0');
   fee.createdAt = event.block.timestamp.toI32();

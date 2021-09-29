@@ -16,7 +16,7 @@ export function ensureAllowedSharesTransferRecipientsPolicy(
 
   policy = new AllowedSharesTransferRecipientsPolicy(id);
   policy.policy = policyAddress;
-  policy.type = 'AllowedSharesTransferRecipients';
+  policy.policyType = 'AllowedSharesTransferRecipients';
   policy.comptroller = comptrollerAddress.toHex();
   policy.addressLists = new Array<string>();
   policy.createdAt = event.block.timestamp.toI32();

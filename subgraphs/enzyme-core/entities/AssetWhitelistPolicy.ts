@@ -16,7 +16,7 @@ export function ensureAssetWhitelistPolicy(
 
   policy = new AssetWhitelistPolicy(id);
   policy.policy = policyAddress;
-  policy.type = 'AssetWhitelist';
+  policy.policyType = 'AssetWhitelist';
   policy.comptroller = comptrollerAddress.toHex();
   policy.assets = new Array<Bytes>();
   policy.createdAt = event.block.timestamp.toI32();

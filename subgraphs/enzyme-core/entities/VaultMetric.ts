@@ -2,29 +2,12 @@ import { toBigDecimal } from '@enzymefinance/subgraph-utils';
 import { Address, BigDecimal, ethereum } from '@graphprotocol/graph-ts';
 import { release2Addresses, release3Addresses, release4Addresses } from '../generated/addresses';
 import { ProtocolSdk } from '../generated/contracts/ProtocolSdk';
-import { MetricCounter, VaultMetric } from '../generated/schema';
+import { VaultMetric } from '../generated/schema';
 import { tokenTotalSupplyOrThrow } from '../utils/tokenCalls';
 import { ensureAsset } from './Asset';
 import { ensureComptroller } from './Comptroller';
+import { getVaultMetricCounter } from './Counter';
 import { useVault } from './Vault';
-
-export function getVaultMetricCounter(): i32 {
-  let counter = MetricCounter.load('metricId');
-
-  if (counter == null) {
-    counter = new MetricCounter('metricId');
-    counter.vaultMetricCounter = 1;
-    counter.depositMetricCounter = 0;
-    counter.save();
-
-    return counter.vaultMetricCounter;
-  }
-
-  counter.vaultMetricCounter = counter.vaultMetricCounter + 1;
-  counter.save();
-
-  return counter.vaultMetricCounter;
-}
 
 export function trackVaultMetric(vaultAddress: Address, event: ethereum.Event): void {
   let id = vaultAddress.toHex() + '/' + event.block.number.toString();
@@ -37,7 +20,7 @@ export function trackVaultMetric(vaultAddress: Address, event: ethereum.Event): 
   let quantities = getVaultQuantities(vaultAddress, event);
 
   metric = new VaultMetric(id);
-  metric.counter = getVaultMetricCounter();
+  metric.vaultMetricCounter = getVaultMetricCounter();
   metric.timestamp = event.block.timestamp.toI32();
   metric.vault = vaultAddress;
   metric.gav = quantities.gav;

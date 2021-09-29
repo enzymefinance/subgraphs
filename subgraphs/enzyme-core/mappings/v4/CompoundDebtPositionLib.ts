@@ -18,7 +18,7 @@ export function handleAssetBorrowed(event: AssetBorrowed): void {
   let amount = toBigDecimal(event.params.amount, asset.decimals);
   let denominationAsset = ensureAsset(Address.fromString(comptroller.denomination));
 
-  createCompoundDebtPositionChange(event.address, asset, amount, denominationAsset, 'AssetBorrowed', event);
+  createCompoundDebtPositionChange(event.address, asset, amount, denominationAsset, 'AssetBorrowed', vault, event);
 }
 
 export function handleBorrowedAssetRepaid(event: BorrowedAssetRepaid): void {
@@ -28,7 +28,15 @@ export function handleBorrowedAssetRepaid(event: BorrowedAssetRepaid): void {
   let amount = toBigDecimal(event.params.amount, asset.decimals);
   let denominationAsset = ensureAsset(Address.fromString(comptroller.denomination));
 
-  createCompoundDebtPositionChange(event.address, asset, amount, denominationAsset, 'BorrowedAssetRepaid', event);
+  createCompoundDebtPositionChange(
+    event.address,
+    asset,
+    amount,
+    denominationAsset,
+    'BorrowedAssetRepaid',
+    vault,
+    event,
+  );
 }
 
 export function handleCollateralAssetAdded(event: CollateralAssetAdded): void {
@@ -38,7 +46,15 @@ export function handleCollateralAssetAdded(event: CollateralAssetAdded): void {
   let amount = toBigDecimal(event.params.amount, asset.decimals);
   let denominationAsset = ensureAsset(Address.fromString(comptroller.denomination));
 
-  createCompoundDebtPositionChange(event.address, asset, amount, denominationAsset, 'CollateralAssetAdded', event);
+  createCompoundDebtPositionChange(
+    event.address,
+    asset,
+    amount,
+    denominationAsset,
+    'CollateralAssetAdded',
+    vault,
+    event,
+  );
 }
 
 export function handleCollateralAssetRemoved(event: CollateralAssetRemoved): void {
@@ -48,5 +64,13 @@ export function handleCollateralAssetRemoved(event: CollateralAssetRemoved): voi
   let amount = toBigDecimal(event.params.amount, asset.decimals);
   let denominationAsset = ensureAsset(Address.fromString(comptroller.denomination));
 
-  createCompoundDebtPositionChange(event.address, asset, amount, denominationAsset, 'CollateralAssetRemoved', event);
+  createCompoundDebtPositionChange(
+    event.address,
+    asset,
+    amount,
+    denominationAsset,
+    'CollateralAssetRemoved',
+    vault,
+    event,
+  );
 }

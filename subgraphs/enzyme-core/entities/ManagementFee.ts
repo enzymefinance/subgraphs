@@ -16,7 +16,7 @@ export function ensureManagementFee(
 
   fee = new ManagementFee(id);
   fee.fee = feeAddress;
-  fee.type = 'Management';
+  fee.feeType = 'Management';
   fee.comptroller = comptrollerAddress.toHex();
   fee.scaledPerSecondRate = BigInt.fromI32(0);
   fee.createdAt = event.block.timestamp.toI32();

@@ -16,7 +16,7 @@ export function ensureAllowedAdaptersPolicy(
 
   policy = new AllowedAdaptersPolicy(id);
   policy.policy = policyAddress;
-  policy.type = 'AllowedAdapters';
+  policy.policyType = 'AllowedAdapters';
   policy.comptroller = comptrollerAddress.toHex();
   policy.addressLists = new Array<string>();
   policy.createdAt = event.block.timestamp.toI32();

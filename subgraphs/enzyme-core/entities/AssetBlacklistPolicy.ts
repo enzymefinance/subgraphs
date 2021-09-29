@@ -16,7 +16,7 @@ export function ensureAssetBlacklistPolicy(
 
   policy = new AssetBlacklistPolicy(id);
   policy.policy = policyAddress;
-  policy.type = 'AssetBlacklist';
+  policy.policyType = 'AssetBlacklist';
   policy.comptroller = comptrollerAddress.toHex();
   policy.assets = new Array<Bytes>();
   policy.createdAt = event.block.timestamp.toI32();

@@ -1,6 +1,7 @@
-import { ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
+import { uniqueEventId, ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
 import { Address, DataSourceContext } from '@graphprotocol/graph-ts';
 import { ensureComptroller } from '../entities/Comptroller';
+import { getActivityCounter } from '../entities/Counter';
 import { generateMigrationId, useMigration } from '../entities/Migration';
 import { ensureNetwork } from '../entities/Network';
 import { ensureRelease } from '../entities/Release';
@@ -21,7 +22,13 @@ import {
   SharesTokenSymbolSet,
   VaultProxyDeployed,
 } from '../generated/contracts/DispatcherEvents';
-import { Migration } from '../generated/schema';
+import {
+  Migration,
+  NetworkReleaseChanged,
+  VaultMigrationCancelled,
+  VaultMigrationExecuted,
+  VaultMigrationSignalled,
+} from '../generated/schema';
 import { ComptrollerLib3DataSource, ComptrollerLib4DataSource } from '../generated/templates';
 
 export function handleCurrentFundDeployerSet(event: CurrentFundDeployerSet): void {
@@ -31,12 +38,23 @@ export function handleCurrentFundDeployerSet(event: CurrentFundDeployerSet): voi
   network.currentRelease = release.id;
   network.save();
 
+  let activity = new NetworkReleaseChanged(uniqueEventId(event));
+  activity.timestamp = event.block.timestamp.toI32();
+  activity.activityCounter = getActivityCounter();
+  activity.activityCategories = ['Network'];
+  activity.activityType = 'NetworkSettings';
+  activity.nextRelease = release.id;
+
   if (!event.params.prevFundDeployer.equals(ZERO_ADDRESS)) {
     let prevRelease = ensureRelease(event.params.prevFundDeployer, event);
     prevRelease.current = false;
     prevRelease.close = event.block.timestamp.toI32();
     prevRelease.save();
+
+    activity.prevRelease = prevRelease.id;
   }
+
+  activity.save();
 }
 
 export function handleMigrationCancelled(event: MigrationCancelled): void {
@@ -56,6 +74,15 @@ export function handleMigrationCancelled(event: MigrationCancelled): void {
   comptrollerProxy.vault = null;
   comptrollerProxy.status = 'FREE';
   comptrollerProxy.save();
+
+  let activity = new VaultMigrationCancelled(uniqueEventId(event, 'MigrationCancelled'));
+  activity.timestamp = event.block.timestamp.toI32();
+  activity.vault = event.params.vaultProxy.toHex();
+  activity.migration = migrationId;
+  activity.activityCounter = getActivityCounter();
+  activity.activityCategories = ['Vault'];
+  activity.activityType = 'VaultSettings';
+  activity.save();
 }
 
 export function handleMigrationExecuted(event: MigrationExecuted): void {
@@ -100,6 +127,16 @@ export function handleMigrationExecuted(event: MigrationExecuted): void {
   prevComptrollerProxy.destruction = event.block.timestamp.toI32();
   prevComptrollerProxy.status = 'DESTRUCTED';
   prevComptrollerProxy.save();
+
+  let activity = new VaultMigrationExecuted(uniqueEventId(event, 'MigrationExecuted'));
+  activity.timestamp = event.block.timestamp.toI32();
+  activity.vault = event.params.vaultProxy.toHex();
+  activity.migration = migrationId;
+  activity.nextComptroller = comptrollerProxy.id;
+  activity.activityCounter = getActivityCounter();
+  activity.activityCategories = ['Vault'];
+  activity.activityType = 'VaultSettings';
+  activity.save();
 }
 
 export function handleMigrationSignaled(event: MigrationSignaled): void {
@@ -126,6 +163,16 @@ export function handleMigrationSignaled(event: MigrationSignaled): void {
   comptrollerProxy.vault = vault.id;
   comptrollerProxy.status = 'SIGNALLED';
   comptrollerProxy.save();
+
+  let activity = new VaultMigrationSignalled(uniqueEventId(event, 'MigrationSignalled'));
+  activity.timestamp = event.block.timestamp.toI32();
+  activity.vault = event.params.vaultProxy.toHex();
+  activity.migration = migrationId;
+  activity.nextComptroller = comptrollerProxy.id;
+  activity.activityCounter = getActivityCounter();
+  activity.activityCategories = ['Vault'];
+  activity.activityType = 'VaultSettings';
+  activity.save();
 }
 
 export function handleMigrationTimelockSet(event: MigrationTimelockSet): void {

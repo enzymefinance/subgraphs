@@ -16,7 +16,7 @@ export function ensureGuaranteedRedemptionPolicy(
 
   policy = new GuaranteedRedemptionPolicy(id);
   policy.policy = policyAddress;
-  policy.type = 'GuaranteedRedemption';
+  policy.policyType = 'GuaranteedRedemption';
   policy.comptroller = comptrollerAddress.toHex();
   policy.startTimestamp = 0;
   policy.duration = 0;

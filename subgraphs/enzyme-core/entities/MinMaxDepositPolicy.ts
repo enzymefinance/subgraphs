@@ -16,7 +16,7 @@ export function ensureMinMaxDepositPolicy(
 
   policy = new MinMaxDepositPolicy(id);
   policy.policy = policyAddress;
-  policy.type = 'MinMaxDeposit';
+  policy.policyType = 'MinMaxDeposit';
   policy.comptroller = comptrollerAddress.toHex();
   policy.minDepositAmount = BigDecimal.fromString('0');
   policy.maxDepositAmount = BigDecimal.fromString('0');
