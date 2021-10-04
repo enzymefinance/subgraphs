@@ -3,6 +3,7 @@ import { Transfer } from '../generated/ERC20Contract';
 import { Asset, IncomingTransfer, OutgoingTransfer, Vault } from '../generated/schema';
 import { ensureAsset } from '../entities/Asset';
 import { getOrCreateHolding, updateHoldingBalance } from '../entities/Holding';
+import { getTransferCounter } from '../entities/Counter';
 
 export function transferId(event: Transfer, suffix: string): string {
   return event.transaction.hash.toHex() + '/' + event.logIndex.toString() + '/' + suffix;
@@ -57,6 +58,7 @@ function handleIncomingTransfer(event: Transfer, asset: Asset, vault: Vault): vo
   let amount = toBigDecimal(event.params.value, asset.decimals);
 
   let transfer = new IncomingTransfer(transferId(event, 'incoming'));
+  transfer.counter = getTransferCounter();
   transfer.type = 'INCOMING';
   transfer.vault = vault.id;
   transfer.asset = asset.id;
@@ -77,6 +79,7 @@ function handleOutgoingTransfer(event: Transfer, asset: Asset, vault: Vault): vo
   let amount = toBigDecimal(event.params.value, asset.decimals);
 
   let transfer = new OutgoingTransfer(transferId(event, 'outgoing'));
+  transfer.counter = getTransferCounter();
   transfer.type = 'OUTGOING';
   transfer.vault = vault.id;
   transfer.asset = asset.id;

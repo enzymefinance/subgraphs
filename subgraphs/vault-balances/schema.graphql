@@ -126,6 +126,10 @@ Shared interface for incoming and outgoing transfers.
 interface Transfer {
   id: ID!
   """
+  Strictly incremental counter for data scraping.
+  """
+  counter: Int!
+  """
   The time at which the transfer occurred.
   """
   timestamp: Int!
@@ -172,6 +176,10 @@ Outgoing transfers (transfers where an asset leaves a vault).
 """
 type OutgoingTransfer implements Transfer @entity {
   id: ID!
+  """
+  Strictly incremental counter for data scraping.
+  """
+  counter: Int!
   """
   The time at which the transfer occurred.
   """
@@ -224,6 +232,10 @@ Incoming transfers (transfers where an asset enters a vault).
 type IncomingTransfer implements Transfer @entity {
   id: ID!
   """
+  Strictly incremental counter for data scraping.
+  """
+  counter: Int!
+  """
   The time at which the transfer occurred.
   """
   timestamp: Int!
@@ -244,7 +256,7 @@ type IncomingTransfer implements Transfer @entity {
   """
   holding: Holding!
   """
-  The affected vault (payer).
+  The affected vault (recipient).
   """
   vault: Vault!
   """
@@ -267,4 +279,19 @@ type IncomingTransfer implements Transfer @entity {
   The transaction hash.
   """
   transaction: Bytes!
+}
+
+#################################################
+# Counter
+#################################################
+
+"""
+Generic counter entity to allow safe data scraping.
+"""
+type Counter @entity {
+  id: ID!
+  """
+  Strictly incremental counter for data scraping.
+  """
+  count: Int!
 }
