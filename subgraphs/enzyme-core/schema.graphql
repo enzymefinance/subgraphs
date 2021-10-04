@@ -1078,13 +1078,6 @@ interface DepositorActivity {
 # Metrics
 #################################################
 
-type Counter @entity {
-  id: ID!
-  activityCounter: Int!
-  depositMetricCounter: Int!
-  vaultMetricCounter: Int!
-}
-
 type VaultMetric @entity {
   id: ID!
   vaultMetricCounter: Int!
@@ -1106,4 +1099,13 @@ type DepositMetric @entity {
   vault: Bytes!
   depositor: Bytes!
   balance: BigDecimal!
+}
+
+#################################################
+# Counter
+#################################################
+
+type Counter @entity {
+  id: ID!
+  count: Int!
 }
