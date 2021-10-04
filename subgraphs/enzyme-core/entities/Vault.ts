@@ -1,7 +1,7 @@
 import { logCritical } from '@enzymefinance/subgraph-utils';
 import { Address, BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 import { Account, Comptroller, Release, Vault, VaultCreated } from '../generated/schema';
-import { getActivityCounter } from './Counter';
+import { getActivityCounter, getVaultCounter } from './Counter';
 
 export function createVault(
   address: Address,
@@ -14,6 +14,7 @@ export function createVault(
 ): Vault {
   let vault = new Vault(address.toHex());
   vault.name = name;
+  vault.counter = getVaultCounter();
   vault.inception = inception.toI32();
   vault.release = release.id;
   vault.comptroller = comptroller.id;

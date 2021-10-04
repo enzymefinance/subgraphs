@@ -25,3 +25,7 @@ export function getDepositMetricCounter(): i32 {
 export function getVaultMetricCounter(): i32 {
   return getCounter('metrics');
 }
+
+export function getVaultCounter(): i32 {
+  return getCounter('vaults');
+}
