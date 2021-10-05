@@ -5,10 +5,9 @@ export function getCounter(id: string): i32 {
   if (counter == null) {
     counter = new Counter(id);
     counter.count = 0;
-  } else {
-    counter.count = counter.count + 1;
   }
 
+  counter.count = counter.count + 1;
   counter.save();
 
   return counter.count;
