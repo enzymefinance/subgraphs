@@ -6,6 +6,7 @@ import { trackDepositMetric } from '../../entities/DepositMetric';
 import { useNetwork } from '../../entities/Network';
 import { useVault } from '../../entities/Vault';
 import { trackVaultMetric } from '../../entities/VaultMetric';
+import { release4Addresses } from '../../generated/addresses';
 import {
   AccessorSet,
   Approval,
@@ -225,10 +226,18 @@ export function handleTrackedAssetRemoved(event: TrackedAssetRemoved): void {
 }
 
 export function handleProtocolFeePaidInShares(event: ProtocolFeePaidInShares): void {
+  let vault = useVault(event.address.toHex());
+
+  let depositor = ensureDepositor(release4Addresses.protocolFeeTrackerAddress, event);
+  let deposit = ensureDeposit(depositor, vault, event);
+
   let feePaid = new ProtocolFeePaid(uniqueEventId(event));
   feePaid.timestamp = event.block.timestamp.toI32();
-  feePaid.vault = event.address.toHex();
+  feePaid.vault = vault.id;
   feePaid.shares = toBigDecimal(event.params.sharesAmount);
+  feePaid.sharesChangeType = 'ProtocolFeePaid';
+  feePaid.depositor = depositor.id;
+  feePaid.deposit = deposit.id;
   feePaid.activityCounter = getActivityCounter();
   feePaid.activityCategories = ['Vault'];
   feePaid.activityType = 'ProtocolFee';
@@ -237,10 +246,18 @@ export function handleProtocolFeePaidInShares(event: ProtocolFeePaidInShares): v
 export function handleProtocolFeeSharesBoughtBack(event: ProtocolFeeSharesBoughtBack): void {
   let mlnBurned = toBigDecimal(event.params.mlnBurned);
 
+  let vault = useVault(event.address.toHex());
+
+  let depositor = ensureDepositor(release4Addresses.protocolFeeTrackerAddress, event);
+  let deposit = ensureDeposit(depositor, vault, event);
+
   let feeBurned = new ProtocolFeeBurned(uniqueEventId(event));
   feeBurned.timestamp = event.block.timestamp.toI32();
   feeBurned.vault = event.address.toHex();
-  feeBurned.sharesBoughtBack = toBigDecimal(event.params.sharesAmount);
+  feeBurned.shares = toBigDecimal(event.params.sharesAmount);
+  feeBurned.sharesChangeType = 'ProtocolFeePaid';
+  feeBurned.depositor = depositor.id;
+  feeBurned.deposit = deposit.id;
   feeBurned.mlnBurned = mlnBurned;
   feeBurned.activityCounter = getActivityCounter();
   feeBurned.activityCategories = ['Vault'];

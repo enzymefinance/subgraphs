@@ -18,6 +18,8 @@ enum SharesChangeType {
   FeeSharesReceived
   FeeSharesBurned
   FeeSharesAllocationChanged
+  ProtocolFeePaid
+  ProtocolFeeBurnt
 }
 
 enum TradeType {
@@ -948,21 +950,27 @@ type ProtocolFee @entity {
   lastPaid: Int!
 }
 
-type ProtocolFeePaid @entity {
+type ProtocolFeePaid implements Activity & VaultActivity & SharesChange @entity {
   id: ID!
   timestamp: Int!
   vault: Vault!
   shares: BigDecimal!
+  sharesChangeType: SharesChangeType!
+  depositor: Account!
+  deposit: Deposit!
   activityCounter: Int!
   activityCategories: [ActivityCategory!]!
   activityType: ActivityType!
 }
 
-type ProtocolFeeBurned @entity {
+type ProtocolFeeBurned implements Activity & VaultActivity & SharesChange @entity {
   id: ID!
   timestamp: Int!
   vault: Vault!
-  sharesBoughtBack: BigDecimal!
+  shares: BigDecimal!
+  sharesChangeType: SharesChangeType!
+  depositor: Account!
+  deposit: Deposit!
   mlnBurned: BigDecimal!
   activityCounter: Int!
   activityCategories: [ActivityCategory!]!
