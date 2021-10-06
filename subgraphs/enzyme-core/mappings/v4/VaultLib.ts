@@ -99,7 +99,7 @@ export function handleTransfer(event: Transfer): void {
 
   let transfer = new SharesTransferEvent(uniqueEventId(event, 'SharesTransfer'));
   transfer.vault = vault.id;
-  transfer.from = fromInvestment.id;
+  transfer.from = fromInvestor.id;
   transfer.to = toInvestor.id;
   transfer.shares = shares;
   transfer.timestamp = event.block.timestamp.toI32();
