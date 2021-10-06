@@ -116,19 +116,6 @@ describe('Vault with Policies', () => {
 
     const onlyUntrackDustOrPricelessAssetsPolicySettings = '0x';
 
-    console.log(
-      deployment.allowedAdapterIncomingAssetsPolicy,
-      deployment.allowedAdaptersPolicy,
-      deployment.allowedAssetsForRedemptionPolicy,
-      deployment.allowedDepositRecipientsPolicy,
-      deployment.allowedExternalPositionTypesPolicy,
-      deployment.allowedSharesTransferRecipientsPolicy,
-      deployment.cumulativeSlippageTolerancePolicy,
-      deployment.guaranteedRedemptionPolicy,
-      deployment.minMaxInvestmentPolicy,
-      deployment.onlyUntrackDustOrPricelessAssetsPolicy,
-    );
-
     const policies = [
       deployment.allowedAdapterIncomingAssetsPolicy,
       deployment.allowedAdaptersPolicy,

@@ -3,8 +3,6 @@ import { ComptrollerLib, Dispatcher, FundDeployer, StandardToken, VaultLib } fro
 import { providers, utils, Wallet } from 'ethers';
 import { assertEvent } from './utils/assertions';
 import { Deployment, fetchDeployment } from './utils/deployment';
-import { waitForSubgraph } from './utils/subgraph';
-import { fetchDeposit } from './utils/subgraph-queries/fetchDeposit';
 
 describe('Simple vault with deposits and a transfers', () => {
   const ethereumNetwork = process.env.ETHEREUM_NETWORK;
@@ -13,10 +11,6 @@ describe('Simple vault with deposits and a transfers', () => {
 
   const provider = new providers.StaticJsonRpcProvider(jsonRpcProvider, ethereumNetwork);
   let signer = new Wallet(privateKey, provider);
-
-  const subgraphStatusEndpoint = process.env.SUBGRAPH_STATUS_ENDPOINT;
-  const subgraphEndpoint = process.env.SUBGRAPH_ENDPOINT;
-  const subgraphName = process.env.SUBGRAPH_NAME;
 
   const deploymentEndpoint = process.env.DEPLOYMENT_ENDPOINT;
 
@@ -102,19 +96,9 @@ describe('Simple vault with deposits and a transfers', () => {
       investmentAmount: buySharesArgs.investmentAmount,
     });
 
-    await waitForSubgraph(subgraphStatusEndpoint, subgraphName, sharesBought.blockNumber);
-
-    const investmentId = `${fundCreatedArgs.vaultProxy.toLowerCase()}/${buySharesArgs.buyer.toLowerCase()}`;
-    const subgraphInvestment = await fetchDeposit(subgraphEndpoint, investmentId, sharesBought.blockNumber);
-
-    expect(subgraphInvestment.shares).toEqual(sharesToBuy.toString());
-    expect(subgraphInvestment.depositor.isDepositor).toBe(true);
-
     // Transfer
 
     const numberOfShares = await vaultProxy.balanceOf(signer.address);
-    const transferred = await vaultProxy.transfer.args(randomAddress(), numberOfShares.div(2)).send();
-
-    await waitForSubgraph(subgraphStatusEndpoint, subgraphName, transferred.blockNumber);
+    await vaultProxy.transfer.args(randomAddress(), numberOfShares.div(2)).send();
   });
 });
