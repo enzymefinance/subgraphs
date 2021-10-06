@@ -4,7 +4,7 @@ import {
   DustToleranceInWethSet,
   PricelessAssetBypassed,
   PricelessAssetTimelockStarted,
-} from '../../generated/contracts/OnlyUntrackDustOrPricelessAssetsPolicy4Events';
+} from '../../generated/contracts/OnlyRemoveDustExternalPositionPolicy4Events';
 import { ProtocolSdk } from '../../generated/contracts/ProtocolSdk';
 
 export function handleDustToleranceInWethSet(event: DustToleranceInWethSet): void {
@@ -16,7 +16,7 @@ export function handleDustToleranceInWethSet(event: DustToleranceInWethSet): voi
   }
 
   let release = ensureRelease(releaseAddress.value, event);
-  release.dustToleranceForAssetsInWeth = toBigDecimal(event.params.nextDustToleranceInWeth);
+  release.dustToleranceForExternalPositionsInWeth = toBigDecimal(event.params.nextDustToleranceInWeth);
   release.save();
 }
 

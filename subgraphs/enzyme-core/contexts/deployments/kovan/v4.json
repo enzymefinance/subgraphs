@@ -3,7 +3,7 @@
   "chainId": "42",
   "contracts": {
     "AddressListRegistry": {
-      "address": "0xC30721CFF9A1F6067902478ffFde0d45eC787750",
+      "address": "0x699020D00F5D8c0B6f174A2A68bd318E98709950",
       "abi": [
         {
           "inputs": [
@@ -489,7 +489,7 @@
       ]
     },
     "AllowedAdapterIncomingAssetsPolicy": {
-      "address": "0x5796714e32539c9043036475582FEB87859afa8e",
+      "address": "0x0595F87f33553512C3C10c16806391CfA0b95275",
       "abi": [
         {
           "inputs": [
@@ -718,7 +718,7 @@
       }
     },
     "AllowedAdaptersPolicy": {
-      "address": "0xE37aC0F39e45A1aF74B2E49D46603502189F97A9",
+      "address": "0x18c924289bA21579c730aD0608EeB4a396E6A998",
       "abi": [
         {
           "inputs": [
@@ -947,7 +947,7 @@
       }
     },
     "AllowedAssetsForRedemptionPolicy": {
-      "address": "0xAFa6E22Be4F8F4b3dA4B17215DF2E6065cEff11D",
+      "address": "0xC3Be4D3b42289F910347a4737B75cC4424dcd8E5",
       "abi": [
         {
           "inputs": [
@@ -1176,7 +1176,7 @@
       }
     },
     "AllowedDepositRecipientsPolicy": {
-      "address": "0xDd46d32DC9f575e7D5d70e0a005091228091617e",
+      "address": "0x1719113f17d01c1eBF7adC65521e23FED59f8CBB",
       "abi": [
         {
           "inputs": [
@@ -1405,7 +1405,7 @@
       }
     },
     "AllowedExternalPositionTypesPolicy": {
-      "address": "0xC71b856B30911BeBd477e704e7E82ae04d1C715B",
+      "address": "0x1A2Db893844Da9e49E71b95F6CCe3f1a403cFfe2",
       "abi": [
         {
           "inputs": [
@@ -1597,7 +1597,7 @@
       }
     },
     "AllowedSharesTransferRecipientsPolicy": {
-      "address": "0x08ef12F211Fa6bb0e5DfA660F98a479940E8E6C9",
+      "address": "0x43135597a5E0e8BFdB211Fc5d015c5EDCdc29E88",
       "abi": [
         {
           "inputs": [
@@ -1826,7 +1826,7 @@
       }
     },
     "AssetFinalityResolver": {
-      "address": "0xEAfB1263D047695A2Fc3F308E3d5E6C4d5FDDB83",
+      "address": "0x3d677e3f6c59299F09CCc32027ad1581F934D7c8",
       "abi": [
         {
           "inputs": [
@@ -1849,7 +1849,7 @@
       ]
     },
     "ComptrollerLib": {
-      "address": "0x3b82A772Cb274Be9D256b6063ddeb7db367C067d",
+      "address": "0xD5A7B5FcBd9189f58C9dC97CF8505efF27B942D2",
       "abi": [
         {
           "inputs": [
@@ -2794,7 +2794,7 @@
           }
         },
         "primitives": {
-          "mln": "0x7fFaE0E8118ced1a777F886f8Bc84D9ceCC5eF73"
+          "mln": "0x58f7D52B5093E14B9375E16623042087D2DF0610"
         },
         "weth": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
         "unsupportedAssets": {},
@@ -2802,7 +2802,7 @@
       }
     },
     "CumulativeSlippageTolerancePolicy": {
-      "address": "0xE50857bD8508C94D15CCc503c9174060058A7e3a",
+      "address": "0xa983e028e1c04d492eDd7e9246f871FbC22001F7",
       "abi": [
         {
           "inputs": [
@@ -3057,14 +3057,14 @@
             {
               "components": [
                 {
-                  "internalType": "uint16",
+                  "internalType": "uint64",
                   "name": "tolerance",
-                  "type": "uint16"
+                  "type": "uint64"
                 },
                 {
-                  "internalType": "uint16",
+                  "internalType": "uint64",
                   "name": "cumulativeSlippage",
-                  "type": "uint16"
+                  "type": "uint64"
                 },
                 {
                   "internalType": "uint128",
@@ -3250,7 +3250,7 @@
       }
     },
     "DepositWrapper": {
-      "address": "0xdd598b5175Ce8B37a700C92823C0D8A71A0892bd",
+      "address": "0xcf14F9E745fA2A4e7e34651F428e5777E12dc281",
       "abi": [
         {
           "inputs": [
@@ -3332,7 +3332,7 @@
       ]
     },
     "Dispatcher": {
-      "address": "0xb5f802D8e7d4c8aCD51e7097fAA03F286e90609d",
+      "address": "0xCdb7a704a3aB0C88651F0466d2Ec01c3db5EbF66",
       "abi": [
         {
           "inputs": [],
@@ -4041,7 +4041,7 @@
       ]
     },
     "EntranceRateBurnFee": {
-      "address": "0x80AE6bFa8b1d4CbFbbf9557e11Ec294e6E5E2907",
+      "address": "0x566FD72c1f6E67c953a6a4eB4f1B97D34788Fd53",
       "abi": [
         {
           "inputs": [
@@ -4358,7 +4358,7 @@
       }
     },
     "EntranceRateDirectFee": {
-      "address": "0x17C08869a36992DD5eE3A6eC270ebBA69110Dc1f",
+      "address": "0xD767dA5ce47Ee0d6E32434e6c4A7A630BB3Ce8cA",
       "abi": [
         {
           "inputs": [
@@ -4712,7 +4712,7 @@
       }
     },
     "ExitRateBurnFee": {
-      "address": "0xD293ff7c45CFD06D90dbB360B4B67Cf90B636f5a",
+      "address": "0xDE66712E57f2a866e1Db88D00bfa99bBA24aCd76",
       "abi": [
         {
           "inputs": [
@@ -5060,7 +5060,7 @@
       }
     },
     "ExitRateDirectFee": {
-      "address": "0xAF94720c55D5518079E7726e5438f32357847557",
+      "address": "0xd3B35fB2484ceD5550E6227093B6d424d10CC6E4",
       "abi": [
         {
           "inputs": [
@@ -5445,7 +5445,7 @@
       }
     },
     "ExternalPositionFactory": {
-      "address": "0x90ab385E4e50c458c2b95187cbc7F25D03C68062",
+      "address": "0x47107F653Ed6e94Aff1Cac325ee994E7B3332385",
       "abi": [
         {
           "inputs": [
@@ -5730,7 +5730,7 @@
       ]
     },
     "ExternalPositionManager": {
-      "address": "0xEcd6cf4cF9ed8bC581A81B13A2a7C03b7fDd7AA8",
+      "address": "0x429bfd3f391aD3Bd08398381731c257F208f7dEA",
       "abi": [
         {
           "inputs": [
@@ -6061,7 +6061,7 @@
       ]
     },
     "FeeManager": {
-      "address": "0x125B5165D64C4723e4a63262f6d45C59409AFE08",
+      "address": "0x1d03D167F9aC6C74Ed0aaDfC1701Ebc2D27C453A",
       "abi": [
         {
           "inputs": [
@@ -6343,7 +6343,7 @@
       ]
     },
     "FundDeployer": {
-      "address": "0x13Fa584E403587Ed82538ffab0231938A5baBa11",
+      "address": "0xbA4D92DfecFA04385C5B724DbC6BA0eb58e0E284",
       "abi": [
         {
           "inputs": [
@@ -7297,7 +7297,7 @@
       ]
     },
     "GasRelayPaymasterFactory": {
-      "address": "0xbA4411e50023B909C36C778A842A6EDc385a52D2",
+      "address": "0xeA3BAF90c40F6dAC27DEd987aB2e9d309452D670",
       "abi": [
         {
           "inputs": [
@@ -7427,7 +7427,7 @@
       ]
     },
     "GasRelayPaymasterLib": {
-      "address": "0x98b535e38D88B7DDc44812502441F06235dc6dB8",
+      "address": "0x955b2c316E8F2c6d3b1757c3173515a488aa2a68",
       "abi": [
         {
           "inputs": [
@@ -7857,7 +7857,7 @@
       ]
     },
     "GlobalConfigLib": {
-      "address": "0x29eea5610a1D2d9015Fa94C39667f42Ef8875D74",
+      "address": "0x39748B663D99c1ff8019103a6403C0025e49fB59",
       "abi": [
         {
           "anonymous": false,
@@ -7940,7 +7940,7 @@
       ]
     },
     "GlobalConfigProxy": {
-      "address": "0xfd40288C8e6acA380704c69FFf356a66b73925e4",
+      "address": "0x882F1eBEAC5F6D4989AA834aEaB8c12Ef78AcC3d",
       "abi": [
         {
           "inputs": [
@@ -7965,7 +7965,7 @@
       ]
     },
     "GuaranteedRedemptionPolicy": {
-      "address": "0xFDd38046E5a358Df9d96ACf0df6F785AF9437627",
+      "address": "0x1e09017ED4725C96c8521EF2c60006303bc9D16a",
       "abi": [
         {
           "inputs": [
@@ -8370,7 +8370,7 @@
       }
     },
     "IntegrationManager": {
-      "address": "0x313A1299318339f5d8B45fc0467D42eE9715Dc43",
+      "address": "0x732A730e2fb6788A1885a528Ed6E7e6F6c957750",
       "abi": [
         {
           "inputs": [
@@ -8584,7 +8584,7 @@
       ]
     },
     "ManagementFee": {
-      "address": "0x222d0537F1Bd645f5Ae970e73f260be2424d0bD8",
+      "address": "0xA9DBdb7043428f83352932D9e13DF2928308182d",
       "abi": [
         {
           "inputs": [
@@ -8949,8 +8949,206 @@
         "type": "FEE"
       }
     },
+    "MinAssetBalancesPostRedemptionPolicy": {
+      "address": "0x255B9Eb41F113472AE0BEb6db94DaeB26A46A124",
+      "abi": [
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_policyManager",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "constructor"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "comptrollerProxy",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "asset",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "minBalance",
+              "type": "uint256"
+            }
+          ],
+          "name": "MinAssetBalanceAddedForFund",
+          "type": "event"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "name": "activateForFund",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_comptrollerProxy",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes",
+              "name": "_encodedSettings",
+              "type": "bytes"
+            }
+          ],
+          "name": "addFundSettings",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "canDisable",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "canDisable_",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "pure",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_comptrollerProxy",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "_asset",
+              "type": "address"
+            }
+          ],
+          "name": "getMinAssetBalanceForFund",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "minBalance_",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "getPolicyManager",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "policyManager_",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "identifier",
+          "outputs": [
+            {
+              "internalType": "string",
+              "name": "identifier_",
+              "type": "string"
+            }
+          ],
+          "stateMutability": "pure",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "implementedHooks",
+          "outputs": [
+            {
+              "internalType": "enum IPolicyManager.PolicyHook[]",
+              "name": "implementedHooks_",
+              "type": "uint8[]"
+            }
+          ],
+          "stateMutability": "pure",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes",
+              "name": "",
+              "type": "bytes"
+            }
+          ],
+          "name": "updateFundSettings",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_comptrollerProxy",
+              "type": "address"
+            },
+            {
+              "internalType": "enum IPolicyManager.PolicyHook",
+              "name": "",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes",
+              "name": "_encodedArgs",
+              "type": "bytes"
+            }
+          ],
+          "name": "validateRule",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "isValid_",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        }
+      ],
+      "linkedData": {
+        "type": "POLICY"
+      }
+    },
     "MinMaxInvestmentPolicy": {
-      "address": "0x60028C24A78b2D8a26635178ff7FeC1C7D00Ad03",
+      "address": "0x0e6A7cf345f5c966B6c9ff8075C5a6F9D7Ce00f0",
       "abi": [
         {
           "inputs": [
@@ -9178,8 +9376,398 @@
         "type": "POLICY"
       }
     },
+    "OnlyRemoveDustExternalPositionPolicy": {
+      "address": "0x829e888Fc3bed572a525016114FEbFe076A9c402",
+      "abi": [
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_policyManager",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "_fundDeployer",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "_valueInterpreter",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "_wethToken",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_pricelessAssetBypassTimelock",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_pricelessAssetBypassTimeLimit",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "constructor"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "nextDustToleranceInWeth",
+              "type": "uint256"
+            }
+          ],
+          "name": "DustToleranceInWethSet",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "comptrollerProxy",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "asset",
+              "type": "address"
+            }
+          ],
+          "name": "PricelessAssetBypassed",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "comptrollerProxy",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "asset",
+              "type": "address"
+            }
+          ],
+          "name": "PricelessAssetTimelockStarted",
+          "type": "event"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "name": "activateForFund",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes",
+              "name": "",
+              "type": "bytes"
+            }
+          ],
+          "name": "addFundSettings",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_comptrollerProxy",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "_asset",
+              "type": "address"
+            }
+          ],
+          "name": "assetIsBypassableForFund",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "isBypassable_",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "canDisable",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "canDisable_",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "pure",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_comptrollerProxy",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "_asset",
+              "type": "address"
+            }
+          ],
+          "name": "getAssetBypassWindowStartForFund",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "windowStart_",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "getDustToleranceInWeth",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "dustToleranceInWeth_",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "getFundDeployer",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "fundDeployer_",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "getOwner",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "owner_",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "getPolicyManager",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "policyManager_",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "getPricelessAssetBypassTimeLimit",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "timeLimit_",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "getPricelessAssetBypassTimelock",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "timelock_",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "getPricelessAssetBypassValueInterpreter",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "valueInterpreter_",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "getPricelessAssetBypassWethToken",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "wethToken_",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "identifier",
+          "outputs": [
+            {
+              "internalType": "string",
+              "name": "identifier_",
+              "type": "string"
+            }
+          ],
+          "stateMutability": "pure",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "implementedHooks",
+          "outputs": [
+            {
+              "internalType": "enum IPolicyManager.PolicyHook[]",
+              "name": "implementedHooks_",
+              "type": "uint8[]"
+            }
+          ],
+          "stateMutability": "pure",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_nextDustToleranceInWeth",
+              "type": "uint256"
+            }
+          ],
+          "name": "setDustToleranceInWeth",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_asset",
+              "type": "address"
+            }
+          ],
+          "name": "startAssetBypassTimelock",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes",
+              "name": "",
+              "type": "bytes"
+            }
+          ],
+          "name": "updateFundSettings",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_comptrollerProxy",
+              "type": "address"
+            },
+            {
+              "internalType": "enum IPolicyManager.PolicyHook",
+              "name": "",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes",
+              "name": "_encodedArgs",
+              "type": "bytes"
+            }
+          ],
+          "name": "validateRule",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "isValid_",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        }
+      ],
+      "linkedData": {
+        "type": "POLICY"
+      }
+    },
     "OnlyUntrackDustOrPricelessAssetsPolicy": {
-      "address": "0x755E93c9bd1c0491873Ee6227861932667a95BB5",
+      "address": "0x2CFF9F3262357aa91dDe4b11F129f44616448469",
       "abi": [
         {
           "inputs": [
@@ -9569,7 +10157,7 @@
       }
     },
     "PerformanceFee": {
-      "address": "0x5bc8E2e2bBd5c0F69D2e2a273EF53535CdEd32Ef",
+      "address": "0x7115D8b50FA86c129f7F571Ea402EFe34920E90C",
       "abi": [
         {
           "inputs": [
@@ -10053,7 +10641,7 @@
       }
     },
     "PolicyManager": {
-      "address": "0xB782928693F42969499ADe9619DeBca1956FC32c",
+      "address": "0x0EAD3C4E6272C8435098497B8A8D903B3F8C1641",
       "abi": [
         {
           "inputs": [
@@ -10404,7 +10992,7 @@
       ]
     },
     "ProtocolFeeReserveLib": {
-      "address": "0x035073A04348fC2CAbC7483b059473f8b6b0C3c4",
+      "address": "0xe5319C9FDe0fE925c95571893aa8D1Fcea6F2089",
       "abi": [
         {
           "anonymous": false,
@@ -10547,7 +11135,7 @@
       ]
     },
     "ProtocolFeeReserveProxy": {
-      "address": "0xCD2bbd9DBd604E7B470fb08F50820a606a40d944",
+      "address": "0x2280228933579d2cEba6f275d2A8BAE3f6ed677D",
       "abi": [
         {
           "inputs": [
@@ -10572,7 +11160,7 @@
       ]
     },
     "ProtocolFeeTracker": {
-      "address": "0x7a699F8dF06212E1BB8B67e1aeF07FBC7B18cDbb",
+      "address": "0x14BefF6Cd501229589cCd4dB46ff8624Fba6D73c",
       "abi": [
         {
           "inputs": [
@@ -10854,7 +11442,7 @@
       ]
     },
     "TestnetTreasuryController": {
-      "address": "0xd5590aE02a9bD0011d15FdFea75b808A227bC383",
+      "address": "0xc0E0a41a85A4F92E9204488B31ec94Be47ad7401",
       "abi": [
         {
           "anonymous": false,
@@ -11112,7 +11700,7 @@
       ]
     },
     "UnpermissionedActionsWrapper": {
-      "address": "0xa09B14023ad9ead486Bbd85E340d189CF41d3359",
+      "address": "0x9D0D7B95A76BBbB63Ac01aC72e763166ceccb67f",
       "abi": [
         {
           "inputs": [
@@ -11197,7 +11785,7 @@
       ]
     },
     "ValueInterpreter": {
-      "address": "0xa0D82f26BA5dF54bE26A0282cEf26ca651b9cA52",
+      "address": "0x7A0626Ef53D8a7aaFc413BE58E3b5C5A96db181d",
       "abi": [
         {
           "inputs": [
@@ -11411,7 +11999,7 @@
       ]
     },
     "VaultLib": {
-      "address": "0xd39ba877fABb81f18238Ec257a011E3f993286E2",
+      "address": "0xdAe656342e3bc2767cdAf8bA35b91B5F4C31081B",
       "abi": [
         {
           "inputs": [

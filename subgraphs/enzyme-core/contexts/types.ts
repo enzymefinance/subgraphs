@@ -73,7 +73,9 @@ export interface Release4Addresses {
   guaranteedRedemptionPolicyAddress: string;
   integrationManagerAddress: string;
   managementFeeAddress: string;
+  minAssetBalancesPostRedemptionPolicyAddress: string;
   minMaxInvestmentPolicyAddress: string;
+  onlyRemoveDustExternalPositionPolicyAddress: string;
   onlyUntrackDustOrPricelessAssetsPolicyAddress: string;
   performanceFeeAddress: string;
   policyManagerAddress: string;

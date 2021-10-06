@@ -69,7 +69,8 @@ type Release @entity {
   close: Int
   isLive: Boolean!
 
-  dustToleranceInWeth: BigDecimal
+  dustToleranceForAssetsInWeth: BigDecimal
+  dustToleranceForExternalPositionsInWeth: BigDecimal
 
   network: Network!
   vaults: [Vault!] @derivedFrom(field: "release")
@@ -761,6 +762,18 @@ type MaxConcentrationPolicy implements Policy @entity {
   maxConcentration: BigDecimal!
 }
 
+type MinAssetBalancesPostRedemptionPolicy implements Policy @entity {
+  id: ID!
+  policy: Bytes!
+  policyType: PolicyType!
+  comptroller: Comptroller!
+  createdAt: Int!
+  enabled: Boolean!
+  settings: String!
+  assetBalances: [AssetBalance!]!
+  updatedAt: Int!
+}
+
 type MinMaxDepositPolicy implements Policy @entity {
   id: ID!
   policy: Bytes!
@@ -772,6 +785,16 @@ type MinMaxDepositPolicy implements Policy @entity {
   minDepositAmount: BigDecimal!
   maxDepositAmount: BigDecimal!
   updatedAt: Int!
+}
+
+type OnlyRemoveDustExternalPositionPolicy implements Policy @entity {
+  id: ID!
+  policy: Bytes!
+  policyType: PolicyType!
+  comptroller: Comptroller!
+  createdAt: Int!
+  enabled: Boolean!
+  settings: String!
 }
 
 type OnlyUntrackDustOrPricelessAssetsPolicy implements Policy @entity {
@@ -810,7 +833,9 @@ enum PolicyType {
   DepositorWhitelist
   GuaranteedRedemption
   MaxConcentration
+  MinAssetBalancesPostRedemption
   MinMaxDeposit
+  OnlyRemoveDustExternalPosition
   OnlyUntrackDustOrPricelessAssets
   Unknown
 }
@@ -989,6 +1014,13 @@ type Asset @entity {
 
   # Vault references
   trackingVaults: [Vault!]! @derivedFrom(field: "trackedAssets")
+}
+
+# AssetBalance is AssetAmount without currency values
+type AssetBalance @entity {
+  id: ID!
+  asset: Asset!
+  amount: BigDecimal!
 }
 
 type AssetAmount @entity {

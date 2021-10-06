@@ -6,8 +6,8 @@ export const kovan: Context<Variables> = {
   name: 'enzymefinance/enzyme-core-kovan',
   network: 'kovan',
   variables: {
-    block: 27217130,
-    dispatcherAddress: '0xb5f802D8e7d4c8aCD51e7097fAA03F286e90609d',
+    block: 27529642,
+    dispatcherAddress: '0xCdb7a704a3aB0C88651F0466d2Ec01c3db5EbF66',
     wethTokenAddress: '0xd0a1e359811322d97991e03f863a0c30c2cf029c',
     chainlinkAggregatorAddresses: {
       audUsd: '0x5813A90f826e16dB392abd2aF7966313fc1fd5B8',
@@ -93,7 +93,9 @@ export const kovan: Context<Variables> = {
         guaranteedRedemptionPolicyAddress: v4.contracts.GuaranteedRedemptionPolicy.address,
         integrationManagerAddress: v4.contracts.IntegrationManager.address,
         managementFeeAddress: v4.contracts.ManagementFee.address,
+        minAssetBalancesPostRedemptionPolicyAddress: v4.contracts.MinAssetBalancesPostRedemptionPolicy.address,
         minMaxInvestmentPolicyAddress: v4.contracts.MinMaxInvestmentPolicy.address,
+        onlyRemoveDustExternalPositionPolicyAddress: v4.contracts.OnlyRemoveDustExternalPositionPolicy.address,
         onlyUntrackDustOrPricelessAssetsPolicyAddress: v4.contracts.OnlyUntrackDustOrPricelessAssetsPolicy.address,
         performanceFeeAddress: v4.contracts.PerformanceFee.address,
         policyManagerAddress: v4.contracts.PolicyManager.address,

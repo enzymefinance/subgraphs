@@ -82,7 +82,9 @@ export class Release4Addresses {
   guaranteedRedemptionPolicyAddress: Address;
   integrationManagerAddress: Address;
   managementFeeAddress: Address;
+  minAssetBalancesPostRedemptionPolicyAddress: Address;
   minMaxInvestmentPolicyAddress: Address;
+  onlyRemoveDustExternalPositionPolicyAddress: Address;
   onlyUntrackDustOrPricelessAssetsPolicyAddress: Address;
   performanceFeeAddress: Address;
   policyManagerAddress: Address;
@@ -168,7 +170,9 @@ export let release4Addresses: Release4Addresses = {
   guaranteedRedemptionPolicyAddress: Address.fromString('{{releases.v4.guaranteedRedemptionPolicyAddress}}'),
   integrationManagerAddress: Address.fromString('{{releases.v4.integrationManagerAddress}}'),
   managementFeeAddress: Address.fromString('{{releases.v4.managementFeeAddress}}'),
+  minAssetBalancesPostRedemptionPolicyAddress: Address.fromString('{{releases.v4.minAssetBalancesPostRedemptionPolicyAddress}}'),
   minMaxInvestmentPolicyAddress: Address.fromString('{{releases.v4.minMaxInvestmentPolicyAddress}}'),
+  onlyRemoveDustExternalPositionPolicyAddress: Address.fromString('{{releases.v4.onlyRemoveDustExternalPositionPolicyAddress}}'),
   onlyUntrackDustOrPricelessAssetsPolicyAddress: Address.fromString('{{releases.v4.onlyUntrackDustOrPricelessAssetsPolicyAddress}}'),
   performanceFeeAddress: Address.fromString('{{releases.v4.performanceFeeAddress}}'),
   policyManagerAddress: Address.fromString('{{releases.v4.policyManagerAddress}}'),
