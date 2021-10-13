@@ -6,11 +6,12 @@ import {
   SdkUserDeclaration,
   Template,
 } from '@enzymefinance/subgraph-cli';
-import { kovan } from './contexts/kovan';
-import { mainnet } from './contexts/mainnet';
 import * as v2 from './config/v2';
 import * as v3 from './config/v3';
 import * as v4 from './config/v4';
+import { kovan } from './contexts/kovan';
+import { mainnet } from './contexts/mainnet';
+import { rinkeby } from './contexts/rinkeby';
 
 export interface Variables {
   block: number;
@@ -36,6 +37,7 @@ export interface Variables {
 export const contexts: Contexts<Variables> = {
   kovan,
   mainnet,
+  rinkeby,
 };
 
 export const templates: Template[] = [
