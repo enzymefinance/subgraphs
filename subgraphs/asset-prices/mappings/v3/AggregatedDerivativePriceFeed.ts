@@ -2,7 +2,7 @@ import { DerivativeAdded, DerivativeRemoved } from '../../generated/contracts/Ag
 import { createDerivativeRegistration, removeDerivativeRegistration } from '../../entities/Registration';
 import { initializeCurrencies } from '../../utils/initializeCurrencies';
 import { updateForDerivativeRegistration } from '../../utils/updateForRegistration';
-import { releaseV3Address } from '../../templates/configuration';
+import { releaseV3Address } from '../../generated/configuration';
 
 export function handleDerivativeAdded(event: DerivativeAdded): void {
   initializeCurrencies(event);

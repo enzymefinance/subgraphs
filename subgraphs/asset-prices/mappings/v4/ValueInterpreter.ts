@@ -14,7 +14,7 @@ import {
 import { initializeCurrencies } from '../../utils/initializeCurrencies';
 import { updateForDerivativeRegistration } from '../../utils/updateForRegistration';
 import { updateForPrimitiveRegistration } from '../../utils/updateForRegistration';
-import { releaseV4Address } from '../../templates/configuration';
+import { releaseV4Address } from '../../generated/configuration';
 
 export function handleDerivativeAdded(event: DerivativeAdded): void {
   initializeCurrencies(event);

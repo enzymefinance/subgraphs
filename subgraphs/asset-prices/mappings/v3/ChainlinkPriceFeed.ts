@@ -7,7 +7,7 @@ import {
 import { createOrUpdatePrimitiveRegistration, removePrimitiveRegistration } from '../../entities/Registration';
 import { initializeCurrencies } from '../../utils/initializeCurrencies';
 import { updateForPrimitiveRegistration } from '../../utils/updateForRegistration';
-import { releaseV3Address } from '../../templates/configuration';
+import { releaseV3Address } from '../../generated/configuration';
 
 export function handlePrimitiveAdded(event: PrimitiveAdded): void {
   initializeCurrencies(event);
