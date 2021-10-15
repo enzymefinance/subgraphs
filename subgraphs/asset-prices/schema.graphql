@@ -252,3 +252,18 @@ type DerivativeUpdater @entity {
   """
   block: Int!
 }
+
+#################################################
+# Counter
+#################################################
+
+"""
+Generic counter entity to allow safe data scraping.
+"""
+type Counter @entity {
+  id: ID!
+  """
+  Strictly incremental counter for data scraping.
+  """
+  count: Int!
+}

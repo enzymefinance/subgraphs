@@ -1,8 +1,9 @@
 import { toBigDecimal, ZERO_BD } from '@enzymefinance/subgraph-utils';
 import { Address, BigDecimal, BigInt, ethereum, log } from '@graphprotocol/graph-ts';
 import { SharedSdk } from '../generated/contracts/SharedSdk';
-import { Asset } from '../generated/schema';
+import { Asset, AssetPrice } from '../generated/schema';
 import { fetchAssetPrice } from '../utils/fetchAssetPrice';
+import { getAssetPriceCounter } from './Counter';
 
 export function getOrCreateAsset(
   address: Address,
@@ -47,6 +48,17 @@ export function updateAssetPrice(asset: Asset, price: BigDecimal, event: ethereu
   asset.updated = event.block.timestamp.toI32();
   asset.price = price;
   asset.save();
+
+  let assetPriceId = asset.id + '/' + event.block.number.toString();
+  let assetPrice = AssetPrice.load(assetPriceId);
+  if (assetPrice == null) {
+    assetPrice = new AssetPrice(assetPriceId);
+    assetPrice.counter = getAssetPriceCounter();
+  }
+
+  assetPrice.price = asset.price;
+  assetPrice.timestamp = asset.updated;
+  assetPrice.save();
 }
 
 export function updateAssetPriceWithValueInterpreter(asset: Asset, version: Address, event: ethereum.Event): void {
