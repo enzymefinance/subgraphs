@@ -33,7 +33,17 @@ function maintainPortfolio(vault: Vault, balance: Balance): void {
   vault.save();
 }
 
-export function updateVaultBalance(vault: Vault, asset: Asset, event: ethereum.Event): Balance {
+export class UpdateVaultBalanceTuple {
+  balance: Balance;
+  tvl: BigDecimal;
+
+  constructor(balance: Balance, tvl: BigDecimal) {
+    this.balance = balance;
+    this.tvl = tvl;
+  }
+}
+
+export function updateVaultBalance(vault: Vault, asset: Asset, event: ethereum.Event): UpdateVaultBalanceTuple {
   let balance = getOrCreateVaultBalance(vault, asset, event);
   let previousBalance = balance.balance;
 
@@ -55,7 +65,7 @@ export function updateVaultBalance(vault: Vault, asset: Asset, event: ethereum.E
   // Create a historical snapshot of the balance entity.
   maintainPortfolio(vault, balance);
 
-  return balance;
+  return new UpdateVaultBalanceTuple(balance, asset.tvl);
 }
 
 export function updateTrackedAsset(vault: Vault, asset: Asset, event: ethereum.Event, tracked: boolean): void {

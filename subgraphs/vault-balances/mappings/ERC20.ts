@@ -54,7 +54,7 @@ export function handleTransfer(event: Transfer): void {
 
 function handleIncomingTransfer(event: Transfer, asset: Asset, vault: Vault): void {
   let before = getOrCreateVaultBalance(vault, asset, event).balance;
-  let balance = updateVaultBalance(vault, asset, event);
+  let tuple = updateVaultBalance(vault, asset, event);
   let amount = toBigDecimal(event.params.value, asset.decimals);
 
   let transfer = new IncomingTransfer(transferId(event, 'incoming'));
@@ -62,11 +62,12 @@ function handleIncomingTransfer(event: Transfer, asset: Asset, vault: Vault): vo
   transfer.type = 'INCOMING';
   transfer.vault = vault.id;
   transfer.asset = asset.id;
-  transfer.balance = balance.id;
+  transfer.balance = tuple.balance.id;
   transfer.amount = amount;
   transfer.before = before;
-  transfer.after = balance.balance;
+  transfer.after = tuple.balance.balance;
   transfer.sender = event.params.from;
+  transfer.tvl = tuple.tvl;
   transfer.transaction = event.transaction.hash;
   transfer.timestamp = event.block.timestamp.toI32();
   transfer.block = event.block.number.toI32();
@@ -75,7 +76,7 @@ function handleIncomingTransfer(event: Transfer, asset: Asset, vault: Vault): vo
 
 function handleOutgoingTransfer(event: Transfer, asset: Asset, vault: Vault): void {
   let before = getOrCreateVaultBalance(vault, asset, event).balance;
-  let balance = updateVaultBalance(vault, asset, event);
+  let tuple = updateVaultBalance(vault, asset, event);
   let amount = toBigDecimal(event.params.value, asset.decimals);
 
   let transfer = new OutgoingTransfer(transferId(event, 'outgoing'));
@@ -83,11 +84,12 @@ function handleOutgoingTransfer(event: Transfer, asset: Asset, vault: Vault): vo
   transfer.type = 'OUTGOING';
   transfer.vault = vault.id;
   transfer.asset = asset.id;
-  transfer.balance = balance.id;
+  transfer.balance = tuple.balance.id;
   transfer.amount = amount;
   transfer.before = before;
-  transfer.after = balance.balance;
+  transfer.after = tuple.balance.balance;
   transfer.recipient = event.params.to;
+  transfer.tvl = tuple.tvl;
   transfer.transaction = event.transaction.hash;
   transfer.timestamp = event.block.timestamp.toI32();
   transfer.block = event.block.number.toI32();

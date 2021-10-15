@@ -170,6 +170,10 @@ interface Transfer {
   """
   after: BigDecimal!
   """
+  The tvl at the time of the transfer.
+  """
+  tvl: BigDecimal!
+  """
   The transaction hash.
   """
   transaction: Bytes!
@@ -225,6 +229,10 @@ type OutgoingTransfer implements Transfer @entity {
   """
   after: BigDecimal!
   """
+  The tvl at the time of the transfer.
+  """
+  tvl: BigDecimal!
+  """
   The transaction hash.
   """
   transaction: Bytes!
@@ -279,6 +287,10 @@ type IncomingTransfer implements Transfer @entity {
   The balance after the transfer.
   """
   after: BigDecimal!
+  """
+  The tvl at the time of the transfer.
+  """
+  tvl: BigDecimal!
   """
   The transaction hash.
   """
