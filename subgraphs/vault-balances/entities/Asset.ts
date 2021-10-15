@@ -1,3 +1,4 @@
+import { ZERO_BD } from '@enzymefinance/subgraph-utils';
 import { Address, log } from '@graphprotocol/graph-ts';
 import { Asset, IgnoredAsset } from '../generated/schema';
 import { tokenBalance, tokenDecimals } from '../utils/tokenCalls';
@@ -34,6 +35,7 @@ export function ensureAsset(address: Address): Asset | null {
     let decimals = tokenDecimals(address);
     asset = new Asset(id);
     asset.decimals = decimals == -1 ? 18 : decimals;
+    asset.tvl = ZERO_BD;
     asset.save();
   }
 

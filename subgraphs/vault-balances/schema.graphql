@@ -18,9 +18,13 @@ type Asset @entity {
   """
   decimals: Int!
   """
-  The current per-vault holdings for the asset.
+  The total value locked of this asset in the entire network.
   """
-  holdings: [Holding!]! @derivedFrom(field: "asset")
+  tvl: BigDecimal!
+  """
+  The current per-vault balances for the asset.
+  """
+  balances: [Balance!]! @derivedFrom(field: "asset")
   """
   Incoming and outgoing ransfers for the asset.
   """
@@ -54,11 +58,11 @@ type Vault @entity {
   """
   The current portfolio (tracked assets) of the vault.
   """
-  portfolio: [Holding!]!
+  portfolio: [Balance!]!
   """
-  The current holdings (tracked and untracked assets) of the vault.
+  The current balances (tracked and untracked assets) of the vault.
   """
-  holdings: [Holding!]! @derivedFrom(field: "vault")
+  balances: [Balance!]! @derivedFrom(field: "vault")
   """
   Incoming and outgoing transfers.
   """
@@ -74,9 +78,9 @@ type Vault @entity {
 }
 
 """
-A holding (asset held by a vault).
+A vault balance (asset balance held by a vault).
 """
-type Holding @entity {
+type Balance @entity {
   id: ID!
   """
   The owning vault.
@@ -101,15 +105,15 @@ type Holding @entity {
   """
   Incoming and outgoing transfers.
   """
-  transfers: [Transfer!]! @derivedFrom(field: "holding")
+  transfers: [Transfer!]! @derivedFrom(field: "balance")
   """
   Incoming transfers.
   """
-  incoming: [IncomingTransfer!]! @derivedFrom(field: "holding")
+  incoming: [IncomingTransfer!]! @derivedFrom(field: "balance")
   """
   Incoming transfers.
   """
-  outgoing: [OutgoingTransfer!]! @derivedFrom(field: "holding")
+  outgoing: [OutgoingTransfer!]! @derivedFrom(field: "balance")
 }
 
 """
@@ -146,9 +150,9 @@ interface Transfer {
   """
   asset: Asset!
   """
-  The affected holding.
+  The affected balance.
   """
-  holding: Holding!
+  balance: Balance!
   """
   The affected vault.
   """
@@ -197,9 +201,9 @@ type OutgoingTransfer implements Transfer @entity {
   """
   asset: Asset!
   """
-  The affected holding.
+  The affected balance.
   """
-  holding: Holding!
+  balance: Balance!
   """
   The affected vault (payer).
   """
@@ -252,9 +256,9 @@ type IncomingTransfer implements Transfer @entity {
   """
   asset: Asset!
   """
-  The affected holding.
+  The affected balance.
   """
-  holding: Holding!
+  balance: Balance!
   """
   The affected vault (recipient).
   """

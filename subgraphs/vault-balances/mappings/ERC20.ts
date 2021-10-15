@@ -2,7 +2,7 @@ import { toBigDecimal, ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
 import { Transfer } from '../generated/ERC20Contract';
 import { Asset, IncomingTransfer, OutgoingTransfer, Vault } from '../generated/schema';
 import { ensureAsset } from '../entities/Asset';
-import { getOrCreateHolding, updateHoldingBalance } from '../entities/Holding';
+import { getOrCreateVaultBalance, updateVaultBalance } from '../entities/Balance';
 import { getTransferCounter } from '../entities/Counter';
 
 export function transferId(event: Transfer, suffix: string): string {
@@ -53,8 +53,8 @@ export function handleTransfer(event: Transfer): void {
 }
 
 function handleIncomingTransfer(event: Transfer, asset: Asset, vault: Vault): void {
-  let before = getOrCreateHolding(vault, asset, event).balance;
-  let holding = updateHoldingBalance(vault, asset, event);
+  let before = getOrCreateVaultBalance(vault, asset, event).balance;
+  let balance = updateVaultBalance(vault, asset, event);
   let amount = toBigDecimal(event.params.value, asset.decimals);
 
   let transfer = new IncomingTransfer(transferId(event, 'incoming'));
@@ -62,10 +62,10 @@ function handleIncomingTransfer(event: Transfer, asset: Asset, vault: Vault): vo
   transfer.type = 'INCOMING';
   transfer.vault = vault.id;
   transfer.asset = asset.id;
-  transfer.holding = holding.id;
+  transfer.balance = balance.id;
   transfer.amount = amount;
   transfer.before = before;
-  transfer.after = holding.balance;
+  transfer.after = balance.balance;
   transfer.sender = event.params.from;
   transfer.transaction = event.transaction.hash;
   transfer.timestamp = event.block.timestamp.toI32();
@@ -74,8 +74,8 @@ function handleIncomingTransfer(event: Transfer, asset: Asset, vault: Vault): vo
 }
 
 function handleOutgoingTransfer(event: Transfer, asset: Asset, vault: Vault): void {
-  let before = getOrCreateHolding(vault, asset, event).balance;
-  let holding = updateHoldingBalance(vault, asset, event);
+  let before = getOrCreateVaultBalance(vault, asset, event).balance;
+  let balance = updateVaultBalance(vault, asset, event);
   let amount = toBigDecimal(event.params.value, asset.decimals);
 
   let transfer = new OutgoingTransfer(transferId(event, 'outgoing'));
@@ -83,10 +83,10 @@ function handleOutgoingTransfer(event: Transfer, asset: Asset, vault: Vault): vo
   transfer.type = 'OUTGOING';
   transfer.vault = vault.id;
   transfer.asset = asset.id;
-  transfer.holding = holding.id;
+  transfer.balance = balance.id;
   transfer.amount = amount;
   transfer.before = before;
-  transfer.after = holding.balance;
+  transfer.after = balance.balance;
   transfer.recipient = event.params.to;
   transfer.transaction = event.transaction.hash;
   transfer.timestamp = event.block.timestamp.toI32();

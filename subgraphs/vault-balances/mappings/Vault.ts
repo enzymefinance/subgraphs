@@ -1,6 +1,6 @@
 import { log } from '@graphprotocol/graph-ts';
 import { ensureAsset } from '../entities/Asset';
-import { updateTrackedAsset } from '../entities/Holding';
+import { updateTrackedAsset } from '../entities/Balance';
 import { TrackedAssetAdded, TrackedAssetRemoved } from '../generated/VaultContract';
 import { Asset, Vault } from '../generated/schema';
 
