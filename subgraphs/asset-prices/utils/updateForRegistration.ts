@@ -19,27 +19,35 @@ export function updateForPrimitiveRegistration(
   event: ethereum.Event,
   value: BigDecimal | null = null,
 ): void {
-  let asset = getOrCreateAsset(Address.fromString(registration.asset), registration.version, event);
+  let asset = getOrCreateAsset(
+    Address.fromString(registration.asset),
+    Address.fromString(registration.version.toHex()),
+    event,
+  );
   // Skip the update if the given registration is not the active registration for this asset.
   if (!isActiveRegistration(changetype<Registration>(registration), asset)) {
     return;
   }
 
   if (!value) {
-    updateAssetPriceWithValueInterpreter(asset, registration.version, event);
+    updateAssetPriceWithValueInterpreter(asset, Address.fromString(registration.version.toHex()), event);
   } else {
     updateAssetPrice(asset, value as BigDecimal, event);
   }
 }
 
 export function updateForDerivativeRegistration(registration: DerivativeRegistration, event: ethereum.Event): void {
-  let asset = getOrCreateAsset(Address.fromString(registration.asset), registration.version, event);
+  let asset = getOrCreateAsset(
+    Address.fromString(registration.asset),
+    Address.fromString(registration.version.toHex()),
+    event,
+  );
   // Skip the update if the given registration is not the active registration for this asset.
   if (!isActiveRegistration(changetype<Registration>(registration), asset)) {
     return;
   }
 
-  updateAssetPriceWithValueInterpreter(asset, registration.version, event);
+  updateAssetPriceWithValueInterpreter(asset, Address.fromString(registration.version.toHex()), event);
 }
 
 function isActiveRegistration(registration: Registration, asset: Asset): boolean {

@@ -10,6 +10,7 @@ import {
 interface Variables {
   releaseConfiguration: {
     v2?: {
+      fundDeployer: string;
       valueInterpreter: string;
       derivativePriceFeed: string;
       derivativePriceFeedBlock: number;
@@ -17,6 +18,7 @@ interface Variables {
       primitivePriceFeedBlock: number;
     };
     v3?: {
+      fundDeployer: string;
       valueInterpreter: string;
       derivativePriceFeed: string;
       derivativePriceFeedBlock: number;
@@ -24,6 +26,7 @@ interface Variables {
       primitivePriceFeedBlock: number;
     };
     v4?: {
+      fundDeployer: string;
       valueInterpreter: string;
       valueInterpreterBlock: number;
     };
@@ -49,6 +52,7 @@ const name = 'enzymefinance/asset-prices';
 const mainnet: Variables = {
   releaseConfiguration: {
     v2: {
+      fundDeployer: '0x9134C9975244b46692Ad9A7Da36DBa8734Ec6DA3',
       valueInterpreter: '0x6618bF56E1C7b6c8310Bfe4096013bEd8F191628',
       derivativePriceFeed: '0xCFb6F4C08856986d13839B1907b5c645EE95388F',
       derivativePriceFeedBlock: 11636552,
@@ -56,6 +60,7 @@ const mainnet: Variables = {
       primitivePriceFeedBlock: 11636534,
     },
     v3: {
+      fundDeployer: '0x7e6d3b1161DF9c9c7527F68d651B297d2Fdb820B',
       valueInterpreter: '0x10a5624840Ac07287f756777DF1DEC34d2C2d654',
       derivativePriceFeed: '0x2E45f9B3fd5871cCaf4eB415dFCcbDD126F57C4f',
       derivativePriceFeedBlock: 12388007,

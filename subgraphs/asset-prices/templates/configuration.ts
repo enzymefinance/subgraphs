@@ -10,6 +10,12 @@ export let gbpCurrencyAggregatorAddress = Address.fromString('{{currencyAggregat
 export let usdCurrencyAggregatorAddress = Address.fromString('{{currencyAggregatorProxies.USD}}');
 export let jpyCurrencyAggregatorAddress = Address.fromString('{{currencyAggregatorProxies.JPY}}');
 
+export let releaseV2Address = Address.fromString('{{or releaseConfiguration.v2.fundDeployer "0x0000000000000000000000000000000000000000"}}');
+export let releaseV3Address = Address.fromString('{{or releaseConfiguration.v3.fundDeployer "0x0000000000000000000000000000000000000000"}}');
+export let releaseV4Address = Address.fromString('{{or releaseConfiguration.v4.fundDeployer "0x0000000000000000000000000000000000000000"}}');
+
 export let valueInterpreterV2Address = Address.fromString('{{or releaseConfiguration.v2.valueInterpreter "0x0000000000000000000000000000000000000000"}}');
 export let valueInterpreterV3Address = Address.fromString('{{or releaseConfiguration.v3.valueInterpreter "0x0000000000000000000000000000000000000000"}}');
 export let valueInterpreterV4Address = Address.fromString('{{or releaseConfiguration.v4.valueInterpreter "0x0000000000000000000000000000000000000000"}}');
+
+export let testnetTreasuryControllerAddress = Address.fromString('{{or testnetConfiguration.treasuryController "0x0000000000000000000000000000000000000000"}}');

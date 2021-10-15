@@ -1,5 +1,5 @@
 import { ONE_BD, saveDivideBigDecimal } from '@enzymefinance/subgraph-utils';
-import { BigDecimal, ethereum, log } from '@graphprotocol/graph-ts';
+import { Address, BigDecimal, ethereum, log } from '@graphprotocol/graph-ts';
 import { Currency } from '../generated/schema';
 import { initializeCurrencies } from '../utils/initializeCurrencies';
 import { getAsset, updateAssetPriceWithValueInterpreter } from './Asset';
@@ -21,7 +21,7 @@ export function getOrCreateCurrency(id: string, event: ethereum.Event): Currency
 }
 
 function doUpdateCurrency(currency: Currency, eth: BigDecimal, usd: BigDecimal, event: ethereum.Event): void {
-  currency.updated = event.block.number.toI32();
+  currency.updated = event.block.timestamp.toI32();
   currency.usd = usd;
   currency.eth = eth;
   currency.save();
@@ -53,7 +53,7 @@ export function updateCurrency(currency: Currency, value: BigDecimal, event: eth
         continue;
       }
 
-      updateAssetPriceWithValueInterpreter(asset, registration.version, event);
+      updateAssetPriceWithValueInterpreter(asset, Address.fromString(registration.version.toHex()), event);
     }
   } else {
     let usd = getOrCreateCurrency('USD', event);

@@ -19,30 +19,29 @@ export function initializeCurrencies(event: ethereum.Event): void {
   createCurrencyRegistration('JPY', event);
 
   let usdEth = fetchLatestCurrencyAggregatorAnswer('USD', event);
-  createCurrency('USD', usdEth, ONE_BD, event);
+  createCurrency('USD', usdEth, ONE_BD);
 
   let btcUsd = fetchLatestCurrencyAggregatorAnswer('BTC', event);
-  createCurrency('BTC', saveDivideBigDecimal(btcUsd, usdEth), btcUsd, event);
+  createCurrency('BTC', saveDivideBigDecimal(btcUsd, usdEth), btcUsd);
 
   let eurUsd = fetchLatestCurrencyAggregatorAnswer('EUR', event);
-  createCurrency('EUR', saveDivideBigDecimal(eurUsd, usdEth), eurUsd, event);
+  createCurrency('EUR', saveDivideBigDecimal(eurUsd, usdEth), eurUsd);
 
   let audUsd = fetchLatestCurrencyAggregatorAnswer('AUD', event);
-  createCurrency('AUD', saveDivideBigDecimal(audUsd, usdEth), audUsd, event);
+  createCurrency('AUD', saveDivideBigDecimal(audUsd, usdEth), audUsd);
 
   let chfUsd = fetchLatestCurrencyAggregatorAnswer('CHF', event);
-  createCurrency('CHF', saveDivideBigDecimal(chfUsd, usdEth), chfUsd, event);
+  createCurrency('CHF', saveDivideBigDecimal(chfUsd, usdEth), chfUsd);
 
   let gbpUsd = fetchLatestCurrencyAggregatorAnswer('GBP', event);
-  createCurrency('GBP', saveDivideBigDecimal(gbpUsd, usdEth), gbpUsd, event);
+  createCurrency('GBP', saveDivideBigDecimal(gbpUsd, usdEth), gbpUsd);
 
   let jpyUsd = fetchLatestCurrencyAggregatorAnswer('JPY', event);
-  createCurrency('JPY', saveDivideBigDecimal(jpyUsd, usdEth), jpyUsd, event);
+  createCurrency('JPY', saveDivideBigDecimal(jpyUsd, usdEth), jpyUsd);
 }
 
-function createCurrency(id: string, eth: BigDecimal, usd: BigDecimal, event: ethereum.Event): void {
+function createCurrency(id: string, eth: BigDecimal, usd: BigDecimal): void {
   let currency = new Currency(id);
-  currency.updated = event.block.number.toI32();
   currency.usd = usd;
   currency.eth = eth;
   currency.save();

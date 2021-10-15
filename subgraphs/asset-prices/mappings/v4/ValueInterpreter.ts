@@ -14,17 +14,18 @@ import {
 import { initializeCurrencies } from '../../utils/initializeCurrencies';
 import { updateForDerivativeRegistration } from '../../utils/updateForRegistration';
 import { updateForPrimitiveRegistration } from '../../utils/updateForRegistration';
+import { releaseV4Address } from '../../templates/configuration';
 
 export function handleDerivativeAdded(event: DerivativeAdded): void {
   initializeCurrencies(event);
 
-  let registration = createDerivativeRegistration(event.params.derivative, 4, event);
+  let registration = createDerivativeRegistration(event.params.derivative, releaseV4Address, event);
   updateForDerivativeRegistration(registration, event);
 }
 
 export function handleDerivativeRemoved(event: DerivativeRemoved): void {
   initializeCurrencies(event);
-  removeDerivativeRegistration(event.params.derivative, 4, event);
+  removeDerivativeRegistration(event.params.derivative, releaseV4Address, event);
 }
 
 export function handlePrimitiveAdded(event: PrimitiveAdded): void {
@@ -34,7 +35,7 @@ export function handlePrimitiveAdded(event: PrimitiveAdded): void {
   let registration = createOrUpdatePrimitiveRegistration(
     event.params.primitive,
     event.params.aggregator,
-    4,
+    releaseV4Address,
     event,
     quote,
   );
@@ -43,10 +44,10 @@ export function handlePrimitiveAdded(event: PrimitiveAdded): void {
 
 export function handlePrimitiveRemoved(event: PrimitiveRemoved): void {
   initializeCurrencies(event);
-  removePrimitiveRegistration(event.params.primitive, 4, event);
+  removePrimitiveRegistration(event.params.primitive, releaseV4Address, event);
 }
 
 export function handleStalePrimitiveRemoved(event: StalePrimitiveRemoved): void {
   initializeCurrencies(event);
-  removePrimitiveRegistration(event.params.primitive, 4, event);
+  removePrimitiveRegistration(event.params.primitive, releaseV4Address, event);
 }

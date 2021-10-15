@@ -1,4 +1,4 @@
-import { BigInt, ethereum } from '@graphprotocol/graph-ts';
+import { Address, BigInt, ethereum } from '@graphprotocol/graph-ts';
 import { DerivativeUpdater } from '../generated/schema';
 import { getAsset, updateAssetPriceWithValueInterpreter } from './Asset';
 import { getOrCreateDerivativeRegistry } from './DerivativeRegistry';
@@ -44,7 +44,7 @@ export function updateDerivativePrices(event: ethereum.Event): void {
     let index = progress.toI32();
     let asset = getAsset(assets[index]);
     let registration = getActiveRegistration(asset)!;
-    updateAssetPriceWithValueInterpreter(asset, registration.version, event);
+    updateAssetPriceWithValueInterpreter(asset, Address.fromString(registration.version.toHex()), event);
   }
 
   updater.progress = progress.toI32();

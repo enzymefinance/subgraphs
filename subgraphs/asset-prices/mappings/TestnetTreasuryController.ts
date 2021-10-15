@@ -1,15 +1,13 @@
-import { toBigDecimal } from '@enzymefinance/subgraph-utils';
+import { toBigDecimal, ZERO_ADDRESS, ZERO_BI } from '@enzymefinance/subgraph-utils';
 import { getOrCreateAsset, updateAssetPrice } from '../entities/Asset';
 import { PriceUpdated, TokenDeployed } from '../generated/contracts/TestnetTreasuryControllerEvents';
 import { initializeCurrencies } from '../utils/initializeCurrencies';
 
 export function handleTokenDeployed(event: TokenDeployed): void {
   initializeCurrencies(event); // It's fine to only do that here.
-  getOrCreateAsset(event.params.asset, 0, event);
+  getOrCreateAsset(event.params.asset, ZERO_ADDRESS, event, ZERO_BI);
 }
 
 export function handlePriceUpdated(event: PriceUpdated): void {
-  let asset = getOrCreateAsset(event.params.asset, 0, event);
-  let price = toBigDecimal(event.params.price, asset.decimals);
-  updateAssetPrice(asset, price, event);
+  getOrCreateAsset(event.params.asset, ZERO_ADDRESS, event, event.params.price);
 }

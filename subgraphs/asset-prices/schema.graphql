@@ -16,13 +16,36 @@ type Asset @entity {
   """
   price: BigDecimal!
   """
-  The block number at which the asset price was updated.
+  The timestamp at which the asset price was updated.
   """
   updated: Int!
   """
   A list of active registrations for this asset. Used to run batched updates for derivative assets.
   """
   registrations: [AssetRegistration!]!
+}
+
+"""
+A historical asset price.
+"""
+type AssetPrice @entity {
+  id: ID!
+  """
+  Incremental counter to enable safe scraping.
+  """
+  counter: Int!
+  """
+  The timestamp at which the asset price was updated.
+  """
+  timestamp: Int!
+  """
+  The asset this price record belongs to.
+  """
+  asset: Asset!
+  """
+  The asset price in ETH.
+  """
+  price: BigDecimal!
 }
 
 #################################################
@@ -43,7 +66,7 @@ type Currency @entity {
   """
   usd: BigDecimal!
   """
-  The block number at which the currency value was updated.
+  The timestamp at which the currency value was updated.
   """
   updated: Int!
 }
@@ -126,7 +149,7 @@ interface AssetRegistration {
   """
   Used for sorting the registrations before invoking updates on their behalf.
   """
-  version: Int!
+  version: Bytes!
 }
 
 type CurrencyRegistration implements Registration @entity {
@@ -166,7 +189,7 @@ type PrimitiveRegistration implements Registration & AssetRegistration @entity {
   """
   Used for sorting the registrations before invoking updates on their behalf.
   """
-  version: Int!
+  version: Bytes!
 }
 
 type DerivativeRegistration implements Registration & AssetRegistration @entity {
@@ -182,7 +205,7 @@ type DerivativeRegistration implements Registration & AssetRegistration @entity 
   """
   Used for sorting the registrations before invoking updates on their behalf.
   """
-  version: Int!
+  version: Bytes!
 }
 
 #################################################

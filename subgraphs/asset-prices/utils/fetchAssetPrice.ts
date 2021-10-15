@@ -1,23 +1,39 @@
-import { Address, BigInt, BigDecimal } from '@graphprotocol/graph-ts';
-import { toBigDecimal } from '@enzymefinance/subgraph-utils';
+import { Address, BigInt, BigDecimal, log, dataSource } from '@graphprotocol/graph-ts';
+import { toBigDecimal, ZERO_ADDRESS, ZERO_BD } from '@enzymefinance/subgraph-utils';
 import { SharedSdk } from '../generated/contracts/SharedSdk';
 import { Asset } from '../generated/schema';
 import {
+  releaseV4Address,
+  releaseV3Address,
+  releaseV2Address,
   valueInterpreterV2Address,
   valueInterpreterV3Address,
   valueInterpreterV4Address,
   wethTokenAddress,
 } from '../generated/configuration';
 
-export function fetchAssetPrice(asset: Asset, version: number): BigDecimal {
-  switch (version as i32) {
-    case 2:
-      return fetchAssetPriceLegacy(asset, valueInterpreterV2Address);
-    case 3:
-      return fetchAssetPriceLegacy(asset, valueInterpreterV3Address);
-    default:
-      return fetchAssetPriceNew(asset, valueInterpreterV4Address);
+export function fetchAssetPrice(asset: Asset, version: Address): BigDecimal {
+  if (version == ZERO_ADDRESS) {
+    log.warning('Unknown release version', []);
+    return ZERO_BD;
   }
+
+  let networkName = dataSource.network();
+  if (networkName == 'mainnet') {
+    if (version == releaseV2Address) {
+      return fetchAssetPriceLegacy(asset, valueInterpreterV2Address);
+    } else if (version == releaseV3Address) {
+      return fetchAssetPriceLegacy(asset, valueInterpreterV3Address);
+    } else if (version == releaseV4Address) {
+      return fetchAssetPriceNew(asset, valueInterpreterV4Address);
+    } else {
+      log.warning('Unsupported release version {}', [version.toHex()]);
+      return ZERO_BD;
+    }
+  }
+
+  log.warning('Unsupported network {}', [networkName]);
+  return ZERO_BD;
 }
 
 function fetchAssetPriceNew(asset: Asset, interpreter: Address): BigDecimal {
