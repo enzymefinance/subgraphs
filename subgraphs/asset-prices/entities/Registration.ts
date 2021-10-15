@@ -7,6 +7,7 @@ import {
   Aggregator,
   AggregatorProxy,
   Asset,
+  RegistrationChange,
 } from '../generated/schema';
 import { getCurrencyAggregator } from '../utils/getCurrencyAggregator';
 import { unwrapAggregator } from '../utils/unwrapAggregator';
@@ -15,6 +16,20 @@ import { getOrCreateAsset } from './Asset';
 import { updateDerivativeRegistry } from './DerivativeRegistry';
 import { updateUsdQuotedPrimitiveRegistry } from './UsdQuotedPrimitiveRegistry';
 import { sortRegistrations } from '../utils/sortRegistrations';
+import { getRegistrationChangeCounter } from './Counter';
+
+function recordRegistrationChange(registrationId: string, type: string, change: string, event: ethereum.Event): void {
+  let registrationChangeId = event.transaction.hash.toHex() + '/' + event.logIndex.toString();
+  let registrationChange = new RegistrationChange(registrationChangeId);
+  registrationChange.registration = registrationId;
+  registrationChange.type = type;
+  registrationChange.change = change;
+  registrationChange.timestamp = event.block.timestamp.toI32();
+  registrationChange.block = event.block.number;
+  registrationChange.transaction = event.transaction.hash;
+  registrationChange.counter = getRegistrationChangeCounter();
+  registrationChange.save();
+}
 
 export function createCurrencyRegistration(currencyId: string, event: ethereum.Event): CurrencyRegistration {
   let registrationId = currencyRegistrationId(currencyId);
@@ -33,6 +48,7 @@ export function createCurrencyRegistration(currencyId: string, event: ethereum.E
   let aggregatorAddress = unwrapAggregator(proxyAddress);
   addRegistrationToAggregatorProxy(proxyAddress, registrationId);
   addProxyToAggregator(proxyAddress, aggregatorAddress, event);
+  recordRegistrationChange(registration.id, 'CURRENCY', 'REMOVED', event);
 
   return registration;
 }
@@ -55,6 +71,7 @@ export function createDerivativeRegistration(
   registration.save();
 
   addRegistrationToAsset(assetAddress, registrationId, releaseVersion, event);
+  recordRegistrationChange(registration.id, 'DERIVATIVE', 'ADDED', event);
 
   return registration;
 }
@@ -80,6 +97,7 @@ export function createOrUpdatePrimitiveRegistration(
   addRegistrationToAggregatorProxy(proxyAddress, registrationId);
   addProxyToAggregator(proxyAddress, aggregatorAddress, event);
   addRegistrationToAsset(assetAddress, registrationId, releaseVersion, event);
+  recordRegistrationChange(registration.id, 'PRIMITIVE', 'ADDED', event);
 
   return registration;
 }
@@ -95,10 +113,9 @@ export function removePrimitiveRegistration(
     return null;
   }
 
-  // Delete the registration entity.
-  store.remove('PrimitiveRegistration', registration.id);
   removeRegistrationFromAggregatorProxy(Address.fromString(registration.proxy), registrationId);
   removeRegistrationFromAsset(assetAddress, registrationId, releaseVersion, event);
+  recordRegistrationChange(registration.id, 'PRIMITIVE', 'REMOVED', event);
 
   return registration;
 }
@@ -114,8 +131,6 @@ export function removeDerivativeRegistration(
     return null;
   }
 
-  // Delete the registration entity.
-  store.remove('DerivativeRegistration', registration.id);
   removeRegistrationFromAsset(assetAddress, registrationId, releaseVersion, event);
 
   return registration;
@@ -169,7 +184,6 @@ function addRegistrationToAsset(
   let asset = getOrCreateAsset(assetAddress, releaseVersion, event);
   let registrations = arrayUnique<string>(asset.registrations.concat([registrationId]))
     .map<AssetRegistration>((id) => AssetRegistration.load(id) as AssetRegistration)
-    .filter((registration) => registration != null)
     .sort((a, b) => sortRegistrations(a, b));
 
   asset.registrations = registrations.map<string>((registration) => registration.id);
@@ -209,7 +223,6 @@ function removeRegistrationFromAsset(
   let removed = arrayDiff<string>(asset.registrations, [registrationId]);
   let registrations = arrayUnique<string>(removed.concat([registrationId]))
     .map<AssetRegistration>((id) => AssetRegistration.load(id) as AssetRegistration)
-    .filter((registration) => registration != null)
     .sort((a, b) => sortRegistrations(a, b));
 
   asset.registrations = registrations.map<string>((registration) => registration.id);
@@ -284,15 +297,6 @@ export class Registration extends Entity {
     return null;
   }
 
-  static remove(id: string): void {
-    let entity = this.entity(id);
-    if (entity == null) {
-      return;
-    }
-
-    store.remove(entity, id);
-  }
-
   static load(id: string): Registration | null {
     let entity = this.entity(id);
     if (entity == null) {
@@ -355,15 +359,6 @@ export class AssetRegistration extends Entity {
     }
 
     return null;
-  }
-
-  static remove(id: string): void {
-    let entity = this.entity(id);
-    if (entity == null) {
-      return;
-    }
-
-    store.remove(entity, id);
   }
 
   static load(id: string): AssetRegistration | null {

@@ -16,3 +16,7 @@ export function getCounter(id: string): i32 {
 export function getAssetPriceCounter(): i32 {
   return getCounter('asset-price');
 }
+
+export function getRegistrationChangeCounter(): i32 {
+  return getCounter('registration-change');
+}

@@ -24,6 +24,7 @@ export function updateForPrimitiveRegistration(
     Address.fromString(registration.version.toHex()),
     event,
   );
+
   // Skip the update if the given registration is not the active registration for this asset.
   if (!isActiveRegistration(changetype<Registration>(registration), asset)) {
     return;
@@ -42,6 +43,7 @@ export function updateForDerivativeRegistration(registration: DerivativeRegistra
     Address.fromString(registration.version.toHex()),
     event,
   );
+
   // Skip the update if the given registration is not the active registration for this asset.
   if (!isActiveRegistration(changetype<Registration>(registration), asset)) {
     return;

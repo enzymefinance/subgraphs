@@ -134,6 +134,10 @@ interface Registration {
   The type of the registration entry.
   """
   type: RegistrationType!
+  """
+  Any change events related to this registration.
+  """
+  changes: [RegistrationChange!]! @derivedFrom(field: "registration")
 }
 
 interface AssetRegistration {
@@ -147,9 +151,13 @@ interface AssetRegistration {
   """
   asset: Asset!
   """
-  Used for sorting the registrations before invoking updates on their behalf.
+  The version (address of FundDeployer) in which the asset was registered.
   """
   version: Bytes!
+  """
+  Any change events related to this registration.
+  """
+  changes: [RegistrationChange!]! @derivedFrom(field: "registration")
 }
 
 type CurrencyRegistration implements Registration @entity {
@@ -166,6 +174,10 @@ type CurrencyRegistration implements Registration @entity {
   The registered aggregator proxy.
   """
   proxy: AggregatorProxy!
+  """
+  Any change events related to this registration.
+  """
+  changes: [RegistrationChange!]! @derivedFrom(field: "registration")
 }
 
 type PrimitiveRegistration implements Registration & AssetRegistration @entity {
@@ -187,9 +199,13 @@ type PrimitiveRegistration implements Registration & AssetRegistration @entity {
   """
   proxy: AggregatorProxy!
   """
-  Used for sorting the registrations before invoking updates on their behalf.
+  The version (address of FundDeployer) in which the asset was registered.
   """
   version: Bytes!
+  """
+  Any change events related to this registration.
+  """
+  changes: [RegistrationChange!]! @derivedFrom(field: "registration")
 }
 
 type DerivativeRegistration implements Registration & AssetRegistration @entity {
@@ -203,9 +219,50 @@ type DerivativeRegistration implements Registration & AssetRegistration @entity 
   """
   asset: Asset!
   """
-  Used for sorting the registrations before invoking updates on their behalf.
+  The version (address of FundDeployer) in which the asset was registered.
   """
   version: Bytes!
+  """
+  Any change events related to this registration.
+  """
+  changes: [RegistrationChange!]! @derivedFrom(field: "registration")
+}
+
+enum RegistrationChangeType {
+  ADDED
+  REMOVED
+}
+
+type RegistrationChange @entity {
+  id: ID!
+  """
+  The type of the registration entry.
+  """
+  type: RegistrationType!
+  """
+  The type of the change.
+  """
+  change: RegistrationChangeType!
+  """
+  The timestamp when the change occurred.
+  """
+  timestamp: Int!
+  """
+  The block number in which the change occurred.
+  """
+  block: BigInt!
+  """
+  The transaction which caused the change.
+  """
+  transaction: Bytes!
+  """
+  The affected registration.
+  """
+  registration: Registration!
+  """
+  Incremental counter to enable safe scraping.
+  """
+  counter: Int!
 }
 
 #################################################
