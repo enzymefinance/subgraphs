@@ -69,6 +69,17 @@ export function tokenDecimals(address: Address): i32 {
   return -1;
 }
 
+export function tokenDecimalsOrFallback(address: Address, fallback: i32 = 18): i32 {
+  let contract = ERC20Sdk.bind(address);
+  let decimalsCall = contract.try_decimals();
+  if (!decimalsCall.reverted) {
+    return decimalsCall.value;
+  }
+
+  log.error('decimals() call reverted for {}', [address.toHex()]);
+  return fallback;
+}
+
 export function tokenDecimalsOrThrow(address: Address): i32 {
   let contract = ERC20Sdk.bind(address);
   let decimalsCall = contract.try_decimals();

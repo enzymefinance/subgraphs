@@ -48,7 +48,19 @@ export const configure: Configurator<Variables> = (variables) => {
       abis: {
         ERC20: 'abis/ERC20.json',
       },
-      functions: (abis) => [abis.ERC20.getFunction('balanceOf'), abis.ERC20.getFunction('decimals')],
+      functions: (abis) => [
+        abis.ERC20.getFunction('symbol'),
+        abis.ERC20.getFunction('name'),
+        abis.ERC20.getFunction('decimals'),
+        abis.ERC20.getFunction('balanceOf'),
+      ],
+    },
+    {
+      name: 'ERC20Bytes',
+      abis: {
+        ERC20Bytes: 'abis/ERC20Bytes.json',
+      },
+      functions: (abis) => [abis.ERC20Bytes.getFunction('symbol'), abis.ERC20Bytes.getFunction('name')],
     },
   ];
 
@@ -60,7 +72,8 @@ export const configure: Configurator<Variables> = (variables) => {
       events: (abi) => [abi.getEvent('VaultProxyDeployed'), abi.getEvent('MigrationExecuted')],
     },
     {
-      name: 'ERC20',
+      name: 'Asset',
+      abi: 'abis/ERC20.json',
       block: variables.start,
       events: (abi) => [abi.getEvent('Transfer')],
     },

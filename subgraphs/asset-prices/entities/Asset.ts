@@ -1,8 +1,8 @@
 import { toBigDecimal, ZERO_BD } from '@enzymefinance/subgraph-utils';
 import { Address, BigDecimal, BigInt, ethereum, log } from '@graphprotocol/graph-ts';
-import { SharedSdk } from '../generated/contracts/SharedSdk';
 import { Asset, AssetPrice } from '../generated/schema';
 import { fetchAssetPrice } from '../utils/fetchAssetPrice';
+import { tokenDecimalsOrFallback, tokenName, tokenSymbol } from '../utils/tokenCalls';
 import { getAssetPriceCounter } from './Counter';
 
 export function getOrCreateAsset(
@@ -15,11 +15,10 @@ export function getOrCreateAsset(
   let asset = Asset.load(id);
 
   if (asset == null) {
-    let contract = SharedSdk.bind(address);
-    let decimals = contract.try_decimals();
-
     asset = new Asset(id);
-    asset.decimals = decimals.reverted ? 18 : decimals.value;
+    asset.decimals = tokenDecimalsOrFallback(address, 18);
+    asset.symbol = tokenSymbol(address);
+    asset.name = tokenName(address);
     asset.registrations = [];
     asset.updated = event.block.timestamp.toI32();
     asset.price = ZERO_BD;

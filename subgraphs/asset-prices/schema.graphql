@@ -8,6 +8,14 @@ A registered asset.
 type Asset @entity {
   id: ID!
   """
+  The symbol of the asset.
+  """
+  symbol: String!
+  """
+  The name of the asset.
+  """
+  name: String!
+  """
   The number of decimal places for this asset.
   """
   decimals: Int!
@@ -23,6 +31,10 @@ type Asset @entity {
   A list of active registrations for this asset. Used to run batched updates for derivative assets.
   """
   registrations: [AssetRegistration!]!
+  """
+  A list of active registrations for this asset. Used to run batched updates for derivative assets.
+  """
+  changes: [RegistrationChange!]! @derivedFrom(field: "asset")
 }
 
 """
@@ -219,6 +231,10 @@ type DerivativeRegistration implements Registration & AssetRegistration @entity 
   """
   asset: Asset!
   """
+  The address of the derivative price feed.
+  """
+  feed: Bytes!
+  """
   The version (address of FundDeployer) in which the asset was registered.
   """
   version: Bytes!
@@ -233,7 +249,7 @@ enum RegistrationChangeType {
   REMOVED
 }
 
-type RegistrationChange @entity {
+interface RegistrationChange {
   id: ID!
   """
   The type of the registration entry.
@@ -243,6 +259,182 @@ type RegistrationChange @entity {
   The type of the change.
   """
   change: RegistrationChangeType!
+  """
+  The version (address of FundDeployer) in which the asset was registered.
+  """
+  version: Bytes!
+  """
+  The affected asset.
+  """
+  asset: Asset!
+  """
+  The timestamp when the change occurred.
+  """
+  timestamp: Int!
+  """
+  The block number in which the change occurred.
+  """
+  block: BigInt!
+  """
+  The transaction which caused the change.
+  """
+  transaction: Bytes!
+  """
+  The affected registration.
+  """
+  registration: Registration!
+  """
+  Incremental counter to enable safe scraping.
+  """
+  counter: Int!
+}
+
+type PrimitiveAdded implements RegistrationChange @entity {
+  id: ID!
+  """
+  The type of the registration entry.
+  """
+  type: RegistrationType!
+  """
+  The type of the change.
+  """
+  change: RegistrationChangeType!
+  """
+  The version (address of FundDeployer) in which the asset was registered.
+  """
+  version: Bytes!
+  """
+  The affected asset.
+  """
+  asset: Asset!
+  """
+  The timestamp when the change occurred.
+  """
+  timestamp: Int!
+  """
+  The block number in which the change occurred.
+  """
+  block: BigInt!
+  """
+  The transaction which caused the change.
+  """
+  transaction: Bytes!
+  """
+  The affected registration.
+  """
+  registration: Registration!
+  """
+  Incremental counter to enable safe scraping.
+  """
+  counter: Int!
+  """
+  The address of the aggregator proxy contract.
+  """
+  aggregator: Bytes!
+}
+
+type PrimitiveRemoved implements RegistrationChange @entity {
+  id: ID!
+  """
+  The type of the registration entry.
+  """
+  type: RegistrationType!
+  """
+  The type of the change.
+  """
+  change: RegistrationChangeType!
+  """
+  The version (address of FundDeployer) in which the asset was registered.
+  """
+  version: Bytes!
+  """
+  The affected asset.
+  """
+  asset: Asset!
+  """
+  The timestamp when the change occurred.
+  """
+  timestamp: Int!
+  """
+  The block number in which the change occurred.
+  """
+  block: BigInt!
+  """
+  The transaction which caused the change.
+  """
+  transaction: Bytes!
+  """
+  The affected registration.
+  """
+  registration: Registration!
+  """
+  Incremental counter to enable safe scraping.
+  """
+  counter: Int!
+}
+
+type DerivativeAdded implements RegistrationChange @entity {
+  id: ID!
+  """
+  The type of the registration entry.
+  """
+  type: RegistrationType!
+  """
+  The type of the change.
+  """
+  change: RegistrationChangeType!
+  """
+  The version (address of FundDeployer) in which the asset was registered.
+  """
+  version: Bytes!
+  """
+  The affected asset.
+  """
+  asset: Asset!
+  """
+  The timestamp when the change occurred.
+  """
+  timestamp: Int!
+  """
+  The block number in which the change occurred.
+  """
+  block: BigInt!
+  """
+  The transaction which caused the change.
+  """
+  transaction: Bytes!
+  """
+  The affected registration.
+  """
+  registration: Registration!
+  """
+  Incremental counter to enable safe scraping.
+  """
+  counter: Int!
+  """
+  The address of the derivative price feed contract.
+  """
+  feed: Bytes!
+}
+
+type DerivativeRemoved implements RegistrationChange @entity {
+  id: ID!
+  """
+  The type of the registration entry.
+  """
+  type: RegistrationType!
+  """
+  The type of the change.
+  """
+  change: RegistrationChangeType!
+  """
+  The version (address of FundDeployer) in which the asset was registered.
+  """
+  version: Bytes!
+  """
+  The affected asset.
+  """
+  asset: Asset!
   """
   The timestamp when the change occurred.
   """

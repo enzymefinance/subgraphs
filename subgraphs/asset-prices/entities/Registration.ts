@@ -7,7 +7,10 @@ import {
   Aggregator,
   AggregatorProxy,
   Asset,
-  RegistrationChange,
+  DerivativeAdded,
+  DerivativeRemoved,
+  PrimitiveAdded,
+  PrimitiveRemoved,
 } from '../generated/schema';
 import { getCurrencyAggregator } from '../utils/getCurrencyAggregator';
 import { unwrapAggregator } from '../utils/unwrapAggregator';
@@ -18,17 +21,8 @@ import { updateUsdQuotedPrimitiveRegistry } from './UsdQuotedPrimitiveRegistry';
 import { sortRegistrations } from '../utils/sortRegistrations';
 import { getRegistrationChangeCounter } from './Counter';
 
-function recordRegistrationChange(registrationId: string, type: string, change: string, event: ethereum.Event): void {
-  let registrationChangeId = event.transaction.hash.toHex() + '/' + event.logIndex.toString();
-  let registrationChange = new RegistrationChange(registrationChangeId);
-  registrationChange.registration = registrationId;
-  registrationChange.type = type;
-  registrationChange.change = change;
-  registrationChange.timestamp = event.block.timestamp.toI32();
-  registrationChange.block = event.block.number;
-  registrationChange.transaction = event.transaction.hash;
-  registrationChange.counter = getRegistrationChangeCounter();
-  registrationChange.save();
+function registrationChangeId(event: ethereum.Event): string {
+  return event.transaction.hash.toHex() + '/' + event.logIndex.toString();
 }
 
 export function createCurrencyRegistration(currencyId: string, event: ethereum.Event): CurrencyRegistration {
@@ -48,46 +42,78 @@ export function createCurrencyRegistration(currencyId: string, event: ethereum.E
   let aggregatorAddress = unwrapAggregator(proxyAddress);
   addRegistrationToAggregatorProxy(proxyAddress, registrationId);
   addProxyToAggregator(proxyAddress, aggregatorAddress, event);
-  recordRegistrationChange(registration.id, 'CURRENCY', 'REMOVED', event);
 
   return registration;
 }
 
 export function createDerivativeRegistration(
   assetAddress: Address,
+  priceFeedAddress: Address,
   releaseVersion: Address,
   event: ethereum.Event,
 ): DerivativeRegistration {
   let registrationId = derivativeRegistrationId(assetAddress, releaseVersion);
-  let registration = DerivativeRegistration.load(registrationId);
-  if (registration != null) {
-    return registration;
-  }
-
-  registration = new DerivativeRegistration(registrationId);
+  let registration = new DerivativeRegistration(registrationId);
   registration.type = 'DERIVATIVE';
   registration.asset = assetAddress.toHex();
   registration.version = releaseVersion;
+  registration.feed = priceFeedAddress;
   registration.save();
 
   addRegistrationToAsset(assetAddress, registrationId, releaseVersion, event);
-  recordRegistrationChange(registration.id, 'DERIVATIVE', 'ADDED', event);
+
+  let change = new DerivativeAdded(registrationChangeId(event));
+  change.registration = registrationId;
+  change.type = 'DERIVATIVE';
+  change.change = 'ADDED';
+  change.version = releaseVersion;
+  change.asset = assetAddress.toHex();
+  change.timestamp = event.block.timestamp.toI32();
+  change.block = event.block.number;
+  change.transaction = event.transaction.hash;
+  change.feed = priceFeedAddress;
+  change.counter = getRegistrationChangeCounter();
+  change.save();
 
   return registration;
 }
 
-export function createOrUpdatePrimitiveRegistration(
+export function removeDerivativeRegistration(
+  assetAddress: Address,
+  releaseVersion: Address,
+  event: ethereum.Event,
+): DerivativeRegistration | null {
+  let registrationId = primitiveRegistrationId(assetAddress, releaseVersion);
+  let registration = DerivativeRegistration.load(registrationId);
+
+  removeRegistrationFromAsset(assetAddress, registrationId, releaseVersion, event);
+
+  let change = new DerivativeRemoved(registrationChangeId(event));
+  change.registration = registrationId;
+  change.type = 'DERIVATIVE';
+  change.change = 'REMOVED';
+  change.version = releaseVersion;
+  change.asset = assetAddress.toHex();
+  change.timestamp = event.block.timestamp.toI32();
+  change.block = event.block.number;
+  change.transaction = event.transaction.hash;
+  change.counter = getRegistrationChangeCounter();
+  change.save();
+
+  return registration;
+}
+
+export function createPrimitiveRegistration(
   assetAddress: Address,
   proxyAddress: Address,
   releaseVersion: Address,
+  quoteCurrency: string,
   event: ethereum.Event,
-  quoteCurrency: string | null = null,
 ): PrimitiveRegistration {
-  let previous = removePrimitiveRegistration(assetAddress, releaseVersion, event);
   let registrationId = primitiveRegistrationId(assetAddress, releaseVersion);
   let registration = new PrimitiveRegistration(registrationId);
   registration.type = 'PRIMITIVE';
-  registration.quote = (!quoteCurrency ? (!previous ? 'ETH' : previous.quote) : quoteCurrency) as string;
+  registration.quote = quoteCurrency;
   registration.asset = assetAddress.toHex();
   registration.proxy = proxyAddress.toHex();
   registration.version = releaseVersion;
@@ -97,7 +123,19 @@ export function createOrUpdatePrimitiveRegistration(
   addRegistrationToAggregatorProxy(proxyAddress, registrationId);
   addProxyToAggregator(proxyAddress, aggregatorAddress, event);
   addRegistrationToAsset(assetAddress, registrationId, releaseVersion, event);
-  recordRegistrationChange(registration.id, 'PRIMITIVE', 'ADDED', event);
+
+  let change = new PrimitiveAdded(registrationChangeId(event));
+  change.registration = registrationId;
+  change.type = 'PRIMITIVE';
+  change.change = 'ADDED';
+  change.version = releaseVersion;
+  change.asset = assetAddress.toHex();
+  change.timestamp = event.block.timestamp.toI32();
+  change.block = event.block.number;
+  change.transaction = event.transaction.hash;
+  change.aggregator = proxyAddress;
+  change.counter = getRegistrationChangeCounter();
+  change.save();
 
   return registration;
 }
@@ -115,25 +153,32 @@ export function removePrimitiveRegistration(
 
   removeRegistrationFromAggregatorProxy(Address.fromString(registration.proxy), registrationId);
   removeRegistrationFromAsset(assetAddress, registrationId, releaseVersion, event);
-  recordRegistrationChange(registration.id, 'PRIMITIVE', 'REMOVED', event);
+
+  let change = new PrimitiveRemoved(registrationChangeId(event));
+  change.registration = registrationId;
+  change.type = 'PRIMITIVE';
+  change.change = 'REMOVED';
+  change.version = releaseVersion;
+  change.asset = assetAddress.toHex();
+  change.timestamp = event.block.timestamp.toI32();
+  change.block = event.block.number;
+  change.transaction = event.transaction.hash;
+  change.counter = getRegistrationChangeCounter();
+  change.save();
 
   return registration;
 }
 
-export function removeDerivativeRegistration(
+export function createOrUpdatePrimitiveRegistration(
   assetAddress: Address,
+  proxyAddress: Address,
   releaseVersion: Address,
   event: ethereum.Event,
-): DerivativeRegistration | null {
-  let registrationId = primitiveRegistrationId(assetAddress, releaseVersion);
-  let registration = DerivativeRegistration.load(registrationId);
-  if (registration == null) {
-    return null;
-  }
-
-  removeRegistrationFromAsset(assetAddress, registrationId, releaseVersion, event);
-
-  return registration;
+  quoteCurrencyOrNull: string | null = null,
+): PrimitiveRegistration {
+  let previous = removePrimitiveRegistration(assetAddress, releaseVersion, event);
+  let quoteCurrency = (!quoteCurrencyOrNull ? (!previous ? 'ETH' : previous.quote) : quoteCurrencyOrNull) as string;
+  return createPrimitiveRegistration(assetAddress, proxyAddress, releaseVersion, quoteCurrency, event);
 }
 
 export function getUpdatedAggregator(aggregatorAddress: Address, event: ethereum.Event): Aggregator {

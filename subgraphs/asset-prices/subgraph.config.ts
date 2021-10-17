@@ -160,6 +160,24 @@ export const configure: Configurator<Variables> = (variables: Variables) => {
         abis.ChainlinkAggregator.getFunction('latestAnswer'),
       ],
     },
+    {
+      name: 'ERC20',
+      abis: {
+        ERC20: 'abis/ERC20.json',
+      },
+      functions: (abis) => [
+        abis.ERC20.getFunction('symbol'),
+        abis.ERC20.getFunction('name'),
+        abis.ERC20.getFunction('decimals'),
+      ],
+    },
+    {
+      name: 'ERC20Bytes',
+      abis: {
+        ERC20Bytes: 'abis/ERC20Bytes.json',
+      },
+      functions: (abis) => [abis.ERC20Bytes.getFunction('symbol'), abis.ERC20Bytes.getFunction('name')],
+    },
   ];
 
   if (variables.releaseConfiguration.v2) {

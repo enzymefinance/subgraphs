@@ -14,7 +14,15 @@ type Asset @entity {
   """
   id: ID!
   """
-  The number of decimal places for the asset.
+  The symbol of the asset.
+  """
+  symbol: String!
+  """
+  The name of the asset.
+  """
+  name: String!
+  """
+  The number of decimal places for this asset.
   """
   decimals: Int!
   """

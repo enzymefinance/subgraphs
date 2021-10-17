@@ -7,7 +7,12 @@ import { releaseV2Address } from '../../generated/configuration';
 export function handleDerivativeAdded(event: DerivativeAdded): void {
   initializeCurrencies(event);
 
-  let registration = createDerivativeRegistration(event.params.derivative, releaseV2Address, event);
+  let registration = createDerivativeRegistration(
+    event.params.derivative,
+    event.params.priceFeed,
+    releaseV2Address,
+    event,
+  );
   updateForDerivativeRegistration(registration, event);
 }
 
