@@ -21,8 +21,8 @@ import { updateUsdQuotedPrimitiveRegistry } from './UsdQuotedPrimitiveRegistry';
 import { sortRegistrations } from '../utils/sortRegistrations';
 import { getRegistrationChangeCounter } from './Counter';
 
-function registrationChangeId(event: ethereum.Event): string {
-  return event.transaction.hash.toHex() + '/' + event.logIndex.toString();
+function registrationChangeId(type: string, change: string, event: ethereum.Event): string {
+  return type + '/' + change + '/' + event.transaction.hash.toHex() + '/' + event.logIndex.toString();
 }
 
 export function createCurrencyRegistration(currencyId: string, event: ethereum.Event): CurrencyRegistration {
@@ -62,7 +62,7 @@ export function createDerivativeRegistration(
 
   addRegistrationToAsset(assetAddress, registrationId, releaseVersion, event);
 
-  let change = new DerivativeAdded(registrationChangeId(event));
+  let change = new DerivativeAdded(registrationChangeId('DERIVATIVE', 'ADDED', event));
   change.registration = registrationId;
   change.type = 'DERIVATIVE';
   change.change = 'ADDED';
@@ -85,10 +85,13 @@ export function removeDerivativeRegistration(
 ): DerivativeRegistration | null {
   let registrationId = primitiveRegistrationId(assetAddress, releaseVersion);
   let registration = DerivativeRegistration.load(registrationId);
+  if (registration == null) {
+    return null;
+  }
 
   removeRegistrationFromAsset(assetAddress, registrationId, releaseVersion, event);
 
-  let change = new DerivativeRemoved(registrationChangeId(event));
+  let change = new DerivativeRemoved(registrationChangeId('DERIVATIVE', 'REMOVED', event));
   change.registration = registrationId;
   change.type = 'DERIVATIVE';
   change.change = 'REMOVED';
@@ -124,7 +127,7 @@ export function createPrimitiveRegistration(
   addProxyToAggregator(proxyAddress, aggregatorAddress, event);
   addRegistrationToAsset(assetAddress, registrationId, releaseVersion, event);
 
-  let change = new PrimitiveAdded(registrationChangeId(event));
+  let change = new PrimitiveAdded(registrationChangeId('PRIMITIVE', 'ADDED', event));
   change.registration = registrationId;
   change.type = 'PRIMITIVE';
   change.change = 'ADDED';
@@ -154,7 +157,7 @@ export function removePrimitiveRegistration(
   removeRegistrationFromAggregatorProxy(Address.fromString(registration.proxy), registrationId);
   removeRegistrationFromAsset(assetAddress, registrationId, releaseVersion, event);
 
-  let change = new PrimitiveRemoved(registrationChangeId(event));
+  let change = new PrimitiveRemoved(registrationChangeId('PRIMITIVE', 'REMOVED', event));
   change.registration = registrationId;
   change.type = 'PRIMITIVE';
   change.change = 'REMOVED';
@@ -228,7 +231,9 @@ function addRegistrationToAsset(
   // Update registrations sorted by priority.
   let asset = getOrCreateAsset(assetAddress, releaseVersion, event);
   let registrations = arrayUnique<string>(asset.registrations.concat([registrationId]))
-    .map<AssetRegistration>((id) => AssetRegistration.load(id) as AssetRegistration)
+    .map<AssetRegistration | null>((id) => AssetRegistration.load(id))
+    .filter((item) => item != null)
+    .map<AssetRegistration>((item) => item as AssetRegistration)
     .sort((a, b) => sortRegistrations(a, b));
 
   asset.registrations = registrations.map<string>((registration) => registration.id);
@@ -267,7 +272,9 @@ function removeRegistrationFromAsset(
   let asset = getOrCreateAsset(assetAddress, releaseVersion, event);
   let removed = arrayDiff<string>(asset.registrations, [registrationId]);
   let registrations = arrayUnique<string>(removed.concat([registrationId]))
-    .map<AssetRegistration>((id) => AssetRegistration.load(id) as AssetRegistration)
+    .map<AssetRegistration | null>((id) => AssetRegistration.load(id))
+    .filter((item) => item != null)
+    .map<AssetRegistration>((item) => item as AssetRegistration)
     .sort((a, b) => sortRegistrations(a, b));
 
   asset.registrations = registrations.map<string>((registration) => registration.id);
