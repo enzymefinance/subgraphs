@@ -131,7 +131,9 @@ class Subgraph<TVariables = any> {
     await graph(['codegen', '--skip-migrations', 'true', '--output-dir', outputDir]);
 
     fs.renameSync(path.join(outputDir, 'schema.ts'), path.join(generatedDir, 'schema.ts'));
-    fs.renameSync(path.join(outputDir, 'templates.ts'), path.join(generatedDir, 'templates.ts'));
+    if (fs.existsSync(path.join(outputDir, 'templates.ts'))) {
+      fs.renameSync(path.join(outputDir, 'templates.ts'), path.join(generatedDir, 'templates.ts'));
+    }
 
     const globbed = glob.sync('**/*', { cwd: outputDir, absolute: true });
     const files = globbed.filter((item) => fs.statSync(item).isFile());
