@@ -1,0 +1,265 @@
+#################################################
+# Version
+#################################################
+
+"""
+A release version.
+"""
+type Version @entity {
+  id: ID!
+  assets: [Asset!]! @derivedFrom(field: "version")
+  changes: [RegistrationChange!]! @derivedFrom(field: "version")
+  registrations: [Registration!]! @derivedFrom(field: "version")
+}
+
+#################################################
+# Assets
+#################################################
+
+"""
+A registered asset.
+"""
+type Asset @entity {
+  id: ID!
+  """
+  The address of the asset.
+  """
+  address: Bytes!
+  """
+  The symbol of the asset.
+  """
+  symbol: String!
+  """
+  The name of the asset.
+  """
+  name: String!
+  """
+  The number of decimal places for this asset.
+  """
+  decimals: Int!
+  """
+  The version in which the asset was registered.
+  """
+  version: Version!
+  """
+  The active registrations for this asset or empty if there's no active registration.
+  """
+  registration: Registration
+  """
+  Incremental counter to enable safe scraping.
+  """
+  counter: Int!
+  """
+  A list of active registrations for this asset. Used to run batched updates for derivative assets.
+  """
+  changes: [RegistrationChange!]! @derivedFrom(field: "asset")
+}
+
+#################################################
+# Asset registrations
+#################################################
+
+enum RegistrationType {
+  PRIMITIVE
+  DERIVATIVE
+}
+
+interface Registration {
+  id: ID!
+  """
+  The type of the registration entry.
+  """
+  type: RegistrationType!
+  """
+  The version in which the asset was registered.
+  """
+  version: Version!
+  """
+  Incremental counter to enable safe scraping.
+  """
+  counter: Int!
+}
+
+type PrimitiveRegistration implements Registration @entity {
+  id: ID!
+  """
+  The type of the registration entry.
+  """
+  type: RegistrationType!
+  """
+  The registered asset.
+  """
+  asset: Asset!
+  """
+  The version in which the asset was registered.
+  """
+  version: Version!
+  """
+  Incremental counter to enable safe scraping.
+  """
+  counter: Int!
+  """
+  The registered aggregator proxy.
+  """
+  aggregator: Bytes!
+}
+
+type DerivativeRegistration implements Registration @entity {
+  id: ID!
+  """
+  The type of the registration entry.
+  """
+  type: RegistrationType!
+  """
+  The registered asset.
+  """
+  asset: Asset!
+  """
+  The version in which the asset was registered.
+  """
+  version: Version!
+  """
+  Incremental counter to enable safe scraping.
+  """
+  counter: Int!
+  """
+  The address of the derivative price feed.
+  """
+  feed: Bytes!
+}
+
+#################################################
+# Asset registration changes
+#################################################
+
+enum RegistrationChangeType {
+  ADDED
+  REMOVED
+}
+
+interface RegistrationChange {
+  id: ID!
+  """
+  The type of the registration entry.
+  """
+  type: RegistrationType!
+  """
+  The type of the change.
+  """
+  change: RegistrationChangeType!
+  """
+  The version in which the asset was registered.
+  """
+  version: Version!
+  """
+  The affected asset.
+  """
+  asset: Asset!
+  """
+  The timestamp when the change occurred.
+  """
+  timestamp: Int!
+  """
+  The block number in which the change occurred.
+  """
+  block: BigInt!
+  """
+  The transaction which caused the change.
+  """
+  transaction: Bytes!
+  """
+  Incremental counter to enable safe scraping.
+  """
+  counter: Int!
+}
+
+type RegistrationAdded implements RegistrationChange @entity {
+  id: ID!
+  """
+  The type of the registration entry.
+  """
+  type: RegistrationType!
+  """
+  The type of the change.
+  """
+  change: RegistrationChangeType!
+  """
+  The version in which the asset was registered.
+  """
+  version: Version!
+  """
+  The affected asset.
+  """
+  asset: Asset!
+  """
+  The timestamp when the change occurred.
+  """
+  timestamp: Int!
+  """
+  The block number in which the change occurred.
+  """
+  block: BigInt!
+  """
+  The transaction which caused the change.
+  """
+  transaction: Bytes!
+  """
+  Incremental counter to enable safe scraping.
+  """
+  counter: Int!
+  """
+  The affected registration.
+  """
+  registration: Registration
+}
+
+type RegistrationRemoved implements RegistrationChange @entity {
+  id: ID!
+  """
+  The type of the registration entry.
+  """
+  type: RegistrationType!
+  """
+  The type of the change.
+  """
+  change: RegistrationChangeType!
+  """
+  The version in which the asset was registered.
+  """
+  version: Version!
+  """
+  The affected asset.
+  """
+  asset: Asset!
+  """
+  The timestamp when the change occurred.
+  """
+  timestamp: Int!
+  """
+  The block number in which the change occurred.
+  """
+  block: BigInt!
+  """
+  The transaction which caused the change.
+  """
+  transaction: Bytes!
+  """
+  Incremental counter to enable safe scraping.
+  """
+  counter: Int!
+}
+
+#################################################
+# Counter
+#################################################
+
+"""
+Generic counter entity to allow safe data scraping.
+"""
+type Counter @entity {
+  id: ID!
+  """
+  Strictly incremental counter for data scraping.
+  """
+  count: Int!
+}
