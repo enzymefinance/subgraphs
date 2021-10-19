@@ -83,43 +83,36 @@ type Registration @entity {
   """
   active: Boolean!
   """
-  Registration details.
+  Last known registration details.
   """
   details: RegistrationDetails!
   """
-  All changes related to that registration.
+  All changes related to the registration.
   """
   changes: [RegistrationChange!]! @derivedFrom(field: "registration")
 }
 
+#################################################
+# Asset registrations details
+#################################################
+
 interface RegistrationDetails {
   id: ID!
-  """
-  The registration.
-  """
-  registration: Registration!
 }
 
 type PrimitiveRegistrationDetails implements RegistrationDetails @entity {
   id: ID!
   """
-  The registration.
-  """
-  registration: Registration!
-  """
-  The Chainlink Aggregator address for the asset registration.
+  The chainlink aggregator address for the asset registration.
   """
   aggregator: Bytes!
 }
 
+# TODO: Add derived metadata about the asset (e.g. uniswap pool details)
 type DerivativeRegistrationDetails implements RegistrationDetails @entity {
   id: ID!
   """
-  The registration.
-  """
-  registration: Registration!
-  """
-  The Derivative PriceFeed address for the asset registration.
+  The derivative price feed address for the asset registration.
   """
   feed: Bytes!
 }
@@ -133,7 +126,7 @@ enum RegistrationChangeType {
   REMOVED
 }
 
-interface RegistrationChange {
+type RegistrationChange @entity {
   id: ID!
   """
   The type of the registration entry.
@@ -156,85 +149,9 @@ interface RegistrationChange {
   """
   registration: Registration!
   """
-  The timestamp when the change occurred.
+  The registration details in effect when this change occurred.
   """
-  timestamp: Int!
-  """
-  The block number in which the change occurred.
-  """
-  block: BigInt!
-  """
-  The transaction which caused the change.
-  """
-  transaction: Bytes!
-  """
-  Incremental counter to enable safe scraping.
-  """
-  counter: Int!
-}
-
-type RegistrationAdded implements RegistrationChange @entity {
-  id: ID!
-  """
-  The type of the registration entry.
-  """
-  type: RegistrationType!
-  """
-  The type of the change.
-  """
-  change: RegistrationChangeType!
-  """
-  The version in which the asset was registered.
-  """
-  version: Version!
-  """
-  The affected asset.
-  """
-  asset: Asset!
-  """
-  The affected registration.
-  """
-  registration: Registration!
-  """
-  The timestamp when the change occurred.
-  """
-  timestamp: Int!
-  """
-  The block number in which the change occurred.
-  """
-  block: BigInt!
-  """
-  The transaction which caused the change.
-  """
-  transaction: Bytes!
-  """
-  Incremental counter to enable safe scraping.
-  """
-  counter: Int!
-}
-
-type RegistrationRemoved implements RegistrationChange @entity {
-  id: ID!
-  """
-  The type of the registration entry.
-  """
-  type: RegistrationType!
-  """
-  The type of the change.
-  """
-  change: RegistrationChangeType!
-  """
-  The version in which the asset was registered.
-  """
-  version: Version!
-  """
-  The affected asset.
-  """
-  asset: Asset!
-  """
-  The affected registration.
-  """
-  registration: Registration!
+  details: RegistrationDetails!
   """
   The timestamp when the change occurred.
   """
