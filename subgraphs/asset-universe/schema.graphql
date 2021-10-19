@@ -129,10 +129,6 @@ enum RegistrationChangeType {
 type RegistrationChange @entity {
   id: ID!
   """
-  The type of the registration entry.
-  """
-  type: RegistrationType!
-  """
   The type of the change.
   """
   change: RegistrationChangeType!

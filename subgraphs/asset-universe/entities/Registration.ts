@@ -87,8 +87,7 @@ export function recordRegistrationChange(
   let record = new RegistrationChange(id);
   record.registration = registration.id;
   record.details = details;
-  record.type = 'DERIVATIVE';
-  record.change = 'ADDED';
+  record.change = change;
   record.version = version.id;
   record.asset = asset.id;
   record.timestamp = event.block.timestamp.toI32();
