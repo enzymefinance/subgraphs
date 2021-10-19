@@ -7,7 +7,6 @@ A release version.
 """
 type Version @entity {
   id: ID!
-  assets: [Asset!]! @derivedFrom(field: "version")
   changes: [RegistrationChange!]! @derivedFrom(field: "version")
   registrations: [Registration!]! @derivedFrom(field: "version")
 }
@@ -22,10 +21,6 @@ A registered asset.
 type Asset @entity {
   id: ID!
   """
-  The address of the asset.
-  """
-  address: Bytes!
-  """
   The symbol of the asset.
   """
   symbol: String!
@@ -37,10 +32,6 @@ type Asset @entity {
   The number of decimal places for this asset.
   """
   decimals: Int!
-  """
-  The version in which the asset was registered.
-  """
-  version: Version!
   """
   All registrations for this asset.
   """

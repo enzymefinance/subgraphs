@@ -6,12 +6,12 @@ import { getOrCreateAsset } from '../../entities/Asset';
 
 export function handleDerivativeAdded(event: DerivativeAdded): void {
   let version = getOrCreateVersion(releaseV3Address);
-  let asset = getOrCreateAsset(event.params.derivative, version);
+  let asset = getOrCreateAsset(event.params.derivative);
   createDerivativeRegistration(version, asset, event.params.priceFeed, event);
 }
 
 export function handleDerivativeRemoved(event: DerivativeRemoved): void {
   let version = getOrCreateVersion(releaseV3Address);
-  let asset = getOrCreateAsset(event.params.derivative, version);
+  let asset = getOrCreateAsset(event.params.derivative);
   removeDerivativeRegistration(version, asset, event);
 }
