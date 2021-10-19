@@ -1,16 +1,75 @@
+import { arrayDiff, arrayUnique } from '@enzymefinance/subgraph-utils';
 import { Address, ethereum } from '@graphprotocol/graph-ts';
 import {
-  PrimitiveRegistration,
-  DerivativeRegistration,
-  Version,
   Asset,
+  DerivativeRegistrationDetails,
+  PrimitiveRegistrationDetails,
+  Registration,
   RegistrationAdded,
   RegistrationRemoved,
+  Version,
 } from '../generated/schema';
 import { getRegistrationChangeCounter, getRegistrationCounter } from './Counter';
 
-function registrationId(type: string, event: ethereum.Event): string {
-  return type + '/' + event.transaction.hash.toHex() + '/' + event.logIndex.toString();
+function registrationId(version: Version, asset: Asset): string {
+  return version.id + '/' + asset.id;
+}
+
+export function getOrCreateRegistration(version: Version, asset: Asset): Registration {
+  let id = registrationId(version, asset);
+  let registration = Registration.load(id);
+
+  if (registration == null) {
+    registration = new Registration(id);
+    registration.asset = asset.id;
+    registration.version = version.id;
+    registration.counter = getRegistrationCounter();
+    registration.active = false;
+    registration.details = '';
+    registration.save();
+  }
+
+  return registration;
+}
+
+function registrationDetailsId(registration: Registration, type: string): string {
+  return registration.id + '/' + type;
+}
+
+export function getOrCreateDerivativeRegistrationDetails(
+  registration: Registration,
+  feed: Address,
+): DerivativeRegistrationDetails {
+  let id = registrationDetailsId(registration, 'DERIVATIVE');
+
+  let details = DerivativeRegistrationDetails.load(registration.id);
+
+  if (details == null) {
+    details = new DerivativeRegistrationDetails(id);
+    details.registration = registration.id;
+    details.feed = feed;
+    details.save();
+  }
+
+  return details;
+}
+
+export function getOrCreatePrimitiveRegistrationDetails(
+  registration: Registration,
+  aggregator: Address,
+): PrimitiveRegistrationDetails {
+  let id = registrationDetailsId(registration, 'PRIMITIVE');
+
+  let details = PrimitiveRegistrationDetails.load(registration.id);
+
+  if (details == null) {
+    details = new PrimitiveRegistrationDetails(id);
+    details.registration = registration.id;
+    details.aggregator = aggregator;
+    details.save();
+  }
+
+  return details;
 }
 
 export function createDerivativeRegistration(
@@ -19,20 +78,18 @@ export function createDerivativeRegistration(
   feed: Address,
   event: ethereum.Event,
 ): void {
-  let id = registrationId('DERIVATIVE', event);
-  let registration = new DerivativeRegistration(id);
-  registration.type = 'DERIVATIVE';
-  registration.asset = asset.id;
-  registration.version = version.id;
-  registration.counter = getRegistrationCounter();
-  registration.feed = feed;
+  let registration = getOrCreateRegistration(version, asset);
+  let details = getOrCreateDerivativeRegistrationDetails(registration, feed);
+
+  registration.active = true;
+  registration.details = details.id;
   registration.save();
 
-  asset.registration = registration.id;
+  asset.registrations = arrayUnique<string>(asset.registrations.concat([registration.id]));
   asset.save();
 
-  let change = new RegistrationAdded(id + '/ADDED');
-  change.registration = id;
+  let change = new RegistrationAdded(registration.id + '/ADDED' + '/' + event.block.timestamp.toString());
+  change.registration = registration.id;
   change.type = 'DERIVATIVE';
   change.change = 'ADDED';
   change.version = version.id;
@@ -45,15 +102,15 @@ export function createDerivativeRegistration(
 }
 
 export function removeDerivativeRegistration(version: Version, asset: Asset, event: ethereum.Event): void {
-  if (asset.registration && asset.registration!.startsWith('DERIVATIVE/')) {
-    asset.registration = null;
-    asset.save();
-  }
+  let registration = getOrCreateRegistration(version, asset);
 
-  asset.registration = null;
+  registration.active = false;
+  registration.save();
+
+  asset.registrations = arrayDiff<string>(asset.registrations, [registration.id]);
   asset.save();
 
-  let id = registrationId('DERIVATIVE', event);
+  let id = registrationId(version, asset);
   let change = new RegistrationRemoved(id + '/REMOVED');
   change.type = 'DERIVATIVE';
   change.change = 'REMOVED';
@@ -72,20 +129,18 @@ export function createPrimitiveRegistration(
   aggregator: Address,
   event: ethereum.Event,
 ): void {
-  let id = registrationId('PRIMITIVE', event);
-  let registration = new PrimitiveRegistration(id);
-  registration.type = 'PRIMITIVE';
-  registration.asset = asset.id;
-  registration.version = version.id;
-  registration.counter = getRegistrationCounter();
-  registration.aggregator = aggregator;
+  let registration = getOrCreateRegistration(version, asset);
+  let details = getOrCreateDerivativeRegistrationDetails(registration, aggregator);
+
+  registration.active = true;
+  registration.details = details.id;
   registration.save();
 
-  asset.registration = registration.id;
+  asset.registrations = arrayUnique<string>(asset.registrations.concat([registration.id]));
   asset.save();
 
-  let change = new RegistrationAdded(id + '/ADDED');
-  change.registration = id;
+  let change = new RegistrationAdded(registration.id + '/ADDED' + '/' + event.block.timestamp.toString());
+  change.registration = registration.id;
   change.type = 'PRIMITIVE';
   change.change = 'ADDED';
   change.version = version.id;
@@ -98,16 +153,14 @@ export function createPrimitiveRegistration(
 }
 
 export function removePrimitiveRegistration(version: Version, asset: Asset, event: ethereum.Event): void {
-  if (asset.registration && asset.registration!.startsWith('PRIMITIVE/')) {
-    asset.registration = null;
-    asset.save();
-  }
+  let registration = getOrCreateRegistration(version, asset);
+  registration.active = false;
+  registration.save();
 
-  asset.registration = null;
+  asset.registrations = arrayDiff<string>(asset.registrations, [registration.id]);
   asset.save();
 
-  let id = registrationId('PRIMITIVE', event);
-  let change = new RegistrationRemoved(id + '/REMOVED');
+  let change = new RegistrationRemoved(registration.id + '/REMOVED' + '/' + event.block.timestamp.toString());
   change.type = 'PRIMITIVE';
   change.change = 'REMOVED';
   change.version = version.id;

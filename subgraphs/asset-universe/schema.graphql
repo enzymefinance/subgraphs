@@ -42,15 +42,15 @@ type Asset @entity {
   """
   version: Version!
   """
-  The active registrations for this asset or empty if there's no active registration.
+  All registrations for this asset.
   """
-  registration: Registration
+  registrations: [Registration!]!
   """
   Incremental counter to enable safe scraping.
   """
   counter: Int!
   """
-  A list of active registrations for this asset. Used to run batched updates for derivative assets.
+  A list of registration changes for this asset.
   """
   changes: [RegistrationChange!]! @derivedFrom(field: "asset")
 }
@@ -64,30 +64,10 @@ enum RegistrationType {
   DERIVATIVE
 }
 
-interface Registration {
+type Registration @entity {
   id: ID!
   """
-  The type of the registration entry.
-  """
-  type: RegistrationType!
-  """
-  The version in which the asset was registered.
-  """
-  version: Version!
-  """
-  Incremental counter to enable safe scraping.
-  """
-  counter: Int!
-}
-
-type PrimitiveRegistration implements Registration @entity {
-  id: ID!
-  """
-  The type of the registration entry.
-  """
-  type: RegistrationType!
-  """
-  The registered asset.
+  The asset.
   """
   asset: Asset!
   """
@@ -99,31 +79,47 @@ type PrimitiveRegistration implements Registration @entity {
   """
   counter: Int!
   """
-  The registered aggregator proxy.
+  Flag if registration is currently active.
+  """
+  active: Boolean!
+  """
+  Registration details.
+  """
+  details: RegistrationDetails!
+  """
+  All changes related to that registration.
+  """
+  changes: [RegistrationChange!]! @derivedFrom(field: "registration")
+}
+
+interface RegistrationDetails {
+  id: ID!
+  """
+  The registration.
+  """
+  registration: Registration!
+}
+
+type PrimitiveRegistrationDetails implements RegistrationDetails @entity {
+  id: ID!
+  """
+  The registration.
+  """
+  registration: Registration!
+  """
+  The Chainlink Aggregator address for the asset registration.
   """
   aggregator: Bytes!
 }
 
-type DerivativeRegistration implements Registration @entity {
+type DerivativeRegistrationDetails implements RegistrationDetails @entity {
   id: ID!
   """
-  The type of the registration entry.
+  The registration.
   """
-  type: RegistrationType!
+  registration: Registration!
   """
-  The registered asset.
-  """
-  asset: Asset!
-  """
-  The version in which the asset was registered.
-  """
-  version: Version!
-  """
-  Incremental counter to enable safe scraping.
-  """
-  counter: Int!
-  """
-  The address of the derivative price feed.
+  The Derivative PriceFeed address for the asset registration.
   """
   feed: Bytes!
 }
@@ -155,6 +151,10 @@ interface RegistrationChange {
   The affected asset.
   """
   asset: Asset!
+  """
+  The affected registration.
+  """
+  registration: Registration!
   """
   The timestamp when the change occurred.
   """
@@ -192,6 +192,10 @@ type RegistrationAdded implements RegistrationChange @entity {
   """
   asset: Asset!
   """
+  The affected registration.
+  """
+  registration: Registration!
+  """
   The timestamp when the change occurred.
   """
   timestamp: Int!
@@ -207,10 +211,6 @@ type RegistrationAdded implements RegistrationChange @entity {
   Incremental counter to enable safe scraping.
   """
   counter: Int!
-  """
-  The affected registration.
-  """
-  registration: Registration
 }
 
 type RegistrationRemoved implements RegistrationChange @entity {
@@ -231,6 +231,10 @@ type RegistrationRemoved implements RegistrationChange @entity {
   The affected asset.
   """
   asset: Asset!
+  """
+  The affected registration.
+  """
+  registration: Registration!
   """
   The timestamp when the change occurred.
   """

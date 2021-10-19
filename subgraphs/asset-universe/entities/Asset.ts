@@ -3,12 +3,12 @@ import { Asset, Version } from '../generated/schema';
 import { tokenDecimalsOrFallback, tokenName, tokenSymbol } from '../utils/tokenCalls';
 import { getAssetCounter } from './Counter';
 
-function assetId(address: Address, version: Version): string {
-  return address.toHex() + '/' + version.id;
+function assetId(address: Address): string {
+  return address.toHex();
 }
 
 export function getOrCreateAsset(address: Address, version: Version): Asset {
-  let id = assetId(address, version);
+  let id = assetId(address);
   let asset = Asset.load(id);
 
   if (asset == null) {
@@ -19,7 +19,7 @@ export function getOrCreateAsset(address: Address, version: Version): Asset {
     asset.name = tokenName(address);
     asset.version = version.id;
     asset.counter = getAssetCounter();
-    asset.registration = null;
+    asset.registrations = new Array<string>();
     asset.save();
   }
 

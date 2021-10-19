@@ -134,6 +134,8 @@ type Vault @entity {
   protocolFeeSharesPaid: [ProtocolFeePaid!]! @derivedFrom(field: "vault")
   protocolFeeBurned: [ProtocolFeeBurned!]! @derivedFrom(field: "vault")
 
+  externalPositions: [ExternalPosition!]! @derivedFrom(field: "vault")
+
   comptrollers: [Comptroller!]! @derivedFrom(field: "vault")
   trades: [Trade!]! @derivedFrom(field: "vault")
   deposits: [Deposit!]! @derivedFrom(field: "vault")
