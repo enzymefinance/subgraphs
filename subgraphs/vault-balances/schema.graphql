@@ -26,9 +26,17 @@ type Asset @entity {
   """
   decimals: Int!
   """
-  The total value locked of this asset in the entire network.
+  The total amount of this asset in the entire network.
   """
-  tvl: BigDecimal!
+  aum: BigDecimal!
+  """
+  The number of vaults currently tracking this asset.
+  """
+  tracking: Int!
+  """
+  The number of vaults currently holding this asset (balance above 0).
+  """
+  holding: Int!
   """
   The current per-vault balances for the asset.
   """
@@ -170,18 +178,6 @@ interface Transfer {
   """
   amount: BigDecimal!
   """
-  The balance before the transfer.
-  """
-  before: BigDecimal!
-  """
-  The balance after the transfer.
-  """
-  after: BigDecimal!
-  """
-  The tvl at the time of the transfer.
-  """
-  tvl: BigDecimal!
-  """
   The transaction hash.
   """
   transaction: Bytes!
@@ -228,18 +224,6 @@ type OutgoingTransfer implements Transfer @entity {
   The transferred amount.
   """
   amount: BigDecimal!
-  """
-  The balance before the transfer.
-  """
-  before: BigDecimal!
-  """
-  The balance after the transfer.
-  """
-  after: BigDecimal!
-  """
-  The tvl at the time of the transfer.
-  """
-  tvl: BigDecimal!
   """
   The transaction hash.
   """
@@ -288,21 +272,77 @@ type IncomingTransfer implements Transfer @entity {
   """
   amount: BigDecimal!
   """
-  The balance before the transfer.
-  """
-  before: BigDecimal!
-  """
-  The balance after the transfer.
-  """
-  after: BigDecimal!
-  """
-  The tvl at the time of the transfer.
-  """
-  tvl: BigDecimal!
-  """
   The transaction hash.
   """
   transaction: Bytes!
+}
+
+#################################################
+# Metrics
+#################################################
+
+type BalanceMetric @entity {
+  id: ID!
+  """
+  Strictly incremental counter for data scraping.
+  """
+  counter: Int!
+  """
+  The block number at which the last balance change was recorded.
+  """
+  block: Int!
+  """
+  The block timestamp at which the last balance change was recorded.
+  """
+  timestamp: Int!
+  """
+  The owning vault.
+  """
+  vault: Bytes!
+  """
+  The held asset.
+  """
+  asset: Bytes!
+  """
+  Whether the asset is tracked in the vault.
+  """
+  tracked: Boolean!
+  """
+  The vault's asset balance.
+  """
+  balance: BigDecimal!
+}
+
+type AumMetric @entity {
+  id: ID!
+  """
+  Strictly incremental counter for data scraping.
+  """
+  counter: Int!
+  """
+  The block number at which the last balance change was recorded.
+  """
+  block: Int!
+  """
+  The block timestamp at which the last balance change was recorded.
+  """
+  timestamp: Int!
+  """
+  The held asset.
+  """
+  asset: Bytes!
+  """
+  The total amount of this asset in the entire network.
+  """
+  aum: BigDecimal!
+  """
+  The number of vaults currently tracking this asset.
+  """
+  tracking: Int!
+  """
+  The number of vaults currently holding this asset (balance above 0).
+  """
+  holding: Int!
 }
 
 #################################################

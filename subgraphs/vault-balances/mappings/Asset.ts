@@ -2,7 +2,7 @@ import { toBigDecimal, ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
 import { Transfer } from '../generated/ERC20Contract';
 import { Asset, IncomingTransfer, OutgoingTransfer, Vault } from '../generated/schema';
 import { ensureAsset } from '../entities/Asset';
-import { getOrCreateVaultBalance, updateVaultBalance } from '../entities/Balance';
+import { updateVaultBalance } from '../entities/Balance';
 import { getTransferCounter } from '../entities/Counter';
 
 export function transferId(event: Transfer, suffix: string): string {
@@ -53,7 +53,6 @@ export function handleTransfer(event: Transfer): void {
 }
 
 function handleIncomingTransfer(event: Transfer, asset: Asset, vault: Vault): void {
-  let before = getOrCreateVaultBalance(vault, asset, event).balance;
   let tuple = updateVaultBalance(vault, asset, event);
   let amount = toBigDecimal(event.params.value, asset.decimals);
 
@@ -64,10 +63,7 @@ function handleIncomingTransfer(event: Transfer, asset: Asset, vault: Vault): vo
   transfer.asset = asset.id;
   transfer.balance = tuple.balance.id;
   transfer.amount = amount;
-  transfer.before = before;
-  transfer.after = tuple.balance.balance;
   transfer.sender = event.params.from;
-  transfer.tvl = tuple.tvl;
   transfer.transaction = event.transaction.hash;
   transfer.timestamp = event.block.timestamp.toI32();
   transfer.block = event.block.number.toI32();
@@ -75,7 +71,6 @@ function handleIncomingTransfer(event: Transfer, asset: Asset, vault: Vault): vo
 }
 
 function handleOutgoingTransfer(event: Transfer, asset: Asset, vault: Vault): void {
-  let before = getOrCreateVaultBalance(vault, asset, event).balance;
   let tuple = updateVaultBalance(vault, asset, event);
   let amount = toBigDecimal(event.params.value, asset.decimals);
 
@@ -86,10 +81,7 @@ function handleOutgoingTransfer(event: Transfer, asset: Asset, vault: Vault): vo
   transfer.asset = asset.id;
   transfer.balance = tuple.balance.id;
   transfer.amount = amount;
-  transfer.before = before;
-  transfer.after = tuple.balance.balance;
   transfer.recipient = event.params.to;
-  transfer.tvl = tuple.tvl;
   transfer.transaction = event.transaction.hash;
   transfer.timestamp = event.block.timestamp.toI32();
   transfer.block = event.block.number.toI32();

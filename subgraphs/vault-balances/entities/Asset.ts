@@ -36,7 +36,9 @@ export function ensureAsset(address: Address): Asset | null {
     asset.symbol = tokenSymbol(address);
     asset.name = tokenName(address);
     asset.decimals = tokenDecimalsOrFallback(address, 18);
-    asset.tvl = ZERO_BD;
+    asset.aum = ZERO_BD;
+    asset.tracking = 0;
+    asset.holding = 0;
     asset.save();
   }
 

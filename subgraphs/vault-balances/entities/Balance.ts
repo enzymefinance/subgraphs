@@ -1,7 +1,9 @@
-import { BigDecimal, Address, BigInt, ethereum } from '@graphprotocol/graph-ts';
-import { toBigDecimal, arrayDiff } from '@enzymefinance/subgraph-utils';
-import { Vault, Asset, Balance } from '../generated/schema';
+import { arrayDiff, toBigDecimal, ZERO_BD } from '@enzymefinance/subgraph-utils';
+import { Address, BigDecimal, BigInt, ethereum } from '@graphprotocol/graph-ts';
+import { Asset, Balance, Vault } from '../generated/schema';
 import { tokenBalance } from '../utils/tokenCalls';
+import { recordAumMetric } from './AumMetric';
+import { recordBalanceMetric } from './BalanceMetric';
 
 export function getOrCreateVaultBalance(vault: Vault, asset: Asset, event: ethereum.Event): Balance {
   let id = vault.id + '/' + asset.id;
@@ -20,26 +22,13 @@ export function getOrCreateVaultBalance(vault: Vault, asset: Asset, event: ether
   return balance as Balance;
 }
 
-function maintainPortfolio(vault: Vault, balance: Balance): void {
-  // Bail out early if the balance entity is already registered in the current portfolio.
-  let included = vault.portfolio.includes(balance.id);
-  if (balance.tracked && !included) {
-    vault.portfolio = vault.portfolio.concat([balance.id]);
-  } else if (!balance.tracked && included) {
-    vault.portfolio = arrayDiff<string>(vault.portfolio, [balance.id]);
-  }
-
-  vault.updated = balance.updated;
-  vault.save();
-}
-
 export class UpdateVaultBalanceTuple {
   balance: Balance;
-  tvl: BigDecimal;
+  aum: BigDecimal;
 
-  constructor(balance: Balance, tvl: BigDecimal) {
+  constructor(balance: Balance, aum: BigDecimal) {
     this.balance = balance;
-    this.tvl = tvl;
+    this.aum = aum;
   }
 }
 
@@ -53,8 +42,15 @@ export function updateVaultBalance(vault: Vault, asset: Asset, event: ethereum.E
     ? BigDecimal.fromString('0')
     : toBigDecimal(balanceOrNull as BigInt, asset.decimals);
 
-  // Update the tvl for this asset.
-  asset.tvl = asset.tvl.minus(previousBalance).plus(currentBalance);
+  // Update the holding counter on the asset entity.
+  if (previousBalance.equals(ZERO_BD) && !currentBalance.equals(ZERO_BD)) {
+    asset.holding = asset.holding + 1;
+  } else if (!previousBalance.equals(ZERO_BD) && currentBalance.equals(ZERO_BD)) {
+    asset.holding = asset.holding - 1;
+  }
+
+  // Update the aum for this asset.
+  asset.aum = asset.aum.minus(previousBalance).plus(currentBalance);
   asset.save();
 
   // Update the balance for this vault.
@@ -62,17 +58,42 @@ export function updateVaultBalance(vault: Vault, asset: Asset, event: ethereum.E
   balance.updated = event.block.number.toI32();
   balance.save();
 
-  // Create a historical snapshot of the balance entity.
-  maintainPortfolio(vault, balance);
+  // Record the timestamp of the last change.
+  vault.updated = balance.updated;
+  vault.save();
 
-  return new UpdateVaultBalanceTuple(balance, asset.tvl);
+  // Track metrics.
+  recordBalanceMetric(vault, asset, balance, event);
+  recordAumMetric(asset, event);
+
+  return new UpdateVaultBalanceTuple(balance, asset.aum);
 }
 
 export function updateTrackedAsset(vault: Vault, asset: Asset, event: ethereum.Event, tracked: boolean): void {
   let balance = getOrCreateVaultBalance(vault, asset, event);
+
+  // Update the tracking counter on the asset entity.
+  if (!balance.tracked && tracked) {
+    asset.tracking = asset.tracking + 1;
+    asset.save();
+  } else if (balance.tracked && !tracked) {
+    asset.tracking = asset.tracking - 1;
+    asset.save();
+  }
+
   balance.tracked = tracked;
   balance.save();
 
-  // Create a historical snapshot of the balance entity.
-  maintainPortfolio(vault, balance);
+  // Update the portfolio.
+  // Bail out early if the balance entity is already registered in the current portfolio.
+  let included = vault.portfolio.includes(balance.id);
+  if (balance.tracked && !included) {
+    vault.portfolio = vault.portfolio.concat([balance.id]);
+  } else if (!balance.tracked && included) {
+    vault.portfolio = arrayDiff<string>(vault.portfolio, [balance.id]);
+  }
+
+  // NOTE: It's important that this is called last so that the call to `recordAumMetric` already uses
+  // the updated `tracking` counter of the asset entity.
+  updateVaultBalance(vault, asset, event);
 }
