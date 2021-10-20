@@ -92,7 +92,7 @@ describe('Vault with Fees', () => {
     // create fund
 
     const newFundArgs = {
-      fundName: 'Vault with Fees ' + Math.floor(Math.random() * 1000000),
+      fundName: 'Vault with Fees And Investments ' + Math.floor(Math.random() * 1000000),
       sharesActionTimelock: 0,
       feeManagerConfigData,
       policyManagerConfigData: '0x',
@@ -121,5 +121,43 @@ describe('Vault with Fees', () => {
     const fundCreatedArgs = assertEvent(fundCreated, 'NewFundCreated', {
       vaultProxy: expect.any(String) as string,
     });
+
+    // buy shares
+    const approveAmount = 10;
+    const sharesToBuy = 1;
+    const buySharesArgs = {
+      comptrollerProxy,
+      signer,
+      buyer: signer.address,
+      denominationAsset,
+      investmentAmount: utils.parseEther(sharesToBuy.toString()),
+      minSharesAmount: utils.parseEther(sharesToBuy.toString()),
+    };
+
+    await denominationAsset.approve.args(comptrollerProxy, utils.parseEther(approveAmount.toString())).send();
+
+    const sharesBought = await comptrollerProxy.buyShares
+      .args(buySharesArgs.investmentAmount, buySharesArgs.minSharesAmount.mul(90).div(100))
+      .send();
+
+    assertEvent(sharesBought, 'SharesBought', {
+      buyer: await signer.getAddress(),
+      investmentAmount: buySharesArgs.investmentAmount,
+    });
+
+    // Redeem
+
+    const redeemed = await comptrollerProxy.redeemSharesInKind
+      .args(signer, utils.parseEther(sharesToBuy.toString()).div(2), [], [])
+      .gas(300000)
+      .send();
+
+    // buy more shares
+
+    await denominationAsset.approve.args(comptrollerProxy, buySharesArgs.investmentAmount).send();
+
+    const boughtMoreShares = await comptrollerProxy.buyShares
+      .args(buySharesArgs.investmentAmount, buySharesArgs.minSharesAmount.mul(99).div(100))
+      .send();
   });
 });

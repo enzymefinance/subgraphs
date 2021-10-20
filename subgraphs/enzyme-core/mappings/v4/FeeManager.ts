@@ -129,6 +129,9 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
 
     let transferInId = previousUniqueEventId(event, 'SharesTransferredIn');
     store.remove('SharesTransferredInEvent', transferInId);
+
+    let transferId = previousUniqueEventId(event, 'SharesTransfer');
+    store.remove('SharesTransferEvent', transferId);
   } else if (feeSettlementType == 'Mint') {
     // Mint - mint new shares for fee recipient
     let depositor = ensureAccount(event.params.payee, event);

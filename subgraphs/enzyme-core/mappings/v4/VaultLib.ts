@@ -103,7 +103,7 @@ export function handleTransfer(event: Transfer): void {
   transfer.to = toInvestor.id;
   transfer.shares = shares;
   transfer.timestamp = event.block.timestamp.toI32();
-  transferOut.activityCounter = getActivityCounter();
+  transfer.activityCounter = getActivityCounter();
   transfer.activityCategories = ['Vault'];
   transfer.activityType = 'DepositorShares';
   transfer.save();
