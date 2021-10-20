@@ -2,7 +2,7 @@ import { toBigDecimal } from '@enzymefinance/subgraph-utils';
 import { Address, BigDecimal, ethereum } from '@graphprotocol/graph-ts';
 import { release2Addresses, release3Addresses, release4Addresses } from '../generated/addresses';
 import { ProtocolSdk } from '../generated/contracts/ProtocolSdk';
-import { VaultMetric } from '../generated/schema';
+import { Asset, Comptroller, Vault, VaultMetric } from '../generated/schema';
 import { tokenTotalSupplyOrThrow } from '../utils/tokenCalls';
 import { ensureAsset } from './Asset';
 import { ensureComptroller } from './Comptroller';
@@ -17,72 +17,109 @@ export function trackVaultMetric(vaultAddress: Address, event: ethereum.Event): 
     return;
   }
 
-  let quantities = getVaultQuantities(vaultAddress, event);
+  let vault = useVault(vaultAddress.toHex());
+  let comptroller = ensureComptroller(Address.fromString(vault.comptroller), event);
+  let denominationAsset = ensureAsset(Address.fromString(comptroller.denomination));
+
+  let quantities = getVaultQuantities(vault, comptroller, denominationAsset, event);
 
   metric = new VaultMetric(id);
-  metric.vaultMetricCounter = getVaultMetricCounter();
+  metric.counter = getVaultMetricCounter();
   metric.timestamp = event.block.timestamp.toI32();
+  metric.blockNumber = event.block.number.toI32();
+
   metric.vault = vaultAddress;
-  metric.gav = quantities.gav;
-  metric.gavReverted = quantities.gavReverted;
-  metric.nav = quantities.nav;
-  metric.navReverted = quantities.navReverted;
+  metric.comptroller = Address.fromString(vault.comptroller);
+  metric.release = Address.fromString(vault.release);
+
+  metric.denominationAsset = Address.fromString(denominationAsset.id);
+  metric.denominationAssetDecimals = denominationAsset.decimals;
+
   metric.totalSupply = quantities.totalSupply;
-  metric.sharePrice = quantities.sharePrice;
-  metric.denominationAsset = quantities.denominationAsset;
+  metric.totalSupplyResolver = quantities.totalSupplyResolver;
+
+  metric.grossShareValue = quantities.grossShareValue;
+  metric.grossShareValueResolver = quantities.grossShareValueResolver;
+  metric.grossShareValueReverted = quantities.grossShareValueReverted;
+
+  metric.netShareValue = quantities.netShareValue;
+  metric.netShareValueResolver = quantities.netShareValueResolver;
+  metric.netShareValueReverted = quantities.netShareValueReverted;
+
+  metric.netAssetValue = quantities.netAssetValue;
+  metric.netAssetValueCalculatable = quantities.netAssetValueCalculatable;
+
+  metric.grossAssetValue = quantities.grossAssetValue;
+  metric.grossAssetValueCalculatable = quantities.grossAssetValueCalculatable;
   metric.save();
 }
 
 export class VaultQuantities {
-  gav: BigDecimal;
-  gavReverted: boolean;
-  nav: BigDecimal;
-  navReverted: boolean;
   totalSupply: BigDecimal;
-  sharePrice: BigDecimal;
-  denominationAsset: Address;
+  totalSupplyResolver: string;
+  grossShareValue: BigDecimal;
+  grossShareValueResolver: string;
+  grossShareValueReverted: boolean;
+  netShareValue: BigDecimal;
+  netShareValueResolver: string;
+  netShareValueReverted: boolean;
+  netAssetValue: BigDecimal;
+  netAssetValueCalculatable: boolean;
+  grossAssetValue: BigDecimal;
+  grossAssetValueCalculatable: boolean;
 }
 
-export function getVaultQuantities(vaultAddress: Address, event: ethereum.Event): VaultQuantities {
-  let totalSupply = toBigDecimal(tokenTotalSupplyOrThrow(vaultAddress));
-  let vault = useVault(vaultAddress.toHex());
+export function getVaultQuantities(
+  vault: Vault,
+  comptroller: Comptroller,
+  denominationAsset: Asset,
+  event: ethereum.Event,
+): VaultQuantities {
+  let totalSupply = toBigDecimal(tokenTotalSupplyOrThrow(Address.fromString(vault.id)));
   vault.totalSupply = totalSupply;
   vault.save();
 
   let releaseId = vault.release;
-  let comptroller = ensureComptroller(Address.fromString(vault.comptroller), event);
-  let denominationAsset = ensureAsset(Address.fromString(comptroller.denomination));
 
   let quantities: VaultQuantities = {
-    gav: BigDecimal.fromString('0'),
-    gavReverted: false,
-    nav: BigDecimal.fromString('0'),
-    navReverted: false,
     totalSupply: totalSupply,
-    sharePrice: BigDecimal.fromString('0'),
-    denominationAsset: Address.fromString(denominationAsset.id),
+    totalSupplyResolver: '2.0',
+    grossShareValue: BigDecimal.fromString('0'),
+    grossShareValueResolver: '',
+    grossShareValueReverted: true,
+    netShareValue: BigDecimal.fromString('0'),
+    netShareValueResolver: '',
+    netShareValueReverted: true,
+    netAssetValue: BigDecimal.fromString('0'),
+    netAssetValueCalculatable: false,
+    grossAssetValue: BigDecimal.fromString('0'),
+    grossAssetValueCalculatable: false,
   };
 
   // release 2
   if (releaseId == release2Addresses.fundDeployerAddress.toHex()) {
+    let fundActionsWrapperContract = ProtocolSdk.bind(release2Addresses.fundActionsWrapperAddress);
+    let netShareValueCall = fundActionsWrapperContract.try_calcNetShareValueForFund(Address.fromString(comptroller.id));
+
+    if (!netShareValueCall.reverted && netShareValueCall.value.value1) {
+      quantities.netShareValue = toBigDecimal(netShareValueCall.value.value0, 18);
+      quantities.netShareValueReverted = false;
+      quantities.netShareValueResolver = '2.0';
+
+      quantities.netAssetValue = quantities.netShareValue.times(totalSupply);
+      quantities.netAssetValueCalculatable = true;
+    }
+
     let comptrollerContract = ProtocolSdk.bind(Address.fromString(comptroller.id));
-    let gavCall = comptrollerContract.try_calcGav(false);
+    let grossShareValueCall = comptrollerContract.try_calcGrossShareValue(false);
 
-    if (!gavCall.reverted && gavCall.value.value1) {
-      quantities.gav = toBigDecimal(gavCall.value.value0, denominationAsset.decimals);
-    } else {
-      quantities.gavReverted = true;
-    }
+    if (!grossShareValueCall.reverted && grossShareValueCall.value.value1) {
+      quantities.grossShareValue = toBigDecimal(grossShareValueCall.value.value0, 18);
+      quantities.grossShareValueReverted = false;
+      quantities.grossShareValueResolver = '2.0';
 
-    let fundActionsWrapper = ProtocolSdk.bind(release2Addresses.fundActionsWrapperAddress);
-    let netSharePriceCall = fundActionsWrapper.try_calcNetShareValueForFund(Address.fromString(comptroller.id));
-    if (!netSharePriceCall.reverted && netSharePriceCall.value.value1) {
-      quantities.sharePrice = toBigDecimal(netSharePriceCall.value.value0, 18);
-    }
-    if (!netSharePriceCall.reverted && netSharePriceCall.value.value1) {
-      quantities.nav = quantities.sharePrice.times(totalSupply);
-    } else {
-      quantities.navReverted = true;
+      quantities.grossAssetValue = quantities.grossShareValue.times(totalSupply);
+      quantities.grossAssetValueCalculatable = true;
     }
 
     return quantities;
@@ -90,26 +127,28 @@ export function getVaultQuantities(vaultAddress: Address, event: ethereum.Event)
 
   // release 3
   if (releaseId == release3Addresses.fundDeployerAddress.toHex()) {
+    let fundActionsWrapperContract = ProtocolSdk.bind(release3Addresses.fundActionsWrapperAddress);
+    let netShareValueCall = fundActionsWrapperContract.try_calcNetShareValueForFund(Address.fromString(comptroller.id));
+
+    if (!netShareValueCall.reverted && netShareValueCall.value.value1) {
+      quantities.netShareValue = toBigDecimal(netShareValueCall.value.value0, 18);
+      quantities.netShareValueReverted = false;
+      quantities.netShareValueResolver = '3.0';
+
+      quantities.netAssetValue = quantities.netShareValue.times(totalSupply);
+      quantities.netAssetValueCalculatable = true;
+    }
+
     let comptrollerContract = ProtocolSdk.bind(Address.fromString(comptroller.id));
-    let gavCall = comptrollerContract.try_calcGav(false);
+    let grossShareValueCall = comptrollerContract.try_calcGrossShareValue(false);
 
-    if (!gavCall.reverted && gavCall.value.value1) {
-      quantities.gav = toBigDecimal(gavCall.value.value0, denominationAsset.decimals);
-    } else {
-      quantities.gavReverted = true;
-    }
+    if (!grossShareValueCall.reverted && grossShareValueCall.value.value1) {
+      quantities.grossShareValue = toBigDecimal(grossShareValueCall.value.value0, 18);
+      quantities.grossShareValueReverted = false;
+      quantities.grossShareValueResolver = '3.0';
 
-    let fundActionsWrapper = ProtocolSdk.bind(release3Addresses.fundActionsWrapperAddress);
-    let netSharePriceCall = fundActionsWrapper.try_calcNetShareValueForFund(Address.fromString(comptroller.id));
-
-    if (!netSharePriceCall.reverted && netSharePriceCall.value.value1) {
-      quantities.sharePrice = toBigDecimal(netSharePriceCall.value.value0, 18);
-    }
-
-    if (!netSharePriceCall.reverted && netSharePriceCall.value.value1) {
-      quantities.nav = quantities.sharePrice.times(totalSupply);
-    } else {
-      quantities.navReverted = true;
+      quantities.grossAssetValue = quantities.grossShareValue.times(totalSupply);
+      quantities.grossAssetValueCalculatable = true;
     }
 
     return quantities;
@@ -117,23 +156,30 @@ export function getVaultQuantities(vaultAddress: Address, event: ethereum.Event)
 
   // release 4
   if (releaseId == release4Addresses.fundDeployerAddress.toHex()) {
-    let comptrollerContract = ProtocolSdk.bind(Address.fromString(comptroller.id));
-    let gavCall = comptrollerContract.try_calcGav1(false);
+    let fundActionsWrapperContract = ProtocolSdk.bind(release3Addresses.fundActionsWrapperAddress);
+    let netShareValueCall = fundActionsWrapperContract.try_calcNetShareValueForFund1(
+      Address.fromString(comptroller.id),
+    );
 
-    if (!gavCall.reverted) {
-      quantities.gav = toBigDecimal(gavCall.value, denominationAsset.decimals);
-    } else {
-      quantities.gavReverted = true;
+    if (!netShareValueCall.reverted) {
+      quantities.netShareValue = toBigDecimal(netShareValueCall.value, 18);
+      quantities.netShareValueReverted = false;
+      quantities.netShareValueResolver = '4.0';
+
+      quantities.netAssetValue = quantities.netShareValue.times(totalSupply);
+      quantities.netAssetValueCalculatable = true;
     }
 
-    let fundActionsWrapper = ProtocolSdk.bind(release4Addresses.unpermissionedActionsWrapperAddress);
-    let netSharePriceCall = fundActionsWrapper.try_calcNetShareValueForFund1(Address.fromString(comptroller.id));
+    let comptrollerContract = ProtocolSdk.bind(Address.fromString(comptroller.id));
+    let grossShareValueCall = comptrollerContract.try_calcGrossShareValue1(false);
 
-    if (!netSharePriceCall.reverted) {
-      quantities.sharePrice = toBigDecimal(netSharePriceCall.value, 18);
-      quantities.nav = quantities.sharePrice.times(totalSupply);
-    } else {
-      quantities.navReverted = true;
+    if (!grossShareValueCall.reverted) {
+      quantities.grossShareValue = toBigDecimal(grossShareValueCall.value, 18);
+      quantities.grossShareValueReverted = false;
+      quantities.grossShareValueResolver = '4.0';
+
+      quantities.grossAssetValue = quantities.grossShareValue.times(totalSupply);
+      quantities.grossAssetValueCalculatable = true;
     }
 
     return quantities;

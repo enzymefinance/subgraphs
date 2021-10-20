@@ -25,9 +25,14 @@ export function trackDepositMetric(vaultAddress: Address, depositorAddress: Addr
   deposit.save();
 
   metric = new DepositMetric(id);
-  metric.depositMetricCounter = getDepositMetricCounter();
+  metric.counter = getDepositMetricCounter();
   metric.timestamp = event.block.timestamp.toI32();
+  metric.blockNumber = event.block.number.toI32();
+
   metric.vault = vaultAddress;
+  metric.comptroller = Address.fromString(vault.comptroller);
+  metric.release = Address.fromString(vault.release);
+
   metric.depositor = depositorAddress;
   metric.balance = balance;
   metric.save();

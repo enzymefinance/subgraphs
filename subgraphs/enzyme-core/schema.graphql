@@ -1123,24 +1123,57 @@ interface DepositorActivity {
 
 type VaultMetric @entity {
   id: ID!
-  vaultMetricCounter: Int!
+  counter: Int!
   timestamp: Int!
+  blockNumber: Int!
+
+  # vault
   vault: Bytes!
-  nav: BigDecimal!
-  navReverted: Boolean!
-  gav: BigDecimal!
-  gavReverted: Boolean!
-  totalSupply: BigDecimal!
-  sharePrice: BigDecimal!
+  comptroller: Bytes!
+  release: Bytes!
+
+  # denomination asset
   denominationAsset: Bytes!
+  denominationAssetDecimals: Int!
+
+  # total supply
+  totalSupply: BigDecimal!
+  totalSupplyResolver: String!
+
+  # gav / share
+  grossShareValue: BigDecimal!
+  grossShareValueResolver: String!
+  grossShareValueReverted: Boolean!
+
+  # nav / share
+  netShareValue: BigDecimal!
+  netShareValueResolver: String!
+  netShareValueReverted: Boolean!
+
+  # nav
+  netAssetValue: BigDecimal!
+  netAssetValueCalculatable: Boolean!
+  # gav
+
+  grossAssetValue: BigDecimal!
+  grossAssetValueCalculatable: Boolean!
 }
 
 type DepositMetric @entity {
   id: ID!
-  depositMetricCounter: Int!
+  counter: Int!
   timestamp: Int!
+  blockNumber: Int!
+
+  # vault
   vault: Bytes!
+  comptroller: Bytes!
+  release: Bytes!
+
+  # depositor
   depositor: Bytes!
+
+  # balance
   balance: BigDecimal!
 }
 

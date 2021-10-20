@@ -89,6 +89,8 @@ export const configure: Configurator<Variables> = (variables) => {
         abis.VaultLib.getFunction('totalSupply'),
         abis.ComptrollerLibA.getFunction('calcGav'),
         abis.ComptrollerLibB.getFunction('calcGav'),
+        abis.ComptrollerLibA.getFunction('calcGrossShareValue'),
+        abis.ComptrollerLibB.getFunction('calcGrossShareValue'),
         abis.ComptrollerLibA.getFunction('getDenominationAsset'),
         abis.CompoundDebtPositionLib.getFunction('getManagedAssets'),
         abis.CompoundDebtPositionLib.getFunction('getDebtAssets'),
