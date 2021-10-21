@@ -10,14 +10,13 @@ export function recordRegistrationChange(
   version: Version,
   asset: Asset,
   registration: Registration,
-  registrationDetailId: string,
   change: string,
   event: ethereum.Event,
 ): void {
   let id = registrationChangeId(registration, change, event);
   let record = new RegistrationChange(id);
   record.registration = registration.id;
-  record.detail = registrationDetailId;
+  record.detail = registration.detail;
   record.change = change;
   record.version = version.id;
   record.asset = asset.id;

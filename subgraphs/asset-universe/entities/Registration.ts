@@ -35,9 +35,9 @@ export function createDerivativeRegistration(
   event: ethereum.Event,
 ): void {
   let registration = getOrCreateRegistration(version, asset, event);
-  let registrationDetailId = getOrCreateDerivativeRegistrationDetail(version, asset, feed, event);
+  let detail = getOrCreateDerivativeRegistrationDetail(version, asset, feed, event);
   registration.active = true;
-  registration.detail = registrationDetailId;
+  registration.detail = detail;
   registration.updated = event.block.timestamp.toI32();
   registration.save();
 
@@ -45,7 +45,7 @@ export function createDerivativeRegistration(
   asset.save();
 
   // Record the change with the new details.
-  recordRegistrationChange(version, asset, registration, registrationDetailId, 'ADDED', event);
+  recordRegistrationChange(version, asset, registration, 'ADDED', event);
 }
 
 export function removeDerivativeRegistration(version: Version, asset: Asset, event: ethereum.Event): void {
@@ -55,7 +55,7 @@ export function removeDerivativeRegistration(version: Version, asset: Asset, eve
   registration.save();
 
   // Record the change with the last known details.
-  recordRegistrationChange(version, asset, registration, registration.detail, 'REMOVED', event);
+  recordRegistrationChange(version, asset, registration, 'REMOVED', event);
 }
 
 export function createPrimitiveRegistration(
@@ -65,9 +65,9 @@ export function createPrimitiveRegistration(
   event: ethereum.Event,
 ): void {
   let registration = getOrCreateRegistration(version, asset, event);
-  let registrationDetailId = getOrCreatePrimitiveRegistrationDetail(version, asset, aggregator, event);
+  let detail = getOrCreatePrimitiveRegistrationDetail(version, asset, aggregator, event);
   registration.active = true;
-  registration.detail = registrationDetailId;
+  registration.detail = detail;
   registration.updated = event.block.timestamp.toI32();
   registration.save();
 
@@ -75,7 +75,7 @@ export function createPrimitiveRegistration(
   asset.save();
 
   // Record the change with the new details.
-  recordRegistrationChange(version, asset, registration, registrationDetailId, 'ADDED', event);
+  recordRegistrationChange(version, asset, registration, 'ADDED', event);
 }
 
 export function removePrimitiveRegistration(version: Version, asset: Asset, event: ethereum.Event): void {
@@ -85,5 +85,5 @@ export function removePrimitiveRegistration(version: Version, asset: Asset, even
   registration.save();
 
   // Record the change with the last known details.
-  recordRegistrationChange(version, asset, registration, registration.detail, 'REMOVED', event);
+  recordRegistrationChange(version, asset, registration, 'REMOVED', event);
 }
