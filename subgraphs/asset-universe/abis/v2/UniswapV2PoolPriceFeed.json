@@ -1,0 +1,267 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_fundDeployer",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_derivativePriceFeed",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_primitivePriceFeed",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_valueInterpreter",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_factory",
+        "type": "address"
+      },
+      {
+        "internalType": "address[]",
+        "name": "_poolTokens",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "poolToken",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "token0",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "token1",
+        "type": "address"
+      }
+    ],
+    "name": "PoolTokenAdded",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "_poolTokens",
+        "type": "address[]"
+      }
+    ],
+    "name": "addPoolTokens",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_derivative",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_derivativeAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "calcUnderlyingValues",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "underlyings_",
+        "type": "address[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "underlyingAmounts_",
+        "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getDerivativePriceFeed",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "derivativePriceFeed_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getFactory",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "factory_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getFundDeployer",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "fundDeployer_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getOwner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "owner_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_poolToken",
+        "type": "address"
+      }
+    ],
+    "name": "getPoolTokenInfo",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "token0",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "token1",
+            "type": "address"
+          },
+          {
+            "internalType": "uint8",
+            "name": "token0Decimals",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint8",
+            "name": "token1Decimals",
+            "type": "uint8"
+          }
+        ],
+        "internalType": "struct UniswapV2PoolPriceFeed.PoolTokenInfo",
+        "name": "poolTokenInfo_",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_poolToken",
+        "type": "address"
+      }
+    ],
+    "name": "getPoolTokenUnderlyings",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "token0_",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "token1_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getPrimitivePriceFeed",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "primitivePriceFeed_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getValueInterpreter",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "valueInterpreter_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_asset",
+        "type": "address"
+      }
+    ],
+    "name": "isSupportedAsset",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "isSupported_",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

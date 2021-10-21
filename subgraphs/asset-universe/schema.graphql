@@ -7,6 +7,7 @@ A release version.
 """
 type Version @entity {
   id: ID!
+  counter: Int!
   changes: [RegistrationChange!]! @derivedFrom(field: "version")
   registrations: [Registration!]! @derivedFrom(field: "version")
 }
@@ -50,11 +51,6 @@ type Asset @entity {
 # Asset registrations
 #################################################
 
-enum RegistrationType {
-  PRIMITIVE
-  DERIVATIVE
-}
-
 type Registration @entity {
   id: ID!
   """
@@ -70,13 +66,21 @@ type Registration @entity {
   """
   counter: Int!
   """
+  Timestamp when the registration was added.
+  """
+  addedTimestamp: Int!
+  """
+  Timestamp when the registration was updated.
+  """
+  updatedTimestamp: Int!
+  """
   Flag if registration is currently active.
   """
   active: Boolean!
   """
   Last known registration details.
   """
-  details: RegistrationDetails!
+  detail: RegistrationDetail!
   """
   All changes related to the registration.
   """
@@ -87,11 +91,11 @@ type Registration @entity {
 # Asset registrations details
 #################################################
 
-interface RegistrationDetails {
+interface RegistrationDetail {
   id: ID!
 }
 
-type PrimitiveRegistrationDetails implements RegistrationDetails @entity {
+type PrimitiveRegistrationDetail implements RegistrationDetail @entity {
   id: ID!
   """
   The chainlink aggregator address for the asset registration.
@@ -99,8 +103,156 @@ type PrimitiveRegistrationDetails implements RegistrationDetails @entity {
   aggregator: Bytes!
 }
 
-# TODO: Add derived metadata about the asset (e.g. uniswap pool details)
-type DerivativeRegistrationDetails implements RegistrationDetails @entity {
+type AaveRegistrationDetail implements RegistrationDetail @entity {
+  id: ID!
+  """
+  The derivative price feed address for the asset registration.
+  """
+  feed: Bytes!
+  """
+  The underlying asset.
+  """
+  underlyingAsset: Asset
+}
+
+type AlphaHomoraV1RegistrationDetail implements RegistrationDetail @entity {
+  id: ID!
+  """
+  The derivative price feed address for the asset registration.
+  """
+  feed: Bytes!
+  """
+  The underlying asset.
+  """
+  underlyingAsset: Asset
+}
+
+enum CurveAssetType {
+  GAUGE
+  POOL
+}
+
+type CurvePoolRegistrationDetail implements RegistrationDetail @entity {
+  id: ID!
+  """
+  The derivative price feed address for the asset registration.
+  """
+  feed: Bytes!
+  """
+  The description.
+  """
+  pool: Bytes!
+  """
+  The  address of the gauge.
+  """
+  gauge: Bytes!
+  """
+  The lp token asset.
+  """
+  lpToken: Asset!
+  """
+  The gauge token asset.
+  """
+  gaugeToken: Asset!
+  """
+  The Curve Pool asset type.
+  """
+  curveAssetType: CurveAssetType!
+  """
+  The invariantProxyAsset.
+  """
+  invariantProxyAsset: Asset!
+  """
+  The number of tokens.
+  """
+  numberOfTokens: Int!
+  """
+  The token0 asset.
+  """
+  token0: Asset
+  """
+  The token1 asset.
+  """
+  token1: Asset
+  """
+  The token2 asset.
+  """
+  token2: Asset
+}
+
+type CompoundRegistrationDetail implements RegistrationDetail @entity {
+  id: ID!
+  """
+  The derivative price feed address for the asset registration.
+  """
+  feed: Bytes!
+  """
+  The underlying asset.
+  """
+  underlyingAsset: Asset
+}
+
+type IdleRegistrationDetail implements RegistrationDetail @entity {
+  id: ID!
+  """
+  The derivative price feed address for the asset registration.
+  """
+  feed: Bytes!
+  """
+  The underlying asset.
+  """
+  underlyingAsset: Asset
+}
+
+type StakehoundEthRegistrationDetail implements RegistrationDetail @entity {
+  id: ID!
+  """
+  The derivative price feed address for the asset registration.
+  """
+  feed: Bytes!
+  """
+  The underlying asset.
+  """
+  underlyingAsset: Asset
+}
+
+type SynthetixRegistrationDetail implements RegistrationDetail @entity {
+  id: ID!
+  """
+  The derivative price feed address for the asset registration.
+  """
+  feed: Bytes!
+}
+
+type UniswapV2PoolRegistrationDetail implements RegistrationDetail @entity {
+  id: ID!
+  """
+  The derivative price feed address for the asset registration.
+  """
+  feed: Bytes!
+  """
+  Token0 of the UniswapV2 pool.
+  """
+  token0: Asset!
+  """
+  Token1 of the UniswapV2 pool.
+  """
+  token1: Asset!
+}
+
+type YearnVaultV2RegistrationDetail implements RegistrationDetail @entity {
+  id: ID!
+  """
+  The derivative price feed address for the asset registration.
+  """
+  feed: Bytes!
+  """
+  The underlying asset.
+  """
+  underlyingAsset: Asset!
+}
+
+type UnknownRegistrationDetail implements RegistrationDetail @entity {
   id: ID!
   """
   The derivative price feed address for the asset registration.
@@ -138,7 +290,7 @@ type RegistrationChange @entity {
   """
   The registration details in effect when this change occurred.
   """
-  details: RegistrationDetails!
+  detail: RegistrationDetail!
   """
   The timestamp when the change occurred.
   """

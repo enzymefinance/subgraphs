@@ -9,6 +9,6 @@
   },
   "dependencies": {
     "@enzymefinance/subgraph-utils": "^0.0.0",
-    "@graphprotocol/graph-ts": "^0.22.0"
+    "@graphprotocol/graph-ts": "^0.22.1"
   }
 }

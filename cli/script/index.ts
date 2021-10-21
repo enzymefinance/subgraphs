@@ -11,7 +11,7 @@ import glob from 'glob';
 import handlebars from 'handlebars';
 import path from 'path';
 import yargs from 'yargs';
-import { formatEventJson, formatFunctionJson, sdkDeclaration, sourceDeclaration, templateDeclaration } from './utils';
+import { formatJson, sdkDeclaration, sourceDeclaration, templateDeclaration } from './utils';
 
 const graph = require('@graphprotocol/graph-cli/src/cli').run as (args?: string[]) => Promise<void>;
 const root = path.join(__dirname, '..');
@@ -89,7 +89,7 @@ class Subgraph<TVariables = any> {
 
   public async generateAbis() {
     this.environment.manifest.sources.forEach((source) => {
-      const formattedFragments = source.events.map((event) => formatEventJson(event.fragment));
+      const formattedFragments = source.events.map((event) => formatJson(event.fragment));
       const jsonOutput = JSON.stringify(formattedFragments, undefined, 2);
       const outputFile = path.join(this.root, source.abi.file);
       const outputDir = path.dirname(outputFile);
@@ -101,7 +101,7 @@ class Subgraph<TVariables = any> {
     });
 
     this.environment.manifest.templates?.forEach((template) => {
-      const formattedFragments = template.events.map((event) => formatEventJson(event.fragment));
+      const formattedFragments = template.events.map((event) => formatJson(event.fragment));
       const jsonOutput = JSON.stringify(formattedFragments, undefined, 2);
       const outputFile = path.join(this.root, template.abi.file);
       const outputDir = path.dirname(outputFile);
@@ -113,7 +113,7 @@ class Subgraph<TVariables = any> {
     });
 
     this.environment.manifest.sdks?.forEach((sdk) => {
-      const formattedFragments = sdk.functions.map((fn) => formatFunctionJson(fn));
+      const formattedFragments = sdk.functions.map((fn) => formatJson(fn));
       const jsonOutput = JSON.stringify(formattedFragments, undefined, 2);
       const outputFile = path.join(this.root, sdk.file);
       const outputDir = path.dirname(outputFile);

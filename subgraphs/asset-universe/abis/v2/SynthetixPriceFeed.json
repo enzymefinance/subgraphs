@@ -1,0 +1,236 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_fundDeployer",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_addressResolver",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_sUSD",
+        "type": "address"
+      },
+      {
+        "internalType": "address[]",
+        "name": "_synths",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "synth",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "currencyKey",
+        "type": "bytes32"
+      }
+    ],
+    "name": "SynthAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "synth",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "prevCurrencyKey",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "nextCurrencyKey",
+        "type": "bytes32"
+      }
+    ],
+    "name": "SynthCurrencyKeyUpdated",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "_synths",
+        "type": "address[]"
+      }
+    ],
+    "name": "addSynths",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_derivative",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_derivativeAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "calcUnderlyingValues",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "underlyings_",
+        "type": "address[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "underlyingAmounts_",
+        "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getAddressResolver",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_synth",
+        "type": "address"
+      }
+    ],
+    "name": "getCurrencyKeyForSynth",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "currencyKey_",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "_synths",
+        "type": "address[]"
+      }
+    ],
+    "name": "getCurrencyKeysForSynths",
+    "outputs": [
+      {
+        "internalType": "bytes32[]",
+        "name": "currencyKeys_",
+        "type": "bytes32[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getFundDeployer",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "fundDeployer_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getOwner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "owner_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getSUSD",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "susd_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_asset",
+        "type": "address"
+      }
+    ],
+    "name": "isSupportedAsset",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "isSupported_",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "_synths",
+        "type": "address[]"
+      }
+    ],
+    "name": "updateSynthCurrencyKeys",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

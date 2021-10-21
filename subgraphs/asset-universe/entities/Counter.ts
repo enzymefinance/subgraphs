@@ -24,3 +24,7 @@ export function getRegistrationCounter(): i32 {
 export function getRegistrationChangeCounter(): i32 {
   return getCounter('change');
 }
+
+export function getVersionCounter(): i32 {
+  return getCounter('version') + 1;
+}
