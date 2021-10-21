@@ -222,12 +222,15 @@ export function getOrCreateCurveDetail(id: string, derivative: Asset, feed: Addr
   detail.curveAssetType = curveAssetType;
   detail.invariantProxyAsset = info.value.invariantProxyAsset.toHex();
   detail.numberOfTokens = nCoinsValue[0].toI32();
-  detail.token0 = coinsValue[0].equals(ETH) ? wethTokenAddress.toHex() : coinsValue[0].toHex();
-  detail.token1 = coinsValue[1].equals(ETH) ? wethTokenAddress.toHex() : coinsValue[1].toHex();
+
+  let underlyingAssets = new Array<string>();
+  underlyingAssets.push(coinsValue[0].equals(ETH) ? wethTokenAddress.toHex() : coinsValue[0].toHex());
+  underlyingAssets.push(coinsValue[1].equals(ETH) ? wethTokenAddress.toHex() : coinsValue[1].toHex());
   if (nCoinsValue[0].toI32() == 3) {
-    detail.token2 = coinsValue[2].equals(ETH) ? wethTokenAddress.toHex() : coinsValue[2].toHex();
+    underlyingAssets.push(coinsValue[2].equals(ETH) ? wethTokenAddress.toHex() : coinsValue[2].toHex());
   }
 
+  detail.underlyingAssets = underlyingAssets;
   detail.save();
 }
 
@@ -311,11 +314,9 @@ function getOrCreateUniswapV2PoolDetail(id: string, derivative: Asset, feed: Add
 
   let token0Address = underlying.value.value0;
   let token1Address = underlying.value.value1;
-
   let detail = new UniswapV2PoolRegistrationDetail(derivative.id);
   detail.feed = feed;
-  detail.token0 = token0Address.toHex();
-  detail.token1 = token1Address.toHex();
+  detail.underlyingAssets = [token0Address.toHex(), token1Address.toHex()];
   detail.save();
 
   let symbol0 = tokenSymbol(token0Address);

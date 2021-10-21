@@ -112,7 +112,7 @@ type AaveRegistrationDetail implements RegistrationDetail @entity {
   """
   The underlying asset.
   """
-  underlyingAsset: Asset
+  underlyingAsset: Asset!
 }
 
 type AlphaHomoraV1RegistrationDetail implements RegistrationDetail @entity {
@@ -124,7 +124,7 @@ type AlphaHomoraV1RegistrationDetail implements RegistrationDetail @entity {
   """
   The underlying asset.
   """
-  underlyingAsset: Asset
+  underlyingAsset: Asset!
 }
 
 enum CurveAssetType {
@@ -167,17 +167,9 @@ type CurvePoolRegistrationDetail implements RegistrationDetail @entity {
   """
   numberOfTokens: Int!
   """
-  The token0 asset.
+  The underlying tokens.
   """
-  token0: Asset
-  """
-  The token1 asset.
-  """
-  token1: Asset
-  """
-  The token2 asset.
-  """
-  token2: Asset
+  underlyingAssets: [Asset!]!
 }
 
 type CompoundRegistrationDetail implements RegistrationDetail @entity {
@@ -231,13 +223,9 @@ type UniswapV2PoolRegistrationDetail implements RegistrationDetail @entity {
   """
   feed: Bytes!
   """
-  Token0 of the UniswapV2 pool.
+  The underlying tokens.
   """
-  token0: Asset!
-  """
-  Token1 of the UniswapV2 pool.
-  """
-  token1: Asset!
+  underlyingAssets: [Asset!]!
 }
 
 type YearnVaultV2RegistrationDetail implements RegistrationDetail @entity {
