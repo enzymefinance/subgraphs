@@ -68,11 +68,11 @@ type Registration @entity {
   """
   Timestamp when the registration was added.
   """
-  addedTimestamp: Int!
+  added: Int!
   """
   Timestamp when the registration was updated.
   """
-  updatedTimestamp: Int!
+  updated: Int!
   """
   Flag if registration is currently active.
   """

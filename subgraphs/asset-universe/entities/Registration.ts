@@ -18,8 +18,8 @@ export function getOrCreateRegistration(version: Version, asset: Asset, event: e
     registration.asset = asset.id;
     registration.version = version.id;
     registration.counter = getRegistrationCounter();
-    registration.addedTimestamp = event.block.timestamp.toI32();
-    registration.updatedTimestamp = event.block.timestamp.toI32();
+    registration.added = event.block.timestamp.toI32();
+    registration.updated = event.block.timestamp.toI32();
     registration.active = false;
     registration.detail = '';
     registration.save();
@@ -38,7 +38,7 @@ export function createDerivativeRegistration(
   let registrationDetailId = getOrCreateDerivativeRegistrationDetail(version, asset, feed, event);
   registration.active = true;
   registration.detail = registrationDetailId;
-  registration.updatedTimestamp = event.block.timestamp.toI32();
+  registration.updated = event.block.timestamp.toI32();
   registration.save();
 
   asset.registrations = arrayUnique<string>(asset.registrations.concat([registration.id]));
@@ -51,7 +51,7 @@ export function createDerivativeRegistration(
 export function removeDerivativeRegistration(version: Version, asset: Asset, event: ethereum.Event): void {
   let registration = getOrCreateRegistration(version, asset, event);
   registration.active = false;
-  registration.updatedTimestamp = event.block.timestamp.toI32();
+  registration.updated = event.block.timestamp.toI32();
   registration.save();
 
   // Record the change with the last known details.
@@ -68,7 +68,7 @@ export function createPrimitiveRegistration(
   let registrationDetailId = getOrCreatePrimitiveRegistrationDetail(version, asset, aggregator, event);
   registration.active = true;
   registration.detail = registrationDetailId;
-  registration.updatedTimestamp = event.block.timestamp.toI32();
+  registration.updated = event.block.timestamp.toI32();
   registration.save();
 
   asset.registrations = arrayUnique<string>(asset.registrations.concat([registration.id]));
@@ -81,7 +81,7 @@ export function createPrimitiveRegistration(
 export function removePrimitiveRegistration(version: Version, asset: Asset, event: ethereum.Event): void {
   let registration = getOrCreateRegistration(version, asset, event);
   registration.active = false;
-  registration.updatedTimestamp = event.block.timestamp.toI32();
+  registration.updated = event.block.timestamp.toI32();
   registration.save();
 
   // Record the change with the last known details.
