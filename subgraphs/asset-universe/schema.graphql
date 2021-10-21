@@ -189,7 +189,7 @@ type CompoundRegistrationDetail implements RegistrationDetail @entity {
   """
   The underlying asset.
   """
-  underlyingAsset: Asset
+  underlyingAsset: Asset!
 }
 
 type IdleRegistrationDetail implements RegistrationDetail @entity {
@@ -201,7 +201,7 @@ type IdleRegistrationDetail implements RegistrationDetail @entity {
   """
   The underlying asset.
   """
-  underlyingAsset: Asset
+  underlyingAsset: Asset!
 }
 
 type StakehoundEthRegistrationDetail implements RegistrationDetail @entity {
@@ -213,7 +213,7 @@ type StakehoundEthRegistrationDetail implements RegistrationDetail @entity {
   """
   The underlying asset.
   """
-  underlyingAsset: Asset
+  underlyingAsset: Asset!
 }
 
 type SynthetixRegistrationDetail implements RegistrationDetail @entity {
