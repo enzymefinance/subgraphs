@@ -20,7 +20,3 @@ export function getTransferCounter(): i32 {
 export function getBalanceMetricCounter(): i32 {
   return getCounter('balances');
 }
-
-export function getAumMetricCounter(): i32 {
-  return getCounter('aums');
-}

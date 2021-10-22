@@ -1,11 +1,10 @@
-import { arrayDiff, toBigDecimal, ZERO_BD } from '@enzymefinance/subgraph-utils';
+import { arrayDiff, toBigDecimal } from '@enzymefinance/subgraph-utils';
 import { Address, BigDecimal, BigInt, ethereum } from '@graphprotocol/graph-ts';
 import { Asset, Balance, Vault } from '../generated/schema';
 import { tokenBalance } from '../utils/tokenCalls';
-import { recordAumMetric } from './AumMetric';
 import { recordBalanceMetric } from './BalanceMetric';
 
-export function getOrCreateVaultBalance(vault: Vault, asset: Asset, event: ethereum.Event): Balance {
+export function getOrCreateVaultBalance(vault: Vault, asset: Asset): Balance {
   let id = vault.id + '/' + asset.id;
   let balance = Balance.load(id);
 
@@ -14,7 +13,6 @@ export function getOrCreateVaultBalance(vault: Vault, asset: Asset, event: ether
     balance.asset = asset.id;
     balance.vault = vault.id;
     balance.tracked = false;
-    balance.updated = event.block.number.toI32();
     balance.balance = BigDecimal.fromString('0');
     balance.save();
   }
@@ -22,19 +20,8 @@ export function getOrCreateVaultBalance(vault: Vault, asset: Asset, event: ether
   return balance as Balance;
 }
 
-export class UpdateVaultBalanceTuple {
-  balance: Balance;
-  aum: BigDecimal;
-
-  constructor(balance: Balance, aum: BigDecimal) {
-    this.balance = balance;
-    this.aum = aum;
-  }
-}
-
-export function updateVaultBalance(vault: Vault, asset: Asset, event: ethereum.Event): UpdateVaultBalanceTuple {
-  let balance = getOrCreateVaultBalance(vault, asset, event);
-  let previousBalance = balance.balance;
+export function updateVaultBalance(vault: Vault, asset: Asset, event: ethereum.Event): Balance {
+  let balance = getOrCreateVaultBalance(vault, asset);
 
   // TODO: Is it reasonable to assume that we can default this to `0` if the balance cannot be fetched.
   let balanceOrNull = tokenBalance(Address.fromString(asset.id), Address.fromString(vault.id));
@@ -42,40 +29,18 @@ export function updateVaultBalance(vault: Vault, asset: Asset, event: ethereum.E
     ? BigDecimal.fromString('0')
     : toBigDecimal(balanceOrNull as BigInt, asset.decimals);
 
-  // Update the holding counter on the asset entity.
-  if (previousBalance.equals(ZERO_BD) && !currentBalance.equals(ZERO_BD)) {
-    asset.holding = asset.holding + 1;
-  } else if (!previousBalance.equals(ZERO_BD) && currentBalance.equals(ZERO_BD)) {
-    asset.holding = asset.holding - 1;
-  }
-
-  // Update the aum for this asset.
-  asset.aum = asset.aum.minus(previousBalance).plus(currentBalance);
-  asset.save();
-
   // Update the balance for this vault.
   balance.balance = currentBalance;
-  balance.updated = event.block.number.toI32();
   balance.save();
 
   // Track metrics.
   recordBalanceMetric(vault, asset, balance, event);
-  recordAumMetric(asset, event);
 
-  return new UpdateVaultBalanceTuple(balance, asset.aum);
+  return balance;
 }
 
 export function updateTrackedAsset(vault: Vault, asset: Asset, event: ethereum.Event, tracked: boolean): void {
-  let balance = getOrCreateVaultBalance(vault, asset, event);
-
-  // Update the tracking counter on the asset entity.
-  if (!balance.tracked && tracked) {
-    asset.tracking = asset.tracking + 1;
-    asset.save();
-  } else if (balance.tracked && !tracked) {
-    asset.tracking = asset.tracking - 1;
-    asset.save();
-  }
+  let balance = getOrCreateVaultBalance(vault, asset);
 
   balance.tracked = tracked;
   balance.save();

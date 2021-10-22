@@ -53,7 +53,7 @@ export function handleTransfer(event: Transfer): void {
 }
 
 function handleIncomingTransfer(event: Transfer, asset: Asset, vault: Vault): void {
-  let tuple = updateVaultBalance(vault, asset, event);
+  let balance = updateVaultBalance(vault, asset, event);
   let amount = toBigDecimal(event.params.value, asset.decimals);
 
   let transfer = new IncomingTransfer(transferId(event, 'incoming'));
@@ -61,7 +61,7 @@ function handleIncomingTransfer(event: Transfer, asset: Asset, vault: Vault): vo
   transfer.type = 'INCOMING';
   transfer.vault = vault.id;
   transfer.asset = asset.id;
-  transfer.balance = tuple.balance.id;
+  transfer.balance = balance.id;
   transfer.amount = amount;
   transfer.sender = event.params.from;
   transfer.transaction = event.transaction.hash;
@@ -71,7 +71,7 @@ function handleIncomingTransfer(event: Transfer, asset: Asset, vault: Vault): vo
 }
 
 function handleOutgoingTransfer(event: Transfer, asset: Asset, vault: Vault): void {
-  let tuple = updateVaultBalance(vault, asset, event);
+  let balance = updateVaultBalance(vault, asset, event);
   let amount = toBigDecimal(event.params.value, asset.decimals);
 
   let transfer = new OutgoingTransfer(transferId(event, 'outgoing'));
@@ -79,7 +79,7 @@ function handleOutgoingTransfer(event: Transfer, asset: Asset, vault: Vault): vo
   transfer.type = 'OUTGOING';
   transfer.vault = vault.id;
   transfer.asset = asset.id;
-  transfer.balance = tuple.balance.id;
+  transfer.balance = balance.id;
   transfer.amount = amount;
   transfer.recipient = event.params.to;
   transfer.transaction = event.transaction.hash;

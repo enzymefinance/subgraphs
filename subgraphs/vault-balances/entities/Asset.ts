@@ -1,7 +1,6 @@
-import { ZERO_BD } from '@enzymefinance/subgraph-utils';
 import { Address, log } from '@graphprotocol/graph-ts';
 import { Asset, IgnoredAsset } from '../generated/schema';
-import { tokenBalance, tokenDecimals, tokenDecimalsOrFallback, tokenName, tokenSymbol } from '../utils/tokenCalls';
+import { tokenBalance, tokenDecimals } from '../utils/tokenCalls';
 
 function supportBalanceOfCall(address: Address): boolean {
   let vitalik = Address.fromString('0xab5801a7d398351b8be11c439e05c5b3259aec9b');
@@ -33,12 +32,7 @@ export function ensureAsset(address: Address): Asset | null {
     }
 
     asset = new Asset(id);
-    asset.symbol = tokenSymbol(address);
-    asset.name = tokenName(address);
-    asset.decimals = tokenDecimalsOrFallback(address, 18);
-    asset.aum = ZERO_BD;
-    asset.tracking = 0;
-    asset.holding = 0;
+    asset.decimals = tokenDecimals(address, 18);
     asset.save();
   }
 

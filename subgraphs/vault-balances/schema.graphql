@@ -14,29 +14,9 @@ type Asset @entity {
   """
   id: ID!
   """
-  The symbol of the asset.
-  """
-  symbol: String!
-  """
-  The name of the asset.
-  """
-  name: String!
-  """
   The number of decimal places for this asset.
   """
   decimals: Int!
-  """
-  The total amount of this asset in the entire network.
-  """
-  aum: BigDecimal!
-  """
-  The number of vaults currently tracking this asset.
-  """
-  tracking: Int!
-  """
-  The number of vaults currently holding this asset (balance above 0).
-  """
-  holding: Int!
   """
   The current per-vault balances for the asset.
   """
@@ -102,10 +82,6 @@ type Balance @entity {
   The vault's asset balance.
   """
   balance: BigDecimal!
-  """
-  The block number at which the last balance change was recorded.
-  """
-  updated: Int!
   """
   Whether the asset is currently tracked in the vault
   """
@@ -303,38 +279,6 @@ type BalanceMetric @entity {
   The vault's asset balance.
   """
   balance: BigDecimal!
-}
-
-type AumMetric @entity {
-  id: ID!
-  """
-  Strictly incremental counter for data scraping.
-  """
-  counter: Int!
-  """
-  The block number at which the last balance change was recorded.
-  """
-  block: Int!
-  """
-  The block timestamp at which the last balance change was recorded.
-  """
-  timestamp: Int!
-  """
-  The held asset.
-  """
-  asset: Bytes!
-  """
-  The total amount of this asset in the entire network.
-  """
-  aum: BigDecimal!
-  """
-  The number of vaults currently tracking this asset.
-  """
-  tracking: Int!
-  """
-  The number of vaults currently holding this asset (balance above 0).
-  """
-  holding: Int!
 }
 
 #################################################
