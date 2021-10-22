@@ -64,14 +64,6 @@ type Vault @entity {
   """
   id: ID!
   """
-  The address of the current version of the vault.
-  """
-  version: Bytes!
-  """
-  The block number at which the last balance change was recorded.
-  """
-  updated: Int!
-  """
   The current portfolio (tracked assets) of the vault.
   """
   portfolio: [Balance!]!

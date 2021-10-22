@@ -69,7 +69,7 @@ export const configure: Configurator<Variables> = (variables) => {
       name: 'Dispatcher',
       block: variables.start,
       address: variables.dispatcher,
-      events: (abi) => [abi.getEvent('VaultProxyDeployed'), abi.getEvent('MigrationExecuted')],
+      events: (abi) => [abi.getEvent('VaultProxyDeployed')],
     },
     {
       name: 'Asset',

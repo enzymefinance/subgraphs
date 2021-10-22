@@ -58,10 +58,6 @@ export function updateVaultBalance(vault: Vault, asset: Asset, event: ethereum.E
   balance.updated = event.block.number.toI32();
   balance.save();
 
-  // Record the timestamp of the last change.
-  vault.updated = balance.updated;
-  vault.save();
-
   // Track metrics.
   recordBalanceMetric(vault, asset, balance, event);
   recordAumMetric(asset, event);
