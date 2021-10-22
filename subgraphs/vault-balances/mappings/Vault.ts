@@ -1,5 +1,5 @@
 import { log } from '@graphprotocol/graph-ts';
-import { ensureAsset } from '../entities/Asset';
+import { getOrCreateAsset } from '../entities/Asset';
 import { updateTrackedAsset } from '../entities/Balance';
 import { TrackedAssetAdded, TrackedAssetRemoved } from '../generated/contracts/VaultEvents';
 import { Vault } from '../generated/schema';
@@ -11,7 +11,7 @@ export function handleTrackedAssetAdded(event: TrackedAssetAdded): void {
     return;
   }
 
-  let asset = ensureAsset(event.params.asset);
+  let asset = getOrCreateAsset(event.params.asset);
   if (asset == null) {
     log.error('Missing asset {}', [event.params.asset.toHex()]);
     return;
@@ -27,7 +27,7 @@ export function handleTrackedAssetRemoved(event: TrackedAssetRemoved): void {
     return;
   }
 
-  let asset = ensureAsset(event.params.asset);
+  let asset = getOrCreateAsset(event.params.asset);
   if (asset == null) {
     log.error('Missing asset {}', [event.params.asset.toHex()]);
     return;

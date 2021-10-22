@@ -1,7 +1,7 @@
 import { toBigDecimal, ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
 import { Transfer } from '../generated/contracts/ERC20Events';
 import { Asset, IncomingTransfer, OutgoingTransfer, Vault } from '../generated/schema';
-import { ensureAsset } from '../entities/Asset';
+import { getOrCreateAsset } from '../entities/Asset';
 import { updateVaultBalance } from '../entities/Balance';
 import { getTransferCounter } from '../entities/Counter';
 
@@ -35,7 +35,7 @@ export function handleTransfer(event: Transfer): void {
   }
 
   // Ensure that this is a valid asset.
-  let asset = ensureAsset(event.address);
+  let asset = getOrCreateAsset(event.address);
   if (asset == null) {
     return;
   }

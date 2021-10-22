@@ -13,7 +13,7 @@ function supportBalanceOfCall(address: Address): boolean {
   return true;
 }
 
-export function ensureAsset(address: Address): Asset | null {
+export function getOrCreateAsset(address: Address): Asset | null {
   let id = address.toHex();
   let asset = Asset.load(id);
 
