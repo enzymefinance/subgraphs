@@ -18,5 +18,5 @@ export function getTransferCounter(): i32 {
 }
 
 export function getBalanceMetricCounter(): i32 {
-  return getCounter('balances');
+  return getCounter('balance-metrics');
 }

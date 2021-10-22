@@ -44,10 +44,6 @@ type Vault @entity {
   """
   id: ID!
   """
-  The current portfolio (tracked assets) of the vault.
-  """
-  portfolio: [Balance!]!
-  """
   The current balances (tracked and untracked assets) of the vault.
   """
   balances: [Balance!]! @derivedFrom(field: "vault")

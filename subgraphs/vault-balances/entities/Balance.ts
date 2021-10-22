@@ -1,4 +1,4 @@
-import { arrayDiff, toBigDecimal } from '@enzymefinance/subgraph-utils';
+import { toBigDecimal } from '@enzymefinance/subgraph-utils';
 import { Address, BigDecimal, BigInt, ethereum } from '@graphprotocol/graph-ts';
 import { Asset, Balance, Vault } from '../generated/schema';
 import { tokenBalance } from '../utils/tokenCalls';
@@ -41,18 +41,8 @@ export function updateVaultBalance(vault: Vault, asset: Asset, event: ethereum.E
 
 export function updateTrackedAsset(vault: Vault, asset: Asset, event: ethereum.Event, tracked: boolean): void {
   let balance = getOrCreateVaultBalance(vault, asset);
-
   balance.tracked = tracked;
   balance.save();
-
-  // Update the portfolio.
-  // Bail out early if the balance entity is already registered in the current portfolio.
-  let included = vault.portfolio.includes(balance.id);
-  if (balance.tracked && !included) {
-    vault.portfolio = vault.portfolio.concat([balance.id]);
-  } else if (!balance.tracked && included) {
-    vault.portfolio = arrayDiff<string>(vault.portfolio, [balance.id]);
-  }
 
   // NOTE: It's important that this is called last so that the call to `recordAumMetric` already uses
   // the updated `tracking` counter of the asset entity.
