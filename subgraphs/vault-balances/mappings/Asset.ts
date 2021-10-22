@@ -25,9 +25,8 @@ export function handleTransfer(event: Transfer): void {
 
   // If the to or from address is the zero adress, we can skip the loading attempt. This
   // is the case if it's a burn or mint operation for instance.
-  let to = (event.params.to.equals(ZERO_ADDRESS) ? null : Vault.load(event.params.to.toHex())) as Vault | null;
-  let from = (event.params.from.equals(ZERO_ADDRESS) ? null : Vault.load(event.params.from.toHex())) as Vault | null;
-
+  let to: Vault | null = event.params.to.equals(ZERO_ADDRESS) ? null : Vault.load(event.params.to.toHex());
+  let from: Vault | null = event.params.from.equals(ZERO_ADDRESS) ? null : Vault.load(event.params.from.toHex());
   // Bail out early if neither `from` nor `to` are a vault.
   // NOTE: There is a possibility, that a token is transferred to a future vault address
   // before it is even created. We knowingly ignore this case here.
@@ -36,19 +35,19 @@ export function handleTransfer(event: Transfer): void {
   }
 
   // Ensure that this is a valid asset.
-  let asset = ensureAsset(event.address) as Asset;
+  let asset = ensureAsset(event.address);
   if (asset == null) {
     return;
   }
 
   // Record the case where the recipient is a vault.
   if (to != null) {
-    handleIncomingTransfer(event, asset, to as Vault);
+    handleIncomingTransfer(event, asset, to);
   }
 
   // Record the case where the sender is a vault.
   if (from != null) {
-    handleOutgoingTransfer(event, asset, from as Vault);
+    handleOutgoingTransfer(event, asset, from);
   }
 }
 

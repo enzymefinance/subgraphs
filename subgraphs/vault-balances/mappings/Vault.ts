@@ -17,7 +17,7 @@ export function handleTrackedAssetAdded(event: TrackedAssetAdded): void {
     return;
   }
 
-  updateTrackedAsset(vault as Vault, asset as Asset, event, true);
+  updateTrackedAsset(vault, asset, event, true);
 }
 
 export function handleTrackedAssetRemoved(event: TrackedAssetRemoved): void {
@@ -33,5 +33,5 @@ export function handleTrackedAssetRemoved(event: TrackedAssetRemoved): void {
     return;
   }
 
-  updateTrackedAsset(vault as Vault, asset as Asset, event, false);
+  updateTrackedAsset(vault, asset, event, false);
 }

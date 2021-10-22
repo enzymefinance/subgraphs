@@ -4,7 +4,6 @@ import { VaultDataSource } from '../generated/templates';
 
 export function handleVaultProxyDeployed(event: VaultProxyDeployed): void {
   let id = event.params.vaultProxy.toHex();
-
   // This should never happen but it doesn't hurt to check it nonetheless.
   if (Vault.load(id) != null) {
     return;

@@ -1,5 +1,5 @@
 import { toBigDecimal } from '@enzymefinance/subgraph-utils';
-import { Address, BigDecimal, BigInt, ethereum } from '@graphprotocol/graph-ts';
+import { Address, BigDecimal, ethereum } from '@graphprotocol/graph-ts';
 import { Asset, Balance, Vault } from '../generated/schema';
 import { tokenBalance } from '../utils/tokenCalls';
 import { recordBalanceMetric } from './BalanceMetric';
@@ -17,7 +17,7 @@ export function getOrCreateVaultBalance(vault: Vault, asset: Asset): Balance {
     balance.save();
   }
 
-  return balance as Balance;
+  return balance;
 }
 
 export function updateVaultBalance(vault: Vault, asset: Asset, event: ethereum.Event): Balance {
@@ -25,9 +25,7 @@ export function updateVaultBalance(vault: Vault, asset: Asset, event: ethereum.E
 
   // TODO: Is it reasonable to assume that we can default this to `0` if the balance cannot be fetched.
   let balanceOrNull = tokenBalance(Address.fromString(asset.id), Address.fromString(vault.id));
-  let currentBalance = !balanceOrNull
-    ? BigDecimal.fromString('0')
-    : toBigDecimal(balanceOrNull as BigInt, asset.decimals);
+  let currentBalance = !balanceOrNull ? BigDecimal.fromString('0') : toBigDecimal(balanceOrNull, asset.decimals);
 
   // Update the balance for this vault.
   balance.balance = currentBalance;
