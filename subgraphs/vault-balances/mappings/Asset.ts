@@ -1,5 +1,5 @@
 import { toBigDecimal, ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
-import { Transfer } from '../generated/ERC20Contract';
+import { Transfer } from '../generated/contracts/ERC20Events';
 import { Asset, IncomingTransfer, OutgoingTransfer, Vault } from '../generated/schema';
 import { ensureAsset } from '../entities/Asset';
 import { updateVaultBalance } from '../entities/Balance';

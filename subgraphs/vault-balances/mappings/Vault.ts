@@ -1,8 +1,8 @@
 import { log } from '@graphprotocol/graph-ts';
 import { ensureAsset } from '../entities/Asset';
 import { updateTrackedAsset } from '../entities/Balance';
-import { TrackedAssetAdded, TrackedAssetRemoved } from '../generated/VaultContract';
-import { Asset, Vault } from '../generated/schema';
+import { TrackedAssetAdded, TrackedAssetRemoved } from '../generated/contracts/VaultEvents';
+import { Vault } from '../generated/schema';
 
 export function handleTrackedAssetAdded(event: TrackedAssetAdded): void {
   let vault = Vault.load(event.address.toHex());
