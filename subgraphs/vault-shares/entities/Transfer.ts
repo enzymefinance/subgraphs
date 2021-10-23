@@ -16,8 +16,10 @@ export function createIncomingTransfer(
   depositor: Depositor,
   from: Depositor | null,
 ): void {
-  let deposit = getOrCreateDeposit(vault, depositor, event);
+  let deposit = getOrCreateDeposit(vault, depositor);
   deposit.balance = deposit.balance.plus(amount);
+  deposit.save();
+
   recordDepositMetric(vault, depositor, deposit, event);
 
   let transfer = new IncomingTransfer(transferId(event, 'incoming'));
@@ -42,8 +44,10 @@ export function createOutgoingTransfer(
   depositor: Depositor,
   to: Depositor | null,
 ): void {
-  let deposit = getOrCreateDeposit(vault, depositor, event);
+  let deposit = getOrCreateDeposit(vault, depositor);
   deposit.balance = deposit.balance.minus(amount);
+  deposit.save();
+
   recordDepositMetric(vault, depositor, deposit, event);
 
   let transfer = new OutgoingTransfer(transferId(event, 'outgoing'));

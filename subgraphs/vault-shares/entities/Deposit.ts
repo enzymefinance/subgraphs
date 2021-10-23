@@ -1,8 +1,7 @@
 import { ZERO_BD } from '@enzymefinance/subgraph-utils';
-import { ethereum } from '@graphprotocol/graph-ts';
 import { Depositor, Deposit, Vault } from '../generated/schema';
 
-export function getOrCreateDeposit(vault: Vault, depositor: Depositor, event: ethereum.Event): Deposit {
+export function getOrCreateDeposit(vault: Vault, depositor: Depositor): Deposit {
   let id = vault.id + '/' + depositor.id;
   let deposit = Deposit.load(id);
   if (deposit == null) {
