@@ -38,11 +38,11 @@ export function handleTransfer(event: Transfer): void {
 
   // Record the case where the recipient is a vault.
   if (to != null) {
-    createIncomingTransfer(event, asset, to);
+    createIncomingTransfer(event, asset, to, event.params.value, event.params.from);
   }
 
   // Record the case where the sender is a vault.
   if (from != null) {
-    createOutgoingTransfer(event, asset, from);
+    createOutgoingTransfer(event, asset, from, event.params.value, event.params.to);
   }
 }
