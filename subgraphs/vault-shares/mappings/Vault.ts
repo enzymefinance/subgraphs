@@ -29,8 +29,10 @@ export function handleTransfer(event: Transfer): void {
   // Adjust the total supply of the vault if this was a token mint or burn event.
   if (from == null && to != null) {
     vault.supply = vault.supply.plus(amount);
+    vault.save();
   } else if (to == null && from != null) {
     vault.supply = vault.supply.minus(amount);
+    vault.save();
   }
 
   // Record the case where the recipient is a vault.
