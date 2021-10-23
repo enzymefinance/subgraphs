@@ -1,13 +1,8 @@
-import { toBigDecimal, ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
-import { Transfer } from '../generated/contracts/ERC20Events';
-import { Asset, IncomingTransfer, OutgoingTransfer, Vault } from '../generated/schema';
+import { ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
+import { Transfer } from '../generated/contracts/AssetEvents';
 import { getOrCreateAsset } from '../entities/Asset';
-import { updateVaultBalance } from '../entities/Balance';
-import { getTransferCounter } from '../entities/Counter';
-
-export function transferId(event: Transfer, suffix: string): string {
-  return event.transaction.hash.toHex() + '/' + event.logIndex.toString() + '/' + suffix;
-}
+import { Vault } from '../generated/schema';
+import { createIncomingTransfer, createOutgoingTransfer } from '../entities/Transfer';
 
 export function handleTransfer(event: Transfer): void {
   // Ignore events where the transfer value is zero.
@@ -27,6 +22,7 @@ export function handleTransfer(event: Transfer): void {
   // is the case if it's a burn or mint operation for instance.
   let to: Vault | null = event.params.to.equals(ZERO_ADDRESS) ? null : Vault.load(event.params.to.toHex());
   let from: Vault | null = event.params.from.equals(ZERO_ADDRESS) ? null : Vault.load(event.params.from.toHex());
+
   // Bail out early if neither `from` nor `to` are a vault.
   // NOTE: There is a possibility, that a token is transferred to a future vault address
   // before it is even created. We knowingly ignore this case here.
@@ -42,47 +38,11 @@ export function handleTransfer(event: Transfer): void {
 
   // Record the case where the recipient is a vault.
   if (to != null) {
-    handleIncomingTransfer(event, asset, to);
+    createIncomingTransfer(event, asset, to);
   }
 
   // Record the case where the sender is a vault.
   if (from != null) {
-    handleOutgoingTransfer(event, asset, from);
+    createOutgoingTransfer(event, asset, from);
   }
-}
-
-function handleIncomingTransfer(event: Transfer, asset: Asset, vault: Vault): void {
-  let balance = updateVaultBalance(vault, asset, event);
-  let amount = toBigDecimal(event.params.value, asset.decimals);
-
-  let transfer = new IncomingTransfer(transferId(event, 'incoming'));
-  transfer.counter = getTransferCounter();
-  transfer.type = 'INCOMING';
-  transfer.vault = vault.id;
-  transfer.asset = asset.id;
-  transfer.balance = balance.id;
-  transfer.amount = amount;
-  transfer.sender = event.params.from;
-  transfer.transaction = event.transaction.hash;
-  transfer.timestamp = event.block.timestamp.toI32();
-  transfer.block = event.block.number.toI32();
-  transfer.save();
-}
-
-function handleOutgoingTransfer(event: Transfer, asset: Asset, vault: Vault): void {
-  let balance = updateVaultBalance(vault, asset, event);
-  let amount = toBigDecimal(event.params.value, asset.decimals);
-
-  let transfer = new OutgoingTransfer(transferId(event, 'outgoing'));
-  transfer.counter = getTransferCounter();
-  transfer.type = 'OUTGOING';
-  transfer.vault = vault.id;
-  transfer.asset = asset.id;
-  transfer.balance = balance.id;
-  transfer.amount = amount;
-  transfer.recipient = event.params.to;
-  transfer.transaction = event.transaction.hash;
-  transfer.timestamp = event.block.timestamp.toI32();
-  transfer.block = event.block.number.toI32();
-  transfer.save();
 }

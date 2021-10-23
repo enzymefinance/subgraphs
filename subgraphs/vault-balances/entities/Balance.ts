@@ -21,14 +21,12 @@ export function getOrCreateVaultBalance(vault: Vault, asset: Asset): Balance {
 }
 
 export function updateVaultBalance(vault: Vault, asset: Asset, event: ethereum.Event): Balance {
-  let balance = getOrCreateVaultBalance(vault, asset);
-
-  // TODO: Is it reasonable to assume that we can default this to `0` if the balance cannot be fetched.
-  let balanceOrNull = tokenBalance(Address.fromString(asset.id), Address.fromString(vault.id));
-  let currentBalance = !balanceOrNull ? BigDecimal.fromString('0') : toBigDecimal(balanceOrNull, asset.decimals);
+  let assetAddress = Address.fromString(asset.id);
+  let vaultAddress = Address.fromString(vault.id);
 
   // Update the balance for this vault.
-  balance.balance = currentBalance;
+  let balance = getOrCreateVaultBalance(vault, asset);
+  balance.balance = toBigDecimal(tokenBalance(assetAddress, vaultAddress), asset.decimals);
   balance.save();
 
   // Track metrics.
