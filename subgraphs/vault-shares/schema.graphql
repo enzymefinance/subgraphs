@@ -269,13 +269,33 @@ type DepositMetric @entity {
   """
   vault: Bytes!
   """
-  The total supply of shares at this metric recording.
-  """
-  supply: BigDecimal!
-  """
   The vault's asset balance.
   """
   balance: BigDecimal!
+}
+
+type SupplyMetric @entity {
+  id: ID!
+  """
+  Strictly incremental counter for data scraping.
+  """
+  counter: Int!
+  """
+  The block number at which the last balance change was recorded.
+  """
+  block: Int!
+  """
+  The block timestamp at which the last balance change was recorded.
+  """
+  timestamp: Int!
+  """
+  The transferred vault shares.
+  """
+  vault: Bytes!
+  """
+  The total supply of shares at this metric recording.
+  """
+  supply: BigDecimal!
 }
 
 #################################################

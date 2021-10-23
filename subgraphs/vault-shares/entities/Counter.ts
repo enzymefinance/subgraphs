@@ -20,3 +20,7 @@ export function getTransferCounter(): i32 {
 export function getDepositMetricCounter(): i32 {
   return getCounter('deposit-metrics');
 }
+
+export function getSupplyMetricCounter(): i32 {
+  return getCounter('supply-metrics');
+}

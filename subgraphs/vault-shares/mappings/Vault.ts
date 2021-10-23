@@ -1,16 +1,10 @@
 import { toBigDecimal, ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
 import { Transfer } from '../generated/contracts/VaultEvents';
-import { Depositor, IncomingTransfer, OutgoingTransfer, Vault } from '../generated/schema';
-import { getOrCreateDeposit } from '../entities/Deposit';
-import { getTransferCounter } from '../entities/Counter';
+import { Depositor } from '../generated/schema';
 import { getOrCreateDepositor } from '../entities/Depositor';
 import { getOrCreateVault } from '../entities/Vault';
-import { BigDecimal } from '@graphprotocol/graph-ts';
-import { recordDepositMetric } from '../entities/DepositMetric';
-
-export function transferId(event: Transfer, suffix: string): string {
-  return event.transaction.hash.toHex() + '/' + event.logIndex.toString() + '/' + suffix;
-}
+import { createIncomingTransfer, createOutgoingTransfer } from '../entities/Transfer';
+import { recordSupplyMetric } from '../entities/SupplyMetric';
 
 export function handleTransfer(event: Transfer): void {
   // Ignore events where the transfer value is zero.
@@ -35,67 +29,18 @@ export function handleTransfer(event: Transfer): void {
     vault.save();
   }
 
-  // Record the case where the recipient is a vault.
+  // Record a metric for the total supply change if this was a mint or burn event.
+  if (from == null || to == null) {
+    recordSupplyMetric(vault, event);
+  }
+
+  // Record the case where a depositor minted or received shares.
   if (to != null) {
-    handleIncomingTransfer(event, amount, vault, to, from);
+    createIncomingTransfer(event, amount, vault, to, from);
   }
 
-  // Record the case where the sender is a vault.
+  // Record the case where a depositor sent or burned shares.
   if (from != null) {
-    handleOutgoingTransfer(event, amount, vault, from, to);
+    createOutgoingTransfer(event, amount, vault, from, to);
   }
-}
-
-function handleIncomingTransfer(
-  event: Transfer,
-  amount: BigDecimal,
-  vault: Vault,
-  depositor: Depositor,
-  from: Depositor | null,
-): void {
-  let deposit = getOrCreateDeposit(vault, depositor, event);
-  deposit.balance = deposit.balance.plus(amount);
-
-  let transfer = new IncomingTransfer(transferId(event, 'incoming'));
-  transfer.counter = getTransferCounter();
-  transfer.type = 'INCOMING';
-  transfer.supply = vault.supply;
-  transfer.vault = vault.id;
-  transfer.depositor = depositor.id;
-  transfer.deposit = deposit.id;
-  transfer.amount = amount;
-  transfer.sender = from == null ? null : from.id;
-  transfer.transaction = event.transaction.hash;
-  transfer.timestamp = event.block.timestamp.toI32();
-  transfer.block = event.block.number.toI32();
-  transfer.save();
-
-  recordDepositMetric(vault, depositor, deposit, event);
-}
-
-function handleOutgoingTransfer(
-  event: Transfer,
-  amount: BigDecimal,
-  vault: Vault,
-  depositor: Depositor,
-  to: Depositor | null,
-): void {
-  let deposit = getOrCreateDeposit(vault, depositor, event);
-  deposit.balance = deposit.balance.minus(amount);
-
-  let transfer = new OutgoingTransfer(transferId(event, 'outgoing'));
-  transfer.counter = getTransferCounter();
-  transfer.type = 'OUTGOING';
-  transfer.supply = vault.supply;
-  transfer.vault = vault.id;
-  transfer.depositor = depositor.id;
-  transfer.deposit = deposit.id;
-  transfer.amount = amount;
-  transfer.recipient = to == null ? null : to.id;
-  transfer.transaction = event.transaction.hash;
-  transfer.timestamp = event.block.timestamp.toI32();
-  transfer.block = event.block.number.toI32();
-  transfer.save();
-
-  recordDepositMetric(vault, depositor, deposit, event);
 }

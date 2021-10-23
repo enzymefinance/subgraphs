@@ -1,3 +1,4 @@
+import { recordSupplyMetric } from '../entities/SupplyMetric';
 import { getOrCreateVault } from '../entities/Vault';
 import { VaultProxyDeployed } from '../generated/contracts/DispatcherEvents';
 import { Vault } from '../generated/schema';
@@ -10,7 +11,9 @@ export function handleVaultProxyDeployed(event: VaultProxyDeployed): void {
     return;
   }
 
-  getOrCreateVault(event.params.vaultProxy);
+  // Create the vault entity and record the first share supply metric (0).
+  let vault = getOrCreateVault(event.params.vaultProxy);
+  recordSupplyMetric(vault, event);
 
   // Spawn the data source for the vault proxy to observe tracked assets and external positions.
   VaultDataSource.create(event.params.vaultProxy);
