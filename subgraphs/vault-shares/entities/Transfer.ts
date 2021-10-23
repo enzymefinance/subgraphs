@@ -30,6 +30,7 @@ export function createIncomingTransfer(
   transfer.depositor = depositor.id;
   transfer.deposit = deposit.id;
   transfer.amount = amount;
+  transfer.balance = deposit.balance;
   transfer.sender = from == null ? null : from.id;
   transfer.transaction = event.transaction.hash;
   transfer.timestamp = event.block.timestamp.toI32();
@@ -58,6 +59,7 @@ export function createOutgoingTransfer(
   transfer.depositor = depositor.id;
   transfer.deposit = deposit.id;
   transfer.amount = amount;
+  transfer.balance = deposit.balance;
   transfer.recipient = to == null ? null : to.id;
   transfer.transaction = event.transaction.hash;
   transfer.timestamp = event.block.timestamp.toI32();

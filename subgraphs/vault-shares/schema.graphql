@@ -131,6 +131,10 @@ interface Transfer {
   """
   amount: BigDecimal!
   """
+  The deposit balance after the transfer.
+  """
+  balance: BigDecimal!
+  """
   The total supply of shares at the time of the transfer.
   """
   supply: BigDecimal!
@@ -182,6 +186,10 @@ type OutgoingTransfer implements Transfer @entity {
   """
   amount: BigDecimal!
   """
+  The deposit balance after the transfer.
+  """
+  balance: BigDecimal!
+  """
   The total supply of shares at the time of the transfer.
   """
   supply: BigDecimal!
@@ -232,6 +240,10 @@ type IncomingTransfer implements Transfer @entity {
   The transferred amount.
   """
   amount: BigDecimal!
+  """
+  The deposit balance after the transfer.
+  """
+  balance: BigDecimal!
   """
   The total supply of shares at the time of the transfer.
   """
