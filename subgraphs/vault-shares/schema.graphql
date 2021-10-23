@@ -174,9 +174,9 @@ type OutgoingTransfer implements Transfer @entity {
   """
   depositor: Depositor!
   """
-  The address of the recipient.
+  The recipient of the transfer. If this is not set then the recipient was the zero address (burn).
   """
-  recipient: Bytes!
+  recipient: Depositor
   """
   The transferred amount.
   """
@@ -225,9 +225,9 @@ type IncomingTransfer implements Transfer @entity {
   """
   depositor: Depositor!
   """
-  The address of the sender.
+  The sender of the transfer. If this is not set then the sender was the zero address (mint).
   """
-  sender: Bytes!
+  sender: Depositor
   """
   The transferred amount.
   """
