@@ -40,7 +40,5 @@ export function updateTrackedAsset(vault: Vault, asset: Asset, event: ethereum.E
   balance.tracked = tracked;
   balance.save();
 
-  // NOTE: It's important that this is called last so that the call to `recordAumMetric` already uses
-  // the updated `tracking` counter of the asset entity.
   updateVaultBalance(vault, asset, event);
 }
