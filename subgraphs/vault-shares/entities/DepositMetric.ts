@@ -18,6 +18,6 @@ export function recordDepositMetric(vault: Vault, depositor: Depositor, deposit:
     metric.depositor = Address.fromString(depositor.id);
   }
 
-  metric.balance = deposit.balance;
+  metric.shares = deposit.shares;
   metric.save();
 }

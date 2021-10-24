@@ -11,7 +11,7 @@ type Vault @entity {
   """
   supply: BigDecimal!
   """
-  The current balances (tracked and untracked assets) of the vault.
+  All deposits into the vault (including those that are currently at 0 shares).
   """
   deposits: [Deposit!]! @derivedFrom(field: "vault")
   """
@@ -37,7 +37,7 @@ type Depositor @entity {
   """
   id: ID!
   """
-  The current balances (tracked and untracked assets) of the vault.
+  All deposits of the depositor (including those that are currently at 0 shares).
   """
   deposits: [Deposit!]! @derivedFrom(field: "depositor")
   """
@@ -55,7 +55,7 @@ type Depositor @entity {
 }
 
 """
-A deposit (shares balance held by a depositor).
+A deposit (shares count held by a depositor).
 """
 type Deposit @entity {
   id: ID!
@@ -68,9 +68,9 @@ type Deposit @entity {
   """
   vault: Vault!
   """
-  The current share balance of the depositor.
+  The current share count of the depositor.
   """
-  balance: BigDecimal!
+  shares: BigDecimal!
   """
   Incoming and outgoing transfers.
   """
@@ -131,9 +131,9 @@ interface Transfer {
   """
   amount: BigDecimal!
   """
-  The deposit balance after the transfer.
+  The share count after the transfer.
   """
-  balance: BigDecimal!
+  shares: BigDecimal!
   """
   The total supply of shares at the time of the transfer.
   """
@@ -186,9 +186,9 @@ type OutgoingTransfer implements Transfer @entity {
   """
   amount: BigDecimal!
   """
-  The deposit balance after the transfer.
+  The share count after the transfer.
   """
-  balance: BigDecimal!
+  shares: BigDecimal!
   """
   The total supply of shares at the time of the transfer.
   """
@@ -241,9 +241,9 @@ type IncomingTransfer implements Transfer @entity {
   """
   amount: BigDecimal!
   """
-  The deposit balance after the transfer.
+  The share count after the transfer.
   """
-  balance: BigDecimal!
+  shares: BigDecimal!
   """
   The total supply of shares at the time of the transfer.
   """
@@ -265,11 +265,11 @@ type DepositMetric @entity {
   """
   counter: Int!
   """
-  The block number at which the last balance change was recorded.
+  The block number at which the share count change was recorded.
   """
   block: Int!
   """
-  The block timestamp at which the last balance change was recorded.
+  The block timestamp at which the share count change was recorded.
   """
   timestamp: Int!
   """
@@ -281,9 +281,9 @@ type DepositMetric @entity {
   """
   vault: Bytes!
   """
-  The vault's asset balance.
+  The share count.
   """
-  balance: BigDecimal!
+  shares: BigDecimal!
 }
 
 type SupplyMetric @entity {
@@ -293,11 +293,11 @@ type SupplyMetric @entity {
   """
   counter: Int!
   """
-  The block number at which the last balance change was recorded.
+  The block number at which the supply change was recorded.
   """
   block: Int!
   """
-  The block timestamp at which the last balance change was recorded.
+  The block timestamp at which the supply change was recorded.
   """
   timestamp: Int!
   """

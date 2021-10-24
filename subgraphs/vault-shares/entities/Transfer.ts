@@ -17,7 +17,7 @@ export function createIncomingTransfer(
   from: Depositor | null,
 ): void {
   let deposit = getOrCreateDeposit(vault, depositor);
-  deposit.balance = deposit.balance.plus(amount);
+  deposit.shares = deposit.shares.plus(amount);
   deposit.save();
 
   recordDepositMetric(vault, depositor, deposit, event);
@@ -30,7 +30,7 @@ export function createIncomingTransfer(
   transfer.depositor = depositor.id;
   transfer.deposit = deposit.id;
   transfer.amount = amount;
-  transfer.balance = deposit.balance;
+  transfer.shares = deposit.shares;
   transfer.sender = from == null ? null : from.id;
   transfer.transaction = event.transaction.hash;
   transfer.timestamp = event.block.timestamp.toI32();
@@ -46,7 +46,7 @@ export function createOutgoingTransfer(
   to: Depositor | null,
 ): void {
   let deposit = getOrCreateDeposit(vault, depositor);
-  deposit.balance = deposit.balance.minus(amount);
+  deposit.shares = deposit.shares.minus(amount);
   deposit.save();
 
   recordDepositMetric(vault, depositor, deposit, event);
@@ -59,7 +59,7 @@ export function createOutgoingTransfer(
   transfer.depositor = depositor.id;
   transfer.deposit = deposit.id;
   transfer.amount = amount;
-  transfer.balance = deposit.balance;
+  transfer.shares = deposit.shares;
   transfer.recipient = to == null ? null : to.id;
   transfer.transaction = event.transaction.hash;
   transfer.timestamp = event.block.timestamp.toI32();

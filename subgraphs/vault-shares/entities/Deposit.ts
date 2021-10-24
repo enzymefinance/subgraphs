@@ -8,7 +8,7 @@ export function getOrCreateDeposit(vault: Vault, depositor: Depositor): Deposit 
     deposit = new Deposit(id);
     deposit.vault = vault.id;
     deposit.depositor = depositor.id;
-    deposit.balance = ZERO_BD;
+    deposit.shares = ZERO_BD;
     deposit.save();
   }
 
