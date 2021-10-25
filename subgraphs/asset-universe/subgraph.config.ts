@@ -113,7 +113,10 @@ const kovan: Variables = {
     //   primitivePriceFeed: '0x5A49D2a6420362bE3E396C59Fe9280c9f9588Ec3',
     //   primitivePriceFeedBlock: 24710598,
     // },
-    // // TODO: Add v4 contracts.
+    v4: {
+      fundDeployer: '0xbA4D92DfecFA04385C5B724DbC6BA0eb58e0E284',
+      valueInterpreter: '0x7A0626Ef53D8a7aaFc413BE58E3b5C5A96db181d',
+    },
   },
   testnetConfiguration: {
     treasuryController: '0xd5590aE02a9bD0011d15FdFea75b808A227bC383',
