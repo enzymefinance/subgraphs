@@ -6,7 +6,6 @@ import { createAssetAmount } from '../../entities/AssetAmount';
 import { ensureComptroller } from '../../entities/Comptroller';
 import { trackTrade } from '../../entities/Trade';
 import { useVault } from '../../entities/Vault';
-import { trackVaultMetric } from '../../entities/VaultMetric';
 import {
   AdapterDeregistered,
   AdapterRegistered,
@@ -74,6 +73,4 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
     outgoingAssetAmounts,
     event,
   );
-
-  trackVaultMetric(event.params.vaultProxy, event);
 }

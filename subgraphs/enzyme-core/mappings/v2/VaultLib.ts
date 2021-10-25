@@ -1,9 +1,8 @@
 import { arrayDiff, arrayUnique, ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
 import { ensureOwner } from '../../entities/Account';
 import { ensureAsset } from '../../entities/Asset';
-import { trackDepositMetric } from '../../entities/DepositMetric';
+import { trackDeposit } from '../../entities/Deposit';
 import { useVault } from '../../entities/Vault';
-import { trackVaultMetric } from '../../entities/VaultMetric';
 import {
   AccessorSet,
   Approval,
@@ -44,8 +43,6 @@ export function handleTrackedAssetAdded(event: TrackedAssetAdded): void {
 
   vault.trackedAssets = arrayUnique<string>(vault.trackedAssets.concat([asset.id]));
   vault.save();
-
-  trackVaultMetric(event.address, event);
 }
 
 export function handleTrackedAssetRemoved(event: TrackedAssetRemoved): void {
@@ -54,8 +51,6 @@ export function handleTrackedAssetRemoved(event: TrackedAssetRemoved): void {
 
   vault.trackedAssets = arrayDiff<string>(vault.trackedAssets, [asset.id]);
   vault.save();
-
-  trackVaultMetric(event.address, event);
 }
 
 export function handleVaultLibSet(event: VaultLibSet): void {}
@@ -63,13 +58,11 @@ export function handleVaultLibSet(event: VaultLibSet): void {}
 export function handleApproval(event: Approval): void {}
 
 export function handleTransfer(event: Transfer): void {
-  trackVaultMetric(event.address, event);
-
   if (event.params.from.notEqual(ZERO_ADDRESS)) {
-    trackDepositMetric(event.address, event.params.from, event);
+    trackDeposit(event.address, event.params.from, event);
   }
 
   if (event.params.to.notEqual(ZERO_ADDRESS)) {
-    trackDepositMetric(event.address, event.params.to, event);
+    trackDeposit(event.address, event.params.to, event);
   }
 }

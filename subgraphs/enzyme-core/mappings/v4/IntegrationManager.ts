@@ -5,7 +5,6 @@ import { createAssetAmount } from '../../entities/AssetAmount';
 import { ensureComptroller } from '../../entities/Comptroller';
 import { trackTrade } from '../../entities/Trade';
 import { useVault } from '../../entities/Vault';
-import { trackVaultMetric } from '../../entities/VaultMetric';
 import { CallOnIntegrationExecutedForFund } from '../../generated/contracts/IntegrationManager4Events';
 import { Asset, AssetAmount } from '../../generated/schema';
 
@@ -48,6 +47,4 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
     outgoingAssetAmounts,
     event,
   );
-
-  trackVaultMetric(Address.fromString(vault.id), event);
 }

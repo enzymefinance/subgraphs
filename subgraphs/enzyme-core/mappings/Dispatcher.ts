@@ -6,7 +6,6 @@ import { generateMigrationId, useMigration } from '../entities/Migration';
 import { ensureNetwork } from '../entities/Network';
 import { ensureRelease } from '../entities/Release';
 import { useVault } from '../entities/Vault';
-import { trackVaultMetric } from '../entities/VaultMetric';
 import { release3Addresses, release4Addresses } from '../generated/addresses';
 import {
   CurrentFundDeployerSet,
@@ -103,8 +102,6 @@ export function handleMigrationExecuted(event: MigrationExecuted): void {
   vault.release = ensureRelease(event.params.nextFundDeployer, event).id;
   vault.comptroller = ensureComptroller(Address.fromString(migration.comptroller), event).id;
   vault.save();
-
-  trackVaultMetric(event.params.vaultProxy, event);
 
   // start monitoring the Comptroller Proxy
   let comptrollerContext = new DataSourceContext();

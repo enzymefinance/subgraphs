@@ -2,7 +2,6 @@ import { Address, DataSourceContext } from '@graphprotocol/graph-ts';
 import { ensureAsset } from '../../entities/Asset';
 import { createCompoundDebtPosition, trackCompoundDebtPositionAssets } from '../../entities/CompoundDebtPosition';
 import { ensureComptroller } from '../../entities/Comptroller';
-import { trackVaultMetric } from '../../entities/VaultMetric';
 import {
   CallOnExternalPositionExecutedForFund,
   ExternalPositionDeployedForFund,
@@ -31,10 +30,6 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
   let cdp = CompoundDebtPosition.load(event.params.externalPosition.toHex());
   if (cdp != null) {
     trackCompoundDebtPositionAssets(event.params.externalPosition.toHex(), denominationAsset, event);
-  }
-
-  if (comptrollerProxy.vault) {
-    trackVaultMetric(Address.fromString(comptrollerProxy.vault as string), event);
   }
 }
 

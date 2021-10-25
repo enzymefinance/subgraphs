@@ -1,11 +1,9 @@
 import { arrayDiff, arrayUnique, toBigDecimal, uniqueEventId, ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
 import { ensureAccount, ensureAssetManager, ensureDepositor, ensureOwner } from '../../entities/Account';
 import { getActivityCounter } from '../../entities/Counter';
-import { ensureDeposit } from '../../entities/Deposit';
-import { trackDepositMetric } from '../../entities/DepositMetric';
+import { ensureDeposit, trackDeposit } from '../../entities/Deposit';
 import { useNetwork } from '../../entities/Network';
 import { useVault } from '../../entities/Vault';
-import { trackVaultMetric } from '../../entities/VaultMetric';
 import { release4Addresses } from '../../generated/addresses';
 import {
   AccessorSet,
@@ -40,16 +38,14 @@ import {
 } from '../../generated/schema';
 
 export function handleTransfer(event: Transfer): void {
-  trackVaultMetric(event.address, event);
-
   // only track deposit balance if not zero address
   if (event.params.from.notEqual(ZERO_ADDRESS)) {
-    trackDepositMetric(event.address, event.params.from, event);
+    trackDeposit(event.address, event.params.from, event);
   }
 
   // only track deposit balance if not zero address
   if (event.params.to.notEqual(ZERO_ADDRESS)) {
-    trackDepositMetric(event.address, event.params.to, event);
+    trackDeposit(event.address, event.params.to, event);
   }
 
   if (
@@ -211,8 +207,6 @@ export function handleTrackedAssetAdded(event: TrackedAssetAdded): void {
   let vault = useVault(event.address.toHex());
   vault.trackedAssets = arrayUnique<string>(vault.trackedAssets.concat([trackedAsset.id]));
   vault.save();
-
-  trackVaultMetric(event.address, event);
 }
 
 export function handleTrackedAssetRemoved(event: TrackedAssetRemoved): void {
@@ -221,8 +215,6 @@ export function handleTrackedAssetRemoved(event: TrackedAssetRemoved): void {
   let vault = useVault(event.address.toHex());
   vault.trackedAssets = arrayDiff<string>(vault.trackedAssets, [trackedAsset.id]);
   vault.save();
-
-  trackVaultMetric(event.address, event);
 }
 
 export function handleProtocolFeePaidInShares(event: ProtocolFeePaidInShares): void {
