@@ -25,6 +25,6 @@ export function getRegistrationChangeCounter(): i32 {
   return getCounter('change');
 }
 
-export function getVersionCounter(): i32 {
-  return getCounter('version') + 1;
+export function getReleaseCounter(): i32 {
+  return getCounter('release') + 1;
 }

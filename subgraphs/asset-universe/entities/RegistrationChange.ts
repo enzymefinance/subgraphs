@@ -1,5 +1,5 @@
 import { ethereum } from '@graphprotocol/graph-ts';
-import { Asset, Registration, RegistrationChange, Version } from '../generated/schema';
+import { Asset, Registration, RegistrationChange, Release } from '../generated/schema';
 import { getRegistrationChangeCounter } from './Counter';
 
 function registrationChangeId(registration: Registration, change: string, event: ethereum.Event): string {
@@ -7,7 +7,7 @@ function registrationChangeId(registration: Registration, change: string, event:
 }
 
 export function recordRegistrationChange(
-  version: Version,
+  release: Release,
   asset: Asset,
   registration: Registration,
   change: string,
@@ -18,7 +18,7 @@ export function recordRegistrationChange(
   record.registration = registration.id;
   record.detail = registration.detail;
   record.change = change;
-  record.version = version.id;
+  record.release = release.id;
   record.asset = asset.id;
   record.timestamp = event.block.timestamp.toI32();
   record.block = event.block.number;

@@ -1,24 +1,24 @@
 import { ETH } from '@enzymefinance/subgraph-utils';
 import { Address, ethereum, log } from '@graphprotocol/graph-ts';
 import {
-  wethTokenAddress,
   aavePriceFeedV2Address,
   aavePriceFeedV3Address,
   alphaHomoraV1PriceFeedV2Address,
   alphaHomoraV1PriceFeedV3Address,
-  idlePriceFeedV2Address,
-  stakehoundEthPriceFeedV2Address,
-  synthetixPriceFeedV2Address,
-  uniswapV2PoolPriceFeedV2Address,
-  uniswapV2PoolPriceFeedV3Address,
-  yearnVaultV2PriceFeedV3Address,
   compoundPriceFeedV2Address,
   compoundPriceFeedV3Address,
   curvePriceFeedV2Address,
   curvePriceFeedV3Address,
+  idlePriceFeedV2Address,
   idlePriceFeedV3Address,
+  stakehoundEthPriceFeedV2Address,
   stakehoundEthPriceFeedV3Address,
+  synthetixPriceFeedV2Address,
   synthetixPriceFeedV3Address,
+  uniswapV2PoolPriceFeedV2Address,
+  uniswapV2PoolPriceFeedV3Address,
+  wethTokenAddress,
+  yearnVaultV2PriceFeedV3Address,
 } from '../generated/configuration';
 import { CurveSdk } from '../generated/contracts/CurveSdk';
 import { ProtocolSdk } from '../generated/contracts/ProtocolSdk';
@@ -30,25 +30,25 @@ import {
   CurvePoolRegistrationDetail,
   IdleRegistrationDetail,
   PrimitiveRegistrationDetail,
+  Release,
   StakehoundEthRegistrationDetail,
   SynthetixRegistrationDetail,
   UniswapV2PoolRegistrationDetail,
   UnknownRegistrationDetail,
-  Version,
 } from '../generated/schema';
 import { getOrCreateAsset } from './Asset';
 
-function registrationDetailId(version: Version, asset: Asset, event: ethereum.Event): string {
-  return version.id + '/' + asset.id + '/' + event.transaction.hash.toHex() + '/' + event.logIndex.toString();
+function registrationDetailId(release: Release, asset: Asset, event: ethereum.Event): string {
+  return release.id + '/' + asset.id + '/' + event.transaction.hash.toHex() + '/' + event.logIndex.toString();
 }
 
 export function getOrCreatePrimitiveRegistrationDetail(
-  version: Version,
+  release: Release,
   asset: Asset,
   aggregator: Address,
   event: ethereum.Event,
 ): string {
-  let id = registrationDetailId(version, asset, event);
+  let id = registrationDetailId(release, asset, event);
   let detail = new PrimitiveRegistrationDetail(id);
   detail.aggregator = aggregator;
   detail.save();
@@ -57,12 +57,12 @@ export function getOrCreatePrimitiveRegistrationDetail(
 }
 
 export function getOrCreateDerivativeRegistrationDetail(
-  version: Version,
+  release: Release,
   asset: Asset,
   feed: Address,
   event: ethereum.Event,
 ): string {
-  let id = registrationDetailId(version, asset, event);
+  let id = registrationDetailId(release, asset, event);
   if (feed.equals(aavePriceFeedV2Address) || feed.equals(aavePriceFeedV3Address)) {
     getOrCreateAaveDetail(id, asset, feed);
   } else if (feed.equals(alphaHomoraV1PriceFeedV2Address) || feed.equals(alphaHomoraV1PriceFeedV3Address)) {

@@ -1,15 +1,15 @@
 import { Address } from '@graphprotocol/graph-ts';
-import { Version } from '../generated/schema';
-import { getVersionCounter } from './Counter';
+import { Release } from '../generated/schema';
+import { getReleaseCounter } from './Counter';
 
-export function getOrCreateVersion(address: Address): Version {
+export function getOrCreateRelease(address: Address): Release {
   let id = address.toHex();
-  let version = Version.load(id);
-  if (version == null) {
-    version = new Version(id);
-    version.counter = getVersionCounter();
-    version.save();
+  let release = Release.load(id);
+  if (release == null) {
+    release = new Release(id);
+    release.counter = getReleaseCounter();
+    release.save();
   }
 
-  return version;
+  return release;
 }

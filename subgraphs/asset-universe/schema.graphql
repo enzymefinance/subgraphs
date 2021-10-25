@@ -1,15 +1,15 @@
 #################################################
-# Version
+# Release
 #################################################
 
 """
-A release version.
+A release.
 """
-type Version @entity {
+type Release @entity {
   id: ID!
   counter: Int!
-  changes: [RegistrationChange!]! @derivedFrom(field: "version")
-  registrations: [Registration!]! @derivedFrom(field: "version")
+  changes: [RegistrationChange!]! @derivedFrom(field: "release")
+  registrations: [Registration!]! @derivedFrom(field: "release")
 }
 
 #################################################
@@ -58,9 +58,9 @@ type Registration @entity {
   """
   asset: Asset!
   """
-  The version in which the asset was registered.
+  The release in which the asset was registered.
   """
-  version: Version!
+  release: Release!
   """
   Incremental counter to enable safe scraping.
   """
@@ -264,9 +264,9 @@ type RegistrationChange @entity {
   """
   change: RegistrationChangeType!
   """
-  The version in which the asset was registered.
+  The release in which the asset was registered.
   """
-  version: Version!
+  release: Release!
   """
   The affected asset.
   """

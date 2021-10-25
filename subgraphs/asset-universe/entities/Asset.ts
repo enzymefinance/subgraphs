@@ -1,5 +1,5 @@
 import { Address } from '@graphprotocol/graph-ts';
-import { Asset, Version } from '../generated/schema';
+import { Asset } from '../generated/schema';
 import { tokenDecimalsOrFallback, tokenName, tokenSymbol } from '../utils/tokenCalls';
 import { getAssetCounter } from './Counter';
 
