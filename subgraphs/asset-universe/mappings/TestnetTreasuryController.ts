@@ -1,18 +1,18 @@
 import { ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
 import { getOrCreateAsset } from '../entities/Asset';
 import { createPrimitiveRegistration } from '../entities/Registration';
-import { getOrCreateRelease } from '../entities/Version';
+import { getOrCreateRelease } from '../entities/Release';
 import { releaseV4Address, wethTokenAddress } from '../generated/configuration';
 import { TokenDeployed } from '../generated/contracts/TestnetTreasuryControllerEvents';
 
 export function handleTokenDeployed(event: TokenDeployed): void {
-  let version = getOrCreateRelease(releaseV4Address);
+  let release = getOrCreateRelease(releaseV4Address);
 
   let asset = getOrCreateAsset(event.params.asset);
 
-  createPrimitiveRegistration(version, asset, ZERO_ADDRESS, event);
+  createPrimitiveRegistration(release, asset, ZERO_ADDRESS, event);
 
   // WETH
   let weth = getOrCreateAsset(wethTokenAddress);
-  createPrimitiveRegistration(version, weth, ZERO_ADDRESS, event);
+  createPrimitiveRegistration(release, weth, ZERO_ADDRESS, event);
 }

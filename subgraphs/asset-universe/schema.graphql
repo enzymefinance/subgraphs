@@ -62,6 +62,10 @@ type Registration @entity {
   """
   release: Release!
   """
+  The release counter (used for ordering query results).
+  """
+  releaseCounter: Int!
+  """
   Incremental counter to enable safe scraping.
   """
   counter: Int!

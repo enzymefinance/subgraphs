@@ -17,6 +17,7 @@ export function getOrCreateRegistration(release: Release, asset: Asset, event: e
     registration = new Registration(id);
     registration.asset = asset.id;
     registration.release = release.id;
+    registration.releaseCounter = release.counter;
     registration.counter = getRegistrationCounter();
     registration.added = event.block.timestamp.toI32();
     registration.updated = event.block.timestamp.toI32();
