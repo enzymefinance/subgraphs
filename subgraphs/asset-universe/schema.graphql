@@ -95,12 +95,30 @@ type Registration @entity {
 # Asset registrations details
 #################################################
 
+enum RegistrationDetailType {
+  PRIMITIVE
+  AAVE
+  ALPHA_HOMORA_V1
+  CURVE_POOL
+  COMPOUND
+  IDLE
+  STAKEHOUND_ETH
+  SYNTHETIX
+  UNISWAP_V2_POOL
+  YEARN_VAULT_V2
+  UNKNOWN
+}
+
 interface RegistrationDetail {
   id: ID!
 }
 
 type PrimitiveRegistrationDetail implements RegistrationDetail @entity {
   id: ID!
+  """
+  The registration detail type
+  """
+  type: RegistrationDetailType!
   """
   The chainlink aggregator address for the asset registration.
   """
@@ -109,6 +127,10 @@ type PrimitiveRegistrationDetail implements RegistrationDetail @entity {
 
 type AaveRegistrationDetail implements RegistrationDetail @entity {
   id: ID!
+  """
+  The registration detail type
+  """
+  type: RegistrationDetailType!
   """
   The derivative price feed address for the asset registration.
   """
@@ -121,6 +143,10 @@ type AaveRegistrationDetail implements RegistrationDetail @entity {
 
 type AlphaHomoraV1RegistrationDetail implements RegistrationDetail @entity {
   id: ID!
+  """
+  The registration detail type
+  """
+  type: RegistrationDetailType!
   """
   The derivative price feed address for the asset registration.
   """
@@ -138,6 +164,10 @@ enum CurveAssetType {
 
 type CurvePoolRegistrationDetail implements RegistrationDetail @entity {
   id: ID!
+  """
+  The registration detail type
+  """
+  type: RegistrationDetailType!
   """
   The derivative price feed address for the asset registration.
   """
@@ -179,6 +209,10 @@ type CurvePoolRegistrationDetail implements RegistrationDetail @entity {
 type CompoundRegistrationDetail implements RegistrationDetail @entity {
   id: ID!
   """
+  The registration detail type
+  """
+  type: RegistrationDetailType!
+  """
   The derivative price feed address for the asset registration.
   """
   feed: Bytes!
@@ -190,6 +224,10 @@ type CompoundRegistrationDetail implements RegistrationDetail @entity {
 
 type IdleRegistrationDetail implements RegistrationDetail @entity {
   id: ID!
+  """
+  The registration detail type
+  """
+  type: RegistrationDetailType!
   """
   The derivative price feed address for the asset registration.
   """
@@ -203,6 +241,10 @@ type IdleRegistrationDetail implements RegistrationDetail @entity {
 type StakehoundEthRegistrationDetail implements RegistrationDetail @entity {
   id: ID!
   """
+  The registration detail type
+  """
+  type: RegistrationDetailType!
+  """
   The derivative price feed address for the asset registration.
   """
   feed: Bytes!
@@ -215,6 +257,10 @@ type StakehoundEthRegistrationDetail implements RegistrationDetail @entity {
 type SynthetixRegistrationDetail implements RegistrationDetail @entity {
   id: ID!
   """
+  The registration detail type
+  """
+  type: RegistrationDetailType!
+  """
   The derivative price feed address for the asset registration.
   """
   feed: Bytes!
@@ -222,6 +268,10 @@ type SynthetixRegistrationDetail implements RegistrationDetail @entity {
 
 type UniswapV2PoolRegistrationDetail implements RegistrationDetail @entity {
   id: ID!
+  """
+  The registration detail type
+  """
+  type: RegistrationDetailType!
   """
   The derivative price feed address for the asset registration.
   """
@@ -235,6 +285,10 @@ type UniswapV2PoolRegistrationDetail implements RegistrationDetail @entity {
 type YearnVaultV2RegistrationDetail implements RegistrationDetail @entity {
   id: ID!
   """
+  The registration detail type
+  """
+  type: RegistrationDetailType!
+  """
   The derivative price feed address for the asset registration.
   """
   feed: Bytes!
@@ -246,6 +300,10 @@ type YearnVaultV2RegistrationDetail implements RegistrationDetail @entity {
 
 type UnknownRegistrationDetail implements RegistrationDetail @entity {
   id: ID!
+  """
+  The registration detail type
+  """
+  type: RegistrationDetailType!
   """
   The derivative price feed address for the asset registration.
   """

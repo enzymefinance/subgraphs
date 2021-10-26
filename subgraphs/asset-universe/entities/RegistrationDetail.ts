@@ -50,6 +50,7 @@ export function getOrCreatePrimitiveRegistrationDetail(
 ): string {
   let id = registrationDetailId(release, asset, event);
   let detail = new PrimitiveRegistrationDetail(id);
+  detail.type = 'PRIMITIVE';
   detail.aggregator = aggregator;
   detail.save();
 
@@ -106,6 +107,7 @@ function getOrCreateAaveDetail(id: string, derivative: Asset, feed: Address): vo
   }
 
   let detail = new AaveRegistrationDetail(id);
+  detail.type = 'AAVE';
   detail.feed = feed;
   detail.underlyingAsset = getOrCreateAsset(underlying.value).id;
   detail.save();
@@ -129,6 +131,7 @@ function getOrCreateAlphaHomoraV1Detail(id: string, derivative: Asset, feed: Add
   }
 
   let detail = new AlphaHomoraV1RegistrationDetail(id);
+  detail.type = 'ALPHA_HOMORA_V1';
   detail.feed = feed;
   detail.underlyingAsset = getOrCreateAsset(underlying.value).id;
   detail.save();
@@ -152,6 +155,7 @@ function getOrCreateCompoundDetail(id: string, derivative: Asset, feed: Address)
   }
 
   let detail = new CompoundRegistrationDetail(id);
+  detail.type = 'COMPOUND';
   detail.feed = feed;
   detail.underlyingAsset = getOrCreateAsset(underlying.value).id;
   detail.save();
@@ -229,6 +233,7 @@ export function getOrCreateCurveDetail(id: string, derivative: Asset, feed: Addr
     underlyingAssets.push(getOrCreateAsset(coinsValue[2].equals(ETH) ? wethTokenAddress : coinsValue[2]).id);
   }
 
+  detail.type = 'CURVE_POOL';
   detail.feed = feed;
   detail.underlyingAssets = underlyingAssets;
   detail.save();
@@ -252,6 +257,7 @@ function getOrCreateIdleDetail(id: string, derivative: Asset, feed: Address): vo
   }
 
   let detail = new IdleRegistrationDetail(id);
+  detail.type = 'IDLE';
   detail.feed = feed;
   detail.underlyingAsset = getOrCreateAsset(underlying.value).id;
   detail.save();
@@ -275,6 +281,7 @@ function getOrCreateStakehoundEthDetail(id: string, derivative: Asset, feed: Add
   }
 
   let detail = new StakehoundEthRegistrationDetail(id);
+  detail.type = 'STAKEHOUND_ETH';
   detail.feed = feed;
   detail.underlyingAsset = getOrCreateAsset(underlying.value).id;
   detail.save();
@@ -291,6 +298,7 @@ function getOrCreateSynthetixDetail(id: string, derivative: Asset, feed: Address
   }
 
   let detail = new SynthetixRegistrationDetail(id);
+  detail.type = 'SYNTHETIX';
   detail.feed = feed;
   detail.save();
 }
@@ -316,6 +324,7 @@ function getOrCreateUniswapV2PoolDetail(id: string, derivative: Asset, feed: Add
   let token1 = getOrCreateAsset(underlying.value.value1);
 
   let detail = new UniswapV2PoolRegistrationDetail(id);
+  detail.type = 'UNISWAP_V2_POOL';
   detail.feed = feed;
   detail.underlyingAssets = [token0.id, token1.id];
   detail.save();
@@ -342,6 +351,7 @@ function getOrCreateYearnVaultV2Detail(id: string, derivative: Asset, feed: Addr
   }
 
   let detail = new StakehoundEthRegistrationDetail(id);
+  detail.type = 'YEARN_VAULT_V2';
   detail.feed = feed;
   detail.underlyingAsset = getOrCreateAsset(underlying.value).id;
   detail.save();
@@ -349,6 +359,7 @@ function getOrCreateYearnVaultV2Detail(id: string, derivative: Asset, feed: Addr
 
 function getOrCreateUnknownDetail(id: string, feed: Address): void {
   let detail = new UnknownRegistrationDetail(id);
+  detail.type = 'UNKNOWN';
   detail.feed = feed;
   detail.save();
 }
