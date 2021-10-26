@@ -229,6 +229,7 @@ export function getOrCreateCurveDetail(id: string, derivative: Asset, feed: Addr
     underlyingAssets.push(getOrCreateAsset(coinsValue[2].equals(ETH) ? wethTokenAddress : coinsValue[2]).id);
   }
 
+  detail.feed = feed;
   detail.underlyingAssets = underlyingAssets;
   detail.save();
 }
