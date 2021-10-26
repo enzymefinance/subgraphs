@@ -1,0 +1,89 @@
+"""
+A vault.
+"""
+type Vault @entity {
+  """
+  The address of the vault.
+  """
+  id: ID!
+  """
+  The block at which this vault was deployed.
+  """
+  inception: Int!
+  """
+  The comptroller the vault is currently controlled by.
+  """
+  comptroller: Comptroller!
+  """
+  The release the vault is currently managed by.
+  """
+  release: Release!
+  """
+  Strictly incremental counter for data scraping.
+  """
+  counter: Int!
+  """
+  All comptrollers linked to this vault.
+  """
+  comptrollers: [Comptroller!]! @derivedFrom(field: "vault")
+}
+
+"""
+A comptroller.
+"""
+type Comptroller @entity {
+  """
+  The address of the vault.
+  """
+  id: ID!
+  """
+  The block at which this comptroller took control of the vault.
+  """
+  from: Int!
+  """
+  The block at which this comptroller was migrated away from.
+  """
+  to: Int!
+  """
+  The vault this configuration belongs to.
+  """
+  vault: Vault!
+  """
+  The vault this configuration belongs to.
+  """
+  release: Release!
+  """
+  Strictly incremental counter for data scraping.
+  """
+  counter: Int!
+}
+
+"""
+A release.
+"""
+type Release @entity {
+  id: ID!
+  """
+  Strictly incremental counter for data scraping.
+  """
+  counter: Int!
+  """
+  All vaults currently managed in this release.
+  """
+  vaults: [Vault!]! @derivedFrom(field: "release")
+  """
+  All comptrollers deployed by this release.
+  """
+  comptrollers: [Comptroller!]! @derivedFrom(field: "release")
+}
+
+"""
+Generic counter entity to allow safe data scraping.
+"""
+type Counter @entity {
+  id: ID!
+  """
+  Strictly incremental counter for data scraping.
+  """
+  count: Int!
+}

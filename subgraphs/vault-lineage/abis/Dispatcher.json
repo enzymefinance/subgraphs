@@ -1,0 +1,706 @@
+[
+  {
+    "inputs": [],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "prevFundDeployer",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "nextFundDeployer",
+        "type": "address"
+      }
+    ],
+    "name": "CurrentFundDeployerSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "vaultProxy",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "prevFundDeployer",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "nextFundDeployer",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "nextVaultAccessor",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "nextVaultLib",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "executableTimestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "MigrationCancelled",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "vaultProxy",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "prevFundDeployer",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "nextFundDeployer",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "nextVaultAccessor",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "nextVaultLib",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "executableTimestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "MigrationExecuted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "bytes",
+        "name": "failureReturnData",
+        "type": "bytes"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "vaultProxy",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "prevFundDeployer",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "nextFundDeployer",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "nextVaultAccessor",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "nextVaultLib",
+        "type": "address"
+      }
+    ],
+    "name": "MigrationInCancelHookFailed",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "bytes",
+        "name": "failureReturnData",
+        "type": "bytes"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum IMigrationHookHandler.MigrationOutHook",
+        "name": "hook",
+        "type": "uint8"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "vaultProxy",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "prevFundDeployer",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "nextFundDeployer",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "nextVaultAccessor",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "nextVaultLib",
+        "type": "address"
+      }
+    ],
+    "name": "MigrationOutHookFailed",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "vaultProxy",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "prevFundDeployer",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "nextFundDeployer",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "nextVaultAccessor",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "nextVaultLib",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "executableTimestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "MigrationSignaled",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "prevTimelock",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "nextTimelock",
+        "type": "uint256"
+      }
+    ],
+    "name": "MigrationTimelockSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "nominatedOwner",
+        "type": "address"
+      }
+    ],
+    "name": "NominatedOwnerRemoved",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "nominatedOwner",
+        "type": "address"
+      }
+    ],
+    "name": "NominatedOwnerSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "prevOwner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "nextOwner",
+        "type": "address"
+      }
+    ],
+    "name": "OwnershipTransferred",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "_nextSymbol",
+        "type": "string"
+      }
+    ],
+    "name": "SharesTokenSymbolSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "fundDeployer",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "vaultProxy",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "vaultLib",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "vaultAccessor",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "fundName",
+        "type": "string"
+      }
+    ],
+    "name": "VaultProxyDeployed",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_vaultProxy",
+        "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "_bypassFailure",
+        "type": "bool"
+      }
+    ],
+    "name": "cancelMigration",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "claimOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_vaultLib",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_owner",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_vaultAccessor",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "_fundName",
+        "type": "string"
+      }
+    ],
+    "name": "deployVaultProxy",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "vaultProxy_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_vaultProxy",
+        "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "_bypassFailure",
+        "type": "bool"
+      }
+    ],
+    "name": "executeMigration",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getCurrentFundDeployer",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "currentFundDeployer_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_vaultProxy",
+        "type": "address"
+      }
+    ],
+    "name": "getFundDeployerForVaultProxy",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "fundDeployer_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_vaultProxy",
+        "type": "address"
+      }
+    ],
+    "name": "getMigrationRequestDetailsForVaultProxy",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "nextFundDeployer_",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "nextVaultAccessor_",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "nextVaultLib_",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "executableTimestamp_",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getMigrationTimelock",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "migrationTimelock_",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getNominatedOwner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "nominatedOwner_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getOwner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "owner_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getSharesTokenSymbol",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "sharesTokenSymbol_",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_vaultProxy",
+        "type": "address"
+      }
+    ],
+    "name": "getTimelockRemainingForMigrationRequest",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "secondsRemaining_",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_vaultProxy",
+        "type": "address"
+      }
+    ],
+    "name": "hasExecutableMigrationRequest",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "hasExecutableRequest_",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_vaultProxy",
+        "type": "address"
+      }
+    ],
+    "name": "hasMigrationRequest",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "hasMigrationRequest_",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "removeNominatedOwner",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_nextFundDeployer",
+        "type": "address"
+      }
+    ],
+    "name": "setCurrentFundDeployer",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_nextTimelock",
+        "type": "uint256"
+      }
+    ],
+    "name": "setMigrationTimelock",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_nextNominatedOwner",
+        "type": "address"
+      }
+    ],
+    "name": "setNominatedOwner",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "_nextSymbol",
+        "type": "string"
+      }
+    ],
+    "name": "setSharesTokenSymbol",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_vaultProxy",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_nextVaultAccessor",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_nextVaultLib",
+        "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "_bypassFailure",
+        "type": "bool"
+      }
+    ],
+    "name": "signalMigration",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]
