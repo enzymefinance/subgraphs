@@ -1572,10 +1572,10 @@
   resolved "https://registry.yarnpkg.com/@enzymefinance/prettier-config/-/prettier-config-1.0.4.tgz#fe2e4663b3886ad49604ca728fbff8e4ada38bec"
   integrity sha512-03ewhgADdFu+0uqdhM1ezSknhxqHV9xLdsvHliRxotqKhZx1Lc87nfpb6kVkGq4KyIToPq0VWzPy3XmA68kcxQ==
 
-"@enzymefinance/protocol@^4.0.0-next.1":
-  version "4.0.0-next.1"
-  resolved "https://registry.yarnpkg.com/@enzymefinance/protocol/-/protocol-4.0.0-next.1.tgz#271c2a5b2a4237bb89d8ad5adaa24c334d49b111"
-  integrity sha512-w64Wew+r2VQ4pVkjOHHu4dWxSSbRdfgxleUsUBGYI0Qrv4rF1BHHj3gMlXAlaq8g5arS0mdEOyKQlt+qlx2EHg==
+"@enzymefinance/protocol@^4.0.0-next.2":
+  version "4.0.0-next.2"
+  resolved "https://registry.yarnpkg.com/@enzymefinance/protocol/-/protocol-4.0.0-next.2.tgz#8a271b15c4fb860f5137c7c9654621ee46768c17"
+  integrity sha512-N/fPSGzWkPo+TzMkmQBIA5e/ek7DqcPuVNvaNGzdYPxmVeDWRPi8SCfOxZcwVrnMkWOVbLtSB+9JhpQYSqwSSQ==
   dependencies:
     "@babel/runtime" "^7.15.4"
     "@enzymefinance/ethers" "^1.0.0"
@@ -3578,15 +3578,10 @@ camelcase@^6.2.0:
   resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-6.2.0.tgz#924af881c9d525ac9d87f40d964e5cea982a1809"
   integrity sha512-c7wVvbw3f37nuobQNtgsgG9POC9qMbNuMQmTCqZv23b6MIz0fcYpBiOlv9gEN/hdLdnZTDQhg6e9Dq5M1vKvfg==
 
-caniuse-lite@^1.0.30001219:
-  version "1.0.30001223"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001223.tgz#39b49ff0bfb3ee3587000d2f66c47addc6e14443"
-  integrity sha512-k/RYs6zc/fjbxTjaWZemeSmOjO0JJV+KguOBA3NwPup8uzxM1cMhR2BD9XmO86GuqaqTCO8CgkgH9Rz//vdDiA==
-
-caniuse-lite@^1.0.30001251:
-  version "1.0.30001252"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001252.tgz#cb16e4e3dafe948fc4a9bb3307aea054b912019a"
-  integrity sha512-I56jhWDGMtdILQORdusxBOH+Nl/KgQSdDmpJezYddnAkVOmnoU8zwjTV9xAjMIYxr0iPreEAVylCGcmHCjfaOw==
+caniuse-lite@^1.0.30001219, caniuse-lite@^1.0.30001251:
+  version "1.0.30001274"
+  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001274.tgz"
+  integrity sha512-+Nkvv0fHyhISkiMIjnyjmf5YJcQ1IQHZN6U9TLUMroWR38FNwpsC51Gb68yueafX1V6ifOisInSgP9WJFS13ew==
 
 caseless@~0.12.0:
   version "0.12.0"

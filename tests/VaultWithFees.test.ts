@@ -13,7 +13,7 @@ import {
 } from '@enzymefinance/protocol';
 import { BigNumber, providers, utils, Wallet } from 'ethers';
 import { assertEvent } from './utils/assertions';
-import { Deployment, fetchDeployment } from './utils/deployment';
+import { deployment } from './utils/deployment';
 
 describe('Vault with Fees', () => {
   const ethereumNetwork = process.env.ETHEREUM_NETWORK;
@@ -33,15 +33,7 @@ describe('Vault with Fees', () => {
   let fundDeployerAddress: string;
   let fundDeployer: FundDeployer;
 
-  let deployment: Deployment;
-  let assets: string[];
-
   beforeAll(async () => {
-    const deploymentWithAssets = await fetchDeployment(deploymentEndpoint);
-
-    deployment = deploymentWithAssets.contracts;
-    assets = deploymentWithAssets.assets;
-
     dispatcher = new Dispatcher(deployment.dispatcher, provider);
     fundDeployerAddress = await dispatcher.getCurrentFundDeployer();
     fundDeployer = new FundDeployer(fundDeployerAddress, signer);

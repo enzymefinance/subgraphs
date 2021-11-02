@@ -97,7 +97,7 @@ const mainnet: Variables = {
 
 const kovan: Variables = {
   wethTokenAddress: '0xd0a1e359811322d97991e03f863a0c30c2cf029c',
-  startBlock: 27217130,
+  startBlock: 28110115,
   releaseConfiguration: {
     // v2: {
     //   valueInterpreter: '0xFEE7aEE3907d1657fd2BdcBba8909AF40a144421',

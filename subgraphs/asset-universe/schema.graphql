@@ -111,6 +111,10 @@ enum RegistrationDetailType {
 
 interface RegistrationDetail {
   id: ID!
+  """
+  The registration detail type
+  """
+  type: RegistrationDetailType!
 }
 
 type PrimitiveRegistrationDetail implements RegistrationDetail @entity {

@@ -3,7 +3,7 @@
   "chainId": "42",
   "contracts": {
     "AddressListRegistry": {
-      "address": "0x699020D00F5D8c0B6f174A2A68bd318E98709950",
+      "address": "0xa20b971B979DdC2B0380fD0713e8eCBd781d7637",
       "abi": [
         {
           "inputs": [
@@ -489,7 +489,7 @@
       ]
     },
     "AllowedAdapterIncomingAssetsPolicy": {
-      "address": "0x0595F87f33553512C3C10c16806391CfA0b95275",
+      "address": "0xF507b2bd15b5d5c50c85Dff4a7FECC06254446cd",
       "abi": [
         {
           "inputs": [
@@ -718,7 +718,7 @@
       }
     },
     "AllowedAdaptersPolicy": {
-      "address": "0x18c924289bA21579c730aD0608EeB4a396E6A998",
+      "address": "0x4595758D58e3AA35E8Ad3f6ACA6d1cC025f6EaF1",
       "abi": [
         {
           "inputs": [
@@ -947,7 +947,7 @@
       }
     },
     "AllowedAssetsForRedemptionPolicy": {
-      "address": "0xC3Be4D3b42289F910347a4737B75cC4424dcd8E5",
+      "address": "0x8107c9082799deb74cb14d950F5e485EA84F700a",
       "abi": [
         {
           "inputs": [
@@ -1176,7 +1176,7 @@
       }
     },
     "AllowedDepositRecipientsPolicy": {
-      "address": "0x1719113f17d01c1eBF7adC65521e23FED59f8CBB",
+      "address": "0x07F9A4fEd8c32E1589B88b72deBd9F5123F46ad1",
       "abi": [
         {
           "inputs": [
@@ -1405,7 +1405,7 @@
       }
     },
     "AllowedExternalPositionTypesPolicy": {
-      "address": "0x1A2Db893844Da9e49E71b95F6CCe3f1a403cFfe2",
+      "address": "0x2277dc8C4fC448Edff5C2A3Eaf993DFa0d7f510d",
       "abi": [
         {
           "inputs": [
@@ -1597,7 +1597,7 @@
       }
     },
     "AllowedSharesTransferRecipientsPolicy": {
-      "address": "0x43135597a5E0e8BFdB211Fc5d015c5EDCdc29E88",
+      "address": "0x0B02b1366EdbA995447CB45625153bfE26fA7ab8",
       "abi": [
         {
           "inputs": [
@@ -1826,7 +1826,7 @@
       }
     },
     "AssetFinalityResolver": {
-      "address": "0x3d677e3f6c59299F09CCc32027ad1581F934D7c8",
+      "address": "0x0569219EdF6CC35e2b0B6aB48031aE12CE013b68",
       "abi": [
         {
           "inputs": [
@@ -1849,7 +1849,7 @@
       ]
     },
     "ComptrollerLib": {
-      "address": "0xD5A7B5FcBd9189f58C9dC97CF8505efF27B942D2",
+      "address": "0x9F71d93aFdDA674559bfdCa171a160235fF9b67e",
       "abi": [
         {
           "inputs": [
@@ -2785,7 +2785,7 @@
       "linkedData": {
         "gsn": {
           "relayHub": "0x727862794bdaa3b8Bc4E3705950D4e9397E3bAfd",
-          "relayWorker": "0xf928049a69dfdbd5579b573689bc125b64b2a1bb",
+          "relayWorker": "0xB9C39eAe2FF5a2fcA9B05CA2f1a245Da7dfb1e17",
           "trustedForwarder": "0x7eEae829DF28F9Ce522274D5771A6Be91d00E5ED"
         },
         "policies": {
@@ -2794,7 +2794,8 @@
           }
         },
         "primitives": {
-          "mln": "0x58f7D52B5093E14B9375E16623042087D2DF0610"
+          "mln": "0x90580375f495140FA86d76CB26149418c88140f7",
+          "comp": "0x9C0f204f933DE63B276a57Ac25dF3F60d55B5a29"
         },
         "weth": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
         "unsupportedAssets": {},
@@ -2802,7 +2803,7 @@
       }
     },
     "CumulativeSlippageTolerancePolicy": {
-      "address": "0xa983e028e1c04d492eDd7e9246f871FbC22001F7",
+      "address": "0xf732EF794D1Ad3b69316ba38C617F7527eBD4fA4",
       "abi": [
         {
           "inputs": [
@@ -3250,7 +3251,7 @@
       }
     },
     "DepositWrapper": {
-      "address": "0xcf14F9E745fA2A4e7e34651F428e5777E12dc281",
+      "address": "0x1E769472EB2ce24081d111Be4eF15816A45E3A95",
       "abi": [
         {
           "inputs": [
@@ -3332,7 +3333,7 @@
       ]
     },
     "Dispatcher": {
-      "address": "0xCdb7a704a3aB0C88651F0466d2Ec01c3db5EbF66",
+      "address": "0xC48f7A682FAb8216cf475e6D269f447c54396cb4",
       "abi": [
         {
           "inputs": [],
@@ -4041,7 +4042,7 @@
       ]
     },
     "EntranceRateBurnFee": {
-      "address": "0x566FD72c1f6E67c953a6a4eB4f1B97D34788Fd53",
+      "address": "0xa4F62c7813fA0785A18E7B3De800A05DC9f8EAA3",
       "abi": [
         {
           "inputs": [
@@ -4358,7 +4359,7 @@
       }
     },
     "EntranceRateDirectFee": {
-      "address": "0xD767dA5ce47Ee0d6E32434e6c4A7A630BB3Ce8cA",
+      "address": "0x2D0019845670305cD7D4Df9a4C05c2FBc2691952",
       "abi": [
         {
           "inputs": [
@@ -4712,7 +4713,7 @@
       }
     },
     "ExitRateBurnFee": {
-      "address": "0xDE66712E57f2a866e1Db88D00bfa99bBA24aCd76",
+      "address": "0xae194c97E390517c31A794d76e4bD6B8f1a008F1",
       "abi": [
         {
           "inputs": [
@@ -5060,7 +5061,7 @@
       }
     },
     "ExitRateDirectFee": {
-      "address": "0xd3B35fB2484ceD5550E6227093B6d424d10CC6E4",
+      "address": "0x0a8bc8360ada4274e01516Ddf2909c805f54E5B4",
       "abi": [
         {
           "inputs": [
@@ -5445,7 +5446,7 @@
       }
     },
     "ExternalPositionFactory": {
-      "address": "0x47107F653Ed6e94Aff1Cac325ee994E7B3332385",
+      "address": "0x65a1ADd71e6CA0998B92a303C1BDD12a31043D83",
       "abi": [
         {
           "inputs": [
@@ -5730,7 +5731,7 @@
       ]
     },
     "ExternalPositionManager": {
-      "address": "0x429bfd3f391aD3Bd08398381731c257F208f7dEA",
+      "address": "0x8f3a51c0721fE7A11bCE38970eDAb379B9bF7306",
       "abi": [
         {
           "inputs": [
@@ -6061,7 +6062,7 @@
       ]
     },
     "FeeManager": {
-      "address": "0x1d03D167F9aC6C74Ed0aaDfC1701Ebc2D27C453A",
+      "address": "0xf780bF21a29a1Cd92228Ec8Bf7B724532A0EeEf4",
       "abi": [
         {
           "inputs": [
@@ -6343,7 +6344,7 @@
       ]
     },
     "FundDeployer": {
-      "address": "0xbA4D92DfecFA04385C5B724DbC6BA0eb58e0E284",
+      "address": "0xdc7Fcff86385A86A9BB29472C9165f77b96DDAC8",
       "abi": [
         {
           "inputs": [
@@ -7297,7 +7298,7 @@
       ]
     },
     "GasRelayPaymasterFactory": {
-      "address": "0xeA3BAF90c40F6dAC27DEd987aB2e9d309452D670",
+      "address": "0x80A5FDBC2A8b881E8955183c7cdAB10339E909C8",
       "abi": [
         {
           "inputs": [
@@ -7427,7 +7428,7 @@
       ]
     },
     "GasRelayPaymasterLib": {
-      "address": "0x955b2c316E8F2c6d3b1757c3173515a488aa2a68",
+      "address": "0x5a7D0181582Ca1c762c9de466AFec4a139c49601",
       "abi": [
         {
           "inputs": [
@@ -7857,7 +7858,7 @@
       ]
     },
     "GlobalConfigLib": {
-      "address": "0x39748B663D99c1ff8019103a6403C0025e49fB59",
+      "address": "0x6C7463C669ada235b76Ab9528F8961c4E45F7403",
       "abi": [
         {
           "anonymous": false,
@@ -7940,7 +7941,7 @@
       ]
     },
     "GlobalConfigProxy": {
-      "address": "0x882F1eBEAC5F6D4989AA834aEaB8c12Ef78AcC3d",
+      "address": "0x30F20E6fea3193FE17F9128F6256D4DC0e4BE5BC",
       "abi": [
         {
           "inputs": [
@@ -7965,7 +7966,7 @@
       ]
     },
     "GuaranteedRedemptionPolicy": {
-      "address": "0x1e09017ED4725C96c8521EF2c60006303bc9D16a",
+      "address": "0xb33bE98d6E0a094F4eD79c1040cd90F1a90328b3",
       "abi": [
         {
           "inputs": [
@@ -8370,7 +8371,7 @@
       }
     },
     "IntegrationManager": {
-      "address": "0x732A730e2fb6788A1885a528Ed6E7e6F6c957750",
+      "address": "0x4a9a05E1C8a1f6C61A7903386a21805622a09c8C",
       "abi": [
         {
           "inputs": [
@@ -8584,7 +8585,7 @@
       ]
     },
     "ManagementFee": {
-      "address": "0xA9DBdb7043428f83352932D9e13DF2928308182d",
+      "address": "0xf8D15D2785c943dd7bfA80EFA85270e263e1c023",
       "abi": [
         {
           "inputs": [
@@ -8950,7 +8951,7 @@
       }
     },
     "MinAssetBalancesPostRedemptionPolicy": {
-      "address": "0x255B9Eb41F113472AE0BEb6db94DaeB26A46A124",
+      "address": "0xBd90ec55AE036D3E988a458a375029af9b4382e6",
       "abi": [
         {
           "inputs": [
@@ -9148,7 +9149,7 @@
       }
     },
     "MinMaxInvestmentPolicy": {
-      "address": "0x0e6A7cf345f5c966B6c9ff8075C5a6F9D7Ce00f0",
+      "address": "0x1dCC1cf27280d33B513Ffd39E816472f62f9a7Ec",
       "abi": [
         {
           "inputs": [
@@ -9377,7 +9378,7 @@
       }
     },
     "OnlyRemoveDustExternalPositionPolicy": {
-      "address": "0x829e888Fc3bed572a525016114FEbFe076A9c402",
+      "address": "0xB01B9d1dFdA2f340696e3bb136Aa72A5dcAF1deD",
       "abi": [
         {
           "inputs": [
@@ -9767,7 +9768,7 @@
       }
     },
     "OnlyUntrackDustOrPricelessAssetsPolicy": {
-      "address": "0x2CFF9F3262357aa91dDe4b11F129f44616448469",
+      "address": "0xb8251cedD51C6945806520439FAd5543b6805fd1",
       "abi": [
         {
           "inputs": [
@@ -10157,7 +10158,7 @@
       }
     },
     "PerformanceFee": {
-      "address": "0x7115D8b50FA86c129f7F571Ea402EFe34920E90C",
+      "address": "0x4182B8d416e47e01892eE43b376d19C542833aB9",
       "abi": [
         {
           "inputs": [
@@ -10641,7 +10642,7 @@
       }
     },
     "PolicyManager": {
-      "address": "0x0EAD3C4E6272C8435098497B8A8D903B3F8C1641",
+      "address": "0x1cb8F38Ea49875F834e87D9A23Fd0d78587971d2",
       "abi": [
         {
           "inputs": [
@@ -10992,7 +10993,7 @@
       ]
     },
     "ProtocolFeeReserveLib": {
-      "address": "0xe5319C9FDe0fE925c95571893aa8D1Fcea6F2089",
+      "address": "0x28F03536A501BD2015aB9eF1658c150DeB555c30",
       "abi": [
         {
           "anonymous": false,
@@ -11135,7 +11136,7 @@
       ]
     },
     "ProtocolFeeReserveProxy": {
-      "address": "0x2280228933579d2cEba6f275d2A8BAE3f6ed677D",
+      "address": "0xF4aAc8f4A96eb3d12A87540616C29a3424150C7d",
       "abi": [
         {
           "inputs": [
@@ -11160,7 +11161,7 @@
       ]
     },
     "ProtocolFeeTracker": {
-      "address": "0x14BefF6Cd501229589cCd4dB46ff8624Fba6D73c",
+      "address": "0xf96AF62B14EE70788c046fAcE7A9256798479997",
       "abi": [
         {
           "inputs": [
@@ -11441,8 +11442,117 @@
         }
       ]
     },
+    "TestnetCompoundDebtPosition": {
+      "address": "0xd50D9515B53f6917D69e65ea4bb7ec9c5C567569",
+      "abi": [
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_treasury",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "_compToken",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "constructor"
+        },
+        {
+          "inputs": [],
+          "name": "ETH_ADDRESS",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "TREASURY",
+          "outputs": [
+            {
+              "internalType": "contract TestnetTreasuryController",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "getDebtAssets",
+          "outputs": [
+            {
+              "internalType": "address[]",
+              "name": "assets_",
+              "type": "address[]"
+            },
+            {
+              "internalType": "uint256[]",
+              "name": "amounts_",
+              "type": "uint256[]"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "getManagedAssets",
+          "outputs": [
+            {
+              "internalType": "address[]",
+              "name": "assets_",
+              "type": "address[]"
+            },
+            {
+              "internalType": "uint256[]",
+              "name": "amounts_",
+              "type": "uint256[]"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "bytes",
+              "name": "",
+              "type": "bytes"
+            }
+          ],
+          "name": "init",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "bytes",
+              "name": "_actionData",
+              "type": "bytes"
+            }
+          ],
+          "name": "receiveCallFromVault",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        }
+      ]
+    },
     "TestnetTreasuryController": {
-      "address": "0xc0E0a41a85A4F92E9204488B31ec94Be47ad7401",
+      "address": "0x2546E91C90922F05426b7F016263147D3Cd67B4c",
       "abi": [
         {
           "anonymous": false,
@@ -11700,7 +11810,7 @@
       ]
     },
     "UnpermissionedActionsWrapper": {
-      "address": "0x9D0D7B95A76BBbB63Ac01aC72e763166ceccb67f",
+      "address": "0x9A388fb430c1D918Bc97e8aac798d24fE9E2EeA6",
       "abi": [
         {
           "inputs": [
@@ -11785,7 +11895,7 @@
       ]
     },
     "ValueInterpreter": {
-      "address": "0x7A0626Ef53D8a7aaFc413BE58E3b5C5A96db181d",
+      "address": "0xd62F44b640ffA7E99Cb2e3EEBAc22A90c326d88D",
       "abi": [
         {
           "inputs": [
@@ -11999,7 +12109,7 @@
       ]
     },
     "VaultLib": {
-      "address": "0xdAe656342e3bc2767cdAf8bA35b91B5F4C31081B",
+      "address": "0xd2BD9139A803BCdbd188BeF47650D877972772CB",
       "abi": [
         {
           "inputs": [
