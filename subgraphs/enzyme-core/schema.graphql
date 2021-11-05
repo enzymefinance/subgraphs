@@ -668,7 +668,7 @@ type AllowedExternalPositionTypesPolicy implements Policy @entity {
   createdAt: Int!
   enabled: Boolean!
   settings: String!
-  externalPositionTypes: [Int!]!
+  externalPositionTypes: [BigInt!]!
 }
 
 type AllowedSharesTransferRecipientsPolicy implements Policy @entity {

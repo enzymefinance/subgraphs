@@ -1,4 +1,4 @@
-import { Address, ethereum } from '@graphprotocol/graph-ts';
+import { Address, BigInt, ethereum } from '@graphprotocol/graph-ts';
 import { AllowedExternalPositionTypesPolicy } from '../generated/schema';
 import { policyId } from './Policy';
 
@@ -18,7 +18,7 @@ export function ensureAllowedExternalPositionTypesPolicy(
   policy.policy = policyAddress;
   policy.policyType = 'AllowedExternalPositionTypes';
   policy.comptroller = comptrollerAddress.toHex();
-  policy.externalPositionTypes = new Array<i32>();
+  policy.externalPositionTypes = new Array<BigInt>();
   policy.createdAt = event.block.timestamp.toI32();
   policy.enabled = true;
   policy.settings = '';

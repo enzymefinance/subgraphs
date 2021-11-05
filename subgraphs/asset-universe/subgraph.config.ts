@@ -114,12 +114,12 @@ const kovan: Variables = {
     //   primitivePriceFeedBlock: 24710598,
     // },
     v4: {
-      fundDeployer: '0xbA4D92DfecFA04385C5B724DbC6BA0eb58e0E284',
-      valueInterpreter: '0x7A0626Ef53D8a7aaFc413BE58E3b5C5A96db181d',
+      fundDeployer: '0xdc7Fcff86385A86A9BB29472C9165f77b96DDAC8',
+      valueInterpreter: '0xd62F44b640ffA7E99Cb2e3EEBAc22A90c326d88D',
     },
   },
   testnetConfiguration: {
-    treasuryController: '0xd5590aE02a9bD0011d15FdFea75b808A227bC383',
+    treasuryController: '0x2546E91C90922F05426b7F016263147D3Cd67B4c',
   },
 };
 

@@ -16,7 +16,7 @@ export function ensureUnknownPolicy(
 
   policy = new UnknownPolicy(id);
   policy.policy = policyAddress;
-  policy.policyType = 'UnknownPolicy';
+  policy.policyType = 'Unknown';
   policy.comptroller = comptrollerAddress.toHex();
   policy.createdAt = event.block.timestamp.toI32();
   policy.enabled = true;
