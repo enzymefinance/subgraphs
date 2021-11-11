@@ -313,11 +313,12 @@ type Account @entity {
   depositorSince: Int!
 
   ownerships: [Vault!]! @derivedFrom(field: "owner")
+  ownershipNominations: [Vault!]! @derivedFrom(field: "nominatedOwner")
   authUserships: [Comptroller!]! @derivedFrom(field: "authUsers")
   assetManagements: [Vault!]! @derivedFrom(field: "assetManagers")
+
   deposits: [Deposit!]! @derivedFrom(field: "depositor")
   sharesChanges: [SharesChange!]! @derivedFrom(field: "depositor")
-
   depositorActivity: [DepositorActivity!]! @derivedFrom(field: "depositor")
 }
 
