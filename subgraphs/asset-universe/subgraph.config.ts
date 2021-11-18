@@ -5,6 +5,7 @@ import {
   SdkUserDeclaration,
   Template,
 } from '@enzymefinance/subgraph-cli';
+import { default as v4 } from '../../deployments/local/v4.json';
 
 interface Variables {
   wethTokenAddress: string;
@@ -99,20 +100,6 @@ const kovan: Variables = {
   wethTokenAddress: '0xd0a1e359811322d97991e03f863a0c30c2cf029c',
   startBlock: 28110115,
   releaseConfiguration: {
-    // v2: {
-    //   valueInterpreter: '0xFEE7aEE3907d1657fd2BdcBba8909AF40a144421',
-    //   derivativePriceFeed: '0x1899F9e144A0D47cC1471e797C2b7930adf530b3',
-    //   derivativePriceFeedBlock: 24710069,
-    //   primitivePriceFeed: '0x1dbf40Fc502A61a09c38F5D0f4D07f42AC507606',
-    //   primitivePriceFeedBlock: 24710056,
-    // },
-    // v3: {
-    //   valueInterpreter: '0x92D1D329de7633B788bD4A9727192C2F498e2cA7',
-    //   derivativePriceFeed: '0x5304c3f2c2433e5e37732B46604eEB39725a4883',
-    //   derivativePriceFeedBlock: 24710610,
-    //   primitivePriceFeed: '0x5A49D2a6420362bE3E396C59Fe9280c9f9588Ec3',
-    //   primitivePriceFeedBlock: 24710598,
-    // },
     v4: {
       fundDeployer: '0xdc7Fcff86385A86A9BB29472C9165f77b96DDAC8',
       valueInterpreter: '0xd62F44b640ffA7E99Cb2e3EEBAc22A90c326d88D',
@@ -120,6 +107,17 @@ const kovan: Variables = {
   },
   testnetConfiguration: {
     treasuryController: '0x2546E91C90922F05426b7F016263147D3Cd67B4c',
+  },
+};
+
+const local: Variables = {
+  wethTokenAddress: '0xd0a1e359811322d97991e03f863a0c30c2cf029c',
+  startBlock: 13619920,
+  releaseConfiguration: {
+    v4: {
+      fundDeployer: v4.contracts.FundDeployer.address,
+      valueInterpreter: v4.contracts.ValueInterpreter.address,
+    },
   },
 };
 
@@ -137,8 +135,8 @@ export const contexts: Contexts<Variables> = {
   local: {
     name,
     local: true,
-    network: 'mainnet',
-    variables: mainnet,
+    network: 'local',
+    variables: local,
   },
 };
 

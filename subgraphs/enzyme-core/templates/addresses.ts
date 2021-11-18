@@ -78,7 +78,6 @@ export class Release4Addresses {
   feeManagerAddress: Address;
   fundDeployerAddress: Address;
   gasRelayPaymasterFactoryAddress: Address;
-  globalConfigLibAddress: Address;
   guaranteedRedemptionPolicyAddress: Address;
   integrationManagerAddress: Address;
   managementFeeAddress: Address;
@@ -166,7 +165,6 @@ export let release4Addresses: Release4Addresses = {
   feeManagerAddress: Address.fromString('{{releases.v4.feeManagerAddress}}'),
   fundDeployerAddress: Address.fromString('{{releases.v4.fundDeployerAddress}}'),
   gasRelayPaymasterFactoryAddress: Address.fromString('{{releases.v4.gasRelayPaymasterFactoryAddress}}'),
-  globalConfigLibAddress: Address.fromString('{{releases.v4.globalConfigLibAddress}}'),
   guaranteedRedemptionPolicyAddress: Address.fromString('{{releases.v4.guaranteedRedemptionPolicyAddress}}'),
   integrationManagerAddress: Address.fromString('{{releases.v4.integrationManagerAddress}}'),
   managementFeeAddress: Address.fromString('{{releases.v4.managementFeeAddress}}'),

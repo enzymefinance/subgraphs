@@ -11,6 +11,8 @@ services:
     depends_on:
       - ipfs
       - postgres
+    extra_hosts:
+      - host.docker.internal:host-gateway
     environment:
       postgres_host: postgres
       postgres_user: graph-node
@@ -21,13 +23,12 @@ services:
       RUST_LOG: info
       ETHEREUM_REORG_THRESHOLD: 1
       ETHEREUM_ANCESTOR_COUNT: 1
+      
 
   ipfs:
     image: ipfs/go-ipfs:v0.4.23
     ports:
       - 5001:5001
-    volumes:
-      - ipfs:/data/ipfs
 
   postgres:
     image: postgres
@@ -38,9 +39,3 @@ services:
       POSTGRES_USER: graph-node
       POSTGRES_PASSWORD: let-me-in
       POSTGRES_DB: graph-node
-    volumes:
-      - postgres:/var/lib/postgresql/data
-
-volumes:
-  ipfs:
-  postgres:

@@ -19,7 +19,6 @@ export interface ReleaseVariables {
   feeManagerAddress: string;
   fundDeployerAddress: string;
   gasRelayPaymasterFactoryAddress: string;
-  globalConfigLibAddress: string;
   guaranteedRedemptionPolicyAddress: string;
   integrationManagerAddress: string;
   managementFeeAddress: string;
@@ -54,7 +53,6 @@ export const sources = (variables: ReleaseVariables): DataSourceUserDeclaration[
   { name: 'FeeManager', address: variables.feeManagerAddress },
   { name: 'FundDeployer', address: variables.fundDeployerAddress },
   { name: 'GasRelayPaymasterFactory', address: variables.gasRelayPaymasterFactoryAddress },
-  { name: 'GlobalConfigLib', address: variables.globalConfigLibAddress },
   { name: 'GuaranteedRedemptionPolicy', address: variables.guaranteedRedemptionPolicyAddress },
   { name: 'IntegrationManager', address: variables.integrationManagerAddress },
   { name: 'ManagementFee', address: variables.managementFeeAddress },

@@ -69,7 +69,6 @@ export interface Release4Addresses {
   feeManagerAddress: string;
   fundDeployerAddress: string;
   gasRelayPaymasterFactoryAddress: string;
-  globalConfigLibAddress: string;
   guaranteedRedemptionPolicyAddress: string;
   integrationManagerAddress: string;
   managementFeeAddress: string;

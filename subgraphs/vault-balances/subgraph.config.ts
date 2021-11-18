@@ -6,6 +6,7 @@ import {
   SdkUserDeclaration,
   Template,
 } from '@enzymefinance/subgraph-cli';
+import { default as v4 } from '../../deployments/local/v4.json';
 
 interface Variables {
   dispatcher: string;
@@ -37,11 +38,11 @@ export const contexts: Contexts<Variables> = {
   local: {
     local: true,
     name,
-    network: 'kovan',
+    network: 'local',
     variables: {
-      dispatcher: '0xba9493530494958EC2DeED9c8BB34004ff37Ad28',
+      dispatcher: v4.contracts.Dispatcher.address,
       weth: '0xd0a1e359811322d97991e03f863a0c30c2cf029c',
-      start: 24710049,
+      start: 13619920,
     },
   },
 };

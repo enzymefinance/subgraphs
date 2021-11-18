@@ -1,6 +1,6 @@
 import { Context } from '@enzymefinance/subgraph-cli';
 import { Variables } from '../subgraph.config';
-import { default as v4 } from './deployments/kovan/v4.json';
+import { default as v4 } from '../../../deployments/kovan/v4.json';
 
 export const kovan: Context<Variables> = {
   name: 'enzymefinance/enzyme-core-kovan',
@@ -89,7 +89,6 @@ export const kovan: Context<Variables> = {
         feeManagerAddress: v4.contracts.FeeManager.address,
         fundDeployerAddress: v4.contracts.FundDeployer.address,
         gasRelayPaymasterFactoryAddress: v4.contracts.GasRelayPaymasterFactory.address,
-        globalConfigLibAddress: v4.contracts.GlobalConfigLib.address,
         guaranteedRedemptionPolicyAddress: v4.contracts.GuaranteedRedemptionPolicy.address,
         integrationManagerAddress: v4.contracts.IntegrationManager.address,
         managementFeeAddress: v4.contracts.ManagementFee.address,

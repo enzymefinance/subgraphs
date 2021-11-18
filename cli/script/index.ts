@@ -16,7 +16,7 @@ import { formatJson, sdkDeclaration, sourceDeclaration, templateDeclaration } fr
 const graph = require('@graphprotocol/graph-cli/src/cli').run as (args?: string[]) => Promise<void>;
 const root = path.join(__dirname, '..');
 
-const defaultLocalNode = 'http://127.0.0.1:8020/';
+const defaultLocalNode = 'http://localhost:8020/';
 const defaultLocalIpfs = 'http://localhost:5001/';
 const defaultRemoteNode = 'https://api.thegraph.com/deploy/';
 const defaultRemoteIpfs = 'https://api.thegraph.com/ipfs/';
@@ -255,6 +255,15 @@ yargs
     'Deploy the subgraph.',
     () => {},
     async ({ subgraph }) => {
+      console.log('Generating event abis');
+      await subgraph.generateAbis();
+
+      console.log('Generating subgraph manifest');
+      await subgraph.generateManifest();
+
+      console.log('Generating code');
+      await subgraph.generateCode();
+
       console.log('Deploying subgraph');
       await subgraph.createSubgraph();
       await subgraph.deploySubgraph();

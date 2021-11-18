@@ -12,6 +12,7 @@ import * as v4 from './config/v4';
 import { kovan } from './contexts/kovan';
 import { mainnet } from './contexts/mainnet';
 import { rinkeby } from './contexts/rinkeby';
+import { local } from './contexts/local';
 
 export interface Variables {
   block: number;
@@ -38,6 +39,7 @@ export const contexts: Contexts<Variables> = {
   kovan,
   mainnet,
   rinkeby,
+  local,
 };
 
 export const templates: Template[] = [
