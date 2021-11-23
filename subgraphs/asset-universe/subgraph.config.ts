@@ -96,6 +96,17 @@ const mainnet: Variables = {
   },
 };
 
+const matic: Variables = {
+  wethTokenAddress: '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619',
+  startBlock: 21551925,
+  releaseConfiguration: {
+    v4: {
+      fundDeployer: '0x9177A3354EE50bffBcC42C4c6baC27ed63979097',
+      valueInterpreter: '0xb47502F30315817d7C01FcE163c0F1Ea25715De2',
+    },
+  },
+};
+
 const kovan: Variables = {
   wethTokenAddress: '0xd0a1e359811322d97991e03f863a0c30c2cf029c',
   startBlock: 28110115,
@@ -131,6 +142,11 @@ export const contexts: Contexts<Variables> = {
     name,
     network: 'mainnet',
     variables: mainnet,
+  },
+  matic: {
+    name: `${name}-matic`,
+    network: 'matic',
+    variables: matic,
   },
   local: {
     name,

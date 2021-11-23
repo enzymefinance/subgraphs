@@ -25,6 +25,14 @@ export const contexts: Contexts<Variables> = {
       start: 11681281,
     },
   },
+  matic: {
+    name: `${name}-matic`,
+    network: 'matic',
+    variables: {
+      dispatcher: '0xC80bD25cd46e49277CcB56E751704A6316Af30aD',
+      start: 21551925,
+    },
+  },
   local: {
     local: true,
     name,

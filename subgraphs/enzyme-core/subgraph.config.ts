@@ -10,9 +10,10 @@ import * as v2 from './config/v2';
 import * as v3 from './config/v3';
 import * as v4 from './config/v4';
 import { kovan } from './contexts/kovan';
-import { mainnet } from './contexts/mainnet';
-import { rinkeby } from './contexts/rinkeby';
 import { local } from './contexts/local';
+import { mainnet } from './contexts/mainnet';
+import { matic } from './contexts/matic';
+import { rinkeby } from './contexts/rinkeby';
 
 export interface Variables {
   block: number;
@@ -38,6 +39,7 @@ export interface Variables {
 export const contexts: Contexts<Variables> = {
   kovan,
   mainnet,
+  matic,
   rinkeby,
   local,
 };
