@@ -3292,64 +3292,25 @@
       "linkedData": {
         "aave": {
           "atokens": {
-            "aaave": [
-              "0x1d2a0E5EC8E5bBDCA5CB219e649B565d8e5c3360",
-              "0xD6DF932A45C0f255f85145f286eA0b292B21C90B"
-            ],
-            "adai": [
-              "0x27F8D03b3a2196956ED754baDc28D73be8830A6e",
-              "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063"
-            ],
-            "ausdc": [
-              "0x1a13F4Ca1d028320A707D99520AbFefca3998b7F",
-              "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174"
-            ],
-            "ausdt": [
-              "0x60D55F02A771d515e077c9C2403a1ef324885CeC",
-              "0xc2132D05D31c914a87C6611C10748AEb04B58e8F"
-            ],
-            "awbtc": [
-              "0x5c2ed810328349100A66B82b78a1791B101C9D61",
-              "0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6"
-            ],
-            "aweth": [
-              "0x28424507fefb6f7f8E9D3860F56504E4e5f5f390",
-              "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619"
-            ],
-            "awmatic": [
-              "0x8dF3aad3a84da6b69A4DA8aeC3eA40d9091B2Ac4",
-              "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270"
-            ]
+            "aaave": ["0x1d2a0E5EC8E5bBDCA5CB219e649B565d8e5c3360", "0xD6DF932A45C0f255f85145f286eA0b292B21C90B"],
+            "adai": ["0x27F8D03b3a2196956ED754baDc28D73be8830A6e", "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063"],
+            "ausdc": ["0x1a13F4Ca1d028320A707D99520AbFefca3998b7F", "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174"],
+            "ausdt": ["0x60D55F02A771d515e077c9C2403a1ef324885CeC", "0xc2132D05D31c914a87C6611C10748AEb04B58e8F"],
+            "awbtc": ["0x5c2ed810328349100A66B82b78a1791B101C9D61", "0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6"],
+            "aweth": ["0x28424507fefb6f7f8E9D3860F56504E4e5f5f390", "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619"],
+            "awmatic": ["0x8dF3aad3a84da6b69A4DA8aeC3eA40d9091B2Ac4", "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270"]
           },
           "lendingPoolAddressProvider": "0xd05e3E715d945B59290df0ae8eF85c1BdB684744",
           "protocolDataProvider": "0x7551b5D2763519d4e37e8B81929D336De671d46d"
         },
         "chainlink": {
           "aggregators": {
-            "aave": [
-              "0xbE23a3AA13038CfC28aFd0ECe4FdE379fE7fBfc4",
-              "0"
-            ],
-            "dai": [
-              "0xFC539A559e170f848323e19dfD66007520510085",
-              "0"
-            ],
-            "usdc": [
-              "0xefb7e6be8356cCc6827799B6A7348eE674A80EaE",
-              "0"
-            ],
-            "usdt": [
-              "0xf9d5AAC6E5572AEFa6bd64108ff86a222F69B64d",
-              "0"
-            ],
-            "wbtc": [
-              "0x19b0F0833C78c0848109E3842D34d2fDF2cA69BA",
-              "0"
-            ],
-            "wmatic": [
-              "0x327e23A4855b6F663a28c5161541d69Af8973302",
-              "0"
-            ]
+            "aave": ["0xbE23a3AA13038CfC28aFd0ECe4FdE379fE7fBfc4", "0"],
+            "dai": ["0xFC539A559e170f848323e19dfD66007520510085", "0"],
+            "usdc": ["0xefb7e6be8356cCc6827799B6A7348eE674A80EaE", "0"],
+            "usdt": ["0xf9d5AAC6E5572AEFa6bd64108ff86a222F69B64d", "0"],
+            "wbtc": ["0x19b0F0833C78c0848109E3842D34d2fDF2cA69BA", "0"],
+            "wmatic": ["0x327e23A4855b6F663a28c5161541d69Af8973302", "0"]
           },
           "ethusd": "0xF9680D99D6C9589e2a93a78A04A279e509205945"
         },

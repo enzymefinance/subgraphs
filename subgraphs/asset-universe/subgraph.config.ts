@@ -98,11 +98,11 @@ const mainnet: Variables = {
 
 const matic: Variables = {
   wethTokenAddress: '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619',
-  startBlock: 21551925,
+  startBlock: 21708066,
   releaseConfiguration: {
     v4: {
-      fundDeployer: '0x9177A3354EE50bffBcC42C4c6baC27ed63979097',
-      valueInterpreter: '0xb47502F30315817d7C01FcE163c0F1Ea25715De2',
+      fundDeployer: '0x1C1B94812Faf3dE496a2634B36C1FbC6e5c222e7',
+      valueInterpreter: '0x4D586784241C2214207cF97cd0cb59C0538d6Fd9',
     },
   },
 };

@@ -6,8 +6,8 @@ export const matic: Context<Variables> = {
   name: 'enzymefinance/enzyme-core-matic',
   network: 'matic',
   variables: {
-    block: 21551925,
-    dispatcherAddress: '0xC80bD25cd46e49277CcB56E751704A6316Af30aD',
+    block: 21708066,
+    dispatcherAddress: '0x402A81aD2972a017B4564453E69afaE2b006A7E2',
     wethTokenAddress: '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619',
     chainlinkAggregatorAddresses: {
       audUsd: '0x062Df9C4efd2030e243ffCc398b652e8b8F95C6f',
@@ -88,7 +88,7 @@ export const matic: Context<Variables> = {
         externalPositionManagerAddress: v4.contracts.ExternalPositionManager.address,
         feeManagerAddress: v4.contracts.FeeManager.address,
         fundDeployerAddress: v4.contracts.FundDeployer.address,
-        gasRelayPaymasterFactoryAddress: '0x0000000000000000000000000000000000000000',
+        gasRelayPaymasterFactoryAddress: v4.contracts.GasRelayPaymasterFactory.address,
         guaranteedRedemptionPolicyAddress: '0x0000000000000000000000000000000000000000',
         integrationManagerAddress: v4.contracts.IntegrationManager.address,
         managementFeeAddress: v4.contracts.ManagementFee.address,
