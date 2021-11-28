@@ -3,22 +3,30 @@ import { Address, ethereum, log } from '@graphprotocol/graph-ts';
 import {
   aavePriceFeedV2Address,
   aavePriceFeedV3Address,
+  aavePriceFeedV4Address,
   alphaHomoraV1PriceFeedV2Address,
   alphaHomoraV1PriceFeedV3Address,
   compoundPriceFeedV2Address,
   compoundPriceFeedV3Address,
+  compoundPriceFeedV4Address,
   curvePriceFeedV2Address,
   curvePriceFeedV3Address,
+  curvePriceFeedV4Address,
   idlePriceFeedV2Address,
   idlePriceFeedV3Address,
+  idlePriceFeedV4Address,
   stakehoundEthPriceFeedV2Address,
   stakehoundEthPriceFeedV3Address,
+  stakehoundEthPriceFeedV4Address,
   synthetixPriceFeedV2Address,
   synthetixPriceFeedV3Address,
+  synthetixPriceFeedV4Address,
   uniswapV2PoolPriceFeedV2Address,
   uniswapV2PoolPriceFeedV3Address,
+  uniswapV2PoolPriceFeedV4Address,
   wethTokenAddress,
   yearnVaultV2PriceFeedV3Address,
+  yearnVaultV2PriceFeedV4Address,
 } from '../generated/configuration';
 import { CurveSdk } from '../generated/contracts/CurveSdk';
 import { ProtocolSdk } from '../generated/contracts/ProtocolSdk';
@@ -64,23 +72,51 @@ export function getOrCreateDerivativeRegistrationDetail(
   event: ethereum.Event,
 ): string {
   let id = registrationDetailId(release, asset, event);
-  if (feed.equals(aavePriceFeedV2Address) || feed.equals(aavePriceFeedV3Address)) {
+  if (
+    feed.equals(aavePriceFeedV2Address) ||
+    feed.equals(aavePriceFeedV3Address) ||
+    feed.equals(aavePriceFeedV4Address)
+  ) {
     getOrCreateAaveDetail(id, asset, feed);
   } else if (feed.equals(alphaHomoraV1PriceFeedV2Address) || feed.equals(alphaHomoraV1PriceFeedV3Address)) {
     getOrCreateAlphaHomoraV1Detail(id, asset, feed);
-  } else if (feed.equals(compoundPriceFeedV2Address) || feed.equals(compoundPriceFeedV3Address)) {
+  } else if (
+    feed.equals(compoundPriceFeedV2Address) ||
+    feed.equals(compoundPriceFeedV3Address) ||
+    feed.equals(compoundPriceFeedV4Address)
+  ) {
     getOrCreateCompoundDetail(id, asset, feed);
-  } else if (feed.equals(curvePriceFeedV2Address) || feed.equals(curvePriceFeedV3Address)) {
+  } else if (
+    feed.equals(curvePriceFeedV2Address) ||
+    feed.equals(curvePriceFeedV3Address) ||
+    feed.equals(curvePriceFeedV4Address)
+  ) {
     getOrCreateCurveDetail(id, asset, feed);
-  } else if (feed.equals(idlePriceFeedV2Address) || feed.equals(idlePriceFeedV3Address)) {
+  } else if (
+    feed.equals(idlePriceFeedV2Address) ||
+    feed.equals(idlePriceFeedV3Address) ||
+    feed.equals(idlePriceFeedV4Address)
+  ) {
     getOrCreateIdleDetail(id, asset, feed);
-  } else if (feed.equals(stakehoundEthPriceFeedV2Address) || feed.equals(stakehoundEthPriceFeedV3Address)) {
+  } else if (
+    feed.equals(stakehoundEthPriceFeedV2Address) ||
+    feed.equals(stakehoundEthPriceFeedV3Address) ||
+    feed.equals(stakehoundEthPriceFeedV4Address)
+  ) {
     getOrCreateStakehoundEthDetail(id, asset, feed);
-  } else if (feed.equals(synthetixPriceFeedV2Address) || feed.equals(synthetixPriceFeedV3Address)) {
+  } else if (
+    feed.equals(synthetixPriceFeedV2Address) ||
+    feed.equals(synthetixPriceFeedV3Address) ||
+    feed.equals(synthetixPriceFeedV4Address)
+  ) {
     getOrCreateSynthetixDetail(id, asset, feed);
-  } else if (feed.equals(uniswapV2PoolPriceFeedV2Address) || feed.equals(uniswapV2PoolPriceFeedV3Address)) {
+  } else if (
+    feed.equals(uniswapV2PoolPriceFeedV2Address) ||
+    feed.equals(uniswapV2PoolPriceFeedV3Address) ||
+    feed.equals(uniswapV2PoolPriceFeedV4Address)
+  ) {
     getOrCreateUniswapV2PoolDetail(id, asset, feed);
-  } else if (feed.equals(yearnVaultV2PriceFeedV3Address)) {
+  } else if (feed.equals(yearnVaultV2PriceFeedV3Address) || feed.equals(yearnVaultV2PriceFeedV4Address)) {
     getOrCreateYearnVaultV2Detail(id, asset, feed);
   } else {
     getOrCreateUnknownDetail(id, feed);

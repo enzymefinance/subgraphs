@@ -30,3 +30,13 @@ export let synthetixPriceFeedV3Address = Address.fromString('{{or releaseConfigu
 export let uniswapV2PoolPriceFeedV3Address = Address.fromString('{{or releaseConfiguration.v3.uniswapV2PoolPriceFeed "0x0000000000000000000000000000000000000000"}}');
 export let wdgldPriceFeedV3Address = Address.fromString('{{or releaseConfiguration.v3.wdgldPriceFeed "0x0000000000000000000000000000000000000000"}}');
 export let yearnVaultV2PriceFeedV3Address = Address.fromString('{{or releaseConfiguration.v3.yearnVaultV2PriceFeed "0x0000000000000000000000000000000000000000"}}');
+
+export let aavePriceFeedV4Address = Address.fromString('{{or releaseConfiguration.v4.aavePriceFeed "0x0000000000000000000000000000000000000000"}}'.toLowerCase());
+export let compoundPriceFeedV4Address = Address.fromString('{{or releaseConfiguration.v4.compoundPriceFeed "0x0000000000000000000000000000000000000000"}}');
+export let curvePriceFeedV4Address = Address.fromString('{{or releaseConfiguration.v4.curvePriceFeed "0x0000000000000000000000000000000000000000"}}');
+export let idlePriceFeedV4Address = Address.fromString('{{or releaseConfiguration.v4.idlePriceFeed "0x0000000000000000000000000000000000000000"}}');
+export let lidoStethPriceFeedV4Address = Address.fromString('{{or releaseConfiguration.v4.lidoStethPriceFeed "0x0000000000000000000000000000000000000000"}}');
+export let stakehoundEthPriceFeedV4Address = Address.fromString('{{or releaseConfiguration.v4.stakehoundEthPriceFeed "0x0000000000000000000000000000000000000000"}}');
+export let synthetixPriceFeedV4Address = Address.fromString('{{or releaseConfiguration.v4.synthetixPriceFeed "0x0000000000000000000000000000000000000000"}}');
+export let uniswapV2PoolPriceFeedV4Address = Address.fromString('{{or releaseConfiguration.v4.uniswapV2PoolPriceFeed "0x0000000000000000000000000000000000000000"}}');
+export let yearnVaultV2PriceFeedV4Address = Address.fromString('{{or releaseConfiguration.v4.yearnVaultV2PriceFeed "0x0000000000000000000000000000000000000000"}}');

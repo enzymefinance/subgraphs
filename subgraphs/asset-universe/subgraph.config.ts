@@ -5,7 +5,8 @@ import {
   SdkUserDeclaration,
   Template,
 } from '@enzymefinance/subgraph-cli';
-import { default as v4 } from '../../deployments/local/v4.json';
+import { default as v4Local } from '../../deployments/local/v4.json';
+import { default as v4Kovan, default as v4Matic } from '../../deployments/matic/v4.json';
 
 interface Variables {
   wethTokenAddress: string;
@@ -45,6 +46,15 @@ interface Variables {
     v4?: {
       fundDeployer: string;
       valueInterpreter: string;
+      aavePriceFeed: string;
+      compoundPriceFeed: string;
+      curvePriceFeed: string;
+      idlePriceFeed: string;
+      lidoStethPriceFeed: string;
+      stakehoundEthPriceFeed: string;
+      synthetixPriceFeed: string;
+      uniswapV2PoolPriceFeed: string;
+      yearnVaultV2PriceFeed: string;
     };
   };
   testnetConfiguration?: {
@@ -92,6 +102,15 @@ const mainnet: Variables = {
     v4: {
       fundDeployer: '0x0000000000000000000000000000000000000000',
       valueInterpreter: '0x0000000000000000000000000000000000000000',
+      aavePriceFeed: '0x0000000000000000000000000000000000000000',
+      compoundPriceFeed: '0x0000000000000000000000000000000000000000',
+      curvePriceFeed: '0x0000000000000000000000000000000000000000',
+      idlePriceFeed: '0x0000000000000000000000000000000000000000',
+      lidoStethPriceFeed: '0x0000000000000000000000000000000000000000',
+      stakehoundEthPriceFeed: '0x0000000000000000000000000000000000000000',
+      synthetixPriceFeed: '0x0000000000000000000000000000000000000000',
+      uniswapV2PoolPriceFeed: '0x0000000000000000000000000000000000000000',
+      yearnVaultV2PriceFeed: '0x0000000000000000000000000000000000000000',
     },
   },
 };
@@ -103,6 +122,15 @@ const matic: Variables = {
     v4: {
       fundDeployer: '0x1C1B94812Faf3dE496a2634B36C1FbC6e5c222e7',
       valueInterpreter: '0x4D586784241C2214207cF97cd0cb59C0538d6Fd9',
+      aavePriceFeed: v4Matic.contracts.AavePriceFeed.address,
+      compoundPriceFeed: '0x0000000000000000000000000000000000000000',
+      curvePriceFeed: '0x0000000000000000000000000000000000000000',
+      idlePriceFeed: '0x0000000000000000000000000000000000000000',
+      lidoStethPriceFeed: '0x0000000000000000000000000000000000000000',
+      stakehoundEthPriceFeed: '0x0000000000000000000000000000000000000000',
+      synthetixPriceFeed: '0x0000000000000000000000000000000000000000',
+      uniswapV2PoolPriceFeed: '0x0000000000000000000000000000000000000000',
+      yearnVaultV2PriceFeed: '0x0000000000000000000000000000000000000000',
     },
   },
 };
@@ -114,6 +142,15 @@ const kovan: Variables = {
     v4: {
       fundDeployer: '0xdc7Fcff86385A86A9BB29472C9165f77b96DDAC8',
       valueInterpreter: '0xd62F44b640ffA7E99Cb2e3EEBAc22A90c326d88D',
+      aavePriceFeed: v4Kovan.contracts.AavePriceFeed.address,
+      compoundPriceFeed: '0x0000000000000000000000000000000000000000',
+      curvePriceFeed: '0x0000000000000000000000000000000000000000',
+      idlePriceFeed: '0x0000000000000000000000000000000000000000',
+      lidoStethPriceFeed: '0x0000000000000000000000000000000000000000',
+      stakehoundEthPriceFeed: '0x0000000000000000000000000000000000000000',
+      synthetixPriceFeed: '0x0000000000000000000000000000000000000000',
+      uniswapV2PoolPriceFeed: '0x0000000000000000000000000000000000000000',
+      yearnVaultV2PriceFeed: '0x0000000000000000000000000000000000000000',
     },
   },
   testnetConfiguration: {
@@ -126,8 +163,17 @@ const local: Variables = {
   startBlock: 13619920,
   releaseConfiguration: {
     v4: {
-      fundDeployer: v4.contracts.FundDeployer.address,
-      valueInterpreter: v4.contracts.ValueInterpreter.address,
+      fundDeployer: v4Local.contracts.FundDeployer.address,
+      valueInterpreter: v4Local.contracts.ValueInterpreter.address,
+      aavePriceFeed: v4Local.contracts.AavePriceFeed.address,
+      compoundPriceFeed: v4Local.contracts.CompoundPriceFeed.address,
+      curvePriceFeed: v4Local.contracts.CurvePriceFeed.address,
+      idlePriceFeed: v4Local.contracts.IdlePriceFeed.address,
+      lidoStethPriceFeed: v4Local.contracts.LidoStethPriceFeed.address,
+      stakehoundEthPriceFeed: v4Local.contracts.StakehoundEthPriceFeed.address,
+      synthetixPriceFeed: v4Local.contracts.SynthetixPriceFeed.address,
+      uniswapV2PoolPriceFeed: v4Local.contracts.UniswapV2PoolPriceFeed.address,
+      yearnVaultV2PriceFeed: v4Local.contracts.YearnVaultV2PriceFeed.address,
     },
   },
 };
