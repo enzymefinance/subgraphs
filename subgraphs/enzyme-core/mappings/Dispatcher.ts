@@ -144,8 +144,10 @@ export function handleMigrationSignaled(event: MigrationSignaled): void {
     event.params.executableTimestamp,
   );
 
+  let vault = useVault(event.params.vaultProxy.toHex());
+
   let migration = new Migration(migrationId);
-  migration.vault = useVault(event.params.vaultProxy.toHex()).id;
+  migration.vault = vault.id;
   migration.comptroller = ensureComptroller(event.params.nextVaultAccessor, event).id;
   migration.prevRelease = ensureRelease(event.params.prevFundDeployer, event).id;
   migration.nextRelease = ensureRelease(event.params.nextFundDeployer, event).id;
@@ -153,8 +155,6 @@ export function handleMigrationSignaled(event: MigrationSignaled): void {
   migration.cancelled = false;
   migration.executed = false;
   migration.save();
-
-  let vault = useVault(event.params.vaultProxy.toHex());
 
   let comptrollerProxy = ensureComptroller(event.params.nextVaultAccessor, event);
   comptrollerProxy.vault = vault.id;

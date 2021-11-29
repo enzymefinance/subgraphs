@@ -42,7 +42,7 @@ export function createVault(
 export function useVault(id: string): Vault {
   let vault = Vault.load(id);
   if (vault == null) {
-    logCritical('Failed to load fund {}.', [id]);
+    logCritical('Failed to load vault {}.', [id]);
   }
 
   return vault as Vault;

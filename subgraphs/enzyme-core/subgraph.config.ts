@@ -61,7 +61,6 @@ export const configure: Configurator<Variables> = (variables) => {
       abi.getEvent('MigrationExecuted'),
       abi.getEvent('CurrentFundDeployerSet'),
       abi.getEvent('MigrationCancelled'),
-      abi.getEvent('MigrationExecuted'),
       abi.getEvent('MigrationSignaled'),
       abi.getEvent('MigrationTimelockSet'),
       abi.getEvent('NominatedOwnerSet'),
@@ -71,7 +70,6 @@ export const configure: Configurator<Variables> = (variables) => {
       abi.getEvent('MigrationInCancelHookFailed'),
       abi.getEvent('MigrationOutHookFailed'),
       abi.getEvent('SharesTokenSymbolSet'),
-      abi.getEvent('VaultProxyDeployed'),
     ],
   };
 
