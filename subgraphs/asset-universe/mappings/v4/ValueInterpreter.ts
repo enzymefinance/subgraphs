@@ -1,3 +1,4 @@
+import { ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
 import { getOrCreateAsset } from '../../entities/Asset';
 import {
   createDerivativeRegistration,
@@ -6,7 +7,7 @@ import {
   removePrimitiveRegistration,
 } from '../../entities/Registration';
 import { getOrCreateRelease } from '../../entities/Release';
-import { releaseV4Address } from '../../generated/configuration';
+import { releaseV4Address, wethTokenAddress } from '../../generated/configuration';
 import {
   DerivativeAdded,
   DerivativeRemoved,
@@ -31,6 +32,9 @@ export function handlePrimitiveAdded(event: PrimitiveAdded): void {
   let release = getOrCreateRelease(releaseV4Address);
   let asset = getOrCreateAsset(event.params.primitive);
   createPrimitiveRegistration(release, asset, event.params.aggregator, event);
+  // WETH
+  let weth = getOrCreateAsset(wethTokenAddress);
+  createPrimitiveRegistration(release, weth, ZERO_ADDRESS, event);
 }
 
 export function handlePrimitiveRemoved(event: PrimitiveRemoved): void {

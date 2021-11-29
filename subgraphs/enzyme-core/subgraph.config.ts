@@ -52,12 +52,27 @@ export const templates: Template[] = [
 ];
 
 export const configure: Configurator<Variables> = (variables) => {
-  const dispatcher = {
-    source: {
-      name: 'Dispatcher',
-      block: variables.block,
-      address: variables.dispatcherAddress,
-    },
+  const dispatcher: DataSourceUserDeclaration = {
+    name: 'Dispatcher',
+    block: variables.block,
+    address: variables.dispatcherAddress,
+    events: (abi) => [
+      abi.getEvent('VaultProxyDeployed'),
+      abi.getEvent('MigrationExecuted'),
+      abi.getEvent('CurrentFundDeployerSet'),
+      abi.getEvent('MigrationCancelled'),
+      abi.getEvent('MigrationExecuted'),
+      abi.getEvent('MigrationSignaled'),
+      abi.getEvent('MigrationTimelockSet'),
+      abi.getEvent('NominatedOwnerSet'),
+      abi.getEvent('NominatedOwnerRemoved'),
+      abi.getEvent('OwnershipTransferred'),
+      abi.getEvent('MigrationInCancelHookFailed'),
+      abi.getEvent('MigrationInCancelHookFailed'),
+      abi.getEvent('MigrationOutHookFailed'),
+      abi.getEvent('SharesTokenSymbolSet'),
+      abi.getEvent('VaultProxyDeployed'),
+    ],
   };
 
   const sdks: SdkUserDeclaration[] = [
@@ -130,7 +145,7 @@ export const configure: Configurator<Variables> = (variables) => {
   ];
 
   const sources: DataSourceUserDeclaration[] = [
-    dispatcher.source,
+    dispatcher,
     ...v2.sources(variables.releases.v2).map((item) => ({ ...item, version: 2, block: variables.block })),
     ...v3.sources(variables.releases.v3).map((item) => ({ ...item, version: 3, block: variables.block })),
     ...v4.sources(variables.releases.v4).map((item) => ({ ...item, version: 4, block: variables.block })),
