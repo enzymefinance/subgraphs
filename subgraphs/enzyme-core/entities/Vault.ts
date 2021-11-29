@@ -1,5 +1,5 @@
 import { logCritical } from '@enzymefinance/subgraph-utils';
-import { Address, BigDecimal, BigInt } from '@graphprotocol/graph-ts';
+import { Address, BigInt } from '@graphprotocol/graph-ts';
 import { Account, Comptroller, Release, Vault, VaultCreated } from '../generated/schema';
 import { getActivityCounter, getVaultCounter } from './Counter';
 
@@ -23,7 +23,6 @@ export function createVault(
   vault.assetManagers = new Array<string>();
   vault.trackedAssets = new Array<string>();
   vault.freelyTransferableShares = false;
-  vault.totalSupply = BigDecimal.fromString('0');
   vault.depositCount = 0;
   vault.save();
 
