@@ -6,7 +6,9 @@ import { ensureAllowedExternalPositionTypesPolicy } from '../../entities/Allowed
 import { ensureAllowedSharesTransferRecipientsPolicy } from '../../entities/AllowedSharesTransferRecipientsPolicy';
 import { ensureCumulativeSlippageTolerancePolicy } from '../../entities/CumulativeSlippageTolerancePolicy';
 import { ensureGuaranteedRedemptionPolicy } from '../../entities/GuaranteedRedemptionPolicy';
+import { ensureMinAssetBalancesPostRedemptionPolicy } from '../../entities/MinAssetBalancesPostRedemptionPolicy';
 import { ensureMinMaxDepositPolicy } from '../../entities/MinMaxDepositPolicy';
+import { ensureOnlyRemoveDustExternalPositionPolicy } from '../../entities/OnlyRemoveDustExternalPositionPolicy';
 import { ensureOnlyUntrackDustOrPricelessAssetsPolicy } from '../../entities/OnlyUntrackDustOrPricelessAssetsPolicy';
 import { ensureUnknownPolicy } from '../../entities/UnknownPolicy';
 import { release4Addresses } from '../../generated/addresses';
@@ -80,8 +82,24 @@ export function handlePolicyEnabledForFund(event: PolicyEnabledForFund): void {
     return;
   }
 
+  if (event.params.policy.equals(release4Addresses.minAssetBalancesPostRedemptionPolicyAddress)) {
+    let policy = ensureMinAssetBalancesPostRedemptionPolicy(comptrollerAddress, policyAddress, event);
+    policy.enabled = true;
+    policy.settings = event.params.settingsData.toHex();
+    policy.save();
+    return;
+  }
+
   if (event.params.policy.equals(release4Addresses.minMaxInvestmentPolicyAddress)) {
     let policy = ensureMinMaxDepositPolicy(comptrollerAddress, policyAddress, event);
+    policy.enabled = true;
+    policy.settings = event.params.settingsData.toHex();
+    policy.save();
+    return;
+  }
+
+  if (event.params.policy.equals(release4Addresses.onlyRemoveDustExternalPositionPolicyAddress)) {
+    let policy = ensureOnlyRemoveDustExternalPositionPolicy(comptrollerAddress, policyAddress, event);
     policy.enabled = true;
     policy.settings = event.params.settingsData.toHex();
     policy.save();
@@ -162,8 +180,22 @@ export function handlePolicyDisabledForFund(event: PolicyDisabledForFund): void 
     return;
   }
 
+  if (event.params.policy.equals(release4Addresses.minAssetBalancesPostRedemptionPolicyAddress)) {
+    let policy = ensureMinAssetBalancesPostRedemptionPolicy(comptrollerAddress, policyAddress, event);
+    policy.enabled = false;
+    policy.save();
+    return;
+  }
+
   if (event.params.policy.equals(release4Addresses.minMaxInvestmentPolicyAddress)) {
     let policy = ensureMinMaxDepositPolicy(comptrollerAddress, policyAddress, event);
+    policy.enabled = false;
+    policy.save();
+    return;
+  }
+
+  if (event.params.policy.equals(release4Addresses.onlyRemoveDustExternalPositionPolicyAddress)) {
+    let policy = ensureOnlyRemoveDustExternalPositionPolicy(comptrollerAddress, policyAddress, event);
     policy.enabled = false;
     policy.save();
     return;

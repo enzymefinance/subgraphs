@@ -16,7 +16,7 @@ export function ensureOnlyRemoveDustExternalPositionPolicy(
 
   policy = new OnlyRemoveDustExternalPositionPolicy(id);
   policy.policy = policyAddress;
-  policy.policyType = 'OnlyRemoveDustExternalPositionPolicy';
+  policy.policyType = 'OnlyRemoveDustExternalPosition';
   policy.comptroller = comptrollerAddress.toHex();
   policy.createdAt = event.block.timestamp.toI32();
   policy.enabled = true;
