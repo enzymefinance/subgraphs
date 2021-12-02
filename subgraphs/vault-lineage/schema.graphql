@@ -7,9 +7,21 @@ type Vault @entity {
   """
   id: ID!
   """
-  The block at which this vault was deployed.
+  The vault name.
   """
-  inception: Int!
+  name: String!
+  """
+  The vault creator.
+  """
+  creator: String!
+  """
+  The block at which the vault was deployed.
+  """
+  block: Int!
+  """
+  The timestamp at which the vault was deployed.
+  """
+  timestamp: Int!
   """
   The comptroller the vault is currently controlled by.
   """

@@ -18,6 +18,8 @@ export function handleVaultProxyDeployed(event: VaultProxyDeployed): void {
   let vault = getOrCreateVault(event.params.vaultProxy, event);
   let release = getOrCreateRelease(event.params.fundDeployer);
   let comptroller = getOrCreateComptroller(event.params.vaultAccessor, vault, release, event);
+  vault.creator = event.params.owner.toHex();
+  vault.name = event.params.fundName;
   vault.comptroller = comptroller.id;
   vault.release = release.id;
   vault.save();
