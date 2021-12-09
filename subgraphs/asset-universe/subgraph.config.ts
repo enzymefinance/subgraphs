@@ -6,7 +6,7 @@ import {
   Template,
 } from '@enzymefinance/subgraph-cli';
 import { default as v4Local } from '../../deployments/local/v4.json';
-import { default as v4Kovan, default as v4Matic } from '../../deployments/matic/v4.json';
+import { default as v4Matic } from '../../deployments/matic/v4.json';
 
 interface Variables {
   wethTokenAddress: string;
@@ -120,8 +120,8 @@ const matic: Variables = {
   startBlock: 22327337,
   releaseConfiguration: {
     v4: {
-      fundDeployer: '0x1C1B94812Faf3dE496a2634B36C1FbC6e5c222e7',
-      valueInterpreter: '0x4D586784241C2214207cF97cd0cb59C0538d6Fd9',
+      fundDeployer: v4Matic.contracts.FundDeployer.address,
+      valueInterpreter: v4Matic.contracts.ValueInterpreter.address,
       aavePriceFeed: v4Matic.contracts.AavePriceFeed.address,
       compoundPriceFeed: '0x0000000000000000000000000000000000000000',
       curvePriceFeed: '0x0000000000000000000000000000000000000000',
@@ -142,7 +142,7 @@ const kovan: Variables = {
     v4: {
       fundDeployer: '0xdc7Fcff86385A86A9BB29472C9165f77b96DDAC8',
       valueInterpreter: '0xd62F44b640ffA7E99Cb2e3EEBAc22A90c326d88D',
-      aavePriceFeed: v4Kovan.contracts.AavePriceFeed.address,
+      aavePriceFeed: '0x0000000000000000000000000000000000000000',
       compoundPriceFeed: '0x0000000000000000000000000000000000000000',
       curvePriceFeed: '0x0000000000000000000000000000000000000000',
       idlePriceFeed: '0x0000000000000000000000000000000000000000',

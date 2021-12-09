@@ -4,7 +4,8 @@ import {
   DataSourceTemplateUserDeclaration,
   DataSourceUserDeclaration,
 } from '@enzymefinance/subgraph-cli';
-import { default as v4 } from '../../deployments/local/v4.json';
+import { default as v4Local } from '../../deployments/local/v4.json';
+import { default as v4Matic } from '../../deployments/matic/v4.json';
 
 interface Variables {
   dispatcher: string;
@@ -34,7 +35,7 @@ export const contexts: Contexts<Variables> = {
     name: `${name}-matic`,
     network: 'matic',
     variables: {
-      dispatcher: '0x402A81aD2972a017B4564453E69afaE2b006A7E2',
+      dispatcher: v4Matic.contracts.Dispatcher.address,
       start: 22327337,
     },
   },
@@ -43,7 +44,7 @@ export const contexts: Contexts<Variables> = {
     name,
     network: 'local',
     variables: {
-      dispatcher: v4.contracts.Dispatcher.address,
+      dispatcher: v4Local.contracts.Dispatcher.address,
       start: 13619920,
     },
   },

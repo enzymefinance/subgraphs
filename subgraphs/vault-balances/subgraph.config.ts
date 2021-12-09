@@ -6,7 +6,8 @@ import {
   SdkUserDeclaration,
   Template,
 } from '@enzymefinance/subgraph-cli';
-import { default as v4 } from '../../deployments/local/v4.json';
+import { default as local } from '../../deployments/local/v4.json';
+import { default as matic } from '../../deployments/matic/v4.json';
 
 interface Variables {
   dispatcher: string;
@@ -30,7 +31,7 @@ export const contexts: Contexts<Variables> = {
     name,
     network: 'mainnet',
     variables: {
-      dispatcher: '0xC3DC853dD716bd5754f421ef94fdCbac3902ab32',
+      dispatcher: matic.contracts.Dispatcher.address,
       weth: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
       start: 11681281,
     },
@@ -49,7 +50,7 @@ export const contexts: Contexts<Variables> = {
     name,
     network: 'local',
     variables: {
-      dispatcher: v4.contracts.Dispatcher.address,
+      dispatcher: local.contracts.Dispatcher.address,
       weth: '0xd0a1e359811322d97991e03f863a0c30c2cf029c',
       start: 13619920,
     },
