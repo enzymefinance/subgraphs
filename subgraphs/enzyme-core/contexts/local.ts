@@ -8,7 +8,7 @@ export const local: Context<Variables> = {
   local: true,
   variables: {
     block: 13619920, // Protocol mainnet fork block.
-    dispatcherAddress: '0xC3DC853dD716bd5754f421ef94fdCbac3902ab32',
+    dispatcherAddress: v4.contracts.Dispatcher.address,
     wethTokenAddress: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
     chainlinkAggregatorAddresses: {
       audUsd: '0x77F9710E7d0A19669A13c055F62cd80d313dF022',

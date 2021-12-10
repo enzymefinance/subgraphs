@@ -23,7 +23,6 @@ services:
       RUST_LOG: info
       ETHEREUM_REORG_THRESHOLD: 1
       ETHEREUM_ANCESTOR_COUNT: 1
-      
 
   ipfs:
     image: ipfs/go-ipfs:v0.4.23
