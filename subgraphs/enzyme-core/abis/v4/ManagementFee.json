@@ -34,9 +34,9 @@
       },
       {
         "indexed": false,
-        "internalType": "uint256",
+        "internalType": "uint128",
         "name": "scaledPerSecondRate",
-        "type": "uint256"
+        "type": "uint128"
       }
     ],
     "name": "FundSettingsAdded",
@@ -135,14 +135,14 @@
       {
         "components": [
           {
-            "internalType": "uint256",
+            "internalType": "uint128",
             "name": "scaledPerSecondRate",
-            "type": "uint256"
+            "type": "uint128"
           },
           {
-            "internalType": "uint256",
+            "internalType": "uint128",
             "name": "lastSettled",
-            "type": "uint256"
+            "type": "uint128"
           }
         ],
         "internalType": "struct ManagementFee.FeeInfo",

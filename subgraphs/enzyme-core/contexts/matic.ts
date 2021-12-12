@@ -7,7 +7,7 @@ export const matic: Context<Variables> = {
   network: 'matic',
   variables: {
     block: 22327337,
-    dispatcherAddress: '0x402A81aD2972a017B4564453E69afaE2b006A7E2',
+    dispatcherAddress: v4.contracts.Dispatcher.address,
     wethTokenAddress: '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619',
     chainlinkAggregatorAddresses: {
       audUsd: '0x062Df9C4efd2030e243ffCc398b652e8b8F95C6f',
