@@ -31,7 +31,7 @@ export const contexts: Contexts<Variables> = {
     name,
     network: 'mainnet',
     variables: {
-      dispatcher: matic.contracts.Dispatcher.address,
+      dispatcher: '0xC3DC853dD716bd5754f421ef94fdCbac3902ab32',
       weth: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
       start: 11681281,
     },
@@ -40,7 +40,7 @@ export const contexts: Contexts<Variables> = {
     name: `${name}-matic`,
     network: 'matic',
     variables: {
-      dispatcher: '0x402A81aD2972a017B4564453E69afaE2b006A7E2',
+      dispatcher: matic.contracts.Dispatcher.address,
       weth: '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619',
       start: 22327337,
     },
