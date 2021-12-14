@@ -29,4 +29,7 @@ export function trackTrade(
   trade.activityCategories = ['Vault'];
   trade.activityType = 'Trade';
   trade.save();
+
+  vault.lastAssetUpdate = event.block.timestamp.toI32();
+  vault.save();
 }

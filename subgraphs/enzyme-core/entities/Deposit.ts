@@ -34,8 +34,6 @@ export function ensureDeposit(depositor: Account, vault: Vault, event: ethereum.
 }
 
 export function trackDeposit(vaultAddress: Address, depositorAddress: Address, event: ethereum.Event): void {
-  let id = vaultAddress.toHex() + '/' + depositorAddress.toHex() + '/' + event.block.number.toString();
-
   let balanceCallResult = tokenBalance(vaultAddress, depositorAddress);
   let balance = balanceCallResult ? toBigDecimal(balanceCallResult) : ZERO_BD;
 
@@ -45,4 +43,7 @@ export function trackDeposit(vaultAddress: Address, depositorAddress: Address, e
 
   deposit.shares = balance;
   deposit.save();
+
+  vault.lastAssetUpdate = event.block.timestamp.toI32();
+  vault.save();
 }

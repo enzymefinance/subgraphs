@@ -128,6 +128,7 @@ type Vault @entity {
   trackedAssets: [Asset!]!
 
   depositCount: Int!
+  lastAssetUpdate: Int!
 
   protocolFee: ProtocolFee
   protocolFeeSharesPaid: [ProtocolFeePaid!]! @derivedFrom(field: "vault")

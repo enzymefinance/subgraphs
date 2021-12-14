@@ -53,6 +53,9 @@ export function createCompoundDebtPositionChange(
   change.activityType = 'ExternalPosition';
   change.save();
 
+  vault.lastAssetUpdate = event.block.timestamp.toI32();
+  vault.save();
+
   return change;
 }
 

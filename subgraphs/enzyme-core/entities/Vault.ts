@@ -24,6 +24,7 @@ export function createVault(
   vault.trackedAssets = new Array<string>();
   vault.freelyTransferableShares = false;
   vault.depositCount = 0;
+  vault.lastAssetUpdate = 0;
   vault.save();
 
   let activity = new VaultCreated(vault.id);
