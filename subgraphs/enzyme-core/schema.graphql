@@ -159,7 +159,7 @@ type Comptroller @entity {
   authUsers: [Account!]!
   autoProtocolFeeSharesBuyback: Boolean!
   gasRelayer: GasRelayer
-  sharesActionTimelock: Int!
+  sharesActionTimelock: BigInt!
   fees: [Fee!]! @derivedFrom(field: "comptroller")
   policies: [Policy!]! @derivedFrom(field: "comptroller")
 }

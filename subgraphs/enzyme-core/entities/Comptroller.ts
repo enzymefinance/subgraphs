@@ -1,4 +1,4 @@
-import { ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
+import { ZERO_ADDRESS, ZERO_BI } from '@enzymefinance/subgraph-utils';
 import { Address, ethereum } from '@graphprotocol/graph-ts';
 import { Comptroller } from '../generated/schema';
 
@@ -13,7 +13,7 @@ export function ensureComptroller(address: Address, event: ethereum.Event): Comp
   comptroller.creation = event.block.timestamp.toI32();
   comptroller.activation = 0;
   comptroller.denomination = ZERO_ADDRESS.toHex();
-  comptroller.sharesActionTimelock = 0;
+  comptroller.sharesActionTimelock = ZERO_BI;
   comptroller.release = ZERO_ADDRESS.toHex();
   comptroller.status = 'FREE';
   comptroller.authUsers = new Array<string>();
