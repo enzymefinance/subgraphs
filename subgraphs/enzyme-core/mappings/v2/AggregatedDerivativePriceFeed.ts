@@ -18,7 +18,7 @@ export function handleDerivativeAdded(event: DerivativeAdded): void {
   activity.release = release2Addresses.fundDeployerAddress.toHex();
   activity.activityCounter = getActivityCounter();
   activity.activityCategories = ['Network'];
-  activity.activityType = 'Assets';
+  activity.activityType = 'NetworkSettings';
   activity.save();
 }
 
@@ -31,7 +31,7 @@ export function handleDerivativeRemoved(event: DerivativeRemoved): void {
   activity.release = release2Addresses.fundDeployerAddress.toHex();
   activity.activityCounter = getActivityCounter();
   activity.activityCategories = ['Network'];
-  activity.activityType = 'Assets';
+  activity.activityType = 'NetworkSettings';
   activity.save();
 }
 

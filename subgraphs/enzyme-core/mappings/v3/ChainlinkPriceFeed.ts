@@ -21,7 +21,7 @@ export function handlePrimitiveAdded(event: PrimitiveAdded): void {
   activity.release = release3Addresses.fundDeployerAddress.toHex();
   activity.activityCounter = getActivityCounter();
   activity.activityCategories = ['Network'];
-  activity.activityType = 'Assets';
+  activity.activityType = 'NetworkSettings';
   activity.save();
 }
 
@@ -34,7 +34,7 @@ export function handlePrimitiveRemoved(event: PrimitiveRemoved): void {
   activity.release = release3Addresses.fundDeployerAddress.toHex();
   activity.activityCounter = getActivityCounter();
   activity.activityCategories = ['Network'];
-  activity.activityType = 'Assets';
+  activity.activityType = 'NetworkSettings';
   activity.save();
 }
 

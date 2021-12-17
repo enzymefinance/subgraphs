@@ -50,7 +50,7 @@ export function createCompoundDebtPositionChange(
   change.vault = vault.id;
   change.activityCounter = getActivityCounter();
   change.activityCategories = ['Vault'];
-  change.activityType = 'ExternalPosition';
+  change.activityType = 'Trade';
   change.save();
 
   vault.lastAssetUpdate = event.block.timestamp.toI32();

@@ -1074,9 +1074,7 @@ enum ActivityCategory {
 }
 
 enum ActivityType {
-  Assets
   DepositorShares
-  ExternalPosition
   FeeShares
   NetworkSettings
   ProtocolFee

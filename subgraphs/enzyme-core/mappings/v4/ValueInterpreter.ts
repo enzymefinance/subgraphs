@@ -22,7 +22,7 @@ export function handleDerivativeAdded(event: DerivativeAdded): void {
   activity.release = release4Addresses.fundDeployerAddress.toHex();
   activity.activityCounter = getActivityCounter();
   activity.activityCategories = ['Network'];
-  activity.activityType = 'Assets';
+  activity.activityType = 'NetworkSettings';
   activity.save();
 }
 
@@ -35,7 +35,7 @@ export function handlePrimitiveAdded(event: PrimitiveAdded): void {
   activity.release = release4Addresses.fundDeployerAddress.toHex();
   activity.activityCounter = getActivityCounter();
   activity.activityCategories = ['Network'];
-  activity.activityType = 'Assets';
+  activity.activityType = 'NetworkSettings';
   activity.save();
 }
 
@@ -48,7 +48,7 @@ export function handleDerivativeRemoved(event: DerivativeRemoved): void {
   activity.release = release4Addresses.fundDeployerAddress.toHex();
   activity.activityCounter = getActivityCounter();
   activity.activityCategories = ['Network'];
-  activity.activityType = 'Assets';
+  activity.activityType = 'NetworkSettings';
   activity.save();
 }
 
@@ -61,7 +61,7 @@ export function handlePrimitiveRemoved(event: PrimitiveRemoved): void {
   activity.release = release4Addresses.fundDeployerAddress.toHex();
   activity.activityCounter = getActivityCounter();
   activity.activityCategories = ['Network'];
-  activity.activityType = 'Assets';
+  activity.activityType = 'NetworkSettings';
   activity.save();
 }
 
