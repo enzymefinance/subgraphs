@@ -14,6 +14,7 @@ export function createVault(
 ): Vault {
   let vault = new Vault(address.toHex());
   vault.name = name;
+  vault.symbol = 'ENZF';
   vault.counter = getVaultCounter();
   vault.inception = inception.toI32();
   vault.release = release.id;

@@ -13,7 +13,7 @@ export function recordSupplyMetric(vault: Vault, event: ethereum.Event): void {
     metric = new SupplyMetric(id);
     metric.counter = getSupplyMetricCounter();
     metric.timestamp = event.block.timestamp.toI32();
-    metric.block = event.block.number.toI32();
+    metric.block = event.block.number;
     metric.vault = Address.fromString(vault.id);
   }
 

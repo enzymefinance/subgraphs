@@ -1,4 +1,4 @@
-import { Configurator, Contexts, DataSourceUserDeclaration } from '@enzymefinance/subgraph-cli';
+import { Configurator, Contexts, DataSourceUserDeclaration, SdkUserDeclaration } from '@enzymefinance/subgraph-cli';
 import { default as v4Local } from '../../deployments/local/v4.json';
 import { default as v4Matic } from '../../deployments/matic/v4.json';
 
@@ -31,7 +31,7 @@ export const contexts: Contexts<Variables> = {
     network: 'matic',
     variables: {
       dispatcher: v4Matic.contracts.Dispatcher.address,
-      start: 22327337,
+      start: 22626288,
     },
   },
   local: {
@@ -46,6 +46,16 @@ export const contexts: Contexts<Variables> = {
 };
 
 export const configure: Configurator<Variables> = (variables) => {
+  const sdks: SdkUserDeclaration[] = [
+    {
+      name: 'VaultLib',
+      abis: {
+        VaultLib: 'abis/VaultLib.json',
+      },
+      functions: (abis) => [abis.VaultLib.getFunction('symbol')],
+    },
+  ];
+
   const sources: DataSourceUserDeclaration[] = [
     {
       name: 'Dispatcher',
@@ -59,5 +69,5 @@ export const configure: Configurator<Variables> = (variables) => {
     },
   ];
 
-  return { sources };
+  return { sources, sdks };
 };

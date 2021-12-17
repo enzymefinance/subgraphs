@@ -3,6 +3,7 @@ import { getOrCreateRelease } from '../entities/Release';
 import { getOrCreateComptroller } from '../entities/Comptroller';
 import { CurrentFundDeployerSet, MigrationExecuted, VaultProxyDeployed } from '../generated/contracts/DispatcherEvents';
 import { Comptroller, Vault } from '../generated/schema';
+import { ONE_BI } from '@enzymefinance/subgraph-utils';
 
 export function handleCurrentFundDeployerSet(event: CurrentFundDeployerSet): void {
   getOrCreateRelease(event.params.nextFundDeployer);
@@ -31,7 +32,7 @@ export function handleMigrationExecuted(event: MigrationExecuted): void {
   // Mark the previous comptroller as destroyed.
   let previous = Comptroller.load(vault.comptroller);
   if (previous != null) {
-    previous.to = event.block.number.toI32() - 1;
+    previous.to = event.block.number.minus(ONE_BI);
     previous.save();
   }
 

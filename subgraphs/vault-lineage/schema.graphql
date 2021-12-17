@@ -11,13 +11,17 @@ type Vault @entity {
   """
   name: String!
   """
+  The vault symbol.
+  """
+  symbol: String!
+  """
   The vault creator.
   """
   creator: String!
   """
   The block at which the vault was deployed.
   """
-  block: Int!
+  block: BigInt!
   """
   The timestamp at which the vault was deployed.
   """
@@ -51,11 +55,11 @@ type Comptroller @entity {
   """
   The block at which this comptroller took control of the vault.
   """
-  from: Int!
+  from: BigInt!
   """
   The block at which this comptroller was migrated away from.
   """
-  to: Int!
+  to: BigInt!
   """
   The vault this configuration belongs to.
   """

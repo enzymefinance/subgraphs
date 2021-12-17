@@ -24,6 +24,8 @@ import {
   TrackedAssetAdded,
   TrackedAssetRemoved,
   Transfer,
+  NameSet,
+  SymbolSet,
   VaultLibSet,
 } from '../../generated/contracts/VaultLib4Events';
 import {
@@ -259,6 +261,18 @@ export function handleProtocolFeeSharesBoughtBack(event: ProtocolFeeSharesBought
   let network = useNetwork();
   network.mlnBurned = network.mlnBurned.plus(mlnBurned);
   network.save();
+}
+
+export function handleNameSet(event: NameSet): void {
+  let vault = useVault(event.address.toHex());
+  vault.name = event.params.name;
+  vault.save();
+}
+
+export function handleSymbolSet(event: SymbolSet): void {
+  let vault = useVault(event.address.toHex());
+  vault.symbol = event.params.symbol;
+  vault.save();
 }
 
 export function handleApproval(event: Approval): void {}

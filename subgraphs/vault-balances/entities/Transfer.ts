@@ -28,7 +28,7 @@ export function createIncomingTransfer(
   transfer.sender = sender;
   transfer.transaction = event.transaction.hash;
   transfer.timestamp = event.block.timestamp.toI32();
-  transfer.block = event.block.number.toI32();
+  transfer.block = event.block.number;
   transfer.save();
 }
 
@@ -52,6 +52,6 @@ export function createOutgoingTransfer(
   transfer.recipient = recipient;
   transfer.transaction = event.transaction.hash;
   transfer.timestamp = event.block.timestamp.toI32();
-  transfer.block = event.block.number.toI32();
+  transfer.block = event.block.number;
   transfer.save();
 }

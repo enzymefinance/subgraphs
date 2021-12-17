@@ -117,7 +117,7 @@ const mainnet: Variables = {
 
 const matic: Variables = {
   wethTokenAddress: '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619',
-  startBlock: 22327337,
+  startBlock: 22626288,
   releaseConfiguration: {
     v4: {
       fundDeployer: v4Matic.contracts.FundDeployer.address,

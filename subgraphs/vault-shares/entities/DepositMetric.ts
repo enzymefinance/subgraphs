@@ -13,7 +13,7 @@ export function recordDepositMetric(vault: Vault, depositor: Depositor, deposit:
     metric = new DepositMetric(id);
     metric.counter = getDepositMetricCounter();
     metric.timestamp = event.block.timestamp.toI32();
-    metric.block = event.block.number.toI32();
+    metric.block = event.block.number;
     metric.vault = Address.fromString(vault.id);
     metric.depositor = Address.fromString(depositor.id);
   }

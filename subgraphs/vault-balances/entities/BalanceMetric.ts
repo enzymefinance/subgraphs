@@ -13,7 +13,7 @@ export function recordBalanceMetric(vault: Vault, asset: Asset, balance: Balance
     metric = new BalanceMetric(id);
     metric.counter = getBalanceMetricCounter();
     metric.timestamp = event.block.timestamp.toI32();
-    metric.block = event.block.number.toI32();
+    metric.block = event.block.number;
     metric.vault = Address.fromString(vault.id);
     metric.asset = Address.fromString(asset.id);
   }

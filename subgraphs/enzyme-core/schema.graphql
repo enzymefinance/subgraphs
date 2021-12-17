@@ -114,6 +114,7 @@ type Vault @entity {
   id: ID!
   counter: Int!
   name: String!
+  symbol: String!
   comptroller: Comptroller!
   release: Release!
   inception: Int!

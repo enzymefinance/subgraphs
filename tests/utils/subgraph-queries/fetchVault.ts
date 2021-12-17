@@ -6,7 +6,7 @@ export interface Vault {
 }
 
 const vaultQuery = gql`
-  query Vault($id: ID!, $block: Int!) {
+  query Vault($id: ID!, $block: BigInt!) {
     vault(id: $id, block: { number: $block }) {
       id
       name

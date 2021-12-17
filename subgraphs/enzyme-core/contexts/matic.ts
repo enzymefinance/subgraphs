@@ -6,7 +6,7 @@ export const matic: Context<Variables> = {
   name: 'enzymefinance/enzyme-core-matic',
   network: 'matic',
   variables: {
-    block: 22327337,
+    block: 22626288,
     dispatcherAddress: v4.contracts.Dispatcher.address,
     wethTokenAddress: '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619',
     chainlinkAggregatorAddresses: {

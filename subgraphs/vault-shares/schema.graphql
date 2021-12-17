@@ -109,7 +109,7 @@ interface Transfer {
   """
   The block number at which the transfer occurred.
   """
-  block: Int!
+  block: BigInt!
   """
   The transfer direction (incoming or outgoing).
   """
@@ -160,7 +160,7 @@ type OutgoingTransfer implements Transfer @entity {
   """
   The block number at which the transfer occurred.
   """
-  block: Int!
+  block: BigInt!
   """
   The transfer direction (incoming or outgoing).
   """
@@ -215,7 +215,7 @@ type IncomingTransfer implements Transfer @entity {
   """
   The block number at which the transfer occurred.
   """
-  block: Int!
+  block: BigInt!
   """
   The transfer direction (incoming or outgoing).
   """
@@ -267,7 +267,7 @@ type DepositMetric @entity {
   """
   The block number at which the share count change was recorded.
   """
-  block: Int!
+  block: BigInt!
   """
   The block timestamp at which the share count change was recorded.
   """
@@ -295,7 +295,7 @@ type SupplyMetric @entity {
   """
   The block number at which the supply change was recorded.
   """
-  block: Int!
+  block: BigInt!
   """
   The block timestamp at which the supply change was recorded.
   """

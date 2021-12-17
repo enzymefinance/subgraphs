@@ -120,7 +120,7 @@ interface Transfer {
   """
   The block number at which the transfer occurred.
   """
-  block: Int!
+  block: BigInt!
   """
   The transfer direction (incoming or outgoing).
   """
@@ -163,7 +163,7 @@ type OutgoingTransfer implements Transfer @entity {
   """
   The block number at which the transfer occurred.
   """
-  block: Int!
+  block: BigInt!
   """
   The transfer direction (incoming or outgoing).
   """
@@ -210,7 +210,7 @@ type IncomingTransfer implements Transfer @entity {
   """
   The block number at which the transfer occurred.
   """
-  block: Int!
+  block: BigInt!
   """
   The transfer direction (incoming or outgoing).
   """
@@ -254,7 +254,7 @@ type BalanceMetric @entity {
   """
   The block number at which the last balance change was recorded.
   """
-  block: Int!
+  block: BigInt!
   """
   The block timestamp at which the last balance change was recorded.
   """
