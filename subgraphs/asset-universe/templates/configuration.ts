@@ -31,7 +31,7 @@ export let uniswapV2PoolPriceFeedV3Address = Address.fromString('{{or releaseCon
 export let wdgldPriceFeedV3Address = Address.fromString('{{or releaseConfiguration.v3.wdgldPriceFeed "0x0000000000000000000000000000000000000000"}}');
 export let yearnVaultV2PriceFeedV3Address = Address.fromString('{{or releaseConfiguration.v3.yearnVaultV2PriceFeed "0x0000000000000000000000000000000000000000"}}');
 
-export let aavePriceFeedV4Address = Address.fromString('{{or releaseConfiguration.v4.aavePriceFeed "0x0000000000000000000000000000000000000000"}}'.toLowerCase());
+export let aavePriceFeedV4Address = Address.fromString('{{or releaseConfiguration.v4.aavePriceFeed "0x0000000000000000000000000000000000000000"}}');
 export let compoundPriceFeedV4Address = Address.fromString('{{or releaseConfiguration.v4.compoundPriceFeed "0x0000000000000000000000000000000000000000"}}');
 export let curvePriceFeedV4Address = Address.fromString('{{or releaseConfiguration.v4.curvePriceFeed "0x0000000000000000000000000000000000000000"}}');
 export let idlePriceFeedV4Address = Address.fromString('{{or releaseConfiguration.v4.idlePriceFeed "0x0000000000000000000000000000000000000000"}}');

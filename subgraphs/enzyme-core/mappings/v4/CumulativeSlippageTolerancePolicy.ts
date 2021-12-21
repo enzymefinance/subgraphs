@@ -9,14 +9,14 @@ import {
 
 export function handleCumulativeSlippageUpdatedForFund(event: CumulativeSlippageUpdatedForFund): void {
   let policy = ensureCumulativeSlippageTolerancePolicy(event.params.comptrollerProxy, event.address, event);
-  policy.cumulativeSlippage = toBigDecimal(event.params.nextCumulativeSlippage, 4);
+  policy.cumulativeSlippage = toBigDecimal(event.params.nextCumulativeSlippage);
   policy.lastSlippageTimestamp = event.block.timestamp.toI32();
   policy.save();
 }
 
 export function handleFundSettingsSet(event: FundSettingsSet): void {
   let policy = ensureCumulativeSlippageTolerancePolicy(event.params.comptrollerProxy, event.address, event);
-  policy.tolerance = toBigDecimal(event.params.tolerance, 4);
+  policy.tolerance = toBigDecimal(event.params.tolerance);
   policy.save();
 }
 

@@ -22,7 +22,7 @@ export function getOrCreateVault(address: Address, event: ethereum.Event): Vault
   return vault;
 }
 
-function getVaultSymbol(address: Address) {
+function getVaultSymbol(address: Address): string {
   const contract = VaultLibSdk.bind(address);
   const result = contract.try_symbol();
   if (result.reverted) {
