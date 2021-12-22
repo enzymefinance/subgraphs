@@ -11,21 +11,22 @@ import {
   AssetManagerAdded,
   AssetManagerRemoved,
   AssetWithdrawn,
+  EthReceived,
   ExternalPositionAdded,
   ExternalPositionRemoved,
   FreelyTransferableSharesSet,
   MigratorSet,
+  NameSet,
   NominatedOwnerRemoved,
   NominatedOwnerSet,
   OwnerSet,
   OwnershipTransferred,
   ProtocolFeePaidInShares,
   ProtocolFeeSharesBoughtBack,
+  SymbolSet,
   TrackedAssetAdded,
   TrackedAssetRemoved,
   Transfer,
-  NameSet,
-  SymbolSet,
   VaultLibSet,
 } from '../../generated/contracts/VaultLib4Events';
 import {
@@ -280,3 +281,9 @@ export function handleAssetWithdrawn(event: AssetWithdrawn): void {}
 export function handleExternalPositionAdded(event: ExternalPositionAdded): void {}
 export function handleExternalPositionRemoved(event: ExternalPositionRemoved): void {}
 export function handleVaultLibSet(event: VaultLibSet): void {}
+
+export function handleEthReceived(event: EthReceived): void {
+  let vault = useVault(event.address.toHex());
+  vault.lastAssetUpdate = event.block.timestamp.toI32();
+  vault.save();
+}
