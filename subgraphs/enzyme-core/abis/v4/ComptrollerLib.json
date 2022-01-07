@@ -82,7 +82,7 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "bytes",
         "name": "failureReturnData",
         "type": "bytes"
@@ -151,13 +151,13 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "bytes",
         "name": "failureReturnData",
         "type": "bytes"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "redeemer",
         "type": "address"
@@ -400,24 +400,6 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "bytes",
-        "name": "_feeManagerConfigData",
-        "type": "bytes"
-      },
-      {
-        "internalType": "bytes",
-        "name": "_policyManagerConfigData",
-        "type": "bytes"
-      }
-    ],
-    "name": "configureExtensions",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
     "inputs": [],
     "name": "deployGasRelayPaymaster",
     "outputs": [],
@@ -432,7 +414,18 @@
     "type": "function"
   },
   {
-    "inputs": [],
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_deactivateFeeManagerGasLimit",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_payProtocolFeeGasLimit",
+        "type": "uint256"
+      }
+    ],
     "name": "destructActivated",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -921,7 +914,13 @@
       }
     ],
     "name": "vaultCallOnContract",
-    "outputs": [],
+    "outputs": [
+      {
+        "internalType": "bytes",
+        "name": "returnData_",
+        "type": "bytes"
+      }
+    ],
     "stateMutability": "nonpayable",
     "type": "function"
   }

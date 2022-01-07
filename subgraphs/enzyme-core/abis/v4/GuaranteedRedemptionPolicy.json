@@ -62,15 +62,15 @@
       },
       {
         "indexed": false,
-        "internalType": "uint256",
+        "internalType": "uint128",
         "name": "startTimestamp",
-        "type": "uint256"
+        "type": "uint128"
       },
       {
         "indexed": false,
-        "internalType": "uint256",
+        "internalType": "uint128",
         "name": "duration",
-        "type": "uint256"
+        "type": "uint128"
       }
     ],
     "name": "FundSettingsSet",
@@ -255,14 +255,14 @@
       {
         "components": [
           {
-            "internalType": "uint256",
+            "internalType": "uint128",
             "name": "startTimestamp",
-            "type": "uint256"
+            "type": "uint128"
           },
           {
-            "internalType": "uint256",
+            "internalType": "uint128",
             "name": "duration",
-            "type": "uint256"
+            "type": "uint128"
           }
         ],
         "internalType": "struct GuaranteedRedemptionPolicy.RedemptionWindow",

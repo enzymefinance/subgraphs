@@ -209,24 +209,24 @@
       {
         "components": [
           {
-            "internalType": "uint256",
+            "internalType": "uint16",
             "name": "rate",
-            "type": "uint256"
+            "type": "uint16"
           },
           {
-            "internalType": "uint256",
+            "internalType": "uint64",
             "name": "period",
-            "type": "uint256"
+            "type": "uint64"
           },
           {
-            "internalType": "uint256",
+            "internalType": "uint64",
             "name": "activated",
-            "type": "uint256"
+            "type": "uint64"
           },
           {
-            "internalType": "uint256",
+            "internalType": "uint64",
             "name": "lastPaid",
-            "type": "uint256"
+            "type": "uint64"
           },
           {
             "internalType": "uint256",

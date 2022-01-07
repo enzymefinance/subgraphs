@@ -13,7 +13,6 @@ import {
   DerivativeRemoved,
   PrimitiveAdded,
   PrimitiveRemoved,
-  StalePrimitiveRemoved,
 } from '../../generated/contracts/ValueInterpreter4Events';
 
 export function handleDerivativeAdded(event: DerivativeAdded): void {
@@ -38,12 +37,6 @@ export function handlePrimitiveAdded(event: PrimitiveAdded): void {
 }
 
 export function handlePrimitiveRemoved(event: PrimitiveRemoved): void {
-  let release = getOrCreateRelease(releaseV4Address);
-  let asset = getOrCreateAsset(event.params.primitive);
-  removePrimitiveRegistration(release, asset, event);
-}
-
-export function handleStalePrimitiveRemoved(event: StalePrimitiveRemoved): void {
   let release = getOrCreateRelease(releaseV4Address);
   let asset = getOrCreateAsset(event.params.primitive);
   removePrimitiveRegistration(release, asset, event);

@@ -8,8 +8,6 @@ import {
   EthUsdAggregatorSet,
   PrimitiveAdded,
   PrimitiveRemoved,
-  StalePrimitiveRemoved,
-  StaleRateThresholdSet,
 } from '../../generated/contracts/ValueInterpreter4Events';
 import { AssetAdded, AssetRemoved } from '../../generated/schema';
 
@@ -66,5 +64,3 @@ export function handlePrimitiveRemoved(event: PrimitiveRemoved): void {
 }
 
 export function handleEthUsdAggregatorSet(event: EthUsdAggregatorSet): void {}
-export function handleStalePrimitiveRemoved(event: StalePrimitiveRemoved): void {}
-export function handleStaleRateThresholdSet(event: StaleRateThresholdSet): void {}

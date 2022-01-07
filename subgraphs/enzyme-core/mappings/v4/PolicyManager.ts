@@ -12,7 +12,7 @@ import { ensureOnlyRemoveDustExternalPositionPolicy } from '../../entities/OnlyR
 import { ensureOnlyUntrackDustOrPricelessAssetsPolicy } from '../../entities/OnlyUntrackDustOrPricelessAssetsPolicy';
 import { ensureUnknownPolicy } from '../../entities/UnknownPolicy';
 import { release4Addresses } from '../../generated/addresses';
-import { PolicyDisabledForFund, PolicyEnabledForFund } from '../../generated/contracts/PolicyManager4Events';
+import { PolicyDisabledOnHookForFund, PolicyEnabledForFund } from '../../generated/contracts/PolicyManager4Events';
 
 export function handlePolicyEnabledForFund(event: PolicyEnabledForFund): void {
   let comptrollerAddress = event.params.comptrollerProxy;
@@ -120,7 +120,7 @@ export function handlePolicyEnabledForFund(event: PolicyEnabledForFund): void {
   policy.save();
 }
 
-export function handlePolicyDisabledForFund(event: PolicyDisabledForFund): void {
+export function handlePolicyDisabledOnHookForFund(event: PolicyDisabledOnHookForFund): void {
   let comptrollerAddress = event.params.comptrollerProxy;
   let policyAddress = event.params.policy;
 

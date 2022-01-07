@@ -138,6 +138,25 @@
     "type": "event"
   },
   {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "comptrollerProxy",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "vaultProxy",
+        "type": "address"
+      }
+    ],
+    "name": "ValidatedVaultProxySetForFund",
+    "type": "event"
+  },
+  {
     "inputs": [
       {
         "internalType": "bool",
@@ -291,6 +310,16 @@
   },
   {
     "inputs": [
+      {
+        "internalType": "address",
+        "name": "_comptrollerProxy",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_vaultProxy",
+        "type": "address"
+      },
       {
         "internalType": "bytes",
         "name": "",

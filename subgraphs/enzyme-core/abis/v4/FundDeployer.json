@@ -89,6 +89,25 @@
     "anonymous": false,
     "inputs": [
       {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "nextDeactivateFeeManagerGasLimit",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "nextPayProtocolFeeGasLimit",
+        "type": "uint256"
+      }
+    ],
+    "name": "GasLimitsForDestructCallSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
         "indexed": true,
         "internalType": "address",
         "name": "creator",
@@ -393,6 +412,11 @@
         "type": "string"
       },
       {
+        "internalType": "string",
+        "name": "_fundSymbol",
+        "type": "string"
+      },
+      {
         "internalType": "address",
         "name": "_denominationAsset",
         "type": "address"
@@ -569,6 +593,24 @@
         "internalType": "address",
         "name": "dispatcher_",
         "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getGasLimitsForDestructCall",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "deactivateFeeManagerGasLimit_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "payProtocolFeeGasLimit_",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -898,6 +940,24 @@
       }
     ],
     "name": "setComptrollerLib",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint32",
+        "name": "_nextDeactivateFeeManagerGasLimit",
+        "type": "uint32"
+      },
+      {
+        "internalType": "uint32",
+        "name": "_nextPayProtocolFeeGasLimit",
+        "type": "uint32"
+      }
+    ],
+    "name": "setGasLimitsForDestructCall",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

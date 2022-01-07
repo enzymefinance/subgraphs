@@ -10,6 +10,11 @@
         "internalType": "address",
         "name": "_wethToken",
         "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_chainlinkStaleRateThreshold",
+        "type": "uint256"
       }
     ],
     "stateMutability": "nonpayable",
@@ -108,38 +113,6 @@
       }
     ],
     "name": "PrimitiveRemoved",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "primitive",
-        "type": "address"
-      }
-    ],
-    "name": "StalePrimitiveRemoved",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "prevStaleRateThreshold",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "nextStaleRateThreshold",
-        "type": "uint256"
-      }
-    ],
-    "name": "StaleRateThresholdSet",
     "type": "event"
   },
   {
@@ -442,25 +415,6 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "_aggregator",
-        "type": "address"
-      }
-    ],
-    "name": "rateIsStale",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "rateIsStale_",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "address[]",
         "name": "_derivatives",
         "type": "address[]"
@@ -487,38 +441,12 @@
   {
     "inputs": [
       {
-        "internalType": "address[]",
-        "name": "_primitives",
-        "type": "address[]"
-      }
-    ],
-    "name": "removeStalePrimitives",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "address",
         "name": "_nextEthUsdAggregator",
         "type": "address"
       }
     ],
     "name": "setEthUsdAggregator",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_nextStaleRateThreshold",
-        "type": "uint256"
-      }
-    ],
-    "name": "setStaleRateThreshold",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

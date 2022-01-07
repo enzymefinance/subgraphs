@@ -18,25 +18,6 @@
         "type": "address"
       }
     ],
-    "name": "calcNetShareValueForFund",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "netShareValue_",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_comptrollerProxy",
-        "type": "address"
-      }
-    ],
     "name": "getContinuousFeesForFund",
     "outputs": [
       {

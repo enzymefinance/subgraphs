@@ -252,14 +252,14 @@
       {
         "components": [
           {
-            "internalType": "uint16",
+            "internalType": "uint64",
             "name": "tolerance",
-            "type": "uint16"
+            "type": "uint64"
           },
           {
-            "internalType": "uint16",
+            "internalType": "uint64",
             "name": "cumulativeSlippage",
-            "type": "uint16"
+            "type": "uint64"
           },
           {
             "internalType": "uint128",

@@ -327,7 +327,6 @@ export const configure: Configurator<Variables> = (variables: Variables) => {
         abi.getEvent('DerivativeRemoved'),
         abi.getEvent('PrimitiveAdded'),
         abi.getEvent('PrimitiveRemoved'),
-        abi.getEvent('StalePrimitiveRemoved'),
       ],
     });
   }
