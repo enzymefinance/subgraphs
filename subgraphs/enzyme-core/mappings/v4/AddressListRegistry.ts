@@ -4,6 +4,7 @@ import { ensureAddressList } from '../../entities/AddressList';
 import {
   ItemAddedToList,
   ItemRemovedFromList,
+  ListAttested,
   ListCreated,
   ListOwnerSet,
   ListUpdateTypeSet,
@@ -46,3 +47,5 @@ export function handleListUpdateTypeSet(event: ListUpdateTypeSet): void {
   addressList.updatedAt = event.block.timestamp.toI32();
   addressList.save();
 }
+
+export function handleListAttested(event: ListAttested): void {}

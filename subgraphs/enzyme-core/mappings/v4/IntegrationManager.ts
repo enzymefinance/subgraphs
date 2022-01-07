@@ -5,7 +5,10 @@ import { createAssetAmount } from '../../entities/AssetAmount';
 import { ensureComptroller } from '../../entities/Comptroller';
 import { trackTrade } from '../../entities/Trade';
 import { useVault } from '../../entities/Vault';
-import { CallOnIntegrationExecutedForFund } from '../../generated/contracts/IntegrationManager4Events';
+import {
+  CallOnIntegrationExecutedForFund,
+  ValidatedVaultProxySetForFund,
+} from '../../generated/contracts/IntegrationManager4Events';
 import { Asset, AssetAmount } from '../../generated/schema';
 
 export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationExecutedForFund): void {
@@ -48,3 +51,5 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
     event,
   );
 }
+
+export function handleValidatedVaultProxySetForFund(event: ValidatedVaultProxySetForFund): void {}

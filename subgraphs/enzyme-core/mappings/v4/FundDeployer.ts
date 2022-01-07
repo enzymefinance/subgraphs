@@ -14,6 +14,7 @@ import {
   BuySharesOnBehalfCallerRegistered,
   ComptrollerLibSet,
   ComptrollerProxyDeployed,
+  GasLimitsForDestructCallSet,
   MigrationRequestCreated,
   NewFundCreated,
   ProtocolFeeTrackerSet,
@@ -204,3 +205,4 @@ export function handleReconfigurationTimelockSet(event: ReconfigurationTimelockS
 export function handleVaultCallDeregistered(event: VaultCallDeregistered): void {}
 export function handleVaultCallRegistered(event: VaultCallRegistered): void {}
 export function handleVaultLibSet(event: VaultLibSet): void {}
+export function handleGasLimitsForDestructCallSet(event: GasLimitsForDestructCallSet): void {}

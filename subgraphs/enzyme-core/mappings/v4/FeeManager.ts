@@ -18,6 +18,7 @@ import {
   FeeEnabledForFund,
   FeeSettledForFund,
   SharesOutstandingPaidForFund,
+  ValidatedVaultProxySetForFund,
 } from '../../generated/contracts/FeeManager4Events';
 import {
   FeeSharesAllocationChangedEvent,
@@ -227,3 +228,5 @@ export function handleSharesOutstandingPaidForFund(event: SharesOutstandingPaidF
   paidOut.activityType = 'FeeShares';
   paidOut.save();
 }
+
+export function handleValidatedVaultProxySetForFund(event: ValidatedVaultProxySetForFund): void {}

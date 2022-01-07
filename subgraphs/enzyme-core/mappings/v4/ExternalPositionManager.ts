@@ -6,6 +6,7 @@ import {
   CallOnExternalPositionExecutedForFund,
   ExternalPositionDeployedForFund,
   ExternalPositionTypeInfoUpdated,
+  ValidatedVaultProxySetForFund,
 } from '../../generated/contracts/ExternalPositionManager4Events';
 import { CompoundDebtPosition } from '../../generated/schema';
 import { CompoundDebtPositionLib4DataSource } from '../../generated/templates';
@@ -34,3 +35,4 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 }
 
 export function handleExternalPositionTypeInfoUpdated(event: ExternalPositionTypeInfoUpdated): void {}
+export function handleValidatedVaultProxySetForFund(event: ValidatedVaultProxySetForFund): void {}
