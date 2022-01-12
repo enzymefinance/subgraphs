@@ -1,15 +1,19 @@
+import { uniqueEventId } from '@enzymefinance/subgraph-utils';
 import { ensureAllowedAdapterIncomingAssetsPolicy } from '../../entities/AllowedAdapterIncomingAssetsPolicy';
 import { ensureAllowedAdaptersPolicy } from '../../entities/AllowedAdaptersPolicy';
 import { ensureAllowedAssetsForRedemptionPolicy } from '../../entities/AllowedAssetsForRedemptionPolicy';
 import { ensureAllowedDepositRecipientsPolicy } from '../../entities/AllowedDepositRecipientsPolicy';
 import { ensureAllowedExternalPositionTypesPolicy } from '../../entities/AllowedExternalPositionTypesPolicy';
 import { ensureAllowedSharesTransferRecipientsPolicy } from '../../entities/AllowedSharesTransferRecipientsPolicy';
+import { ensureComptroller } from '../../entities/Comptroller';
+import { getActivityCounter } from '../../entities/Counter';
 import { ensureCumulativeSlippageTolerancePolicy } from '../../entities/CumulativeSlippageTolerancePolicy';
 import { ensureGuaranteedRedemptionPolicy } from '../../entities/GuaranteedRedemptionPolicy';
 import { ensureMinAssetBalancesPostRedemptionPolicy } from '../../entities/MinAssetBalancesPostRedemptionPolicy';
 import { ensureMinMaxDepositPolicy } from '../../entities/MinMaxDepositPolicy';
 import { ensureOnlyRemoveDustExternalPositionPolicy } from '../../entities/OnlyRemoveDustExternalPositionPolicy';
 import { ensureOnlyUntrackDustOrPricelessAssetsPolicy } from '../../entities/OnlyUntrackDustOrPricelessAssetsPolicy';
+import { policyId } from '../../entities/Policy';
 import { ensureUnknownPolicy } from '../../entities/UnknownPolicy';
 import { release4Addresses } from '../../generated/addresses';
 import {
@@ -17,10 +21,23 @@ import {
   PolicyEnabledForFund,
   ValidatedVaultProxySetForFund,
 } from '../../generated/contracts/PolicyManager4Events';
+import { PolicyDisabledForVault, PolicyEnabledForVault } from '../../generated/schema';
 
 export function handlePolicyEnabledForFund(event: PolicyEnabledForFund): void {
   let comptrollerAddress = event.params.comptrollerProxy;
   let policyAddress = event.params.policy;
+
+  let comptroller = ensureComptroller(comptrollerAddress, event);
+  if (comptroller.vault != null) {
+    let policyEnabled = new PolicyEnabledForVault(uniqueEventId(event));
+    policyEnabled.timestamp = event.block.timestamp.toI32();
+    policyEnabled.vault = comptroller.vault as string;
+    policyEnabled.policy = policyId(comptrollerAddress, policyAddress);
+    policyEnabled.activityCounter = getActivityCounter();
+    policyEnabled.activityType = 'VaultSettings';
+    policyEnabled.activityCategories = ['Vault'];
+    policyEnabled.save();
+  }
 
   if (event.params.policy.equals(release4Addresses.allowedAdapterIncomingAssetsPolicyAddress)) {
     let policy = ensureAllowedAdapterIncomingAssetsPolicy(comptrollerAddress, policyAddress, event);
@@ -127,6 +144,18 @@ export function handlePolicyEnabledForFund(event: PolicyEnabledForFund): void {
 export function handlePolicyDisabledOnHookForFund(event: PolicyDisabledOnHookForFund): void {
   let comptrollerAddress = event.params.comptrollerProxy;
   let policyAddress = event.params.policy;
+
+  let comptroller = ensureComptroller(comptrollerAddress, event);
+  if (comptroller.vault != null) {
+    let policyEnabled = new PolicyDisabledForVault(uniqueEventId(event));
+    policyEnabled.timestamp = event.block.timestamp.toI32();
+    policyEnabled.vault = comptroller.vault as string;
+    policyEnabled.policy = policyId(comptrollerAddress, policyAddress);
+    policyEnabled.activityCounter = getActivityCounter();
+    policyEnabled.activityType = 'VaultSettings';
+    policyEnabled.activityCategories = ['Vault'];
+    policyEnabled.save();
+  }
 
   if (event.params.policy.equals(release4Addresses.allowedAdapterIncomingAssetsPolicyAddress)) {
     let policy = ensureAllowedAdapterIncomingAssetsPolicy(comptrollerAddress, policyAddress, event);

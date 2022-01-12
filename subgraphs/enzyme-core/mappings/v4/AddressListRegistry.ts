@@ -48,4 +48,9 @@ export function handleListUpdateTypeSet(event: ListUpdateTypeSet): void {
   addressList.save();
 }
 
-export function handleListAttested(event: ListAttested): void {}
+export function handleListAttested(event: ListAttested): void {
+  let addressList = ensureAddressList(event.params.id.toString(), event);
+  addressList.description = event.params.description;
+  addressList.updatedAt = event.block.timestamp.toI32();
+  addressList.save();
+}

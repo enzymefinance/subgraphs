@@ -30,6 +30,7 @@ import {
   VaultLibSet,
 } from '../../generated/contracts/VaultLib4Events';
 import {
+  FreelyTransferableSharesSetEvent,
   ProtocolFeeBurned,
   ProtocolFeePaid,
   SharesTransferEvent,
@@ -148,6 +149,14 @@ export function handleFreelyTransferableSharesSet(event: FreelyTransferableShare
   let vault = useVault(event.address.toHex());
   vault.freelyTransferableShares = true;
   vault.save();
+
+  let freelyTransferable = new FreelyTransferableSharesSetEvent(uniqueEventId(event));
+  freelyTransferable.vault = vault.id;
+  freelyTransferable.timestamp = event.block.timestamp.toI32();
+  freelyTransferable.activityCounter = getActivityCounter();
+  freelyTransferable.activityCategories = ['Vault'];
+  freelyTransferable.activityType = 'VaultSettings';
+  freelyTransferable.save();
 }
 
 export function handleNominatedOwnerRemoved(event: NominatedOwnerRemoved): void {

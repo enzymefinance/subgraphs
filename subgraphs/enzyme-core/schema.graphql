@@ -296,6 +296,15 @@ type VaultOwnershipTransferred implements Activity & VaultActivity @entity {
   activityType: ActivityType!
 }
 
+type FreelyTransferableSharesSetEvent implements Activity & VaultActivity @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: Int!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
 #################################################
 # Account
 #################################################
@@ -844,12 +853,33 @@ enum PolicyType {
   Unknown
 }
 
+type PolicyEnabledForVault implements Activity & VaultActivity @entity {
+  id: ID!
+  timestamp: Int!
+  vault: Vault!
+  policy: Policy!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
+type PolicyDisabledForVault implements Activity & VaultActivity @entity {
+  id: ID!
+  timestamp: Int!
+  vault: Vault!
+  policy: Policy!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
 #################################################
 # Address Lists (for various policies)
 #################################################
 
 type AddressList @entity {
   id: ID!
+  description: String
   createdAt: Int!
   updatedAt: Int!
   creator: Bytes!

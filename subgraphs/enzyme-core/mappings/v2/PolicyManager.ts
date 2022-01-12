@@ -1,12 +1,16 @@
+import { uniqueEventId } from '@enzymefinance/subgraph-utils';
 import { ensureAdapterBlacklistPolicy } from '../../entities/AdapterBlacklistPolicy';
 import { ensureAdapterWhitelistPolicy } from '../../entities/AdapterWhitelistPolicy';
 import { ensureAssetBlacklistPolicy } from '../../entities/AssetBlacklistPolicy';
 import { ensureAssetWhitelistPolicy } from '../../entities/AssetWhitelistPolicy';
 import { ensureBuySharesCallerWhitelistPolicy } from '../../entities/BuySharesCallerWhitelistPolicy';
+import { ensureComptroller } from '../../entities/Comptroller';
+import { getActivityCounter } from '../../entities/Counter';
 import { ensureDepositorWhitelistPolicy } from '../../entities/DepositorWhitelistPolicy';
 import { ensureGuaranteedRedemptionPolicy } from '../../entities/GuaranteedRedemptionPolicy';
 import { ensureMaxConcentrationPolicy } from '../../entities/MaxConcentrationPolicy';
 import { ensureMinMaxDepositPolicy } from '../../entities/MinMaxDepositPolicy';
+import { policyId } from '../../entities/Policy';
 import { ensureUnknownPolicy } from '../../entities/UnknownPolicy';
 import { release2Addresses } from '../../generated/addresses';
 import {
@@ -15,10 +19,23 @@ import {
   PolicyEnabledForFund,
   PolicyRegistered,
 } from '../../generated/contracts/PolicyManager2Events';
+import { PolicyDisabledForVault, PolicyEnabledForVault } from '../../generated/schema';
 
 export function handlePolicyEnabledForFund(event: PolicyEnabledForFund): void {
   let comptrollerAddress = event.params.comptrollerProxy;
   let policyAddress = event.params.policy;
+
+  let comptroller = ensureComptroller(comptrollerAddress, event);
+  if (comptroller.vault != null) {
+    let policyEnabled = new PolicyEnabledForVault(uniqueEventId(event));
+    policyEnabled.timestamp = event.block.timestamp.toI32();
+    policyEnabled.vault = comptroller.vault as string;
+    policyEnabled.policy = policyId(comptrollerAddress, policyAddress);
+    policyEnabled.activityCounter = getActivityCounter();
+    policyEnabled.activityType = 'VaultSettings';
+    policyEnabled.activityCategories = ['Vault'];
+    policyEnabled.save();
+  }
 
   if (event.params.policy.equals(release2Addresses.adapterBlacklistAddress)) {
     let policy = ensureAdapterBlacklistPolicy(comptrollerAddress, policyAddress, event);
@@ -101,6 +118,18 @@ export function handlePolicyEnabledForFund(event: PolicyEnabledForFund): void {
 export function handlePolicyDisabledForFund(event: PolicyDisabledForFund): void {
   let comptrollerAddress = event.params.comptrollerProxy;
   let policyAddress = event.params.policy;
+
+  let comptroller = ensureComptroller(comptrollerAddress, event);
+  if (comptroller.vault != null) {
+    let policyEnabled = new PolicyDisabledForVault(uniqueEventId(event));
+    policyEnabled.timestamp = event.block.timestamp.toI32();
+    policyEnabled.vault = comptroller.vault as string;
+    policyEnabled.policy = policyId(comptrollerAddress, policyAddress);
+    policyEnabled.activityCounter = getActivityCounter();
+    policyEnabled.activityType = 'VaultSettings';
+    policyEnabled.activityCategories = ['Vault'];
+    policyEnabled.save();
+  }
 
   if (event.params.policy.equals(release2Addresses.adapterBlacklistAddress)) {
     let policy = ensureAdapterBlacklistPolicy(comptrollerAddress, policyAddress, event);
