@@ -27,14 +27,14 @@ export function ensureCurrencyPrice(event: ethereum.Event): CurrencyPrice {
   // All prices are vs. ETH
   currencyValue = new CurrencyPrice(id);
   currencyValue.timestamp = event.block.timestamp.toI32();
-  currencyValue.ethAud = audUsd.lt(BigDecimal.fromString('0')) ? ethUsd.div(audUsd) : BigDecimal.fromString('0');
-  currencyValue.ethBtc = btcEth.lt(BigDecimal.fromString('0'))
+  currencyValue.ethAud = audUsd.notEqual(BigDecimal.fromString('0')) ? ethUsd.div(audUsd) : BigDecimal.fromString('0');
+  currencyValue.ethBtc = btcEth.notEqual(BigDecimal.fromString('0'))
     ? BigDecimal.fromString('1').div(btcEth)
     : BigDecimal.fromString('0');
-  currencyValue.ethChf = chfUsd.lt(BigDecimal.fromString('0')) ? ethUsd.div(chfUsd) : BigDecimal.fromString('0');
-  currencyValue.ethEur = eurUsd.lt(BigDecimal.fromString('0')) ? ethUsd.div(eurUsd) : BigDecimal.fromString('0');
-  currencyValue.ethGbp = gbpUsd.lt(BigDecimal.fromString('0')) ? ethUsd.div(gbpUsd) : BigDecimal.fromString('0');
-  currencyValue.ethJpy = jpyUsd.lt(BigDecimal.fromString('0')) ? ethUsd.div(jpyUsd) : BigDecimal.fromString('0');
+  currencyValue.ethChf = chfUsd.notEqual(BigDecimal.fromString('0')) ? ethUsd.div(chfUsd) : BigDecimal.fromString('0');
+  currencyValue.ethEur = eurUsd.notEqual(BigDecimal.fromString('0')) ? ethUsd.div(eurUsd) : BigDecimal.fromString('0');
+  currencyValue.ethGbp = gbpUsd.notEqual(BigDecimal.fromString('0')) ? ethUsd.div(gbpUsd) : BigDecimal.fromString('0');
+  currencyValue.ethJpy = jpyUsd.notEqual(BigDecimal.fromString('0')) ? ethUsd.div(jpyUsd) : BigDecimal.fromString('0');
   currencyValue.ethUsd = ethUsd;
   currencyValue.save();
 
