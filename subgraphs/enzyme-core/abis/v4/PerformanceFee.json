@@ -43,12 +43,6 @@
         "internalType": "uint256",
         "name": "rate",
         "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "period",
-        "type": "uint256"
       }
     ],
     "name": "FundSettingsAdded",
@@ -66,79 +60,11 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "prevSharePrice",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "nextSharePrice",
-        "type": "uint256"
-      }
-    ],
-    "name": "LastSharePriceUpdated",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "comptrollerProxy",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "prevHighWaterMark",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
         "name": "nextHighWaterMark",
         "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "aggregateValueDue",
-        "type": "uint256"
       }
     ],
-    "name": "PaidOut",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "comptrollerProxy",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "prevAggregateValueDue",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "nextAggregateValueDue",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "int256",
-        "name": "sharesOutstandingDiff",
-        "type": "int256"
-      }
-    ],
-    "name": "PerformanceUpdated",
+    "name": "HighWaterMarkUpdated",
     "type": "event"
   },
   {
@@ -158,6 +84,31 @@
       }
     ],
     "name": "RecipientSetForFund",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "comptrollerProxy",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "sharePrice",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "sharesDue",
+        "type": "uint256"
+      }
+    ],
+    "name": "Settled",
     "type": "event"
   },
   {
@@ -209,38 +160,13 @@
       {
         "components": [
           {
-            "internalType": "uint16",
+            "internalType": "uint256",
             "name": "rate",
-            "type": "uint16"
-          },
-          {
-            "internalType": "uint64",
-            "name": "period",
-            "type": "uint64"
-          },
-          {
-            "internalType": "uint64",
-            "name": "activated",
-            "type": "uint64"
-          },
-          {
-            "internalType": "uint64",
-            "name": "lastPaid",
-            "type": "uint64"
+            "type": "uint256"
           },
           {
             "internalType": "uint256",
             "name": "highWaterMark",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "lastSharePrice",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "aggregateValueDue",
             "type": "uint256"
           }
         ],
@@ -288,7 +214,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_comptrollerProxy",
+        "name": "",
         "type": "address"
       },
       {
@@ -301,30 +227,11 @@
     "outputs": [
       {
         "internalType": "bool",
-        "name": "isPayable_",
+        "name": "",
         "type": "bool"
       }
     ],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_comptrollerProxy",
-        "type": "address"
-      }
-    ],
-    "name": "payoutAllowed",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "payoutAllowed_",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -432,12 +339,12 @@
       },
       {
         "internalType": "enum IFeeManager.FeeHook",
-        "name": "_hook",
+        "name": "",
         "type": "uint8"
       },
       {
         "internalType": "bytes",
-        "name": "_settlementData",
+        "name": "",
         "type": "bytes"
       },
       {
