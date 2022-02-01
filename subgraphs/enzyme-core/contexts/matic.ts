@@ -89,7 +89,6 @@ export const matic: Context<Variables> = {
         feeManagerAddress: v4.contracts.FeeManager.address,
         fundDeployerAddress: v4.contracts.FundDeployer.address,
         gasRelayPaymasterFactoryAddress: v4.contracts.GasRelayPaymasterFactory.address,
-        guaranteedRedemptionPolicyAddress: '0x0000000000000000000000000000000000000000',
         integrationManagerAddress: v4.contracts.IntegrationManager.address,
         managementFeeAddress: v4.contracts.ManagementFee.address,
         minAssetBalancesPostRedemptionPolicyAddress: v4.contracts.MinAssetBalancesPostRedemptionPolicy.address,

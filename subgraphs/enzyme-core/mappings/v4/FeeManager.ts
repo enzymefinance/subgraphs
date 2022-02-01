@@ -68,7 +68,7 @@ export function handleFeeEnabledForFund(event: FeeEnabledForFund): void {
   }
 
   if (event.params.fee.equals(release4Addresses.performanceFeeAddress)) {
-    let policy = ensurePerformanceFee(comptrollerAddress, feeAddress, event);
+    let policy = ensurePerformanceFee(comptrollerAddress, feeAddress, 'NO_CRYSTALLISATION_PERIOD', event);
     policy.settings = event.params.settingsData.toHex();
     policy.save();
     return;

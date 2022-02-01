@@ -95,14 +95,6 @@ export function handlePolicyEnabledForFund(event: PolicyEnabledForFund): void {
     return;
   }
 
-  if (event.params.policy.equals(release4Addresses.guaranteedRedemptionPolicyAddress)) {
-    let policy = ensureGuaranteedRedemptionPolicy(comptrollerAddress, policyAddress, event);
-    policy.enabled = true;
-    policy.settings = event.params.settingsData.toHex();
-    policy.save();
-    return;
-  }
-
   if (event.params.policy.equals(release4Addresses.minAssetBalancesPostRedemptionPolicyAddress)) {
     let policy = ensureMinAssetBalancesPostRedemptionPolicy(comptrollerAddress, policyAddress, event);
     policy.enabled = true;
@@ -201,13 +193,6 @@ export function handlePolicyDisabledOnHookForFund(event: PolicyDisabledOnHookFor
 
   if (event.params.policy.equals(release4Addresses.cumulativeSlippageTolerancePolicyAddress)) {
     let policy = ensureCumulativeSlippageTolerancePolicy(comptrollerAddress, policyAddress, event);
-    policy.enabled = false;
-    policy.save();
-    return;
-  }
-
-  if (event.params.policy.equals(release4Addresses.guaranteedRedemptionPolicyAddress)) {
-    let policy = ensureGuaranteedRedemptionPolicy(comptrollerAddress, policyAddress, event);
     policy.enabled = false;
     policy.save();
     return;

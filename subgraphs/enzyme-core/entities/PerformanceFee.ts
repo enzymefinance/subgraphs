@@ -5,6 +5,7 @@ import { feeId } from './Fee';
 export function ensurePerformanceFee(
   comptrollerAddress: Address,
   feeAddress: Address,
+  performanceFeeType: string,
   event: ethereum.Event,
 ): PerformanceFee {
   let id = feeId(comptrollerAddress, feeAddress);
@@ -23,11 +24,13 @@ export function ensurePerformanceFee(
   fee.activatedAt = 0;
   fee.createdAt = event.block.timestamp.toI32();
   fee.lastPaid = 0;
+  fee.lastSettled = 0;
   fee.settings = '';
   fee.highWaterMark = BigDecimal.fromString('0');
   fee.lastSharePrice = BigDecimal.fromString('0');
   fee.aggregateValueDue = BigDecimal.fromString('0');
   fee.sharesOutstanding = BigDecimal.fromString('0');
+  fee.performanceFeeType = performanceFeeType;
   fee.save();
 
   return fee;

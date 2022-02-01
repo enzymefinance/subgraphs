@@ -39,6 +39,11 @@ enum TradeType {
   UNSTAKE_AND_REDEEM
 }
 
+enum PerformanceFeeType {
+  CRYSTALLISATION_PERIOD
+  NO_CRYSTALLISATION_PERIOD
+}
+
 #################################################
 # Network
 #################################################
@@ -564,11 +569,13 @@ type PerformanceFee implements Fee @entity {
   period: Int!
   activatedAt: Int!
   lastPaid: Int!
+  lastSettled: Int!
   highWaterMark: BigDecimal!
   lastSharePrice: BigDecimal!
   aggregateValueDue: BigDecimal!
   sharesOutstanding: BigDecimal!
   recipient: Account
+  performanceFeeType: PerformanceFeeType!
 }
 
 type UnknownFee implements Fee @entity {

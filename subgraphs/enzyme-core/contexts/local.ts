@@ -90,7 +90,6 @@ export const local: Context<Variables> = {
         feeManagerAddress: v4.contracts.FeeManager.address,
         fundDeployerAddress: v4.contracts.FundDeployer.address,
         gasRelayPaymasterFactoryAddress: v4.contracts.GasRelayPaymasterFactory.address,
-        guaranteedRedemptionPolicyAddress: v4.contracts.GuaranteedRedemptionPolicy.address,
         integrationManagerAddress: v4.contracts.IntegrationManager.address,
         managementFeeAddress: v4.contracts.ManagementFee.address,
         minAssetBalancesPostRedemptionPolicyAddress: v4.contracts.MinAssetBalancesPostRedemptionPolicy.address,

@@ -31,7 +31,6 @@ export const abisV4 = [
   { name: 'FundDeployer', version: '4', file: './abis/v4/FundDeployer.json' },
   { name: 'GasRelayPaymasterFactory', version: '4', file: './abis/v4/GasRelayPaymasterFactory.json' },
   { name: 'GasRelayPaymasterLib', version: '4', file: './abis/v4/GasRelayPaymasterLib.json' },
-  { name: 'GuaranteedRedemptionPolicy', version: '4', file: './abis/v4/GuaranteedRedemptionPolicy.json' },
   { name: 'IntegrationManager', version: '4', file: './abis/v4/IntegrationManager.json' },
   { name: 'ManagementFee', version: '4', file: './abis/v4/ManagementFee.json' },
   {
