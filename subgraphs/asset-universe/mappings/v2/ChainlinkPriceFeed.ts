@@ -12,14 +12,14 @@ import {
 export function handlePrimitiveAdded(event: PrimitiveAdded): void {
   let release = getOrCreateRelease(releaseV2Address);
   let asset = getOrCreateAsset(event.params.primitive);
-  createPrimitiveRegistration(release, asset, event.params.aggregator, event);
+  createPrimitiveRegistration(release, asset, event);
 }
 
 export function handlePrimitiveUpdated(event: PrimitiveUpdated): void {
   let release = getOrCreateRelease(releaseV2Address);
   let asset = getOrCreateAsset(event.params.primitive);
   removePrimitiveRegistration(release, asset, event);
-  createPrimitiveRegistration(release, asset, event.params.nextAggregator, event);
+  createPrimitiveRegistration(release, asset, event);
 }
 
 export function handlePrimitiveRemoved(event: PrimitiveRemoved): void {

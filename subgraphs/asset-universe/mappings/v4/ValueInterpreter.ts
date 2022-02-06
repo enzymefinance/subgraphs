@@ -18,7 +18,7 @@ import {
 export function handleDerivativeAdded(event: DerivativeAdded): void {
   let release = getOrCreateRelease(releaseV4Address);
   let asset = getOrCreateAsset(event.params.derivative);
-  createDerivativeRegistration(release, asset, event.params.priceFeed, event);
+  createDerivativeRegistration(release, asset, event);
 }
 
 export function handleDerivativeRemoved(event: DerivativeRemoved): void {
@@ -30,10 +30,10 @@ export function handleDerivativeRemoved(event: DerivativeRemoved): void {
 export function handlePrimitiveAdded(event: PrimitiveAdded): void {
   let release = getOrCreateRelease(releaseV4Address);
   let asset = getOrCreateAsset(event.params.primitive);
-  createPrimitiveRegistration(release, asset, event.params.aggregator, event);
+  createPrimitiveRegistration(release, asset, event);
   // WETH
   let weth = getOrCreateAsset(wethTokenAddress);
-  createPrimitiveRegistration(release, weth, ZERO_ADDRESS, event);
+  createPrimitiveRegistration(release, weth, event);
 }
 
 export function handlePrimitiveRemoved(event: PrimitiveRemoved): void {

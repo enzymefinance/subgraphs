@@ -10,9 +10,9 @@ export function handleTokenDeployed(event: TokenDeployed): void {
 
   let asset = getOrCreateAsset(event.params.asset);
 
-  createPrimitiveRegistration(release, asset, ZERO_ADDRESS, event);
+  createPrimitiveRegistration(release, asset, event);
 
   // WETH
   let weth = getOrCreateAsset(wethTokenAddress);
-  createPrimitiveRegistration(release, weth, ZERO_ADDRESS, event);
+  createPrimitiveRegistration(release, weth, event);
 }

@@ -16,7 +16,6 @@ export function recordRegistrationChange(
   let id = registrationChangeId(registration, change, event);
   let record = new RegistrationChange(id);
   record.registration = registration.id;
-  record.detail = registration.detail;
   record.change = change;
   record.release = release.id;
   record.asset = asset.id;
