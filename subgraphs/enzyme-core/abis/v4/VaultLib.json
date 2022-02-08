@@ -28,8 +28,18 @@
       },
       {
         "internalType": "address",
+        "name": "_mlnBurner",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
         "name": "_wethToken",
         "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_positionsLimit",
+        "type": "uint256"
       }
     ],
     "stateMutability": "nonpayable",
@@ -758,6 +768,19 @@
   },
   {
     "inputs": [],
+    "name": "getMlnBurner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "mlnBurner_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "getMlnToken",
     "outputs": [
       {
@@ -790,6 +813,19 @@
         "internalType": "address",
         "name": "owner_",
         "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getPositionsLimit",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "positionsLimit_",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",

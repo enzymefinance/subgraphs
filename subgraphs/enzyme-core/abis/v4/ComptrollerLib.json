@@ -43,11 +43,6 @@
       },
       {
         "internalType": "address",
-        "name": "_assetFinalityResolver",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
         "name": "_gasRelayPaymasterFactory",
         "type": "address"
       },
@@ -339,13 +334,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "bool",
-        "name": "_finalizeAssets",
-        "type": "bool"
-      }
-    ],
+    "inputs": [],
     "name": "calcGav",
     "outputs": [
       {
@@ -358,13 +347,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "bool",
-        "name": "_requireFinality",
-        "type": "bool"
-      }
-    ],
+    "inputs": [],
     "name": "calcGrossShareValue",
     "outputs": [
       {
@@ -446,19 +429,6 @@
         "internalType": "bool",
         "name": "doesAutoBuyback_",
         "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getAssetFinalityResolver",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "assetFinalityResolver_",
-        "type": "address"
       }
     ],
     "stateMutability": "view",
