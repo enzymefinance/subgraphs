@@ -40,8 +40,8 @@ enum TradeType {
 }
 
 enum PerformanceFeeType {
-  CRYSTALLISATION_PERIOD
-  NO_CRYSTALLISATION_PERIOD
+  CRYSTALLIZATION_PERIOD
+  NO_CRYSTALLIZATION_PERIOD
 }
 
 #################################################
