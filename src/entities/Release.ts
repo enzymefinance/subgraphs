@@ -6,6 +6,7 @@ import {
   ReleaseAddresses,
   releaseAddressesA,
   releaseAddressesB,
+  releaseAddressesC,
   synthetixAddressResolverAddress,
   synthetixDelegateApprovalsAddress,
   synthetixIntegrateeAddress,
@@ -27,6 +28,8 @@ export function createRelease(address: Address, event: ethereum.Event): Release 
     releaseAddresses = releaseAddressesA;
   } else if (address.equals(releaseAddressesB.fundDeployerAddress)) {
     releaseAddresses = releaseAddressesB;
+  } else if (address.equals(releaseAddressesC.fundDeployerAddress)) {
+    releaseAddresses = releaseAddressesC;
   } else {
     logCritical('Release with FundDeployer {} not found.', [address.toHex()]);
     return release;
