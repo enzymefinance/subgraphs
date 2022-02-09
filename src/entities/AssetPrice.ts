@@ -82,6 +82,10 @@ export function fetchAssetPrice(asset: Asset): BigDecimal {
     return BigDecimal.fromString('0');
   }
 
+  if (releaseAddress == "0x4f1c53f096533c04d8157efb6bca3eb22ddc6360") {
+    return BigDecimal.fromString('0');
+  }
+
   let release = Release.load(releaseAddress);
   if (release == null) {
     return BigDecimal.fromString('0');

@@ -8,7 +8,6 @@ import kovanA from './deployments/kovan-releaseA.json';
 import kovanB from './deployments/kovan-releaseB.json';
 import mainnetA from './deployments/mainnet-releaseA.json';
 import mainnetB from './deployments/mainnet-releaseB.json';
-import mainnetC from './deployments/mainnet-releaseC.json';
 
 interface Deployment {
   // Core
@@ -436,78 +435,6 @@ async function fetchDeployment(source: string): Promise<DeploymentWithMetadata> 
           yearnVaultV2Adapter: mainnetB.contracts.YearnVaultV2Adapter.address,
           zeroExV2Adapter: mainnetB.contracts.ZeroExV2Adapter.address,
         },
-
-               // C is FundDeployer xxxx -
-               {
-                id: 'C',
-                networkName: 'mainnet',
-                startBlock: 12387773,
-                fundDeployer: mainnetC.contracts.FundDeployer.address,
-                vaultLib: mainnetC.contracts.VaultLib.address,
-                comptrollerLib: mainnetC.contracts.ComptrollerLib.address,
-                valueInterpreter: mainnetC.contracts.ValueInterpreter.address,
-                integrationManager: mainnetC.contracts.IntegrationManager.address,
-                policyManager: mainnetC.contracts.PolicyManager.address,
-                feeManager: mainnetC.contracts.FeeManager.address,
-      
-                // Prices
-                aggregatedDerivativePriceFeed: '0x0000000000000000000000000000000000000000',
-                chainlinkPriceFeed: '0x0000000000000000000000000000000000000000',
-      
-                // Derivative Price Feeds
-                aavePriceFeed: mainnetC.contracts.AavePriceFeed.address,
-                alphaHomoraV1PriceFeed: '0x0000000000000000000000000000000000000000',
-                chaiPriceFeed: '0x0000000000000000000000000000000000000000',
-                compoundPriceFeed: mainnetC.contracts.CompoundPriceFeed.address,
-                curvePriceFeed: mainnetC.contracts.CurvePriceFeed.address,
-                idlePriceFeed: mainnetC.contracts.IdlePriceFeed.address,
-                lidoStethPriceFeed: mainnetC.contracts.LidoStethPriceFeed.address,
-                stakehoundEthPriceFeed: mainnetC.contracts.StakehoundEthPriceFeed.address,
-                synthetixPriceFeed: '0x0000000000000000000000000000000000000000',
-                uniswapV2PoolPriceFeed: mainnetC.contracts.UniswapV2PoolPriceFeed.address,
-                wdgldPriceFeed: '0x0000000000000000000000000000000000000000',
-                yearnVaultV2PriceFeed: mainnetC.contracts.YearnVaultV2PriceFeed.address,
-      
-                // Peripheral
-                fundActionsWrapper: mainnetC.contracts.UnpermissionedActionsWrapper.address,
-      
-                // Fees
-                managementFee: mainnetC.contracts.ManagementFee.address,
-                performanceFee: mainnetC.contracts.PerformanceFee.address,
-                entranceRateBurnFee: mainnetC.contracts.EntranceRateBurnFee.address,
-                entranceRateDirectFee: mainnetC.contracts.EntranceRateDirectFee.address,
-      
-                // Policies
-                adapterBlacklist: '0x0000000000000000000000000000000000000000',
-                adapterWhitelist: '0x0000000000000000000000000000000000000000',
-                assetBlacklist: '0x0000000000000000000000000000000000000000',
-                assetWhitelist:'0x0000000000000000000000000000000000000000',
-                investorWhitelist: '0x0000000000000000000000000000000000000000',
-                guaranteedRedemption: '0x0000000000000000000000000000000000000000',
-                maxConcentration: '0x0000000000000000000000000000000000000000',
-                minMaxInvestment: mainnetC.contracts.MinMaxInvestmentPolicy.address,
-                buySharesCallerWhitelist: '0x0000000000000000000000000000000000000000',
-      
-                // Adapters
-                aaveAdapter: mainnetC.contracts.AaveAdapter.address,
-                alphaHomoraV1Adapter: '0x0000000000000000000000000000000000000000',
-                curveExchangeAdapter: mainnetC.contracts.CurveExchangeAdapter.address,
-                curveLiquidityAaveAdapter: mainnetC.contracts.CurveLiquidityAaveAdapter.address,
-                curveLiquidityEursAdapter: '0x0000000000000000000000000000000000000000',
-                curveLiquiditySethAdapter: mainnetC.contracts.CurveLiquiditySethAdapter.address,
-                curveLiquidityStethAdapter: mainnetC.contracts.CurveLiquidityStethAdapter.address,
-                trackedAssetsAdapter: '0x0000000000000000000000000000000000000000',
-                compoundAdapter: mainnetC.contracts.CompoundAdapter.address,
-                chaiAdapter: '0x0000000000000000000000000000000000000000',
-                idleAdapter: mainnetC.contracts.IdleAdapter.address,
-                kyberAdapter:'0x0000000000000000000000000000000000000000',
-                paraSwapAdapter: '0x0000000000000000000000000000000000000000',
-                paraSwapV4Adapter: '0x0000000000000000000000000000000000000000',
-                synthetixAdapter: mainnetC.contracts.SynthetixAdapter.address,
-                uniswapV2Adapter: '0x0000000000000000000000000000000000000000',
-                yearnVaultV2Adapter: mainnetC.contracts.YearnVaultV2Adapter.address,
-                zeroExV2Adapter: mainnetC.contracts.ZeroExV2Adapter.address,
-              },
       ],
 
       // External
