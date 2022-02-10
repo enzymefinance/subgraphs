@@ -3,11 +3,8 @@ description: Enzyme Finance
 repository: https://github.com/enzymefinance/subgraph
 schema:
   file: ./schema.graphql
-# graft:
-#   base: QmPzMXZBUdUiCwynwpPFw7jKTbp97Xf1ZKXGQ348Hsz5pB
-#   block: 12399536
-# features:
-#   - nonFatalErrors
+features:
+  - nonFatalErrors
 
 
 dataSources:

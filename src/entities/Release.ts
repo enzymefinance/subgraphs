@@ -6,13 +6,13 @@ import {
   ReleaseAddresses,
   releaseAddressesA,
   releaseAddressesB,
-  releaseAddressesC,
   synthetixAddressResolverAddress,
   synthetixDelegateApprovalsAddress,
   synthetixIntegrateeAddress,
   uniswapV2IntegrateeAddress,
   wethTokenAddress,
 } from '../addresses';
+import { zeroAddress } from '../constants';
 import { Release } from '../generated/schema';
 import { logCritical } from '../utils/logCritical';
 import { networkId } from './Network';
@@ -28,10 +28,70 @@ export function createRelease(address: Address, event: ethereum.Event): Release 
     releaseAddresses = releaseAddressesA;
   } else if (address.equals(releaseAddressesB.fundDeployerAddress)) {
     releaseAddresses = releaseAddressesB;
-  } else if (address.equals(releaseAddressesC.fundDeployerAddress)) {
-    releaseAddresses = releaseAddressesC;
   } else {
-    logCritical('Release with FundDeployer {} not found.', [address.toHex()]);
+    release.aaveAdapter = zeroAddress.toHex();
+    release.aavePriceFeed = zeroAddress.toHex();
+    release.adapterBlacklist = zeroAddress.toHex();
+    release.adapterWhitelist = zeroAddress.toHex();
+    release.aggregatedDerivativePriceFeed = zeroAddress.toHex();
+    release.alphaHomoraV1Adapter = zeroAddress.toHex();
+    release.alphaHomoraV1PriceFeed = zeroAddress.toHex();
+    release.assetBlacklist = zeroAddress.toHex();
+    release.assetWhitelist = zeroAddress.toHex();
+    release.buySharesCallerWhitelist = zeroAddress.toHex();
+    release.chaiAdapter = zeroAddress.toHex();
+    release.chaiIntegratee = zeroAddress.toHex();
+    release.chainlinkPriceFeed = zeroAddress.toHex();
+    release.chaiPriceFeed = zeroAddress.toHex();
+    release.compoundAdapter = zeroAddress.toHex();
+    release.compoundPriceFeed = zeroAddress.toHex();
+    release.comptrollerLib = zeroAddress.toHex();
+    release.curveExchangeAdapter = zeroAddress.toHex();
+    release.curveLiquidityAaveAdapter = zeroAddress.toHex();
+    release.curveLiquidityEursAdapter = zeroAddress.toHex();
+    release.curveLiquiditySethAdapter = zeroAddress.toHex();
+    release.curveLiquidityStethAdapter = zeroAddress.toHex();
+    release.curvePriceFeed = zeroAddress.toHex();
+    release.dispatcher = dispatcherAddress.toHex();
+    release.entranceRateBurnFee = zeroAddress.toHex();
+    release.entranceRateDirectFee = zeroAddress.toHex();
+    release.feeManager = zeroAddress.toHex();
+    release.fundActionsWrapper = zeroAddress.toHex();
+    release.fundDeployer = zeroAddress.toHex();
+    release.guaranteedRedemption = zeroAddress.toHex();
+    release.idleAdapter = zeroAddress.toHex();
+    release.idlePriceFeed = zeroAddress.toHex();
+    release.integrationManager = zeroAddress.toHex();
+    release.investorWhitelist = zeroAddress.toHex();
+    release.kyberAdapter = zeroAddress.toHex();
+    release.kyberIntegratee = zeroAddress.toHex();
+    release.lidoStethPriceFeed = zeroAddress.toHex();
+    release.managementFee = zeroAddress.toHex();
+    release.maxConcentration = zeroAddress.toHex();
+    release.minMaxInvestment = zeroAddress.toHex();
+    release.paraSwapAdapter = zeroAddress.toHex();
+    release.paraSwapV4Adapter = zeroAddress.toHex();
+    release.performanceFee = zeroAddress.toHex();
+    release.policyManager = zeroAddress.toHex();
+    release.stakehoundEthPriceFeed = zeroAddress.toHex();
+    release.synthetixAdapter = zeroAddress.toHex();
+    release.synthetixAddressResolver = zeroAddress.toHex();
+    release.synthetixDelegateApprovals = zeroAddress.toHex();
+    release.synthetixIntegratee = zeroAddress.toHex();
+    release.synthetixPriceFeed = zeroAddress.toHex();
+    release.trackedAssetsAdapter = zeroAddress.toHex();
+    release.uniswapV2Adapter = zeroAddress.toHex();
+    release.uniswapV2Integratee = zeroAddress.toHex();
+    release.uniswapV2PoolPriceFeed = zeroAddress.toHex();
+    release.valueInterpreter = zeroAddress.toHex();
+    release.vaultLib = zeroAddress.toHex();
+    release.wdgldPriceFeed = zeroAddress.toHex();
+    release.wethToken = wethTokenAddress.toHex();
+    release.yearnVaultV2Adapter = zeroAddress.toHex();
+    release.yearnVaultV2PriceFeed = zeroAddress.toHex();
+    release.zeroExV2Adapter = zeroAddress.toHex();
+    release.save();
+
     return release;
   }
 
@@ -126,7 +186,7 @@ export function releaseFromPriceFeed(event: ethereum.Event): Release | null {
   ) {
     release = ensureRelease(releaseAddressesB.fundDeployerAddress.toHex(), event);
   } else {
-    logCritical('Release with PriceFeed {} not found.', [priceFeed.toHex()]);
+    // logCritical('Release with PriceFeed {} not found.', [priceFeed.toHex()]);
     return null;
   }
 
