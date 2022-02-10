@@ -26,7 +26,6 @@ export function ensureAsset(address: Address): Asset {
   asset.decimals = decimalsCall.value;
   asset.type = 'UNKNOWN';
   asset.releases = new Array<string>();
-  asset.networkAssetHolding = '';
   asset.save();
 
   return asset;

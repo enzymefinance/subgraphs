@@ -4,11 +4,6 @@ import { Asset, AssetPrice, Release } from '../generated/schema';
 import { ValueInterpreterContract } from '../generated/ValueInterpreterContract';
 import { logCritical } from '../utils/logCritical';
 import { toBigDecimal } from '../utils/toBigDecimal';
-import {
-  updateDailyAssetPriceCandle,
-  updateHourlyAssetPriceCandle,
-  updateMonthlyAssetPriceCandle,
-} from './AssetPriceCandle';
 import { useNetwork } from './Network';
 
 export function assetPriceId(asset: Asset, timestamp: BigInt): string {
@@ -59,16 +54,7 @@ export function trackAssetPrice(asset: Asset, timestamp: BigInt, price: BigDecim
     return current;
   }
 
-  let hourly = updateHourlyAssetPriceCandle(asset, current);
-  let daily = updateDailyAssetPriceCandle(asset, current);
-  let monthly = updateMonthlyAssetPriceCandle(asset, current);
-
-  // NOTE: It's important that we update the price references AFTER the candles have been updated.
-  // Otherwise, we can't carry over the previous to the new candles.
   asset.price = current.id;
-  asset.hourly = hourly.id;
-  asset.daily = daily.id;
-  asset.monthly = monthly.id;
   asset.save();
 
   return current;

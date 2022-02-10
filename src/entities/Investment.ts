@@ -1,6 +1,5 @@
 import { BigDecimal, ethereum } from '@graphprotocol/graph-ts';
 import { Account, Fund, Investment } from '../generated/schema';
-import { trackNetworkInvestments } from './NetworkState';
 
 function investmentId(investor: Account, fund: Fund): string {
   return fund.id + '/' + investor.id;
@@ -24,8 +23,6 @@ export function ensureInvestment(investor: Account, fund: Fund, stateId: string,
 
   fund.investmentCount = fund.investmentCount + 1;
   fund.save();
-
-  trackNetworkInvestments(event);
 
   return investment;
 }

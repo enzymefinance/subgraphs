@@ -1,6 +1,5 @@
 import { Address, ethereum } from '@graphprotocol/graph-ts';
 import { Account } from '../generated/schema';
-import { trackNetworkInvestors, trackNetworkManagers } from './NetworkState';
 
 export function ensureManager(managerAddress: Address, event: ethereum.Event): Account {
   let account = ensureAccount(managerAddress, event);
@@ -9,8 +8,6 @@ export function ensureManager(managerAddress: Address, event: ethereum.Event): A
     account.manager = true;
     account.managerSince = event.block.timestamp;
     account.save();
-
-    trackNetworkManagers(event);
   }
 
   return account;
@@ -24,7 +21,6 @@ export function ensureInvestor(investorAddress: Address, event: ethereum.Event):
     account.investorSince = event.block.timestamp;
     account.save();
 
-    trackNetworkInvestors(event);
   }
 
   return account;

@@ -5,7 +5,6 @@ import { logCritical } from '../utils/logCritical';
 import { ensureAccount, ensureManager } from './Account';
 import { createFeeState } from './FeeState';
 import { createFundState } from './FundState';
-import { trackNetworkFunds } from './NetworkState';
 import { createPortfolioState } from './PortfolioState';
 import { ensureRelease } from './Release';
 import { createShareState } from './ShareState';
@@ -46,10 +45,7 @@ export function createFund(event: NewFundCreated): Fund {
   fund.portfolio = portfolio.id;
   fund.feeState = feeState.id;
   fund.state = state.id;
-
   fund.save();
-
-  trackNetworkFunds(event);
 
   return fund;
 }

@@ -11,7 +11,6 @@ import {
 import { DerivativeAddedEvent, DerivativeRemovedEvent, DerivativeUpdatedEvent } from '../generated/schema';
 import { arrayDiff } from '../utils/arrayDiff';
 import { arrayUnique } from '../utils/arrayUnique';
-import { ensureCron, triggerCron } from '../utils/cronManager';
 import { genericId } from '../utils/genericId';
 
 export function handleDerivativeAdded(event: DerivativeAdded): void {
@@ -32,17 +31,6 @@ export function handleDerivativeAdded(event: DerivativeAdded): void {
   derivativeAdded.transaction = ensureTransaction(event).id;
   derivativeAdded.priceFeed = event.params.priceFeed.toHex();
   derivativeAdded.save();
-
-  // Whenever a new asset is registered, we need to fetch its current price immediately.
-  let current = fetchAssetPrice(derivative);
-  trackAssetPrice(derivative, event.block.timestamp, current);
-
-  let cron = ensureCron();
-  cron.derivatives = arrayUnique<string>(cron.derivatives.concat([derivative.id]));
-  cron.save();
-
-  // It's important that we run cron last.
-  triggerCron(event.block.timestamp);
 }
 
 export function handleDerivativeRemoved(event: DerivativeRemoved): void {
@@ -59,13 +47,6 @@ export function handleDerivativeRemoved(event: DerivativeRemoved): void {
   derivativeRemoved.timestamp = event.block.timestamp;
   derivativeRemoved.transaction = ensureTransaction(event).id;
   derivativeRemoved.save();
-
-  let cron = ensureCron();
-  cron.derivatives = arrayDiff<string>(cron.derivatives, [derivative.id]);
-  cron.save();
-
-  // It's important that we run cron last.
-  triggerCron(event.block.timestamp);
 }
 
 export function handleDerivativeUpdated(event: DerivativeUpdated): void {
@@ -78,11 +59,4 @@ export function handleDerivativeUpdated(event: DerivativeUpdated): void {
   derivativeUpdated.prevPriceFeed = event.params.prevPriceFeed.toHex();
   derivativeUpdated.nextPriceFeed = event.params.nextPriceFeed.toHex();
   derivativeUpdated.save();
-
-  // Whenever a new asset is registered, we need to fetch its current price immediately.
-  let current = fetchAssetPrice(derivative);
-  trackAssetPrice(derivative, event.block.timestamp, current);
-
-  // It's important that we run cron last.
-  triggerCron(event.block.timestamp);
 }

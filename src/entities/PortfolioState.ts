@@ -8,7 +8,6 @@ import { toBigDecimal } from '../utils/toBigDecimal';
 import { ensureAsset } from './Asset';
 import { ensureFundState, useFundState } from './FundState';
 import { createHoldingState, findHoldingState, useHoldingState } from './HoldingState';
-import { trackNetworkAssetHoldings } from './NetworkAssetHolding';
 
 export function portfolioStateId(fund: Fund, event: ethereum.Event): string {
   return fund.id + '/' + event.block.timestamp.toString() + '/portfolio';
@@ -95,8 +94,6 @@ export function trackPortfolioState(fund: Fund, event: ethereum.Event, cause: En
 
   fund.portfolio = portfolio.id;
   fund.save();
-
-  trackNetworkAssetHoldings(previousHoldings, nextHoldings, event);
 
   return portfolio;
 }

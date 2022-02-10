@@ -844,25 +844,3 @@ templates:
           handler: handleSharesRedeemed
         - event: VaultProxySet(address)
           handler: handleVaultProxySet
-
-  - name: ChainlinkAggregatorDataSource
-    kind: ethereum/contract
-    network: {{networkName}}
-    source:
-      abi: ChainlinkAggregatorContract
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.4
-      language: wasm/assemblyscript
-      entities: []
-      file: ./src/mappings/ChainlinkAggregator.ts
-      abis:
-        - name: ValueInterpreterContract
-          file: ./node_modules/@enzymefinance/protocol/artifacts/ValueInterpreter.json
-        - name: ChainlinkAggregatorContract
-          file: ./node_modules/@chainlink/contracts/abi/v0.6/AggregatorInterface.json
-        - name: ChainlinkAggregatorProxyContract
-          file: ./node_modules/@chainlink/contracts/abi/v0.6/AggregatorProxy.json
-      eventHandlers:
-        - event: AnswerUpdated(indexed int256,indexed uint256,uint256)
-          handler: handleAnswerUpdated
