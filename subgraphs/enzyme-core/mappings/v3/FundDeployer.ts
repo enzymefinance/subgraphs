@@ -13,7 +13,7 @@ import {
   VaultCallDeregistered,
   VaultCallRegistered,
 } from '../../generated/contracts/FundDeployer3Events';
-import { ComptrollerLib3DataSource, VaultLib3DataSource } from '../../generated/templates';
+import { ComptrollerLib3DataSource } from '../../generated/templates';
 
 export function handleNewFundCreated(event: NewFundCreated): void {
   let vault = createVault(
@@ -31,7 +31,6 @@ export function handleNewFundCreated(event: NewFundCreated): void {
   let comptrollerContext = new DataSourceContext();
   comptrollerContext.setString('vaultProxy', event.params.vaultProxy.toHex());
 
-  VaultLib3DataSource.create(event.params.vaultProxy);
   ComptrollerLib3DataSource.createWithContext(event.params.comptrollerProxy, comptrollerContext);
 
   let comptroller = ensureComptroller(event.params.comptrollerProxy, event);

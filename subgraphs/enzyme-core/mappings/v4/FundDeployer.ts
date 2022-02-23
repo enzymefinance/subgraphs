@@ -34,7 +34,7 @@ import {
   VaultReconfigurationExecuted,
   VaultReconfigurationSignalled,
 } from '../../generated/schema';
-import { ComptrollerLib4DataSource, VaultLib4DataSource } from '../../generated/templates';
+import { ComptrollerLib4DataSource } from '../../generated/templates';
 
 export function handleNewFundCreated(event: NewFundCreated): void {
   let vaultContract = ProtocolSdk.bind(event.params.vaultProxy);
@@ -60,7 +60,6 @@ export function handleNewFundCreated(event: NewFundCreated): void {
   let comptrollerContext = new DataSourceContext();
   comptrollerContext.setString('vaultProxy', event.params.vaultProxy.toHex());
 
-  VaultLib4DataSource.create(event.params.vaultProxy);
   ComptrollerLib4DataSource.createWithContext(event.params.comptrollerProxy, comptrollerContext);
 
   let comptroller = ensureComptroller(event.params.comptrollerProxy, event);

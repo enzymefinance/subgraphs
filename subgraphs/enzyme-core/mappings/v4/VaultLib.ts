@@ -1,5 +1,6 @@
 import { arrayDiff, arrayUnique, toBigDecimal, uniqueEventId, ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
 import { ensureAccount, ensureAssetManager, ensureDepositor, ensureOwner } from '../../entities/Account';
+import { ensureAsset } from '../../entities/Asset';
 import { getActivityCounter } from '../../entities/Counter';
 import { ensureDeposit, trackDeposit } from '../../entities/Deposit';
 import { useNetwork } from '../../entities/Network';
@@ -214,7 +215,7 @@ export function handleOwnershipTransferred(event: OwnershipTransferred): void {
 }
 
 export function handleTrackedAssetAdded(event: TrackedAssetAdded): void {
-  let trackedAsset = ensureAssetManager(event.params.asset, event);
+  let trackedAsset = ensureAsset(event.params.asset);
 
   let vault = useVault(event.address.toHex());
   vault.trackedAssets = arrayUnique<string>(vault.trackedAssets.concat([trackedAsset.id]));
@@ -222,7 +223,7 @@ export function handleTrackedAssetAdded(event: TrackedAssetAdded): void {
 }
 
 export function handleTrackedAssetRemoved(event: TrackedAssetRemoved): void {
-  let trackedAsset = ensureAssetManager(event.params.asset, event);
+  let trackedAsset = ensureAsset(event.params.asset);
 
   let vault = useVault(event.address.toHex());
   vault.trackedAssets = arrayDiff<string>(vault.trackedAssets, [trackedAsset.id]);

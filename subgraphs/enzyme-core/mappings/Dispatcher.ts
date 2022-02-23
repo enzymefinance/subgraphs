@@ -28,7 +28,7 @@ import {
   VaultMigrationExecuted,
   VaultMigrationSignalled,
 } from '../generated/schema';
-import { ComptrollerLib3DataSource, ComptrollerLib4DataSource } from '../generated/templates';
+import { ComptrollerLib3DataSource, ComptrollerLib4DataSource, VaultLib4DataSource } from '../generated/templates';
 
 export function handleCurrentFundDeployerSet(event: CurrentFundDeployerSet): void {
   let network = ensureNetwork(event);
@@ -205,4 +205,8 @@ export function handleOwnershipTransferred(event: OwnershipTransferred): void {
 
 export function handleMigrationInCancelHookFailed(event: MigrationInCancelHookFailed): void {}
 export function handleMigrationOutHookFailed(event: MigrationOutHookFailed): void {}
-export function handleVaultProxyDeployed(event: VaultProxyDeployed): void {}
+
+export function handleVaultProxyDeployed(event: VaultProxyDeployed): void {
+  // start monitoring the VaultProxy - always use the latest ABI (v4 for Sulu)
+  VaultLib4DataSource.create(event.params.vaultProxy);
+}
