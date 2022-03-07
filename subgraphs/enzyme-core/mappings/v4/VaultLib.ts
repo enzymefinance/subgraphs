@@ -31,6 +31,7 @@ import {
   VaultLibSet,
 } from '../../generated/contracts/VaultLib4Events';
 import {
+  CompoundDebtPosition,
   FreelyTransferableSharesSetEvent,
   ProtocolFeeBurned,
   ProtocolFeePaid,
@@ -286,14 +287,42 @@ export function handleSymbolSet(event: SymbolSet): void {
   vault.save();
 }
 
-export function handleApproval(event: Approval): void {}
-export function handleAssetWithdrawn(event: AssetWithdrawn): void {}
-export function handleExternalPositionAdded(event: ExternalPositionAdded): void {}
-export function handleExternalPositionRemoved(event: ExternalPositionRemoved): void {}
-export function handleVaultLibSet(event: VaultLibSet): void {}
+export function handleExternalPositionAdded(event: ExternalPositionAdded): void {
+  let vault = useVault(event.address.toHex());
+  let externalPositionAddress = event.params.externalPosition.toHex();
+
+  //  Compound Debt Position
+  let cdp = CompoundDebtPosition.load(externalPositionAddress);
+  if (cdp != null) {
+    cdp.active = true;
+    cdp.save();
+    return;
+  }
+
+  // TODO: Uniswap V3 Liquidity Position
+}
+
+export function handleExternalPositionRemoved(event: ExternalPositionRemoved): void {
+  let vault = useVault(event.address.toHex());
+  let externalPositionAddress = event.params.externalPosition.toHex();
+
+  //  Compound Debt Position
+  let cdp = CompoundDebtPosition.load(externalPositionAddress);
+  if (cdp != null) {
+    cdp.active = false;
+    cdp.save();
+    return;
+  }
+
+  // TODO: Uniswap V3 Liquidity Position
+}
 
 export function handleEthReceived(event: EthReceived): void {
   let vault = useVault(event.address.toHex());
   vault.lastAssetUpdate = event.block.timestamp.toI32();
   vault.save();
 }
+
+export function handleApproval(event: Approval): void {}
+export function handleAssetWithdrawn(event: AssetWithdrawn): void {}
+export function handleVaultLibSet(event: VaultLibSet): void {}

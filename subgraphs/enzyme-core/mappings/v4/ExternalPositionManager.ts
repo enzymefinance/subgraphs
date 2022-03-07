@@ -31,7 +31,10 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
   let cdp = CompoundDebtPosition.load(event.params.externalPosition.toHex());
   if (cdp != null) {
     trackCompoundDebtPositionAssets(event.params.externalPosition.toHex(), denominationAsset, event);
+    return;
   }
+
+  // Uniswap V3 Liquidity
 }
 
 export function handleExternalPositionTypeInfoUpdated(event: ExternalPositionTypeInfoUpdated): void {}
