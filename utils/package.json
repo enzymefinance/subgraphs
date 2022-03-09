@@ -34,6 +34,6 @@
     "Subgraph"
   ],
   "dependencies": {
-    "@graphprotocol/graph-ts": "^0.24.1"
+    "@graphprotocol/graph-ts": "^0.25.0"
   }
 }

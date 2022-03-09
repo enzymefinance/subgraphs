@@ -10,8 +10,13 @@ export let ONE_DAY = BigInt.fromI32(86400);
 
 export let ZERO_BI = BigInt.fromI32(0);
 export let ONE_BI = BigInt.fromI32(1);
+export let UINT256_MAX = BigInt.fromString(
+  '115792089237316195423570985008687907853269984665640564039457584007913129639935',
+);
+
 export let ZERO_BD = ZERO_BI.toBigDecimal();
 export let ONE_BD = ONE_BI.toBigDecimal();
+export let UINT256_MAX_BD = UINT256_MAX.toBigDecimal();
 
 export let ETH = Address.fromString('0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE');
 

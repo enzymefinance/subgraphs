@@ -1,4 +1,5 @@
 export const abisV4 = [
+  { name: 'AaveDebtPositionLib', version: '4', file: './abis/v4/AaveDebtPositionLib.json' },
   { name: 'AddressListRegistry', version: '4', file: './abis/v4/AddressListRegistry.json' },
   {
     name: 'AllowedAdapterIncomingAssetsPolicy',
@@ -31,6 +32,7 @@ export const abisV4 = [
   { name: 'FundDeployer', version: '4', file: './abis/v4/FundDeployer.json' },
   { name: 'GasRelayPaymasterFactory', version: '4', file: './abis/v4/GasRelayPaymasterFactory.json' },
   { name: 'GasRelayPaymasterLib', version: '4', file: './abis/v4/GasRelayPaymasterLib.json' },
+  { name: 'IExternalPositionProxy', version: '4', file: './abis/v4/IExternalPositionProxy.json' },
   { name: 'IntegrationManager', version: '4', file: './abis/v4/IntegrationManager.json' },
   { name: 'ManagementFee', version: '4', file: './abis/v4/ManagementFee.json' },
   {

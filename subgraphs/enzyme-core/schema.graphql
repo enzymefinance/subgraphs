@@ -952,10 +952,11 @@ type CompoundDebtPosition implements ExternalPosition @entity {
 }
 
 enum CompoundDebtPositionChangeType {
-  AssetBorrowed
-  BorrowedAssetRepaid
-  CollateralAssetAdded
-  CollateralAssetRemoved
+  AddCollateral
+  RemoveCollateral
+  Borrow
+  RepayBorrow
+  ClaimComp
 }
 
 type CompoundDebtPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
@@ -964,7 +965,39 @@ type CompoundDebtPositionChange implements Activity & VaultActivity & ExternalPo
   timestamp: Int!
   externalPosition: ExternalPosition!
   changeType: CompoundDebtPositionChangeType!
-  assetAmount: AssetAmount!
+  assetAmounts: [AssetAmount!]!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
+type AaveDebtPosition implements ExternalPosition @entity {
+  id: ID!
+  vault: Vault!
+  type: Int!
+  active: Boolean!
+
+  collateralAmounts: [AssetAmount!]!
+  borrowedAmounts: [AssetAmount!]!
+
+  changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
+}
+
+enum AaveDebtPositionChangeType {
+  AddCollateral
+  RemoveCollateral
+  Borrow
+  RepayBorrow
+  ClaimStkAave
+}
+
+type AaveDebtPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: Int!
+  externalPosition: ExternalPosition!
+  changeType: CompoundDebtPositionChangeType!
+  assetAmounts: [AssetAmount!]!
   activityCounter: Int!
   activityCategories: [ActivityCategory!]!
   activityType: ActivityType!

@@ -1,7 +1,11 @@
 import { BigDecimal, BigInt } from '@graphprotocol/graph-ts';
-import { ZERO_BD, ZERO_BI } from '../constants';
+import { UINT256_MAX, UINT256_MAX_BD, ZERO_BD, ZERO_BI } from '../constants';
 
 export function toBigDecimal(quantity: BigInt, decimals: i32 = 18): BigDecimal {
+  if (quantity.equals(UINT256_MAX)) {
+    return UINT256_MAX_BD;
+  }
+
   return quantity.divDecimal(
     BigInt.fromI32(10)
       .pow(decimals as u8)

@@ -1,47 +1,47 @@
 import { logCritical, toBigDecimal, uniqueEventId } from '@enzymefinance/subgraph-utils';
 import { Address, BigDecimal, ethereum } from '@graphprotocol/graph-ts';
 import { ProtocolSdk } from '../generated/contracts/ProtocolSdk';
-import { Asset, AssetAmount, CompoundDebtPosition, CompoundDebtPositionChange, Vault } from '../generated/schema';
+import { Asset, AaveDebtPosition, AaveDebtPositionChange, Vault, AssetAmount } from '../generated/schema';
 import { ensureAsset } from './Asset';
 import { createAssetAmount } from './AssetAmount';
 import { getActivityCounter } from './Counter';
 import { useVault } from './Vault';
 
-export function useCompoundDebtPosition(id: string): CompoundDebtPosition {
-  let cdp = CompoundDebtPosition.load(id);
+export function useAaveDebtPosition(id: string): AaveDebtPosition {
+  let cdp = AaveDebtPosition.load(id);
   if (cdp == null) {
-    logCritical('Failed to load CompoundDebtPosition {}.', [id]);
+    logCritical('Failed to load fund {}.', [id]);
   }
 
-  return cdp as CompoundDebtPosition;
+  return cdp as AaveDebtPosition;
 }
 
-export function createCompoundDebtPosition(
+export function createAaveDebtPosition(
   externalPositionAddress: Address,
   vaultAddress: Address,
   type: i32,
-): CompoundDebtPosition {
-  let compoundDebtPosition = new CompoundDebtPosition(externalPositionAddress.toHex());
-  compoundDebtPosition.vault = useVault(vaultAddress.toHex()).id;
-  compoundDebtPosition.active = true;
-  compoundDebtPosition.type = type;
-  compoundDebtPosition.collateralAmounts = new Array<string>();
-  compoundDebtPosition.borrowedAmounts = new Array<string>();
-  compoundDebtPosition.save();
+): AaveDebtPosition {
+  let aaveDebtPosition = new AaveDebtPosition(externalPositionAddress.toHex());
+  aaveDebtPosition.vault = useVault(vaultAddress.toHex()).id;
+  aaveDebtPosition.active = true;
+  aaveDebtPosition.type = type;
+  aaveDebtPosition.collateralAmounts = new Array<string>();
+  aaveDebtPosition.borrowedAmounts = new Array<string>();
+  aaveDebtPosition.save();
 
-  return compoundDebtPosition;
+  return aaveDebtPosition;
 }
 
-export function createCompoundDebtPositionChange(
-  compoundDebtPositionAddress: Address,
+export function createAaveDebtPositionChange(
+  aaveDebtPositionAddress: Address,
   assetAmounts: AssetAmount[],
   changeType: string,
   vault: Vault,
   event: ethereum.Event,
-): CompoundDebtPositionChange {
-  let change = new CompoundDebtPositionChange(uniqueEventId(event));
+): AaveDebtPositionChange {
+  let change = new AaveDebtPositionChange(uniqueEventId(event));
   change.changeType = changeType;
-  change.externalPosition = compoundDebtPositionAddress.toHex();
+  change.externalPosition = aaveDebtPositionAddress.toHex();
   change.assetAmounts = assetAmounts.map<string>((assetAmount) => assetAmount.id);
   change.vault = vault.id;
   change.activityCounter = getActivityCounter();
@@ -55,32 +55,32 @@ export function createCompoundDebtPositionChange(
   return change;
 }
 
-export function trackCompoundDebtPositionAssets(id: string, denominationAsset: Asset, event: ethereum.Event): void {
-  let cdpContract = ProtocolSdk.bind(Address.fromString(id));
+export function trackAaveDebtPositionAssets(id: string, denominationAsset: Asset, event: ethereum.Event): void {
+  let adpContract = ProtocolSdk.bind(Address.fromString(id));
 
-  let collateral = cdpContract.getManagedAssets();
+  let collateral = adpContract.getManagedAssets();
   let collateralAssetAmounts = new Array<string>();
   for (let i = 0; i < collateral.value0.length; i++) {
     let address = collateral.value0[i];
     let amount = collateral.value1[i];
 
     let asset = ensureAsset(address);
-    let assetAmount = createAssetAmount(asset, toBigDecimal(amount, asset.decimals), denominationAsset, 'cdp', event);
+    let assetAmount = createAssetAmount(asset, toBigDecimal(amount, asset.decimals), denominationAsset, 'adp', event);
     collateralAssetAmounts = collateralAssetAmounts.concat([assetAmount.id]);
   }
 
-  let borrowed = cdpContract.getDebtAssets();
+  let borrowed = adpContract.getDebtAssets();
   let borrowedAssetAmounts = new Array<string>();
   for (let i = 0; i < borrowed.value0.length; i++) {
     let address = borrowed.value0[i];
     let amount = borrowed.value1[i];
 
     let asset = ensureAsset(address);
-    let assetAmount = createAssetAmount(asset, toBigDecimal(amount, asset.decimals), denominationAsset, 'cdp', event);
+    let assetAmount = createAssetAmount(asset, toBigDecimal(amount, asset.decimals), denominationAsset, 'adp', event);
     borrowedAssetAmounts = borrowedAssetAmounts.concat([assetAmount.id]);
   }
 
-  let cdp = useCompoundDebtPosition(id);
+  let cdp = useAaveDebtPosition(id);
   cdp.collateralAmounts = collateralAssetAmounts;
   cdp.borrowedAmounts = borrowedAssetAmounts;
   cdp.save();

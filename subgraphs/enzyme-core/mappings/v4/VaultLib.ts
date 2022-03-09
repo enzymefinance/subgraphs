@@ -1,11 +1,14 @@
 import { arrayDiff, arrayUnique, toBigDecimal, uniqueEventId, ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
+import { useAaveDebtPosition } from '../../entities/AaveDebtPosition';
 import { ensureAccount, ensureAssetManager, ensureDepositor, ensureOwner } from '../../entities/Account';
 import { ensureAsset } from '../../entities/Asset';
+import { useCompoundDebtPosition } from '../../entities/CompoundDebtPosition';
 import { getActivityCounter } from '../../entities/Counter';
 import { ensureDeposit, trackDeposit } from '../../entities/Deposit';
 import { useNetwork } from '../../entities/Network';
 import { useVault } from '../../entities/Vault';
 import { release4Addresses } from '../../generated/addresses';
+import { ProtocolSdk } from '../../generated/contracts/ProtocolSdk';
 import {
   AccessorSet,
   Approval,
@@ -31,7 +34,6 @@ import {
   VaultLibSet,
 } from '../../generated/contracts/VaultLib4Events';
 import {
-  CompoundDebtPosition,
   FreelyTransferableSharesSetEvent,
   ProtocolFeeBurned,
   ProtocolFeePaid,
@@ -42,6 +44,7 @@ import {
   VaultNominatedOwnerSet,
   VaultOwnershipTransferred,
 } from '../../generated/schema';
+import { ExternalPositionType } from '../../utils/externalPositionType';
 
 export function handleTransfer(event: Transfer): void {
   // only track deposit balance if not zero address
@@ -288,33 +291,45 @@ export function handleSymbolSet(event: SymbolSet): void {
 }
 
 export function handleExternalPositionAdded(event: ExternalPositionAdded): void {
-  let vault = useVault(event.address.toHex());
-  let externalPositionAddress = event.params.externalPosition.toHex();
+  let iExternalPositionProxy = ProtocolSdk.bind(event.params.externalPosition);
+  let typeId = iExternalPositionProxy.getExternalPositionType().toI32();
 
   //  Compound Debt Position
-  let cdp = CompoundDebtPosition.load(externalPositionAddress);
-  if (cdp != null) {
+  if (typeId == ExternalPositionType.COMPOUND_DEBT_POSITION) {
+    let cdp = useCompoundDebtPosition(event.params.externalPosition.toHex());
     cdp.active = true;
     cdp.save();
     return;
   }
 
-  // TODO: Uniswap V3 Liquidity Position
+  // Aave Debt Position
+  if (typeId == ExternalPositionType.AAVE_DEBT_POSITION) {
+    let adp = useAaveDebtPosition(event.params.externalPosition.toHex());
+    adp.active = true;
+    adp.save();
+    return;
+  }
 }
 
 export function handleExternalPositionRemoved(event: ExternalPositionRemoved): void {
-  let vault = useVault(event.address.toHex());
-  let externalPositionAddress = event.params.externalPosition.toHex();
+  let iExternalPositionProxy = ProtocolSdk.bind(event.params.externalPosition);
+  let typeId = iExternalPositionProxy.getExternalPositionType().toI32();
 
   //  Compound Debt Position
-  let cdp = CompoundDebtPosition.load(externalPositionAddress);
-  if (cdp != null) {
+  if (typeId == ExternalPositionType.COMPOUND_DEBT_POSITION) {
+    let cdp = useCompoundDebtPosition(event.params.externalPosition.toHex());
     cdp.active = false;
     cdp.save();
     return;
   }
 
-  // TODO: Uniswap V3 Liquidity Position
+  // Aave Debt Position
+  if (typeId == ExternalPositionType.AAVE_DEBT_POSITION) {
+    let adp = useAaveDebtPosition(event.params.externalPosition.toHex());
+    adp.active = false;
+    adp.save();
+    return;
+  }
 }
 
 export function handleEthReceived(event: EthReceived): void {

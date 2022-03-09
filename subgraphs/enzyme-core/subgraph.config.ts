@@ -12,6 +12,7 @@ import * as v4 from './config/v4';
 import { kovan } from './contexts/kovan';
 import { local } from './contexts/local';
 import { mainnet } from './contexts/mainnet';
+import { mainnetdev } from './contexts/mainnet-dev';
 import { matic } from './contexts/matic';
 import { rinkeby } from './contexts/rinkeby';
 
@@ -39,6 +40,7 @@ export interface Variables {
 export const contexts: Contexts<Variables> = {
   kovan,
   mainnet,
+  mainnetdev,
   matic,
   rinkeby,
   local,
@@ -85,9 +87,11 @@ export const configure: Configurator<Variables> = (variables) => {
         ComptrollerLibA: 'abis/v2/ComptrollerLib.json',
         ComptrollerLibB: 'abis/v4/ComptrollerLib.json',
         CompoundDebtPositionLib: 'abis/v4/CompoundDebtPositionLib.json',
+        AaveDebtPositionLib: 'abis/v4/AaveDebtPositionLib.json',
         GasRelayPaymasterLib: 'abis/v4/GasRelayPaymasterLib.json',
         ProtocolFeeTracker: 'abis/v4/ProtocolFeeTracker.json',
         OnlyUntrackDustOrPricelessAssetsPolicy: 'abis/v4/OnlyUntrackDustOrPricelessAssetsPolicy.json',
+        IExternalPositionProxy: 'abis/v4/IExternalPositionProxy.json',
       },
       functions: (abis) => [
         abis.ChainlinkAggregator.getFunction('latestAnswer'),
@@ -109,10 +113,13 @@ export const configure: Configurator<Variables> = (variables) => {
         abis.ComptrollerLibA.getFunction('getDenominationAsset'),
         abis.CompoundDebtPositionLib.getFunction('getManagedAssets'),
         abis.CompoundDebtPositionLib.getFunction('getDebtAssets'),
+        abis.AaveDebtPositionLib.getFunction('getManagedAssets'),
+        abis.AaveDebtPositionLib.getFunction('getDebtAssets'),
         abis.GasRelayPaymasterLib.getFunction('getParentComptroller'),
         abis.GasRelayPaymasterLib.getFunction('getRelayHubDeposit'),
         abis.ProtocolFeeTracker.getFunction('getFeeBpsForVault'),
         abis.OnlyUntrackDustOrPricelessAssetsPolicy.getFunction('getFundDeployer'),
+        abis.IExternalPositionProxy.getFunction('getExternalPositionType'),
       ],
     },
     {
