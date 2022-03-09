@@ -7,7 +7,9 @@ import {
   Template,
 } from '@enzymefinance/subgraph-cli';
 import { default as local } from '../../deployments/local/v4.json';
-import { default as matic } from '../../deployments/matic/v4.json';
+
+import ethereum from '@enzymefinance/environment/ethereum';
+import polygon from '@enzymefinance/environment/polygon';
 
 interface Variables {
   dispatcher: string;
@@ -31,8 +33,8 @@ export const contexts: Contexts<Variables> = {
     name,
     network: 'mainnet',
     variables: {
-      dispatcher: '0xC3DC853dD716bd5754f421ef94fdCbac3902ab32',
-      weth: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+      dispatcher: ethereum.contracts.Dispatcher,
+      weth: ethereum.weth.id,
       start: 11681281,
     },
   },
@@ -40,9 +42,9 @@ export const contexts: Contexts<Variables> = {
     name: `${name}-matic`,
     network: 'matic',
     variables: {
-      dispatcher: matic.contracts.Dispatcher.address,
-      weth: '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619',
-      start: 22626288,
+      dispatcher: polygon.contracts.Dispatcher,
+      weth: polygon.weth.id,
+      start: 25731749,
     },
   },
   local: {

@@ -5,7 +5,9 @@ import {
   SdkUserDeclaration,
   Template,
 } from '@enzymefinance/subgraph-cli';
-import { default as v4Matic } from '../../deployments/matic/v4.json';
+
+import ethereum from '@enzymefinance/environment/ethereum';
+import polygon from '@enzymefinance/environment/polygon';
 
 interface Variables {
   wethTokenAddress: string;
@@ -34,7 +36,7 @@ interface Variables {
 const name = 'enzymefinance/asset-universe';
 
 const mainnet: Variables = {
-  wethTokenAddress: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+  wethTokenAddress: ethereum.weth.id,
   startBlock: 11636534,
   releaseConfiguration: {
     v2: {
@@ -48,19 +50,19 @@ const mainnet: Variables = {
       primitivePriceFeed: '0x1fad8faf11e027f8630f394599830dbeb97004ee',
     },
     v4: {
-      fundDeployer: '0x4f1c53f096533c04d8157efb6bca3eb22ddc6360',
-      valueInterpreter: '0xd7b0610db501b15bfb9b7ddad8b3869de262a327',
+      fundDeployer: ethereum.contracts.FundDeployer,
+      valueInterpreter: ethereum.contracts.ValueInterpreter,
     },
   },
 };
 
 const matic: Variables = {
-  wethTokenAddress: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
-  startBlock: 22626288,
+  wethTokenAddress: polygon.weth.id,
+  startBlock: 25731749,
   releaseConfiguration: {
     v4: {
-      fundDeployer: v4Matic.contracts.FundDeployer.address,
-      valueInterpreter: v4Matic.contracts.ValueInterpreter.address,
+      fundDeployer: polygon.contracts.FundDeployer,
+      valueInterpreter: polygon.contracts.ValueInterpreter,
     },
   },
 };
