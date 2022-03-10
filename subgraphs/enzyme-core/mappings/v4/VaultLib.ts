@@ -5,6 +5,7 @@ import { ensureAsset } from '../../entities/Asset';
 import { useCompoundDebtPosition } from '../../entities/CompoundDebtPosition';
 import { getActivityCounter } from '../../entities/Counter';
 import { ensureDeposit, trackDeposit } from '../../entities/Deposit';
+import { useExternalPositionType } from '../../entities/ExternalPositionType';
 import { useNetwork } from '../../entities/Network';
 import { useVault } from '../../entities/Vault';
 import { release4Addresses } from '../../generated/addresses';
@@ -44,7 +45,6 @@ import {
   VaultNominatedOwnerSet,
   VaultOwnershipTransferred,
 } from '../../generated/schema';
-import { ExternalPositionType } from '../../utils/externalPositionType';
 
 export function handleTransfer(event: Transfer): void {
   // only track deposit balance if not zero address
@@ -292,10 +292,12 @@ export function handleSymbolSet(event: SymbolSet): void {
 
 export function handleExternalPositionAdded(event: ExternalPositionAdded): void {
   let iExternalPositionProxy = ProtocolSdk.bind(event.params.externalPosition);
-  let typeId = iExternalPositionProxy.getExternalPositionType().toI32();
+  let typeId = iExternalPositionProxy.getExternalPositionType();
+
+  let type = useExternalPositionType(typeId);
 
   //  Compound Debt Position
-  if (typeId == ExternalPositionType.COMPOUND_DEBT_POSITION) {
+  if (type.label == 'COMPOUND_DEBT') {
     let cdp = useCompoundDebtPosition(event.params.externalPosition.toHex());
     cdp.active = true;
     cdp.save();
@@ -303,7 +305,7 @@ export function handleExternalPositionAdded(event: ExternalPositionAdded): void 
   }
 
   // Aave Debt Position
-  if (typeId == ExternalPositionType.AAVE_DEBT_POSITION) {
+  if (type.label == 'AAVE_DEBT') {
     let adp = useAaveDebtPosition(event.params.externalPosition.toHex());
     adp.active = true;
     adp.save();
@@ -313,10 +315,12 @@ export function handleExternalPositionAdded(event: ExternalPositionAdded): void 
 
 export function handleExternalPositionRemoved(event: ExternalPositionRemoved): void {
   let iExternalPositionProxy = ProtocolSdk.bind(event.params.externalPosition);
-  let typeId = iExternalPositionProxy.getExternalPositionType().toI32();
+  let typeId = iExternalPositionProxy.getExternalPositionType();
+
+  let type = useExternalPositionType(typeId);
 
   //  Compound Debt Position
-  if (typeId == ExternalPositionType.COMPOUND_DEBT_POSITION) {
+  if (type.label == 'COMPOUND_DEBT') {
     let cdp = useCompoundDebtPosition(event.params.externalPosition.toHex());
     cdp.active = false;
     cdp.save();
@@ -324,7 +328,7 @@ export function handleExternalPositionRemoved(event: ExternalPositionRemoved): v
   }
 
   // Aave Debt Position
-  if (typeId == ExternalPositionType.AAVE_DEBT_POSITION) {
+  if (type.label == 'AAVE_DEBT') {
     let adp = useAaveDebtPosition(event.params.externalPosition.toHex());
     adp.active = false;
     adp.save();

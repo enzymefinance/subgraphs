@@ -73,7 +73,6 @@ export class Release4Addresses {
   entranceRateDirectFeeAddress: Address;
   exitRateBurnFeeAddress: Address;
   exitRateDirectFeeAddress: Address;
-  externalPositionFactoryAddress: Address;
   externalPositionManagerAddress: Address;
   feeManagerAddress: Address;
   fundDeployerAddress: Address;
@@ -159,7 +158,6 @@ export let release4Addresses: Release4Addresses = {
   entranceRateDirectFeeAddress: Address.fromString('{{releases.v4.entranceRateDirectFeeAddress}}'),
   exitRateBurnFeeAddress: Address.fromString('{{releases.v4.exitRateBurnFeeAddress}}'),
   exitRateDirectFeeAddress: Address.fromString('{{releases.v4.exitRateDirectFeeAddress}}'),
-  externalPositionFactoryAddress: Address.fromString('{{releases.v4.externalPositionFactoryAddress}}'),
   externalPositionManagerAddress: Address.fromString('{{releases.v4.externalPositionManagerAddress}}'),
   feeManagerAddress: Address.fromString('{{releases.v4.feeManagerAddress}}'),
   fundDeployerAddress: Address.fromString('{{releases.v4.fundDeployerAddress}}'),

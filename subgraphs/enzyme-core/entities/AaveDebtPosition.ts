@@ -1,7 +1,14 @@
 import { logCritical, toBigDecimal, uniqueEventId } from '@enzymefinance/subgraph-utils';
 import { Address, BigDecimal, ethereum } from '@graphprotocol/graph-ts';
 import { ProtocolSdk } from '../generated/contracts/ProtocolSdk';
-import { Asset, AaveDebtPosition, AaveDebtPositionChange, Vault, AssetAmount } from '../generated/schema';
+import {
+  Asset,
+  AaveDebtPosition,
+  AaveDebtPositionChange,
+  Vault,
+  AssetAmount,
+  ExternalPositionType,
+} from '../generated/schema';
 import { ensureAsset } from './Asset';
 import { createAssetAmount } from './AssetAmount';
 import { getActivityCounter } from './Counter';
@@ -19,12 +26,12 @@ export function useAaveDebtPosition(id: string): AaveDebtPosition {
 export function createAaveDebtPosition(
   externalPositionAddress: Address,
   vaultAddress: Address,
-  type: i32,
+  type: ExternalPositionType,
 ): AaveDebtPosition {
   let aaveDebtPosition = new AaveDebtPosition(externalPositionAddress.toHex());
   aaveDebtPosition.vault = useVault(vaultAddress.toHex()).id;
   aaveDebtPosition.active = true;
-  aaveDebtPosition.type = type;
+  aaveDebtPosition.type = type.id;
   aaveDebtPosition.collateralAmounts = new Array<string>();
   aaveDebtPosition.borrowedAmounts = new Array<string>();
   aaveDebtPosition.save();

@@ -7,6 +7,7 @@ export const mainnetdev: Context<Variables> = {
   variables: {
     block: 11636493,
     dispatcherAddress: '0xC3DC853dD716bd5754f421ef94fdCbac3902ab32',
+    externalPositionFactoryAddress: '0x0aacb782205dde9eff4862ace9849dce1ca3409f',
     wethTokenAddress: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
     chainlinkAggregatorAddresses: {
       audUsd: '0x77F9710E7d0A19669A13c055F62cd80d313dF022',
@@ -83,7 +84,6 @@ export const mainnetdev: Context<Variables> = {
         entranceRateDirectFeeAddress: '0xfb8df7d5e320020cd8047226b81cf6d68f3e3c19',
         exitRateBurnFeeAddress: '0x06b13918e988d1314da1a9da4c0cde5fe994364a',
         exitRateDirectFeeAddress: '0x3a09d11c20aa1ad38c77b4f426901d3427f73fbe',
-        externalPositionFactoryAddress: '0x0aacb782205dde9eff4862ace9849dce1ca3409f',
         externalPositionManagerAddress: '0x1e3da40f999cf47091f869ebac477d84b0827cf4',
         feeManagerAddress: '0xaf0dffac1ce85c3fce4c2bf50073251f615eefc4',
         fundDeployerAddress: '0x4f1c53f096533c04d8157efb6bca3eb22ddc6360',

@@ -14,7 +14,6 @@ export interface ReleaseVariables {
   entranceRateDirectFeeAddress: string;
   exitRateBurnFeeAddress: string;
   exitRateDirectFeeAddress: string;
-  externalPositionFactoryAddress: string;
   externalPositionManagerAddress: string;
   feeManagerAddress: string;
   fundDeployerAddress: string;
@@ -47,7 +46,6 @@ export const sources = (variables: ReleaseVariables): DataSourceUserDeclaration[
   { name: 'EntranceRateDirectFee', address: variables.entranceRateDirectFeeAddress },
   { name: 'ExitRateBurnFee', address: variables.exitRateBurnFeeAddress },
   { name: 'ExitRateDirectFee', address: variables.exitRateDirectFeeAddress },
-  { name: 'ExternalPositionFactory', address: variables.externalPositionFactoryAddress },
   { name: 'ExternalPositionManager', address: variables.externalPositionManagerAddress },
   { name: 'FeeManager', address: variables.feeManagerAddress },
   { name: 'FundDeployer', address: variables.fundDeployerAddress },

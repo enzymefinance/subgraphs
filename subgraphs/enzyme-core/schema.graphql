@@ -925,10 +925,16 @@ type Trade implements Activity & VaultActivity @entity {
 # External Positions
 #################################################
 
+type ExternalPositionType @entity {
+  id: ID!
+  label: String!
+  externalPositions: [ExternalPosition!]! @derivedFrom(field: "type")
+}
+
 interface ExternalPosition {
   id: ID!
   vault: Vault!
-  type: Int!
+  type: ExternalPositionType!
   active: Boolean!
 
   changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
@@ -942,7 +948,7 @@ interface ExternalPositionChange {
 type CompoundDebtPosition implements ExternalPosition @entity {
   id: ID!
   vault: Vault!
-  type: Int!
+  type: ExternalPositionType!
   active: Boolean!
 
   collateralAmounts: [AssetAmount!]!
@@ -974,7 +980,7 @@ type CompoundDebtPositionChange implements Activity & VaultActivity & ExternalPo
 type AaveDebtPosition implements ExternalPosition @entity {
   id: ID!
   vault: Vault!
-  type: Int!
+  type: ExternalPositionType!
   active: Boolean!
 
   collateralAmounts: [AssetAmount!]!
@@ -988,7 +994,7 @@ enum AaveDebtPositionChangeType {
   RemoveCollateral
   Borrow
   RepayBorrow
-  ClaimStkAave
+  ClaimRewards
 }
 
 type AaveDebtPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {

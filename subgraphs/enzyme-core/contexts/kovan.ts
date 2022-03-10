@@ -8,6 +8,7 @@ export const kovan: Context<Variables> = {
   variables: {
     block: 27529642,
     dispatcherAddress: '0xCdb7a704a3aB0C88651F0466d2Ec01c3db5EbF66',
+    externalPositionFactoryAddress: v4.contracts.ExternalPositionFactory.address,
     wethTokenAddress: '0xd0a1e359811322d97991e03f863a0c30c2cf029c',
     chainlinkAggregatorAddresses: {
       audUsd: '0x5813A90f826e16dB392abd2aF7966313fc1fd5B8',
@@ -84,7 +85,6 @@ export const kovan: Context<Variables> = {
         entranceRateDirectFeeAddress: v4.contracts.EntranceRateDirectFee.address,
         exitRateBurnFeeAddress: v4.contracts.ExitRateBurnFee.address,
         exitRateDirectFeeAddress: v4.contracts.ExitRateDirectFee.address,
-        externalPositionFactoryAddress: v4.contracts.ExternalPositionFactory.address,
         externalPositionManagerAddress: v4.contracts.ExternalPositionManager.address,
         feeManagerAddress: v4.contracts.FeeManager.address,
         fundDeployerAddress: v4.contracts.FundDeployer.address,

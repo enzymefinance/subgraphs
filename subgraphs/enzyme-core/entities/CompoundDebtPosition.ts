@@ -1,7 +1,14 @@
 import { logCritical, toBigDecimal, uniqueEventId } from '@enzymefinance/subgraph-utils';
 import { Address, BigDecimal, ethereum } from '@graphprotocol/graph-ts';
 import { ProtocolSdk } from '../generated/contracts/ProtocolSdk';
-import { Asset, AssetAmount, CompoundDebtPosition, CompoundDebtPositionChange, Vault } from '../generated/schema';
+import {
+  Asset,
+  AssetAmount,
+  CompoundDebtPosition,
+  CompoundDebtPositionChange,
+  ExternalPositionType,
+  Vault,
+} from '../generated/schema';
 import { ensureAsset } from './Asset';
 import { createAssetAmount } from './AssetAmount';
 import { getActivityCounter } from './Counter';
@@ -19,12 +26,12 @@ export function useCompoundDebtPosition(id: string): CompoundDebtPosition {
 export function createCompoundDebtPosition(
   externalPositionAddress: Address,
   vaultAddress: Address,
-  type: i32,
+  type: ExternalPositionType,
 ): CompoundDebtPosition {
   let compoundDebtPosition = new CompoundDebtPosition(externalPositionAddress.toHex());
   compoundDebtPosition.vault = useVault(vaultAddress.toHex()).id;
   compoundDebtPosition.active = true;
-  compoundDebtPosition.type = type;
+  compoundDebtPosition.type = type.id;
   compoundDebtPosition.collateralAmounts = new Array<string>();
   compoundDebtPosition.borrowedAmounts = new Array<string>();
   compoundDebtPosition.save();

@@ -9,6 +9,7 @@ export const local: Context<Variables> = {
   variables: {
     block: 13619920, // Protocol mainnet fork block.
     dispatcherAddress: v4.contracts.Dispatcher.address,
+    externalPositionFactoryAddress: v4.contracts.ExternalPositionFactory.address,
     wethTokenAddress: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
     chainlinkAggregatorAddresses: {
       audUsd: '0x77F9710E7d0A19669A13c055F62cd80d313dF022',
@@ -85,7 +86,6 @@ export const local: Context<Variables> = {
         entranceRateDirectFeeAddress: v4.contracts.EntranceRateDirectFee.address,
         exitRateBurnFeeAddress: v4.contracts.ExitRateBurnFee.address,
         exitRateDirectFeeAddress: v4.contracts.ExitRateDirectFee.address,
-        externalPositionFactoryAddress: v4.contracts.ExternalPositionFactory.address,
         externalPositionManagerAddress: v4.contracts.ExternalPositionManager.address,
         feeManagerAddress: v4.contracts.FeeManager.address,
         fundDeployerAddress: v4.contracts.FundDeployer.address,

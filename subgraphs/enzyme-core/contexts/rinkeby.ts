@@ -8,6 +8,7 @@ export const rinkeby: Context<Variables> = {
   variables: {
     block: 9452021,
     dispatcherAddress: '0xdd54d3f1a3f8d5DDf45c812640d8fbAfd657f901',
+    externalPositionFactoryAddress: v4.contracts.ExternalPositionFactory.address,
     wethTokenAddress: '0xc778417e063141139fce010982780140aa0cd5ab',
     chainlinkAggregatorAddresses: {
       audUsd: '0x21c095d2aDa464A294956eA058077F14F66535af',
@@ -84,7 +85,6 @@ export const rinkeby: Context<Variables> = {
         entranceRateDirectFeeAddress: v4.contracts.EntranceRateDirectFee.address,
         exitRateBurnFeeAddress: v4.contracts.ExitRateBurnFee.address,
         exitRateDirectFeeAddress: v4.contracts.ExitRateDirectFee.address,
-        externalPositionFactoryAddress: v4.contracts.ExternalPositionFactory.address,
         externalPositionManagerAddress: v4.contracts.ExternalPositionManager.address,
         feeManagerAddress: v4.contracts.FeeManager.address,
         fundDeployerAddress: v4.contracts.FundDeployer.address,

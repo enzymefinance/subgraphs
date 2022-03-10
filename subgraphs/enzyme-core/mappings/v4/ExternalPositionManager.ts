@@ -13,6 +13,7 @@ import {
   trackCompoundDebtPositionAssets,
 } from '../../entities/CompoundDebtPosition';
 import { ensureComptroller } from '../../entities/Comptroller';
+import { useExternalPositionType } from '../../entities/ExternalPositionType';
 import { useVault } from '../../entities/Vault';
 import {
   CallOnExternalPositionExecutedForFund,
@@ -22,27 +23,23 @@ import {
 } from '../../generated/contracts/ExternalPositionManager4Events';
 import { ProtocolSdk } from '../../generated/contracts/ProtocolSdk';
 import { AssetAmount } from '../../generated/schema';
-import {
-  AaveDebtPositionActionId,
-  CompoundDebtPositionActionId,
-  ExternalPositionType,
-} from '../../utils/externalPositionType';
+import { AaveDebtPositionActionId, CompoundDebtPositionActionId } from '../../utils/actionId';
 
 export function handleExternalPositionDeployedForFund(event: ExternalPositionDeployedForFund): void {
-  let typeId = event.params.externalPositionTypeId.toI32();
+  let type = useExternalPositionType(event.params.externalPositionTypeId);
 
   // Compound Debt Position
-  if (typeId == ExternalPositionType.COMPOUND_DEBT_POSITION) {
-    createCompoundDebtPosition(event.params.externalPosition, event.params.vaultProxy, typeId);
+  if (type.label == 'COMPOUND_DEBT') {
+    createCompoundDebtPosition(event.params.externalPosition, event.params.vaultProxy, type);
   }
 
   // Uniswap V3 Position
-  if (typeId == ExternalPositionType.UNISWAP_V3_POOL) {
+  if (type.label == 'UNISWAP_V3_LIQUIDITY') {
   }
 
   // Aave Debt Position
-  if (typeId == ExternalPositionType.AAVE_DEBT_POSITION) {
-    createAaveDebtPosition(event.params.externalPosition, event.params.vaultProxy, typeId);
+  if (type.label == 'AAVE_DEBT') {
+    createAaveDebtPosition(event.params.externalPosition, event.params.vaultProxy, type);
   }
 }
 
@@ -58,9 +55,11 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
   let denominationAsset = ensureAsset(Address.fromString(comptrollerProxy.denomination));
 
   let iExternalPositionProxy = ProtocolSdk.bind(event.params.externalPosition);
-  let typeId = iExternalPositionProxy.getExternalPositionType().toI32();
+  let typeId = iExternalPositionProxy.getExternalPositionType();
 
-  if (typeId == ExternalPositionType.COMPOUND_DEBT_POSITION) {
+  let type = useExternalPositionType(typeId);
+
+  if (type.label == 'COMPOUND_DEBT') {
     let decoded = ethereum.decode('(address[],uint256[],bytes)', tuplePrefixBytes(event.params.actionArgs));
 
     if (decoded == null) {
@@ -106,7 +105,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
   }
 
   // Aave Debt Position
-  if (typeId == ExternalPositionType.AAVE_DEBT_POSITION) {
+  if (type.label == 'AAVE_DEBT') {
     let decoded = ethereum.decode('(address[],uint256[])', tuplePrefixBytes(event.params.actionArgs));
 
     if (decoded == null) {
@@ -142,7 +141,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       createAaveDebtPositionChange(event.params.externalPosition, assetAmounts, 'RepayBorrow', vault, event);
     }
 
-    if (actionId == AaveDebtPositionActionId.ClaimStkAave) {
+    if (actionId == AaveDebtPositionActionId.ClaimRewards) {
       // Not implemented
       // assetAmounts: rewards tokens, but we don't know the amounts (set to zero)
     }

@@ -19,6 +19,7 @@ import { rinkeby } from './contexts/rinkeby';
 export interface Variables {
   block: number;
   dispatcherAddress: string;
+  externalPositionFactoryAddress: string;
   wethTokenAddress: string;
   chainlinkAggregatorAddresses: {
     audUsd: string;
@@ -72,6 +73,19 @@ export const configure: Configurator<Variables> = (variables) => {
       abi.getEvent('MigrationInCancelHookFailed'),
       abi.getEvent('MigrationOutHookFailed'),
       abi.getEvent('SharesTokenSymbolSet'),
+    ],
+  };
+
+  const externalPositionFactory: DataSourceUserDeclaration = {
+    name: 'ExternalPositionFactory',
+    block: variables.block,
+    address: variables.externalPositionFactoryAddress,
+    events: (abi) => [
+      abi.getEvent('PositionDeployed'),
+      abi.getEvent('PositionDeployerAdded'),
+      abi.getEvent('PositionDeployerRemoved'),
+      abi.getEvent('PositionTypeAdded'),
+      abi.getEvent('PositionTypeLabelUpdated'),
     ],
   };
 
@@ -147,6 +161,7 @@ export const configure: Configurator<Variables> = (variables) => {
 
   const sources: DataSourceUserDeclaration[] = [
     dispatcher,
+    externalPositionFactory,
     ...v2.sources(variables.releases.v2).map((item) => ({ ...item, version: 2, block: variables.block })),
     ...v3.sources(variables.releases.v3).map((item) => ({ ...item, version: 3, block: variables.block })),
     ...v4.sources(variables.releases.v4).map((item) => ({ ...item, version: 4, block: variables.block })),
