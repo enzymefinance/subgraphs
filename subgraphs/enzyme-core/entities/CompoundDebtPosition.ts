@@ -51,6 +51,7 @@ export function createCompoundDebtPositionChange(
   change.externalPosition = compoundDebtPositionAddress.toHex();
   change.assetAmounts = assetAmounts.map<string>((assetAmount) => assetAmount.id);
   change.vault = vault.id;
+  change.timestamp = event.block.timestamp.toI32();
   change.activityCounter = getActivityCounter();
   change.activityCategories = ['Vault'];
   change.activityType = 'Trade';
