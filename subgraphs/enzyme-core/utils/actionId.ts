@@ -13,3 +13,11 @@ export const enum CompoundDebtPositionActionId {
   RepayBorrow = 3,
   ClaimComp = 4,
 }
+
+export const enum UniswapV3LiquidityPositionActionId {
+  Mint,
+  AddLiquidity,
+  RemoveLiquidity,
+  Collect,
+  Purge,
+}

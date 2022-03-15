@@ -106,6 +106,7 @@ export const configure: Configurator<Variables> = (variables) => {
         ProtocolFeeTracker: 'abis/v4/ProtocolFeeTracker.json',
         OnlyUntrackDustOrPricelessAssetsPolicy: 'abis/v4/OnlyUntrackDustOrPricelessAssetsPolicy.json',
         IExternalPositionProxy: 'abis/v4/IExternalPositionProxy.json',
+        UniswapV3LiquidityPositionLib: 'abis/v4/UniswapV3LiquidityPositionLib.json',
       },
       functions: (abis) => [
         abis.ChainlinkAggregator.getFunction('latestAnswer'),
@@ -134,6 +135,7 @@ export const configure: Configurator<Variables> = (variables) => {
         abis.ProtocolFeeTracker.getFunction('getFeeBpsForVault'),
         abis.OnlyUntrackDustOrPricelessAssetsPolicy.getFunction('getFundDeployer'),
         abis.IExternalPositionProxy.getFunction('getExternalPositionType'),
+        abis.UniswapV3LiquidityPositionLib.getFunction('getNonFungibleTokenManager'),
       ],
     },
     {
@@ -156,6 +158,13 @@ export const configure: Configurator<Variables> = (variables) => {
         ERC20Bytes: 'abis/ERC20Bytes.json',
       },
       functions: (abis) => [abis.ERC20Bytes.getFunction('symbol'), abis.ERC20Bytes.getFunction('name')],
+    },
+    {
+      name: 'NonfungiblePositionManager',
+      abis: {
+        NonfungiblePositionManager: 'abis/NonfungiblePositionManager.json',
+      },
+      functions: (abis) => [abis.NonfungiblePositionManager.getFunction('positions')],
     },
   ];
 

@@ -3,17 +3,23 @@ import { Address, ethereum } from '@graphprotocol/graph-ts';
 import {
   createAaveDebtPosition,
   createAaveDebtPositionChange,
-  trackAaveDebtPositionAssets,
+  trackAaveDebtPosition,
 } from '../../entities/AaveDebtPosition';
 import { ensureAsset } from '../../entities/Asset';
 import { createAssetAmount } from '../../entities/AssetAmount';
 import {
   createCompoundDebtPosition,
   createCompoundDebtPositionChange,
-  trackCompoundDebtPositionAssets,
+  trackCompoundDebtPosition,
 } from '../../entities/CompoundDebtPosition';
 import { ensureComptroller } from '../../entities/Comptroller';
 import { useExternalPositionType } from '../../entities/ExternalPositionType';
+import {
+  createUniswapV3LiquidityPosition,
+  createUniswapV3LiquidityPositionChange,
+  trackUniswapV3LiquidityPosition,
+} from '../../entities/UniswapV3LiquidityPosition';
+import { useUniswapV3Nft } from '../../entities/UniswapV3Nft';
 import { useVault } from '../../entities/Vault';
 import {
   CallOnExternalPositionExecutedForFund,
@@ -23,7 +29,11 @@ import {
 } from '../../generated/contracts/ExternalPositionManager4Events';
 import { ProtocolSdk } from '../../generated/contracts/ProtocolSdk';
 import { AssetAmount } from '../../generated/schema';
-import { AaveDebtPositionActionId, CompoundDebtPositionActionId } from '../../utils/actionId';
+import {
+  AaveDebtPositionActionId,
+  CompoundDebtPositionActionId,
+  UniswapV3LiquidityPositionActionId,
+} from '../../utils/actionId';
 
 export function handleExternalPositionDeployedForFund(event: ExternalPositionDeployedForFund): void {
   let type = useExternalPositionType(event.params.externalPositionTypeId);
@@ -33,13 +43,14 @@ export function handleExternalPositionDeployedForFund(event: ExternalPositionDep
     createCompoundDebtPosition(event.params.externalPosition, event.params.vaultProxy, type);
   }
 
-  // Uniswap V3 Position
-  if (type.label == 'UNISWAP_V3_LIQUIDITY') {
-  }
-
   // Aave Debt Position
   if (type.label == 'AAVE_DEBT') {
     createAaveDebtPosition(event.params.externalPosition, event.params.vaultProxy, type);
+  }
+
+  // Uniswap V3 Position
+  if (type.label == 'UNISWAP_V3_LIQUIDITY') {
+    createUniswapV3LiquidityPosition(event.params.externalPosition, event.params.vaultProxy, type);
   }
 }
 
@@ -96,11 +107,10 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     }
 
     if (actionId == CompoundDebtPositionActionId.ClaimComp) {
-      // Not implemented
-      // assetAmounts: rewards tokens, but we don't know the amounts
+      createCompoundDebtPositionChange(event.params.externalPosition, null, 'ClaimComp', vault, event);
     }
 
-    trackCompoundDebtPositionAssets(event.params.externalPosition.toHex(), denominationAsset, event);
+    trackCompoundDebtPosition(event.params.externalPosition.toHex(), event);
     return;
   }
 
@@ -142,16 +152,149 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     }
 
     if (actionId == AaveDebtPositionActionId.ClaimRewards) {
-      // Not implemented
-      // assetAmounts: rewards tokens, but we don't know the amounts (set to zero)
+      createAaveDebtPositionChange(event.params.externalPosition, null, 'ClaimRewards', vault, event);
     }
 
-    trackAaveDebtPositionAssets(event.params.externalPosition.toHex(), denominationAsset, event);
+    trackAaveDebtPosition(event.params.externalPosition.toHex(), event);
     return;
   }
 
   // Uniswap V3 Liquidity
-  // Not implemented
+  if (type.label == 'UNISWAP_V3_LIQUIDITY') {
+    if (actionId == UniswapV3LiquidityPositionActionId.Mint) {
+      let decoded = ethereum.decode(
+        '(address, address, uint24, int24, int24, uint256, uint256, uint256, uint256)',
+        event.params.actionArgs,
+      );
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+
+      let asset0 = ensureAsset(tuple[0].toAddress());
+      let amount0 = toBigDecimal(tuple[5].toBigInt(), asset0.decimals);
+      let assetAmount0 = createAssetAmount(asset0, amount0, denominationAsset, 'uv3lp', event);
+
+      let asset1 = ensureAsset(tuple[1].toAddress());
+      let amount1 = toBigDecimal(tuple[6].toBigInt(), asset1.decimals);
+      let assetAmount1 = createAssetAmount(asset1, amount1, denominationAsset, 'uv3lp', event);
+
+      createUniswapV3LiquidityPositionChange(
+        event.params.externalPosition,
+        null,
+        [assetAmount0, assetAmount1],
+        null,
+        'Mint',
+        vault,
+        event,
+      );
+    }
+
+    if (actionId == UniswapV3LiquidityPositionActionId.AddLiquidity) {
+      let decoded = ethereum.decode('(uint256, uint256, uint256, uint256, uint256)', event.params.actionArgs);
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+
+      let nftId = tuple[0].toBigInt();
+
+      let nft = useUniswapV3Nft(nftId);
+
+      let asset0 = ensureAsset(Address.fromString(nft.token0));
+      let amount0 = toBigDecimal(tuple[1].toBigInt(), asset0.decimals);
+      let assetAmount0 = createAssetAmount(asset0, amount0, denominationAsset, 'uv3lp', event);
+
+      let asset1 = ensureAsset(Address.fromString(nft.token1));
+      let amount1 = toBigDecimal(tuple[2].toBigInt(), asset1.decimals);
+      let assetAmount1 = createAssetAmount(asset1, amount1, denominationAsset, 'uv3lp', event);
+
+      createUniswapV3LiquidityPositionChange(
+        event.params.externalPosition,
+        nft,
+        [assetAmount0, assetAmount1],
+        null,
+        'AddLiquidity',
+        vault,
+        event,
+      );
+    }
+
+    if (actionId == UniswapV3LiquidityPositionActionId.RemoveLiquidity) {
+      let decoded = ethereum.decode('(uint256, uint128, uint256, uint256)', event.params.actionArgs);
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+
+      let nftId = tuple[0].toBigInt();
+      let liquidity = tuple[1].toBigInt();
+
+      createUniswapV3LiquidityPositionChange(
+        event.params.externalPosition,
+        useUniswapV3Nft(nftId),
+        null,
+        liquidity,
+        'RemoveLiquidity',
+        vault,
+        event,
+      );
+    }
+
+    if (actionId == UniswapV3LiquidityPositionActionId.Collect) {
+      let decoded = ethereum.decode('(uint256)', event.params.actionArgs);
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+
+      let nftId = tuple[0].toBigInt();
+
+      createUniswapV3LiquidityPositionChange(
+        event.params.externalPosition,
+        useUniswapV3Nft(nftId),
+        null,
+        null,
+        'Collect',
+        vault,
+        event,
+      );
+    }
+
+    if (actionId == UniswapV3LiquidityPositionActionId.Purge) {
+      let decoded = ethereum.decode('(uint256, uint128, uint256, uint256)', event.params.actionArgs);
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+
+      let nftId = tuple[0].toBigInt();
+      let liquidity = tuple[1].toBigInt();
+
+      createUniswapV3LiquidityPositionChange(
+        event.params.externalPosition,
+        useUniswapV3Nft(nftId),
+        null,
+        liquidity,
+        'Purge',
+        vault,
+        event,
+      );
+    }
+
+    trackUniswapV3LiquidityPosition();
+    return;
+  }
 }
 
 export function handleExternalPositionTypeInfoUpdated(event: ExternalPositionTypeInfoUpdated): void {}

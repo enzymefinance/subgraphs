@@ -936,7 +936,6 @@ interface ExternalPosition {
   vault: Vault!
   type: ExternalPositionType!
   active: Boolean!
-
   changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
 }
 
@@ -950,10 +949,8 @@ type CompoundDebtPosition implements ExternalPosition @entity {
   vault: Vault!
   type: ExternalPositionType!
   active: Boolean!
-
-  collateralAmounts: [AssetAmount!]!
-  borrowedAmounts: [AssetAmount!]!
-
+  collateralAssetBalances: [AssetBalance!]!
+  borrowedAssetBalances: [AssetBalance!]!
   changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
 }
 
@@ -970,8 +967,8 @@ type CompoundDebtPositionChange implements Activity & VaultActivity & ExternalPo
   vault: Vault!
   timestamp: Int!
   externalPosition: ExternalPosition!
-  changeType: CompoundDebtPositionChangeType!
-  assetAmounts: [AssetAmount!]!
+  compoundDebtPositionChangeType: CompoundDebtPositionChangeType!
+  assetAmounts: [AssetAmount!]
   activityCounter: Int!
   activityCategories: [ActivityCategory!]!
   activityType: ActivityType!
@@ -982,10 +979,8 @@ type AaveDebtPosition implements ExternalPosition @entity {
   vault: Vault!
   type: ExternalPositionType!
   active: Boolean!
-
-  collateralAmounts: [AssetAmount!]!
-  borrowedAmounts: [AssetAmount!]!
-
+  collateralAssetBalances: [AssetBalance!]!
+  borrowedAssetBalances: [AssetBalance!]!
   changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
 }
 
@@ -1002,8 +997,49 @@ type AaveDebtPositionChange implements Activity & VaultActivity & ExternalPositi
   vault: Vault!
   timestamp: Int!
   externalPosition: ExternalPosition!
-  changeType: AaveDebtPositionChangeType!
-  assetAmounts: [AssetAmount!]!
+  aaveDebtPositionChangeType: AaveDebtPositionChangeType!
+  assetAmounts: [AssetAmount!]
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
+type UniswapV3LiquidityPosition implements ExternalPosition @entity {
+  id: ID!
+  vault: Vault!
+  type: ExternalPositionType!
+  active: Boolean!
+  nfts: [UniswapV3Nft!]! @derivedFrom(field: "externalPosition")
+  changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
+}
+
+type UniswapV3Nft @entity {
+  id: ID!
+  externalPosition: UniswapV3LiquidityPosition
+  token0: Asset!
+  token1: Asset!
+  fee: BigDecimal!
+  tickLower: Int!
+  tickUpper: Int!
+}
+
+enum UniswapV3LiquidityPositionChangeType {
+  Mint
+  AddLiquidity
+  RemoveLiquidity
+  Collect
+  Purge
+}
+
+type UniswapV3LiquidityPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: Int!
+  externalPosition: ExternalPosition!
+  uniswapV3LiquidityPositionChangeType: UniswapV3LiquidityPositionChangeType!
+  nft: UniswapV3Nft
+  assetAmounts: [AssetAmount!]
+  liquidity: BigInt
   activityCounter: Int!
   activityCategories: [ActivityCategory!]!
   activityType: ActivityType!
