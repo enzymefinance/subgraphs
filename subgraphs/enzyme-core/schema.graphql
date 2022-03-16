@@ -939,6 +939,26 @@ interface ExternalPosition {
   changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
 }
 
+type ExternalPositionAddedEvent implements Activity & VaultActivity @entity {
+  id: ID!
+  timestamp: Int!
+  vault: Vault!
+  externalPosition: ExternalPosition!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
+type ExternalPositionRemovedEvent implements Activity & VaultActivity @entity {
+  id: ID!
+  timestamp: Int!
+  vault: Vault!
+  externalPosition: ExternalPosition!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
 interface ExternalPositionChange {
   id: ID!
   externalPosition: ExternalPosition!

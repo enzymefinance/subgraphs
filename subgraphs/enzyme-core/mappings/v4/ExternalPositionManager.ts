@@ -1,4 +1,4 @@
-import { toBigDecimal, tuplePrefixBytes } from '@enzymefinance/subgraph-utils';
+import { toBigDecimal, tuplePrefixBytes, uniqueEventId } from '@enzymefinance/subgraph-utils';
 import { Address, ethereum } from '@graphprotocol/graph-ts';
 import {
   createAaveDebtPosition,
@@ -13,6 +13,7 @@ import {
   trackCompoundDebtPosition,
 } from '../../entities/CompoundDebtPosition';
 import { ensureComptroller } from '../../entities/Comptroller';
+import { getActivityCounter } from '../../entities/Counter';
 import { useExternalPositionType } from '../../entities/ExternalPositionType';
 import {
   createUniswapV3LiquidityPosition,

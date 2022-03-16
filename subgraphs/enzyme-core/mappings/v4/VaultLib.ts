@@ -7,6 +7,7 @@ import { getActivityCounter } from '../../entities/Counter';
 import { ensureDeposit, trackDeposit } from '../../entities/Deposit';
 import { useExternalPositionType } from '../../entities/ExternalPositionType';
 import { useNetwork } from '../../entities/Network';
+import { useUniswapV3LiquidityPosition } from '../../entities/UniswapV3LiquidityPosition';
 import { useVault } from '../../entities/Vault';
 import { release4Addresses } from '../../generated/addresses';
 import { ProtocolSdk } from '../../generated/contracts/ProtocolSdk';
@@ -35,6 +36,8 @@ import {
   VaultLibSet,
 } from '../../generated/contracts/VaultLib4Events';
 import {
+  ExternalPositionAddedEvent,
+  ExternalPositionRemovedEvent,
   FreelyTransferableSharesSetEvent,
   ProtocolFeeBurned,
   ProtocolFeePaid,
@@ -296,21 +299,32 @@ export function handleExternalPositionAdded(event: ExternalPositionAdded): void 
 
   let type = useExternalPositionType(typeId);
 
-  //  Compound Debt Position
   if (type.label == 'COMPOUND_DEBT') {
     let cdp = useCompoundDebtPosition(event.params.externalPosition.toHex());
     cdp.active = true;
     cdp.save();
-    return;
   }
 
-  // Aave Debt Position
   if (type.label == 'AAVE_DEBT') {
     let adp = useAaveDebtPosition(event.params.externalPosition.toHex());
     adp.active = true;
     adp.save();
-    return;
   }
+
+  if (type.label == 'UNISWAP_V3_LIQUIDITY') {
+    let adp = useUniswapV3LiquidityPosition(event.params.externalPosition.toHex());
+    adp.active = true;
+    adp.save();
+  }
+
+  let activity = new ExternalPositionAddedEvent(uniqueEventId(event));
+  activity.timestamp = event.block.timestamp.toI32();
+  activity.vault = event.address.toHex();
+  activity.externalPosition = event.params.externalPosition.toHex();
+  activity.activityCounter = getActivityCounter();
+  activity.activityCategories = ['Vault'];
+  activity.activityType = 'VaultSettings';
+  activity.save();
 }
 
 export function handleExternalPositionRemoved(event: ExternalPositionRemoved): void {
@@ -319,21 +333,32 @@ export function handleExternalPositionRemoved(event: ExternalPositionRemoved): v
 
   let type = useExternalPositionType(typeId);
 
-  //  Compound Debt Position
   if (type.label == 'COMPOUND_DEBT') {
     let cdp = useCompoundDebtPosition(event.params.externalPosition.toHex());
     cdp.active = false;
     cdp.save();
-    return;
   }
 
-  // Aave Debt Position
   if (type.label == 'AAVE_DEBT') {
     let adp = useAaveDebtPosition(event.params.externalPosition.toHex());
     adp.active = false;
     adp.save();
-    return;
   }
+
+  if (type.label == 'UNISWAP_V3_LIQUIDITY') {
+    let adp = useUniswapV3LiquidityPosition(event.params.externalPosition.toHex());
+    adp.active = false;
+    adp.save();
+  }
+
+  let activity = new ExternalPositionRemovedEvent(uniqueEventId(event));
+  activity.timestamp = event.block.timestamp.toI32();
+  activity.vault = event.address.toHex();
+  activity.externalPosition = event.params.externalPosition.toHex();
+  activity.activityCounter = getActivityCounter();
+  activity.activityCategories = ['Vault'];
+  activity.activityType = 'VaultSettings';
+  activity.save();
 }
 
 export function handleEthReceived(event: EthReceived): void {
