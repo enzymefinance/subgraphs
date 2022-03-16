@@ -1,7 +1,7 @@
 import { Context } from '@enzymefinance/subgraph-cli';
 import { Variables } from '../subgraph.config';
 
-export const mainnetdev: Context<Variables> = {
+export const mainnetDev: Context<Variables> = {
   name: 'enzymefinance/enzyme-core-dev',
   network: 'mainnet',
   variables: {

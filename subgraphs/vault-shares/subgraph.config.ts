@@ -7,6 +7,7 @@ import {
 import { default as v4Local } from '../../deployments/local/v4.json';
 
 import polygon from '@enzymefinance/environment/polygon';
+import polygonDev from '../../deployments/matic-dev/v4.json';
 
 interface Variables {
   dispatcher: string;
@@ -38,6 +39,14 @@ export const contexts: Contexts<Variables> = {
     variables: {
       dispatcher: polygon.contracts.Dispatcher,
       start: 25731749,
+    },
+  },
+  'matic-dev': {
+    name: `${name}-matic-dev`,
+    network: 'matic',
+    variables: {
+      dispatcher: polygonDev.contracts.Dispatcher,
+      start: 25825424,
     },
   },
   local: {

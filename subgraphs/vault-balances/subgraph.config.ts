@@ -10,6 +10,7 @@ import { default as local } from '../../deployments/local/v4.json';
 
 import ethereum from '@enzymefinance/environment/ethereum';
 import polygon from '@enzymefinance/environment/polygon';
+import polygonDev from '../../deployments/matic-dev/v4.json';
 
 interface Variables {
   dispatcher: string;
@@ -45,6 +46,15 @@ export const contexts: Contexts<Variables> = {
       dispatcher: polygon.contracts.Dispatcher,
       weth: polygon.weth.id,
       start: 25731749,
+    },
+  },
+  'matic-dev': {
+    name: `${name}-matic-dev`,
+    network: 'matic',
+    variables: {
+      dispatcher: polygonDev.contracts.Dispatcher,
+      weth: polygon.weth.id,
+      start: 25825424,
     },
   },
   local: {

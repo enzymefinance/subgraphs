@@ -8,6 +8,7 @@ import {
 
 import ethereum from '@enzymefinance/environment/ethereum';
 import polygon from '@enzymefinance/environment/polygon';
+import polygonDev from '../../deployments/matic-dev/v4.json';
 
 interface Variables {
   wethTokenAddress: string;
@@ -67,6 +68,17 @@ const matic: Variables = {
   },
 };
 
+const maticDev: Variables = {
+  wethTokenAddress: polygon.weth.id,
+  startBlock: 25825424,
+  releaseConfiguration: {
+    v4: {
+      fundDeployer: polygonDev.contracts.FundDeployer,
+      valueInterpreter: polygonDev.contracts.ValueInterpreter,
+    },
+  },
+};
+
 const kovan: Variables = {
   wethTokenAddress: '0xd0a1e359811322d97991e03f863a0c30c2cf029c',
   startBlock: 28110115,
@@ -96,6 +108,11 @@ export const contexts: Contexts<Variables> = {
     name: `${name}-matic`,
     network: 'matic',
     variables: matic,
+  },
+  'matic-dev': {
+    name: `${name}-matic-dev`,
+    network: 'matic',
+    variables: maticDev,
   },
 };
 

@@ -12,8 +12,9 @@ import * as v4 from './config/v4';
 import { kovan } from './contexts/kovan';
 import { local } from './contexts/local';
 import { mainnet } from './contexts/mainnet';
-import { mainnetdev } from './contexts/mainnet-dev';
+import { mainnetDev } from './contexts/mainnet-dev';
 import { matic } from './contexts/matic';
+import { maticDev } from './contexts/matic-dev';
 import { rinkeby } from './contexts/rinkeby';
 
 export interface Variables {
@@ -41,8 +42,9 @@ export interface Variables {
 export const contexts: Contexts<Variables> = {
   kovan,
   mainnet,
-  mainnetdev,
+  'mainnet-dev': mainnetDev,
   matic,
+  'matic-dev': maticDev,
   rinkeby,
   local,
 };
