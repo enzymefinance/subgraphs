@@ -1,5 +1,5 @@
 import { toBigDecimal, tuplePrefixBytes, uniqueEventId } from '@enzymefinance/subgraph-utils';
-import { Address, ethereum } from '@graphprotocol/graph-ts';
+import { Address, DataSourceContext, ethereum, log } from '@graphprotocol/graph-ts';
 import {
   createAaveDebtPosition,
   createAaveDebtPositionChange,
@@ -30,6 +30,7 @@ import {
 } from '../../generated/contracts/ExternalPositionManager4Events';
 import { ProtocolSdk } from '../../generated/contracts/ProtocolSdk';
 import { AssetAmount } from '../../generated/schema';
+import { UniswapV3LiquidityPositionLib4DataSource } from '../../generated/templates';
 import {
   AaveDebtPositionActionId,
   CompoundDebtPositionActionId,
@@ -52,6 +53,10 @@ export function handleExternalPositionDeployedForFund(event: ExternalPositionDep
   // Uniswap V3 Position
   if (type.label == 'UNISWAP_V3_LIQUIDITY') {
     createUniswapV3LiquidityPosition(event.params.externalPosition, event.params.vaultProxy, type);
+
+    let context = new DataSourceContext();
+    context.setString('vaultProxy', event.params.vaultProxy.toHex());
+    UniswapV3LiquidityPositionLib4DataSource.createWithContext(event.params.externalPosition, context);
   }
 }
 
@@ -164,7 +169,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
   if (type.label == 'UNISWAP_V3_LIQUIDITY') {
     if (actionId == UniswapV3LiquidityPositionActionId.Mint) {
       let decoded = ethereum.decode(
-        '(address, address, uint24, int24, int24, uint256, uint256, uint256, uint256)',
+        '(address,address,uint24,int24,int24,uint256,uint256,uint256,uint256)',
         event.params.actionArgs,
       );
 
@@ -194,7 +199,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     }
 
     if (actionId == UniswapV3LiquidityPositionActionId.AddLiquidity) {
-      let decoded = ethereum.decode('(uint256, uint256, uint256, uint256, uint256)', event.params.actionArgs);
+      let decoded = ethereum.decode('(uint256,uint256,uint256,uint256,uint256)', event.params.actionArgs);
 
       if (decoded == null) {
         return;
@@ -226,7 +231,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     }
 
     if (actionId == UniswapV3LiquidityPositionActionId.RemoveLiquidity) {
-      let decoded = ethereum.decode('(uint256, uint128, uint256, uint256)', event.params.actionArgs);
+      let decoded = ethereum.decode('(uint256,uint128,uint256,uint256)', event.params.actionArgs);
 
       if (decoded == null) {
         return;
@@ -271,7 +276,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     }
 
     if (actionId == UniswapV3LiquidityPositionActionId.Purge) {
-      let decoded = ethereum.decode('(uint256, uint128, uint256, uint256)', event.params.actionArgs);
+      let decoded = ethereum.decode('(uint256,uint128,uint256,uint256)', event.params.actionArgs);
 
       if (decoded == null) {
         return;

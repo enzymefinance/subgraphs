@@ -26,13 +26,13 @@ export function createUniswapV3LiquidityPosition(
   vaultAddress: Address,
   type: ExternalPositionType,
 ): UniswapV3LiquidityPosition {
-  let aaveDebtPosition = new UniswapV3LiquidityPosition(externalPositionAddress.toHex());
-  aaveDebtPosition.vault = useVault(vaultAddress.toHex()).id;
-  aaveDebtPosition.active = true;
-  aaveDebtPosition.type = type.id;
-  aaveDebtPosition.save();
+  let uniswapV3LiquidityPosition = new UniswapV3LiquidityPosition(externalPositionAddress.toHex());
+  uniswapV3LiquidityPosition.vault = useVault(vaultAddress.toHex()).id;
+  uniswapV3LiquidityPosition.active = true;
+  uniswapV3LiquidityPosition.type = type.id;
+  uniswapV3LiquidityPosition.save();
 
-  return aaveDebtPosition;
+  return uniswapV3LiquidityPosition;
 }
 
 export function createUniswapV3LiquidityPositionChange(
