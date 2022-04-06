@@ -6,11 +6,10 @@ import {
   SdkUserDeclaration,
   Template,
 } from '@enzymefinance/subgraph-cli';
-import { default as local } from '../../deployments/local/v4.json';
 
-import ethereum from '@enzymefinance/environment/ethereum';
-import polygon from '@enzymefinance/environment/polygon';
-import polygonDev from '../../deployments/matic-dev/v4.json';
+import ethereumDeployment from '@enzymefinance/environment/ethereum';
+import polygonDevDeployment from '@enzymefinance/environment/polygon';
+import polygonDeployment from '../../deployments/polygon/v4.json';
 
 interface Variables {
   dispatcher: string;
@@ -21,50 +20,31 @@ interface Variables {
 const name = 'enzymefinance/vault-balances';
 
 export const contexts: Contexts<Variables> = {
-  kovan: {
-    name: `${name}-kovan`,
-    network: 'kovan',
-    variables: {
-      dispatcher: '0xCdb7a704a3aB0C88651F0466d2Ec01c3db5EbF66',
-      weth: '0xd0a1e359811322d97991e03f863a0c30c2cf029c',
-      start: 27529642,
-    },
-  },
-  mainnet: {
+  ethereum: {
     name,
     network: 'mainnet',
     variables: {
-      dispatcher: ethereum.contracts.Dispatcher,
-      weth: ethereum.weth.id,
+      dispatcher: ethereumDeployment.contracts.Dispatcher,
+      weth: ethereumDeployment.weth.id,
       start: 11681281,
     },
   },
-  matic: {
-    name: `${name}-matic`,
+  polygon: {
+    name: `${name}-polygon`,
     network: 'matic',
     variables: {
-      dispatcher: polygon.contracts.Dispatcher,
-      weth: polygon.weth.id,
+      dispatcher: polygonDeployment.contracts.Dispatcher,
+      weth: polygonDevDeployment.weth.id,
+      start: 26191606,
+    },
+  },
+  testnet: {
+    name: `${name}-testnet`,
+    network: 'matic',
+    variables: {
+      dispatcher: polygonDevDeployment.contracts.Dispatcher,
+      weth: polygonDevDeployment.weth.id,
       start: 25731749,
-    },
-  },
-  'matic-dev': {
-    name: `${name}-matic-dev`,
-    network: 'matic',
-    variables: {
-      dispatcher: polygonDev.contracts.Dispatcher,
-      weth: polygon.weth.id,
-      start: 25825424,
-    },
-  },
-  local: {
-    local: true,
-    name,
-    network: 'local',
-    variables: {
-      dispatcher: local.contracts.Dispatcher.address,
-      weth: '0xd0a1e359811322d97991e03f863a0c30c2cf029c',
-      start: 13619920,
     },
   },
 };

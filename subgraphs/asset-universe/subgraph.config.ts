@@ -6,9 +6,9 @@ import {
   Template,
 } from '@enzymefinance/subgraph-cli';
 
-import ethereum from '@enzymefinance/environment/ethereum';
-import polygon from '@enzymefinance/environment/polygon';
-import polygonDev from '../../deployments/matic-dev/v4.json';
+import ethereumDeployment from '@enzymefinance/environment/ethereum';
+import polygonDeployment from '../../deployments/polygon/v4.json';
+import polygonDevDeployment from '@enzymefinance/environment/polygon';
 
 interface Variables {
   wethTokenAddress: string;
@@ -36,8 +36,8 @@ interface Variables {
 
 const name = 'enzymefinance/asset-universe';
 
-const mainnet: Variables = {
-  wethTokenAddress: ethereum.weth.id,
+const ethereum: Variables = {
+  wethTokenAddress: ethereumDeployment.weth.id,
   startBlock: 11636534,
   releaseConfiguration: {
     v2: {
@@ -51,68 +51,49 @@ const mainnet: Variables = {
       primitivePriceFeed: '0x1fad8faf11e027f8630f394599830dbeb97004ee',
     },
     v4: {
-      fundDeployer: ethereum.contracts.FundDeployer,
-      valueInterpreter: ethereum.contracts.ValueInterpreter,
+      fundDeployer: ethereumDeployment.contracts.FundDeployer,
+      valueInterpreter: ethereumDeployment.contracts.ValueInterpreter,
     },
   },
 };
 
-const matic: Variables = {
-  wethTokenAddress: polygon.weth.id,
-  startBlock: 25731749,
-  releaseConfiguration: {
-    v4: {
-      fundDeployer: polygon.contracts.FundDeployer,
-      valueInterpreter: polygon.contracts.ValueInterpreter,
-    },
-  },
-};
-
-const maticDev: Variables = {
-  wethTokenAddress: polygon.weth.id,
+const polygon: Variables = {
+  wethTokenAddress: polygonDevDeployment.weth.id,
   startBlock: 25825424,
   releaseConfiguration: {
     v4: {
-      fundDeployer: polygonDev.contracts.FundDeployer,
-      valueInterpreter: polygonDev.contracts.ValueInterpreter,
+      fundDeployer: polygonDeployment.contracts.FundDeployer,
+      valueInterpreter: polygonDeployment.contracts.ValueInterpreter,
     },
   },
 };
 
-const kovan: Variables = {
-  wethTokenAddress: '0xd0a1e359811322d97991e03f863a0c30c2cf029c',
-  startBlock: 28110115,
+const testnet: Variables = {
+  wethTokenAddress: polygonDevDeployment.weth.id,
+  startBlock: 25731749,
   releaseConfiguration: {
     v4: {
-      fundDeployer: '0xdc7fcff86385a86a9bb29472c9165f77b96ddac8',
-      valueInterpreter: '0xd62f44b640ffa7e99cb2e3eebac22a90c326d88d',
+      fundDeployer: polygonDevDeployment.contracts.FundDeployer,
+      valueInterpreter: polygonDevDeployment.contracts.ValueInterpreter,
     },
-  },
-  testnetConfiguration: {
-    treasuryController: '0x2546e91c90922f05426b7f016263147d3cd67b4c',
   },
 };
 
 export const contexts: Contexts<Variables> = {
-  kovan: {
-    name: `${name}-kovan`,
-    network: 'kovan',
-    variables: kovan,
-  },
-  mainnet: {
+  ethereum: {
     name,
     network: 'mainnet',
-    variables: mainnet,
+    variables: ethereum,
   },
-  matic: {
-    name: `${name}-matic`,
+  polygon: {
+    name: `${name}-polygon`,
     network: 'matic',
-    variables: matic,
+    variables: polygon,
   },
-  'matic-dev': {
-    name: `${name}-matic-dev`,
+  testnet: {
+    name: `${name}-testnet`,
     network: 'matic',
-    variables: maticDev,
+    variables: testnet,
   },
 };
 

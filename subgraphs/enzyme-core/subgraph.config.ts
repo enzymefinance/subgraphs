@@ -9,13 +9,10 @@ import {
 import * as v2 from './config/v2';
 import * as v3 from './config/v3';
 import * as v4 from './config/v4';
-import { kovan } from './contexts/kovan';
-import { local } from './contexts/local';
-import { mainnet } from './contexts/mainnet';
-import { mainnetDev } from './contexts/mainnet-dev';
-import { matic } from './contexts/matic';
-import { maticDev } from './contexts/matic-dev';
-import { rinkeby } from './contexts/rinkeby';
+import { ethereum } from './contexts/ethereum';
+import { ethereumDevDeployment } from './contexts/ethereum-dev';
+import { polygon } from './contexts/polygon';
+import { testnet } from './contexts/testnet';
 
 export interface Variables {
   block: number;
@@ -40,13 +37,10 @@ export interface Variables {
 }
 
 export const contexts: Contexts<Variables> = {
-  kovan,
-  mainnet,
-  'mainnet-dev': mainnetDev,
-  matic,
-  'matic-dev': maticDev,
-  rinkeby,
-  local,
+  ethereum,
+  'ethereum-dev': ethereumDevDeployment,
+  polygon,
+  testnet,
 };
 
 export const templates: Template[] = [

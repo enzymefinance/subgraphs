@@ -1,8 +1,7 @@
 import { Configurator, Contexts, DataSourceUserDeclaration, SdkUserDeclaration } from '@enzymefinance/subgraph-cli';
-import { default as v4Local } from '../../deployments/local/v4.json';
 
-import polygon from '@enzymefinance/environment/polygon';
-import polygonDev from '../../deployments/matic-dev/v4.json';
+import polygon from '../../deployments/polygon/v4.json';
+import polygonDevDeployment from '@enzymefinance/environment/polygon';
 
 interface Variables {
   dispatcher: string;
@@ -12,15 +11,7 @@ interface Variables {
 const name = 'enzymefinance/vault-lineage';
 
 export const contexts: Contexts<Variables> = {
-  kovan: {
-    name: `${name}-kovan`,
-    network: 'kovan',
-    variables: {
-      dispatcher: '0xb5f802D8e7d4c8aCD51e7097fAA03F286e90609d',
-      start: 27217130,
-    },
-  },
-  mainnet: {
+  ethereum: {
     name,
     network: 'mainnet',
     variables: {
@@ -28,29 +19,20 @@ export const contexts: Contexts<Variables> = {
       start: 11681281,
     },
   },
-  matic: {
-    name: `${name}-matic`,
+  polygon: {
+    name: `${name}-polygon`,
     network: 'matic',
     variables: {
       dispatcher: polygon.contracts.Dispatcher,
-      start: 25731749,
-    },
-  },
-  'matic-dev': {
-    name: `${name}-matic-dev`,
-    network: 'matic',
-    variables: {
-      dispatcher: polygonDev.contracts.Dispatcher,
       start: 25825424,
     },
   },
-  local: {
-    local: true,
-    name,
-    network: 'local',
+  testnet: {
+    name: `${name}-testnet`,
+    network: 'matic',
     variables: {
-      dispatcher: v4Local.contracts.Dispatcher.address,
-      start: 13619920,
+      dispatcher: polygonDevDeployment.contracts.Dispatcher,
+      start: 25731749,
     },
   },
 };
