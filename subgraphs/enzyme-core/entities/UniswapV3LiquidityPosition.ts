@@ -1,7 +1,6 @@
 import { logCritical, uniqueEventId } from '@enzymefinance/subgraph-utils';
 import { Address, BigInt, ethereum } from '@graphprotocol/graph-ts';
 import {
-  Asset,
   UniswapV3LiquidityPosition,
   UniswapV3LiquidityPositionChange,
   Vault,
@@ -60,9 +59,4 @@ export function createUniswapV3LiquidityPositionChange(
   vault.save();
 
   return change;
-}
-
-export function trackUniswapV3LiquidityPosition(): void {
-  // Nothing to do here: Uniswap V3 nft parameters are unchanged, so we don't need to track them.
-  // Anything that does change (i.e. nft liquidity) is subject to fluctiations, so we cannot track it.
 }

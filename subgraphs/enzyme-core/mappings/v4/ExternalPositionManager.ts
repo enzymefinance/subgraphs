@@ -1,5 +1,5 @@
-import { toBigDecimal, tuplePrefixBytes, uniqueEventId } from '@enzymefinance/subgraph-utils';
-import { Address, DataSourceContext, ethereum, log } from '@graphprotocol/graph-ts';
+import { toBigDecimal, tuplePrefixBytes } from '@enzymefinance/subgraph-utils';
+import { Address, DataSourceContext, ethereum } from '@graphprotocol/graph-ts';
 import {
   createAaveDebtPosition,
   createAaveDebtPositionChange,
@@ -13,14 +13,12 @@ import {
   trackCompoundDebtPosition,
 } from '../../entities/CompoundDebtPosition';
 import { ensureComptroller } from '../../entities/Comptroller';
-import { getActivityCounter } from '../../entities/Counter';
 import { useExternalPositionType } from '../../entities/ExternalPositionType';
 import {
   createUniswapV3LiquidityPosition,
   createUniswapV3LiquidityPositionChange,
-  trackUniswapV3LiquidityPosition,
 } from '../../entities/UniswapV3LiquidityPosition';
-import { useUniswapV3Nft } from '../../entities/UniswapV3Nft';
+import { trackUniswapV3Nft, useUniswapV3Nft } from '../../entities/UniswapV3Nft';
 import { useVault } from '../../entities/Vault';
 import {
   CallOnExternalPositionExecutedForFund,
@@ -117,7 +115,6 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     }
 
     trackCompoundDebtPosition(event.params.externalPosition.toHex(), event);
-    return;
   }
 
   // Aave Debt Position
@@ -162,7 +159,6 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     }
 
     trackAaveDebtPosition(event.params.externalPosition.toHex(), event);
-    return;
   }
 
   // Uniswap V3 Liquidity
@@ -228,6 +224,10 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         vault,
         event,
       );
+
+      let nonFungiblePositionManagerAddress = iExternalPositionProxy.getNonFungibleTokenManager();
+
+      trackUniswapV3Nft(nftId, nonFungiblePositionManagerAddress);
     }
 
     if (actionId == UniswapV3LiquidityPositionActionId.RemoveLiquidity) {
@@ -251,6 +251,10 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         vault,
         event,
       );
+
+      let nonFungiblePositionManagerAddress = iExternalPositionProxy.getNonFungibleTokenManager();
+
+      trackUniswapV3Nft(nftId, nonFungiblePositionManagerAddress);
     }
 
     if (actionId == UniswapV3LiquidityPositionActionId.Collect) {
@@ -273,6 +277,10 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         vault,
         event,
       );
+
+      let nonFungiblePositionManagerAddress = iExternalPositionProxy.getNonFungibleTokenManager();
+
+      trackUniswapV3Nft(nftId, nonFungiblePositionManagerAddress);
     }
 
     if (actionId == UniswapV3LiquidityPositionActionId.Purge) {
@@ -296,9 +304,10 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         vault,
         event,
       );
+
+      // Do not call trackUniswapV3Nft() for purge (nft will not exist onchain after purge)
     }
 
-    trackUniswapV3LiquidityPosition();
     return;
   }
 }

@@ -4,7 +4,7 @@ import {
   PositionDeployerRemoved,
   PositionTypeAdded,
   PositionTypeLabelUpdated,
-} from '../generated/contracts/ExternalPositionFactory4Events';
+} from '../generated/contracts/ExternalPositionFactoryEvents';
 import { ExternalPositionType } from '../generated/schema';
 
 export function handlePositionTypeAdded(event: PositionTypeAdded): void {

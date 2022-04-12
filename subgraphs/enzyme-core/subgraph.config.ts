@@ -156,11 +156,16 @@ export const configure: Configurator<Variables> = (variables) => {
       functions: (abis) => [abis.ERC20Bytes.getFunction('symbol'), abis.ERC20Bytes.getFunction('name')],
     },
     {
-      name: 'NonfungiblePositionManager',
+      name: 'UniswapV3',
       abis: {
         NonfungiblePositionManager: 'abis/NonfungiblePositionManager.json',
+        UniswapV3Factory: 'abis/UniswapV3Factory.json',
       },
-      functions: (abis) => [abis.NonfungiblePositionManager.getFunction('positions')],
+      functions: (abis) => [
+        abis.NonfungiblePositionManager.getFunction('positions'),
+        abis.NonfungiblePositionManager.getFunction('factory'),
+        abis.UniswapV3Factory.getFunction('getPool'),
+      ],
     },
   ];
 

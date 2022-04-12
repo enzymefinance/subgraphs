@@ -1041,6 +1041,8 @@ type UniswapV3Nft @entity {
   fee: BigDecimal!
   tickLower: Int!
   tickUpper: Int!
+  liquidity: BigInt!
+  poolAddress: Bytes!
 }
 
 enum UniswapV3LiquidityPositionChangeType {
