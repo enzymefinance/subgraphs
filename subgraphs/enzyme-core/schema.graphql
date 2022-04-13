@@ -1043,6 +1043,7 @@ type UniswapV3Nft @entity {
   tickUpper: Int!
   liquidity: BigInt!
   poolAddress: Bytes!
+  tokenURI: String!
 }
 
 enum UniswapV3LiquidityPositionChangeType {

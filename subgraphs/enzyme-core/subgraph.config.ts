@@ -164,6 +164,7 @@ export const configure: Configurator<Variables> = (variables) => {
       functions: (abis) => [
         abis.NonfungiblePositionManager.getFunction('positions'),
         abis.NonfungiblePositionManager.getFunction('factory'),
+        abis.NonfungiblePositionManager.getFunction('tokenURI'),
         abis.UniswapV3Factory.getFunction('getPool'),
       ],
     },

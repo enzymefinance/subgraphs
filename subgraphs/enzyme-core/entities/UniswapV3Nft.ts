@@ -20,19 +20,7 @@ export function createUniswapV3Nft(
 ): UniswapV3Nft {
   let nonFungiblePositionManager = UniswapV3Sdk.bind(nonFungiblePositionManagerAddress);
   let positions = nonFungiblePositionManager.positions(tokenId);
-
-  // value0     uint96 nonce,
-  // value1     address operator,
-  // value2     address token0,
-  // value3     address token1,
-  // value4     uint24 fee,
-  // value5     int24 tickLower,
-  // value6     int24 tickUpper,
-  // value7     uint128 liquidity,
-  // value8     uint256 feeGrowthInside0LastX128,
-  // value9     uint256 feeGrowthInside1LastX128,
-  // value10    uint128 tokensOwed0,
-  // value11    uint128 tokensOwed1
+  let tokenURI = nonFungiblePositionManager.tokenURI(tokenId);
 
   let uniswapV3Factory = UniswapV3Sdk.bind(nonFungiblePositionManager.factory());
   let poolAddress = uniswapV3Factory.getPool(positions.value2, positions.value3, positions.value4);
@@ -50,6 +38,7 @@ export function createUniswapV3Nft(
   nft.tickUpper = positions.value6;
   nft.liquidity = positions.value7;
   nft.poolAddress = poolAddress;
+  nft.tokenURI = tokenURI;
   nft.save();
 
   return nft;
