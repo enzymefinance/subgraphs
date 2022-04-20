@@ -50,6 +50,7 @@ export function createUniswapV3LiquidityPositionChange(
   change.assetAmounts = assetAmounts != null ? assetAmounts.map<string>((assetAmount) => assetAmount.id) : null;
   change.liquidity = liquidity;
   change.vault = vault.id;
+  change.timestamp = event.block.timestamp.toI32();
   change.activityCounter = getActivityCounter();
   change.activityCategories = ['Vault'];
   change.activityType = 'Trade';
