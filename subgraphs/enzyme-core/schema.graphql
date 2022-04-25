@@ -1060,9 +1060,10 @@ type UniswapV3LiquidityPositionChange implements Activity & VaultActivity & Exte
   timestamp: Int!
   externalPosition: ExternalPosition!
   uniswapV3LiquidityPositionChangeType: UniswapV3LiquidityPositionChangeType!
-  nft: UniswapV3Nft
+  nft: UniswapV3Nft!
   assetAmounts: [AssetAmount!]
   liquidity: BigInt
+  currentTick: Int!
   activityCounter: Int!
   activityCategories: [ActivityCategory!]!
   activityType: ActivityType!

@@ -1,4 +1,4 @@
-import { logCritical } from '@enzymefinance/subgraph-utils';
+import { logCritical, ZERO_BI } from '@enzymefinance/subgraph-utils';
 import { Address, BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 import { UniswapV3Sdk } from '../generated/contracts/UniswapV3Sdk';
 import { UniswapV3Nft } from '../generated/schema';
@@ -46,10 +46,15 @@ export function createUniswapV3Nft(
 
 export function trackUniswapV3Nft(tokenId: BigInt, nonFungiblePositionManagerAddress: Address): UniswapV3Nft {
   let nonFungiblePositionManager = UniswapV3Sdk.bind(nonFungiblePositionManagerAddress);
-  let positions = nonFungiblePositionManager.positions(tokenId);
+  let positions = nonFungiblePositionManager.try_positions(tokenId);
 
   let nft = useUniswapV3Nft(tokenId);
-  nft.liquidity = positions.value7;
+
+  if (positions.reverted == false) {
+    nft.liquidity = positions.value.value7;
+  } else {
+    nft.liquidity = ZERO_BI;
+  }
   nft.save();
 
   return nft;

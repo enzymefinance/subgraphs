@@ -1,4 +1,4 @@
-import { toBigDecimal, tuplePrefixBytes } from '@enzymefinance/subgraph-utils';
+import { toBigDecimal, tuplePrefixBytes, ZERO_BI } from '@enzymefinance/subgraph-utils';
 import { Address, DataSourceContext, ethereum } from '@graphprotocol/graph-ts';
 import {
   createAaveDebtPosition,
@@ -164,34 +164,8 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
   // Uniswap V3 Liquidity
   if (type.label == 'UNISWAP_V3_LIQUIDITY') {
     if (actionId == UniswapV3LiquidityPositionActionId.Mint) {
-      let decoded = ethereum.decode(
-        '(address,address,uint24,int24,int24,uint256,uint256,uint256,uint256)',
-        event.params.actionArgs,
-      );
-
-      if (decoded == null) {
-        return;
-      }
-
-      let tuple = decoded.toTuple();
-
-      let asset0 = ensureAsset(tuple[0].toAddress());
-      let amount0 = toBigDecimal(tuple[5].toBigInt(), asset0.decimals);
-      let assetAmount0 = createAssetAmount(asset0, amount0, denominationAsset, 'uv3lp', event);
-
-      let asset1 = ensureAsset(tuple[1].toAddress());
-      let amount1 = toBigDecimal(tuple[6].toBigInt(), asset1.decimals);
-      let assetAmount1 = createAssetAmount(asset1, amount1, denominationAsset, 'uv3lp', event);
-
-      createUniswapV3LiquidityPositionChange(
-        event.params.externalPosition,
-        null,
-        [assetAmount0, assetAmount1],
-        null,
-        'Mint',
-        vault,
-        event,
-      );
+      // We are NOT tracking the position change here, because we do not know the nftId. Instead,
+      // the position change is tracked in the NFTPositionAdded event in the UniswapV3LiquidityPositionLib
     }
 
     if (actionId == UniswapV3LiquidityPositionActionId.AddLiquidity) {
@@ -305,7 +279,9 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         event,
       );
 
-      // Do not call trackUniswapV3Nft() for purge (nft will not exist onchain after purge)
+      let nonFungiblePositionManagerAddress = iExternalPositionProxy.getNonFungibleTokenManager();
+
+      trackUniswapV3Nft(nftId, nonFungiblePositionManagerAddress);
     }
 
     return;

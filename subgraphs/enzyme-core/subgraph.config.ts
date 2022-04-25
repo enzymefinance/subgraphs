@@ -160,12 +160,14 @@ export const configure: Configurator<Variables> = (variables) => {
       abis: {
         NonfungiblePositionManager: 'abis/NonfungiblePositionManager.json',
         UniswapV3Factory: 'abis/UniswapV3Factory.json',
+        UniswapV3Pool: 'abis/UniswapV3Pool.json',
       },
       functions: (abis) => [
         abis.NonfungiblePositionManager.getFunction('positions'),
         abis.NonfungiblePositionManager.getFunction('factory'),
         abis.NonfungiblePositionManager.getFunction('tokenURI'),
         abis.UniswapV3Factory.getFunction('getPool'),
+        abis.UniswapV3Pool.getFunction('slot0'),
       ],
     },
   ];
