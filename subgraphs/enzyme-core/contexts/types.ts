@@ -83,4 +83,5 @@ export interface Release4Addresses {
   valueInterpreterAddress: string;
   vaultLibAddress: string;
   curveLiquidityAdapterAddress: string;
+  convexCurveLpStakingAdapterAddress: string;
 }

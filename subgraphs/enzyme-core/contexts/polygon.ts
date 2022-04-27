@@ -106,6 +106,7 @@ export const polygon: Context<Variables> = {
         valueInterpreterAddress: polygonDeployment.contracts.ValueInterpreter,
         vaultLibAddress: polygonDeployment.contracts.VaultLib,
         curveLiquidityAdapterAddress: polygonDeployment.contracts.CurveLiquidityAdapter,
+        convexCurveLpStakingAdapterAddress: polygonDeployment.contracts.ConvexCurveLpStakingAdapter,
       },
     },
   },

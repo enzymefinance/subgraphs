@@ -103,6 +103,7 @@ export const ethereumDevDeployment: Context<Variables> = {
         valueInterpreterAddress: '0xd7b0610db501b15bfb9b7ddad8b3869de262a327',
         vaultLibAddress: '0x891dee0483ebaa922e274ddd2ebbaa2d33468a38',
         curveLiquidityAdapterAddress: ethereumDeployment.contracts.CurveLiquidityAdapter,
+        convexCurveLpStakingAdapterAddress: ethereumDeployment.contracts.ConvexCurveLpStakingAdapter,
       },
     },
   },

@@ -32,6 +32,7 @@ export interface ReleaseVariables {
   valueInterpreterAddress: string;
   vaultLibAddress: string;
   curveLiquidityAdapterAddress: string;
+  convexCurveLpStakingAdapterAddress: string;
 }
 
 export const sources = (variables: ReleaseVariables): DataSourceUserDeclaration[] => [

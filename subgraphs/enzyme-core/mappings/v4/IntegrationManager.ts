@@ -44,7 +44,8 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
 
   // Claim rewards doesn't emit incoming assets. In order to be able to display information, on the activty page, about claimed asset we decode the call action args.
   if (
-    release4Addresses.curveLiquidityAdapterAddress.equals(event.params.adapter) &&
+    (release4Addresses.curveLiquidityAdapterAddress.equals(event.params.adapter) ||
+      release4Addresses.convexCurveLpStakingAdapterAddress.equals(event.params.adapter)) &&
     integrationSelector == claimRewardsSelector
   ) {
     let decoded = ethereum.decode('(address)', event.params.integrationData);

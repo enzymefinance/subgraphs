@@ -105,6 +105,7 @@ export const testnet: Context<Variables> = {
         valueInterpreterAddress: testnetDeployment.contracts.ValueInterpreter,
         vaultLibAddress: testnetDeployment.contracts.VaultLib,
         curveLiquidityAdapterAddress: testnetDeployment.contracts.CurveLiquidityAdapter,
+        convexCurveLpStakingAdapterAddress: testnetDeployment.contracts.ConvexCurveLpStakingAdapter,
       },
     },
   },
