@@ -105,6 +105,7 @@ export const polygon: Context<Variables> = {
         unpermissionedActionsWrapperAddress: polygonDeployment.contracts.UnpermissionedActionsWrapper,
         valueInterpreterAddress: polygonDeployment.contracts.ValueInterpreter,
         vaultLibAddress: polygonDeployment.contracts.VaultLib,
+        curveLiquidityAdapterAddress: polygonDeployment.contracts.CurveLiquidityAdapter,
       },
     },
   },

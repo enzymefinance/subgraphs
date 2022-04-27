@@ -82,4 +82,5 @@ export interface Release4Addresses {
   unpermissionedActionsWrapperAddress: string;
   valueInterpreterAddress: string;
   vaultLibAddress: string;
+  curveLiquidityAdapterAddress: string;
 }

@@ -1,5 +1,6 @@
 import { Context } from '@enzymefinance/subgraph-cli';
 import { Variables } from '../subgraph.config';
+import ethereumDeployment from '@enzymefinance/environment/ethereum';
 
 export const ethereumDevDeployment: Context<Variables> = {
   name: 'enzymefinance/enzyme-core-dev',
@@ -101,6 +102,7 @@ export const ethereumDevDeployment: Context<Variables> = {
         unpermissionedActionsWrapperAddress: '0xcfab4fcbfe059d5c1840d9dc285a9bfa0f96a118',
         valueInterpreterAddress: '0xd7b0610db501b15bfb9b7ddad8b3869de262a327',
         vaultLibAddress: '0x891dee0483ebaa922e274ddd2ebbaa2d33468a38',
+        curveLiquidityAdapterAddress: ethereumDeployment.contracts.CurveLiquidityAdapter,
       },
     },
   },

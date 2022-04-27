@@ -31,6 +31,7 @@ export interface ReleaseVariables {
   unpermissionedActionsWrapperAddress: string;
   valueInterpreterAddress: string;
   vaultLibAddress: string;
+  curveLiquidityAdapterAddress: string;
 }
 
 export const sources = (variables: ReleaseVariables): DataSourceUserDeclaration[] => [

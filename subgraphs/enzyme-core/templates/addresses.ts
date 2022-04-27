@@ -90,6 +90,7 @@ export class Release4Addresses {
   unpermissionedActionsWrapperAddress: Address;
   valueInterpreterAddress: Address;
   vaultLibAddress: Address;
+  curveLiquidityAdapterAddress: Address;
 }
 
 export let release2Addresses: Release2Addresses = {
@@ -175,6 +176,7 @@ export let release4Addresses: Release4Addresses = {
   unpermissionedActionsWrapperAddress: Address.fromString('{{releases.v4.protocolFeeTrackerAddress}}'),
   valueInterpreterAddress: Address.fromString('{{releases.v4.valueInterpreterAddress}}'),
   vaultLibAddress: Address.fromString('{{releases.v4.vaultLibAddress}}'),
+  curveLiquidityAdapterAddress: Address.fromString('{{releases.v4.curveLiquidityAdapterAddress}}'),
 };
 
 // Core

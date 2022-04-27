@@ -104,6 +104,7 @@ export const testnet: Context<Variables> = {
         unpermissionedActionsWrapperAddress: testnetDeployment.contracts.UnpermissionedActionsWrapper,
         valueInterpreterAddress: testnetDeployment.contracts.ValueInterpreter,
         vaultLibAddress: testnetDeployment.contracts.VaultLib,
+        curveLiquidityAdapterAddress: testnetDeployment.contracts.CurveLiquidityAdapter,
       },
     },
   },
