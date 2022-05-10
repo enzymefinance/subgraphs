@@ -1,8 +1,9 @@
 import { Context } from '@enzymefinance/subgraph-cli';
 import { Variables } from '../subgraph.config';
+import { getEnvironment } from '@enzymefinance/environment/all';
+import { Deployment, Version } from '@enzymefinance/environment';
 
-import polygonDevDeployment from '@enzymefinance/environment/polygon';
-import polygonDeployment from '../../../deployments/polygon/v4.json';
+const polygonDeployment = getEnvironment(Deployment.POLYGON, Version.SULU);
 
 export const polygon: Context<Variables> = {
   name: 'enzymefinance/enzyme-core-polygon',
@@ -11,7 +12,7 @@ export const polygon: Context<Variables> = {
     block: 25825424,
     dispatcherAddress: polygonDeployment.contracts.Dispatcher,
     externalPositionFactoryAddress: polygonDeployment.contracts.ExternalPositionFactory,
-    wethTokenAddress: polygonDevDeployment.weth.id,
+    wethTokenAddress: polygonDeployment.weth.id,
     chainlinkAggregatorAddresses: {
       audUsd: '0x062Df9C4efd2030e243ffCc398b652e8b8F95C6f',
       btcEth: '0x19b0F0833C78c0848109E3842D34d2fDF2cA69BA',

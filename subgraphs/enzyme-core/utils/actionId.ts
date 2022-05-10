@@ -15,9 +15,21 @@ export const enum CompoundDebtPositionActionId {
 }
 
 export const enum UniswapV3LiquidityPositionActionId {
-  Mint,
-  AddLiquidity,
-  RemoveLiquidity,
-  Collect,
-  Purge,
+  Mint = 0,
+  AddLiquidity = 1,
+  RemoveLiquidity = 2,
+  Collect = 3,
+  Purge = 4,
+}
+
+export enum MapleLiquidityPositionActionId {
+  Lend = 0,
+  LendAndStake = 1,
+  IntendToRedeem = 2,
+  Redeem = 3,
+  Stake = 4,
+  Unstake = 5,
+  UnstakeAndRedeem = 6,
+  ClaimInterest = 7,
+  ClaimRewards = 8,
 }

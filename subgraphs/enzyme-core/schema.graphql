@@ -1024,6 +1024,46 @@ type AaveDebtPositionChange implements Activity & VaultActivity & ExternalPositi
   activityType: ActivityType!
 }
 
+type MapleLiquidityPool @entity {
+  id: ID!
+  liquidityAsset: Asset!
+  rewardsContract: Bytes
+}
+
+type MapleLiquidityPosition implements ExternalPosition @entity {
+  id: ID!
+  vault: Vault!
+  type: ExternalPositionType!
+  active: Boolean!
+  pools: [MapleLiquidityPool!]!
+  changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
+}
+
+enum MapleLiquidityPositionChangeType {
+  Lend
+  LendAndStake
+  IntendToRedeem
+  Redeem
+  Stake
+  Unstake
+  UnstakeAndRedeem
+  ClaimInterest
+  ClaimRewards
+}
+
+type MapleLiquidityPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: Int!
+  externalPosition: ExternalPosition!
+  mapleLiquidityPositionChangeType: MapleLiquidityPositionChangeType!
+  pool: MapleLiquidityPool!
+  assetAmount: AssetAmount
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
 type UniswapV3LiquidityPosition implements ExternalPosition @entity {
   id: ID!
   vault: Vault!

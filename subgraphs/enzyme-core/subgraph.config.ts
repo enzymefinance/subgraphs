@@ -135,6 +135,17 @@ export const configure: Configurator<Variables> = (variables) => {
       ],
     },
     {
+      name: 'Maple',
+      abis: {
+        MaplePool: 'abis/MaplePool.json',
+        MapleRewards: 'abis/MapleRewards.json',
+      },
+      functions: (abis) => [
+        abis.MaplePool.getFunction('liquidityAsset'),
+        abis.MapleRewards.getFunction('stakingToken'),
+      ],
+    },
+    {
       name: 'ERC20',
       abis: {
         ERC20: 'abis/ERC20.json',

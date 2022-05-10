@@ -70,4 +70,5 @@ export const templates: DataSourceTemplateUserDeclaration[] = [
   { name: 'ComptrollerLib' },
   { name: 'GasRelayPaymasterLib' },
   { name: 'UniswapV3LiquidityPositionLib' },
+  { name: 'MapleLiquidityPositionLib' },
 ];

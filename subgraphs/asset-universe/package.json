@@ -8,8 +8,8 @@
     "deploy": "enzyme-graph deploy"
   },
   "dependencies": {
-    "@enzymefinance/environment": "^0.0.64",
-    "@enzymefinance/protocol": "^4.0.0-next.7",
+    "@enzymefinance/environment": "^0.0.88",
+    "@enzymefinance/protocol": "^4.0.2",
     "@enzymefinance/subgraph-cli": "^0.0.0",
     "@enzymefinance/subgraph-utils": "^0.0.0",
     "@graphprotocol/graph-ts": "^0.26.0"

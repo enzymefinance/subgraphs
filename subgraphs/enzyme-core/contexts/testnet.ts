@@ -1,7 +1,9 @@
 import { Context } from '@enzymefinance/subgraph-cli';
 import { Variables } from '../subgraph.config';
+import { getEnvironment } from '@enzymefinance/environment/all';
+import { Deployment, Version } from '@enzymefinance/environment';
 
-import testnetDeployment from '@enzymefinance/environment/polygon';
+const testnetDeployment = getEnvironment(Deployment.TESTNET, Version.SULU);
 
 export const testnet: Context<Variables> = {
   name: 'enzymefinance/enzyme-core-testnet',

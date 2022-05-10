@@ -1,6 +1,9 @@
 import { Context } from '@enzymefinance/subgraph-cli';
 import { Variables } from '../subgraph.config';
-import ethereumDeployment from '@enzymefinance/environment/ethereum';
+import { getEnvironment } from '@enzymefinance/environment/all';
+import { Deployment, Version } from '@enzymefinance/environment';
+
+const ethereumDeployment = getEnvironment(Deployment.ETHEREUM, Version.SULU);
 
 export const ethereum: Context<Variables> = {
   name: 'enzymefinance/enzyme-core',
