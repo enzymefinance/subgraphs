@@ -11,6 +11,7 @@ export const testnet: Context<Variables> = {
   variables: {
     block: 25731749,
     dispatcherAddress: testnetDeployment.contracts.Dispatcher,
+    curveMinterAddress: '0x0000000000000000000000000000000000000000',
     externalPositionFactoryAddress: testnetDeployment.contracts.ExternalPositionFactory,
     wethTokenAddress: testnetDeployment.weth.id,
     chainlinkAggregatorAddresses: {

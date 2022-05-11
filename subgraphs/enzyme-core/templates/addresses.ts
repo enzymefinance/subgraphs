@@ -187,6 +187,8 @@ export let dispatcherAddress = Address.fromString('{{dispatcherAddress}}');
 // External
 export let wethTokenAddress = Address.fromString('{{wethTokenAddress}}');
 
+export let curveMinterAddress = Address.fromString('{{curveMinterAddress}}');
+
 export class ChainlinkAggregatorAddresses {
   audUsdAddress: Address;
   btcEthAddress: Address;

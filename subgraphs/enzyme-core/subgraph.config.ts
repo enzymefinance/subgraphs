@@ -17,6 +17,7 @@ import { testnet } from './contexts/testnet';
 export interface Variables {
   block: number;
   dispatcherAddress: string;
+  curveMinterAddress: string;
   externalPositionFactoryAddress: string;
   wethTokenAddress: string;
   chainlinkAggregatorAddresses: {
@@ -103,6 +104,7 @@ export const configure: Configurator<Variables> = (variables) => {
         OnlyUntrackDustOrPricelessAssetsPolicy: 'abis/v4/OnlyUntrackDustOrPricelessAssetsPolicy.json',
         IExternalPositionProxy: 'abis/v4/IExternalPositionProxy.json',
         UniswapV3LiquidityPositionLib: 'abis/v4/UniswapV3LiquidityPositionLib.json',
+        IStakingWrapper: 'abis/v4/IStakingWrapper.json',
       },
       functions: (abis) => [
         abis.ChainlinkAggregator.getFunction('latestAnswer'),
@@ -132,6 +134,7 @@ export const configure: Configurator<Variables> = (variables) => {
         abis.OnlyUntrackDustOrPricelessAssetsPolicy.getFunction('getFundDeployer'),
         abis.IExternalPositionProxy.getFunction('getExternalPositionType'),
         abis.UniswapV3LiquidityPositionLib.getFunction('getNonFungibleTokenManager'),
+        abis.IStakingWrapper.getFunction('getRewardTokens'),
       ],
     },
     {
@@ -180,6 +183,20 @@ export const configure: Configurator<Variables> = (variables) => {
         abis.UniswapV3Factory.getFunction('getPool'),
         abis.UniswapV3Pool.getFunction('slot0'),
       ],
+    },
+    {
+      name: 'CurveLiquidityGaugeV2',
+      abis: {
+        CurveLiquidityGaugeV2: 'abis/CurveLiquidityGaugeV2.json',
+      },
+      functions: (abis) => [abis.CurveLiquidityGaugeV2.getFunction('reward_tokens')],
+    },
+    {
+      name: 'CurveMinter',
+      abis: {
+        CurveMinter: 'abis/CurveMinter.json',
+      },
+      functions: (abis) => [abis.CurveMinter.getFunction('token')],
     },
   ];
 
