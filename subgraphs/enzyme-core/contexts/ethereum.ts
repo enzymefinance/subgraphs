@@ -12,6 +12,8 @@ export const ethereum: Context<Variables> = {
     block: 11636493,
     dispatcherAddress: '0xC3DC853dD716bd5754f421ef94fdCbac3902ab32',
     curveMinterAddress: '0xd061d61a4d941c39e5453435b6345dc261c2fce0',
+    cvxLockerV2Address: '0x72a19342e8f1838460ebfccef09f6585e32db86e',
+    cvxAddress: '0x4e3fbd56cd56c3e72c1403e103b45db9da5b9d2b',
     externalPositionFactoryAddress: '0x0aacb782205dde9eff4862ace9849dce1ca3409f',
     wethTokenAddress: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
     chainlinkAggregatorAddresses: {

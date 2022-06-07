@@ -33,3 +33,11 @@ export enum MapleLiquidityPositionActionId {
   ClaimInterest = 7,
   ClaimRewards = 8,
 }
+
+export enum ConvexVotingPositionActionId {
+  Lock = 0,
+  Relock = 1,
+  Withdraw = 2,
+  ClaimRewards = 3,
+  Delegate = 4,
+}

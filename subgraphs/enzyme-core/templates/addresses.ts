@@ -189,6 +189,10 @@ export let wethTokenAddress = Address.fromString('{{wethTokenAddress}}');
 
 export let curveMinterAddress = Address.fromString('{{curveMinterAddress}}');
 
+export let cvxAddress = Address.fromString('{{cvxAddress}}');
+
+export let cvxLockerV2Address = Address.fromString('{{cvxLockerV2Address}}');
+
 export class ChainlinkAggregatorAddresses {
   audUsdAddress: Address;
   btcEthAddress: Address;

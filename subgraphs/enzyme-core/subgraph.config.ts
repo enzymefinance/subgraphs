@@ -18,6 +18,8 @@ export interface Variables {
   block: number;
   dispatcherAddress: string;
   curveMinterAddress: string;
+  cvxLockerV2Address: string;
+  cvxAddress: string;
   externalPositionFactoryAddress: string;
   wethTokenAddress: string;
   chainlinkAggregatorAddresses: {
@@ -197,6 +199,13 @@ export const configure: Configurator<Variables> = (variables) => {
         CurveMinter: 'abis/CurveMinter.json',
       },
       functions: (abis) => [abis.CurveMinter.getFunction('token')],
+    },
+    {
+      name: 'CvxLockerV2',
+      abis: {
+        CvxLockerV2: 'abis/CvxLockerV2.json',
+      },
+      functions: (abis) => [abis.CvxLockerV2.getFunction('userLocks')],
     },
   ];
 

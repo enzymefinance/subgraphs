@@ -1,5 +1,5 @@
-import { toBigDecimal, tuplePrefixBytes } from '@enzymefinance/subgraph-utils';
-import { Address, DataSourceContext, ethereum } from '@graphprotocol/graph-ts';
+import { arrayUnique, toBigDecimal, tuplePrefixBytes } from '@enzymefinance/subgraph-utils';
+import { Address, Bytes, DataSourceContext, ethereum, crypto } from '@graphprotocol/graph-ts';
 import {
   createAaveDebtPosition,
   createAaveDebtPositionChange,
@@ -32,7 +32,7 @@ import {
   ValidatedVaultProxySetForFund,
 } from '../../generated/contracts/ExternalPositionManager4Events';
 import { ProtocolSdk } from '../../generated/contracts/ProtocolSdk';
-import { AssetAmount } from '../../generated/schema';
+import { Asset, AssetAmount } from '../../generated/schema';
 import {
   MapleLiquidityPositionLib4DataSource,
   UniswapV3LiquidityPositionLib4DataSource,
@@ -40,11 +40,20 @@ import {
 import {
   AaveDebtPositionActionId,
   CompoundDebtPositionActionId,
+  ConvexVotingPositionActionId,
   MapleLiquidityPositionActionId,
   UniswapV3LiquidityPositionActionId,
 } from '../../utils/actionId';
 import { ensureMapleLiquidityPool } from '../../entities/MapleLiquidityPool';
 import { MapleSdk } from '../../generated/contracts/MapleSdk';
+import {
+  createConvexVotingPosition,
+  createConvexVotingPositionChange,
+  updateConvexVotingPositionWithdrawOrRelock,
+  updateConvexVotingPositionUserLocks,
+  useConvexVotingPosition,
+} from '../../entities/ConvexVotingPosition';
+import { cvxAddress } from '../../generated/addresses';
 
 export function handleExternalPositionDeployedForFund(event: ExternalPositionDeployedForFund): void {
   let type = useExternalPositionType(event.params.externalPositionTypeId);
@@ -71,6 +80,10 @@ export function handleExternalPositionDeployedForFund(event: ExternalPositionDep
     let context = new DataSourceContext();
     context.setString('vaultProxy', event.params.vaultProxy.toHex());
     MapleLiquidityPositionLib4DataSource.createWithContext(event.params.externalPosition, context);
+  }
+
+  if (type.label == 'CONVEX_VOTING') {
+    createConvexVotingPosition(event.params.externalPosition, event.params.vaultProxy, type);
   }
 }
 
@@ -462,6 +475,110 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
       let pool = ensureMapleLiquidityPool(poolAddress, rewardsContractAddress);
       createMapleLiquidityPositionChange(event.params.externalPosition, pool, null, 'ClaimRewards', vault, event);
+    }
+  }
+
+  if (type.label == 'CONVEX_VOTING') {
+    if (actionId == ConvexVotingPositionActionId.Lock) {
+      let decoded = ethereum.decode('(uint256,uint256)', event.params.actionArgs);
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+
+      let cvxAmount = tuple[0].toBigInt();
+
+      let asset = ensureAsset(cvxAddress);
+      let assetAmount = createAssetAmount(asset, toBigDecimal(cvxAmount), denominationAsset, 'cvx', event);
+
+      createConvexVotingPositionChange(
+        event.params.externalPosition,
+        [assetAmount],
+        [asset],
+        null,
+        'Lock',
+        vault,
+        event,
+      );
+
+      updateConvexVotingPositionUserLocks(event.params.externalPosition);
+    }
+
+    // if (actionId == ConvexVotingPositionActionId.Relock) {
+    //   updateConvexVotingPositionWithdrawOrRelock(event.params.externalPosition, event);
+    //   createConvexVotingPositionChange(event.params.externalPosition, null, null, null, 'Relock', vault, event);
+    // }
+
+    // if (actionId == ConvexVotingPositionActionId.Withdraw) {
+    //   updateConvexVotingPositionWithdrawOrRelock(event.params.externalPosition, event);
+    //   createConvexVotingPositionChange(event.params.externalPosition, null, null, null, 'Withdraw', vault, event);
+    // }
+
+    if (actionId == ConvexVotingPositionActionId.Delegate) {
+      let decoded = ethereum.decode('(address)', event.params.actionArgs);
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+
+      let delegate = tuple[0].toAddress();
+
+      let convexVotingPosition = useConvexVotingPosition(event.params.externalPosition.toHex());
+      convexVotingPosition.delegate = delegate;
+      convexVotingPosition.save();
+
+      createConvexVotingPositionChange(event.params.externalPosition, null, null, delegate, 'Delegate', vault, event);
+    }
+
+    if (actionId == ConvexVotingPositionActionId.ClaimRewards) {
+      let decoded = ethereum.decode(
+        '(address[],bool,address[],tuple(address,uint256,uint256,bytes32[])[],bool)',
+        tuplePrefixBytes(event.params.actionArgs),
+      );
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+
+      let votiumClaimsTuples = tuple[3].toTupleArray<ethereum.Tuple>();
+
+      let merkleProofs: Bytes[][] = [];
+
+      for (let i = 0; i < votiumClaimsTuples.length; i++) {
+        let merkleProof = votiumClaimsTuples[i][3].toBytesArray();
+        merkleProofs = arrayUnique<Bytes[]>(merkleProofs.concat([merkleProof]));
+      }
+
+      let convexVotingPosition = useConvexVotingPosition(event.params.externalPosition.toHex());
+
+      let hashedMerkleProofs = merkleProofs.map<string>((merkleProof) => {
+        let concatenatedProofHashes = merkleProof.reduce<Bytes>((proof, hash) => {
+          return proof.concat(hash);
+        }, new Bytes(0));
+
+        return crypto.keccak256(concatenatedProofHashes).toHex();
+      });
+
+      convexVotingPosition.claimedVotiumMerkleProofsHashes = arrayUnique<string>(
+        convexVotingPosition.claimedVotiumMerkleProofsHashes.concat(hashedMerkleProofs),
+      );
+      convexVotingPosition.save();
+
+      let allTokensToTransfer = tuple[0].toAddressArray();
+      let assets: Asset[] = new Array<Asset>();
+
+      for (let i = 0; i < allTokensToTransfer.length; i++) {
+        let asset = ensureAsset(allTokensToTransfer[i]);
+
+        assets = assets.concat([asset]);
+      }
+      createConvexVotingPositionChange(event.params.externalPosition, null, assets, null, 'ClaimRewards', vault, event);
     }
   }
 }

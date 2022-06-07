@@ -2,7 +2,6 @@ import { logCritical, toBigDecimal, uniqueEventId } from '@enzymefinance/subgrap
 import { Address, ethereum } from '@graphprotocol/graph-ts';
 import { ProtocolSdk } from '../generated/contracts/ProtocolSdk';
 import {
-  Asset,
   AssetAmount,
   CompoundDebtPosition,
   CompoundDebtPositionChange,
@@ -68,7 +67,7 @@ export function trackCompoundDebtPosition(id: string, event: ethereum.Event): vo
 
   let collateral = cdpContract.getManagedAssets();
   let collateralAssetBalances = new Array<string>();
-  for (let i = 0; i < collateral.value0.length; i++) {
+  for (let i: i32 = 0; i < collateral.value0.length; i++) {
     let address = collateral.value0[i];
     let amount = collateral.value1[i];
 
@@ -79,7 +78,7 @@ export function trackCompoundDebtPosition(id: string, event: ethereum.Event): vo
 
   let borrowed = cdpContract.getDebtAssets();
   let borrowedAssetBalances = new Array<string>();
-  for (let i = 0; i < borrowed.value0.length; i++) {
+  for (let i: i32 = 0; i < borrowed.value0.length; i++) {
     let address = borrowed.value0[i];
     let amount = borrowed.value1[i];
 

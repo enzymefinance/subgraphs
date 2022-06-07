@@ -1064,6 +1064,47 @@ type MapleLiquidityPositionChange implements Activity & VaultActivity & External
   activityType: ActivityType!
 }
 
+type ConvexVotingLock @entity {
+  id: ID!
+  amount: BigDecimal!
+  unlockTime: Int!
+  withdrawn: Boolean!
+}
+
+type ConvexVotingPosition implements ExternalPosition @entity {
+  id: ID!
+  vault: Vault!
+  type: ExternalPositionType!
+  active: Boolean!
+  delegate: Bytes
+  lastWithdrawOrRelockTimestamp: Int!
+  claimedVotiumMerkleProofsHashes: [String!]!
+  locks: [ConvexVotingLock!]!
+  changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
+}
+
+enum ConvexVotingPositionChangeType {
+  Lock
+  Relock
+  Withdraw
+  ClaimRewards
+  Delegate
+}
+
+type ConvexVotingPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: Int!
+  externalPosition: ExternalPosition!
+  convexVotingPositionChangeType: ConvexVotingPositionChangeType!
+  assetAmounts: [AssetAmount!]
+  assets: [Asset!]
+  delegate: Bytes
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
 type UniswapV3LiquidityPosition implements ExternalPosition @entity {
   id: ID!
   vault: Vault!

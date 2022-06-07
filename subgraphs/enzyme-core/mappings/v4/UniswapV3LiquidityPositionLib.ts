@@ -4,7 +4,6 @@ import { createUniswapV3Nft, useUniswapV3Nft } from '../../entities/UniswapV3Nft
 import { useVault } from '../../entities/Vault';
 import { ProtocolSdk } from '../../generated/contracts/ProtocolSdk';
 import { NFTPositionAdded, NFTPositionRemoved } from '../../generated/contracts/UniswapV3LiquidityPositionLib4Events';
-import { UniswapV3Sdk } from '../../generated/contracts/UniswapV3Sdk';
 
 export function handleNFTPositionAdded(event: NFTPositionAdded): void {
   // We are listening to this event to get the nftId, and to save the parameters of the nft

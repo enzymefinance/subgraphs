@@ -12,6 +12,8 @@ export const polygon: Context<Variables> = {
     block: 25825424,
     dispatcherAddress: polygonDeployment.contracts.Dispatcher,
     curveMinterAddress: '0x0000000000000000000000000000000000000000',
+    cvxLockerV2Address: '0x0000000000000000000000000000000000000000',
+    cvxAddress: '0x0000000000000000000000000000000000000000',
     externalPositionFactoryAddress: polygonDeployment.contracts.ExternalPositionFactory,
     wethTokenAddress: polygonDeployment.weth.id,
     chainlinkAggregatorAddresses: {

@@ -68,7 +68,7 @@ export function trackAaveDebtPosition(id: string, event: ethereum.Event): void {
 
   let collateral = adpContract.getManagedAssets();
   let collateralAssetBalances = new Array<string>();
-  for (let i = 0; i < collateral.value0.length; i++) {
+  for (let i: i32 = 0; i < collateral.value0.length; i++) {
     let address = collateral.value0[i];
     let amount = collateral.value1[i];
 
@@ -79,7 +79,7 @@ export function trackAaveDebtPosition(id: string, event: ethereum.Event): void {
 
   let borrowed = adpContract.getDebtAssets();
   let borrowedAssetBalances = new Array<string>();
-  for (let i = 0; i < borrowed.value0.length; i++) {
+  for (let i: i32 = 0; i < borrowed.value0.length; i++) {
     let address = borrowed.value0[i];
     let amount = borrowed.value1[i];
 
