@@ -15,7 +15,7 @@ export const testnet: Context<Variables> = {
     cvxLockerV2Address: '0x0000000000000000000000000000000000000000',
     cvxAddress: '0x0000000000000000000000000000000000000000',
     externalPositionFactoryAddress: testnetDeployment.contracts.ExternalPositionFactory,
-    wethTokenAddress: testnetDeployment.weth.id,
+    wethTokenAddress: testnetDeployment.namedTokens.weth.id,
     chainlinkAggregatorAddresses: {
       audUsd: '0x062Df9C4efd2030e243ffCc398b652e8b8F95C6f',
       btcEth: '0x19b0F0833C78c0848109E3842D34d2fDF2cA69BA',
@@ -110,6 +110,7 @@ export const testnet: Context<Variables> = {
         valueInterpreterAddress: testnetDeployment.contracts.ValueInterpreter,
         vaultLibAddress: testnetDeployment.contracts.VaultLib,
         curveLiquidityAdapterAddress: testnetDeployment.contracts.CurveLiquidityAdapter,
+        minSharesSupplyFeeAddress: testnetDeployment.contracts.MinSharesSupplyFee,
         convexCurveLpStakingAdapterAddress: testnetDeployment.contracts.ConvexCurveLpStakingAdapter,
       },
     },

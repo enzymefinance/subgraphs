@@ -108,6 +108,7 @@ export const ethereum: Context<Variables> = {
         unpermissionedActionsWrapperAddress: '0xcfab4fcbfe059d5c1840d9dc285a9bfa0f96a118',
         valueInterpreterAddress: '0xd7b0610db501b15bfb9b7ddad8b3869de262a327',
         vaultLibAddress: '0x891dee0483ebaa922e274ddd2ebbaa2d33468a38',
+        minSharesSupplyFeeAddress: ethereumDeployment.contracts.MinSharesSupplyFee,
         curveLiquidityAdapterAddress: ethereumDeployment.contracts.CurveLiquidityAdapter,
         convexCurveLpStakingAdapterAddress: ethereumDeployment.contracts.ConvexCurveLpStakingAdapter,
       },

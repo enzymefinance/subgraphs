@@ -10,6 +10,7 @@ import { ensureExitRateBurnFee } from '../../entities/ExitRateBurnFee';
 import { ensureExitRateDirectFee } from '../../entities/ExitRateDirectFee';
 import { feeId } from '../../entities/Fee';
 import { ensureManagementFee } from '../../entities/ManagementFee';
+import { ensureMinSharesSupplyFee } from '../../entities/MinSharesSupplyFee';
 import { ensurePerformanceFee } from '../../entities/PerformanceFee';
 import { ensureUnknownFee } from '../../entities/UnknownFee';
 import { useVault } from '../../entities/Vault';
@@ -33,44 +34,50 @@ export function handleFeeEnabledForFund(event: FeeEnabledForFund): void {
   let feeAddress = event.params.fee;
 
   if (event.params.fee.equals(release4Addresses.entranceRateBurnFeeAddress)) {
-    let policy = ensureEntranceRateBurnFee(comptrollerAddress, feeAddress, event);
-    policy.settings = event.params.settingsData.toHex();
-    policy.save();
+    let fee = ensureEntranceRateBurnFee(comptrollerAddress, feeAddress, event);
+    fee.settings = event.params.settingsData.toHex();
+    fee.save();
     return;
   }
 
   if (event.params.fee.equals(release4Addresses.entranceRateDirectFeeAddress)) {
-    let policy = ensureEntranceRateDirectFee(comptrollerAddress, feeAddress, event);
-    policy.settings = event.params.settingsData.toHex();
-    policy.save();
+    let fee = ensureEntranceRateDirectFee(comptrollerAddress, feeAddress, event);
+    fee.settings = event.params.settingsData.toHex();
+    fee.save();
     return;
   }
 
   if (event.params.fee.equals(release4Addresses.exitRateBurnFeeAddress)) {
-    let policy = ensureExitRateBurnFee(comptrollerAddress, feeAddress, event);
-    policy.settings = event.params.settingsData.toHex();
-    policy.save();
+    let fee = ensureExitRateBurnFee(comptrollerAddress, feeAddress, event);
+    fee.settings = event.params.settingsData.toHex();
+    fee.save();
     return;
   }
 
   if (event.params.fee.equals(release4Addresses.exitRateDirectFeeAddress)) {
-    let policy = ensureExitRateDirectFee(comptrollerAddress, feeAddress, event);
-    policy.settings = event.params.settingsData.toHex();
-    policy.save();
+    let fee = ensureExitRateDirectFee(comptrollerAddress, feeAddress, event);
+    fee.settings = event.params.settingsData.toHex();
+    fee.save();
     return;
   }
 
   if (event.params.fee.equals(release4Addresses.managementFeeAddress)) {
-    let policy = ensureManagementFee(comptrollerAddress, feeAddress, event);
-    policy.settings = event.params.settingsData.toHex();
-    policy.save();
+    let fee = ensureManagementFee(comptrollerAddress, feeAddress, event);
+    fee.settings = event.params.settingsData.toHex();
+    fee.save();
+    return;
+  }
+
+  if (event.params.fee.equals(release4Addresses.minSharesSupplyFeeAddress)) {
+    let fee = ensureMinSharesSupplyFee(comptrollerAddress, feeAddress, event);
+    fee.save();
     return;
   }
 
   if (event.params.fee.equals(release4Addresses.performanceFeeAddress)) {
-    let policy = ensurePerformanceFee(comptrollerAddress, feeAddress, 'NO_CRYSTALLIZATION_PERIOD', event);
-    policy.settings = event.params.settingsData.toHex();
-    policy.save();
+    let fee = ensurePerformanceFee(comptrollerAddress, feeAddress, 'NO_CRYSTALLIZATION_PERIOD', event);
+    fee.settings = event.params.settingsData.toHex();
+    fee.save();
     return;
   }
 

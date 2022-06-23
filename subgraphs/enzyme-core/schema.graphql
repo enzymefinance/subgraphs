@@ -578,6 +578,16 @@ type PerformanceFee implements Fee @entity {
   performanceFeeType: PerformanceFeeType!
 }
 
+type MinSharesSupplyFee implements Fee @entity {
+  id: ID!
+  fee: Bytes!
+  feeType: FeeType!
+  comptroller: Comptroller!
+  createdAt: Int!
+  settings: String!
+  lastSettled: Int!
+}
+
 type UnknownFee implements Fee @entity {
   id: ID!
   fee: Bytes!
@@ -595,6 +605,7 @@ enum FeeType {
   ExitRateDirect
   Management
   Performance
+  MinSharesSupply
   Unknown
 }
 

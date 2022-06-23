@@ -41,6 +41,7 @@ export const abisV4 = [
     file: './abis/v4/MinAssetBalancesPostRedemptionPolicy.json',
   },
   { name: 'MinMaxInvestmentPolicy', version: '4', file: './abis/v4/MinMaxInvestmentPolicy.json' },
+  { name: 'MinSharesSupplyFee', version: '4', file: './abis/v4/MinSharesSupplyFee.json' },
   {
     name: 'OnlyRemoveDustExternalPositionPolicy',
     version: '4',

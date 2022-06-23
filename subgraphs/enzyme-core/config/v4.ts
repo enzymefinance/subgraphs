@@ -33,6 +33,7 @@ export interface ReleaseVariables {
   vaultLibAddress: string;
   curveLiquidityAdapterAddress: string;
   convexCurveLpStakingAdapterAddress: string;
+  minSharesSupplyFeeAddress: string;
 }
 
 export const sources = (variables: ReleaseVariables): DataSourceUserDeclaration[] => [
@@ -56,6 +57,7 @@ export const sources = (variables: ReleaseVariables): DataSourceUserDeclaration[
   { name: 'ManagementFee', address: variables.managementFeeAddress },
   { name: 'MinAssetBalancesPostRedemptionPolicy', address: variables.minAssetBalancesPostRedemptionPolicyAddress },
   { name: 'MinMaxInvestmentPolicy', address: variables.minMaxInvestmentPolicyAddress },
+  { name: 'MinSharesSupplyFee', address: variables.minSharesSupplyFeeAddress },
   { name: 'OnlyRemoveDustExternalPositionPolicy', address: variables.onlyRemoveDustExternalPositionPolicyAddress },
   { name: 'OnlyUntrackDustOrPricelessAssetsPolicy', address: variables.onlyUntrackDustOrPricelessAssetsPolicyAddress },
   { name: 'PerformanceFee', address: variables.performanceFeeAddress },

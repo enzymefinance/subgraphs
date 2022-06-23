@@ -2,6 +2,7 @@ import { Context } from '@enzymefinance/subgraph-cli';
 import { Variables } from '../subgraph.config';
 import { getEnvironment } from '@enzymefinance/environment/all';
 import { Deployment, Version } from '@enzymefinance/environment';
+import { weth } from '../../vault-balances/templates/addresses';
 
 const polygonDeployment = getEnvironment(Deployment.POLYGON, Version.SULU);
 
@@ -15,7 +16,7 @@ export const polygon: Context<Variables> = {
     cvxLockerV2Address: '0x0000000000000000000000000000000000000000',
     cvxAddress: '0x0000000000000000000000000000000000000000',
     externalPositionFactoryAddress: polygonDeployment.contracts.ExternalPositionFactory,
-    wethTokenAddress: polygonDeployment.weth.id,
+    wethTokenAddress: polygonDeployment.namedTokens.weth.id,
     chainlinkAggregatorAddresses: {
       audUsd: '0x062Df9C4efd2030e243ffCc398b652e8b8F95C6f',
       btcEth: '0x19b0F0833C78c0848109E3842D34d2fDF2cA69BA',
@@ -110,6 +111,7 @@ export const polygon: Context<Variables> = {
         valueInterpreterAddress: polygonDeployment.contracts.ValueInterpreter,
         vaultLibAddress: polygonDeployment.contracts.VaultLib,
         curveLiquidityAdapterAddress: polygonDeployment.contracts.CurveLiquidityAdapter,
+        minSharesSupplyFeeAddress: polygonDeployment.contracts.MinSharesSupplyFee,
         convexCurveLpStakingAdapterAddress: polygonDeployment.contracts.ConvexCurveLpStakingAdapter,
       },
     },

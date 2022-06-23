@@ -92,6 +92,7 @@ export class Release4Addresses {
   vaultLibAddress: Address;
   curveLiquidityAdapterAddress: Address;
   convexCurveLpStakingAdapterAddress: Address;
+  minSharesSupplyFeeAddress: Address;
 }
 
 export let release2Addresses: Release2Addresses = {
@@ -179,6 +180,7 @@ export let release4Addresses: Release4Addresses = {
   vaultLibAddress: Address.fromString('{{releases.v4.vaultLibAddress}}'),
   curveLiquidityAdapterAddress: Address.fromString('{{releases.v4.curveLiquidityAdapterAddress}}'),
   convexCurveLpStakingAdapterAddress: Address.fromString('{{releases.v4.convexCurveLpStakingAdapterAddress}}'),
+  minSharesSupplyFeeAddress: Address.fromString('{{releases.v4.minSharesSupplyFeeAddress}}'),
 };
 
 // Core

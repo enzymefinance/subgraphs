@@ -105,6 +105,7 @@ export const ethereumDevDeployment: Context<Variables> = {
         policyManagerAddress: '0xadf5a8db090627b153ef0c5726ccfdc1c7aed7bd',
         protocolFeeReserveLibAddress: '0xa0ed89af63367ddc8e1dd6b992f20d1214ccb51c',
         protocolFeeTrackerAddress: '0xe97980f1d43c4cd4f1eef0277a2dea7ddbc2cd13',
+        minSharesSupplyFeeAddress: ethereumDeployment.contracts.MinSharesSupplyFee,
         unpermissionedActionsWrapperAddress: '0xcfab4fcbfe059d5c1840d9dc285a9bfa0f96a118',
         valueInterpreterAddress: '0xd7b0610db501b15bfb9b7ddad8b3869de262a327',
         vaultLibAddress: '0x891dee0483ebaa922e274ddd2ebbaa2d33468a38',
