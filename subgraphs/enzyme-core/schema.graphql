@@ -1150,6 +1150,24 @@ type UniswapV3LiquidityPositionChange implements Activity & VaultActivity & Exte
   activityType: ActivityType!
 }
 
+type UnknownExternalPosition implements ExternalPosition @entity {
+  id: ID!
+  vault: Vault!
+  type: ExternalPositionType!
+  active: Boolean!
+  changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
+}
+
+type UnknownExternalPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: Int!
+  externalPosition: ExternalPosition!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
 #################################################
 # Gas Relayer
 #################################################

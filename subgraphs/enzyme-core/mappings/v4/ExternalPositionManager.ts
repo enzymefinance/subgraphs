@@ -54,16 +54,22 @@ import {
   useConvexVotingPosition,
 } from '../../entities/ConvexVotingPosition';
 import { cvxAddress } from '../../generated/addresses';
+import {
+  createUnknownExternalPosition,
+  createUnknownExternalPositionChange,
+} from '../../entities/UnknownExternalPosition';
 
 export function handleExternalPositionDeployedForFund(event: ExternalPositionDeployedForFund): void {
   let type = useExternalPositionType(event.params.externalPositionTypeId);
 
   if (type.label == 'COMPOUND_DEBT') {
     createCompoundDebtPosition(event.params.externalPosition, event.params.vaultProxy, type);
+    return;
   }
 
   if (type.label == 'AAVE_DEBT') {
     createAaveDebtPosition(event.params.externalPosition, event.params.vaultProxy, type);
+    return;
   }
 
   if (type.label == 'UNISWAP_V3_LIQUIDITY') {
@@ -72,6 +78,7 @@ export function handleExternalPositionDeployedForFund(event: ExternalPositionDep
     let context = new DataSourceContext();
     context.setString('vaultProxy', event.params.vaultProxy.toHex());
     UniswapV3LiquidityPositionLib4DataSource.createWithContext(event.params.externalPosition, context);
+    return;
   }
 
   if (type.label == 'MAPLE_LIQUIDITY') {
@@ -80,11 +87,15 @@ export function handleExternalPositionDeployedForFund(event: ExternalPositionDep
     let context = new DataSourceContext();
     context.setString('vaultProxy', event.params.vaultProxy.toHex());
     MapleLiquidityPositionLib4DataSource.createWithContext(event.params.externalPosition, context);
+    return;
   }
 
   if (type.label == 'CONVEX_VOTING') {
     createConvexVotingPosition(event.params.externalPosition, event.params.vaultProxy, type);
+    return;
   }
+
+  createUnknownExternalPosition(event.params.externalPosition, event.params.vaultProxy, type);
 }
 
 export function handleCallOnExternalPositionExecutedForFund(event: CallOnExternalPositionExecutedForFund): void {
@@ -144,6 +155,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     }
 
     trackCompoundDebtPosition(event.params.externalPosition.toHex(), event);
+    return;
   }
 
   if (type.label == 'AAVE_DEBT') {
@@ -187,6 +199,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     }
 
     trackAaveDebtPosition(event.params.externalPosition.toHex(), event);
+    return;
   }
 
   if (type.label == 'UNISWAP_V3_LIQUIDITY') {
@@ -229,6 +242,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let nonFungiblePositionManagerAddress = iExternalPositionProxy.getNonFungibleTokenManager();
 
       trackUniswapV3Nft(nftId, nonFungiblePositionManagerAddress);
+      return;
     }
 
     if (actionId == UniswapV3LiquidityPositionActionId.RemoveLiquidity) {
@@ -476,6 +490,8 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let pool = ensureMapleLiquidityPool(poolAddress, rewardsContractAddress);
       createMapleLiquidityPositionChange(event.params.externalPosition, pool, null, 'ClaimRewards', vault, event);
     }
+
+    return;
   }
 
   if (type.label == 'CONVEX_VOTING') {
@@ -580,7 +596,11 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       }
       createConvexVotingPositionChange(event.params.externalPosition, null, assets, null, 'ClaimRewards', vault, event);
     }
+
+    return;
   }
+
+  createUnknownExternalPositionChange(event.params.externalPosition, vault, event);
 }
 
 export function handleExternalPositionTypeInfoUpdated(event: ExternalPositionTypeInfoUpdated): void {}
