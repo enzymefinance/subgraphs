@@ -15,11 +15,7 @@ import {
   VaultLibSet,
 } from '../../generated/contracts/VaultLib3Events';
 
-export function handleAccessorSet(event: AccessorSet): void {
-  let vault = useVault(event.address.toHex());
-  vault.comptroller = event.params.nextAccessor.toHex();
-  vault.save();
-}
+export function handleAccessorSet(event: AccessorSet): void {}
 
 export function handleAssetWithdrawn(event: AssetWithdrawn): void {}
 

@@ -131,11 +131,7 @@ export function handleOwnerSet(event: OwnerSet): void {
   vault.save();
 }
 
-export function handleAccessorSet(event: AccessorSet): void {
-  let vault = useVault(event.address.toHex());
-  vault.comptroller = event.params.nextAccessor.toHex();
-  vault.save();
-}
+export function handleAccessorSet(event: AccessorSet): void {}
 
 export function handleAssetManagerAdded(event: AssetManagerAdded): void {
   let assetManager = ensureAssetManager(event.params.manager, event);
