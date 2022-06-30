@@ -1,0 +1,15 @@
+{
+  "name": "@enzymefinance/mln-token-subgraph",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "codegen": "enzyme-graph codegen",
+    "build": "enzyme-graph build",
+    "deploy": "enzyme-graph deploy"
+  },
+  "dependencies": {
+    "@enzymefinance/subgraph-cli": "^0.0.0",
+    "@enzymefinance/subgraph-utils": "^0.0.0",
+    "@graphprotocol/graph-ts": "^0.27.0"
+  }
+}

@@ -1,0 +1,33 @@
+type Account @entity {
+  id: Bytes!
+  balance: BigDecimal!
+  balanceHistory: [Balance!]! @derivedFrom(field: "owner")
+  transfersFrom: [Transfer!]! @derivedFrom(field: "from")
+  transfersTo: [Transfer!]! @derivedFrom(field: "to")
+}
+
+enum TransferType {
+  TRANSFER
+  MINT
+  BURN
+}
+
+type Transfer @entity(immutable: true) {
+  id: Bytes!
+  type: TransferType!
+  from: Account!
+  to: Account!
+  amount: BigDecimal!
+  transaction: Bytes!
+  block: BigInt!
+  timestamp: BigInt!
+}
+
+type Balance @entity(immutable: true) {
+  id: Bytes!
+  owner: Account!
+  balance: BigDecimal!
+  transaction: Bytes!
+  block: BigInt!
+  timestamp: BigInt!
+}
