@@ -29,4 +29,5 @@ type Balance @entity(immutable: true) {
   balance: BigDecimal!
   block: BigInt!
   timestamp: BigInt!
+  ordinal: BigInt!
 }

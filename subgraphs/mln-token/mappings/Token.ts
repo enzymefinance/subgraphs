@@ -1,5 +1,5 @@
 import { ZERO_BD, toBigDecimal, ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
-import { Address, BigInt, Bytes, ethereum } from '@graphprotocol/graph-ts';
+import { Address, BigInt, ByteArray, Bytes, ethereum } from '@graphprotocol/graph-ts';
 import { Transfer as TransferEvent } from '../generated/contracts/TokenEvents';
 import { Account, Balance, Transfer } from '../generated/schema';
 
@@ -34,6 +34,23 @@ import { Account, Balance, Transfer } from '../generated/schema';
 // Address: https://etherscan.io/address/0x3c75d37b579e0e4896f02c0122baa4de05383a6a
 // Deployment: https://etherscan.io/tx/0x5ab5e0d8e7a8b22b69346bedc71086ac6d32fee0b78560d9dba8859ec8db50f2
 
+function getLogOrdinal(event: ethereum.Event, suffix: i32): BigInt {
+  let block = event.block.number;
+  let index = BigInt.fromI32(1000000).plus(event.logIndex);
+  return BigInt.fromString(block.toString() + index.toString() + suffix.toString());
+}
+
+function recordBalance(account: Account, event: ethereum.Event, suffix: i32): void {
+  let ordinal = getLogOrdinal(event, suffix);
+  let balance = new Balance(account.id.concat(Bytes.fromByteArray(Bytes.fromBigInt(ordinal))));
+  balance.block = event.block.number;
+  balance.account = account.id;
+  balance.timestamp = event.block.timestamp;
+  balance.balance = account.balance;
+  balance.ordinal = ordinal;
+  balance.save();
+}
+
 export function getOrCreateAccount(address: Address, event: ethereum.Event): Account {
   let account = Account.load(address);
 
@@ -48,12 +65,7 @@ export function getOrCreateAccount(address: Address, event: ethereum.Event): Acc
       account.balance = toBigDecimal(BigInt.fromString('317387000000000000000000'), 18);
       account.save();
 
-      let balance = new Balance(account.id.concat(Bytes.fromByteArray(Bytes.fromBigInt(event.block.number))));
-      balance.block = event.block.number;
-      balance.account = account.id;
-      balance.timestamp = event.block.timestamp;
-      balance.balance = account.balance;
-      balance.save();
+      recordBalance(account, event, 0);
     }
   }
 
@@ -85,12 +97,7 @@ export function handleTransfer(event: TransferEvent): void {
   toAccount.balance = toAccount.balance.plus(transfer.amount);
   toAccount.save();
 
-  let toBalance = new Balance(toAccount.id.concat(Bytes.fromByteArray(Bytes.fromBigInt(event.block.number))));
-  toBalance.block = event.block.number;
-  toBalance.account = toAccount.id;
-  toBalance.timestamp = event.block.timestamp;
-  toBalance.balance = toAccount.balance;
-  toBalance.save();
+  recordBalance(toAccount, event, 1);
 
   // Do not deduct the balance from the zero address in case of a token mint so we can use this
   // balance to track the total amount of burned tokens.
@@ -98,11 +105,6 @@ export function handleTransfer(event: TransferEvent): void {
     fromAccount.balance = fromAccount.balance.minus(transfer.amount);
     fromAccount.save();
 
-    let fromBalance = new Balance(fromAccount.id.concat(Bytes.fromByteArray(Bytes.fromBigInt(event.block.number))));
-    fromBalance.block = event.block.number;
-    fromBalance.account = fromAccount.id;
-    fromBalance.timestamp = event.block.timestamp;
-    fromBalance.balance = fromAccount.balance;
-    fromBalance.save();
+    recordBalance(fromAccount, event, 2);
   }
 }
