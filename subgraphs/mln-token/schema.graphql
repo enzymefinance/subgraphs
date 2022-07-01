@@ -1,7 +1,7 @@
 type Account @entity {
   id: Bytes!
   balance: BigDecimal!
-  balanceHistory: [Balance!]! @derivedFrom(field: "owner")
+  balanceHistory: [Balance!]! @derivedFrom(field: "account")
   transfersFrom: [Transfer!]! @derivedFrom(field: "from")
   transfersTo: [Transfer!]! @derivedFrom(field: "to")
 }
@@ -25,9 +25,8 @@ type Transfer @entity(immutable: true) {
 
 type Balance @entity(immutable: true) {
   id: Bytes!
-  owner: Account!
+  account: Account!
   balance: BigDecimal!
-  transaction: Bytes!
   block: BigInt!
   timestamp: BigInt!
 }
