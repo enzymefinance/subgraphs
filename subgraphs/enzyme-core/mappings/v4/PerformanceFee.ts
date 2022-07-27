@@ -1,9 +1,8 @@
 import { toBigDecimal } from '@enzymefinance/subgraph-utils';
-import { Address, BigDecimal } from '@graphprotocol/graph-ts';
 import { ensureAccount } from '../../entities/Account';
 import { ensureAsset } from '../../entities/Asset';
-import { ensureComptroller } from '../../entities/Comptroller';
 import { ensurePerformanceFee } from '../../entities/PerformanceFee';
+import { linkSharesSplitterToVault } from '../../entities/SharesSplitter';
 import {
   ActivatedForFund,
   FundSettingsAdded,
@@ -35,6 +34,8 @@ export function handleRecipientSetForFund(event: RecipientSetForFund): void {
   let fee = ensurePerformanceFee(event.params.comptrollerProxy, event.address, 'NO_CRYSTALLIZATION_PERIOD', event);
   fee.recipient = recipient.id;
   fee.save();
+
+  linkSharesSplitterToVault(recipient, event.params.comptrollerProxy);
 }
 
 export function handleHighWaterMarkUpdated(event: HighWaterMarkUpdated): void {

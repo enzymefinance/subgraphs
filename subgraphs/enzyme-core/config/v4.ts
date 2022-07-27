@@ -9,7 +9,9 @@ export interface ReleaseVariables {
   allowedExternalPositionTypesPolicyAddress: string;
   allowedSharesTransferRecipientsPolicyAddress: string;
   comptrollerLibAddress: string;
+  convexCurveLpStakingAdapterAddress: string;
   cumulativeSlippageTolerancePolicyAddress: string;
+  curveLiquidityAdapterAddress: string;
   entranceRateBurnFeeAddress: string;
   entranceRateDirectFeeAddress: string;
   exitRateBurnFeeAddress: string;
@@ -22,6 +24,7 @@ export interface ReleaseVariables {
   managementFeeAddress: string;
   minAssetBalancesPostRedemptionPolicyAddress: string;
   minMaxInvestmentPolicyAddress: string;
+  minSharesSupplyFeeAddress: string;
   onlyRemoveDustExternalPositionPolicyAddress: string;
   onlyUntrackDustOrPricelessAssetsPolicyAddress: string;
   performanceFeeAddress: string;
@@ -31,9 +34,6 @@ export interface ReleaseVariables {
   unpermissionedActionsWrapperAddress: string;
   valueInterpreterAddress: string;
   vaultLibAddress: string;
-  curveLiquidityAdapterAddress: string;
-  convexCurveLpStakingAdapterAddress: string;
-  minSharesSupplyFeeAddress: string;
 }
 
 export const sources = (variables: ReleaseVariables): DataSourceUserDeclaration[] => [

@@ -1,6 +1,7 @@
 import { toBigDecimal } from '@enzymefinance/subgraph-utils';
 import { ensureAccount } from '../../entities/Account';
 import { ensureEntranceRateDirectFee } from '../../entities/EntranceRateDirectFee';
+import { linkSharesSplitterToVault } from '../../entities/SharesSplitter';
 import {
   FundSettingsAdded,
   RecipientSetForFund,
@@ -18,6 +19,8 @@ export function handleRecipientSetForFund(event: RecipientSetForFund): void {
   let fee = ensureEntranceRateDirectFee(event.params.comptrollerProxy, event.address, event);
   fee.recipient = recipient.id;
   fee.save();
+
+  linkSharesSplitterToVault(recipient, event.params.comptrollerProxy);
 }
 
 export function handleSettled(event: Settled): void {

@@ -1371,3 +1371,31 @@ type Counter @entity {
   id: ID!
   count: Int!
 }
+
+#################################################
+# Shares Splitter
+#################################################
+
+type SharesSplitter @entity {
+  id: ID!
+  creator: Account!
+  createdAt: Int!
+  userPercentages: [SharesSplitterUserPercentage!]! @derivedFrom(field: "sharesSplitter")
+  tokenClaims: [SharesSplitterTokenClaims!]! @derivedFrom(field: "sharesSplitter")
+  vaults: [Vault!]!
+}
+
+type SharesSplitterUserPercentage @entity {
+  id: ID!
+  sharesSplitter: SharesSplitter!
+  user: Account!
+  percentage: BigDecimal!
+}
+
+type SharesSplitterTokenClaims @entity {
+  id: ID!
+  sharesSplitter: SharesSplitter!
+  user: Account!
+  token: Bytes!
+  amount: BigDecimal!
+}

@@ -11,11 +11,6 @@ export const polygon: Context<Variables> = {
   network: 'matic',
   variables: {
     block: 25825424,
-    dispatcherAddress: polygonDeployment.contracts.Dispatcher,
-    curveMinterAddress: '0x0000000000000000000000000000000000000000',
-    cvxLockerV2Address: '0x0000000000000000000000000000000000000000',
-    cvxAddress: '0x0000000000000000000000000000000000000000',
-    externalPositionFactoryAddress: polygonDeployment.contracts.ExternalPositionFactory,
     wethTokenAddress: polygonDeployment.namedTokens.weth.id,
     chainlinkAggregatorAddresses: {
       audUsd: '0x062Df9C4efd2030e243ffCc398b652e8b8F95C6f',
@@ -26,6 +21,16 @@ export const polygon: Context<Variables> = {
       eurUsd: '0x73366Fe0AA0Ded304479862808e02506FE556a98',
       gbpUsd: '0x099a2540848573e94fb1Ca0Fa420b00acbBc845a',
       jpyUsd: '0xD647a6fC9BC6402301583C91decC5989d8Bc382D',
+    },
+    external: {
+      curveMinterAddress: '0x0000000000000000000000000000000000000000',
+      cvxLockerV2Address: '0x0000000000000000000000000000000000000000',
+      cvxAddress: '0x0000000000000000000000000000000000000000',
+    },
+    persistent: {
+      dispatcherAddress: polygonDeployment.contracts.Dispatcher,
+      externalPositionFactoryAddress: polygonDeployment.contracts.ExternalPositionFactory,
+      sharesSplitterFactoryAddress: polygonDeployment.contracts.SharesSplitterFactory,
     },
     releases: {
       v2: {
@@ -87,7 +92,9 @@ export const polygon: Context<Variables> = {
         allowedExternalPositionTypesPolicyAddress: polygonDeployment.contracts.AllowedExternalPositionTypesPolicy,
         allowedSharesTransferRecipientsPolicyAddress: polygonDeployment.contracts.AllowedSharesTransferRecipientsPolicy,
         comptrollerLibAddress: polygonDeployment.contracts.ComptrollerLib,
+        convexCurveLpStakingAdapterAddress: polygonDeployment.contracts.ConvexCurveLpStakingAdapter,
         cumulativeSlippageTolerancePolicyAddress: polygonDeployment.contracts.CumulativeSlippageTolerancePolicy,
+        curveLiquidityAdapterAddress: polygonDeployment.contracts.CurveLiquidityAdapter,
         entranceRateBurnFeeAddress: polygonDeployment.contracts.EntranceRateBurnFee,
         entranceRateDirectFeeAddress: polygonDeployment.contracts.EntranceRateDirectFee,
         exitRateBurnFeeAddress: polygonDeployment.contracts.ExitRateBurnFee,
@@ -100,6 +107,7 @@ export const polygon: Context<Variables> = {
         managementFeeAddress: polygonDeployment.contracts.ManagementFee,
         minAssetBalancesPostRedemptionPolicyAddress: polygonDeployment.contracts.MinAssetBalancesPostRedemptionPolicy,
         minMaxInvestmentPolicyAddress: polygonDeployment.contracts.MinMaxInvestmentPolicy,
+        minSharesSupplyFeeAddress: polygonDeployment.contracts.MinSharesSupplyFee,
         onlyRemoveDustExternalPositionPolicyAddress: polygonDeployment.contracts.OnlyRemoveDustExternalPositionPolicy,
         onlyUntrackDustOrPricelessAssetsPolicyAddress:
           polygonDeployment.contracts.OnlyUntrackDustOrPricelessAssetsPolicy,
@@ -110,9 +118,6 @@ export const polygon: Context<Variables> = {
         unpermissionedActionsWrapperAddress: polygonDeployment.contracts.UnpermissionedActionsWrapper,
         valueInterpreterAddress: polygonDeployment.contracts.ValueInterpreter,
         vaultLibAddress: polygonDeployment.contracts.VaultLib,
-        curveLiquidityAdapterAddress: polygonDeployment.contracts.CurveLiquidityAdapter,
-        minSharesSupplyFeeAddress: polygonDeployment.contracts.MinSharesSupplyFee,
-        convexCurveLpStakingAdapterAddress: polygonDeployment.contracts.ConvexCurveLpStakingAdapter,
       },
     },
   },

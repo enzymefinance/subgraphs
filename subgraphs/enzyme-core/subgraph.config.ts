@@ -6,6 +6,7 @@ import {
   SdkUserDeclaration,
   Template,
 } from '@enzymefinance/subgraph-cli';
+import * as persistent from './config/persistent';
 import * as v2 from './config/v2';
 import * as v3 from './config/v3';
 import * as v4 from './config/v4';
@@ -16,11 +17,6 @@ import { testnet } from './contexts/testnet';
 
 export interface Variables {
   block: number;
-  dispatcherAddress: string;
-  curveMinterAddress: string;
-  cvxLockerV2Address: string;
-  cvxAddress: string;
-  externalPositionFactoryAddress: string;
   wethTokenAddress: string;
   chainlinkAggregatorAddresses: {
     audUsd: string;
@@ -32,10 +28,20 @@ export interface Variables {
     gbpUsd: string;
     jpyUsd: string;
   };
+  persistent: {
+    dispatcherAddress: string;
+    externalPositionFactoryAddress: string;
+    sharesSplitterFactoryAddress: string;
+  };
   releases: {
     v2: v2.ReleaseVariables;
     v3: v3.ReleaseVariables;
     v4: v4.ReleaseVariables;
+  };
+  external: {
+    curveMinterAddress: string;
+    cvxLockerV2Address: string;
+    cvxAddress: string;
   };
 }
 
@@ -54,40 +60,6 @@ export const templates: Template[] = [
 ];
 
 export const configure: Configurator<Variables> = (variables) => {
-  const dispatcher: DataSourceUserDeclaration = {
-    name: 'Dispatcher',
-    block: variables.block,
-    address: variables.dispatcherAddress,
-    events: (abi) => [
-      abi.getEvent('VaultProxyDeployed'),
-      abi.getEvent('MigrationExecuted'),
-      abi.getEvent('CurrentFundDeployerSet'),
-      abi.getEvent('MigrationCancelled'),
-      abi.getEvent('MigrationSignaled'),
-      abi.getEvent('MigrationTimelockSet'),
-      abi.getEvent('NominatedOwnerSet'),
-      abi.getEvent('NominatedOwnerRemoved'),
-      abi.getEvent('OwnershipTransferred'),
-      abi.getEvent('MigrationInCancelHookFailed'),
-      abi.getEvent('MigrationInCancelHookFailed'),
-      abi.getEvent('MigrationOutHookFailed'),
-      abi.getEvent('SharesTokenSymbolSet'),
-    ],
-  };
-
-  const externalPositionFactory: DataSourceUserDeclaration = {
-    name: 'ExternalPositionFactory',
-    block: variables.block,
-    address: variables.externalPositionFactoryAddress,
-    events: (abi) => [
-      abi.getEvent('PositionDeployed'),
-      abi.getEvent('PositionDeployerAdded'),
-      abi.getEvent('PositionDeployerRemoved'),
-      abi.getEvent('PositionTypeAdded'),
-      abi.getEvent('PositionTypeLabelUpdated'),
-    ],
-  };
-
   const sdks: SdkUserDeclaration[] = [
     {
       name: 'Protocol',
@@ -126,6 +98,7 @@ export const configure: Configurator<Variables> = (variables) => {
         abis.ComptrollerLibA.getFunction('calcGrossShareValue'),
         abis.ComptrollerLibB.getFunction('calcGrossShareValue'),
         abis.ComptrollerLibA.getFunction('getDenominationAsset'),
+        abis.ComptrollerLibA.getFunction('getVaultProxy'),
         abis.CompoundDebtPositionLib.getFunction('getManagedAssets'),
         abis.CompoundDebtPositionLib.getFunction('getDebtAssets'),
         abis.AaveDebtPositionLib.getFunction('getManagedAssets'),
@@ -210,14 +183,14 @@ export const configure: Configurator<Variables> = (variables) => {
   ];
 
   const sources: DataSourceUserDeclaration[] = [
-    dispatcher,
-    externalPositionFactory,
+    ...persistent.sources(variables),
     ...v2.sources(variables.releases.v2).map((item) => ({ ...item, version: 2, block: variables.block })),
     ...v3.sources(variables.releases.v3).map((item) => ({ ...item, version: 3, block: variables.block })),
     ...v4.sources(variables.releases.v4).map((item) => ({ ...item, version: 4, block: variables.block })),
   ];
 
   const templates: DataSourceTemplateUserDeclaration[] = [
+    ...persistent.templates,
     ...v2.templates.map((item) => ({ ...item, version: 2 })),
     ...v3.templates.map((item) => ({ ...item, version: 3 })),
     ...v4.templates.map((item) => ({ ...item, version: 4 })),

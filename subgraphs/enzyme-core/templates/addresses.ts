@@ -149,14 +149,24 @@ export let release3Addresses: Release3Addresses = {
 
 export let release4Addresses: Release4Addresses = {
   addressListRegistryAddress: Address.fromString('{{releases.v4.addressListRegistryAddress}}'),
-  allowedAdapterIncomingAssetsPolicyAddress: Address.fromString('{{releases.v4.allowedAdapterIncomingAssetsPolicyAddress}}'),
+  allowedAdapterIncomingAssetsPolicyAddress: Address.fromString(
+    '{{releases.v4.allowedAdapterIncomingAssetsPolicyAddress}}',
+  ),
   allowedAdaptersPolicyAddress: Address.fromString('{{releases.v4.allowedAdaptersPolicyAddress}}'),
-  allowedAssetsForRedemptionPolicyAddress: Address.fromString('{{releases.v4.allowedAssetsForRedemptionPolicyAddress}}'),
+  allowedAssetsForRedemptionPolicyAddress: Address.fromString(
+    '{{releases.v4.allowedAssetsForRedemptionPolicyAddress}}',
+  ),
   allowedDepositRecipientsPolicyAddress: Address.fromString('{{releases.v4.allowedDepositRecipientsPolicyAddress}}'),
-  allowedExternalPositionTypesPolicyAddress: Address.fromString('{{releases.v4.allowedExternalPositionTypesPolicyAddress}}'),
-  allowedSharesTransferRecipientsPolicyAddress: Address.fromString('{{releases.v4.allowedSharesTransferRecipientsPolicyAddress}}'),
+  allowedExternalPositionTypesPolicyAddress: Address.fromString(
+    '{{releases.v4.allowedExternalPositionTypesPolicyAddress}}',
+  ),
+  allowedSharesTransferRecipientsPolicyAddress: Address.fromString(
+    '{{releases.v4.allowedSharesTransferRecipientsPolicyAddress}}',
+  ),
   comptrollerLibAddress: Address.fromString('{{releases.v4.comptrollerLibAddress}}'),
-  cumulativeSlippageTolerancePolicyAddress: Address.fromString('{{releases.v4.cumulativeSlippageTolerancePolicyAddress}}'),
+  cumulativeSlippageTolerancePolicyAddress: Address.fromString(
+    '{{releases.v4.cumulativeSlippageTolerancePolicyAddress}}',
+  ),
   entranceRateBurnFeeAddress: Address.fromString('{{releases.v4.entranceRateBurnFeeAddress}}'),
   entranceRateDirectFeeAddress: Address.fromString('{{releases.v4.entranceRateDirectFeeAddress}}'),
   exitRateBurnFeeAddress: Address.fromString('{{releases.v4.exitRateBurnFeeAddress}}'),
@@ -167,10 +177,16 @@ export let release4Addresses: Release4Addresses = {
   gasRelayPaymasterFactoryAddress: Address.fromString('{{releases.v4.gasRelayPaymasterFactoryAddress}}'),
   integrationManagerAddress: Address.fromString('{{releases.v4.integrationManagerAddress}}'),
   managementFeeAddress: Address.fromString('{{releases.v4.managementFeeAddress}}'),
-  minAssetBalancesPostRedemptionPolicyAddress: Address.fromString('{{releases.v4.minAssetBalancesPostRedemptionPolicyAddress}}'),
+  minAssetBalancesPostRedemptionPolicyAddress: Address.fromString(
+    '{{releases.v4.minAssetBalancesPostRedemptionPolicyAddress}}',
+  ),
   minMaxInvestmentPolicyAddress: Address.fromString('{{releases.v4.minMaxInvestmentPolicyAddress}}'),
-  onlyRemoveDustExternalPositionPolicyAddress: Address.fromString('{{releases.v4.onlyRemoveDustExternalPositionPolicyAddress}}'),
-  onlyUntrackDustOrPricelessAssetsPolicyAddress: Address.fromString('{{releases.v4.onlyUntrackDustOrPricelessAssetsPolicyAddress}}'),
+  onlyRemoveDustExternalPositionPolicyAddress: Address.fromString(
+    '{{releases.v4.onlyRemoveDustExternalPositionPolicyAddress}}',
+  ),
+  onlyUntrackDustOrPricelessAssetsPolicyAddress: Address.fromString(
+    '{{releases.v4.onlyUntrackDustOrPricelessAssetsPolicyAddress}}',
+  ),
   performanceFeeAddress: Address.fromString('{{releases.v4.performanceFeeAddress}}'),
   policyManagerAddress: Address.fromString('{{releases.v4.policyManagerAddress}}'),
   protocolFeeReserveLibAddress: Address.fromString('{{releases.v4.protocolFeeReserveLibAddress}}'),
@@ -184,16 +200,16 @@ export let release4Addresses: Release4Addresses = {
 };
 
 // Core
-export let dispatcherAddress = Address.fromString('{{dispatcherAddress}}');
+export let dispatcherAddress = Address.fromString('{{persistent.dispatcherAddress}}');
 
 // External
 export let wethTokenAddress = Address.fromString('{{wethTokenAddress}}');
 
-export let curveMinterAddress = Address.fromString('{{curveMinterAddress}}');
+export let curveMinterAddress = Address.fromString('{{external.curveMinterAddress}}');
 
-export let cvxAddress = Address.fromString('{{cvxAddress}}');
+export let cvxAddress = Address.fromString('{{external.cvxAddress}}');
 
-export let cvxLockerV2Address = Address.fromString('{{cvxLockerV2Address}}');
+export let cvxLockerV2Address = Address.fromString('{{external.cvxLockerV2Address}}');
 
 export class ChainlinkAggregatorAddresses {
   audUsdAddress: Address;

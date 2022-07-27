@@ -10,11 +10,7 @@ export const testnet: Context<Variables> = {
   network: 'matic',
   variables: {
     block: 25731749,
-    dispatcherAddress: testnetDeployment.contracts.Dispatcher,
-    curveMinterAddress: '0x0000000000000000000000000000000000000000',
-    cvxLockerV2Address: '0x0000000000000000000000000000000000000000',
-    cvxAddress: '0x0000000000000000000000000000000000000000',
-    externalPositionFactoryAddress: testnetDeployment.contracts.ExternalPositionFactory,
+
     wethTokenAddress: testnetDeployment.namedTokens.weth.id,
     chainlinkAggregatorAddresses: {
       audUsd: '0x062Df9C4efd2030e243ffCc398b652e8b8F95C6f',
@@ -25,6 +21,16 @@ export const testnet: Context<Variables> = {
       eurUsd: '0x73366Fe0AA0Ded304479862808e02506FE556a98',
       gbpUsd: '0x099a2540848573e94fb1Ca0Fa420b00acbBc845a',
       jpyUsd: '0xD647a6fC9BC6402301583C91decC5989d8Bc382D',
+    },
+    external: {
+      curveMinterAddress: '0x0000000000000000000000000000000000000000',
+      cvxLockerV2Address: '0x0000000000000000000000000000000000000000',
+      cvxAddress: '0x0000000000000000000000000000000000000000',
+    },
+    persistent: {
+      dispatcherAddress: testnetDeployment.contracts.Dispatcher,
+      externalPositionFactoryAddress: testnetDeployment.contracts.ExternalPositionFactory,
+      sharesSplitterFactoryAddress: testnetDeployment.contracts.SharesSplitterFactory,
     },
     releases: {
       v2: {
@@ -86,7 +92,9 @@ export const testnet: Context<Variables> = {
         allowedExternalPositionTypesPolicyAddress: testnetDeployment.contracts.AllowedExternalPositionTypesPolicy,
         allowedSharesTransferRecipientsPolicyAddress: testnetDeployment.contracts.AllowedSharesTransferRecipientsPolicy,
         comptrollerLibAddress: testnetDeployment.contracts.ComptrollerLib,
+        convexCurveLpStakingAdapterAddress: testnetDeployment.contracts.ConvexCurveLpStakingAdapter,
         cumulativeSlippageTolerancePolicyAddress: testnetDeployment.contracts.CumulativeSlippageTolerancePolicy,
+        curveLiquidityAdapterAddress: testnetDeployment.contracts.CurveLiquidityAdapter,
         entranceRateBurnFeeAddress: testnetDeployment.contracts.EntranceRateBurnFee,
         entranceRateDirectFeeAddress: testnetDeployment.contracts.EntranceRateDirectFee,
         exitRateBurnFeeAddress: testnetDeployment.contracts.ExitRateBurnFee,
@@ -99,6 +107,7 @@ export const testnet: Context<Variables> = {
         managementFeeAddress: testnetDeployment.contracts.ManagementFee,
         minAssetBalancesPostRedemptionPolicyAddress: testnetDeployment.contracts.MinAssetBalancesPostRedemptionPolicy,
         minMaxInvestmentPolicyAddress: testnetDeployment.contracts.MinMaxInvestmentPolicy,
+        minSharesSupplyFeeAddress: testnetDeployment.contracts.MinSharesSupplyFee,
         onlyRemoveDustExternalPositionPolicyAddress: testnetDeployment.contracts.OnlyRemoveDustExternalPositionPolicy,
         onlyUntrackDustOrPricelessAssetsPolicyAddress:
           testnetDeployment.contracts.OnlyUntrackDustOrPricelessAssetsPolicy,
@@ -109,9 +118,6 @@ export const testnet: Context<Variables> = {
         unpermissionedActionsWrapperAddress: testnetDeployment.contracts.UnpermissionedActionsWrapper,
         valueInterpreterAddress: testnetDeployment.contracts.ValueInterpreter,
         vaultLibAddress: testnetDeployment.contracts.VaultLib,
-        curveLiquidityAdapterAddress: testnetDeployment.contracts.CurveLiquidityAdapter,
-        minSharesSupplyFeeAddress: testnetDeployment.contracts.MinSharesSupplyFee,
-        convexCurveLpStakingAdapterAddress: testnetDeployment.contracts.ConvexCurveLpStakingAdapter,
       },
     },
   },

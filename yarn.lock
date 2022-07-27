@@ -1721,10 +1721,10 @@
     istanbul-lib-coverage "^3.2.0"
     uuid "^8.3.1"
 
-"@enzymefinance/environment@^0.0.107":
-  version "0.0.107"
-  resolved "https://registry.yarnpkg.com/@enzymefinance/environment/-/environment-0.0.107.tgz#94bcda889757eb4bec4d3b47f7e8a1b1442c0545"
-  integrity sha512-GeZoSEAKf5DLns3O0Afr3UVTpHKPpM8P6+SDIILW80wmKE1/Zkqz58DlSKwFjgKhFk52jTii6/T4AyRS5gwhgQ==
+"@enzymefinance/environment@^0.0.115":
+  version "0.0.115"
+  resolved "https://registry.yarnpkg.com/@enzymefinance/environment/-/environment-0.0.115.tgz#8b8a54a0ff5b369fa792aac9cc7e63879b3d3d7d"
+  integrity sha512-0sovSrkdUud1OZUYeexDABNQ6wjFNnvrpFkRAYbhV+a277+i84blsI+Bi/MCYetwy53/fMnwDKoEVpzTVJhSYQ==
 
 "@enzymefinance/ethers@4.0.2", "@enzymefinance/ethers@^4.0.2":
   version "4.0.2"
@@ -6331,9 +6331,9 @@ globby@^9.2.0:
     pify "^4.0.1"
     slash "^2.0.0"
 
-"gluegun@git+https://github.com/edgeandnode/gluegun.git#v4.3.1-pin-colors-dep":
+"gluegun@https://github.com/edgeandnode/gluegun#v4.3.1-pin-colors-dep":
   version "4.3.1"
-  resolved "git+https://github.com/edgeandnode/gluegun.git#b34b9003d7bf556836da41b57ef36eb21570620a"
+  resolved "https://github.com/edgeandnode/gluegun#b34b9003d7bf556836da41b57ef36eb21570620a"
   dependencies:
     apisauce "^1.0.1"
     app-module-path "^2.2.0"

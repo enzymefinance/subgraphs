@@ -1,5 +1,6 @@
 import { ensureAccount } from '../../entities/Account';
 import { ensureManagementFee } from '../../entities/ManagementFee';
+import { linkSharesSplitterToVault } from '../../entities/SharesSplitter';
 import {
   ActivatedForMigratedFund,
   FundSettingsAdded,
@@ -25,6 +26,8 @@ export function handleRecipientSetForFund(event: RecipientSetForFund): void {
   let fee = ensureManagementFee(event.params.comptrollerProxy, event.address, event);
   fee.recipient = recipient.id;
   fee.save();
+
+  linkSharesSplitterToVault(recipient, event.params.comptrollerProxy);
 }
 
 export function handleSettled(event: Settled): void {
