@@ -10,7 +10,6 @@ export const testnet: Context<Variables> = {
   network: 'matic',
   variables: {
     block: 25731749,
-
     wethTokenAddress: testnetDeployment.namedTokens.weth.id,
     chainlinkAggregatorAddresses: {
       audUsd: '0x062Df9C4efd2030e243ffCc398b652e8b8F95C6f',

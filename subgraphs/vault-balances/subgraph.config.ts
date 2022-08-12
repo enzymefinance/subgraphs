@@ -7,9 +7,8 @@ import {
   Template,
 } from '@enzymefinance/subgraph-cli';
 
-import ethereumDeployment from '@enzymefinance/environment/ethereum';
-import polygonDevDeployment from '@enzymefinance/environment/polygon';
-import polygonDeployment from '../../deployments/polygon/v4.json';
+import { getEnvironment } from '@enzymefinance/environment/all';
+import { Deployment } from '@enzymefinance/environment';
 
 interface Variables {
   dispatcher: string;
@@ -19,13 +18,19 @@ interface Variables {
 
 const name = 'enzymefinance/vault-balances';
 
+const deployments = {
+  ethereum: getEnvironment(Deployment.ETHEREUM),
+  polygon: getEnvironment(Deployment.POLYGON),
+  testnet: getEnvironment(Deployment.TESTNET),
+};
+
 export const contexts: Contexts<Variables> = {
   ethereum: {
     name,
     network: 'mainnet',
     variables: {
-      dispatcher: ethereumDeployment.contracts.Dispatcher,
-      weth: ethereumDeployment.weth.id,
+      dispatcher: deployments.ethereum.contracts.Dispatcher,
+      weth: deployments.ethereum.namedTokens.weth.id,
       start: 11681281,
     },
   },
@@ -33,8 +38,8 @@ export const contexts: Contexts<Variables> = {
     name: `${name}-polygon`,
     network: 'matic',
     variables: {
-      dispatcher: polygonDeployment.contracts.Dispatcher,
-      weth: polygonDevDeployment.weth.id,
+      dispatcher: deployments.polygon.contracts.Dispatcher,
+      weth: deployments.polygon.namedTokens.weth.id,
       start: 26191606,
     },
   },
@@ -42,8 +47,8 @@ export const contexts: Contexts<Variables> = {
     name: `${name}-testnet`,
     network: 'matic',
     variables: {
-      dispatcher: polygonDevDeployment.contracts.Dispatcher,
-      weth: polygonDevDeployment.weth.id,
+      dispatcher: deployments.testnet.contracts.Dispatcher,
+      weth: deployments.testnet.namedTokens.weth.id,
       start: 25731749,
     },
   },

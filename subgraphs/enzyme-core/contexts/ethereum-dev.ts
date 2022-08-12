@@ -10,7 +10,6 @@ export const ethereumDevDeployment: Context<Variables> = {
   network: 'mainnet',
   variables: {
     block: 11636493,
-
     wethTokenAddress: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
     chainlinkAggregatorAddresses: {
       audUsd: '0x77F9710E7d0A19669A13c055F62cd80d313dF022',

@@ -4,9 +4,8 @@ import {
   DataSourceTemplateUserDeclaration,
   DataSourceUserDeclaration,
 } from '@enzymefinance/subgraph-cli';
-
-import polygonDevDeployment from '@enzymefinance/environment/polygon';
-import polygon from '../../deployments/polygon/v4.json';
+import { getEnvironment } from '@enzymefinance/environment/all';
+import { Deployment } from '@enzymefinance/environment';
 
 interface Variables {
   dispatcher: string;
@@ -20,7 +19,7 @@ export const contexts: Contexts<Variables> = {
     name,
     network: 'mainnet',
     variables: {
-      dispatcher: '0xC3DC853dD716bd5754f421ef94fdCbac3902ab32',
+      dispatcher: getEnvironment(Deployment.ETHEREUM).contracts.Dispatcher,
       start: 11681281,
     },
   },
@@ -28,7 +27,7 @@ export const contexts: Contexts<Variables> = {
     name: `${name}-polygon`,
     network: 'matic',
     variables: {
-      dispatcher: polygon.contracts.Dispatcher,
+      dispatcher: getEnvironment(Deployment.POLYGON).contracts.Dispatcher,
       start: 25825424,
     },
   },
@@ -36,7 +35,7 @@ export const contexts: Contexts<Variables> = {
     name: `${name}-testnet`,
     network: 'matic',
     variables: {
-      dispatcher: polygonDevDeployment.contracts.Dispatcher,
+      dispatcher: getEnvironment(Deployment.TESTNET).contracts.Dispatcher,
       start: 25731749,
     },
   },

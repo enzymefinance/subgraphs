@@ -5,10 +5,8 @@ import {
   SdkUserDeclaration,
   Template,
 } from '@enzymefinance/subgraph-cli';
-
-import ethereumDeployment from '@enzymefinance/environment/ethereum';
-import polygonDeployment from '../../deployments/polygon/v4.json';
-import polygonDevDeployment from '@enzymefinance/environment/polygon';
+import { getEnvironment } from '@enzymefinance/environment/all';
+import { Deployment, Version } from '@enzymefinance/environment';
 
 interface Variables {
   wethTokenAddress: string;
@@ -36,8 +34,14 @@ interface Variables {
 
 const name = 'enzymefinance/asset-universe';
 
+const deployments = {
+  ethereum: getEnvironment(Deployment.ETHEREUM, Version.SULU),
+  polygon: getEnvironment(Deployment.POLYGON, Version.SULU),
+  testnet: getEnvironment(Deployment.TESTNET, Version.SULU),
+};
+
 const ethereum: Variables = {
-  wethTokenAddress: ethereumDeployment.weth.id,
+  wethTokenAddress: deployments.ethereum.namedTokens.weth.id,
   startBlock: 11636534,
   releaseConfiguration: {
     v2: {
@@ -51,30 +55,30 @@ const ethereum: Variables = {
       primitivePriceFeed: '0x1fad8faf11e027f8630f394599830dbeb97004ee',
     },
     v4: {
-      fundDeployer: ethereumDeployment.contracts.FundDeployer,
-      valueInterpreter: ethereumDeployment.contracts.ValueInterpreter,
+      fundDeployer: deployments.ethereum.contracts.FundDeployer,
+      valueInterpreter: deployments.ethereum.contracts.ValueInterpreter,
     },
   },
 };
 
 const polygon: Variables = {
-  wethTokenAddress: polygonDevDeployment.weth.id,
+  wethTokenAddress: deployments.polygon.namedTokens.weth.id,
   startBlock: 25825424,
   releaseConfiguration: {
     v4: {
-      fundDeployer: polygonDeployment.contracts.FundDeployer,
-      valueInterpreter: polygonDeployment.contracts.ValueInterpreter,
+      fundDeployer: deployments.polygon.contracts.FundDeployer,
+      valueInterpreter: deployments.polygon.contracts.ValueInterpreter,
     },
   },
 };
 
 const testnet: Variables = {
-  wethTokenAddress: polygonDevDeployment.weth.id,
+  wethTokenAddress: deployments.testnet.namedTokens.weth.id,
   startBlock: 25731749,
   releaseConfiguration: {
     v4: {
-      fundDeployer: polygonDevDeployment.contracts.FundDeployer,
-      valueInterpreter: polygonDevDeployment.contracts.ValueInterpreter,
+      fundDeployer: deployments.testnet.contracts.FundDeployer,
+      valueInterpreter: deployments.testnet.contracts.ValueInterpreter,
     },
   },
 };

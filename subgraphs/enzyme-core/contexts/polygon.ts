@@ -2,7 +2,6 @@ import { Context } from '@enzymefinance/subgraph-cli';
 import { Variables } from '../subgraph.config';
 import { getEnvironment } from '@enzymefinance/environment/all';
 import { Deployment, Version } from '@enzymefinance/environment';
-import { weth } from '../../vault-balances/templates/addresses';
 
 const polygonDeployment = getEnvironment(Deployment.POLYGON, Version.SULU);
 
