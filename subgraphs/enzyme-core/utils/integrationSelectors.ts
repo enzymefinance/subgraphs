@@ -2,6 +2,10 @@ export let addTrackedAssetsSelector = '0x848f3a59';
 export let addTrackedAssetsMethod = 'addTrackedAssets(address,bytes,bytes)';
 export let addTrackedAssetsType = 'ADD_TRACKED_ASSETS';
 
+export let removeTrackedAssetsSelector = '0xf658eb80';
+export let removeTrackedAssetsMethod = 'removeTrackedAssets(address,bytes,bytes)';
+export let removeTrackedAssetsType = 'REMOVE_TRACKED_ASSETS';
+
 export let approveAssetsSelector = '0x3377e18a';
 export let approveAssetsMethod = 'approveAssets(address,bytes,bytes)';
 export let approveAssetsType = 'APPROVE_ASSETS';
@@ -49,6 +53,10 @@ export let unstakeAndRedeemType = 'UNSTAKE_AND_REDEEM';
 export function convertSelectorToType(selector: string): string {
   if (selector == addTrackedAssetsSelector) {
     return addTrackedAssetsType;
+  }
+
+  if (selector == removeTrackedAssetsSelector) {
+    return removeTrackedAssetsType;
   }
 
   if (selector == approveAssetsSelector) {
