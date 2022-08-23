@@ -34,7 +34,11 @@ import {
 } from '../../generated/contracts/ExternalPositionManager4Events';
 import { ProtocolSdk } from '../../generated/contracts/ProtocolSdk';
 import { Asset, AssetAmount } from '../../generated/schema';
-import { UniswapV3LiquidityPositionLib4DataSource } from '../../generated/templates';
+import {
+  ArbitraryLoanPositionLib4DataSource,
+  MapleLiquidityPositionLib4DataSource,
+  UniswapV3LiquidityPositionLib4DataSource,
+} from '../../generated/templates';
 import {
   AaveDebtPositionActionId,
   ArbitraryLoanPositionActionId,
@@ -87,6 +91,8 @@ export function handleExternalPositionDeployedForFund(event: ExternalPositionDep
 
   if (type.label == 'MAPLE_LIQUIDITY') {
     createMapleLiquidityPosition(event.params.externalPosition, event.params.vaultProxy, type);
+
+    MapleLiquidityPositionLib4DataSource.create(event.params.externalPosition);
     return;
   }
 
@@ -97,6 +103,9 @@ export function handleExternalPositionDeployedForFund(event: ExternalPositionDep
 
   if (type.label == 'ARBITRARY_LOAN') {
     createArbitraryLoanPosition(event.params.externalPosition, event.params.vaultProxy, type);
+
+    ArbitraryLoanPositionLib4DataSource.create(event.params.externalPosition);
+
     return;
   }
 
