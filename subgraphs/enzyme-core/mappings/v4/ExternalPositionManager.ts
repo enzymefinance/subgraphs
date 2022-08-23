@@ -1,5 +1,5 @@
-import { arrayUnique, toBigDecimal, tuplePrefixBytes } from '@enzymefinance/subgraph-utils';
-import { Address, Bytes, DataSourceContext, ethereum, crypto } from '@graphprotocol/graph-ts';
+import { arrayUnique, logCritical, toBigDecimal, tuplePrefixBytes } from '@enzymefinance/subgraph-utils';
+import { Address, Bytes, DataSourceContext, ethereum, crypto, BigInt } from '@graphprotocol/graph-ts';
 import {
   createAaveDebtPosition,
   createAaveDebtPositionChange,
@@ -33,12 +33,10 @@ import {
 } from '../../generated/contracts/ExternalPositionManager4Events';
 import { ProtocolSdk } from '../../generated/contracts/ProtocolSdk';
 import { Asset, AssetAmount } from '../../generated/schema';
-import {
-  MapleLiquidityPositionLib4DataSource,
-  UniswapV3LiquidityPositionLib4DataSource,
-} from '../../generated/templates';
+import { UniswapV3LiquidityPositionLib4DataSource } from '../../generated/templates';
 import {
   AaveDebtPositionActionId,
+  ArbitraryLoanPositionActionId,
   CompoundDebtPositionActionId,
   ConvexVotingPositionActionId,
   MapleLiquidityPositionActionId,
@@ -58,6 +56,11 @@ import {
   createUnknownExternalPosition,
   createUnknownExternalPositionChange,
 } from '../../entities/UnknownExternalPosition';
+import {
+  createArbitraryLoanPosition,
+  createArbitraryLoanPositionChange,
+  useArbitraryLoanPosition,
+} from '../../entities/ArbitraryLoanPosition';
 
 export function handleExternalPositionDeployedForFund(event: ExternalPositionDeployedForFund): void {
   let type = useExternalPositionType(event.params.externalPositionTypeId);
@@ -83,15 +86,16 @@ export function handleExternalPositionDeployedForFund(event: ExternalPositionDep
 
   if (type.label == 'MAPLE_LIQUIDITY') {
     createMapleLiquidityPosition(event.params.externalPosition, event.params.vaultProxy, type);
-
-    let context = new DataSourceContext();
-    context.setString('vaultProxy', event.params.vaultProxy.toHex());
-    MapleLiquidityPositionLib4DataSource.createWithContext(event.params.externalPosition, context);
     return;
   }
 
   if (type.label == 'CONVEX_VOTING') {
     createConvexVotingPosition(event.params.externalPosition, event.params.vaultProxy, type);
+    return;
+  }
+
+  if (type.label == 'ARBITRARY_LOAN') {
+    createArbitraryLoanPosition(event.params.externalPosition, event.params.vaultProxy, type);
     return;
   }
 
@@ -507,7 +511,13 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let cvxAmount = tuple[0].toBigInt();
 
       let asset = ensureAsset(cvxAddress);
-      let assetAmount = createAssetAmount(asset, toBigDecimal(cvxAmount), denominationAsset, 'cvx', event);
+      let assetAmount = createAssetAmount(
+        asset,
+        toBigDecimal(cvxAmount, asset.decimals),
+        denominationAsset,
+        'cvx',
+        event,
+      );
 
       createConvexVotingPositionChange(
         event.params.externalPosition,
@@ -595,6 +605,186 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         assets = assets.concat([asset]);
       }
       createConvexVotingPositionChange(event.params.externalPosition, null, assets, null, 'ClaimRewards', vault, event);
+    }
+
+    return;
+  }
+
+  if (type.label == 'ARBITRARY_LOAN') {
+    if (actionId == ArbitraryLoanPositionActionId.ConfigureLoan) {
+      let decoded = ethereum.decode(
+        '(address,address,uint256,address,bytes,bytes32)',
+        tuplePrefixBytes(event.params.actionArgs),
+      );
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+
+      let borrower = tuple[0].toAddress();
+      let loanAssetAddress = tuple[1].toAddress();
+      let loanAssetAmount = tuple[2].toBigInt();
+      let accountingModuleAddress = tuple[3].toAddress();
+      let accountingModuleConfigData = tuple[4].toBytes();
+      let description = tuple[5].toBytes();
+
+      let loanAsset = ensureAsset(loanAssetAddress);
+      let assetAmount = createAssetAmount(
+        loanAsset,
+        toBigDecimal(loanAssetAmount, loanAsset.decimals),
+        denominationAsset,
+        'arb',
+        event,
+      );
+
+      createArbitraryLoanPositionChange(
+        event.params.externalPosition,
+        [assetAmount],
+        [loanAsset],
+        borrower,
+        accountingModuleAddress,
+        accountingModuleConfigData,
+        description.toString(),
+        'ConfigureLoan',
+        vault,
+        event,
+      );
+    }
+
+    if (actionId == ArbitraryLoanPositionActionId.Reconcile) {
+      let decoded = ethereum.decode('(address[])', tuplePrefixBytes(event.params.actionArgs));
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+
+      let extraAssetsToSweepAddresses = tuple[0].toAddressArray();
+
+      let arbitraryLoanPosition = useArbitraryLoanPosition(event.params.externalPosition.toHex());
+
+      if (arbitraryLoanPosition.loanAsset == null) {
+        logCritical('Loan asset is null ArbitraryLoanPosition {}.', [event.params.externalPosition.toHex()]);
+
+        return;
+      }
+
+      let loanAsset = ensureAsset(Address.fromString(arbitraryLoanPosition.loanAsset as string));
+
+      let assets: Asset[] = new Array<Asset>();
+      for (let i = 0; i < extraAssetsToSweepAddresses.length; i++) {
+        let asset = ensureAsset(extraAssetsToSweepAddresses[i]);
+        assets = arrayUnique<Asset>(assets.concat([asset]));
+      }
+
+      assets = arrayUnique<Asset>(assets.concat([loanAsset]));
+
+      createArbitraryLoanPositionChange(
+        event.params.externalPosition,
+        null,
+        assets,
+        null,
+        null,
+        null,
+        arbitraryLoanPosition.description,
+        'Reconcile',
+        vault,
+        event,
+      );
+    }
+
+    if (actionId == ArbitraryLoanPositionActionId.UpdateBorrowableAmount) {
+      let arbitraryLoanPosition = useArbitraryLoanPosition(event.params.externalPosition.toHex());
+
+      if (arbitraryLoanPosition.loanAsset == null) {
+        logCritical('Loan asset is null ArbitraryLoanPosition {}.', [event.params.externalPosition.toHex()]);
+
+        return;
+      }
+
+      let asset = ensureAsset(Address.fromString(arbitraryLoanPosition.loanAsset as string));
+
+      let assetAmount = createAssetAmount(
+        asset,
+        arbitraryLoanPosition.borrowableAmount,
+        denominationAsset,
+        'arb',
+        event,
+      );
+
+      createArbitraryLoanPositionChange(
+        event.params.externalPosition,
+        [assetAmount],
+        [asset],
+        null,
+        null,
+        null,
+        arbitraryLoanPosition.description,
+        'UpdateBorrowableAmount',
+        vault,
+        event,
+      );
+    }
+
+    if (actionId == ArbitraryLoanPositionActionId.CallOnAccountingModule) {
+      createArbitraryLoanPositionChange(
+        event.params.externalPosition,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        'CallOnAccountingModule',
+        vault,
+        event,
+      );
+    }
+
+    if (actionId == ArbitraryLoanPositionActionId.CloseLoan) {
+      let decoded = ethereum.decode('(address[])', tuplePrefixBytes(event.params.actionArgs));
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+
+      let extraAssetsToSweepAddresses = tuple[0].toAddressArray();
+
+      let arbitraryLoanPosition = useArbitraryLoanPosition(event.params.externalPosition.toHex());
+
+      if (arbitraryLoanPosition.loanAsset == null) {
+        logCritical('Loan asset is null ArbitraryLoanPosition {}.', [event.params.externalPosition.toHex()]);
+
+        return;
+      }
+
+      let loanAsset = ensureAsset(Address.fromString(arbitraryLoanPosition.loanAsset as string));
+
+      let assets: Asset[] = new Array<Asset>();
+      for (let i = 0; i < extraAssetsToSweepAddresses.length; i++) {
+        let asset = ensureAsset(extraAssetsToSweepAddresses[i]);
+        assets = arrayUnique<Asset>(assets.concat([asset]));
+      }
+
+      assets = arrayUnique<Asset>(assets.concat([loanAsset]));
+
+      createArbitraryLoanPositionChange(
+        event.params.externalPosition,
+        null,
+        assets,
+        null,
+        null,
+        null,
+        arbitraryLoanPosition.description,
+        'CloseLoan',
+        vault,
+        event,
+      );
     }
 
     return;

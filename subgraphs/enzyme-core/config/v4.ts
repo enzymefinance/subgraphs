@@ -8,6 +8,8 @@ export interface ReleaseVariables {
   allowedDepositRecipientsPolicyAddress: string;
   allowedExternalPositionTypesPolicyAddress: string;
   allowedSharesTransferRecipientsPolicyAddress: string;
+  arbitraryLoanFixedInterestModuleAddress: string;
+  arbitraryLoanTotalNominalDeltaOracleModuleAddress: string;
   comptrollerLibAddress: string;
   convexCurveLpStakingAdapterAddress: string;
   cumulativeSlippageTolerancePolicyAddress: string;
@@ -44,6 +46,11 @@ export const sources = (variables: ReleaseVariables): DataSourceUserDeclaration[
   { name: 'AllowedDepositRecipientsPolicy', address: variables.allowedDepositRecipientsPolicyAddress },
   { name: 'AllowedExternalPositionTypesPolicy', address: variables.allowedExternalPositionTypesPolicyAddress },
   { name: 'AllowedSharesTransferRecipientsPolicy', address: variables.allowedSharesTransferRecipientsPolicyAddress },
+  { name: 'ArbitraryLoanFixedInterestModule', address: variables.arbitraryLoanFixedInterestModuleAddress },
+  {
+    name: 'ArbitraryLoanTotalNominalDeltaOracleModule',
+    address: variables.arbitraryLoanTotalNominalDeltaOracleModuleAddress,
+  },
   { name: 'CumulativeSlippageTolerancePolicy', address: variables.cumulativeSlippageTolerancePolicyAddress },
   { name: 'EntranceRateBurnFee', address: variables.entranceRateBurnFeeAddress },
   { name: 'EntranceRateDirectFee', address: variables.entranceRateDirectFeeAddress },
@@ -73,4 +80,5 @@ export const templates: DataSourceTemplateUserDeclaration[] = [
   { name: 'GasRelayPaymasterLib' },
   { name: 'UniswapV3LiquidityPositionLib' },
   { name: 'MapleLiquidityPositionLib' },
+  { name: 'ArbitraryLoanPositionLib' },
 ];

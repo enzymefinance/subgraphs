@@ -90,6 +90,9 @@ export const polygon: Context<Variables> = {
         allowedDepositRecipientsPolicyAddress: polygonDeployment.contracts.AllowedDepositRecipientsPolicy,
         allowedExternalPositionTypesPolicyAddress: polygonDeployment.contracts.AllowedExternalPositionTypesPolicy,
         allowedSharesTransferRecipientsPolicyAddress: polygonDeployment.contracts.AllowedSharesTransferRecipientsPolicy,
+        arbitraryLoanFixedInterestModuleAddress: polygonDeployment.contracts.ArbitraryLoanFixedInterestModule,
+        arbitraryLoanTotalNominalDeltaOracleModuleAddress:
+          polygonDeployment.contracts.ArbitraryLoanTotalNominalDeltaOracleModule,
         comptrollerLibAddress: polygonDeployment.contracts.ComptrollerLib,
         convexCurveLpStakingAdapterAddress: polygonDeployment.contracts.ConvexCurveLpStakingAdapter,
         cumulativeSlippageTolerancePolicyAddress: polygonDeployment.contracts.CumulativeSlippageTolerancePolicy,

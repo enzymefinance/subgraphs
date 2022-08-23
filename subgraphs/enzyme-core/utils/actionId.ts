@@ -41,3 +41,11 @@ export enum ConvexVotingPositionActionId {
   ClaimRewards = 3,
   Delegate = 4,
 }
+
+export enum ArbitraryLoanPositionActionId {
+  ConfigureLoan = 0,
+  UpdateBorrowableAmount = 1,
+  CallOnAccountingModule = 2,
+  Reconcile = 3,
+  CloseLoan = 4,
+}

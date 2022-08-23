@@ -90,6 +90,9 @@ export const testnet: Context<Variables> = {
         allowedDepositRecipientsPolicyAddress: testnetDeployment.contracts.AllowedDepositRecipientsPolicy,
         allowedExternalPositionTypesPolicyAddress: testnetDeployment.contracts.AllowedExternalPositionTypesPolicy,
         allowedSharesTransferRecipientsPolicyAddress: testnetDeployment.contracts.AllowedSharesTransferRecipientsPolicy,
+        arbitraryLoanFixedInterestModuleAddress: testnetDeployment.contracts.ArbitraryLoanFixedInterestModule,
+        arbitraryLoanTotalNominalDeltaOracleModuleAddress:
+          testnetDeployment.contracts.ArbitraryLoanTotalNominalDeltaOracleModule,
         comptrollerLibAddress: testnetDeployment.contracts.ComptrollerLib,
         convexCurveLpStakingAdapterAddress: testnetDeployment.contracts.ConvexCurveLpStakingAdapter,
         cumulativeSlippageTolerancePolicyAddress: testnetDeployment.contracts.CumulativeSlippageTolerancePolicy,

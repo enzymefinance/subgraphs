@@ -1,0 +1,298 @@
+[
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "loan",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "scaledPerSecondRatePreMaturity",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "scaledPerSecondRatePostMaturity",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "maturity",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum ArbitraryLoanFixedInterestModule.RepaymentTrackingType",
+        "name": "repaymentTrackingType",
+        "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "faceValueIsPrincipalOnly",
+        "type": "bool"
+      }
+    ],
+    "name": "ConfigSetForLoan",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "loan",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "totalInterest",
+        "type": "uint256"
+      }
+    ],
+    "name": "TotalInterestUpdatedForLoan",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "loan",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "totalPrincipalRepaid",
+        "type": "uint256"
+      }
+    ],
+    "name": "TotalPrincipalRepaidUpdatedForLoan",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_totalBorrowed",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_totalRepaid",
+        "type": "uint256"
+      }
+    ],
+    "name": "calcFaceValue",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "faceValue_",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes",
+        "name": "_configData",
+        "type": "bytes"
+      }
+    ],
+    "name": "configure",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_loan",
+        "type": "address"
+      }
+    ],
+    "name": "getAccountingInfoForLoan",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint128",
+            "name": "totalInterestCached",
+            "type": "uint128"
+          },
+          {
+            "internalType": "uint32",
+            "name": "totalInterestCachedTimestamp",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint96",
+            "name": "scaledPerSecondRatePreMaturity",
+            "type": "uint96"
+          },
+          {
+            "internalType": "uint96",
+            "name": "scaledPerSecondRatePostMaturity",
+            "type": "uint96"
+          },
+          {
+            "internalType": "uint32",
+            "name": "maturity",
+            "type": "uint32"
+          },
+          {
+            "internalType": "uint112",
+            "name": "totalPrincipalRepaid",
+            "type": "uint112"
+          },
+          {
+            "internalType": "enum ArbitraryLoanFixedInterestModule.RepaymentTrackingType",
+            "name": "repaymentTrackingType",
+            "type": "uint8"
+          },
+          {
+            "internalType": "bool",
+            "name": "faceValueIsPrincipalOnly",
+            "type": "bool"
+          }
+        ],
+        "internalType": "struct ArbitraryLoanFixedInterestModule.AccountingInfo",
+        "name": "accountingInfo_",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_prevTotalBorrowed",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_totalRepaid",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "preBorrow",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "preClose",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_totalBorrowed",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_prevTotalRepaid",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_repayableLoanAssetAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "name": "preReconcile",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "repayAmount_",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_totalBorrowed",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_prevTotalRepaid",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_repayAmountInput",
+        "type": "uint256"
+      }
+    ],
+    "name": "preRepay",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "repayAmount_",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
+      }
+    ],
+    "name": "receiveCallFromLoan",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

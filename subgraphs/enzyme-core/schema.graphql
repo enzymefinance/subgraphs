@@ -1035,6 +1035,82 @@ type AaveDebtPositionChange implements Activity & VaultActivity & ExternalPositi
   activityType: ActivityType!
 }
 
+enum RepaymentTrackingType {
+  None
+  PrincipalFirst
+  InterestFirst
+}
+
+type ArbitraryLoanFixedInterestModule @entity {
+  id: ID!
+  externalPosition: ArbitraryLoanPosition!
+  scaledPerSecondRatePreMaturity: BigInt!
+  scaledPerSecondRatePostMaturity: BigInt!
+  maturity: Int!
+  repaymentTrackingType: RepaymentTrackingType!
+  faceValueIsPrincipalOnly: Boolean!
+  totalPrincipalRepaid: BigDecimal!
+  totalInterestCachedTimestamp: Int!
+  totalInterestCached: BigDecimal!
+}
+
+type ArbitraryLoanTotalNominalDeltaOracleModule @entity {
+  id: ID!
+  externalPosition: ArbitraryLoanPosition!
+  oracle: Bytes!
+  stalenessThreshold: Int!
+}
+
+enum ArbitraryLoanModuleType {
+  None
+  FixedInterest
+  TotalNominalDeltaOracle
+}
+
+type ArbitraryLoanPosition implements ExternalPosition @entity {
+  id: ID!
+  vault: Vault!
+  type: ExternalPositionType!
+  active: Boolean!
+  loanAsset: Asset
+  borrower: Bytes
+  accountingModule: Bytes
+  moduleType: ArbitraryLoanModuleType
+  fixedInterestModule: ArbitraryLoanFixedInterestModule @derivedFrom(field: "externalPosition")
+  totalNominalDeltaOracleModule: ArbitraryLoanTotalNominalDeltaOracleModule @derivedFrom(field: "externalPosition")
+  description: String!
+  borrowableAmount: BigDecimal!
+  totalBorrowed: BigDecimal!
+  totalRepaid: BigDecimal!
+  isClosed: Boolean!
+  changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
+}
+
+enum ArbitraryLoanPositionChangeType {
+  ConfigureLoan
+  UpdateBorrowableAmount
+  CallOnAccountingModule
+  Reconcile
+  CloseLoan
+}
+
+type ArbitraryLoanPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: Int!
+  externalPosition: ExternalPosition!
+  arbitraryLoanPositionChangeType: ArbitraryLoanPositionChangeType!
+  assetAmounts: [AssetAmount!]
+  assets: [Asset!]
+  borrower: Bytes
+  accountingModule: Bytes
+  accountingModuleConfigData: Bytes
+  description: String
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
 type MapleLiquidityPool @entity {
   id: ID!
   liquidityAsset: Asset!

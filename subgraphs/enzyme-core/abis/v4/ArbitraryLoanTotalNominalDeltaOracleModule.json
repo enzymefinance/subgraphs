@@ -1,0 +1,212 @@
+[
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "loan",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "oracle",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint32",
+        "name": "stalenessThreshold",
+        "type": "uint32"
+      }
+    ],
+    "name": "OracleSetForLoan",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_totalBorrowed",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_totalRepaid",
+        "type": "uint256"
+      }
+    ],
+    "name": "calcFaceValue",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "faceValue_",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes",
+        "name": "_configData",
+        "type": "bytes"
+      }
+    ],
+    "name": "configure",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_loan",
+        "type": "address"
+      }
+    ],
+    "name": "getOracleInfoForLoan",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "oracle",
+            "type": "address"
+          },
+          {
+            "internalType": "uint32",
+            "name": "stalenessThreshold",
+            "type": "uint32"
+          }
+        ],
+        "internalType": "struct ArbitraryLoanTotalNominalDeltaOracleModule.OracleInfo",
+        "name": "oracleInfo_",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "preBorrow",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "preClose",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_repayableLoanAssetAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "name": "preReconcile",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "repayAmount_",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_totalBorrowed",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_prevTotalRepaid",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_repayAmountInput",
+        "type": "uint256"
+      }
+    ],
+    "name": "preRepay",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "repayAmount_",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
+      }
+    ],
+    "name": "receiveCallFromLoan",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

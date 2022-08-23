@@ -1,4 +1,4 @@
-import { Address, dataSource } from '@graphprotocol/graph-ts';
+import { dataSource } from '@graphprotocol/graph-ts';
 import { createUniswapV3LiquidityPositionChange } from '../../entities/UniswapV3LiquidityPosition';
 import { createUniswapV3Nft, useUniswapV3Nft } from '../../entities/UniswapV3Nft';
 import { useVault } from '../../entities/Vault';

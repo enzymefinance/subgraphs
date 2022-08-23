@@ -1,11 +1,14 @@
 import { arrayDiff, arrayUnique, toBigDecimal, uniqueEventId, ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
 import { useAaveDebtPosition } from '../../entities/AaveDebtPosition';
 import { ensureAccount, ensureAssetManager, ensureDepositor, ensureOwner } from '../../entities/Account';
+import { useArbitraryLoanPosition } from '../../entities/ArbitraryLoanPosition';
 import { ensureAsset } from '../../entities/Asset';
 import { useCompoundDebtPosition } from '../../entities/CompoundDebtPosition';
+import { useConvexVotingPosition } from '../../entities/ConvexVotingPosition';
 import { getActivityCounter } from '../../entities/Counter';
 import { ensureDeposit, trackDeposit } from '../../entities/Deposit';
 import { useExternalPositionType } from '../../entities/ExternalPositionType';
+import { useMapleLiquidityPosition } from '../../entities/MapleLiquidityPosition';
 import { useNetwork } from '../../entities/Network';
 import { useUniswapV3LiquidityPosition } from '../../entities/UniswapV3LiquidityPosition';
 import { useVault } from '../../entities/Vault';
@@ -308,9 +311,27 @@ export function handleExternalPositionAdded(event: ExternalPositionAdded): void 
   }
 
   if (type.label == 'UNISWAP_V3_LIQUIDITY') {
-    let adp = useUniswapV3LiquidityPosition(event.params.externalPosition.toHex());
-    adp.active = true;
-    adp.save();
+    let uv3lp = useUniswapV3LiquidityPosition(event.params.externalPosition.toHex());
+    uv3lp.active = true;
+    uv3lp.save();
+  }
+
+  if (type.label == 'CONVEX_VOTING') {
+    let cvx = useConvexVotingPosition(event.params.externalPosition.toHex());
+    cvx.active = true;
+    cvx.save();
+  }
+
+  if (type.label == 'ARBITRARY_LOAN') {
+    let arb = useArbitraryLoanPosition(event.params.externalPosition.toHex());
+    arb.active = true;
+    arb.save();
+  }
+
+  if (type.label == 'MAPLE_LIQUIDITY') {
+    let mpl = useMapleLiquidityPosition(event.params.externalPosition.toHex());
+    mpl.active = true;
+    mpl.save();
   }
 
   let activity = new ExternalPositionAddedEvent(uniqueEventId(event));
@@ -342,9 +363,27 @@ export function handleExternalPositionRemoved(event: ExternalPositionRemoved): v
   }
 
   if (type.label == 'UNISWAP_V3_LIQUIDITY') {
-    let adp = useUniswapV3LiquidityPosition(event.params.externalPosition.toHex());
-    adp.active = false;
-    adp.save();
+    let uv3lp = useUniswapV3LiquidityPosition(event.params.externalPosition.toHex());
+    uv3lp.active = false;
+    uv3lp.save();
+  }
+
+  if (type.label == 'CONVEX_VOTING') {
+    let cvx = useConvexVotingPosition(event.params.externalPosition.toHex());
+    cvx.active = false;
+    cvx.save();
+  }
+
+  if (type.label == 'ARBITRARY_LOAN') {
+    let arb = useArbitraryLoanPosition(event.params.externalPosition.toHex());
+    arb.active = false;
+    arb.save();
+  }
+
+  if (type.label == 'MAPLE_LIQUIDITY') {
+    let mpl = useMapleLiquidityPosition(event.params.externalPosition.toHex());
+    mpl.active = false;
+    mpl.save();
   }
 
   let activity = new ExternalPositionRemovedEvent(uniqueEventId(event));

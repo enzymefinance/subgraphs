@@ -90,6 +90,9 @@ export const ethereumDevDeployment: Context<Variables> = {
         allowedDepositRecipientsPolicyAddress: '0xa66baaa0ccb6468c5a2cb61f5d672c7ba0440ee1',
         allowedExternalPositionTypesPolicyAddress: '0x9e076e7d35a3b881ab9e3da958431630fdfa756f',
         allowedSharesTransferRecipientsPolicyAddress: '0xebe37e43bc6b3aacfe318d6906fc80c4a2a7505a',
+        arbitraryLoanFixedInterestModuleAddress: ethereumDeployment.contracts.ArbitraryLoanFixedInterestModule,
+        arbitraryLoanTotalNominalDeltaOracleModuleAddress:
+          ethereumDeployment.contracts.ArbitraryLoanTotalNominalDeltaOracleModule,
         comptrollerLibAddress: '0x03f7f3b8da875881206655d8099b9dacf721f1ef',
         convexCurveLpStakingAdapterAddress: ethereumDeployment.contracts.ConvexCurveLpStakingAdapter,
         cumulativeSlippageTolerancePolicyAddress: '0x3a49d5aec385ac1bde99f305316b945c5ee71312',
