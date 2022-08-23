@@ -75,3 +75,18 @@ export function createMapleLiquidityAssetAmount(
 
   return createAssetAmount(liquidityAsset, liquidityAmount, denominationAsset, 'mlp', event);
 }
+
+export function createMapleLiquidityAssetAmountByPoolTokenAmount(
+  mapleLiquidityPool: MapleLiquidityPool,
+  poolTokenAmount: BigInt,
+  denominationAsset: Asset,
+  event: ethereum.Event,
+): AssetAmount {
+  let liquidityAsset = ensureAsset(Address.fromString(mapleLiquidityPool.liquidityAsset));
+
+  let poolAsset = ensureAsset(Address.fromString(mapleLiquidityPool.id));
+
+  let liquidityAssetAmount = toBigDecimal(poolTokenAmount, poolAsset.decimals);
+
+  return createAssetAmount(liquidityAsset, liquidityAssetAmount, denominationAsset, 'mlp', event);
+}

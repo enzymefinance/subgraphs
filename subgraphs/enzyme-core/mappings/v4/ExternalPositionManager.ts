@@ -7,6 +7,7 @@ import {
 } from '../../entities/AaveDebtPosition';
 import {
   createMapleLiquidityAssetAmount,
+  createMapleLiquidityAssetAmountByPoolTokenAmount,
   createMapleLiquidityPosition,
   createMapleLiquidityPositionChange,
 } from '../../entities/MapleLiquidityPosition';
@@ -436,7 +437,12 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let poolAddress = rewardsContract.stakingToken();
 
       let pool = ensureMapleLiquidityPool(poolAddress, rewardsContractAddress);
-      let assetAmount = createMapleLiquidityAssetAmount(pool, tuple[1].toBigInt(), denominationAsset, event);
+      let assetAmount = createMapleLiquidityAssetAmountByPoolTokenAmount(
+        pool,
+        tuple[1].toBigInt(),
+        denominationAsset,
+        event,
+      );
       createMapleLiquidityPositionChange(event.params.externalPosition, pool, assetAmount, 'Unstake', vault, event);
     }
 
@@ -453,7 +459,12 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let rewardsContractAddress = tuple[1].toAddress();
 
       let pool = ensureMapleLiquidityPool(poolAddress, rewardsContractAddress);
-      let assetAmount = createMapleLiquidityAssetAmount(pool, tuple[2].toBigInt(), denominationAsset, event);
+      let assetAmount = createMapleLiquidityAssetAmountByPoolTokenAmount(
+        pool,
+        tuple[2].toBigInt(),
+        denominationAsset,
+        event,
+      );
       createMapleLiquidityPositionChange(
         event.params.externalPosition,
         pool,
