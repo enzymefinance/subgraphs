@@ -1,5 +1,7 @@
 import { uniqueEventId } from '@enzymefinance/subgraph-utils';
 import { ensureAllowedAdapterIncomingAssetsPolicy } from '../../entities/AllowedAdapterIncomingAssetsPolicy';
+import { ensureAllowedAdaptersPerManagerPolicy } from '../../entities/AllowedAdaptersPerManagerPolicy';
+import { ensureAllowedExternalPositionTypesPerManagerPolicy } from '../../entities/AllowedExternalPositionTypesPerManagerPolicy';
 import { ensureAllowedAdaptersPolicy } from '../../entities/AllowedAdaptersPolicy';
 import { ensureAllowedAssetsForRedemptionPolicy } from '../../entities/AllowedAssetsForRedemptionPolicy';
 import { ensureAllowedDepositRecipientsPolicy } from '../../entities/AllowedDepositRecipientsPolicy';
@@ -8,7 +10,6 @@ import { ensureAllowedSharesTransferRecipientsPolicy } from '../../entities/Allo
 import { ensureComptroller } from '../../entities/Comptroller';
 import { getActivityCounter } from '../../entities/Counter';
 import { ensureCumulativeSlippageTolerancePolicy } from '../../entities/CumulativeSlippageTolerancePolicy';
-import { ensureGuaranteedRedemptionPolicy } from '../../entities/GuaranteedRedemptionPolicy';
 import { ensureMinAssetBalancesPostRedemptionPolicy } from '../../entities/MinAssetBalancesPostRedemptionPolicy';
 import { ensureMinMaxDepositPolicy } from '../../entities/MinMaxDepositPolicy';
 import { ensureOnlyRemoveDustExternalPositionPolicy } from '../../entities/OnlyRemoveDustExternalPositionPolicy';
@@ -47,6 +48,14 @@ export function handlePolicyEnabledForFund(event: PolicyEnabledForFund): void {
     return;
   }
 
+  if (event.params.policy.equals(release4Addresses.allowedAdaptersPerManagerPolicyAddress)) {
+    let policy = ensureAllowedAdaptersPerManagerPolicy(comptrollerAddress, policyAddress, event);
+    policy.enabled = true;
+    policy.settings = event.params.settingsData.toHex();
+    policy.save();
+    return;
+  }
+
   if (event.params.policy.equals(release4Addresses.allowedAdaptersPolicyAddress)) {
     let policy = ensureAllowedAdaptersPolicy(comptrollerAddress, policyAddress, event);
     policy.enabled = true;
@@ -65,6 +74,14 @@ export function handlePolicyEnabledForFund(event: PolicyEnabledForFund): void {
 
   if (event.params.policy.equals(release4Addresses.allowedDepositRecipientsPolicyAddress)) {
     let policy = ensureAllowedDepositRecipientsPolicy(comptrollerAddress, policyAddress, event);
+    policy.enabled = true;
+    policy.settings = event.params.settingsData.toHex();
+    policy.save();
+    return;
+  }
+
+  if (event.params.policy.equals(release4Addresses.allowedExternalPositionTypesPerManagerPolicyAddress)) {
+    let policy = ensureAllowedExternalPositionTypesPerManagerPolicy(comptrollerAddress, policyAddress, event);
     policy.enabled = true;
     policy.settings = event.params.settingsData.toHex();
     policy.save();
@@ -163,6 +180,13 @@ export function handlePolicyDisabledOnHookForFund(event: PolicyDisabledOnHookFor
     return;
   }
 
+  if (event.params.policy.equals(release4Addresses.allowedAdaptersPerManagerPolicyAddress)) {
+    let policy = ensureAllowedAdaptersPerManagerPolicy(comptrollerAddress, policyAddress, event);
+    policy.enabled = false;
+    policy.save();
+    return;
+  }
+
   if (event.params.policy.equals(release4Addresses.allowedAssetsForRedemptionPolicyAddress)) {
     let policy = ensureAllowedAssetsForRedemptionPolicy(comptrollerAddress, policyAddress, event);
     policy.enabled = false;
@@ -179,6 +203,13 @@ export function handlePolicyDisabledOnHookForFund(event: PolicyDisabledOnHookFor
 
   if (event.params.policy.equals(release4Addresses.allowedExternalPositionTypesPolicyAddress)) {
     let policy = ensureAllowedExternalPositionTypesPolicy(comptrollerAddress, policyAddress, event);
+    policy.enabled = false;
+    policy.save();
+    return;
+  }
+
+  if (event.params.policy.equals(release4Addresses.allowedExternalPositionTypesPerManagerPolicyAddress)) {
+    let policy = ensureAllowedExternalPositionTypesPerManagerPolicy(comptrollerAddress, policyAddress, event);
     policy.enabled = false;
     policy.save();
     return;

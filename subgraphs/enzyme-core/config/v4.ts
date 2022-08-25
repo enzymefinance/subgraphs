@@ -3,9 +3,11 @@ import { DataSourceTemplateUserDeclaration, DataSourceUserDeclaration } from '@e
 export interface ReleaseVariables {
   addressListRegistryAddress: string;
   allowedAdapterIncomingAssetsPolicyAddress: string;
+  allowedAdaptersPerManagerPolicyAddress: string;
   allowedAdaptersPolicyAddress: string;
   allowedAssetsForRedemptionPolicyAddress: string;
   allowedDepositRecipientsPolicyAddress: string;
+  allowedExternalPositionTypesPerManagerPolicyAddress: string;
   allowedExternalPositionTypesPolicyAddress: string;
   allowedSharesTransferRecipientsPolicyAddress: string;
   arbitraryLoanFixedInterestModuleAddress: string;
@@ -33,6 +35,7 @@ export interface ReleaseVariables {
   policyManagerAddress: string;
   protocolFeeReserveLibAddress: string;
   protocolFeeTrackerAddress: string;
+  uintListRegistryAddress: string;
   unpermissionedActionsWrapperAddress: string;
   valueInterpreterAddress: string;
   vaultLibAddress: string;
@@ -41,9 +44,14 @@ export interface ReleaseVariables {
 export const sources = (variables: ReleaseVariables): DataSourceUserDeclaration[] => [
   { name: 'AddressListRegistry', address: variables.addressListRegistryAddress },
   { name: 'AllowedAdapterIncomingAssetsPolicy', address: variables.allowedAdapterIncomingAssetsPolicyAddress },
+  { name: 'AllowedAdaptersPerManagerPolicy', address: variables.allowedAdaptersPerManagerPolicyAddress },
   { name: 'AllowedAdaptersPolicy', address: variables.allowedAdaptersPolicyAddress },
   { name: 'AllowedAssetsForRedemptionPolicy', address: variables.allowedAssetsForRedemptionPolicyAddress },
   { name: 'AllowedDepositRecipientsPolicy', address: variables.allowedDepositRecipientsPolicyAddress },
+  {
+    name: 'AllowedExternalPositionTypesPerManagerPolicy',
+    address: variables.allowedExternalPositionTypesPerManagerPolicyAddress,
+  },
   { name: 'AllowedExternalPositionTypesPolicy', address: variables.allowedExternalPositionTypesPolicyAddress },
   { name: 'AllowedSharesTransferRecipientsPolicy', address: variables.allowedSharesTransferRecipientsPolicyAddress },
   { name: 'ArbitraryLoanFixedInterestModule', address: variables.arbitraryLoanFixedInterestModuleAddress },
@@ -71,6 +79,7 @@ export const sources = (variables: ReleaseVariables): DataSourceUserDeclaration[
   { name: 'PolicyManager', address: variables.policyManagerAddress },
   { name: 'ProtocolFeeReserveLib', address: variables.protocolFeeReserveLibAddress },
   { name: 'ProtocolFeeTracker', address: variables.protocolFeeTrackerAddress },
+  { name: 'UintListRegistry', address: variables.uintListRegistryAddress },
   { name: 'ValueInterpreter', address: variables.valueInterpreterAddress },
 ];
 

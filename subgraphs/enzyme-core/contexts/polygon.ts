@@ -85,9 +85,12 @@ export const polygon: Context<Variables> = {
       v4: {
         addressListRegistryAddress: polygonDeployment.contracts.AddressListRegistry,
         allowedAdapterIncomingAssetsPolicyAddress: polygonDeployment.contracts.AllowedAdapterIncomingAssetsPolicy,
+        allowedAdaptersPerManagerPolicyAddress: polygonDeployment.contracts.AllowedAdaptersPerManagerPolicy,
         allowedAdaptersPolicyAddress: polygonDeployment.contracts.AllowedAdaptersPolicy,
         allowedAssetsForRedemptionPolicyAddress: polygonDeployment.contracts.AllowedAssetsForRedemptionPolicy,
         allowedDepositRecipientsPolicyAddress: polygonDeployment.contracts.AllowedDepositRecipientsPolicy,
+        allowedExternalPositionTypesPerManagerPolicyAddress:
+          polygonDeployment.contracts.AllowedExternalPositionTypesPerManagerPolicy,
         allowedExternalPositionTypesPolicyAddress: polygonDeployment.contracts.AllowedExternalPositionTypesPolicy,
         allowedSharesTransferRecipientsPolicyAddress: polygonDeployment.contracts.AllowedSharesTransferRecipientsPolicy,
         arbitraryLoanFixedInterestModuleAddress: polygonDeployment.contracts.ArbitraryLoanFixedInterestModule,
@@ -117,6 +120,7 @@ export const polygon: Context<Variables> = {
         policyManagerAddress: polygonDeployment.contracts.PolicyManager,
         protocolFeeReserveLibAddress: polygonDeployment.contracts.ProtocolFeeReserveLib,
         protocolFeeTrackerAddress: polygonDeployment.contracts.ProtocolFeeTracker,
+        uintListRegistryAddress: polygonDeployment.contracts.UintListRegistry,
         unpermissionedActionsWrapperAddress: polygonDeployment.contracts.UnpermissionedActionsWrapper,
         valueInterpreterAddress: polygonDeployment.contracts.ValueInterpreter,
         vaultLibAddress: polygonDeployment.contracts.VaultLib,

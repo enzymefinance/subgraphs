@@ -62,9 +62,11 @@ export class Release3Addresses {
 export class Release4Addresses {
   addressListRegistryAddress: Address;
   allowedAdapterIncomingAssetsPolicyAddress: Address;
+  allowedAdaptersPerManagerPolicyAddress: Address;
   allowedAdaptersPolicyAddress: Address;
   allowedAssetsForRedemptionPolicyAddress: Address;
   allowedDepositRecipientsPolicyAddress: Address;
+  allowedExternalPositionTypesPerManagerPolicyAddress: Address;
   allowedExternalPositionTypesPolicyAddress: Address;
   allowedSharesTransferRecipientsPolicyAddress: Address;
   comptrollerLibAddress: Address;
@@ -87,6 +89,7 @@ export class Release4Addresses {
   policyManagerAddress: Address;
   protocolFeeReserveLibAddress: Address;
   protocolFeeTrackerAddress: Address;
+  uintListRegistryAddress: Address;
   unpermissionedActionsWrapperAddress: Address;
   valueInterpreterAddress: Address;
   vaultLibAddress: Address;
@@ -153,10 +156,12 @@ export let release4Addresses: Release4Addresses = {
     '{{releases.v4.allowedAdapterIncomingAssetsPolicyAddress}}',
   ),
   allowedAdaptersPolicyAddress: Address.fromString('{{releases.v4.allowedAdaptersPolicyAddress}}'),
-  allowedAssetsForRedemptionPolicyAddress: Address.fromString(
-    '{{releases.v4.allowedAssetsForRedemptionPolicyAddress}}',
-  ),
+  allowedAdaptersPerManagerPolicyAddress: Address.fromString('{{releases.v4.allowedAdaptersPerManagerPolicyAddress}}'),
+  allowedAssetsForRedemptionPolicyAddress: Address.fromString('{{releases.v4.allowedAssetsForRedemptionPolicyAddress}}'),
   allowedDepositRecipientsPolicyAddress: Address.fromString('{{releases.v4.allowedDepositRecipientsPolicyAddress}}'),
+  allowedExternalPositionTypesPerManagerPolicyAddress: Address.fromString(
+    '{{releases.v4.allowedExternalPositionTypesPerManagerPolicyAddress}}',
+  ),
   allowedExternalPositionTypesPolicyAddress: Address.fromString(
     '{{releases.v4.allowedExternalPositionTypesPolicyAddress}}',
   ),
@@ -191,6 +196,7 @@ export let release4Addresses: Release4Addresses = {
   policyManagerAddress: Address.fromString('{{releases.v4.policyManagerAddress}}'),
   protocolFeeReserveLibAddress: Address.fromString('{{releases.v4.protocolFeeReserveLibAddress}}'),
   protocolFeeTrackerAddress: Address.fromString('{{releases.v4.protocolFeeTrackerAddress}}'),
+  uintListRegistryAddress: Address.fromString('{{releases.v4.uintListRegistryAddress}}'),
   unpermissionedActionsWrapperAddress: Address.fromString('{{releases.v4.protocolFeeTrackerAddress}}'),
   valueInterpreterAddress: Address.fromString('{{releases.v4.valueInterpreterAddress}}'),
   vaultLibAddress: Address.fromString('{{releases.v4.vaultLibAddress}}'),

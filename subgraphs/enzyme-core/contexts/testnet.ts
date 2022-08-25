@@ -85,9 +85,12 @@ export const testnet: Context<Variables> = {
       v4: {
         addressListRegistryAddress: testnetDeployment.contracts.AddressListRegistry,
         allowedAdapterIncomingAssetsPolicyAddress: testnetDeployment.contracts.AllowedAdapterIncomingAssetsPolicy,
+        allowedAdaptersPerManagerPolicyAddress: testnetDeployment.contracts.AllowedAdaptersPerManagerPolicy,
         allowedAdaptersPolicyAddress: testnetDeployment.contracts.AllowedAdaptersPolicy,
         allowedAssetsForRedemptionPolicyAddress: testnetDeployment.contracts.AllowedAssetsForRedemptionPolicy,
         allowedDepositRecipientsPolicyAddress: testnetDeployment.contracts.AllowedDepositRecipientsPolicy,
+        allowedExternalPositionTypesPerManagerPolicyAddress:
+          testnetDeployment.contracts.AllowedExternalPositionTypesPerManagerPolicy,
         allowedExternalPositionTypesPolicyAddress: testnetDeployment.contracts.AllowedExternalPositionTypesPolicy,
         allowedSharesTransferRecipientsPolicyAddress: testnetDeployment.contracts.AllowedSharesTransferRecipientsPolicy,
         arbitraryLoanFixedInterestModuleAddress: testnetDeployment.contracts.ArbitraryLoanFixedInterestModule,
@@ -117,6 +120,7 @@ export const testnet: Context<Variables> = {
         policyManagerAddress: testnetDeployment.contracts.PolicyManager,
         protocolFeeReserveLibAddress: testnetDeployment.contracts.ProtocolFeeReserveLib,
         protocolFeeTrackerAddress: testnetDeployment.contracts.ProtocolFeeTracker,
+        uintListRegistryAddress: testnetDeployment.contracts.UintListRegistry,
         unpermissionedActionsWrapperAddress: testnetDeployment.contracts.UnpermissionedActionsWrapper,
         valueInterpreterAddress: testnetDeployment.contracts.ValueInterpreter,
         vaultLibAddress: testnetDeployment.contracts.VaultLib,

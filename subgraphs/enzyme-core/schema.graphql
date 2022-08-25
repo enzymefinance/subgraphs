@@ -689,6 +689,28 @@ type AllowedDepositRecipientsPolicy implements Policy @entity {
   addressLists: [AddressList!]!
 }
 
+type AllowedAdaptersPerManagerPolicy implements Policy @entity {
+  id: ID!
+  policy: Bytes!
+  policyType: PolicyType!
+  comptroller: Comptroller!
+  createdAt: Int!
+  enabled: Boolean!
+  settings: String!
+  userAddressLists: [UserAddressList!]!
+}
+
+type AllowedExternalPositionTypesPerManagerPolicy implements Policy @entity {
+  id: ID!
+  policy: Bytes!
+  policyType: PolicyType!
+  comptroller: Comptroller!
+  createdAt: Int!
+  enabled: Boolean!
+  settings: String!
+  userUintLists: [UserUintList!]!
+}
+
 type AllowedExternalPositionTypesPolicy implements Policy @entity {
   id: ID!
   policy: Bytes!
@@ -853,8 +875,10 @@ enum PolicyType {
   AdapterWhitelist
   AllowedAdapterIncomingAssets
   AllowedAdapters
+  AllowedAdaptersPerManager
   AllowedAssetsForRedemption
   AllowedDepositRecipients
+  AllowedExternalPositionTypesPerManager
   AllowedExternalPositionTypes
   AllowedSharesTransferRecipients
   AssetBlacklist
@@ -892,8 +916,46 @@ type PolicyDisabledForVault implements Activity & VaultActivity @entity {
 }
 
 #################################################
+# Uint Lists (for various policies)
+#################################################
+
+enum UintListUpdateType {
+  None
+  AddOnly
+  RemoveOnly
+  AddAndRemove
+}
+
+type UserUintList @entity {
+  id: ID!
+  userAddress: Bytes!
+  createdAt: Int!
+  updatedAt: Int!
+  uintLists: [UintList!]!
+}
+
+type UintList @entity {
+  id: ID!
+  description: String
+  createdAt: Int!
+  updatedAt: Int!
+  creator: Bytes!
+  owner: Bytes!
+  updateType: UintListUpdateType!
+  items: [BigInt!]!
+}
+
+#################################################
 # Address Lists (for various policies)
 #################################################
+
+type UserAddressList @entity {
+  id: ID!
+  userAddress: Bytes!
+  createdAt: Int!
+  updatedAt: Int!
+  addressLists: [AddressList!]!
+}
 
 type AddressList @entity {
   id: ID!

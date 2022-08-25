@@ -85,9 +85,12 @@ export const ethereumDevDeployment: Context<Variables> = {
       v4: {
         addressListRegistryAddress: '0x4eb4c7babfb5d54ab4857265b482fb6512d22dff',
         allowedAdapterIncomingAssetsPolicyAddress: '0x2f0e55830a173d845a886fd574f01a039a07fc37',
+        allowedAdaptersPerManagerPolicyAddress: ethereumDeployment.contracts.AllowedAdaptersPerManagerPolicy,
         allowedAdaptersPolicyAddress: '0x720ef97bf835699fcf07591952cd2b132d63a6c0',
         allowedAssetsForRedemptionPolicyAddress: '0x823ca839da344da59d517b84ce3bab9ffc9f54ee',
         allowedDepositRecipientsPolicyAddress: '0xa66baaa0ccb6468c5a2cb61f5d672c7ba0440ee1',
+        allowedExternalPositionTypesPerManagerPolicyAddress:
+          ethereumDeployment.contracts.AllowedExternalPositionTypesPerManagerPolicy,
         allowedExternalPositionTypesPolicyAddress: '0x9e076e7d35a3b881ab9e3da958431630fdfa756f',
         allowedSharesTransferRecipientsPolicyAddress: '0xebe37e43bc6b3aacfe318d6906fc80c4a2a7505a',
         arbitraryLoanFixedInterestModuleAddress: ethereumDeployment.contracts.ArbitraryLoanFixedInterestModule,
@@ -116,6 +119,7 @@ export const ethereumDevDeployment: Context<Variables> = {
         policyManagerAddress: '0xadf5a8db090627b153ef0c5726ccfdc1c7aed7bd',
         protocolFeeReserveLibAddress: '0xa0ed89af63367ddc8e1dd6b992f20d1214ccb51c',
         protocolFeeTrackerAddress: '0xe97980f1d43c4cd4f1eef0277a2dea7ddbc2cd13',
+        uintListRegistryAddress: ethereumDeployment.contracts.UintListRegistry,
         unpermissionedActionsWrapperAddress: '0xcfab4fcbfe059d5c1840d9dc285a9bfa0f96a118',
         valueInterpreterAddress: '0xd7b0610db501b15bfb9b7ddad8b3869de262a327',
         vaultLibAddress: '0x891dee0483ebaa922e274ddd2ebbaa2d33468a38',

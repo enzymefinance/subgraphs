@@ -79,6 +79,7 @@ export interface Release4Addresses {
   policyManagerAddress: string;
   protocolFeeReserveLibAddress: string;
   protocolFeeTrackerAddress: string;
+  uintListRegistryAddress: string;
   unpermissionedActionsWrapperAddress: string;
   valueInterpreterAddress: string;
   vaultLibAddress: string;

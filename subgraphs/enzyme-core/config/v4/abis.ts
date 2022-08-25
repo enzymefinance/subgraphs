@@ -10,10 +10,16 @@ export const abisV4 = [
   { name: 'AllowedAssetsForRedemptionPolicy', version: '4', file: './abis/v4/AllowedAssetsForRedemptionPolicy.json' },
   { name: 'AllowedDepositRecipientsPolicy', version: '4', file: './abis/v4/AllowedDepositRecipientsPolicy.json' },
   {
+    name: 'AllowedExternalPositionTypesPerManagerPolicy',
+    version: '4',
+    file: './abis/v4/AllowedExternalPositionTypesPerManagerPolicy.json',
+  },
+  {
     name: 'AllowedExternalPositionTypesPolicy',
     version: '4',
     file: './abis/v4/AllowedExternalPositionTypesPolicy.json',
   },
+  { name: 'AllowedAdaptersPerManagerPolicy', version: '4', file: './abis/v4/AllowedAdaptersPerManagerPolicy.json' },
   {
     name: 'AllowedSharesTransferRecipientsPolicy',
     version: '4',
@@ -56,6 +62,7 @@ export const abisV4 = [
   { name: 'PolicyManager', version: '4', file: './abis/v4/PolicyManager.json' },
   { name: 'ProtocolFeeReserveLib', version: '4', file: './abis/v4/ProtocolFeeReserveLib.json' },
   { name: 'ProtocolFeeTracker', version: '4', file: './abis/v4/ProtocolFeeTracker.json' },
+  { name: 'UintListRegistry', version: '4', file: './abis/v4/UintListRegistry.json' },
   { name: 'UnpermissionedActionsWrapper', version: '4', file: './abis/v4/UnpermissionedActionsWrapper.json' },
   { name: 'ValueInterpreter', version: '4', file: './abis/v4/ValueInterpreter.json' },
   { name: 'VaultLib', version: '4', file: './abis/v4/VaultLib.json' },
