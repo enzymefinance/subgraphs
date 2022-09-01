@@ -13,8 +13,7 @@ import { Asset, AssetAmount } from '../../generated/schema';
 import { release4Addresses, curveMinterAddress } from '../../generated/addresses';
 import { claimRewardsSelector } from '../../utils/integrationSelectors';
 import { ProtocolSdk } from '../../generated/contracts/ProtocolSdk';
-import { CurveLiquidityGaugeV2Sdk } from '../../generated/contracts/CurveLiquidityGaugeV2Sdk';
-import { CurveMinterSdk } from '../../generated/contracts/CurveMinterSdk';
+import { ExternalSdk } from '../../generated/contracts/ExternalSdk';
 
 export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationExecutedForFund): void {
   let comptroller = ensureComptroller(event.params.comptrollerProxy, event);
@@ -86,7 +85,7 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
 
     let curveLiquidityGaugeV2Address = tuple[0].toAddress();
 
-    let curveLiquidityGaugeV2Contract = CurveLiquidityGaugeV2Sdk.bind(curveLiquidityGaugeV2Address);
+    let curveLiquidityGaugeV2Contract = ExternalSdk.bind(curveLiquidityGaugeV2Address);
 
     let curveGaugeV2MaxRewards = 8;
 
@@ -103,7 +102,7 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
 
     //  Curve Minter exist only on Ethereum mainnet
     if (curveMinterAddress.notEqual(ZERO_ADDRESS)) {
-      let curveMinterContract = CurveMinterSdk.bind(curveMinterAddress);
+      let curveMinterContract = ExternalSdk.bind(curveMinterAddress);
 
       let rewardAssetAddress = curveMinterContract.token();
 

@@ -1,6 +1,6 @@
 import { arrayDiff, arrayUnique } from '@enzymefinance/subgraph-utils';
 import { Bytes } from '@graphprotocol/graph-ts';
-import { ensureAddressList } from '../../entities/AddressList';
+import { ensureAddressList } from '../entities/AddressList';
 import {
   ItemAddedToList,
   ItemRemovedFromList,
@@ -8,8 +8,8 @@ import {
   ListCreated,
   ListOwnerSet,
   ListUpdateTypeSet,
-} from '../../generated/contracts/AddressListRegistry4Events';
-import { addressListUpdateType } from '../../utils/addressListUpdateType';
+} from '../generated/contracts/AddressListRegistryEvents';
+import { addressListUpdateType } from '../utils/addressListUpdateType';
 
 export function handleItemAddedToList(event: ItemAddedToList): void {
   let addressList = ensureAddressList(event.params.id.toString(), event);

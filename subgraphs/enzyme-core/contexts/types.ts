@@ -64,7 +64,6 @@ export interface Release4Addresses {
   entranceRateDirectFeeAddress: string;
   exitRateBurnFeeAddress: string;
   exitRateDirectFeeAddress: string;
-  externalPositionFactoryAddress: string;
   externalPositionManagerAddress: string;
   feeManagerAddress: string;
   fundDeployerAddress: string;

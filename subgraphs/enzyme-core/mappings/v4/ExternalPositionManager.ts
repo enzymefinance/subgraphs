@@ -48,7 +48,7 @@ import {
   UniswapV3LiquidityPositionActionId,
 } from '../../utils/actionId';
 import { ensureMapleLiquidityPool } from '../../entities/MapleLiquidityPool';
-import { MapleSdk } from '../../generated/contracts/MapleSdk';
+import { ExternalSdk } from '../../generated/contracts/ExternalSdk';
 import {
   createConvexVotingPosition,
   createConvexVotingPositionChange,
@@ -442,7 +442,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
       let rewardsContractAddress = tuple[0].toAddress();
 
-      let rewardsContract = MapleSdk.bind(rewardsContractAddress);
+      let rewardsContract = ExternalSdk.bind(rewardsContractAddress);
       let poolAddress = rewardsContract.stakingToken();
 
       let pool = ensureMapleLiquidityPool(poolAddress, rewardsContractAddress);
@@ -508,7 +508,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
       let rewardsContractAddress = tuple[0].toAddress();
 
-      let rewardsContract = MapleSdk.bind(rewardsContractAddress);
+      let rewardsContract = ExternalSdk.bind(rewardsContractAddress);
       let poolAddress = rewardsContract.stakingToken();
 
       let pool = ensureMapleLiquidityPool(poolAddress, rewardsContractAddress);

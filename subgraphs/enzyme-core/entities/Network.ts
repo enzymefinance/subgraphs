@@ -1,6 +1,6 @@
 import { logCritical, ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
 import { BigDecimal, ethereum } from '@graphprotocol/graph-ts';
-import { dispatcherAddress } from '../generated/addresses';
+import { persistentAddresses } from '../generated/addresses';
 import { ProtocolSdk } from '../generated/contracts/ProtocolSdk';
 import { Network } from '../generated/schema';
 
@@ -16,7 +16,7 @@ export function createNetwork(event: ethereum.Event): Network {
   network.protocolFeeRate = BigDecimal.fromString('0');
   network.mlnBurned = BigDecimal.fromString('0');
 
-  let dispatcher = ProtocolSdk.bind(dispatcherAddress);
+  let dispatcher = ProtocolSdk.bind(persistentAddresses.dispatcherAddress);
   network.migrationTimelock = dispatcher.getMigrationTimelock().toI32();
   network.sharesTokenSymbol = dispatcher.getSharesTokenSymbol();
   network.owner = dispatcher.getOwner();

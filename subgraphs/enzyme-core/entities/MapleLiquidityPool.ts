@@ -1,12 +1,12 @@
 import { Address } from '@graphprotocol/graph-ts';
-import { MapleSdk } from '../generated/contracts/MapleSdk';
+import { ExternalSdk } from '../generated/contracts/ExternalSdk';
 import { MapleLiquidityPool } from '../generated/schema';
 import { ensureAsset } from './Asset';
 
 export function createMapleLiquidityPool(pool: Address, rewardsContract: Address | null = null): MapleLiquidityPool {
   let mapleLiquidityPool = new MapleLiquidityPool(pool.toHex());
 
-  let poolContract = MapleSdk.bind(pool);
+  let poolContract = ExternalSdk.bind(pool);
   let liquidityAsset = ensureAsset(poolContract.liquidityAsset());
 
   mapleLiquidityPool.liquidityAsset = liquidityAsset.id;

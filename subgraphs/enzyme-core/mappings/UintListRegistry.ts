@@ -1,5 +1,5 @@
 import { arrayDiff, arrayUnique } from '@enzymefinance/subgraph-utils';
-import { ensureUintList } from '../../entities/UintList';
+import { ensureUintList } from '../entities/UintList';
 import {
   ItemAddedToList,
   ItemRemovedFromList,
@@ -7,8 +7,8 @@ import {
   ListCreated,
   ListOwnerSet,
   ListUpdateTypeSet,
-} from '../../generated/contracts/UintListRegistry4Events';
-import { uintListUpdateType } from '../../utils/uintListUpdateType';
+} from '../generated/contracts/UintListRegistryEvents';
+import { uintListUpdateType } from '../utils/uintListUpdateType';
 import { BigInt } from '@graphprotocol/graph-ts';
 
 export function handleItemAddedToList(event: ItemAddedToList): void {

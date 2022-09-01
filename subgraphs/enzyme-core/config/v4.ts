@@ -1,7 +1,6 @@
 import { DataSourceTemplateUserDeclaration, DataSourceUserDeclaration } from '@enzymefinance/subgraph-cli';
 
 export interface ReleaseVariables {
-  addressListRegistryAddress: string;
   allowedAdapterIncomingAssetsPolicyAddress: string;
   allowedAdaptersPerManagerPolicyAddress: string;
   allowedAdaptersPolicyAddress: string;
@@ -33,16 +32,13 @@ export interface ReleaseVariables {
   onlyUntrackDustOrPricelessAssetsPolicyAddress: string;
   performanceFeeAddress: string;
   policyManagerAddress: string;
-  protocolFeeReserveLibAddress: string;
   protocolFeeTrackerAddress: string;
-  uintListRegistryAddress: string;
   unpermissionedActionsWrapperAddress: string;
   valueInterpreterAddress: string;
   vaultLibAddress: string;
 }
 
 export const sources = (variables: ReleaseVariables): DataSourceUserDeclaration[] => [
-  { name: 'AddressListRegistry', address: variables.addressListRegistryAddress },
   { name: 'AllowedAdapterIncomingAssetsPolicy', address: variables.allowedAdapterIncomingAssetsPolicyAddress },
   { name: 'AllowedAdaptersPerManagerPolicy', address: variables.allowedAdaptersPerManagerPolicyAddress },
   { name: 'AllowedAdaptersPolicy', address: variables.allowedAdaptersPolicyAddress },
@@ -77,9 +73,7 @@ export const sources = (variables: ReleaseVariables): DataSourceUserDeclaration[
   { name: 'OnlyUntrackDustOrPricelessAssetsPolicy', address: variables.onlyUntrackDustOrPricelessAssetsPolicyAddress },
   { name: 'PerformanceFee', address: variables.performanceFeeAddress },
   { name: 'PolicyManager', address: variables.policyManagerAddress },
-  { name: 'ProtocolFeeReserveLib', address: variables.protocolFeeReserveLibAddress },
   { name: 'ProtocolFeeTracker', address: variables.protocolFeeTrackerAddress },
-  { name: 'UintListRegistry', address: variables.uintListRegistryAddress },
   { name: 'ValueInterpreter', address: variables.valueInterpreterAddress },
 ];
 

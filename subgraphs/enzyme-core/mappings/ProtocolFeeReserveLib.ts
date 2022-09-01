@@ -1,4 +1,4 @@
-import { ProtocolFeeReserveLibSet, SharesBoughtBack } from '../../generated/contracts/ProtocolFeeReserveLib4Events';
+import { ProtocolFeeReserveLibSet, SharesBoughtBack } from '../generated/contracts/ProtocolFeeReserveLibEvents';
 
 export function handleSharesBoughtBack(event: SharesBoughtBack): void {
   // tracked in VaultLib

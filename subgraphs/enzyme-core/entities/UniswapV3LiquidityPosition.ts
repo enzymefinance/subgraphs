@@ -1,6 +1,6 @@
 import { logCritical, uniqueEventId } from '@enzymefinance/subgraph-utils';
 import { Address, BigInt, ethereum } from '@graphprotocol/graph-ts';
-import { UniswapV3Sdk } from '../generated/contracts/UniswapV3Sdk';
+import { ExternalSdk } from '../generated/contracts/ExternalSdk';
 import {
   UniswapV3LiquidityPosition,
   UniswapV3LiquidityPositionChange,
@@ -44,7 +44,7 @@ export function createUniswapV3LiquidityPositionChange(
   vault: Vault,
   event: ethereum.Event,
 ): UniswapV3LiquidityPositionChange {
-  let poolContract = UniswapV3Sdk.bind(Address.fromBytes(nft.poolAddress));
+  let poolContract = ExternalSdk.bind(Address.fromBytes(nft.poolAddress));
   let currentTick = poolContract.slot0();
 
   let change = new UniswapV3LiquidityPositionChange(uniqueEventId(event));

@@ -11,7 +11,7 @@ import * as v2 from './config/v2';
 import * as v3 from './config/v3';
 import * as v4 from './config/v4';
 import { ethereum } from './contexts/ethereum';
-import { ethereumDevDeployment } from './contexts/ethereum-dev';
+import { ethereumDev } from './contexts/ethereum-dev';
 import { polygon } from './contexts/polygon';
 import { testnet } from './contexts/testnet';
 
@@ -29,9 +29,12 @@ export interface Variables {
     jpyUsd: string;
   };
   persistent: {
+    addressListRegistryAddress: string;
     dispatcherAddress: string;
     externalPositionFactoryAddress: string;
+    protocolFeeReserveLibAddress: string;
     sharesSplitterFactoryAddress: string;
+    uintListRegistryAddress: string;
   };
   releases: {
     v2: v2.ReleaseVariables;
@@ -47,7 +50,7 @@ export interface Variables {
 
 export const contexts: Contexts<Variables> = {
   ethereum,
-  'ethereum-dev': ethereumDevDeployment,
+  'ethereum-dev': ethereumDev,
   polygon,
   testnet,
 };
@@ -64,7 +67,7 @@ export const configure: Configurator<Variables> = (variables) => {
     {
       name: 'Protocol',
       abis: {
-        ChainlinkAggregator: 'abis/ChainlinkAggregator.json',
+        ChainlinkAggregator: 'abis/external/ChainlinkAggregator.json',
         Dispatcher: 'abis/Dispatcher.json',
         ValueInterpreterA: 'abis/v2/ValueInterpreter.json',
         ValueInterpreterB: 'abis/v4/ValueInterpreter.json',
@@ -112,21 +115,11 @@ export const configure: Configurator<Variables> = (variables) => {
         abis.IStakingWrapper.getFunction('getRewardTokens'),
       ],
     },
-    {
-      name: 'Maple',
-      abis: {
-        MaplePool: 'abis/MaplePool.json',
-        MapleRewards: 'abis/MapleRewards.json',
-      },
-      functions: (abis) => [
-        abis.MaplePool.getFunction('liquidityAsset'),
-        abis.MapleRewards.getFunction('stakingToken'),
-      ],
-    },
+
     {
       name: 'ERC20',
       abis: {
-        ERC20: 'abis/ERC20.json',
+        ERC20: 'abis/erc20/ERC20.json',
       },
       functions: (abis) => [
         abis.ERC20.getFunction('totalSupply'),
@@ -140,45 +133,34 @@ export const configure: Configurator<Variables> = (variables) => {
     {
       name: 'ERC20Bytes',
       abis: {
-        ERC20Bytes: 'abis/ERC20Bytes.json',
+        ERC20Bytes: 'abis/erc20/ERC20Bytes.json',
       },
       functions: (abis) => [abis.ERC20Bytes.getFunction('symbol'), abis.ERC20Bytes.getFunction('name')],
     },
     {
-      name: 'UniswapV3',
+      name: 'External',
       abis: {
-        NonfungiblePositionManager: 'abis/NonfungiblePositionManager.json',
-        UniswapV3Factory: 'abis/UniswapV3Factory.json',
-        UniswapV3Pool: 'abis/UniswapV3Pool.json',
+        CurveLiquidityGaugeV2: 'abis/external/CurveLiquidityGaugeV2.json',
+        CurveMinter: 'abis/external/CurveMinter.json',
+        CvxLockerV2: 'abis/external/CvxLockerV2.json',
+        MaplePool: 'abis/external/MaplePool.json',
+        MapleRewards: 'abis/external/MapleRewards.json',
+        NonfungiblePositionManager: 'abis/external/NonfungiblePositionManager.json',
+        UniswapV3Factory: 'abis/external/UniswapV3Factory.json',
+        UniswapV3Pool: 'abis/external/UniswapV3Pool.json',
       },
       functions: (abis) => [
-        abis.NonfungiblePositionManager.getFunction('positions'),
+        abis.CurveLiquidityGaugeV2.getFunction('reward_tokens'),
+        abis.CurveMinter.getFunction('token'),
+        abis.CvxLockerV2.getFunction('userLocks'),
+        abis.MaplePool.getFunction('liquidityAsset'),
+        abis.MapleRewards.getFunction('stakingToken'),
         abis.NonfungiblePositionManager.getFunction('factory'),
+        abis.NonfungiblePositionManager.getFunction('positions'),
         abis.NonfungiblePositionManager.getFunction('tokenURI'),
         abis.UniswapV3Factory.getFunction('getPool'),
         abis.UniswapV3Pool.getFunction('slot0'),
       ],
-    },
-    {
-      name: 'CurveLiquidityGaugeV2',
-      abis: {
-        CurveLiquidityGaugeV2: 'abis/CurveLiquidityGaugeV2.json',
-      },
-      functions: (abis) => [abis.CurveLiquidityGaugeV2.getFunction('reward_tokens')],
-    },
-    {
-      name: 'CurveMinter',
-      abis: {
-        CurveMinter: 'abis/CurveMinter.json',
-      },
-      functions: (abis) => [abis.CurveMinter.getFunction('token')],
-    },
-    {
-      name: 'CvxLockerV2',
-      abis: {
-        CvxLockerV2: 'abis/CvxLockerV2.json',
-      },
-      functions: (abis) => [abis.CvxLockerV2.getFunction('userLocks')],
     },
   ];
 

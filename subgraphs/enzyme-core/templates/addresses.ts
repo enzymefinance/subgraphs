@@ -7,6 +7,10 @@ import { Address } from '@graphprotocol/graph-ts';
 // there are constant values both by convention but also simply through the
 // way we deploy our protocol, we can use these addresses here.
 
+export class PersistentAddresses {
+  dispatcherAddress: Address;
+}
+
 export class Release2Addresses {
   adapterBlacklistAddress: Address;
   adapterWhitelistAddress: Address;
@@ -60,7 +64,6 @@ export class Release3Addresses {
 }
 
 export class Release4Addresses {
-  addressListRegistryAddress: Address;
   allowedAdapterIncomingAssetsPolicyAddress: Address;
   allowedAdaptersPerManagerPolicyAddress: Address;
   allowedAdaptersPolicyAddress: Address;
@@ -70,7 +73,9 @@ export class Release4Addresses {
   allowedExternalPositionTypesPolicyAddress: Address;
   allowedSharesTransferRecipientsPolicyAddress: Address;
   comptrollerLibAddress: Address;
+  convexCurveLpStakingAdapterAddress: Address;
   cumulativeSlippageTolerancePolicyAddress: Address;
+  curveLiquidityAdapterAddress: Address;
   entranceRateBurnFeeAddress: Address;
   entranceRateDirectFeeAddress: Address;
   exitRateBurnFeeAddress: Address;
@@ -83,20 +88,20 @@ export class Release4Addresses {
   managementFeeAddress: Address;
   minAssetBalancesPostRedemptionPolicyAddress: Address;
   minMaxInvestmentPolicyAddress: Address;
+  minSharesSupplyFeeAddress: Address;
   onlyRemoveDustExternalPositionPolicyAddress: Address;
   onlyUntrackDustOrPricelessAssetsPolicyAddress: Address;
   performanceFeeAddress: Address;
   policyManagerAddress: Address;
-  protocolFeeReserveLibAddress: Address;
   protocolFeeTrackerAddress: Address;
-  uintListRegistryAddress: Address;
   unpermissionedActionsWrapperAddress: Address;
   valueInterpreterAddress: Address;
   vaultLibAddress: Address;
-  curveLiquidityAdapterAddress: Address;
-  convexCurveLpStakingAdapterAddress: Address;
-  minSharesSupplyFeeAddress: Address;
 }
+
+export let persistentAddresses: PersistentAddresses = {
+  dispatcherAddress: Address.fromString('{{persistent.dispatcherAddress}}'),
+};
 
 export let release2Addresses: Release2Addresses = {
   adapterBlacklistAddress: Address.fromString('{{releases.v2.adapterBlacklistAddress}}'),
@@ -151,13 +156,14 @@ export let release3Addresses: Release3Addresses = {
 };
 
 export let release4Addresses: Release4Addresses = {
-  addressListRegistryAddress: Address.fromString('{{releases.v4.addressListRegistryAddress}}'),
   allowedAdapterIncomingAssetsPolicyAddress: Address.fromString(
     '{{releases.v4.allowedAdapterIncomingAssetsPolicyAddress}}',
   ),
-  allowedAdaptersPolicyAddress: Address.fromString('{{releases.v4.allowedAdaptersPolicyAddress}}'),
   allowedAdaptersPerManagerPolicyAddress: Address.fromString('{{releases.v4.allowedAdaptersPerManagerPolicyAddress}}'),
-  allowedAssetsForRedemptionPolicyAddress: Address.fromString('{{releases.v4.allowedAssetsForRedemptionPolicyAddress}}'),
+  allowedAdaptersPolicyAddress: Address.fromString('{{releases.v4.allowedAdaptersPolicyAddress}}'),
+  allowedAssetsForRedemptionPolicyAddress: Address.fromString(
+    '{{releases.v4.allowedAssetsForRedemptionPolicyAddress}}',
+  ),
   allowedDepositRecipientsPolicyAddress: Address.fromString('{{releases.v4.allowedDepositRecipientsPolicyAddress}}'),
   allowedExternalPositionTypesPerManagerPolicyAddress: Address.fromString(
     '{{releases.v4.allowedExternalPositionTypesPerManagerPolicyAddress}}',
@@ -169,9 +175,11 @@ export let release4Addresses: Release4Addresses = {
     '{{releases.v4.allowedSharesTransferRecipientsPolicyAddress}}',
   ),
   comptrollerLibAddress: Address.fromString('{{releases.v4.comptrollerLibAddress}}'),
+  convexCurveLpStakingAdapterAddress: Address.fromString('{{releases.v4.convexCurveLpStakingAdapterAddress}}'),
   cumulativeSlippageTolerancePolicyAddress: Address.fromString(
     '{{releases.v4.cumulativeSlippageTolerancePolicyAddress}}',
   ),
+  curveLiquidityAdapterAddress: Address.fromString('{{releases.v4.curveLiquidityAdapterAddress}}'),
   entranceRateBurnFeeAddress: Address.fromString('{{releases.v4.entranceRateBurnFeeAddress}}'),
   entranceRateDirectFeeAddress: Address.fromString('{{releases.v4.entranceRateDirectFeeAddress}}'),
   exitRateBurnFeeAddress: Address.fromString('{{releases.v4.exitRateBurnFeeAddress}}'),
@@ -186,6 +194,7 @@ export let release4Addresses: Release4Addresses = {
     '{{releases.v4.minAssetBalancesPostRedemptionPolicyAddress}}',
   ),
   minMaxInvestmentPolicyAddress: Address.fromString('{{releases.v4.minMaxInvestmentPolicyAddress}}'),
+  minSharesSupplyFeeAddress: Address.fromString('{{releases.v4.minSharesSupplyFeeAddress}}'),
   onlyRemoveDustExternalPositionPolicyAddress: Address.fromString(
     '{{releases.v4.onlyRemoveDustExternalPositionPolicyAddress}}',
   ),
@@ -194,19 +203,11 @@ export let release4Addresses: Release4Addresses = {
   ),
   performanceFeeAddress: Address.fromString('{{releases.v4.performanceFeeAddress}}'),
   policyManagerAddress: Address.fromString('{{releases.v4.policyManagerAddress}}'),
-  protocolFeeReserveLibAddress: Address.fromString('{{releases.v4.protocolFeeReserveLibAddress}}'),
   protocolFeeTrackerAddress: Address.fromString('{{releases.v4.protocolFeeTrackerAddress}}'),
-  uintListRegistryAddress: Address.fromString('{{releases.v4.uintListRegistryAddress}}'),
   unpermissionedActionsWrapperAddress: Address.fromString('{{releases.v4.protocolFeeTrackerAddress}}'),
   valueInterpreterAddress: Address.fromString('{{releases.v4.valueInterpreterAddress}}'),
   vaultLibAddress: Address.fromString('{{releases.v4.vaultLibAddress}}'),
-  curveLiquidityAdapterAddress: Address.fromString('{{releases.v4.curveLiquidityAdapterAddress}}'),
-  convexCurveLpStakingAdapterAddress: Address.fromString('{{releases.v4.convexCurveLpStakingAdapterAddress}}'),
-  minSharesSupplyFeeAddress: Address.fromString('{{releases.v4.minSharesSupplyFeeAddress}}'),
 };
-
-// Core
-export let dispatcherAddress = Address.fromString('{{persistent.dispatcherAddress}}');
 
 // External
 export let wethTokenAddress = Address.fromString('{{wethTokenAddress}}');

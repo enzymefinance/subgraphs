@@ -1,6 +1,6 @@
 import { logCritical, ZERO_BI } from '@enzymefinance/subgraph-utils';
 import { Address, BigDecimal, BigInt } from '@graphprotocol/graph-ts';
-import { UniswapV3Sdk } from '../generated/contracts/UniswapV3Sdk';
+import { ExternalSdk } from '../generated/contracts/ExternalSdk';
 import { UniswapV3Nft } from '../generated/schema';
 import { ensureAsset } from './Asset';
 
@@ -18,11 +18,11 @@ export function createUniswapV3Nft(
   externalPositionAddress: Address,
   nonFungiblePositionManagerAddress: Address,
 ): UniswapV3Nft {
-  let nonFungiblePositionManager = UniswapV3Sdk.bind(nonFungiblePositionManagerAddress);
+  let nonFungiblePositionManager = ExternalSdk.bind(nonFungiblePositionManagerAddress);
   let positions = nonFungiblePositionManager.positions(tokenId);
   let tokenURI = nonFungiblePositionManager.tokenURI(tokenId);
 
-  let uniswapV3Factory = UniswapV3Sdk.bind(nonFungiblePositionManager.factory());
+  let uniswapV3Factory = ExternalSdk.bind(nonFungiblePositionManager.factory());
   let poolAddress = uniswapV3Factory.getPool(positions.value2, positions.value3, positions.value4);
 
   let token0 = ensureAsset(positions.value2);
@@ -45,7 +45,7 @@ export function createUniswapV3Nft(
 }
 
 export function trackUniswapV3Nft(tokenId: BigInt, nonFungiblePositionManagerAddress: Address): UniswapV3Nft {
-  let nonFungiblePositionManager = UniswapV3Sdk.bind(nonFungiblePositionManagerAddress);
+  let nonFungiblePositionManager = ExternalSdk.bind(nonFungiblePositionManagerAddress);
   let positions = nonFungiblePositionManager.try_positions(tokenId);
 
   let nft = useUniswapV3Nft(tokenId);

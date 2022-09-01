@@ -10,7 +10,7 @@ import {
 } from '../generated/schema';
 import { getActivityCounter } from './Counter';
 import { useVault } from './Vault';
-import { CvxLockerV2Sdk } from '../generated/contracts/CvxLockerV2Sdk';
+import { ExternalSdk } from '../generated/contracts/ExternalSdk';
 import { cvxLockerV2Address } from '../generated/addresses';
 import { ensureConvexVotingLock, useConvexVotingLock } from './ConvexVotingLock';
 
@@ -90,7 +90,7 @@ export function updateConvexVotingPositionUserLocks(externalPositionAddress: Add
   let convexVotingPosition = useConvexVotingPosition(externalPositionAddress.toHex());
   let votingLocks = convexVotingPosition.locks;
 
-  let cvxLockerV2Contract = CvxLockerV2Sdk.bind(cvxLockerV2Address);
+  let cvxLockerV2Contract = ExternalSdk.bind(cvxLockerV2Address);
 
   let reverted = false;
   let counter: i32 = 0;
