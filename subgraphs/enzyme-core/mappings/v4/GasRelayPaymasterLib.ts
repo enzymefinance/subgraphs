@@ -6,7 +6,7 @@ import { ensureComptroller } from '../../entities/Comptroller';
 import { getActivityCounter } from '../../entities/Counter';
 import { ensureGasRelayer, trackGasRelayerBalance } from '../../entities/GasRelayer';
 import { useVault } from '../../entities/Vault';
-import { wethTokenAddress, wrappedNativeTokenAddress } from '../../generated/addresses';
+import { wrappedNativeTokenAddress } from '../../generated/addresses';
 import { Deposited, TransactionRelayed, Withdrawn } from '../../generated/contracts/GasRelayPaymasterLib4Events';
 import { GasRelayerDeposited, GasRelayerTransaction, GasRelayerWithdrawn } from '../../generated/schema';
 
