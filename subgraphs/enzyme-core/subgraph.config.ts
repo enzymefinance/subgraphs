@@ -18,6 +18,7 @@ import { testnet } from './contexts/testnet';
 export interface Variables {
   block: number;
   wethTokenAddress: string;
+  wrappedNativeTokenAddress: string;
   chainlinkAggregatorAddresses: {
     audUsd: string;
     btcEth: string;

@@ -212,6 +212,8 @@ export let release4Addresses: Release4Addresses = {
 // External
 export let wethTokenAddress = Address.fromString('{{wethTokenAddress}}');
 
+export let wrappedNativeTokenAddress = Address.fromString('{{wrappedNativeTokenAddress}}');
+
 export let curveMinterAddress = Address.fromString('{{external.curveMinterAddress}}');
 
 export let cvxAddress = Address.fromString('{{external.cvxAddress}}');

@@ -13,6 +13,7 @@ export const ethereum: Context<Variables> = {
   variables: {
     block: 11636493,
     wethTokenAddress: suluDeployment.namedTokens.weth.id,
+    wrappedNativeTokenAddress: suluDeployment.namedTokens.nativeTokenWrapper.id,
     chainlinkAggregatorAddresses: {
       audUsd: '0x77f9710e7d0a19669a13c055f62cd80d313df022',
       btcEth: '0xdeb288f737066589598e9214e782fa5a8ed689e8',

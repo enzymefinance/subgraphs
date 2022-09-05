@@ -1331,16 +1331,26 @@ type GasRelayer @entity {
   transactions: [GasRelayerTransaction!]! @derivedFrom(field: "gasRelayer")
 }
 
-type GasRelayerDeposited @entity {
+type GasRelayerDeposited implements Activity & VaultActivity @entity {
   id: ID!
+  vault: Vault!
+  timestamp: Int!
   gasRelayer: GasRelayer!
-  amount: BigDecimal!
+  gasRelayerAssetAmount: AssetAmount!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
 }
 
-type GasRelayerWithdrawn @entity {
+type GasRelayerWithdrawn implements Activity & VaultActivity @entity {
   id: ID!
+  vault: Vault!
+  timestamp: Int!
   gasRelayer: GasRelayer!
-  amount: BigDecimal!
+  gasRelayerAssetAmount: AssetAmount!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
 }
 
 type GasRelayerTransaction @entity {

@@ -11,6 +11,7 @@ export const polygon: Context<Variables> = {
   variables: {
     block: 25825424,
     wethTokenAddress: polygonV4Deployment.namedTokens.weth.id,
+    wrappedNativeTokenAddress: polygonV4Deployment.namedTokens.nativeTokenWrapper.id,
     chainlinkAggregatorAddresses: {
       audUsd: '0x062df9c4efd2030e243ffcc398b652e8b8f95c6f',
       btcEth: '0x19b0f0833c78c0848109e3842d34d2fdf2ca69ba',
