@@ -1721,10 +1721,10 @@
     istanbul-lib-coverage "^3.2.0"
     uuid "^8.3.1"
 
-"@enzymefinance/environment@4.0.20":
-  version "4.0.20"
-  resolved "https://registry.yarnpkg.com/@enzymefinance/environment/-/environment-4.0.20.tgz#2e35895b18d00c1173d2a98dfc2a664987fe20b2"
-  integrity sha512-k0Pui9dWggvLNvpkFSngN67V+XbrSddJKPKq1yEYcktepfBLEtNRkAd5W4TjKDwi9cRyqIsCI7SkrJvf8jUBjw==
+"@enzymefinance/environment@4.0.23":
+  version "4.0.23"
+  resolved "https://registry.yarnpkg.com/@enzymefinance/environment/-/environment-4.0.23.tgz#a25d3e31d629195e00095d321f25d9792d2a0db3"
+  integrity sha512-Eucdy4evon/Ocq7oEpqkeSB+TyHWv2tRbWXt8m8InbBdg1eSt6GbD9QMU8LvYUV1uY66jsFuCBd67OQqFuR/Wg==
   dependencies:
     ethers "^5.6.6"
 

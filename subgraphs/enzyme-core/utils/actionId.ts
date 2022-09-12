@@ -34,6 +34,15 @@ export enum MapleLiquidityPositionActionId {
   ClaimRewards = 8,
 }
 
+export enum LiquityDebtPositionActionId {
+  OpenTrove = 0,
+  AddCollateral = 1,
+  RemoveCollateral = 2,
+  Borrow = 3,
+  Repay = 4,
+  CloseTrove = 5,
+}
+
 export enum ConvexVotingPositionActionId {
   Lock = 0,
   Relock = 1,

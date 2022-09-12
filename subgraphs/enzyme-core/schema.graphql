@@ -1213,6 +1213,41 @@ type MapleLiquidityPositionChange implements Activity & VaultActivity & External
   activityType: ActivityType!
 }
 
+type LiquityDebtPosition implements ExternalPosition @entity {
+  id: ID!
+  vault: Vault!
+  type: ExternalPositionType!
+  active: Boolean!
+  troveIsOpen: Boolean!
+  collateralAssetBalance: AssetBalance
+  borrowedAssetBalance: AssetBalance
+  changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
+}
+
+enum LiquityDebtPositionChangeType {
+  OpenTrove
+  AddCollateral
+  RemoveCollateral
+  Borrow
+  Repay
+  CloseTrove
+}
+
+type LiquityDebtPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: Int!
+  externalPosition: ExternalPosition!
+  liquityDebtPositionChangeType: LiquityDebtPositionChangeType!
+  incomingAssetAmounts: [AssetAmount!]!
+  lusdGasCompensationAssetAmount: AssetAmount
+  feeAssetAmount: AssetAmount
+  outgoingAssetAmount: AssetAmount
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
 type ConvexVotingLock @entity {
   id: ID!
   amount: BigDecimal!

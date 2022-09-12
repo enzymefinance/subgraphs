@@ -11,6 +11,14 @@ import {
   createMapleLiquidityPosition,
   createMapleLiquidityPositionChange,
 } from '../../entities/MapleLiquidityPosition';
+import {
+  createLiquityDebtPosition,
+  createLiquityDebtPositionChange,
+  getLiquityDebtPositionBorrowedAmount,
+  lusdGasCompensationAmountBD,
+  trackLiquityDebtPosition,
+  useLiquityDebtPosition,
+} from '../../entities/LiquityDebtPosition';
 import { ensureAsset } from '../../entities/Asset';
 import { createAssetAmount } from '../../entities/AssetAmount';
 import {
@@ -45,6 +53,7 @@ import {
   CompoundDebtPositionActionId,
   ConvexVotingPositionActionId,
   MapleLiquidityPositionActionId,
+  LiquityDebtPositionActionId,
   UniswapV3LiquidityPositionActionId,
 } from '../../utils/actionId';
 import { ensureMapleLiquidityPool } from '../../entities/MapleLiquidityPool';
@@ -52,11 +61,10 @@ import { ExternalSdk } from '../../generated/contracts/ExternalSdk';
 import {
   createConvexVotingPosition,
   createConvexVotingPositionChange,
-  updateConvexVotingPositionWithdrawOrRelock,
   updateConvexVotingPositionUserLocks,
   useConvexVotingPosition,
 } from '../../entities/ConvexVotingPosition';
-import { cvxAddress } from '../../generated/addresses';
+import { cvxAddress, lusdAddress, wethTokenAddress } from '../../generated/addresses';
 import {
   createUnknownExternalPosition,
   createUnknownExternalPositionChange,
@@ -66,6 +74,7 @@ import {
   createArbitraryLoanPositionChange,
   useArbitraryLoanPosition,
 } from '../../entities/ArbitraryLoanPosition';
+import { useAssetBalance } from '../../entities/AssetBalance';
 
 export function handleExternalPositionDeployedForFund(event: ExternalPositionDeployedForFund): void {
   let type = useExternalPositionType(event.params.externalPositionTypeId);
@@ -93,6 +102,11 @@ export function handleExternalPositionDeployedForFund(event: ExternalPositionDep
     createMapleLiquidityPosition(event.params.externalPosition, event.params.vaultProxy, type);
 
     MapleLiquidityPositionLib4DataSource.create(event.params.externalPosition);
+    return;
+  }
+
+  if (type.label == 'LIQUITY_DEBT') {
+    createLiquityDebtPosition(event.params.externalPosition, event.params.vaultProxy, type);
     return;
   }
 
@@ -342,6 +356,260 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     return;
   }
 
+  if (type.label == 'LIQUITY_DEBT') {
+    let troveIsOpen = true;
+
+    if (actionId == LiquityDebtPositionActionId.OpenTrove) {
+      let decoded = ethereum.decode('(uint256,uint256,uint256,address,address)', event.params.actionArgs);
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+      let wethAmount = tuple[1].toBigInt();
+      let lusdAmount = tuple[2].toBigInt();
+
+      let wethAsset = ensureAsset(wethTokenAddress);
+      let outgoingAsset = createAssetAmount(
+        wethAsset,
+        toBigDecimal(wethAmount, wethAsset.decimals),
+        denominationAsset,
+        'ldp-outgoing-asset-amount',
+        event,
+      );
+
+      let lusdAsset = ensureAsset(lusdAddress);
+      let lusdAmountBD = toBigDecimal(lusdAmount, lusdAsset.decimals);
+      let incomingAsset = createAssetAmount(
+        lusdAsset,
+        lusdAmountBD,
+        denominationAsset,
+        'ldp-incoming-asset-amount',
+        event,
+      );
+
+      let lusdGasCompensationAssetAmount = createAssetAmount(
+        lusdAsset,
+        lusdGasCompensationAmountBD,
+        denominationAsset,
+        'ldp-lusd-gas-compensation-asset-amount',
+        event,
+      );
+
+      let borrowedAmount = getLiquityDebtPositionBorrowedAmount(event.params.externalPosition.toHex());
+      let borrowedAmountBD = toBigDecimal(borrowedAmount as BigInt, lusdAsset.decimals);
+
+      let feeAmount = borrowedAmountBD.minus(lusdAmountBD).minus(lusdGasCompensationAmountBD);
+      let feeAssetAmount = createAssetAmount(lusdAsset, feeAmount, denominationAsset, 'ldp-fee-asset-amount', event);
+
+      createLiquityDebtPositionChange(
+        event.params.externalPosition,
+        'OpenTrove',
+        [incomingAsset],
+        outgoingAsset,
+        lusdGasCompensationAssetAmount,
+        feeAssetAmount,
+        vault,
+        event,
+      );
+    }
+
+    if (actionId == LiquityDebtPositionActionId.AddCollateral) {
+      let decoded = ethereum.decode('(uint256,address,address)', event.params.actionArgs);
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+      let wethAmount = tuple[0].toBigInt();
+
+      let wethAsset = ensureAsset(wethTokenAddress);
+      let outgoingAsset = createAssetAmount(
+        wethAsset,
+        toBigDecimal(wethAmount, wethAsset.decimals),
+        denominationAsset,
+        'ldp-outgoing-asset',
+        event,
+      );
+
+      createLiquityDebtPositionChange(
+        event.params.externalPosition,
+        'AddCollateral',
+        [],
+        outgoingAsset,
+        null,
+        null,
+        vault,
+        event,
+      );
+    }
+
+    if (actionId == LiquityDebtPositionActionId.RemoveCollateral) {
+      let decoded = ethereum.decode('(uint256,address,address)', event.params.actionArgs);
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+      let wethAmount = tuple[0].toBigInt();
+
+      let wethAsset = ensureAsset(wethTokenAddress);
+      let incomingAsset = createAssetAmount(
+        wethAsset,
+        toBigDecimal(wethAmount, wethAsset.decimals),
+        denominationAsset,
+        'ldp-incoming-asset-amount',
+        event,
+      );
+
+      createLiquityDebtPositionChange(
+        event.params.externalPosition,
+        'RemoveCollateral',
+        [incomingAsset],
+        null,
+        null,
+        null,
+        vault,
+        event,
+      );
+    }
+
+    if (actionId == LiquityDebtPositionActionId.Borrow) {
+      let decoded = ethereum.decode('(uint256,uint256,address,address)', event.params.actionArgs);
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+      let lusdAmount = tuple[1].toBigInt();
+
+      let lusdAsset = ensureAsset(lusdAddress);
+      let lusdAmountBD = toBigDecimal(lusdAmount, lusdAsset.decimals);
+      let incomingAsset = createAssetAmount(
+        lusdAsset,
+        lusdAmountBD,
+        denominationAsset,
+        'ldp-incoming-asset-amount',
+        event,
+      );
+
+      let ldp = useLiquityDebtPosition(event.params.externalPosition.toHex());
+
+      let borrowedAssetBalance = useAssetBalance(ldp.borrowedAssetBalance as string);
+
+      if (ldp.borrowedAssetBalance == null) {
+        return;
+      }
+
+      let borrowedAmount = getLiquityDebtPositionBorrowedAmount(event.params.externalPosition.toHex());
+      let borrowedAmountBD = toBigDecimal(borrowedAmount as BigInt, lusdAsset.decimals);
+
+      let feeAmount = borrowedAmountBD.minus(lusdAmountBD).minus(borrowedAssetBalance.amount);
+      let feeAssetAmount = createAssetAmount(lusdAsset, feeAmount, denominationAsset, 'ldp-fee-asset-amount', event);
+
+      createLiquityDebtPositionChange(
+        event.params.externalPosition,
+        'Borrow',
+        [incomingAsset],
+        null,
+        null,
+        feeAssetAmount,
+        vault,
+        event,
+      );
+    }
+
+    if (actionId == LiquityDebtPositionActionId.Repay) {
+      let decoded = ethereum.decode('(uint256,address,address)', event.params.actionArgs);
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+      let lusdAmount = tuple[0].toBigInt();
+
+      let lusdAsset = ensureAsset(lusdAddress);
+      let outgoingAsset = createAssetAmount(
+        lusdAsset,
+        toBigDecimal(lusdAmount, lusdAsset.decimals),
+        denominationAsset,
+        'ldp-outgoing-asset',
+        event,
+      );
+
+      createLiquityDebtPositionChange(
+        event.params.externalPosition,
+        'Repay',
+        [],
+        outgoingAsset,
+        null,
+        null,
+        vault,
+        event,
+      );
+    }
+
+    if (actionId == LiquityDebtPositionActionId.CloseTrove) {
+      troveIsOpen = false;
+
+      let ldp = useLiquityDebtPosition(event.params.externalPosition.toHex());
+
+      if (ldp.collateralAssetBalance == null || ldp.borrowedAssetBalance == null) {
+        return;
+      }
+
+      let lusdAsset = ensureAsset(lusdAddress);
+      let lusdGasCompensationAssetAmount = createAssetAmount(
+        lusdAsset,
+        lusdGasCompensationAmountBD,
+        denominationAsset,
+        'ldp-lusd-gas-compensation',
+        event,
+      );
+
+      let collateralAssetBalance = useAssetBalance(ldp.collateralAssetBalance as string);
+
+      let wethAsset = ensureAsset(wethTokenAddress);
+
+      let collateralAssetAmount = createAssetAmount(
+        wethAsset,
+        collateralAssetBalance.amount,
+        denominationAsset,
+        'ldp-collateral-asset-amount',
+        event,
+      );
+
+      let borrowedAssetBalance = useAssetBalance(ldp.borrowedAssetBalance as string);
+
+      let borrowedAssetAmount = createAssetAmount(
+        lusdAsset,
+        borrowedAssetBalance.amount,
+        denominationAsset,
+        'ldp-outgoing-asset-amount',
+        event,
+      );
+
+      createLiquityDebtPositionChange(
+        event.params.externalPosition,
+        'CloseTrove',
+        [collateralAssetAmount, lusdGasCompensationAssetAmount],
+        borrowedAssetAmount,
+        null,
+        null,
+        vault,
+        event,
+      );
+    }
+
+    trackLiquityDebtPosition(event.params.externalPosition.toHex(), troveIsOpen, event);
+    return;
+  }
+
   if (type.label == 'MAPLE_LIQUIDITY') {
     if (actionId == MapleLiquidityPositionActionId.Lend) {
       let decoded = ethereum.decode('(address,uint256)', event.params.actionArgs);
@@ -354,7 +622,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
       let poolAddress = tuple[0].toAddress();
 
-      let pool = ensureMapleLiquidityPool(poolAddress);
+      let pool = ensureMapleLiquidityPool(poolAddress, null);
       let assetAmount = createMapleLiquidityAssetAmount(pool, tuple[1].toBigInt(), denominationAsset, event);
       createMapleLiquidityPositionChange(event.params.externalPosition, pool, assetAmount, 'Lend', vault, event);
     }
@@ -394,7 +662,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
       let poolAddress = tuple[0].toAddress();
 
-      let pool = ensureMapleLiquidityPool(poolAddress);
+      let pool = ensureMapleLiquidityPool(poolAddress, null);
       createMapleLiquidityPositionChange(event.params.externalPosition, pool, null, 'IntendToRedeem', vault, event);
     }
 
@@ -409,7 +677,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
       let poolAddress = tuple[0].toAddress();
 
-      let pool = ensureMapleLiquidityPool(poolAddress);
+      let pool = ensureMapleLiquidityPool(poolAddress, null);
       let assetAmount = createMapleLiquidityAssetAmount(pool, tuple[1].toBigInt(), denominationAsset, event);
       createMapleLiquidityPositionChange(event.params.externalPosition, pool, assetAmount, 'Redeem', vault, event);
     }
@@ -493,7 +761,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
       let tuple = decoded.toTuple();
 
-      let pool = ensureMapleLiquidityPool(tuple[0].toAddress());
+      let pool = ensureMapleLiquidityPool(tuple[0].toAddress(), null);
       createMapleLiquidityPositionChange(event.params.externalPosition, pool, null, 'ClaimInterest', vault, event);
     }
 

@@ -28,6 +28,7 @@ export const ethereum: Context<Variables> = {
       curveMinterAddress: suluDeployment.externalContracts.curveMinter,
       cvxLockerV2Address: suluDeployment.externalContracts.voteLockedConvexToken,
       cvxAddress: suluDeployment.namedTokens.cvx.id,
+      lusdAddress: '0x5f98805a4e8be255a32880fdec7f6728c6568ba0', // TODO: add LUSD to the environment
     },
     persistent: {
       addressListRegistryAddress: suluDeployment.contracts.AddressListRegistry,

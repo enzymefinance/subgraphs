@@ -26,6 +26,7 @@ export const testnet: Context<Variables> = {
       curveMinterAddress: testnetV4Deployment.externalContracts.curveMinter,
       cvxLockerV2Address: testnetV4Deployment.externalContracts.voteLockedConvexToken,
       cvxAddress: testnetV4Deployment.namedTokens.cvx.id,
+      lusdAddress: '0x0000000000000000000000000000000000000000',
     },
     persistent: {
       addressListRegistryAddress: testnetV4Deployment.contracts.AddressListRegistry,

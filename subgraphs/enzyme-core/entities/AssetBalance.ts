@@ -1,4 +1,4 @@
-import { uniqueEventId } from '@enzymefinance/subgraph-utils';
+import { logCritical, uniqueEventId } from '@enzymefinance/subgraph-utils';
 import { BigDecimal, ethereum } from '@graphprotocol/graph-ts';
 import { Asset, AssetBalance } from '../generated/schema';
 
@@ -19,4 +19,13 @@ export function createAssetBalance(
   assetBalance.save();
 
   return assetBalance;
+}
+
+export function useAssetBalance(id: string): AssetBalance {
+  let assetAmount = AssetBalance.load(id);
+  if (assetAmount == null) {
+    logCritical('Failed to load AssetBalance {}.', [id]);
+  }
+
+  return assetAmount as AssetBalance;
 }

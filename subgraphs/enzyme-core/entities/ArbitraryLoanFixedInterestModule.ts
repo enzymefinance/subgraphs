@@ -1,5 +1,5 @@
 import { logCritical, ZERO_BD } from '@enzymefinance/subgraph-utils';
-import { Address, BigInt, BigDecimal } from '@graphprotocol/graph-ts';
+import { Address, BigInt } from '@graphprotocol/graph-ts';
 import { ArbitraryLoanFixedInterestModule } from '../generated/schema';
 
 export function useArbitraryLoanFixedInterestModule(id: string): ArbitraryLoanFixedInterestModule {

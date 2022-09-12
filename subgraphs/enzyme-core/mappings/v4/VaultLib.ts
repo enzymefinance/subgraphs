@@ -14,6 +14,7 @@ import { useUniswapV3LiquidityPosition } from '../../entities/UniswapV3Liquidity
 import { useVault } from '../../entities/Vault';
 import { release4Addresses } from '../../generated/addresses';
 import { ProtocolSdk } from '../../generated/contracts/ProtocolSdk';
+import { useLiquityDebtPosition } from '../../entities/LiquityDebtPosition';
 import {
   AccessorSet,
   Approval,
@@ -334,6 +335,12 @@ export function handleExternalPositionAdded(event: ExternalPositionAdded): void 
     mpl.save();
   }
 
+  if (type.label == 'LIQUITY_DEBT') {
+    let ldp = useLiquityDebtPosition(event.params.externalPosition.toHex());
+    ldp.active = true;
+    ldp.save();
+  }
+
   let activity = new ExternalPositionAddedEvent(uniqueEventId(event));
   activity.timestamp = event.block.timestamp.toI32();
   activity.vault = event.address.toHex();
@@ -384,6 +391,12 @@ export function handleExternalPositionRemoved(event: ExternalPositionRemoved): v
     let mpl = useMapleLiquidityPosition(event.params.externalPosition.toHex());
     mpl.active = false;
     mpl.save();
+  }
+
+  if (type.label == 'LIQUITY_DEBT') {
+    let ldp = useLiquityDebtPosition(event.params.externalPosition.toHex());
+    ldp.active = false;
+    ldp.save();
   }
 
   let activity = new ExternalPositionRemovedEvent(uniqueEventId(event));

@@ -46,6 +46,7 @@ export interface Variables {
     curveMinterAddress: string;
     cvxLockerV2Address: string;
     cvxAddress: string;
+    lusdAddress: string;
   };
 }
 
@@ -77,6 +78,7 @@ export const configure: Configurator<Variables> = (variables) => {
         ComptrollerLibB: 'abis/v4/ComptrollerLib.json',
         CompoundDebtPositionLib: 'abis/v4/CompoundDebtPositionLib.json',
         AaveDebtPositionLib: 'abis/v4/AaveDebtPositionLib.json',
+        LiquityDebtPositionLib: 'abis/v4/LiquityDebtPositionLib.json',
         GasRelayPaymasterLib: 'abis/v4/GasRelayPaymasterLib.json',
         ProtocolFeeTracker: 'abis/v4/ProtocolFeeTracker.json',
         OnlyUntrackDustOrPricelessAssetsPolicy: 'abis/v4/OnlyUntrackDustOrPricelessAssetsPolicy.json',
@@ -107,6 +109,8 @@ export const configure: Configurator<Variables> = (variables) => {
         abis.CompoundDebtPositionLib.getFunction('getDebtAssets'),
         abis.AaveDebtPositionLib.getFunction('getManagedAssets'),
         abis.AaveDebtPositionLib.getFunction('getDebtAssets'),
+        abis.LiquityDebtPositionLib.getFunction('getDebtAssets'),
+        abis.LiquityDebtPositionLib.getFunction('getManagedAssets'),
         abis.GasRelayPaymasterLib.getFunction('getParentComptroller'),
         abis.GasRelayPaymasterLib.getFunction('getRelayHubDeposit'),
         abis.ProtocolFeeTracker.getFunction('getFeeBpsForVault'),

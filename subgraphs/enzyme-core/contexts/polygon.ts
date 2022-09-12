@@ -26,6 +26,7 @@ export const polygon: Context<Variables> = {
       curveMinterAddress: polygonV4Deployment.externalContracts.curveMinter,
       cvxLockerV2Address: polygonV4Deployment.externalContracts.voteLockedConvexToken,
       cvxAddress: polygonV4Deployment.namedTokens.cvx.id,
+      lusdAddress: '0x0000000000000000000000000000000000000000',
     },
     persistent: {
       addressListRegistryAddress: polygonV4Deployment.contracts.AddressListRegistry,

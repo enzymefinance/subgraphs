@@ -9,7 +9,7 @@ import {
 export function handleUsedLendingPoolAdded(event: UsedLendingPoolAdded): void {
   let mapleLiquidityPosition = useMapleLiquidityPosition(event.address.toHex());
 
-  let pool = ensureMapleLiquidityPool(event.params.lendingPool);
+  let pool = ensureMapleLiquidityPool(event.params.lendingPool, null);
 
   mapleLiquidityPosition.pools = arrayUnique<string>(mapleLiquidityPosition.pools.concat([pool.id]));
   mapleLiquidityPosition.save();
@@ -17,7 +17,7 @@ export function handleUsedLendingPoolAdded(event: UsedLendingPoolAdded): void {
 export function handleUsedLendingPoolRemoved(event: UsedLendingPoolRemoved): void {
   let mapleLiquidityPosition = useMapleLiquidityPosition(event.address.toHex());
 
-  let pool = ensureMapleLiquidityPool(event.params.lendingPool);
+  let pool = ensureMapleLiquidityPool(event.params.lendingPool, null);
 
   mapleLiquidityPosition.pools = arrayDiff<string>(mapleLiquidityPosition.pools, [pool.id]);
   mapleLiquidityPosition.save();

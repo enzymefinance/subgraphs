@@ -3,7 +3,7 @@ import { ExternalSdk } from '../generated/contracts/ExternalSdk';
 import { MapleLiquidityPool } from '../generated/schema';
 import { ensureAsset } from './Asset';
 
-export function createMapleLiquidityPool(pool: Address, rewardsContract: Address | null = null): MapleLiquidityPool {
+export function createMapleLiquidityPool(pool: Address, rewardsContract: Address | null): MapleLiquidityPool {
   let mapleLiquidityPool = new MapleLiquidityPool(pool.toHex());
 
   let poolContract = ExternalSdk.bind(pool);
@@ -16,10 +16,7 @@ export function createMapleLiquidityPool(pool: Address, rewardsContract: Address
   return mapleLiquidityPool;
 }
 
-export function ensureMapleLiquidityPool(
-  poolAddress: Address,
-  rewardsContract: Address | null = null,
-): MapleLiquidityPool {
+export function ensureMapleLiquidityPool(poolAddress: Address, rewardsContract: Address | null): MapleLiquidityPool {
   let pool = MapleLiquidityPool.load(poolAddress.toHex());
 
   if (pool != null) {

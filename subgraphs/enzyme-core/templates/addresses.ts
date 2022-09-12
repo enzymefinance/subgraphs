@@ -220,6 +220,8 @@ export let cvxAddress = Address.fromString('{{external.cvxAddress}}');
 
 export let cvxLockerV2Address = Address.fromString('{{external.cvxLockerV2Address}}');
 
+export let lusdAddress = Address.fromString('{{external.lusdAddress}}');
+
 export class ChainlinkAggregatorAddresses {
   audUsdAddress: Address;
   btcEthAddress: Address;
