@@ -16,7 +16,7 @@ export function ensureExitRateDirectFee(
 
   fee = new ExitRateDirectFee(id);
   fee.fee = feeAddress;
-  fee.feeType = 'EntranceRateDirect';
+  fee.feeType = 'ExitRateDirect';
   fee.comptroller = comptrollerAddress.toHex();
   fee.inKindRate = BigDecimal.fromString('0');
   fee.specificAssetsRate = BigDecimal.fromString('0');
