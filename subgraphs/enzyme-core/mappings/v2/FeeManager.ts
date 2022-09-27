@@ -163,7 +163,7 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
     allocated.save();
   } else if (feeSettlementType == 'BurnSharesOutstanding') {
     // BurnSharesOutstanding - Remove allocated fee shares (from vault as temporary owner)
-    let depositor = ensureAccount(event.params.payee, event);
+    let depositor = ensureAccount(event.params.payer, event);
     let deposit = ensureDeposit(depositor, vault, event);
 
     let allocated = new FeeSharesAllocationChangedEvent(uniqueEventId(event));

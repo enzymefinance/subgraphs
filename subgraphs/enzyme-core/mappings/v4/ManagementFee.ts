@@ -1,3 +1,4 @@
+import { ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
 import { ensureAccount } from '../../entities/Account';
 import { ensureManagementFee } from '../../entities/ManagementFee';
 import { linkSharesSplitterToVault } from '../../entities/SharesSplitter';
@@ -21,13 +22,15 @@ export function handleFundSettingsAdded(event: FundSettingsAdded): void {
 }
 
 export function handleRecipientSetForFund(event: RecipientSetForFund): void {
-  let recipient = ensureAccount(event.params.recipient, event);
-
   let fee = ensureManagementFee(event.params.comptrollerProxy, event.address, event);
-  fee.recipient = recipient.id;
+  if (event.params.recipient.equals(ZERO_ADDRESS)) {
+    fee.recipient = null;
+  } else {
+    let recipient = ensureAccount(event.params.recipient, event);
+    fee.recipient = recipient.id;
+    linkSharesSplitterToVault(recipient, event.params.comptrollerProxy);
+  }
   fee.save();
-
-  linkSharesSplitterToVault(recipient, event.params.comptrollerProxy);
 }
 
 export function handleSettled(event: Settled): void {
