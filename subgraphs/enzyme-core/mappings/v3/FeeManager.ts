@@ -1,4 +1,4 @@
-import { toBigDecimal, uniqueEventId } from '@enzymefinance/subgraph-utils';
+import { toBigDecimal, uniqueEventId, ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
 import { Address, BigDecimal } from '@graphprotocol/graph-ts';
 import { ensureAccount } from '../../entities/Account';
 import { ensureComptroller } from '../../entities/Comptroller';
@@ -77,7 +77,7 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
 
   // Differentiate between settlement types
   let feeSettlementType = settlementType(event.params.settlementType);
-  if (feeSettlementType == 'Direct') {
+  if (feeSettlementType == 'Direct' && event.params.payee.notEqual(ZERO_ADDRESS)) {
     // Direct - payment of fee shares from an depositor to the fee recipient
     let payeeAccount = ensureAccount(event.params.payee, event);
     let payeeDeposit = ensureDeposit(payeeAccount, vault, event);
