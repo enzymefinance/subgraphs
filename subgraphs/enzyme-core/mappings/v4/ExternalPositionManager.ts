@@ -367,41 +367,27 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       }
 
       let tuple = decoded.toTuple();
-      let wethAmount = tuple[1].toBigInt();
-      let lusdAmount = tuple[2].toBigInt();
 
       let wethAsset = ensureAsset(wethTokenAddress);
-      let outgoingAsset = createAssetAmount(
-        wethAsset,
-        toBigDecimal(wethAmount, wethAsset.decimals),
-        denominationAsset,
-        'ldp-outgoing-asset-amount',
-        event,
-      );
+      let wethAmount = toBigDecimal(tuple[1].toBigInt(), wethAsset.decimals);
+      let outgoingAsset = createAssetAmount(wethAsset, wethAmount, denominationAsset, 'ldp-outgoing', event);
 
       let lusdAsset = ensureAsset(lusdAddress);
-      let lusdAmountBD = toBigDecimal(lusdAmount, lusdAsset.decimals);
-      let incomingAsset = createAssetAmount(
-        lusdAsset,
-        lusdAmountBD,
-        denominationAsset,
-        'ldp-incoming-asset-amount',
-        event,
-      );
+      let lusdAmount = toBigDecimal(tuple[2].toBigInt(), lusdAsset.decimals);
+      let incomingAsset = createAssetAmount(lusdAsset, lusdAmount, denominationAsset, 'ldp-incoming', event);
 
       let lusdGasCompensationAssetAmount = createAssetAmount(
         lusdAsset,
         lusdGasCompensationAmountBD,
         denominationAsset,
-        'ldp-lusd-gas-compensation-asset-amount',
+        'ldp-lusd-gas-compensation',
         event,
       );
 
       let borrowedAmount = getLiquityDebtPositionBorrowedAmount(event.params.externalPosition.toHex());
-      let borrowedAmountBD = toBigDecimal(borrowedAmount as BigInt, lusdAsset.decimals);
 
-      let feeAmount = borrowedAmountBD.minus(lusdAmountBD).minus(lusdGasCompensationAmountBD);
-      let feeAssetAmount = createAssetAmount(lusdAsset, feeAmount, denominationAsset, 'ldp-fee-asset-amount', event);
+      let feeAmount = borrowedAmount.minus(lusdAmount).minus(lusdGasCompensationAmountBD);
+      let feeAssetAmount = createAssetAmount(lusdAsset, feeAmount, denominationAsset, 'ldp-fee', event);
 
       createLiquityDebtPositionChange(
         event.params.externalPosition,
@@ -423,16 +409,11 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       }
 
       let tuple = decoded.toTuple();
-      let wethAmount = tuple[0].toBigInt();
 
       let wethAsset = ensureAsset(wethTokenAddress);
-      let outgoingAsset = createAssetAmount(
-        wethAsset,
-        toBigDecimal(wethAmount, wethAsset.decimals),
-        denominationAsset,
-        'ldp-outgoing-asset',
-        event,
-      );
+      let wethAmount = toBigDecimal(tuple[0].toBigInt(), wethAsset.decimals);
+
+      let outgoingAsset = createAssetAmount(wethAsset, wethAmount, denominationAsset, 'ldp-outgoing', event);
 
       createLiquityDebtPositionChange(
         event.params.externalPosition,
@@ -454,16 +435,11 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       }
 
       let tuple = decoded.toTuple();
-      let wethAmount = tuple[0].toBigInt();
 
       let wethAsset = ensureAsset(wethTokenAddress);
-      let incomingAsset = createAssetAmount(
-        wethAsset,
-        toBigDecimal(wethAmount, wethAsset.decimals),
-        denominationAsset,
-        'ldp-incoming-asset-amount',
-        event,
-      );
+      let wethAmount = toBigDecimal(tuple[0].toBigInt(), wethAsset.decimals);
+
+      let incomingAsset = createAssetAmount(wethAsset, wethAmount, denominationAsset, 'ldp-incoming', event);
 
       createLiquityDebtPositionChange(
         event.params.externalPosition,
@@ -485,30 +461,17 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       }
 
       let tuple = decoded.toTuple();
-      let lusdAmount = tuple[1].toBigInt();
 
       let lusdAsset = ensureAsset(lusdAddress);
-      let lusdAmountBD = toBigDecimal(lusdAmount, lusdAsset.decimals);
-      let incomingAsset = createAssetAmount(
-        lusdAsset,
-        lusdAmountBD,
-        denominationAsset,
-        'ldp-incoming-asset-amount',
-        event,
-      );
+      let lusdAmount = toBigDecimal(tuple[1].toBigInt(), lusdAsset.decimals);
+
+      let incomingAsset = createAssetAmount(lusdAsset, lusdAmount, denominationAsset, 'ldp-incoming', event);
 
       let ldp = useLiquityDebtPosition(event.params.externalPosition.toHex());
 
-      let borrowedAssetBalance = useAssetBalance(ldp.borrowedAssetBalance as string);
-
-      if (ldp.borrowedAssetBalance == null) {
-        return;
-      }
-
+      let borrowedBalance = ldp.borrowedBalance;
       let borrowedAmount = getLiquityDebtPositionBorrowedAmount(event.params.externalPosition.toHex());
-      let borrowedAmountBD = toBigDecimal(borrowedAmount as BigInt, lusdAsset.decimals);
-
-      let feeAmount = borrowedAmountBD.minus(lusdAmountBD).minus(borrowedAssetBalance.amount);
+      let feeAmount = borrowedAmount.minus(lusdAmount).minus(borrowedBalance);
       let feeAssetAmount = createAssetAmount(lusdAsset, feeAmount, denominationAsset, 'ldp-fee-asset-amount', event);
 
       createLiquityDebtPositionChange(
@@ -531,16 +494,11 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       }
 
       let tuple = decoded.toTuple();
-      let lusdAmount = tuple[0].toBigInt();
 
       let lusdAsset = ensureAsset(lusdAddress);
-      let outgoingAsset = createAssetAmount(
-        lusdAsset,
-        toBigDecimal(lusdAmount, lusdAsset.decimals),
-        denominationAsset,
-        'ldp-outgoing-asset',
-        event,
-      );
+      let lusdAmount = toBigDecimal(tuple[0].toBigInt(), lusdAsset.decimals);
+
+      let outgoingAsset = createAssetAmount(lusdAsset, lusdAmount, denominationAsset, 'ldp-outgoing', event);
 
       createLiquityDebtPositionChange(
         event.params.externalPosition,
@@ -559,10 +517,6 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
       let ldp = useLiquityDebtPosition(event.params.externalPosition.toHex());
 
-      if (ldp.collateralAssetBalance == null || ldp.borrowedAssetBalance == null) {
-        return;
-      }
-
       let lusdAsset = ensureAsset(lusdAddress);
       let lusdGasCompensationAssetAmount = createAssetAmount(
         lusdAsset,
@@ -572,25 +526,20 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         event,
       );
 
-      let collateralAssetBalance = useAssetBalance(ldp.collateralAssetBalance as string);
-
       let wethAsset = ensureAsset(wethTokenAddress);
-
       let collateralAssetAmount = createAssetAmount(
         wethAsset,
-        collateralAssetBalance.amount,
+        ldp.collateralBalance,
         denominationAsset,
-        'ldp-collateral-asset-amount',
+        'ldp-collateral',
         event,
       );
 
-      let borrowedAssetBalance = useAssetBalance(ldp.borrowedAssetBalance as string);
-
       let borrowedAssetAmount = createAssetAmount(
         lusdAsset,
-        borrowedAssetBalance.amount,
+        ldp.borrowedBalance,
         denominationAsset,
-        'ldp-outgoing-asset-amount',
+        'ldp-outgoing',
         event,
       );
 

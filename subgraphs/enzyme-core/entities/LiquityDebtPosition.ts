@@ -1,4 +1,4 @@
-import { logCritical, toBigDecimal, uniqueEventId } from '@enzymefinance/subgraph-utils';
+import { logCritical, toBigDecimal, uniqueEventId, ZERO_BD } from '@enzymefinance/subgraph-utils';
 import { Address, ethereum, BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 import {
   AssetAmount,
@@ -12,6 +12,7 @@ import { ensureAsset } from './Asset';
 import { createAssetBalance } from './AssetBalance';
 import { getActivityCounter } from './Counter';
 import { useVault } from './Vault';
+import { lusdAddress, wethTokenAddress } from '../generated/addresses';
 
 export function useLiquityDebtPosition(id: string): LiquityDebtPosition {
   let ldp = LiquityDebtPosition.load(id);
@@ -32,8 +33,8 @@ export function createLiquityDebtPosition(
   liquityDebtPosition.active = true;
   liquityDebtPosition.troveIsOpen = false;
   liquityDebtPosition.type = type.id;
-  liquityDebtPosition.collateralAssetBalance = null;
-  liquityDebtPosition.borrowedAssetBalance = null;
+  liquityDebtPosition.collateralBalance = ZERO_BD;
+  liquityDebtPosition.borrowedBalance = ZERO_BD;
   liquityDebtPosition.save();
 
   return liquityDebtPosition;
@@ -70,15 +71,18 @@ export function createLiquityDebtPositionChange(
   return change;
 }
 
-export function getLiquityDebtPositionBorrowedAmount(id: string): BigInt | null {
+export function getLiquityDebtPositionBorrowedAmount(id: string): BigDecimal {
   let ldpContract = ProtocolSdk.bind(Address.fromString(id));
 
   let borrowed = ldpContract.getDebtAssets();
 
   if (borrowed.value0.length === 0) {
-    return null;
+    return ZERO_BD;
   }
-  return borrowed.value1[0];
+
+  let borrowedAsset = ensureAsset(lusdAddress);
+
+  return toBigDecimal(borrowed.value1[0], borrowedAsset.decimals);
 }
 
 export function trackLiquityDebtPosition(id: string, troveIsOpen: boolean, event: ethereum.Event): void {
@@ -89,39 +93,23 @@ export function trackLiquityDebtPosition(id: string, troveIsOpen: boolean, event
   let collateral = ldpContract.getManagedAssets();
 
   if (collateral.value0.length === 0) {
-    ldp.collateralAssetBalance = null;
+    ldp.collateralBalance = ZERO_BD;
   } else {
     // there is only single collateral asset (WETH)
-    let collateralAddress = collateral.value0[0];
     let collateralAmount = collateral.value1[0];
-
-    let collateralAsset = ensureAsset(collateralAddress);
-    let collateralAssetBalance = createAssetBalance(
-      collateralAsset,
-      toBigDecimal(collateralAmount, collateralAsset.decimals),
-      'ldp-collateral-asset-balance',
-      event,
-    );
-    ldp.collateralAssetBalance = collateralAssetBalance.id;
+    let collateralAsset = ensureAsset(wethTokenAddress);
+    ldp.collateralBalance = toBigDecimal(collateralAmount, collateralAsset.decimals);
   }
 
   let borrowed = ldpContract.getDebtAssets();
 
   if (borrowed.value0.length === 0) {
-    ldp.borrowedAssetBalance = null;
+    ldp.borrowedBalance = ZERO_BD;
   } else {
     // there is only single borrowed asset (LUSD)
-    let borrowedAddress = borrowed.value0[0];
     let borrowedAmount = borrowed.value1[0];
-
-    let borrowedAsset = ensureAsset(borrowedAddress);
-    let borrowedAssetBalance = createAssetBalance(
-      borrowedAsset,
-      toBigDecimal(borrowedAmount, borrowedAsset.decimals),
-      'ldp-borrowed-asset-balance',
-      event,
-    );
-    ldp.borrowedAssetBalance = borrowedAssetBalance.id;
+    let borrowedAsset = ensureAsset(lusdAddress);
+    ldp.borrowedBalance = toBigDecimal(borrowedAmount, borrowedAsset.decimals);
   }
 
   ldp.troveIsOpen = troveIsOpen;

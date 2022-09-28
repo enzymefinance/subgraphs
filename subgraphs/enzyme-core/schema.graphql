@@ -1219,8 +1219,8 @@ type LiquityDebtPosition implements ExternalPosition @entity {
   type: ExternalPositionType!
   active: Boolean!
   troveIsOpen: Boolean!
-  collateralAssetBalance: AssetBalance
-  borrowedAssetBalance: AssetBalance
+  collateralBalance: BigDecimal!
+  borrowedBalance: BigDecimal!
   changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
 }
 
