@@ -103,6 +103,7 @@ export const polygon: Context<Variables> = {
           polygonV4Deployment.contracts.ArbitraryLoanTotalNominalDeltaOracleModule,
         comptrollerLibAddress: polygonV4Deployment.contracts.ComptrollerLib,
         convexCurveLpStakingAdapterAddress: polygonV4Deployment.contracts.ConvexCurveLpStakingAdapter,
+        convexCurveLpStakingWrapperFactoryAddress: polygonV4Deployment.contracts.ConvexCurveLpStakingWrapperFactory,
         cumulativeSlippageTolerancePolicyAddress: polygonV4Deployment.contracts.CumulativeSlippageTolerancePolicy,
         curveLiquidityAdapterAddress: polygonV4Deployment.contracts.CurveLiquidityAdapter,
         entranceRateBurnFeeAddress: polygonV4Deployment.contracts.EntranceRateBurnFee,

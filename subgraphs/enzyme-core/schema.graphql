@@ -1582,3 +1582,14 @@ type SharesSplitterTokenClaims @entity {
   token: Bytes!
   amount: BigDecimal!
 }
+
+#################################################
+# Convex Curve LP Staking Wrapper
+#################################################
+
+type ConvexCurveLpStakingWrapper @entity {
+  id: ID!
+  pid: Int!
+  lpToken: Asset!
+  timestamp: Int!
+}

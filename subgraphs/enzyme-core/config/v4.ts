@@ -13,6 +13,7 @@ export interface ReleaseVariables {
   arbitraryLoanTotalNominalDeltaOracleModuleAddress: string;
   comptrollerLibAddress: string;
   convexCurveLpStakingAdapterAddress: string;
+  convexCurveLpStakingWrapperFactoryAddress: string;
   cumulativeSlippageTolerancePolicyAddress: string;
   curveLiquidityAdapterAddress: string;
   entranceRateBurnFeeAddress: string;
@@ -55,6 +56,7 @@ export const sources = (variables: ReleaseVariables): DataSourceUserDeclaration[
     name: 'ArbitraryLoanTotalNominalDeltaOracleModule',
     address: variables.arbitraryLoanTotalNominalDeltaOracleModuleAddress,
   },
+  { name: 'ConvexCurveLpStakingWrapperFactory', address: variables.convexCurveLpStakingWrapperFactoryAddress },
   { name: 'CumulativeSlippageTolerancePolicy', address: variables.cumulativeSlippageTolerancePolicyAddress },
   { name: 'EntranceRateBurnFee', address: variables.entranceRateBurnFeeAddress },
   { name: 'EntranceRateDirectFee', address: variables.entranceRateDirectFeeAddress },

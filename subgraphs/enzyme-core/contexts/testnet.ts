@@ -103,6 +103,7 @@ export const testnet: Context<Variables> = {
           testnetV4Deployment.contracts.ArbitraryLoanTotalNominalDeltaOracleModule,
         comptrollerLibAddress: testnetV4Deployment.contracts.ComptrollerLib,
         convexCurveLpStakingAdapterAddress: testnetV4Deployment.contracts.ConvexCurveLpStakingAdapter,
+        convexCurveLpStakingWrapperFactoryAddress: testnetV4Deployment.contracts.ConvexCurveLpStakingWrapperFactory,
         cumulativeSlippageTolerancePolicyAddress: testnetV4Deployment.contracts.CumulativeSlippageTolerancePolicy,
         curveLiquidityAdapterAddress: testnetV4Deployment.contracts.CurveLiquidityAdapter,
         entranceRateBurnFeeAddress: testnetV4Deployment.contracts.EntranceRateBurnFee,
