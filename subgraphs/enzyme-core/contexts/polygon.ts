@@ -26,6 +26,8 @@ export const polygon: Context<Variables> = {
       curveMinterAddress: polygonV4Deployment.externalContracts.curveMinter,
       cvxLockerV2Address: polygonV4Deployment.externalContracts.voteLockedConvexToken,
       cvxAddress: polygonV4Deployment.namedTokens.cvx.id,
+      grtAddress: polygonV4Deployment.namedTokens.grt.id,
+      theGraphStakingProxyAddress: polygonV4Deployment.externalContracts.theGraphStakingProxy,
       lusdAddress: '0x0000000000000000000000000000000000000000',
     },
     persistent: {

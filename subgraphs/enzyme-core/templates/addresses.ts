@@ -222,6 +222,10 @@ export let cvxAddress = Address.fromString('{{external.cvxAddress}}');
 
 export let cvxLockerV2Address = Address.fromString('{{external.cvxLockerV2Address}}');
 
+export let grtAddress = Address.fromString('{{external.grtAddress}}');
+
+export let theGraphStakingProxyAddress = Address.fromString('{{external.theGraphStakingProxyAddress}}');
+
 export let lusdAddress = Address.fromString('{{external.lusdAddress}}');
 
 export class ChainlinkAggregatorAddresses {

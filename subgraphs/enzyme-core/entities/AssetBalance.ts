@@ -22,10 +22,10 @@ export function createAssetBalance(
 }
 
 export function useAssetBalance(id: string): AssetBalance {
-  let assetAmount = AssetBalance.load(id);
-  if (assetAmount == null) {
+  let assetBalance = AssetBalance.load(id);
+  if (assetBalance == null) {
     logCritical('Failed to load AssetBalance {}.', [id]);
   }
 
-  return assetAmount as AssetBalance;
+  return assetBalance as AssetBalance;
 }

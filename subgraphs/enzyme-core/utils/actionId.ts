@@ -58,3 +58,9 @@ export enum ArbitraryLoanPositionActionId {
   Reconcile = 3,
   CloseLoan = 4,
 }
+
+export enum TheGraphDelegationPositionActionId {
+  Delegate = 0,
+  Undelegate = 1,
+  Withdraw = 2,
+}

@@ -1,5 +1,5 @@
 import { logCritical, uniqueEventId, ZERO_BD } from '@enzymefinance/subgraph-utils';
-import { Address, ethereum, BigDecimal, Bytes } from '@graphprotocol/graph-ts';
+import { Address, ethereum, Bytes } from '@graphprotocol/graph-ts';
 import {
   ArbitraryLoanPosition,
   ArbitraryLoanPositionChange,

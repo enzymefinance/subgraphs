@@ -45,7 +45,9 @@ export interface Variables {
   external: {
     curveMinterAddress: string;
     cvxLockerV2Address: string;
+    theGraphStakingProxyAddress: string;
     cvxAddress: string;
+    grtAddress: string;
     lusdAddress: string;
   };
 }
@@ -151,6 +153,7 @@ export const configure: Configurator<Variables> = (variables) => {
         MaplePool: 'abis/external/MaplePool.json',
         MapleRewards: 'abis/external/MapleRewards.json',
         NonfungiblePositionManager: 'abis/external/NonfungiblePositionManager.json',
+        TheGraphStaking: 'abis/external/TheGraphStaking.json',
         UniswapV3Factory: 'abis/external/UniswapV3Factory.json',
         UniswapV3Pool: 'abis/external/UniswapV3Pool.json',
       },
@@ -163,6 +166,9 @@ export const configure: Configurator<Variables> = (variables) => {
         abis.NonfungiblePositionManager.getFunction('factory'),
         abis.NonfungiblePositionManager.getFunction('positions'),
         abis.NonfungiblePositionManager.getFunction('tokenURI'),
+        abis.TheGraphStaking.getFunction('getDelegation'),
+        abis.TheGraphStaking.getFunction('delegationPools'),
+        abis.TheGraphStaking.getFunction('delegationTaxPercentage'),
         abis.UniswapV3Factory.getFunction('getPool'),
         abis.UniswapV3Pool.getFunction('slot0'),
       ],

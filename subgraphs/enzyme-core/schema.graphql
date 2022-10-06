@@ -1289,6 +1289,46 @@ type ConvexVotingPositionChange implements Activity & VaultActivity & ExternalPo
   activityType: ActivityType!
 }
 
+type TheGraphDelegationToIndexer @entity {
+  id: ID!
+  externalPosition: TheGraphDelegationPosition
+  indexer: Bytes!
+  shares: BigInt!
+  tokensLocked: BigDecimal!
+  tokensLockedUntil: Int!
+}
+
+type TheGraphDelegationPosition implements ExternalPosition @entity {
+  id: ID!
+  vault: Vault!
+  type: ExternalPositionType!
+  active: Boolean!
+  delegations: [TheGraphDelegationToIndexer!]! @derivedFrom(field: "externalPosition")
+  changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
+}
+
+enum TheGraphDelegationPositionChangeType {
+  Delegate
+  Undelegate
+  Withdraw
+}
+
+type TheGraphDelegationPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: Int!
+  externalPosition: ExternalPosition!
+  theGraphDelegationPositionChangeType: TheGraphDelegationPositionChangeType!
+  assetAmount: AssetAmount!
+  withdrewWhileUndelegatingAssetAmount: AssetAmount
+  feeAmount: AssetAmount
+  indexer: Bytes!
+  newIndexer: Bytes
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
 type UniswapV3LiquidityPosition implements ExternalPosition @entity {
   id: ID!
   vault: Vault!
