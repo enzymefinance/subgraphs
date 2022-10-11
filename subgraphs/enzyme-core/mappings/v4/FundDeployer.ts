@@ -7,6 +7,7 @@ import { getActivityCounter } from '../../entities/Counter';
 import { trackNetworkFunds } from '../../entities/Network';
 import { useProtocolFee } from '../../entities/ProtocolFee';
 import { generateReconfigurationId, useReconfiguraton } from '../../entities/Reconfiguration';
+import { ensureRegisteredVaultCall, getRegisteredVaultCallId } from '../../entities/RegisteredVaultCall';
 import { ensureRelease } from '../../entities/Release';
 import { createVault, useVault } from '../../entities/Vault';
 import {
@@ -30,6 +31,8 @@ import {
 import { ProtocolSdk } from '../../generated/contracts/ProtocolSdk';
 import {
   Reconfiguration,
+  VaultCallDeregisteredEvent,
+  VaultCallRegisteredEvent,
   VaultReconfigurationCancelled,
   VaultReconfigurationExecuted,
   VaultReconfigurationSignalled,
@@ -196,12 +199,48 @@ export function handleReconfigurationRequestExecuted(event: ReconfigurationReque
   activity.save();
 }
 
+export function handleVaultCallDeregistered(event: VaultCallDeregistered): void {
+  let contract = event.params.contractAddress;
+  let selector = event.params.selector;
+  let dataHash = event.params.dataHash;
+
+  let vaultCall = ensureRegisteredVaultCall(contract, selector, dataHash, event);
+  vaultCall.registered = false;
+  vaultCall.timestamp = event.block.timestamp.toI32();
+  vaultCall.save();
+
+  let activity = new VaultCallRegisteredEvent(uniqueEventId(event));
+  activity.timestamp = event.block.timestamp.toI32();
+  activity.registeredVaultCall = vaultCall.id;
+  activity.activityCounter = getActivityCounter();
+  activity.activityCategories = ['Network'];
+  activity.activityType = 'NetworkSettings';
+  activity.save();
+}
+
+export function handleVaultCallRegistered(event: VaultCallRegistered): void {
+  let contract = event.params.contractAddress;
+  let selector = event.params.selector;
+  let dataHash = event.params.dataHash;
+
+  let vaultCall = ensureRegisteredVaultCall(contract, selector, dataHash, event);
+  vaultCall.registered = true;
+  vaultCall.timestamp = event.block.timestamp.toI32();
+  vaultCall.save();
+
+  let activity = new VaultCallDeregisteredEvent(uniqueEventId(event));
+  activity.timestamp = event.block.timestamp.toI32();
+  activity.registeredVaultCall = vaultCall.id;
+  activity.activityCounter = getActivityCounter();
+  activity.activityCategories = ['Network'];
+  activity.activityType = 'NetworkSettings';
+  activity.save();
+}
+
 export function handleBuySharesOnBehalfCallerDeregistered(event: BuySharesOnBehalfCallerDeregistered): void {}
 export function handleBuySharesOnBehalfCallerRegistered(event: BuySharesOnBehalfCallerRegistered): void {}
 export function handleComptrollerLibSet(event: ComptrollerLibSet): void {}
 export function handleProtocolFeeTrackerSet(event: ProtocolFeeTrackerSet): void {}
 export function handleReconfigurationTimelockSet(event: ReconfigurationTimelockSet): void {}
-export function handleVaultCallDeregistered(event: VaultCallDeregistered): void {}
-export function handleVaultCallRegistered(event: VaultCallRegistered): void {}
 export function handleVaultLibSet(event: VaultLibSet): void {}
 export function handleGasLimitsForDestructCallSet(event: GasLimitsForDestructCallSet): void {}

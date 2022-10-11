@@ -111,6 +111,33 @@ type AssetRemoved implements Activity & NetworkActivity @entity {
   activityType: ActivityType!
 }
 
+type RegisteredVaultCall @entity {
+  id: ID!
+  contract: Bytes!
+  selector: Bytes!
+  dataHash: Bytes!
+  registered: Boolean!
+  timestamp: Int!
+}
+
+type VaultCallRegisteredEvent implements Activity & NetworkActivity @entity {
+  id: ID!
+  timestamp: Int!
+  registeredVaultCall: RegisteredVaultCall!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
+type VaultCallDeregisteredEvent implements Activity & NetworkActivity @entity {
+  id: ID!
+  timestamp: Int!
+  registeredVaultCall: RegisteredVaultCall!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
 #################################################
 # Vault
 #################################################
