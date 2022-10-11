@@ -819,11 +819,11 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
       // let beforeUndelegateTokensLocked = useTheGraphDelegationToIndexer(theGraphDelegationToIndexerId).tokensLocked;
 
-      // let afterUndelegateGraphDelegationToIndexer = trackTheGraphDelegationToIndexer(
-      //   event.params.externalPosition,
-      //   indexer,
-      //   event,
-      // );
+      let afterUndelegateGraphDelegationToIndexer = trackTheGraphDelegationToIndexer(
+        event.params.externalPosition,
+        indexer,
+        event,
+      );
 
       // let afterUndelegateTokensLocked = afterUndelegateGraphDelegationToIndexer.tokensLocked;
 
