@@ -21,11 +21,7 @@ import {
 } from '../../entities/LiquityDebtPosition';
 import { ensureAsset } from '../../entities/Asset';
 import { createAssetAmount } from '../../entities/AssetAmount';
-import {
-  createCompoundDebtPosition,
-  createCompoundDebtPositionChange,
-  trackCompoundDebtPosition,
-} from '../../entities/CompoundDebtPosition';
+import { createCompoundDebtPosition, createCompoundDebtPositionChange } from '../../entities/CompoundDebtPosition';
 import { ensureComptroller } from '../../entities/Comptroller';
 import { useExternalPositionType } from '../../entities/ExternalPositionType';
 import {
@@ -203,7 +199,6 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       createCompoundDebtPositionChange(event.params.externalPosition, null, 'ClaimComp', vault, event);
     }
 
-    trackCompoundDebtPosition(event.params.externalPosition.toHex(), event);
     return;
   }
 

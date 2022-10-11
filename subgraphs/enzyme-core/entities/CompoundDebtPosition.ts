@@ -31,8 +31,6 @@ export function createCompoundDebtPosition(
   compoundDebtPosition.vault = useVault(vaultAddress.toHex()).id;
   compoundDebtPosition.active = true;
   compoundDebtPosition.type = type.id;
-  compoundDebtPosition.collateralAssetBalances = new Array<string>();
-  compoundDebtPosition.borrowedAssetBalances = new Array<string>();
   compoundDebtPosition.save();
 
   return compoundDebtPosition;
@@ -60,35 +58,4 @@ export function createCompoundDebtPositionChange(
   vault.save();
 
   return change;
-}
-
-export function trackCompoundDebtPosition(id: string, event: ethereum.Event): void {
-  let cdpContract = ProtocolSdk.bind(Address.fromString(id));
-
-  let collateral = cdpContract.getManagedAssets();
-  let collateralAssetBalances = new Array<string>();
-  for (let i: i32 = 0; i < collateral.value0.length; i++) {
-    let address = collateral.value0[i];
-    let amount = collateral.value1[i];
-
-    let asset = ensureAsset(address);
-    let assetAmount = createAssetBalance(asset, toBigDecimal(amount, asset.decimals), 'cdp', event);
-    collateralAssetBalances = collateralAssetBalances.concat([assetAmount.id]);
-  }
-
-  let borrowed = cdpContract.getDebtAssets();
-  let borrowedAssetBalances = new Array<string>();
-  for (let i: i32 = 0; i < borrowed.value0.length; i++) {
-    let address = borrowed.value0[i];
-    let amount = borrowed.value1[i];
-
-    let asset = ensureAsset(address);
-    let assetAmount = createAssetBalance(asset, toBigDecimal(amount, asset.decimals), 'cdp', event);
-    borrowedAssetBalances = borrowedAssetBalances.concat([assetAmount.id]);
-  }
-
-  let cdp = useCompoundDebtPosition(id);
-  cdp.collateralAssetBalances = collateralAssetBalances;
-  cdp.borrowedAssetBalances = borrowedAssetBalances;
-  cdp.save();
 }
