@@ -32,8 +32,6 @@ export function createAaveDebtPosition(
   aaveDebtPosition.vault = useVault(vaultAddress.toHex()).id;
   aaveDebtPosition.active = true;
   aaveDebtPosition.type = type.id;
-  aaveDebtPosition.collateralAssetBalances = new Array<string>();
-  aaveDebtPosition.borrowedAssetBalances = new Array<string>();
   aaveDebtPosition.save();
 
   return aaveDebtPosition;
@@ -61,35 +59,4 @@ export function createAaveDebtPositionChange(
   vault.save();
 
   return change;
-}
-
-export function trackAaveDebtPosition(id: string, event: ethereum.Event): void {
-  let adpContract = ProtocolSdk.bind(Address.fromString(id));
-
-  let collateral = adpContract.getManagedAssets();
-  let collateralAssetBalances = new Array<string>();
-  for (let i: i32 = 0; i < collateral.value0.length; i++) {
-    let address = collateral.value0[i];
-    let amount = collateral.value1[i];
-
-    let asset = ensureAsset(address);
-    let assetAmount = createAssetBalance(asset, toBigDecimal(amount, asset.decimals), 'adp', event);
-    collateralAssetBalances = collateralAssetBalances.concat([assetAmount.id]);
-  }
-
-  let borrowed = adpContract.getDebtAssets();
-  let borrowedAssetBalances = new Array<string>();
-  for (let i: i32 = 0; i < borrowed.value0.length; i++) {
-    let address = borrowed.value0[i];
-    let amount = borrowed.value1[i];
-
-    let asset = ensureAsset(address);
-    let assetAmount = createAssetBalance(asset, toBigDecimal(amount, asset.decimals), 'adp', event);
-    borrowedAssetBalances = borrowedAssetBalances.concat([assetAmount.id]);
-  }
-
-  let cdp = useAaveDebtPosition(id);
-  cdp.collateralAssetBalances = collateralAssetBalances;
-  cdp.borrowedAssetBalances = borrowedAssetBalances;
-  cdp.save();
 }

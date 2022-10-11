@@ -1,10 +1,6 @@
-import { arrayUnique, logCritical, toBigDecimal, tuplePrefixBytes, ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
-import { Address, Bytes, DataSourceContext, ethereum, crypto, BigInt, BigDecimal } from '@graphprotocol/graph-ts';
-import {
-  createAaveDebtPosition,
-  createAaveDebtPositionChange,
-  trackAaveDebtPosition,
-} from '../../entities/AaveDebtPosition';
+import { arrayUnique, logCritical, toBigDecimal, tuplePrefixBytes } from '@enzymefinance/subgraph-utils';
+import { Address, Bytes, DataSourceContext, ethereum, crypto } from '@graphprotocol/graph-ts';
+import { createAaveDebtPosition, createAaveDebtPositionChange } from '../../entities/AaveDebtPosition';
 import {
   createMapleLiquidityAssetAmount,
   createMapleLiquidityAssetAmountByPoolTokenAmount,
@@ -242,7 +238,6 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       createAaveDebtPositionChange(event.params.externalPosition, null, 'ClaimRewards', vault, event);
     }
 
-    trackAaveDebtPosition(event.params.externalPosition.toHex(), event);
     return;
   }
 

@@ -1097,8 +1097,6 @@ type AaveDebtPosition implements ExternalPosition @entity {
   vault: Vault!
   type: ExternalPositionType!
   active: Boolean!
-  collateralAssetBalances: [AssetBalance!]!
-  borrowedAssetBalances: [AssetBalance!]!
   changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
 }
 
