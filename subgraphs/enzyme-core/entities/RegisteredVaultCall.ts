@@ -24,7 +24,7 @@ export function ensureRegisteredVaultCall(
   vaultCall.selector = selector;
   vaultCall.dataHash = dataHash;
   vaultCall.registered = true;
-  vaultCall.registeredTimestamp = event.block.timestamp.toI32();
+  vaultCall.timestamp = event.block.timestamp.toI32();
   vaultCall.save();
 
   return vaultCall;
