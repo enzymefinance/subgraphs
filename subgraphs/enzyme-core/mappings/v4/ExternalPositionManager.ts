@@ -378,8 +378,6 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
   }
 
   if (type.label == 'LIQUITY_DEBT') {
-    let troveIsOpen = true;
-
     if (actionId == LiquityDebtPositionActionId.OpenTrove) {
       let decoded = ethereum.decode('(uint256,uint256,uint256,address,address)', event.params.actionArgs);
 
@@ -534,8 +532,6 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     }
 
     if (actionId == LiquityDebtPositionActionId.CloseTrove) {
-      troveIsOpen = false;
-
       let ldp = useLiquityDebtPosition(event.params.externalPosition.toHex());
 
       let lusdAsset = ensureAsset(lusdAddress);
@@ -576,7 +572,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       );
     }
 
-    trackLiquityDebtPosition(event.params.externalPosition.toHex(), troveIsOpen, event);
+    trackLiquityDebtPosition(event.params.externalPosition.toHex());
     return;
   }
 

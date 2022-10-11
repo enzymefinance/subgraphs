@@ -31,7 +31,6 @@ export function createLiquityDebtPosition(
   let liquityDebtPosition = new LiquityDebtPosition(externalPositionAddress.toHex());
   liquityDebtPosition.vault = useVault(vaultAddress.toHex()).id;
   liquityDebtPosition.active = true;
-  liquityDebtPosition.troveIsOpen = false;
   liquityDebtPosition.type = type.id;
   liquityDebtPosition.collateralBalance = ZERO_BD;
   liquityDebtPosition.borrowedBalance = ZERO_BD;
@@ -85,7 +84,7 @@ export function getLiquityDebtPositionBorrowedAmount(id: string): BigDecimal {
   return toBigDecimal(borrowed.value1[0], borrowedAsset.decimals);
 }
 
-export function trackLiquityDebtPosition(id: string, troveIsOpen: boolean, event: ethereum.Event): void {
+export function trackLiquityDebtPosition(id: string): void {
   let ldpContract = ProtocolSdk.bind(Address.fromString(id));
 
   let ldp = useLiquityDebtPosition(id);
@@ -112,7 +111,6 @@ export function trackLiquityDebtPosition(id: string, troveIsOpen: boolean, event
     ldp.borrowedBalance = toBigDecimal(borrowedAmount, borrowedAsset.decimals);
   }
 
-  ldp.troveIsOpen = troveIsOpen;
   ldp.save();
 }
 
