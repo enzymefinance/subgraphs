@@ -77,11 +77,7 @@ export function updateConvexVotingPositionWithdrawOrRelock(
   convexVotingPosition.lastWithdrawOrRelockTimestamp = event.block.timestamp.toI32();
   convexVotingPosition.save();
 
-  for (let i: i32 = 0; i < convexVotingPosition.locks.length; i++) {
-    let lock = useConvexVotingLock(convexVotingPosition.locks[i]);
-    lock.withdrawn = true;
-    lock.save();
-  }
+  updateConvexVotingPositionUserLocks(externalPositionAddress);
 
   return convexVotingPosition;
 }
@@ -104,8 +100,10 @@ export function updateConvexVotingPositionUserLocks(externalPositionAddress: Add
       let lock = ensureConvexVotingLock(externalPositionAddress, BigInt.fromI32(counter));
 
       lock.amount = toBigDecimal(lockCall.value.value0);
-      lock.unlockTime = lockCall.value.value2.toI32();
-      lock.withdrawn = convexVotingPosition.lastWithdrawOrRelockTimestamp > lockCall.value.value2.toI32();
+
+      let unlockTime = lockCall.value.value2.toI32();
+      lock.unlockTime = unlockTime;
+      lock.withdrawn = convexVotingPosition.lastWithdrawOrRelockTimestamp > unlockTime;
 
       lock.save();
 

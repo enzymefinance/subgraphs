@@ -56,6 +56,7 @@ import {
   createConvexVotingPosition,
   createConvexVotingPositionChange,
   updateConvexVotingPositionUserLocks,
+  updateConvexVotingPositionWithdrawOrRelock,
   useConvexVotingPosition,
 } from '../../entities/ConvexVotingPosition';
 import { cvxAddress, lusdAddress, grtAddress, wethTokenAddress } from '../../generated/addresses';
@@ -946,15 +947,15 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       updateConvexVotingPositionUserLocks(event.params.externalPosition);
     }
 
-    // if (actionId == ConvexVotingPositionActionId.Relock) {
-    //   updateConvexVotingPositionWithdrawOrRelock(event.params.externalPosition, event);
-    //   createConvexVotingPositionChange(event.params.externalPosition, null, null, null, 'Relock', vault, event);
-    // }
+    if (actionId == ConvexVotingPositionActionId.Relock) {
+      updateConvexVotingPositionWithdrawOrRelock(event.params.externalPosition, event);
+      createConvexVotingPositionChange(event.params.externalPosition, null, null, null, 'Relock', vault, event);
+    }
 
-    // if (actionId == ConvexVotingPositionActionId.Withdraw) {
-    //   updateConvexVotingPositionWithdrawOrRelock(event.params.externalPosition, event);
-    //   createConvexVotingPositionChange(event.params.externalPosition, null, null, null, 'Withdraw', vault, event);
-    // }
+    if (actionId == ConvexVotingPositionActionId.Withdraw) {
+      updateConvexVotingPositionWithdrawOrRelock(event.params.externalPosition, event);
+      createConvexVotingPositionChange(event.params.externalPosition, null, null, null, 'Withdraw', vault, event);
+    }
 
     if (actionId == ConvexVotingPositionActionId.Delegate) {
       let decoded = ethereum.decode('(address)', event.params.actionArgs);
