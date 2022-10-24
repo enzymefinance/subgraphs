@@ -1,4 +1,4 @@
-import { arrayUnique, logCritical, toBigDecimal, uniqueEventId } from '@enzymefinance/subgraph-utils';
+import { logCritical, uniqueEventId } from '@enzymefinance/subgraph-utils';
 import { Address, ethereum, BigInt } from '@graphprotocol/graph-ts';
 import {
   ConvexVotingPosition,
@@ -12,7 +12,6 @@ import { getActivityCounter } from './Counter';
 import { useVault } from './Vault';
 import { ExternalSdk } from '../generated/contracts/ExternalSdk';
 import { cvxLockerV2Address } from '../generated/addresses';
-import { ensureConvexVotingLock, useConvexVotingLock } from './ConvexVotingLock';
 
 export function useConvexVotingPosition(id: string): ConvexVotingPosition {
   let convexVotingPosition = ConvexVotingPosition.load(id);
@@ -31,10 +30,10 @@ export function createConvexVotingPosition(
   let convexVotingPosition = new ConvexVotingPosition(externalPositionAddress.toHex());
   convexVotingPosition.vault = useVault(vaultAddress.toHex()).id;
   convexVotingPosition.active = true;
-  convexVotingPosition.lastWithdrawOrRelockTimestamp = 0;
   convexVotingPosition.type = type.id;
   convexVotingPosition.claimedVotiumMerkleProofsHashes = new Array<string>();
-  convexVotingPosition.locks = new Array<string>();
+  convexVotingPosition.locksCounter = 0;
+  convexVotingPosition.lastWithdrawOrRelockTimestamp = 0;
   convexVotingPosition.save();
 
   return convexVotingPosition;
@@ -84,35 +83,23 @@ export function updateConvexVotingPositionWithdrawOrRelock(
 
 export function updateConvexVotingPositionUserLocks(externalPositionAddress: Address): ConvexVotingPosition {
   let convexVotingPosition = useConvexVotingPosition(externalPositionAddress.toHex());
-  let votingLocks = convexVotingPosition.locks;
 
   let cvxLockerV2Contract = ExternalSdk.bind(cvxLockerV2Address);
 
   let reverted = false;
-  let counter: i32 = 0;
+  let locksCounter: i32 = 0;
 
   while (reverted == false) {
-    let lockCall = cvxLockerV2Contract.try_userLocks(externalPositionAddress, BigInt.fromI32(counter));
+    let lockCall = cvxLockerV2Contract.try_userLocks(externalPositionAddress, BigInt.fromI32(locksCounter));
 
     if (lockCall.reverted) {
       reverted = true;
     } else {
-      let lock = ensureConvexVotingLock(externalPositionAddress, BigInt.fromI32(counter));
-
-      lock.amount = toBigDecimal(lockCall.value.value0);
-
-      let unlockTime = lockCall.value.value2.toI32();
-      lock.unlockTime = unlockTime;
-      lock.withdrawn = convexVotingPosition.lastWithdrawOrRelockTimestamp > unlockTime;
-
-      lock.save();
-
-      votingLocks = arrayUnique<string>(votingLocks.concat([lock.id]));
+      locksCounter = locksCounter + 1;
     }
-    counter = counter + 1;
   }
 
-  convexVotingPosition.locks = votingLocks;
+  convexVotingPosition.locksCounter = locksCounter;
   convexVotingPosition.save();
 
   return convexVotingPosition;

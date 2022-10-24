@@ -1270,13 +1270,6 @@ type LiquityDebtPositionChange implements Activity & VaultActivity & ExternalPos
   activityType: ActivityType!
 }
 
-type ConvexVotingLock @entity {
-  id: ID!
-  amount: BigDecimal!
-  unlockTime: Int!
-  withdrawn: Boolean!
-}
-
 type ConvexVotingPosition implements ExternalPosition @entity {
   id: ID!
   vault: Vault!
@@ -1285,7 +1278,7 @@ type ConvexVotingPosition implements ExternalPosition @entity {
   delegate: Bytes
   lastWithdrawOrRelockTimestamp: Int!
   claimedVotiumMerkleProofsHashes: [String!]!
-  locks: [ConvexVotingLock!]!
+  locksCounter: Int!
   changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
 }
 
