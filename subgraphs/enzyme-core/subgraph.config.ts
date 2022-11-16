@@ -12,6 +12,7 @@ import * as v3 from './config/v3';
 import * as v4 from './config/v4';
 import { ethereum } from './contexts/ethereum';
 import { ethereumDev } from './contexts/ethereum-dev';
+import { ethereumDevTwo } from './contexts/ethereum-dev-two';
 import { polygon } from './contexts/polygon';
 import { testnet } from './contexts/testnet';
 
@@ -55,6 +56,7 @@ export interface Variables {
 export const contexts: Contexts<Variables> = {
   ethereum,
   'ethereum-dev': ethereumDev,
+  'ethereum-dev-two': ethereumDevTwo,
   polygon,
   testnet,
 };
