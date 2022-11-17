@@ -1,4 +1,4 @@
-import { toBigDecimal } from '@enzymefinance/subgraph-utils';
+import { createPricelessAssetBypass, createPricelessAssetTimelock } from '../../entities/PricelessAsset';
 import { ensureCumulativeSlippageTolerancePolicy } from '../../entities/CumulativeSlippageTolerancePolicy';
 import {
   CumulativeSlippageUpdatedForFund,
@@ -6,6 +6,10 @@ import {
   PricelessAssetBypassed,
   PricelessAssetTimelockStarted,
 } from '../../generated/contracts/CumulativeSlippageTolerancePolicy4Events';
+import { ensureComptroller } from '../../entities/Comptroller';
+import { toBigDecimal } from '@enzymefinance/subgraph-utils';
+import { useVault } from '../../entities/Vault';
+import { ensureAsset } from '../../entities/Asset';
 
 export function handleCumulativeSlippageUpdatedForFund(event: CumulativeSlippageUpdatedForFund): void {
   let policy = ensureCumulativeSlippageTolerancePolicy(event.params.comptrollerProxy, event.address, event);
@@ -20,5 +24,30 @@ export function handleFundSettingsSet(event: FundSettingsSet): void {
   policy.save();
 }
 
-export function handlePricelessAssetBypassed(event: PricelessAssetBypassed): void {}
-export function handlePricelessAssetTimelockStarted(event: PricelessAssetTimelockStarted): void {}
+export function handlePricelessAssetBypassed(event: PricelessAssetBypassed): void {
+  let comptroller = ensureComptroller(event.params.comptrollerProxy, event);
+
+  if (comptroller.vault == null) {
+    return;
+  }
+
+  let vault = useVault(comptroller.vault as string);
+  let policy = ensureCumulativeSlippageTolerancePolicy(event.params.comptrollerProxy, event.address, event);
+  let asset = ensureAsset(event.params.asset);
+
+  createPricelessAssetBypass(vault, policy.id, asset, event);
+}
+
+export function handlePricelessAssetTimelockStarted(event: PricelessAssetTimelockStarted): void {
+  let comptroller = ensureComptroller(event.params.comptrollerProxy, event);
+
+  if (comptroller.vault == null) {
+    return;
+  }
+
+  let vault = useVault(comptroller.vault as string);
+  let policy = ensureCumulativeSlippageTolerancePolicy(event.params.comptrollerProxy, event.address, event);
+  let asset = ensureAsset(event.params.asset);
+
+  createPricelessAssetTimelock(vault, policy.id, asset, event);
+}

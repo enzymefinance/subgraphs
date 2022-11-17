@@ -1535,6 +1535,28 @@ type AssetPrice @entity {
   price: BigDecimal!
 }
 
+type PricelessAssetTimelock implements Activity & VaultActivity @entity {
+  id: ID!
+  vault: Vault!
+  policy: Policy!
+  asset: Asset!
+  timestamp: Int!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
+type PricelessAssetBypass implements Activity & VaultActivity @entity {
+  id: ID!
+  vault: Vault!
+  policy: Policy!
+  asset: Asset!
+  timestamp: Int!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
 type CurrencyPrice @entity {
   id: ID!
   timestamp: Int!

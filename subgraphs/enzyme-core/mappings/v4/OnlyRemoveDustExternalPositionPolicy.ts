@@ -1,5 +1,11 @@
 import { toBigDecimal } from '@enzymefinance/subgraph-utils';
+import { ensureAsset } from '../../entities/Asset';
+import { ensureComptroller } from '../../entities/Comptroller';
+import { ensureOnlyRemoveDustExternalPositionPolicy } from '../../entities/OnlyRemoveDustExternalPositionPolicy';
+import { policyId } from '../../entities/Policy';
+import { createPricelessAssetBypass, createPricelessAssetTimelock } from '../../entities/PricelessAsset';
 import { ensureRelease } from '../../entities/Release';
+import { useVault } from '../../entities/Vault';
 import {
   DustToleranceInWethSet,
   PricelessAssetBypassed,
@@ -20,5 +26,30 @@ export function handleDustToleranceInWethSet(event: DustToleranceInWethSet): voi
   release.save();
 }
 
-export function handlePricelessAssetBypassed(event: PricelessAssetBypassed): void {}
-export function handlePricelessAssetTimelockStarted(event: PricelessAssetTimelockStarted): void {}
+export function handlePricelessAssetBypassed(event: PricelessAssetBypassed): void {
+  let comptroller = ensureComptroller(event.params.comptrollerProxy, event);
+
+  if (comptroller.vault == null) {
+    return;
+  }
+
+  let vault = useVault(comptroller.vault as string);
+  let policy = ensureOnlyRemoveDustExternalPositionPolicy(event.params.comptrollerProxy, event.address, event);
+  let asset = ensureAsset(event.params.asset);
+
+  createPricelessAssetBypass(vault, policy.id, asset, event);
+}
+
+export function handlePricelessAssetTimelockStarted(event: PricelessAssetTimelockStarted): void {
+  let comptroller = ensureComptroller(event.params.comptrollerProxy, event);
+
+  if (comptroller.vault == null) {
+    return;
+  }
+
+  let vault = useVault(comptroller.vault as string);
+  let policy = ensureOnlyRemoveDustExternalPositionPolicy(event.params.comptrollerProxy, event.address, event);
+  let asset = ensureAsset(event.params.asset);
+
+  createPricelessAssetTimelock(vault, policy.id, asset, event);
+}
