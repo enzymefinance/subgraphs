@@ -173,6 +173,7 @@ export const configure: Configurator<Variables> = (variables) => {
         abis.TheGraphStaking.getFunction('delegationTaxPercentage'),
         abis.UniswapV3Factory.getFunction('getPool'),
         abis.UniswapV3Pool.getFunction('slot0'),
+        abis.UniswapV3Pool.getFunction('liquidity'),
       ],
     },
   ];

@@ -1383,6 +1383,8 @@ type UniswapV3LiquidityPositionChange implements Activity & VaultActivity & Exte
   nft: UniswapV3Nft!
   assetAmounts: [AssetAmount!]
   liquidity: BigInt
+  poolLiquidity: BigInt!
+  sqrtPrice: BigInt!
   currentTick: Int!
   activityCounter: Int!
   activityCategories: [ActivityCategory!]!

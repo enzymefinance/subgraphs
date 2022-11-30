@@ -45,7 +45,8 @@ export function createUniswapV3LiquidityPositionChange(
   event: ethereum.Event,
 ): UniswapV3LiquidityPositionChange {
   let poolContract = ExternalSdk.bind(Address.fromBytes(nft.poolAddress));
-  let currentTick = poolContract.slot0();
+  let slot0 = poolContract.slot0();
+  let poolLiquidity = poolContract.liquidity();
 
   let change = new UniswapV3LiquidityPositionChange(uniqueEventId(event));
   change.uniswapV3LiquidityPositionChangeType = changeType;
@@ -53,7 +54,9 @@ export function createUniswapV3LiquidityPositionChange(
   change.nft = nft.id;
   change.assetAmounts = assetAmounts != null ? assetAmounts.map<string>((assetAmount) => assetAmount.id) : null;
   change.liquidity = liquidity;
-  change.currentTick = currentTick.value1;
+  change.poolLiquidity = poolLiquidity;
+  change.currentTick = slot0.value1;
+  change.sqrtPrice = slot0.value0;
   change.vault = vault.id;
   change.timestamp = event.block.timestamp.toI32();
   change.activityCounter = getActivityCounter();
