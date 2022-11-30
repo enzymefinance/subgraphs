@@ -1,4 +1,4 @@
-import { toBigDecimal } from '../../../../utils';
+import { toBigDecimal } from '@enzymefinance/subgraph-utils';
 import { ensureNetwork } from '../../entities/Network';
 import { createProtocolFee, useProtocolFee } from '../../entities/ProtocolFee';
 import {

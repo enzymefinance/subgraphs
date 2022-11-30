@@ -1,0 +1,36 @@
+lockfileVersion: 5.4
+
+specifiers:
+  '@enzymefinance/subgraph-cli': workspace:*
+  '@enzymefinance/subgraph-utils': workspace:*
+  '@graphprotocol/graph-ts': ^0.27.0
+
+dependencies:
+  '@enzymefinance/subgraph-cli': link:../../cli
+  '@enzymefinance/subgraph-utils': link:../../utils
+  '@graphprotocol/graph-ts': 0.27.0
+
+packages:
+
+  /@graphprotocol/graph-ts/0.27.0:
+    resolution: {integrity: sha512-r1SPDIZVQiGMxcY8rhFSM0y7d/xAbQf5vHMWUf59js1KgoyWpM6P3tczZqmQd7JTmeyNsDGIPzd9FeaxllsU4w==}
+    dependencies:
+      assemblyscript: 0.19.10
+    dev: false
+
+  /assemblyscript/0.19.10:
+    resolution: {integrity: sha512-HavcUBXB3mBTRGJcpvaQjmnmaqKHBGREjSPNsIvnAk2f9dj78y4BkMaSSdvBQYWcDDzsHQjyUC8stICFkD1Odg==}
+    hasBin: true
+    dependencies:
+      binaryen: 101.0.0-nightly.20210723
+      long: 4.0.0
+    dev: false
+
+  /binaryen/101.0.0-nightly.20210723:
+    resolution: {integrity: sha512-eioJNqhHlkguVSbblHOtLqlhtC882SOEPKmNFZaDuz1hzQjolxZ+eu3/kaS10n3sGPONsIZsO7R9fR00UyhEUA==}
+    hasBin: true
+    dev: false
+
+  /long/4.0.0:
+    resolution: {integrity: sha512-XsP+KhQif4bjX1kbuSiySJFNAehNxgLb6hPRGJ9QsUr8ajHkuXGdrHmFUTUUXhDwVX2R5bY4JNZEwbUiMhV+MA==}
+    dev: false

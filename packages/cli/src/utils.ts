@@ -7,10 +7,10 @@ import type {
   EventHandlerUserDeclaration,
   SdkUserDeclaration,
   SdkAbiDeclaration,
-} from '@enzymefinance/subgraph-cli';
+} from './types';
 import { utils } from 'ethers';
-import path from 'path';
-import fs from 'fs';
+import path from 'node:path';
+import fs from 'node:fs';
 import { AbiDeclarationType } from './types';
 import { JsonFragment, JsonFragmentType } from '@ethersproject/abi';
 

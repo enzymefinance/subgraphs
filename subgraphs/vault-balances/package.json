@@ -1,17 +1,16 @@
 {
   "name": "@enzymefinance/vault-balances-subgraph",
-  "version": "0.0.0",
   "private": true,
   "scripts": {
     "codegen": "enzyme-graph codegen",
     "build": "enzyme-graph build",
-    "deploy": "enzyme-graph deploy"
+    "upload": "enzyme-graph deploy"
   },
-  "dependencies": {
-    "@enzymefinance/environment": "4.0.24",
-    "@enzymefinance/protocol": "^4.0.5",
-    "@enzymefinance/subgraph-cli": "^0.0.0",
-    "@enzymefinance/subgraph-utils": "^0.0.0",
-    "@graphprotocol/graph-ts": "^0.27.0"
+  "devDependencies": {
+    "@enzymefinance/environment": "^4.0.24",
+    "@enzymefinance/subgraph-cli": "workspace:*",
+    "@enzymefinance/subgraph-utils": "workspace:*",
+    "@graphprotocol/graph-ts": "^0.27.0",
+    "assemblyscript": "^0.24.1"
   }
 }

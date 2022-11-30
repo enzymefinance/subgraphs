@@ -1,5 +1,5 @@
 import { Address, dataSource } from '@graphprotocol/graph-ts';
-import { toBigDecimal, uniqueEventId, ZERO_ADDRESS } from '../../../../utils';
+import { toBigDecimal, uniqueEventId, ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
 import { ensureDepositor } from '../../entities/Account';
 import { ensureAsset } from '../../entities/Asset';
 import { createAssetAmount } from '../../entities/AssetAmount';

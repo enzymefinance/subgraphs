@@ -1,7 +1,3 @@
 {
-  "extends": "assemblyscript/std/assembly.json",
-  "compilerOptions": {
-    "esModuleInterop": true,
-    "resolveJsonModule": true
-  },
+  "extends": "assemblyscript/std/assembly.json"
 }

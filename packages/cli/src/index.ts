@@ -1,16 +1,9 @@
-import type {
-  Configurator,
-  Context,
-  Contexts,
-  Environment,
-  ManifestValues,
-  Template,
-} from '@enzymefinance/subgraph-cli';
-import fs from 'fs';
+import fs from 'node:fs';
 import glob from 'glob';
 import handlebars from 'handlebars';
-import path from 'path';
+import path from 'node:path';
 import yargs from 'yargs';
+import { Configurator, Context, Contexts, Environment, ManifestValues, Template } from './types';
 import { formatJson, sdkDeclaration, sourceDeclaration, templateDeclaration } from './utils';
 
 const graph = require('@graphprotocol/graph-cli/src/cli').run as (args?: string[]) => Promise<void>;

@@ -6,7 +6,6 @@
 !.env.example
 !.github
 !.gitignore
-!.husky
 !.prettierignore
 
 # ignore build output and dependencies

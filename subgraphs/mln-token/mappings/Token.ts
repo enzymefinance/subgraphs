@@ -1,5 +1,5 @@
 import { ZERO_BD, toBigDecimal, ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
-import { Address, BigInt, ByteArray, Bytes, ethereum } from '@graphprotocol/graph-ts';
+import { Address, BigInt, Bytes, ethereum } from '@graphprotocol/graph-ts';
 import { Transfer as TransferEvent } from '../generated/contracts/TokenEvents';
 import { Account, Balance, Transfer } from '../generated/schema';
 

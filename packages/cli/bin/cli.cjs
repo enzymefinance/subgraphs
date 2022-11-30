@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+const path = require('node:path');
+
 process.on('SIGINT', () => {
   process.exit();
 });
@@ -9,10 +11,11 @@ process.on('SIGTERM', () => {
 });
 
 require('ts-node').register({
+  project: path.join(__dirname, '../tsconfig.json'),
   transpileOnly: true,
   compilerOptions: {
     esModuleInterop: true,
   },
 });
 
-require('./script');
+require('../src');
