@@ -52,6 +52,7 @@ import {
   VaultNominatedOwnerSet,
   VaultOwnershipTransferred,
 } from '../../generated/schema';
+import { useKilnStakingPosition } from '../../entities/KilnStakingPosition';
 
 export function handleTransfer(event: Transfer): void {
   // only track deposit balance if not zero address
@@ -341,6 +342,12 @@ export function handleExternalPositionAdded(event: ExternalPositionAdded): void 
     ldp.save();
   }
 
+  if (type.label == 'KILN_STAKING') {
+    let ksp = useKilnStakingPosition(event.params.externalPosition.toHex());
+    ksp.active = true;
+    ksp.save();
+  }
+
   let activity = new ExternalPositionAddedEvent(uniqueEventId(event));
   activity.timestamp = event.block.timestamp.toI32();
   activity.vault = event.address.toHex();
@@ -397,6 +404,12 @@ export function handleExternalPositionRemoved(event: ExternalPositionRemoved): v
     let ldp = useLiquityDebtPosition(event.params.externalPosition.toHex());
     ldp.active = false;
     ldp.save();
+  }
+
+  if (type.label == 'KILN_STAKING') {
+    let ksp = useKilnStakingPosition(event.params.externalPosition.toHex());
+    ksp.active = false;
+    ksp.save();
   }
 
   let activity = new ExternalPositionRemovedEvent(uniqueEventId(event));

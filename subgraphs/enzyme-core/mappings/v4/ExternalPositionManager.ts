@@ -1,5 +1,12 @@
-import { arrayUnique, logCritical, toBigDecimal, tuplePrefixBytes } from '@enzymefinance/subgraph-utils';
-import { Address, Bytes, DataSourceContext, ethereum, crypto } from '@graphprotocol/graph-ts';
+import {
+  arrayUnique,
+  logCritical,
+  toBigDecimal,
+  tuplePrefixBytes,
+  ZERO_BD,
+  ZERO_BI,
+} from '@enzymefinance/subgraph-utils';
+import { Address, Bytes, DataSourceContext, ethereum, crypto, BigInt, BigDecimal } from '@graphprotocol/graph-ts';
 import { createAaveDebtPosition, createAaveDebtPositionChange } from '../../entities/AaveDebtPosition';
 import {
   createMapleLiquidityAssetAmount,
@@ -33,9 +40,10 @@ import {
   ValidatedVaultProxySetForFund,
 } from '../../generated/contracts/ExternalPositionManager4Events';
 import { ProtocolSdk } from '../../generated/contracts/ProtocolSdk';
-import { Asset, AssetAmount } from '../../generated/schema';
+import { Asset, AssetAmount, KilnStaking, KilnStakingPosition } from '../../generated/schema';
 import {
   ArbitraryLoanPositionLib4DataSource,
+  KilnStaking4DataSource,
   MapleLiquidityPositionLib4DataSource,
   TheGraphDelegationPositionLib4DataSource,
   UniswapV3LiquidityPositionLib4DataSource,
@@ -49,6 +57,7 @@ import {
   TheGraphDelegationPositionActionId,
   LiquityDebtPositionActionId,
   UniswapV3LiquidityPositionActionId,
+  KilnStakingPositionActionId,
 } from '../../utils/actionId';
 import { ensureMapleLiquidityPool } from '../../entities/MapleLiquidityPool';
 import { ExternalSdk } from '../../generated/contracts/ExternalSdk';
@@ -81,6 +90,13 @@ import {
   useTheGraphDelegationToIndexer,
 } from '../../entities/TheGraphDelegationToIndexer';
 import { useAssetBalance } from '../../entities/AssetBalance';
+import {
+  createKilnStakingPosition,
+  createKilnStakingPositionChange,
+  ensureKilnStaking,
+  useKilnStakingPosition,
+} from '../../entities/KilnStakingPosition';
+import { kilnClaimFeeType } from '../../utils/kilnClaimFeeType';
 
 export function handleExternalPositionDeployedForFund(event: ExternalPositionDeployedForFund): void {
   let type = useExternalPositionType(event.params.externalPositionTypeId);
@@ -133,6 +149,12 @@ export function handleExternalPositionDeployedForFund(event: ExternalPositionDep
     createTheGraphDelegationPosition(event.params.externalPosition, event.params.vaultProxy, type);
 
     TheGraphDelegationPositionLib4DataSource.create(event.params.externalPosition);
+
+    return;
+  }
+
+  if (type.label == 'KILN_STAKING') {
+    createKilnStakingPosition(event.params.externalPosition, event.params.vaultProxy, type);
 
     return;
   }
@@ -742,6 +764,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
     return;
   }
+
   if (type.label == 'THEGRAPH_DELEGATION') {
     if (actionId == TheGraphDelegationPositionActionId.Delegate) {
       let decoded = ethereum.decode('(address,uint256)', event.params.actionArgs);
@@ -1200,6 +1223,66 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         vault,
         event,
       );
+    }
+
+    return;
+  }
+
+  if (type.label == 'KILN_STAKING') {
+    if (actionId == KilnStakingPositionActionId.Stake) {
+      let decoded = ethereum.decode('(address,uint256)', event.params.actionArgs);
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+
+      let stakingContractAddress = tuple[0].toAddress();
+      let validatorAmount = tuple[1].toBigInt();
+
+      ensureKilnStaking(stakingContractAddress);
+
+      let wethAsset = ensureAsset(wethTokenAddress);
+
+      let ethPerNode = BigDecimal.fromString('32');
+      let amount = toBigDecimal(validatorAmount, wethAsset.decimals).times(ethPerNode);
+      let assetAmount = createAssetAmount(wethAsset, amount, denominationAsset, 'kiln-stake', event);
+
+      createKilnStakingPositionChange(event.params.externalPosition, 'Stake', assetAmount, [], null, vault, event);
+
+      let kilnStakingPosition = useKilnStakingPosition(event.params.externalPosition.toHex());
+      kilnStakingPosition.stakedEthAmount = kilnStakingPosition.stakedEthAmount.plus(
+        toBigDecimal(validatorAmount, wethAsset.decimals),
+      );
+      kilnStakingPosition.save();
+    }
+
+    if (actionId == KilnStakingPositionActionId.ClaimFees) {
+      let decoded = ethereum.decode('(address,bytes[],uint256)', tuplePrefixBytes(event.params.actionArgs));
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+
+      let publicKeys = tuple[1].toBytesArray();
+      let claimType = tuple[2].toI32();
+
+      createKilnStakingPositionChange(
+        event.params.externalPosition,
+        'ClaimFees',
+        null,
+        publicKeys,
+        kilnClaimFeeType(claimType),
+        vault,
+        event,
+      );
+    }
+
+    if (actionId == KilnStakingPositionActionId.WithdrawEth) {
+      createKilnStakingPositionChange(event.params.externalPosition, 'WithdrawEth', null, [], null, vault, event);
     }
 
     return;

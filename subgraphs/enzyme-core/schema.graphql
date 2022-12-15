@@ -1391,6 +1391,48 @@ type UniswapV3LiquidityPositionChange implements Activity & VaultActivity & Exte
   activityType: ActivityType!
 }
 
+type KilnStaking @entity {
+  id: ID!
+}
+
+type KilnStakingPosition implements ExternalPosition @entity {
+  id: ID!
+  vault: Vault!
+  type: ExternalPositionType!
+  active: Boolean!
+  stakedEthAmount: BigDecimal!
+  publicKeys: [Bytes!]! 
+  changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
+}
+
+enum KilnStakingPositionChangeType {
+  Stake
+  ClaimFees
+  WithdrawEth
+}
+
+enum KilnStakingPositionActionClaimType {
+  ExecutionLayer
+  ConsensusLayer
+  All
+}
+
+type KilnStakingPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: Int!
+  externalPosition: ExternalPosition!
+  kilnStakingPositionChangeType: KilnStakingPositionChangeType!
+  stakingContractAddress: Bytes
+  assetAmount: AssetAmount
+  publicKeys: [Bytes!]!
+  claimType: KilnStakingPositionActionClaimType
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
+
 type UnknownExternalPosition implements ExternalPosition @entity {
   id: ID!
   vault: Vault!

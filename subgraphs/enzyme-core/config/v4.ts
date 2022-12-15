@@ -87,4 +87,5 @@ export const templates: DataSourceTemplateUserDeclaration[] = [
   { name: 'MapleLiquidityPositionLib' },
   { name: 'ArbitraryLoanPositionLib' },
   { name: 'TheGraphDelegationPositionLib' },
+  { name: 'KilnStaking' },
 ];

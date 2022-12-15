@@ -64,3 +64,9 @@ export enum TheGraphDelegationPositionActionId {
   Undelegate = 1,
   Withdraw = 2,
 }
+
+export enum KilnStakingPositionActionId {
+  Stake = 0,
+  ClaimFees = 1,
+  WithdrawEth = 2,
+}
