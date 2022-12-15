@@ -26,6 +26,7 @@ export const testnet: Context<Variables> = {
       curveMinterAddress: testnetV4Deployment.externalContracts.curveMinter,
       cvxLockerV2Address: testnetV4Deployment.externalContracts.voteLockedConvexToken,
       cvxAddress: testnetV4Deployment.namedTokens.cvx.id,
+      mplAddress: '0x0000000000000000000000000000000000000000',
       grtAddress: testnetV4Deployment.namedTokens.grt.id,
       theGraphStakingProxyAddress: testnetV4Deployment.externalContracts.theGraphStakingProxy,
       lusdAddress: '0x0000000000000000000000000000000000000000',

@@ -1,5 +1,58 @@
 [
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_mapleV1ToV2PoolMapper",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_freezeV1SnapshotsTimestamp",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_migrationAirdropValueThreshold",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "lendingPoolV1",
+        "type": "address"
+      }
+    ],
+    "name": "MigrationAirdropThresholdNotMet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "lendingPoolV1",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "balance",
+        "type": "uint256"
+      }
+    ],
+    "name": "PoolTokenV1BalanceSnapshotSet",
+    "type": "event"
+  },
+  {
     "anonymous": false,
     "inputs": [
       {
@@ -24,6 +77,51 @@
     ],
     "name": "UsedLendingPoolRemoved",
     "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "lendingPoolV2",
+        "type": "address"
+      }
+    ],
+    "name": "UsedLendingPoolV2Added",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "lendingPoolV2",
+        "type": "address"
+      }
+    ],
+    "name": "UsedLendingPoolV2Removed",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_poolV1",
+        "type": "address"
+      }
+    ],
+    "name": "getBalanceSnapshotOfPoolTokenV1",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "balanceSnapshot_",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
   },
   {
     "inputs": [],
@@ -63,11 +161,24 @@
   },
   {
     "inputs": [],
-    "name": "getUsedLendingPools",
+    "name": "getUsedLendingPoolsV1",
     "outputs": [
       {
         "internalType": "address[]",
-        "name": "pools_",
+        "name": "poolsV1_",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getUsedLendingPoolsV2",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "poolsV2_",
         "type": "address[]"
       }
     ],
@@ -91,11 +202,11 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_pool",
+        "name": "_poolV1",
         "type": "address"
       }
     ],
-    "name": "isUsedLendingPool",
+    "name": "isUsedLendingPoolV1",
     "outputs": [
       {
         "internalType": "bool",
@@ -109,12 +220,45 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "_poolV2",
+        "type": "address"
+      }
+    ],
+    "name": "isUsedLendingPoolV2",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "isUsed_",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "migratePoolsV1ToV2",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "bytes",
         "name": "_actionData",
         "type": "bytes"
       }
     ],
     "name": "receiveCallFromVault",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "snapshotPoolTokenV1Balances",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

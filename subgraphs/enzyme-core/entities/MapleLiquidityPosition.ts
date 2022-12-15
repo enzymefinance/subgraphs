@@ -7,12 +7,14 @@ import {
   AssetAmount,
   ExternalPositionType,
   Asset,
-  MapleLiquidityPool,
+  MapleLiquidityPoolV1,
+  MapleLiquidityPoolV2,
 } from '../generated/schema';
 import { getActivityCounter } from './Counter';
 import { useVault } from './Vault';
 import { ensureAsset } from './Asset';
 import { createAssetAmount } from './AssetAmount';
+import { ExternalSdk } from '../generated/contracts/ExternalSdk';
 
 export function useMapleLiquidityPosition(id: string): MapleLiquidityPosition {
   let mapleLiquidityPosition = MapleLiquidityPosition.load(id);
@@ -40,8 +42,10 @@ export function createMapleLiquidityPosition(
 
 export function createMapleLiquidityPositionChange(
   mapleLiquidityPositionAddress: Address,
-  pool: MapleLiquidityPool,
+  poolV1: MapleLiquidityPoolV1 | null,
+  poolV2: MapleLiquidityPoolV2 | null,
   assetAmount: AssetAmount | null,
+  asset: Asset | null,
   changeType: string,
   vault: Vault,
   event: ethereum.Event,
@@ -49,8 +53,10 @@ export function createMapleLiquidityPositionChange(
   let change = new MapleLiquidityPositionChange(uniqueEventId(event));
   change.mapleLiquidityPositionChangeType = changeType;
   change.externalPosition = mapleLiquidityPositionAddress.toHex();
-  change.pool = pool.id;
+  change.poolV1 = poolV1 != null ? poolV1.id : null;
+  change.poolV2 = poolV2 != null ? poolV2.id : null;
   change.assetAmount = assetAmount != null ? assetAmount.id : null;
+  change.asset = asset != null ? asset.id : null;
   change.vault = vault.id;
   change.timestamp = event.block.timestamp.toI32();
   change.activityCounter = getActivityCounter();
@@ -64,8 +70,8 @@ export function createMapleLiquidityPositionChange(
   return change;
 }
 
-export function createMapleLiquidityAssetAmount(
-  mapleLiquidityPool: MapleLiquidityPool,
+export function createMapleLiquidityAssetAmountV1(
+  mapleLiquidityPool: MapleLiquidityPoolV1,
   amount: BigInt,
   denominationAsset: Asset,
   event: ethereum.Event,
@@ -76,8 +82,20 @@ export function createMapleLiquidityAssetAmount(
   return createAssetAmount(liquidityAsset, liquidityAmount, denominationAsset, 'mlp', event);
 }
 
-export function createMapleLiquidityAssetAmountByPoolTokenAmount(
-  mapleLiquidityPool: MapleLiquidityPool,
+export function createMapleLiquidityAssetAmountV2(
+  mapleLiquidityPool: MapleLiquidityPoolV2,
+  amount: BigInt,
+  denominationAsset: Asset,
+  event: ethereum.Event,
+): AssetAmount {
+  let liquidityAsset = ensureAsset(Address.fromString(mapleLiquidityPool.liquidityAsset));
+  let liquidityAmount = toBigDecimal(amount, liquidityAsset.decimals);
+
+  return createAssetAmount(liquidityAsset, liquidityAmount, denominationAsset, 'mlp', event);
+}
+
+export function createMapleLiquidityAssetAmountByPoolTokenAmountV1(
+  mapleLiquidityPool: MapleLiquidityPoolV1,
   poolTokenAmount: BigInt,
   denominationAsset: Asset,
   event: ethereum.Event,
@@ -87,6 +105,44 @@ export function createMapleLiquidityAssetAmountByPoolTokenAmount(
   let poolAsset = ensureAsset(Address.fromString(mapleLiquidityPool.id));
 
   let liquidityAssetAmount = toBigDecimal(poolTokenAmount, poolAsset.decimals);
+
+  return createAssetAmount(liquidityAsset, liquidityAssetAmount, denominationAsset, 'mlp', event);
+}
+
+export function createMapleLiquidityAssetAmountByPoolTokenAmountV2(
+  mapleLiquidityPool: MapleLiquidityPoolV2,
+  poolTokenAmount: BigInt,
+  denominationAsset: Asset,
+  event: ethereum.Event,
+): AssetAmount {
+  let poolContract = ExternalSdk.bind(Address.fromString(mapleLiquidityPool.id));
+
+  let liquidityAsset = ensureAsset(Address.fromString(mapleLiquidityPool.liquidityAsset));
+
+  let liquidityAssetAmount = toBigDecimal(poolContract.convertToExitAssets(poolTokenAmount), liquidityAsset.decimals);
+
+  return createAssetAmount(liquidityAsset, liquidityAssetAmount, denominationAsset, 'mlp', event);
+}
+
+export function createMapleLiquidityAssetAmountByRedeemedPoolTokenAmountV2(
+  mapleLiquidityPool: MapleLiquidityPoolV2,
+  reedemedPoolTokenAmount: BigInt,
+  denominationAsset: Asset,
+  event: ethereum.Event,
+): AssetAmount {
+  let poolContract = ExternalSdk.bind(Address.fromString(mapleLiquidityPool.id));
+
+  let liquidityAsset = ensureAsset(Address.fromString(mapleLiquidityPool.liquidityAsset));
+
+  let totalPoolTokenAmount = poolContract.totalSupply();
+
+  let unrealizedLosses = poolContract.unrealizedLosses();
+
+  let totalAssets = poolContract.totalAssets();
+
+  let liquidityAmount = reedemedPoolTokenAmount.times(totalAssets.minus(unrealizedLosses)).div(totalPoolTokenAmount);
+
+  let liquidityAssetAmount = toBigDecimal(liquidityAmount, liquidityAsset.decimals);
 
   return createAssetAmount(liquidityAsset, liquidityAssetAmount, denominationAsset, 'mlp', event);
 }

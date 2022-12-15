@@ -23,15 +23,19 @@ export const enum UniswapV3LiquidityPositionActionId {
 }
 
 export enum MapleLiquidityPositionActionId {
-  Lend = 0,
-  LendAndStake = 1,
-  IntendToRedeem = 2,
-  Redeem = 3,
-  Stake = 4,
-  Unstake = 5,
-  UnstakeAndRedeem = 6,
-  ClaimInterest = 7,
-  ClaimRewards = 8,
+  LendV1 = 0,
+  LendAndStakeV1 = 1,
+  IntendToRedeemV1 = 2,
+  RedeemV1 = 3,
+  StakeV1 = 4,
+  UnstakeV1 = 5,
+  UnstakeAndRedeemV1 = 6,
+  ClaimInterestV1 = 7,
+  ClaimRewardsV1 = 8,
+  LendV2 = 9,
+  RequestRedeemV2 = 10,
+  RedeemV2 = 11,
+  CancelRedeemV2 = 12,
 }
 
 export enum LiquityDebtPositionActionId {

@@ -48,6 +48,7 @@ export interface Variables {
     cvxLockerV2Address: string;
     theGraphStakingProxyAddress: string;
     cvxAddress: string;
+    mplAddress: string;
     grtAddress: string;
     lusdAddress: string;
   };
@@ -152,6 +153,7 @@ export const configure: Configurator<Variables> = (variables) => {
         CurveLiquidityGaugeV2: 'abis/external/CurveLiquidityGaugeV2.json',
         CurveMinter: 'abis/external/CurveMinter.json',
         CvxLockerV2: 'abis/external/CvxLockerV2.json',
+        IMapleV2Pool: 'abis/external/IMapleV2Pool.json',
         MaplePool: 'abis/external/MaplePool.json',
         MapleRewards: 'abis/external/MapleRewards.json',
         NonfungiblePositionManager: 'abis/external/NonfungiblePositionManager.json',
@@ -163,6 +165,11 @@ export const configure: Configurator<Variables> = (variables) => {
         abis.CurveLiquidityGaugeV2.getFunction('reward_tokens'),
         abis.CurveMinter.getFunction('token'),
         abis.CvxLockerV2.getFunction('userLocks'),
+        abis.IMapleV2Pool.getFunction('totalAssets'),
+        abis.IMapleV2Pool.getFunction('unrealizedLosses'),
+        abis.IMapleV2Pool.getFunction('totalSupply'),
+        abis.IMapleV2Pool.getFunction('convertToExitAssets'),
+        abis.IMapleV2Pool.getFunction('asset'),
         abis.MaplePool.getFunction('liquidityAsset'),
         abis.MapleRewards.getFunction('stakingToken'),
         abis.NonfungiblePositionManager.getFunction('factory'),

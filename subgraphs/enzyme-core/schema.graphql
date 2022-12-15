@@ -1196,10 +1196,15 @@ type ArbitraryLoanPositionChange implements Activity & VaultActivity & ExternalP
   activityType: ActivityType!
 }
 
-type MapleLiquidityPool @entity {
+type MapleLiquidityPoolV1 @entity {
   id: ID!
   liquidityAsset: Asset!
   rewardsContract: Bytes
+}
+
+type MapleLiquidityPoolV2 @entity {
+  id: ID!
+  liquidityAsset: Asset!
 }
 
 type MapleLiquidityPosition implements ExternalPosition @entity {
@@ -1207,20 +1212,24 @@ type MapleLiquidityPosition implements ExternalPosition @entity {
   vault: Vault!
   type: ExternalPositionType!
   active: Boolean!
-  pools: [MapleLiquidityPool!]!
+  pools: [MapleLiquidityPoolV2!]!
   changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
 }
 
 enum MapleLiquidityPositionChangeType {
-  Lend
-  LendAndStake
-  IntendToRedeem
-  Redeem
-  Stake
-  Unstake
-  UnstakeAndRedeem
-  ClaimInterest
-  ClaimRewards
+  LendV1
+  LendAndStakeV1
+  IntendToRedeemV1
+  RedeemV1
+  StakeV1
+  UnstakeV1
+  UnstakeAndRedeemV1
+  ClaimInterestV1
+  ClaimRewardsV1
+  LendV2
+  RequestRedeemV2
+  RedeemV2
+  CancelRedeemV2
 }
 
 type MapleLiquidityPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
@@ -1229,8 +1238,10 @@ type MapleLiquidityPositionChange implements Activity & VaultActivity & External
   timestamp: Int!
   externalPosition: ExternalPosition!
   mapleLiquidityPositionChangeType: MapleLiquidityPositionChangeType!
-  pool: MapleLiquidityPool!
+  poolV1: MapleLiquidityPoolV1
+  poolV2: MapleLiquidityPoolV2
   assetAmount: AssetAmount
+  asset: Asset
   activityCounter: Int!
   activityCategories: [ActivityCategory!]!
   activityType: ActivityType!

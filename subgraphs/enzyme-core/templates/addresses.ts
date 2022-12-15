@@ -220,6 +220,8 @@ export let curveMinterAddress = Address.fromString('{{external.curveMinterAddres
 
 export let cvxAddress = Address.fromString('{{external.cvxAddress}}');
 
+export let mplAddress = Address.fromString('{{external.mplAddress}}');
+
 export let cvxLockerV2Address = Address.fromString('{{external.cvxLockerV2Address}}');
 
 export let grtAddress = Address.fromString('{{external.grtAddress}}');
