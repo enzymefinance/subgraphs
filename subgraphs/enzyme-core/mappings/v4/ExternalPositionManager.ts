@@ -1469,15 +1469,13 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let wethAsset = ensureAsset(wethTokenAddress);
 
       let ethPerNode = BigDecimal.fromString('32');
-      let amount = toBigDecimal(validatorAmount, wethAsset.decimals).times(ethPerNode);
+      let amount = toBigDecimal(validatorAmount, 0).times(ethPerNode);
       let assetAmount = createAssetAmount(wethAsset, amount, denominationAsset, 'kiln-stake', event);
 
       createKilnStakingPositionChange(event.params.externalPosition, 'Stake', assetAmount, [], null, vault, event);
 
       let kilnStakingPosition = useKilnStakingPosition(event.params.externalPosition.toHex());
-      kilnStakingPosition.stakedEthAmount = kilnStakingPosition.stakedEthAmount.plus(
-        toBigDecimal(validatorAmount, wethAsset.decimals),
-      );
+      kilnStakingPosition.stakedEthAmount = kilnStakingPosition.stakedEthAmount.plus(amount);
       kilnStakingPosition.save();
     }
 
