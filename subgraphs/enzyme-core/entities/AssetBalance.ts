@@ -15,7 +15,7 @@ export function createAssetBalance(
   let id = assetBalanceId(asset, suffix, event);
   let assetBalance = new AssetBalance(id);
   assetBalance.asset = asset.id;
-  assetBalance.amount = amount;
+  assetBalance.amount = amount.truncate(asset.decimals);
   assetBalance.save();
 
   return assetBalance;

@@ -24,11 +24,10 @@ export function createAssetAmount(
     : BigDecimal.fromString('0');
 
   let currencyPrice = ensureCurrencyPrice(event);
-
   let id = assetAmountId(asset, suffix, event);
   let assetAmount = new AssetAmount(id);
   assetAmount.asset = asset.id;
-  assetAmount.amount = amount;
+  assetAmount.amount = amount.truncate(asset.decimals);
   assetAmount.denominationAsset = denominationAsset.id;
   assetAmount.valueDenomination = assetValueDenomination;
   assetAmount.valueAud = assetValueEth.times(currencyPrice.ethAud);

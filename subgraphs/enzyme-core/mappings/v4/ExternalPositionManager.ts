@@ -3,6 +3,7 @@ import {
   logCritical,
   toBigDecimal,
   tuplePrefixBytes,
+  ZERO_ADDRESS,
   ZERO_BD,
   ZERO_BI,
 } from '@enzymefinance/subgraph-utils';
@@ -1046,11 +1047,9 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let indexer = tuple[0].toAddress();
       let shares = tuple[1].toBigInt();
 
-      // Note: commented code was not tested yet
+      let theGraphDelegationToIndexerId = getTheGraphDelegationToIndexerId(event.params.externalPosition, indexer);
 
-      // let theGraphDelegationToIndexerId = getTheGraphDelegationToIndexerId(event.params.externalPosition, indexer);
-
-      // let beforeUndelegateTokensLocked = useTheGraphDelegationToIndexer(theGraphDelegationToIndexerId).tokensLocked;
+      let beforeUndelegateTokensLocked = useTheGraphDelegationToIndexer(theGraphDelegationToIndexerId).tokensLocked;
 
       let afterUndelegateGraphDelegationToIndexer = trackTheGraphDelegationToIndexer(
         event.params.externalPosition,
@@ -1058,25 +1057,25 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         event,
       );
 
-      // let afterUndelegateTokensLocked = afterUndelegateGraphDelegationToIndexer.tokensLocked;
+      let afterUndelegateTokensLocked = afterUndelegateGraphDelegationToIndexer.tokensLocked;
 
-      // let grtAsset = ensureAsset(grtAddress);
+      let grtAsset = ensureAsset(grtAddress);
 
       let grtAmount = sharesToTheGraphAssetAmount(shares, indexer, denominationAsset, event);
 
-      // let withdrewWhileUndelegatingAssetAmountBD = beforeUndelegateTokensLocked
-      //   .plus(grtAmount.amount)
-      //   .minus(afterUndelegateTokensLocked);
+      let withdrewWhileUndelegatingAssetAmountBD = beforeUndelegateTokensLocked
+        .plus(grtAmount.amount)
+        .minus(afterUndelegateTokensLocked);
 
-      // let withdrewWhileUndelegatingAssetAmount = withdrewWhileUndelegatingAssetAmountBD.gt(BigDecimal.fromString('0'))
-      //   ? createAssetAmount(
-      //       grtAsset,
-      //       withdrewWhileUndelegatingAssetAmountBD,
-      //       denominationAsset,
-      //       'grt-withdrew-while-undelegating-asset-amount',
-      //       event,
-      //     )
-      //   : null;
+      let withdrewWhileUndelegatingAssetAmount = withdrewWhileUndelegatingAssetAmountBD.gt(BigDecimal.fromString('0'))
+        ? createAssetAmount(
+            grtAsset,
+            withdrewWhileUndelegatingAssetAmountBD,
+            denominationAsset,
+            'grt-withdrew-while-undelegating-asset-amount',
+            event,
+          )
+        : null;
 
       createTheGraphDelegationPositionChange(
         event.params.externalPosition,
@@ -1084,77 +1083,75 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         indexer,
         null,
         null,
-        null, // withdrewWhileUndelegatingAssetAmount,
+        withdrewWhileUndelegatingAssetAmount,
         'Undelegate',
         vault,
         event,
       );
     }
 
-    // Note: commented code was not tested yet
+    if (actionId == TheGraphDelegationPositionActionId.Withdraw) {
+      let decoded = ethereum.decode('(address,address)', event.params.actionArgs);
 
-    // if (actionId == TheGraphDelegationPositionActionId.Withdraw) {
-    //   let decoded = ethereum.decode('(address,address)', event.params.actionArgs);
+      if (decoded == null) {
+        return;
+      }
 
-    //   if (decoded == null) {
-    //     return;
-    //   }
+      let tuple = decoded.toTuple();
 
-    //   let tuple = decoded.toTuple();
+      let indexer = tuple[0].toAddress();
+      let newIndexer = tuple[1].toAddress();
 
-    //   let indexer = tuple[0].toAddress();
-    //   let newIndexer = tuple[1].toAddress();
+      let isRedelegating = newIndexer.notEqual(ZERO_ADDRESS);
 
-    //   let isRedelegating = newIndexer.notEqual(ZERO_ADDRESS);
+      let delegationToIndexerId = getTheGraphDelegationToIndexerId(event.params.externalPosition, indexer);
 
-    //   let delegationToIndexerId = getTheGraphDelegationToIndexerId(event.params.externalPosition, indexer);
+      let beforeWithdrawTokensLocked = useTheGraphDelegationToIndexer(delegationToIndexerId).tokensLocked;
 
-    //   let beforeWithdrawTokensLocked = useTheGraphDelegationToIndexer(delegationToIndexerId).tokensLocked;
+      let afterWithdrawGraphDelegationToIndexer = trackTheGraphDelegationToIndexer(
+        event.params.externalPosition,
+        indexer,
+        event,
+      );
 
-    //   let afterWithdrawGraphDelegationToIndexer = trackTheGraphDelegationToIndexer(
-    //     event.params.externalPosition,
-    //     indexer,
-    //     event,
-    //   );
+      let afterWithdrawTokensLocked = BigDecimal.fromString('0');
+      // if null then the graph delegation was deleted by remove indexer event
+      if (afterWithdrawGraphDelegationToIndexer != null) {
+        afterWithdrawTokensLocked = afterWithdrawGraphDelegationToIndexer.tokensLocked;
+      }
 
-    //   let afterWithdrawTokensLocked = BigDecimal.fromString('0');
-    //   // if null then the graph delegation was deleted by remove indexer event
-    //   if (afterWithdrawGraphDelegationToIndexer != null) {
-    //     afterWithdrawTokensLocked = afterWithdrawGraphDelegationToIndexer.tokensLocked;
-    //   }
+      let tokensLockedDiffAmount = beforeWithdrawTokensLocked.minus(afterWithdrawTokensLocked);
+      let grtAsset = ensureAsset(grtAddress);
+      let feeAssetAmount: AssetAmount | null = null;
+      let assetAmount: AssetAmount;
 
-    //   let tokensLockedDiffAmount = beforeWithdrawTokensLocked.minus(afterWithdrawTokensLocked);
-    //   let grtAsset = ensureAsset(grtAddress);
-    //   let feeAssetAmount: AssetAmount | null = null;
-    //   let assetAmount: AssetAmount;
+      if (isRedelegating) {
+        let feeAmount = tokensLockedDiffAmount.times(getDelegationTaxPercentage());
 
-    //   if (isRedelegating) {
-    //     let feeAmount = tokensLockedDiffAmount.times(getDelegationTaxPercentage());
+        let grtAmountWithoutFee = tokensLockedDiffAmount.minus(feeAmount);
+        assetAmount = createAssetAmount(grtAsset, grtAmountWithoutFee, denominationAsset, 'grt-asset-amount', event);
 
-    //     let grtAmountWithoutFee = tokensLockedDiffAmount.minus(feeAmount);
-    //     assetAmount = createAssetAmount(grtAsset, grtAmountWithoutFee, denominationAsset, 'grt-asset-amount', event);
+        feeAssetAmount = createAssetAmount(grtAsset, feeAmount, denominationAsset, 'grt-fee-asset-amount', event);
+      } else {
+        assetAmount = createAssetAmount(grtAsset, tokensLockedDiffAmount, denominationAsset, 'grt-asset-amount', event);
+      }
 
-    //     feeAssetAmount = createAssetAmount(grtAsset, feeAmount, denominationAsset, 'grt-fee-asset-amount', event);
-    //   } else {
-    //     assetAmount = createAssetAmount(grtAsset, tokensLockedDiffAmount, denominationAsset, 'grt-asset-amount', event);
-    //   }
+      createTheGraphDelegationPositionChange(
+        event.params.externalPosition,
+        assetAmount,
+        indexer,
+        feeAssetAmount,
+        isRedelegating ? newIndexer : null,
+        null,
+        'Withdraw',
+        vault,
+        event,
+      );
 
-    //   createTheGraphDelegationPositionChange(
-    //     event.params.externalPosition,
-    //     assetAmount,
-    //     indexer,
-    //     feeAssetAmount,
-    //     isRedelegating ? null : newIndexer,
-    //     null,
-    //     'Withdraw',
-    //     vault,
-    //     event,
-    //   );
-
-    //   if (isRedelegating) {
-    //     trackTheGraphDelegationToIndexer(event.params.externalPosition, newIndexer, event);
-    //   }
-    // }
+      if (isRedelegating) {
+        trackTheGraphDelegationToIndexer(event.params.externalPosition, newIndexer, event);
+      }
+    }
 
     return;
   }
