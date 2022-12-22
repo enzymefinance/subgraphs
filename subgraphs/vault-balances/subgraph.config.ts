@@ -17,6 +17,7 @@ interface Variables {
 }
 
 const name = 'enzymefinance/vault-balances';
+const hostedNetworkName = 'enzyme-vault-balances';
 
 const deployments = {
   ethereum: getEnvironment(Deployment.ETHEREUM),

@@ -14,6 +14,8 @@ const defaultLocalIpfs = 'http://localhost:5001/';
 const defaultRemoteNode = 'https://api.thegraph.com/deploy/';
 const defaultRemoteIpfs = 'https://api.thegraph.com/ipfs/';
 
+const hostedNetworkNode = 'https://api.studio.thegraph.com/deploy/';
+
 class SubgraphLoader<TVariables = any> {
   public readonly contexts: Contexts<TVariables>;
   protected readonly configure: Configurator<TVariables>;
