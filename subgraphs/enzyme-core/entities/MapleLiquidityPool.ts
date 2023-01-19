@@ -43,6 +43,7 @@ export function createMapleLiquidityPoolV2(pool: Address): MapleLiquidityPoolV2 
   let liquidityAsset = ensureAsset(poolContract.asset());
 
   mapleLiquidityPool.liquidityAsset = liquidityAsset.id;
+  mapleLiquidityPool.manager = poolContract.manager();
   mapleLiquidityPool.save();
 
   return mapleLiquidityPool;

@@ -1205,6 +1205,7 @@ type MapleLiquidityPoolV1 @entity {
 type MapleLiquidityPoolV2 @entity {
   id: ID!
   liquidityAsset: Asset!
+  manager: Bytes!
 }
 
 type MapleLiquidityPosition implements ExternalPosition @entity {
@@ -1412,7 +1413,7 @@ type KilnStakingPosition implements ExternalPosition @entity {
   type: ExternalPositionType!
   active: Boolean!
   stakedEthAmount: BigDecimal!
-  publicKeys: [Bytes!]! 
+  publicKeys: [Bytes!]!
   changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
 }
 
@@ -1442,7 +1443,6 @@ type KilnStakingPositionChange implements Activity & VaultActivity & ExternalPos
   activityCategories: [ActivityCategory!]!
   activityType: ActivityType!
 }
-
 
 type UnknownExternalPosition implements ExternalPosition @entity {
   id: ID!
