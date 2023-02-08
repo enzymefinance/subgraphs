@@ -23,6 +23,7 @@ export const testnet: Context<Variables> = {
       jpyUsd: '0xd647a6fc9bc6402301583c91decc5989d8bc382d',
     },
     external: {
+      balancerMinterAddress: '0x0000000000000000000000000000000000000000',
       curveMinterAddress: testnetV4Deployment.externalContracts.curveMinter,
       cvxLockerV2Address: testnetV4Deployment.externalContracts.voteLockedConvexToken,
       cvxAddress: testnetV4Deployment.namedTokens.cvx.id,
@@ -104,6 +105,7 @@ export const testnet: Context<Variables> = {
         arbitraryLoanFixedInterestModuleAddress: testnetV4Deployment.contracts.ArbitraryLoanFixedInterestModule,
         arbitraryLoanTotalNominalDeltaOracleModuleAddress:
           testnetV4Deployment.contracts.ArbitraryLoanTotalNominalDeltaOracleModule,
+        balancerV2LiquidityAdapterAddress: '0x6e7588b7a33741a7da4754168346cab07c7c9c07',
         comptrollerLibAddress: testnetV4Deployment.contracts.ComptrollerLib,
         convexCurveLpStakingAdapterAddress: testnetV4Deployment.contracts.ConvexCurveLpStakingAdapter,
         convexCurveLpStakingWrapperFactoryAddress: testnetV4Deployment.contracts.ConvexCurveLpStakingWrapperFactory,

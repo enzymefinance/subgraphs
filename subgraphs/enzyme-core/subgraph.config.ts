@@ -44,6 +44,7 @@ export interface Variables {
     v4: v4.ReleaseVariables;
   };
   external: {
+    balancerMinterAddress: string;
     curveMinterAddress: string;
     cvxLockerV2Address: string;
     theGraphStakingProxyAddress: string;
@@ -150,6 +151,7 @@ export const configure: Configurator<Variables> = (variables) => {
     {
       name: 'External',
       abis: {
+        BalancerMinter: 'abis/external/BalancerMinter.json',
         CurveLiquidityGaugeV2: 'abis/external/CurveLiquidityGaugeV2.json',
         CurveMinter: 'abis/external/CurveMinter.json',
         CvxLockerV2: 'abis/external/CvxLockerV2.json',
@@ -164,6 +166,7 @@ export const configure: Configurator<Variables> = (variables) => {
         UniswapV3Pool: 'abis/external/UniswapV3Pool.json',
       },
       functions: (abis) => [
+        abis.BalancerMinter.getFunction('getBalancerToken'),
         abis.CurveLiquidityGaugeV2.getFunction('reward_tokens'),
         abis.CurveMinter.getFunction('token'),
         abis.CvxLockerV2.getFunction('userLocks'),

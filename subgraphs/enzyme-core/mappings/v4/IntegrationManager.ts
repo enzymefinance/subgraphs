@@ -1,5 +1,5 @@
 import { arrayUnique, toBigDecimal, ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
-import { Address, ethereum, BigInt } from '@graphprotocol/graph-ts';
+import { Address, ethereum, BigInt, log } from '@graphprotocol/graph-ts';
 import { ensureAsset } from '../../entities/Asset';
 import { createAssetAmount } from '../../entities/AssetAmount';
 import { ensureComptroller } from '../../entities/Comptroller';
@@ -10,7 +10,7 @@ import {
   ValidatedVaultProxySetForFund,
 } from '../../generated/contracts/IntegrationManager4Events';
 import { Asset, AssetAmount } from '../../generated/schema';
-import { release4Addresses, curveMinterAddress } from '../../generated/addresses';
+import { release4Addresses, balancerMinterAddress, curveMinterAddress } from '../../generated/addresses';
 import { claimRewardsSelector } from '../../utils/integrationSelectors';
 import { ProtocolSdk } from '../../generated/contracts/ProtocolSdk';
 import { ExternalSdk } from '../../generated/contracts/ExternalSdk';
@@ -72,7 +72,9 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
 
   // Claim rewards doesn't emit incoming assets. In order to be able to display information, on the activty page, about claimed asset we decode the call action args.
   if (
-    release4Addresses.curveLiquidityAdapterAddress.equals(event.params.adapter) &&
+    [release4Addresses.balancerV2LiquidityAdapterAddress, release4Addresses.curveLiquidityAdapterAddress].includes(
+      event.params.adapter,
+    ) &&
     integrationSelector == claimRewardsSelector
   ) {
     let decoded = ethereum.decode('(address)', event.params.integrationData);
@@ -89,7 +91,7 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
 
     let curveGaugeV2MaxRewards = 8;
 
-    for (let i = 1; i < curveGaugeV2MaxRewards; i++) {
+    for (let i = 0; i < curveGaugeV2MaxRewards; i++) {
       let rewardAssetAddress = curveLiquidityGaugeV2Contract.reward_tokens(BigInt.fromI32(i));
 
       if (rewardAssetAddress.equals(ZERO_ADDRESS)) {
@@ -101,7 +103,10 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
     }
 
     //  Curve Minter exist only on Ethereum mainnet
-    if (curveMinterAddress.notEqual(ZERO_ADDRESS)) {
+    if (
+      curveMinterAddress.notEqual(ZERO_ADDRESS) &&
+      release4Addresses.curveLiquidityAdapterAddress.equals(event.params.adapter)
+    ) {
       let curveMinterContract = ExternalSdk.bind(curveMinterAddress);
 
       let rewardAssetAddress = curveMinterContract.token();
@@ -109,6 +114,20 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
       let rewardAsset = ensureAsset(rewardAssetAddress);
       incomingAssets = arrayUnique<Asset>(incomingAssets.concat([rewardAsset]));
     }
+
+    //  Balancer Minter exist only on Ethereum mainnet
+    // TODO: uncomment when tested on Ethereum
+    // if (
+    //   balancerMinterAddress.notEqual(ZERO_ADDRESS) &&
+    //   release4Addresses.balancerV2LiquidityAdapterAddress.equals(event.params.adapter)
+    // ) {
+    //   let balancerMinterContract = ExternalSdk.bind(balancerMinterAddress);
+
+    //   let rewardAssetAddress = balancerMinterContract.getBalancerToken();
+
+    //   let rewardAsset = ensureAsset(rewardAssetAddress);
+    //   incomingAssets = arrayUnique<Asset>(incomingAssets.concat([rewardAsset]));
+    // }
   }
 
   trackTrade(

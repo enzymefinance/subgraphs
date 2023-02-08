@@ -25,6 +25,7 @@ export const ethereum: Context<Variables> = {
       jpyUsd: '0xbce206cae7f0ec07b545edde332a47c2f75bbeb3',
     },
     external: {
+      balancerMinterAddress: '0x239e55f427d44c3cc793f49bfb507ebe76638a2b',
       curveMinterAddress: suluDeployment.externalContracts.curveMinter,
       cvxLockerV2Address: suluDeployment.externalContracts.voteLockedConvexToken,
       cvxAddress: suluDeployment.namedTokens.cvx.id,
@@ -105,6 +106,7 @@ export const ethereum: Context<Variables> = {
         arbitraryLoanFixedInterestModuleAddress: suluDeployment.contracts.ArbitraryLoanFixedInterestModule,
         arbitraryLoanTotalNominalDeltaOracleModuleAddress:
           suluDeployment.contracts.ArbitraryLoanTotalNominalDeltaOracleModule,
+        balancerV2LiquidityAdapterAddress: '0xe65df28eeec94bf2d21192fccb67852e93179daa',
         comptrollerLibAddress: suluDeployment.contracts.ComptrollerLib,
         convexCurveLpStakingAdapterAddress: suluDeployment.contracts.ConvexCurveLpStakingAdapter,
         convexCurveLpStakingWrapperFactoryAddress: suluDeployment.contracts.ConvexCurveLpStakingWrapperFactory,

@@ -72,6 +72,7 @@ export class Release4Addresses {
   allowedExternalPositionTypesPerManagerPolicyAddress: Address;
   allowedExternalPositionTypesPolicyAddress: Address;
   allowedSharesTransferRecipientsPolicyAddress: Address;
+  balancerV2LiquidityAdapterAddress: Address;
   comptrollerLibAddress: Address;
   convexCurveLpStakingAdapterAddress: Address;
   convexCurveLpStakingWrapperFactoryAddress: Address;
@@ -175,6 +176,7 @@ export let release4Addresses: Release4Addresses = {
   allowedSharesTransferRecipientsPolicyAddress: Address.fromString(
     '{{releases.v4.allowedSharesTransferRecipientsPolicyAddress}}',
   ),
+  balancerV2LiquidityAdapterAddress: Address.fromString('{{releases.v4.balancerV2LiquidityAdapterAddress}}'),
   comptrollerLibAddress: Address.fromString('{{releases.v4.comptrollerLibAddress}}'),
   convexCurveLpStakingAdapterAddress: Address.fromString('{{releases.v4.convexCurveLpStakingAdapterAddress}}'),
   convexCurveLpStakingWrapperFactoryAddress: Address.fromString('{{releases.v4.convexCurveLpStakingAdapterAddress}}'),
@@ -215,6 +217,8 @@ export let release4Addresses: Release4Addresses = {
 export let wethTokenAddress = Address.fromString('{{wethTokenAddress}}');
 
 export let wrappedNativeTokenAddress = Address.fromString('{{wrappedNativeTokenAddress}}');
+
+export let balancerMinterAddress = Address.fromString('{{external.balancerMinterAddress}}');
 
 export let curveMinterAddress = Address.fromString('{{external.curveMinterAddress}}');
 
