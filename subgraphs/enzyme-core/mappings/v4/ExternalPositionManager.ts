@@ -62,6 +62,7 @@ import {
   LiquityDebtPositionActionId,
   UniswapV3LiquidityPositionActionId,
   KilnStakingPositionActionId,
+  NotionalV2PositionActionId,
 } from '../../utils/actionId';
 import { ensureMapleLiquidityPoolV1, ensureMapleLiquidityPoolV2 } from '../../entities/MapleLiquidityPool';
 import { ExternalSdk } from '../../generated/contracts/ExternalSdk';
@@ -100,6 +101,9 @@ import {
   useKilnStakingPosition,
 } from '../../entities/KilnStakingPosition';
 import { kilnClaimFeeType } from '../../utils/kilnClaimFeeType';
+import { notionalV2AssetByCurrencyId } from '../../utils/notionalV2AssetByCurrencyId';
+import { createNotionalV2Position, createNotionalV2PositionChange } from '../../entities/NotionalV2Position';
+import { notionalV2MarketIndexType } from '../../utils/notionalV2MarketIndexType';
 
 export function handleExternalPositionDeployedForFund(event: ExternalPositionDeployedForFund): void {
   let type = useExternalPositionType(event.params.externalPositionTypeId);
@@ -159,6 +163,11 @@ export function handleExternalPositionDeployedForFund(event: ExternalPositionDep
   if (type.label == 'KILN_STAKING') {
     createKilnStakingPosition(event.params.externalPosition, event.params.vaultProxy, type);
 
+    return;
+  }
+
+  if (type.label == 'NOTIONAL_V2') {
+    createNotionalV2Position(event.params.externalPosition, event.params.vaultProxy, type);
     return;
   }
 
@@ -1502,6 +1511,176 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
     if (actionId == KilnStakingPositionActionId.WithdrawEth) {
       createKilnStakingPositionChange(event.params.externalPosition, 'WithdrawEth', null, [], null, vault, event);
+    }
+
+    return;
+  }
+
+  if (type.label == 'NOTIONAL_V2') {
+    if (actionId == NotionalV2PositionActionId.AddCollateral) {
+      let decoded = ethereum.decode('(uint16, uint256)', tuplePrefixBytes(event.params.actionArgs));
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+      let currencyId = tuple[0].toI32();
+      let collateralAsset = notionalV2AssetByCurrencyId(currencyId);
+      let collateralAssetAmount = tuple[1].toBigInt();
+
+      if (collateralAsset == null) {
+        return;
+      }
+
+      let collateralAmount = toBigDecimal(collateralAssetAmount, collateralAsset.decimals);
+      let outgoingAssetAmount = createAssetAmount(
+        collateralAsset,
+        collateralAmount,
+        denominationAsset,
+        'notionalv2-add-collateral',
+        event,
+      );
+
+      createNotionalV2PositionChange(
+        event.params.externalPosition,
+        'AddCollateral',
+        null,
+        null,
+        collateralAsset,
+        outgoingAssetAmount,
+        null,
+        null,
+        vault,
+        event,
+      );
+    }
+
+    if (actionId == NotionalV2PositionActionId.Borrow) {
+      let decoded = ethereum.decode('(uint16,bytes32,uint16,uint256)', tuplePrefixBytes(event.params.actionArgs));
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+      let borrowedCurrencyId = tuple[0].toI32();
+      let encodedBorrowTrade = tuple[1].toBytes();
+      let collateralCurrencyId = tuple[2].toI32();
+      let collateralAssetAmount = tuple[3].toBigInt();
+      let incomingAsset = notionalV2AssetByCurrencyId(borrowedCurrencyId);
+      let collateralAsset = notionalV2AssetByCurrencyId(collateralCurrencyId);
+      let marketIndex = encodedBorrowTrade[1];
+      let fCashAmount = encodedBorrowTrade[2];
+      let maturity = notionalV2MarketIndexType(marketIndex.toString());
+
+      if (collateralAsset == null) {
+        return;
+      }
+
+      let collateralAmount = toBigDecimal(collateralAssetAmount, collateralAsset.decimals);
+      let outgoingAssetAmount = createAssetAmount(
+        collateralAsset,
+        collateralAmount,
+        denominationAsset,
+        'notionalv2-borrow',
+        event,
+      );
+
+      createNotionalV2PositionChange(
+        event.params.externalPosition,
+        'Borrow',
+        incomingAsset,
+        null,
+        collateralAsset,
+        outgoingAssetAmount,
+        fCashAmount.toString(),
+        maturity,
+        vault,
+        event,
+      );
+    }
+
+    if (actionId == NotionalV2PositionActionId.Lend) {
+      let decoded = ethereum.decode('(uint16, uint256, bytes32)', tuplePrefixBytes(event.params.actionArgs));
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+      let currencyId = tuple[0].toI32();
+      let collateralAsset = notionalV2AssetByCurrencyId(currencyId);
+      let collateralAssetAmount = tuple[1].toBigInt();
+      let encodedLendTrade = tuple[2].toBytes();
+      let marketIndex = encodedLendTrade[1];
+      let fCashAmount = encodedLendTrade[2];
+      let maturity = notionalV2MarketIndexType(marketIndex.toString());
+
+      if (collateralAsset == null) {
+        return;
+      }
+
+      let collateralAmount = toBigDecimal(collateralAssetAmount, collateralAsset.decimals);
+      let outgoingAssetAmount = createAssetAmount(
+        collateralAsset,
+        collateralAmount,
+        denominationAsset,
+        'notionalv2-add-collateral',
+        event,
+      );
+
+      createNotionalV2PositionChange(
+        event.params.externalPosition,
+        'Lend',
+        null,
+        null,
+        collateralAsset,
+        outgoingAssetAmount,
+        fCashAmount.toString(),
+        maturity,
+        vault,
+        event,
+      );
+    }
+
+    if (actionId == NotionalV2PositionActionId.Redeem) {
+      let decoded = ethereum.decode('(uint16, uint256)', tuplePrefixBytes(event.params.actionArgs));
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+      let currencyId = tuple[0].toI32();
+      let yieldTokenAmount = tuple[1].toBigInt();
+      let yieldToken = notionalV2AssetByCurrencyId(currencyId);
+
+      if (yieldToken == null) {
+        return;
+      }
+
+      let yieldAmount = toBigDecimal(yieldTokenAmount, yieldToken.decimals);
+      let incomingAssetAmount = createAssetAmount(
+        yieldToken,
+        yieldAmount,
+        denominationAsset,
+        'notionalv2-redeem',
+        event,
+      );
+
+      createNotionalV2PositionChange(
+        event.params.externalPosition,
+        'Redeem',
+        yieldToken,
+        incomingAssetAmount,
+        null,
+        null,
+        null,
+        null,
+        vault,
+        event,
+      );
     }
 
     return;
