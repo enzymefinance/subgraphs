@@ -1248,6 +1248,44 @@ type MapleLiquidityPositionChange implements Activity & VaultActivity & External
   activityType: ActivityType!
 }
 
+type NotionalV2Portfolio @entity {
+  id: ID!
+  vault: Vault!
+  positions: [NotionalV2Position!]!
+}
+
+type NotionalV2Position implements ExternalPosition @entity {
+  id: ID!
+  vault: Vault!
+  type: ExternalPositionType!
+  active: Boolean!
+  changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
+}
+
+enum NotionalV2PositionChangeType {
+  AddCollateral
+  Lend
+  Redeem
+  Borrow
+}
+
+type NotionalV2PositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: Int!
+  externalPosition: ExternalPosition!
+  notionalV2PositionChangeType: NotionalV2PositionChangeType!
+  incomingAsset: Asset
+  incomingAssetAmount: AssetAmount
+  outgoingAsset: Asset
+  outgoingAssetAmount: AssetAmount
+  fCashAmount: String
+  maturity: String
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
 type LiquityDebtPosition implements ExternalPosition @entity {
   id: ID!
   vault: Vault!
