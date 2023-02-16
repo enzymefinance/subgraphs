@@ -53,6 +53,7 @@ import {
   VaultOwnershipTransferred,
 } from '../../generated/schema';
 import { useKilnStakingPosition } from '../../entities/KilnStakingPosition';
+import { useNotionalV2Position } from '../../entities/NotionalV2Position';
 
 export function handleTransfer(event: Transfer): void {
   // only track deposit balance if not zero address
@@ -348,6 +349,12 @@ export function handleExternalPositionAdded(event: ExternalPositionAdded): void 
     ksp.save();
   }
 
+  if (type.label == 'NOTIONAL_V2') {
+    let nv2p = useNotionalV2Position(event.params.externalPosition.toHex());
+    nv2p.active = true;
+    nv2p.save();
+  }
+
   let activity = new ExternalPositionAddedEvent(uniqueEventId(event));
   activity.timestamp = event.block.timestamp.toI32();
   activity.vault = event.address.toHex();
@@ -410,6 +417,12 @@ export function handleExternalPositionRemoved(event: ExternalPositionRemoved): v
     let ksp = useKilnStakingPosition(event.params.externalPosition.toHex());
     ksp.active = false;
     ksp.save();
+  }
+
+  if (type.label == 'NOTIONAL_V2') {
+    let nv2p = useNotionalV2Position(event.params.externalPosition.toHex());
+    nv2p.active = false;
+    nv2p.save();
   }
 
   let activity = new ExternalPositionRemovedEvent(uniqueEventId(event));

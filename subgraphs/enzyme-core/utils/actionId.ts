@@ -74,3 +74,10 @@ export enum KilnStakingPositionActionId {
   ClaimFees = 1,
   WithdrawEth = 2,
 }
+
+export enum NotionalV2PositionActionId {
+  AddCollateral = 0,
+  Lend = 1,
+  Redeem = 2,
+  Borrow = 3,
+}
