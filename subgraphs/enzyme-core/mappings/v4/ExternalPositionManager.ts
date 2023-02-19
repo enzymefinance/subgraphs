@@ -102,7 +102,11 @@ import {
 } from '../../entities/KilnStakingPosition';
 import { kilnClaimFeeType } from '../../utils/kilnClaimFeeType';
 import { notionalV2AssetByCurrencyId } from '../../utils/notionalV2AssetByCurrencyId';
-import { createNotionalV2Position, createNotionalV2PositionChange } from '../../entities/NotionalV2Position';
+import {
+  createNotionalV2Position,
+  createNotionalV2PositionChange,
+  trackNotionalV2Position,
+} from '../../entities/NotionalV2Position';
 import { notionalV2MarketIndexType } from '../../utils/notionalV2MarketIndexType';
 
 export function handleExternalPositionDeployedForFund(event: ExternalPositionDeployedForFund): void {
@@ -1683,6 +1687,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       );
     }
 
+    trackNotionalV2Position(event.params.externalPosition.toHex(), denominationAsset, event);
     return;
   }
 
