@@ -1259,6 +1259,8 @@ type NotionalV2Position implements ExternalPosition @entity {
   vault: Vault!
   type: ExternalPositionType!
   active: Boolean!
+  lendAssets: [AssetAmount!]
+  borrowedAssets: [AssetAmount!]
   changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
 }
 
