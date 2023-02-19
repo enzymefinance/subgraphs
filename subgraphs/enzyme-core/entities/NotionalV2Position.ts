@@ -55,9 +55,9 @@ export function createNotionalV2PositionChange(
   change.externalPosition = notionalV2PositionAddress.toHex();
   change.notionalV2PositionChangeType = changeType;
   change.incomingAsset = incomingAsset != null ? incomingAsset.id : null;
-  change.incomingAssetAmount = incomingAssetAmount != null ? incomingAssetAmount : null;
+  change.incomingAssetAmount = incomingAssetAmount != null ? incomingAssetAmount.id : null;
   change.outgoingAsset = outgoingAsset != null ? outgoingAsset.id : null;
-  change.outgoingAssetAmount = outgoingAssetAmount != null ? outgoingAssetAmount : null;
+  change.outgoingAssetAmount = outgoingAssetAmount != null ? outgoingAssetAmount.id : null;
   change.fCashAmount = fCashAmount != null ? fCashAmount : null;
   change.maturity = maturity != null ? maturity : null;
   change.vault = vault.id;
