@@ -1522,7 +1522,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
   if (type.label == 'NOTIONAL_V2') {
     if (actionId == NotionalV2PositionActionId.AddCollateral) {
-      let decoded = ethereum.decode('(uint16, uint256)', tuplePrefixBytes(event.params.actionArgs));
+      let decoded = ethereum.decode('(uint16, uint256)', event.params.actionArgs);
 
       if (decoded == null) {
         return;
@@ -1561,7 +1561,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     }
 
     if (actionId == NotionalV2PositionActionId.Borrow) {
-      let decoded = ethereum.decode('(uint16,bytes32,uint16,uint256)', tuplePrefixBytes(event.params.actionArgs));
+      let decoded = ethereum.decode('(uint16,bytes32,uint16,uint256)', event.params.actionArgs);
 
       if (decoded == null) {
         return;
@@ -1661,7 +1661,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     }
 
     if (actionId == NotionalV2PositionActionId.Redeem) {
-      let decoded = ethereum.decode('(uint16, uint256)', tuplePrefixBytes(event.params.actionArgs));
+      let decoded = ethereum.decode('(uint16, uint256)', event.params.actionArgs);
 
       if (decoded == null) {
         return;
