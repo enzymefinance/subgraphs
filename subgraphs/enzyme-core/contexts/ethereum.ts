@@ -33,6 +33,9 @@ export const ethereum: Context<Variables> = {
       grtAddress: suluDeployment.namedTokens.grt.id,
       theGraphStakingProxyAddress: suluDeployment.externalContracts.theGraphStakingProxy,
       lusdAddress: '0x5f98805a4e8be255a32880fdec7f6728c6568ba0', // TODO: add LUSD to the environment
+      daiAddress: suluDeployment.namedTokens.dai.id,
+      usdcAddress: suluDeployment.namedTokens.usdc.id,
+      wbtcAddress: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599',
     },
     persistent: {
       addressListRegistryAddress: suluDeployment.contracts.AddressListRegistry,

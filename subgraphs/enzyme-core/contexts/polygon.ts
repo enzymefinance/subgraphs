@@ -31,6 +31,9 @@ export const polygon: Context<Variables> = {
       grtAddress: polygonV4Deployment.namedTokens.grt.id,
       theGraphStakingProxyAddress: polygonV4Deployment.externalContracts.theGraphStakingProxy,
       lusdAddress: '0x0000000000000000000000000000000000000000',
+      daiAddress: polygonV4Deployment.namedTokens.dai.id,
+      usdcAddress: polygonV4Deployment.namedTokens.usdc.id,
+      wbtcAddress: '0x1bfd67037b42cf73acf2047067bd4f2c47d9bfd6',
     },
     persistent: {
       addressListRegistryAddress: polygonV4Deployment.contracts.AddressListRegistry,

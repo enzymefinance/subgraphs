@@ -31,6 +31,9 @@ export const testnet: Context<Variables> = {
       grtAddress: testnetV4Deployment.namedTokens.grt.id,
       theGraphStakingProxyAddress: testnetV4Deployment.externalContracts.theGraphStakingProxy,
       lusdAddress: '0x0000000000000000000000000000000000000000',
+      daiAddress: testnetV4Deployment.namedTokens.dai.id,
+      usdcAddress: testnetV4Deployment.namedTokens.usdc.id,
+      wbtcAddress: '0x1bfd67037b42cf73acf2047067bd4f2c47d9bfd6',
     },
     persistent: {
       addressListRegistryAddress: testnetV4Deployment.contracts.AddressListRegistry,

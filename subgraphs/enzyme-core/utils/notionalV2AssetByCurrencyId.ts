@@ -2,7 +2,7 @@ import { wethTokenAddress, daiAddress, usdcAddress, wbtcAddress } from '../gener
 import { Asset } from '../generated/schema';
 import { ensureAsset } from '../entities/Asset';
 
-export function notionalV2AssetByCurrencyId(type: number): Asset | null {
+export function notionalV2AssetByCurrencyId(type: number): Asset {
   if (type == 1) {
     return ensureAsset(wethTokenAddress);
   }
@@ -19,5 +19,5 @@ export function notionalV2AssetByCurrencyId(type: number): Asset | null {
     return ensureAsset(wbtcAddress);
   }
 
-  return null;
+  return ensureAsset(wethTokenAddress);
 }

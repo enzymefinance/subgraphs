@@ -234,6 +234,12 @@ export let theGraphStakingProxyAddress = Address.fromString('{{external.theGraph
 
 export let lusdAddress = Address.fromString('{{external.lusdAddress}}');
 
+export let daiAddress = Address.fromString('{{external.daiAddress}}');
+
+export let usdcAddress = Address.fromString('{{external.usdcAddress}}');
+
+export let wbtcAddress = Address.fromString('{{external.wbtcAddress}}');
+
 export class ChainlinkAggregatorAddresses {
   audUsdAddress: Address;
   btcEthAddress: Address;
