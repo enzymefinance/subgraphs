@@ -1582,7 +1582,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let collateralAssetAmount = tuple[3].toBigInt();
       let incomingAsset = notionalV2AssetByCurrencyId(borrowedCurrencyId);
       let collateralAsset = notionalV2AssetByCurrencyId(collateralCurrencyId);
-      let maturity = notionalV2MarketIndexType(marketIndex.toString());
+      let maturity = notionalV2MarketIndexType(marketIndex);
 
       if (collateralAsset == null) {
         return;
@@ -1631,7 +1631,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let lendTradeTuple = encodedLendTrade.toTuple();
       let marketIndex = lendTradeTuple[1].toI32();
       let fCashAmount = lendTradeTuple[2].toBigInt();
-      let maturity = notionalV2MarketIndexType(marketIndex.toString());
+      let maturity = notionalV2MarketIndexType(marketIndex);
 
       if (collateralAsset == null) {
         return;
