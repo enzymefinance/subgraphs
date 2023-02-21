@@ -32,8 +32,6 @@ export function createNotionalV2Position(
   notionalV2Position.vault = useVault(vaultAddress.toHex()).id;
   notionalV2Position.active = true;
   notionalV2Position.type = type.id;
-  notionalV2Position.lendAssets = null;
-  notionalV2Position.borrowedAssets = null;
   notionalV2Position.save();
 
   return notionalV2Position;
