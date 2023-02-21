@@ -1281,7 +1281,7 @@ type NotionalV2PositionChange implements Activity & VaultActivity & ExternalPosi
   incomingAssetAmount: AssetAmount
   outgoingAsset: Asset
   outgoingAssetAmount: AssetAmount
-  fCashAmount: String
+  fCashAmount: BigInt
   maturity: String
   activityCounter: Int!
   activityCategories: [ActivityCategory!]!

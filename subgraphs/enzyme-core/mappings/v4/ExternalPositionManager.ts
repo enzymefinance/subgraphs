@@ -1553,7 +1553,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         null,
         collateralAsset,
         outgoingAssetAmount,
-        null,
+        ZERO_BI,
         null,
         vault,
         event,
@@ -1569,13 +1569,19 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
       let tuple = decoded.toTuple();
       let borrowedCurrencyId = tuple[0].toI32();
-      let encodedBorrowTrade = tuple[1].toBytes();
+      let encodedBorrowTrade = ethereum.decode('(uint8,uint8,uint88,uint32,uint120)', tuple[1].toBytes());
+
+      if (encodedBorrowTrade == null) {
+        return;
+      }
+
+      let borrowTradeTuple = encodedBorrowTrade.toTuple();
+      let marketIndex = borrowTradeTuple[1].toI32();
+      let fCashAmount = borrowTradeTuple[2].toBigInt();
       let collateralCurrencyId = tuple[2].toI32();
       let collateralAssetAmount = tuple[3].toBigInt();
       let incomingAsset = notionalV2AssetByCurrencyId(borrowedCurrencyId);
       let collateralAsset = notionalV2AssetByCurrencyId(collateralCurrencyId);
-      let marketIndex = encodedBorrowTrade[1];
-      let fCashAmount = encodedBorrowTrade[2];
       let maturity = notionalV2MarketIndexType(marketIndex.toString());
 
       if (collateralAsset == null) {
@@ -1598,7 +1604,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         null,
         collateralAsset,
         outgoingAssetAmount,
-        fCashAmount.toString(),
+        fCashAmount,
         maturity,
         vault,
         event,
@@ -1606,7 +1612,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     }
 
     if (actionId == NotionalV2PositionActionId.Lend) {
-      let decoded = ethereum.decode('(uint16, uint256, bytes32)', tuplePrefixBytes(event.params.actionArgs));
+      let decoded = ethereum.decode('(uint16,uint256,bytes32)', event.params.actionArgs);
 
       if (decoded == null) {
         return;
@@ -1616,9 +1622,15 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let currencyId = tuple[0].toI32();
       let collateralAsset = notionalV2AssetByCurrencyId(currencyId);
       let collateralAssetAmount = tuple[1].toBigInt();
-      let encodedLendTrade = tuple[2].toBytes();
-      let marketIndex = encodedLendTrade[1];
-      let fCashAmount = encodedLendTrade[2];
+      let encodedLendTrade = ethereum.decode('(uint8,uint8,uint88,uint32,uint120)', tuple[2].toBytes());
+
+      if (encodedLendTrade == null) {
+        return;
+      }
+
+      let lendTradeTuple = encodedLendTrade.toTuple();
+      let marketIndex = lendTradeTuple[1].toI32();
+      let fCashAmount = lendTradeTuple[2].toBigInt();
       let maturity = notionalV2MarketIndexType(marketIndex.toString());
 
       if (collateralAsset == null) {
@@ -1641,7 +1653,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         null,
         collateralAsset,
         outgoingAssetAmount,
-        fCashAmount.toString(),
+        fCashAmount,
         maturity,
         vault,
         event,
@@ -1680,7 +1692,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         incomingAssetAmount,
         null,
         null,
-        null,
+        ZERO_BI,
         null,
         vault,
         event,

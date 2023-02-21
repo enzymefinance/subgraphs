@@ -1,5 +1,5 @@
-import { logCritical, toBigDecimal, uniqueEventId } from '@enzymefinance/subgraph-utils';
-import { Address, ethereum } from '@graphprotocol/graph-ts';
+import { logCritical, toBigDecimal, uniqueEventId, ZERO_BD, ZERO_BI } from '@enzymefinance/subgraph-utils';
+import { Address, BigInt, ethereum } from '@graphprotocol/graph-ts';
 import {
   AssetAmount,
   NotionalV2Position,
@@ -46,7 +46,7 @@ export function createNotionalV2PositionChange(
   incomingAssetAmount: AssetAmount | null,
   outgoingAsset: Asset | null,
   outgoingAssetAmount: AssetAmount | null,
-  fCashAmount: string | null,
+  fCashAmount: BigInt | null,
   maturity: string | null,
   vault: Vault,
   event: ethereum.Event,
@@ -58,7 +58,7 @@ export function createNotionalV2PositionChange(
   change.incomingAssetAmount = incomingAssetAmount != null ? incomingAssetAmount.id : null;
   change.outgoingAsset = outgoingAsset != null ? outgoingAsset.id : null;
   change.outgoingAssetAmount = outgoingAssetAmount != null ? outgoingAssetAmount.id : null;
-  change.fCashAmount = fCashAmount != null ? fCashAmount : null;
+  change.fCashAmount = fCashAmount;
   change.maturity = maturity != null ? maturity : null;
   change.vault = vault.id;
   change.timestamp = event.block.timestamp.toI32();
@@ -94,7 +94,7 @@ export function trackNotionalV2Position(id: string, denominationAsset: Asset, ev
       assetAmounts = assetAmounts.concat([assetAmount]);
     }
 
-    nv2p.lendAssets = assetAmounts;
+    nv2p.lendAssets = assetAmounts.map<string>((assetAmount) => assetAmount.id);
   }
 
   let borrowedAssets = nv2pContract.getDebtAssets();
@@ -113,7 +113,7 @@ export function trackNotionalV2Position(id: string, denominationAsset: Asset, ev
       assetAmounts = assetAmounts.concat([assetAmount]);
     }
 
-    nv2p.borrowedAssets = assetAmounts;
+    nv2p.borrowedAssets = assetAmounts.map<string>((assetAmount) => assetAmount.id);
   }
 
   nv2p.save();
