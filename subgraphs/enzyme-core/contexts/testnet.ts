@@ -105,6 +105,7 @@ export const testnet: Context<Variables> = {
         arbitraryLoanFixedInterestModuleAddress: testnetV4Deployment.contracts.ArbitraryLoanFixedInterestModule,
         arbitraryLoanTotalNominalDeltaOracleModuleAddress:
           testnetV4Deployment.contracts.ArbitraryLoanTotalNominalDeltaOracleModule,
+        auraBalancerV2LpStakingAdapterAddress: '0x0000000000000000000000000000000000000000',
         balancerV2LiquidityAdapterAddress: '0x6e7588b7a33741a7da4754168346cab07c7c9c07',
         comptrollerLibAddress: testnetV4Deployment.contracts.ComptrollerLib,
         convexCurveLpStakingAdapterAddress: testnetV4Deployment.contracts.ConvexCurveLpStakingAdapter,

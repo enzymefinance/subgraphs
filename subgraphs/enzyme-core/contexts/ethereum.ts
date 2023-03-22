@@ -106,6 +106,7 @@ export const ethereum: Context<Variables> = {
         arbitraryLoanFixedInterestModuleAddress: suluDeployment.contracts.ArbitraryLoanFixedInterestModule,
         arbitraryLoanTotalNominalDeltaOracleModuleAddress:
           suluDeployment.contracts.ArbitraryLoanTotalNominalDeltaOracleModule,
+        auraBalancerV2LpStakingAdapterAddress: '0x581a1e865285144c32ebd8205ca144156920b5fd',
         balancerV2LiquidityAdapterAddress: '0xe65df28eeec94bf2d21192fccb67852e93179daa',
         comptrollerLibAddress: suluDeployment.contracts.ComptrollerLib,
         convexCurveLpStakingAdapterAddress: suluDeployment.contracts.ConvexCurveLpStakingAdapter,

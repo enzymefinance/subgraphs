@@ -58,6 +58,7 @@ export interface Release4Addresses {
   allowedDepositRecipientsPolicyAddress: string;
   allowedExternalPositionTypesPolicyAddress: string;
   allowedSharesTransferRecipientsPolicyAddress: string;
+  auraBalancerV2LpStakingAdapterAddress: string;
   balancerV2LiquidityAdapterAddress: string;
   comptrollerLibAddress: string;
   cumulativeSlippageTolerancePolicyAddress: string;
