@@ -119,18 +119,17 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
     }
 
     //  Balancer Minter exist only on Ethereum mainnet
-    // TODO: uncomment when tested on Ethereum
-    // if (
-    //   balancerMinterAddress.notEqual(ZERO_ADDRESS) &&
-    //   release4Addresses.balancerV2LiquidityAdapterAddress.equals(event.params.adapter)
-    // ) {
-    //   let balancerMinterContract = ExternalSdk.bind(balancerMinterAddress);
+    if (
+      balancerMinterAddress.notEqual(ZERO_ADDRESS) &&
+      release4Addresses.balancerV2LiquidityAdapterAddress.equals(event.params.adapter)
+    ) {
+      let balancerMinterContract = ExternalSdk.bind(balancerMinterAddress);
 
-    //   let rewardAssetAddress = balancerMinterContract.getBalancerToken();
+      let rewardAssetAddress = balancerMinterContract.getBalancerToken();
 
-    //   let rewardAsset = ensureAsset(rewardAssetAddress);
-    //   incomingAssets = arrayUnique<Asset>(incomingAssets.concat([rewardAsset]));
-    // }
+      let rewardAsset = ensureAsset(rewardAssetAddress);
+      incomingAssets = arrayUnique<Asset>(incomingAssets.concat([rewardAsset]));
+    }
   }
 
   trackTrade(
