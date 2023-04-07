@@ -7,7 +7,7 @@ import {
   ZERO_BD,
   ZERO_BI,
 } from '@enzymefinance/subgraph-utils';
-import { Address, Bytes, DataSourceContext, ethereum, crypto, BigInt, BigDecimal } from '@graphprotocol/graph-ts';
+import { Address, Bytes, DataSourceContext, ethereum, crypto, BigInt, BigDecimal, log } from '@graphprotocol/graph-ts';
 import { createAaveDebtPosition, createAaveDebtPositionChange } from '../../entities/AaveDebtPosition';
 import {
   createMapleLiquidityAssetAmountV1,
@@ -73,7 +73,14 @@ import {
   updateConvexVotingPositionWithdrawOrRelock,
   useConvexVotingPosition,
 } from '../../entities/ConvexVotingPosition';
-import { cvxAddress, lusdAddress, grtAddress, wethTokenAddress, mplAddress } from '../../generated/addresses';
+import {
+  cvxAddress,
+  lusdAddress,
+  grtAddress,
+  wethTokenAddress,
+  mplAddress,
+  notionalV2ProxyAddress,
+} from '../../generated/addresses';
 import {
   createTheGraphDelegationPosition,
   createTheGraphDelegationPositionChange,
@@ -101,7 +108,6 @@ import {
   useKilnStakingPosition,
 } from '../../entities/KilnStakingPosition';
 import { kilnClaimFeeType } from '../../utils/kilnClaimFeeType';
-import { notionalV2AssetByCurrencyId } from '../../utils/notionalV2AssetByCurrencyId';
 import {
   createNotionalV2Position,
   createNotionalV2PositionChange,
@@ -1522,7 +1528,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
   if (type.label == 'NOTIONAL_V2') {
     if (actionId == NotionalV2PositionActionId.AddCollateral) {
-      let decoded = ethereum.decode('(uint16, uint256)', event.params.actionArgs);
+      let decoded = ethereum.decode('(uint16,uint256)', event.params.actionArgs);
 
       if (decoded == null) {
         return;
@@ -1530,7 +1536,16 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
       let tuple = decoded.toTuple();
       let currencyId = tuple[0].toI32();
-      let collateralAsset = notionalV2AssetByCurrencyId(currencyId);
+
+      let notionalV2Contract = ExternalSdk.bind(notionalV2ProxyAddress);
+      let currency = notionalV2Contract.try_getCurrency(currencyId);
+
+      if (currency.reverted) {
+        log.error('NotionalV2 AddCollateral currencyId {}.', [currencyId.toString()]);
+        return;
+      }
+
+      let collateralAsset = currency.value.value0 as unknown as Asset;
       let collateralAssetAmount = tuple[1].toBigInt();
 
       if (collateralAsset == null) {
@@ -1575,27 +1590,37 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         return;
       }
 
+      let notionalV2Contract = ExternalSdk.bind(notionalV2ProxyAddress);
+      let borrowedCurrency = notionalV2Contract.try_getCurrency(borrowedCurrencyId);
+
+      if (borrowedCurrency.reverted) {
+        log.error('NotionalV2 Borrowed currencyId {}.', [borrowedCurrencyId.toString()]);
+        return;
+      }
+
       let borrowTradeTuple = encodedBorrowTrade.toTuple();
       let marketIndex = borrowTradeTuple[1].toI32();
       let fCashAmount = borrowTradeTuple[2].toBigInt();
       let collateralCurrencyId = tuple[2].toI32();
       let collateralAssetAmount = tuple[3].toBigInt();
-      let incomingAsset = notionalV2AssetByCurrencyId(borrowedCurrencyId);
-      let collateralAsset = notionalV2AssetByCurrencyId(collateralCurrencyId);
-      let maturity = notionalV2MarketIndexType(marketIndex);
 
-      if (collateralAsset == null) {
+      let collateralCurrency = notionalV2Contract.try_getCurrency(collateralCurrencyId);
+
+      if (collateralCurrency.reverted) {
+        log.error('NotionalV2 Borowed Collateral currencyId {}.', [collateralCurrencyId.toString()]);
         return;
       }
 
-      let collateralAmount = toBigDecimal(collateralAssetAmount, collateralAsset.decimals);
-      let outgoingAssetAmount = createAssetAmount(
-        collateralAsset,
-        collateralAmount,
-        denominationAsset,
-        'notionalv2-borrow',
-        event,
-      );
+      let incomingAsset = borrowedCurrency.value.value0 as unknown as Asset;
+      let collateralAsset = collateralCurrency.value.value1 as unknown as Asset;
+      let maturity = notionalV2MarketIndexType(marketIndex);
+
+      let collateralAmount =
+        collateralAsset != null ? toBigDecimal(collateralAssetAmount, collateralAsset.decimals) : ZERO_BD;
+      let outgoingAssetAmount =
+        collateralAsset != null
+          ? createAssetAmount(collateralAsset, collateralAmount, denominationAsset, 'notionalv2-borrow', event)
+          : null;
 
       createNotionalV2PositionChange(
         event.params.externalPosition,
@@ -1620,7 +1645,16 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
       let tuple = decoded.toTuple();
       let currencyId = tuple[0].toI32();
-      let collateralAsset = notionalV2AssetByCurrencyId(currencyId);
+
+      let notionalV2Contract = ExternalSdk.bind(notionalV2ProxyAddress);
+      let currency = notionalV2Contract.try_getCurrency(currencyId);
+
+      if (currency.reverted) {
+        log.error('NotionalV2 Lend currencyId {}.', [currencyId.toString()]);
+        return;
+      }
+
+      let collateralAsset = currency.value.value1 as unknown as Asset;
       let collateralAssetAmount = tuple[1].toBigInt();
       let encodedLendTrade = ethereum.decode('(uint8,uint8,uint88,uint32,uint120)', tuple[2].toBytes());
 
@@ -1670,7 +1704,16 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let tuple = decoded.toTuple();
       let currencyId = tuple[0].toI32();
       let yieldTokenAmount = tuple[1].toBigInt();
-      let yieldToken = notionalV2AssetByCurrencyId(currencyId);
+
+      let notionalV2Contract = ExternalSdk.bind(notionalV2ProxyAddress);
+      let currency = notionalV2Contract.try_getCurrency(currencyId);
+
+      if (currency.reverted) {
+        log.error('NotionalV2 Borrowed currencyId {}.', [currencyId.toString()]);
+        return;
+      }
+
+      let yieldToken = currency.value.value0 as unknown as Asset;
 
       if (yieldToken == null) {
         return;

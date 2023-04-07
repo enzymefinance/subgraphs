@@ -36,6 +36,7 @@ export const ethereum: Context<Variables> = {
       daiAddress: suluDeployment.namedTokens.dai.id,
       usdcAddress: suluDeployment.namedTokens.usdc.id,
       wbtcAddress: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599',
+      notionalV2ProxyAddress: '0x1344A36A1B56144C3Bc62E7757377D288fDE0369',
     },
     persistent: {
       addressListRegistryAddress: suluDeployment.contracts.AddressListRegistry,

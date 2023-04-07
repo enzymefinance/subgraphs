@@ -240,6 +240,8 @@ export let usdcAddress = Address.fromString('{{external.usdcAddress}}');
 
 export let wbtcAddress = Address.fromString('{{external.wbtcAddress}}');
 
+export let notionalV2ProxyAddress = Address.fromString('{{external.notionalV2ProxyAddress}}');
+
 export class ChainlinkAggregatorAddresses {
   audUsdAddress: Address;
   btcEthAddress: Address;

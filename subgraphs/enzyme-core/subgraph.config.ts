@@ -55,6 +55,7 @@ export interface Variables {
     daiAddress: string;
     wbtcAddress: string;
     usdcAddress: string;
+    notionalV2ProxyAddress: string;
   };
 }
 
@@ -163,6 +164,7 @@ export const configure: Configurator<Variables> = (variables) => {
         IMapleV2WithdrawalManager: 'abis/external/IMapleV2WithdrawalManager.json',
         MaplePool: 'abis/external/MaplePool.json',
         MapleRewards: 'abis/external/MapleRewards.json',
+        NotionalV2Views: 'abis/external/NotionalV2Views.json',
         NonfungiblePositionManager: 'abis/external/NonfungiblePositionManager.json',
         TheGraphStaking: 'abis/external/TheGraphStaking.json',
         UniswapV3Factory: 'abis/external/UniswapV3Factory.json',
@@ -186,6 +188,7 @@ export const configure: Configurator<Variables> = (variables) => {
         abis.NonfungiblePositionManager.getFunction('factory'),
         abis.NonfungiblePositionManager.getFunction('positions'),
         abis.NonfungiblePositionManager.getFunction('tokenURI'),
+        abis.NotionalV2Views.getFunction('getCurrency'),
         abis.TheGraphStaking.getFunction('getDelegation'),
         abis.TheGraphStaking.getFunction('delegationPools'),
         abis.TheGraphStaking.getFunction('delegationTaxPercentage'),

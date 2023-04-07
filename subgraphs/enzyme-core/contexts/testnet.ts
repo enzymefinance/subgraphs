@@ -34,6 +34,7 @@ export const testnet: Context<Variables> = {
       daiAddress: testnetV4Deployment.namedTokens.dai.id,
       usdcAddress: testnetV4Deployment.namedTokens.usdc.id,
       wbtcAddress: '0x1bfd67037b42cf73acf2047067bd4f2c47d9bfd6',
+      notionalV2ProxyAddress: '0x0000000000000000000000000000000000000000',
     },
     persistent: {
       addressListRegistryAddress: testnetV4Deployment.contracts.AddressListRegistry,
