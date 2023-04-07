@@ -1569,22 +1569,23 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
       let tuple = decoded.toTuple();
       let borrowedCurrencyId = tuple[0].toI32();
-      let solidityPackedTrade = tuple[1].toBytes();
+      let packedBorrowTrade = tuple[1].toBytes();
       let collateralCurrencyId = tuple[2].toI32();
       let collateralAssetAmount = tuple[3].toBigInt();
 
-      // let upackedTrade = unpackTODO:implement('(uint8,uint8,uint88,uint32,uint120)', solidityPackedTrade);
+      // decodePacked
+      let packedBorrowTradeArray = new Uint8Array(1 + 1 + 11 + 4 + 15); // (uint8,uint8,uint88,uint32,uint120)
+      packedBorrowTradeArray.set(packedBorrowTrade);
 
-      // if (upackedTrade == null) {
-      //   return;
-      // }
+      let marketIndexBytes = Bytes.fromUint8Array(packedBorrowTradeArray.subarray(1, 2).reverse());
+      let marketIndex = BigInt.fromUnsignedBytes(marketIndexBytes).toI32();
 
-      // let borrowTradeTuple = upackedTrade.toTuple();
-      // let marketIndex = borrowTradeTuple[1].toI32();
-      // let fCashAmount = borrowTradeTuple[2].toBigInt();
+      let fCashAmountBytes = Bytes.fromUint8Array(packedBorrowTradeArray.subarray(2, 13).reverse());
+      let fCashAmount = BigInt.fromUnsignedBytes(fCashAmountBytes);
+
       let incomingAsset = notionalV2AssetByCurrencyId(borrowedCurrencyId);
       let collateralAsset = notionalV2AssetByCurrencyId(collateralCurrencyId);
-      // let maturity = notionalV2MarketIndexType(marketIndex);
+      let maturity = notionalV2MarketIndexType(marketIndex);
 
       let collateralAmount = toBigDecimal(collateralAssetAmount, collateralAsset.decimals);
       let outgoingAssetAmount = createAssetAmount(
@@ -1602,8 +1603,8 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         null,
         collateralAsset,
         outgoingAssetAmount,
-        null, // TODO: replace with fCashAmount,
-        null, // TODO: replace with maturity
+        fCashAmount,
+        maturity,
         vault,
         event,
       );
