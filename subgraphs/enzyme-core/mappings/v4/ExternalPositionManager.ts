@@ -1569,24 +1569,22 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
       let tuple = decoded.toTuple();
       let borrowedCurrencyId = tuple[0].toI32();
-      let encodedBorrowTrade = ethereum.decode('(uint8,uint8,uint88,uint32,uint120)', tuple[1].toBytes());
-
-      if (encodedBorrowTrade == null) {
-        return;
-      }
-
-      let borrowTradeTuple = encodedBorrowTrade.toTuple();
-      let marketIndex = borrowTradeTuple[1].toI32();
-      let fCashAmount = borrowTradeTuple[2].toBigInt();
+      let solidityPackedTrade = tuple[1].toBytes();
       let collateralCurrencyId = tuple[2].toI32();
       let collateralAssetAmount = tuple[3].toBigInt();
+
+      // let upackedTrade = unpackTODO:implement('(uint8,uint8,uint88,uint32,uint120)', solidityPackedTrade);
+
+      // if (upackedTrade == null) {
+      //   return;
+      // }
+
+      // let borrowTradeTuple = upackedTrade.toTuple();
+      // let marketIndex = borrowTradeTuple[1].toI32();
+      // let fCashAmount = borrowTradeTuple[2].toBigInt();
       let incomingAsset = notionalV2AssetByCurrencyId(borrowedCurrencyId);
       let collateralAsset = notionalV2AssetByCurrencyId(collateralCurrencyId);
-      let maturity = notionalV2MarketIndexType(marketIndex);
-
-      if (collateralAsset == null) {
-        return;
-      }
+      // let maturity = notionalV2MarketIndexType(marketIndex);
 
       let collateralAmount = toBigDecimal(collateralAssetAmount, collateralAsset.decimals);
       let outgoingAssetAmount = createAssetAmount(
@@ -1604,8 +1602,8 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         null,
         collateralAsset,
         outgoingAssetAmount,
-        fCashAmount,
-        maturity,
+        null, // TODO: replace with fCashAmount,
+        null, // TODO: replace with maturity
         vault,
         event,
       );
