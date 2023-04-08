@@ -1583,27 +1583,17 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       }
 
       let tuple = decoded.toTuple();
-      let borrowedCurrencyId = tuple[0].toI32();
-      let encodedBorrowTrade = ethereum.decode('(uint8,uint8,uint88,uint32,uint120)', tuple[1].toBytes());
-
-      if (encodedBorrowTrade == null) {
-        return;
-      }
+      let borrowCurrencyId = tuple[0].toI32();
 
       let notionalV2Contract = ExternalSdk.bind(notionalV2ProxyAddress);
-      let borrowedCurrency = notionalV2Contract.try_getCurrency(borrowedCurrencyId);
+      let borrowedCurrency = notionalV2Contract.try_getCurrency(borrowCurrencyId);
 
       if (borrowedCurrency.reverted) {
-        log.error('NotionalV2 Borrowed currencyId {}.', [borrowedCurrencyId.toString()]);
+        log.error('NotionalV2 Borrowed currencyId {}.', [borrowCurrencyId.toString()]);
         return;
       }
 
-      let borrowTradeTuple = encodedBorrowTrade.toTuple();
-      let marketIndex = borrowTradeTuple[1].toI32();
-      let fCashAmount = borrowTradeTuple[2].toBigInt();
       let collateralCurrencyId = tuple[2].toI32();
-      let collateralAssetAmount = tuple[3].toBigInt();
-
       let collateralCurrency = notionalV2Contract.try_getCurrency(collateralCurrencyId);
 
       if (collateralCurrency.reverted) {
@@ -1613,10 +1603,25 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
       let incomingAsset = borrowedCurrency.value.value0 as unknown as Asset;
       let collateralAsset = collateralCurrency.value.value1 as unknown as Asset;
+      let collateralAssetAmount = tuple[3].toBigInt();
+
+      let packedBorrowTrade = tuple[1].toBytes();
+
+      // decodePacked
+      let packedBorrowTradeArray = new Uint8Array(1 + 1 + 11 + 4 + 15); // (uint8,uint8,uint88,uint32,uint120)
+      packedBorrowTradeArray.set(packedBorrowTrade);
+
+      let marketIndexBytes = Bytes.fromUint8Array(packedBorrowTradeArray.subarray(1, 2).reverse());
+      let marketIndex = BigInt.fromUnsignedBytes(marketIndexBytes).toI32();
+
+      let fCashAmountBytes = Bytes.fromUint8Array(packedBorrowTradeArray.subarray(2, 13).reverse());
+      let fCashAmount = BigInt.fromUnsignedBytes(fCashAmountBytes);
+
       let maturity = notionalV2MarketIndexType(marketIndex);
 
       let collateralAmount =
         collateralAsset != null ? toBigDecimal(collateralAssetAmount, collateralAsset.decimals) : ZERO_BD;
+
       let outgoingAssetAmount =
         collateralAsset != null
           ? createAssetAmount(collateralAsset, collateralAmount, denominationAsset, 'notionalv2-borrow', event)
@@ -1656,27 +1661,26 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
       let collateralAsset = currency.value.value1 as unknown as Asset;
       let collateralAssetAmount = tuple[1].toBigInt();
-      let encodedLendTrade = ethereum.decode('(uint8,uint8,uint88,uint32,uint120)', tuple[2].toBytes());
+      let packedLendTrade = tuple[2].toBytes();
 
-      if (encodedLendTrade == null) {
-        return;
-      }
+      // decodePacked
+      let packedBorrowTradeArray = new Uint8Array(1 + 1 + 11 + 4 + 15); // (uint8,uint8,uint88,uint32,uint120)
+      packedBorrowTradeArray.set(packedLendTrade);
 
-      let lendTradeTuple = encodedLendTrade.toTuple();
-      let marketIndex = lendTradeTuple[1].toI32();
-      let fCashAmount = lendTradeTuple[2].toBigInt();
+      let marketIndexBytes = Bytes.fromUint8Array(packedBorrowTradeArray.subarray(1, 2).reverse());
+      let marketIndex = BigInt.fromUnsignedBytes(marketIndexBytes).toI32();
+
+      let fCashAmountBytes = Bytes.fromUint8Array(packedBorrowTradeArray.subarray(2, 13).reverse());
+      let fCashAmount = BigInt.fromUnsignedBytes(fCashAmountBytes);
+
       let maturity = notionalV2MarketIndexType(marketIndex);
-
-      if (collateralAsset == null) {
-        return;
-      }
 
       let collateralAmount = toBigDecimal(collateralAssetAmount, collateralAsset.decimals);
       let outgoingAssetAmount = createAssetAmount(
         collateralAsset,
         collateralAmount,
         denominationAsset,
-        'notionalv2-add-collateral',
+        'notionalv2-add-lend',
         event,
       );
 
@@ -1695,7 +1699,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     }
 
     if (actionId == NotionalV2PositionActionId.Redeem) {
-      let decoded = ethereum.decode('(uint16, uint256)', event.params.actionArgs);
+      let decoded = ethereum.decode('(uint16,uint256)', event.params.actionArgs);
 
       if (decoded == null) {
         return;
