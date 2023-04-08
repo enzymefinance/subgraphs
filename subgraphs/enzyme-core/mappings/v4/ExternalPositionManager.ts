@@ -1545,7 +1545,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         return;
       }
 
-      let collateralAsset = currency.value.value0 as unknown as Asset;
+      let collateralAsset = currency.value.value1 as unknown as Asset;
       let collateralAssetAmount = tuple[1].toBigInt();
 
       if (collateralAsset == null) {
@@ -1622,6 +1622,16 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let collateralAmount =
         collateralAsset != null ? toBigDecimal(collateralAssetAmount, collateralAsset.decimals) : ZERO_BD;
 
+      let fCashAssetAmount = fCashAmount !== null ? toBigDecimal(fCashAmount, 8) : ZERO_BD;
+
+      let incomingAssetAmount = createAssetAmount(
+        incomingAsset,
+        fCashAssetAmount,
+        denominationAsset,
+        'notionalv2-borrow',
+        event,
+      );
+
       let outgoingAssetAmount =
         collateralAsset != null
           ? createAssetAmount(collateralAsset, collateralAmount, denominationAsset, 'notionalv2-borrow', event)
@@ -1631,7 +1641,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         event.params.externalPosition,
         'Borrow',
         incomingAsset,
-        null,
+        incomingAssetAmount,
         collateralAsset,
         outgoingAssetAmount,
         fCashAmount,
@@ -1718,13 +1728,14 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       }
 
       let yieldToken = currency.value.value0 as unknown as Asset;
+      let incomingAsset = currency.value.value1 as unknown as Asset;
 
       if (yieldToken == null) {
         return;
       }
 
       let yieldAmount = toBigDecimal(yieldTokenAmount, yieldToken.decimals);
-      let incomingAssetAmount = createAssetAmount(
+      let outgoingAssetAmount = createAssetAmount(
         yieldToken,
         yieldAmount,
         denominationAsset,
@@ -1735,10 +1746,10 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       createNotionalV2PositionChange(
         event.params.externalPosition,
         'Redeem',
+        incomingAsset,
+        null,
         yieldToken,
-        incomingAssetAmount,
-        null,
-        null,
+        outgoingAssetAmount,
         ZERO_BI,
         null,
         vault,
