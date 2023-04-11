@@ -48,6 +48,16 @@ export function tokenTotalSupply(address: Address): BigInt | null {
   return null;
 }
 
+export function hasTokenTotalSupply(address: Address): boolean {
+  let contract = ERC20Sdk.bind(address);
+  let totalSupply = contract.try_totalSupply();
+  if (totalSupply.reverted) {
+    return false;
+  }
+
+  return true;
+}
+
 export function tokenTotalSupplyOrThrow(address: Address): BigInt {
   let contract = ERC20Sdk.bind(address);
   let totalSupply = contract.try_totalSupply();

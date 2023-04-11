@@ -36,6 +36,7 @@ export const testnet: Context<Variables> = {
       addressListRegistryAddress: testnetV4Deployment.contracts.AddressListRegistry,
       dispatcherAddress: testnetV4Deployment.contracts.Dispatcher,
       externalPositionFactoryAddress: testnetV4Deployment.contracts.ExternalPositionFactory,
+      gatedRedemptionQueueSharesWrapperFactory: '0xc64f8a0455934f99e253d5e6d1a3ae86e1f405d5',
       protocolFeeReserveLibAddress: testnetV4Deployment.contracts.ProtocolFeeReserveLib,
       sharesSplitterFactoryAddress: testnetV4Deployment.contracts.SharesSplitterFactory,
       uintListRegistryAddress: testnetV4Deployment.contracts.UintListRegistry,

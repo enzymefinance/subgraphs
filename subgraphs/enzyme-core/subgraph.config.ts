@@ -34,6 +34,7 @@ export interface Variables {
     addressListRegistryAddress: string;
     dispatcherAddress: string;
     externalPositionFactoryAddress: string;
+    gatedRedemptionQueueSharesWrapperFactory: string;
     protocolFeeReserveLibAddress: string;
     sharesSplitterFactoryAddress: string;
     uintListRegistryAddress: string;
@@ -91,6 +92,7 @@ export const configure: Configurator<Variables> = (variables) => {
         IExternalPositionProxy: 'abis/v4/IExternalPositionProxy.json',
         UniswapV3LiquidityPositionLib: 'abis/v4/UniswapV3LiquidityPositionLib.json',
         IStakingWrapper: 'abis/v4/IStakingWrapper.json',
+        GatedRedemptionQueueSharesWrapperLib: 'abis/GatedRedemptionQueueSharesWrapperLib.json',
       },
       functions: (abis) => [
         abis.ChainlinkAggregator.getFunction('latestAnswer'),
@@ -124,6 +126,7 @@ export const configure: Configurator<Variables> = (variables) => {
         abis.IExternalPositionProxy.getFunction('getExternalPositionType'),
         abis.UniswapV3LiquidityPositionLib.getFunction('getNonFungibleTokenManager'),
         abis.IStakingWrapper.getFunction('getRewardTokens'),
+        abis.GatedRedemptionQueueSharesWrapperLib.getFunction('getVaultProxy'),
       ],
     },
 
