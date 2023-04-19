@@ -36,7 +36,7 @@ export const polygon: Context<Variables> = {
       addressListRegistryAddress: polygonV4Deployment.contracts.AddressListRegistry,
       dispatcherAddress: polygonV4Deployment.contracts.Dispatcher,
       externalPositionFactoryAddress: polygonV4Deployment.contracts.ExternalPositionFactory,
-      gatedRedemptionQueueSharesWrapperFactory: '0x1ad5e5acc060fafde8a0e37aa382c250d64b62e3',
+      gatedRedemptionQueueSharesWrapperFactory: '0x1ad5e5acc060fafde8a0e37aa382c250d64b62e3', // TODO: update after new deployment
       protocolFeeReserveLibAddress: polygonV4Deployment.contracts.ProtocolFeeReserveLib,
       sharesSplitterFactoryAddress: polygonV4Deployment.contracts.SharesSplitterFactory,
       uintListRegistryAddress: polygonV4Deployment.contracts.UintListRegistry,
