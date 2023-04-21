@@ -150,7 +150,7 @@ export function handleDepositRequestRemoved(event: DepositRequestRemoved): void 
   let asset = ensureAsset(event.params.depositAsset);
 
   let request = ensureGatedRedemptionQueueSharesWrapperDepositRequest(wrapper, account, asset);
-  store.remove('ensureGatedRedemptionQueueSharesWrapperDepositRequest', request.id);
+  store.remove('GatedRedemptionQueueSharesWrapperDepositRequest', request.id);
 }
 
 export function handleDeposited(event: Deposited): void {
