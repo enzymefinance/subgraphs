@@ -93,6 +93,7 @@ export const configure: Configurator<Variables> = (variables) => {
         UniswapV3LiquidityPositionLib: 'abis/v4/UniswapV3LiquidityPositionLib.json',
         IStakingWrapper: 'abis/v4/IStakingWrapper.json',
         GatedRedemptionQueueSharesWrapperLib: 'abis/GatedRedemptionQueueSharesWrapperLib.json',
+        PerformanceFee: 'abis/v4/PerformanceFee.json',
       },
       functions: (abis) => [
         abis.ChainlinkAggregator.getFunction('latestAnswer'),
@@ -127,6 +128,7 @@ export const configure: Configurator<Variables> = (variables) => {
         abis.UniswapV3LiquidityPositionLib.getFunction('getNonFungibleTokenManager'),
         abis.IStakingWrapper.getFunction('getRewardTokens'),
         abis.GatedRedemptionQueueSharesWrapperLib.getFunction('getVaultProxy'),
+        abis.PerformanceFee.getFunction('getFeeInfoForFund'),
       ],
     },
 

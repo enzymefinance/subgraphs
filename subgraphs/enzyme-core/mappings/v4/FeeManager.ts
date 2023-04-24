@@ -28,6 +28,7 @@ import {
   FeeSharesReceivedEvent,
 } from '../../generated/schema';
 import { settlementType } from '../../utils/settlementType';
+import { ProtocolSdk } from '../../generated/contracts/ProtocolSdk';
 
 export function handleFeeEnabledForFund(event: FeeEnabledForFund): void {
   let comptrollerAddress = event.params.comptrollerProxy;
@@ -144,6 +145,15 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
     // Mint - mint new shares for fee recipient
     let depositor = ensureAccount(event.params.payee, event);
     let deposit = ensureDeposit(depositor, vault, event);
+
+    // Get HighWaterMark at the end of the block for Performance Fee
+    let hwm: BigDecimal | null = null;
+    if (event.params.fee.equals(release4Addresses.performanceFeeAddress)) {
+      let performanceFeeContract = ProtocolSdk.bind(release4Addresses.performanceFeeAddress);
+
+      let feeInfo = performanceFeeContract.getFeeInfoForFund(event.params.comptrollerProxy);
+      hwm = toBigDecimal(feeInfo[1].toBigInt());
+    }
 
     let received = new FeeSharesReceivedEvent(uniqueEventId(event));
     received.vault = vault.id;

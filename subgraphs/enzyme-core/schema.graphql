@@ -478,6 +478,7 @@ type FeeSharesReceivedEvent implements Activity & VaultActivity & DepositorActiv
   depositor: Account!
   deposit: Deposit!
   shares: BigDecimal!
+  highWaterMark: BigDecimal
   timestamp: Int!
   activityCounter: Int!
   activityCategories: [ActivityCategory!]!
