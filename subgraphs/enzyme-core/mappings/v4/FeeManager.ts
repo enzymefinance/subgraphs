@@ -163,6 +163,7 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
     received.timestamp = event.block.timestamp.toI32();
     received.shares = shares;
     received.fee = feeId(event.params.comptrollerProxy, event.params.fee);
+    received.highWaterMark = hwm;
     received.activityCounter = getActivityCounter();
     received.activityCategories = ['Vault', 'Depositor'];
     received.activityType = 'FeeShares';
