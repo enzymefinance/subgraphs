@@ -13,6 +13,7 @@ export interface ReleaseVariables {
   arbitraryLoanTotalNominalDeltaOracleModuleAddress: string;
   auraBalancerV2LpStakingAdapterAddress: string;
   balancerV2LiquidityAdapterAddress: string;
+  compoundV3AdapterAddress: string;
   comptrollerLibAddress: string;
   convexCurveLpStakingAdapterAddress: string;
   convexCurveLpStakingWrapperFactoryAddress: string;
