@@ -1545,7 +1545,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         return;
       }
 
-      let collateralAsset = currency.value.value1 as unknown as Asset;
+      let collateralAsset = ensureAsset(currency.value.value1.tokenAddress);
       let collateralAssetAmount = tuple[1].toBigInt();
 
       if (collateralAsset == null) {
@@ -1601,8 +1601,8 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         return;
       }
 
-      let incomingAsset = borrowedCurrency.value.value0 as unknown as Asset;
-      let collateralAsset = collateralCurrency.value.value1 as unknown as Asset;
+      let incomingAsset = ensureAsset(borrowedCurrency.value.value0.tokenAddress);
+      let collateralAsset = ensureAsset(collateralCurrency.value.value1.tokenAddress);
       let collateralAssetAmount = tuple[3].toBigInt();
 
       let packedBorrowTrade = tuple[1].toBytes();
@@ -1669,7 +1669,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         return;
       }
 
-      let collateralAsset = currency.value.value1 as unknown as Asset;
+      let collateralAsset = ensureAsset(currency.value.value1.tokenAddress);
       let collateralAssetAmount = tuple[1].toBigInt();
       let packedLendTrade = tuple[2].toBytes();
 
@@ -1727,8 +1727,8 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         return;
       }
 
-      let yieldToken = currency.value.value0 as unknown as Asset;
-      let incomingAsset = currency.value.value1 as unknown as Asset;
+      let yieldToken = ensureAsset(currency.value.value0.tokenAddress);
+      let incomingAsset = ensureAsset(currency.value.value1.tokenAddress);
 
       if (yieldToken == null) {
         return;
