@@ -1,6 +1,15 @@
-import { tokenDecimalsOrThrow, tokenName, tokenSymbol } from '../utils/tokenCalls';
+import { hasTokenTotalSupply, tokenDecimalsOrThrow, tokenName, tokenSymbol } from '../utils/tokenCalls';
 import { Address } from '@graphprotocol/graph-ts';
 import { Asset } from '../generated/schema';
+
+export function isAsset(address: Address): boolean {
+  let asset = Asset.load(address.toHex());
+  if (asset) {
+    return true;
+  }
+
+  return hasTokenTotalSupply(address);
+}
 
 export function ensureAsset(address: Address): Asset {
   let asset = Asset.load(address.toHex());

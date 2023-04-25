@@ -37,11 +37,13 @@ export const ethereum: Context<Variables> = {
       usdcAddress: suluDeployment.namedTokens.usdc.id,
       wbtcAddress: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599',
       notionalV2ProxyAddress: '0x1344A36A1B56144C3Bc62E7757377D288fDE0369',
+      compAddress: '0xc00e94cb662c3520282e6f5717214004a7f26888',
     },
     persistent: {
       addressListRegistryAddress: suluDeployment.contracts.AddressListRegistry,
       dispatcherAddress: suluDeployment.contracts.Dispatcher,
       externalPositionFactoryAddress: suluDeployment.contracts.ExternalPositionFactory,
+      gatedRedemptionQueueSharesWrapperFactory: '0x70c19a1132d16f4227df23d5a9db57b8775ab805',
       protocolFeeReserveLibAddress: suluDeployment.contracts.ProtocolFeeReserveLib,
       sharesSplitterFactoryAddress: suluDeployment.contracts.SharesSplitterFactory,
       uintListRegistryAddress: suluDeployment.contracts.UintListRegistry,
@@ -110,7 +112,9 @@ export const ethereum: Context<Variables> = {
         arbitraryLoanFixedInterestModuleAddress: suluDeployment.contracts.ArbitraryLoanFixedInterestModule,
         arbitraryLoanTotalNominalDeltaOracleModuleAddress:
           suluDeployment.contracts.ArbitraryLoanTotalNominalDeltaOracleModule,
+        auraBalancerV2LpStakingAdapterAddress: '0x581a1e865285144c32ebd8205ca144156920b5fd',
         balancerV2LiquidityAdapterAddress: '0xe65df28eeec94bf2d21192fccb67852e93179daa',
+        compoundV3AdapterAddress: '0xfaa9b9cc98503f51a54f6038dfdd0e43aa0ac98e',
         comptrollerLibAddress: suluDeployment.contracts.ComptrollerLib,
         convexCurveLpStakingAdapterAddress: suluDeployment.contracts.ConvexCurveLpStakingAdapter,
         convexCurveLpStakingWrapperFactoryAddress: suluDeployment.contracts.ConvexCurveLpStakingWrapperFactory,

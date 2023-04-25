@@ -72,7 +72,9 @@ export class Release4Addresses {
   allowedExternalPositionTypesPerManagerPolicyAddress: Address;
   allowedExternalPositionTypesPolicyAddress: Address;
   allowedSharesTransferRecipientsPolicyAddress: Address;
+  auraBalancerV2LpStakingAdapterAddress: Address;
   balancerV2LiquidityAdapterAddress: Address;
+  compoundV3AdapterAddress: Address;
   comptrollerLibAddress: Address;
   convexCurveLpStakingAdapterAddress: Address;
   convexCurveLpStakingWrapperFactoryAddress: Address;
@@ -176,10 +178,12 @@ export let release4Addresses: Release4Addresses = {
   allowedSharesTransferRecipientsPolicyAddress: Address.fromString(
     '{{releases.v4.allowedSharesTransferRecipientsPolicyAddress}}',
   ),
+  auraBalancerV2LpStakingAdapterAddress:  Address.fromString('{{releases.v4.auraBalancerV2LpStakingAdapterAddress}}'),
   balancerV2LiquidityAdapterAddress: Address.fromString('{{releases.v4.balancerV2LiquidityAdapterAddress}}'),
+  compoundV3AdapterAddress: Address.fromString('{{releases.v4.compoundV3AdapterAddress}}'),
   comptrollerLibAddress: Address.fromString('{{releases.v4.comptrollerLibAddress}}'),
   convexCurveLpStakingAdapterAddress: Address.fromString('{{releases.v4.convexCurveLpStakingAdapterAddress}}'),
-  convexCurveLpStakingWrapperFactoryAddress: Address.fromString('{{releases.v4.convexCurveLpStakingAdapterAddress}}'),
+  convexCurveLpStakingWrapperFactoryAddress: Address.fromString('{{releases.v4.convexCurveLpStakingWrapperFactoryAddress}}'),
   cumulativeSlippageTolerancePolicyAddress: Address.fromString(
     '{{releases.v4.cumulativeSlippageTolerancePolicyAddress}}',
   ),
@@ -241,6 +245,7 @@ export let usdcAddress = Address.fromString('{{external.usdcAddress}}');
 export let wbtcAddress = Address.fromString('{{external.wbtcAddress}}');
 
 export let notionalV2ProxyAddress = Address.fromString('{{external.notionalV2ProxyAddress}}');
+export let compAddress = Address.fromString('{{external.compAddress}}');
 
 export class ChainlinkAggregatorAddresses {
   audUsdAddress: Address;

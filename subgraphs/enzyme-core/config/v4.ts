@@ -11,7 +11,9 @@ export interface ReleaseVariables {
   allowedSharesTransferRecipientsPolicyAddress: string;
   arbitraryLoanFixedInterestModuleAddress: string;
   arbitraryLoanTotalNominalDeltaOracleModuleAddress: string;
+  auraBalancerV2LpStakingAdapterAddress: string;
   balancerV2LiquidityAdapterAddress: string;
+  compoundV3AdapterAddress: string;
   comptrollerLibAddress: string;
   convexCurveLpStakingAdapterAddress: string;
   convexCurveLpStakingWrapperFactoryAddress: string;
