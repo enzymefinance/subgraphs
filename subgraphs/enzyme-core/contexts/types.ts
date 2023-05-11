@@ -60,6 +60,7 @@ export interface Release4Addresses {
   allowedSharesTransferRecipientsPolicyAddress: string;
   auraBalancerV2LpStakingAdapterAddress: string;
   balancerV2LiquidityAdapterAddress: string;
+  compoundV3AdapterAddress: string;
   comptrollerLibAddress: string;
   cumulativeSlippageTolerancePolicyAddress: string;
   entranceRateBurnFeeAddress: string;
