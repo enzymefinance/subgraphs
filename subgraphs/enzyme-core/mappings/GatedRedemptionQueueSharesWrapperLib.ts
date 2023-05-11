@@ -288,6 +288,7 @@ export function handleRedeemed(event: Redeemed): void {
   redemption.timestamp = event.block.timestamp.toI32();
   redemption.vault = wrapper.vault;
   redemption.wrapper = wrapper.id;
+  redemption.account = account.id;
   redemption.shares = sharesAmount;
   redemption.save();
 

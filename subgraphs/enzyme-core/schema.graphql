@@ -1838,6 +1838,7 @@ type GatedRedemptionQueueSharesWrapperRedemption implements GatedRedemptionQueue
   timestamp: Int!
   vault: Vault!
   wrapper: GatedRedemptionQueueSharesWrapper!
+  account: Account!
   shares: BigDecimal!
 }
 
