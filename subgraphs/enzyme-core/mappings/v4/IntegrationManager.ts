@@ -10,7 +10,7 @@ import {
   ValidatedVaultProxySetForFund,
 } from '../../generated/contracts/IntegrationManager4Events';
 import { Asset, AssetAmount } from '../../generated/schema';
-import { release4Addresses, balancerMinterAddress, curveMinterAddress } from '../../generated/addresses';
+import { release4Addresses, balancerMinterAddress, curveMinterAddress, compAddress } from '../../generated/addresses';
 import { claimRewardsSelector } from '../../utils/integrationSelectors';
 import { ProtocolSdk } from '../../generated/contracts/ProtocolSdk';
 import { ExternalSdk } from '../../generated/contracts/ExternalSdk';
@@ -71,6 +71,14 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
 
       incomingAssets = arrayUnique<Asset>(incomingAssets.concat([rewardAsset]));
     }
+  }
+
+  if (
+    release4Addresses.compoundV3AdapterAddress.equals(event.params.adapter) &&
+    integrationSelector == claimRewardsSelector
+  ) {
+    let compAsset = ensureAsset(compAddress);
+    incomingAssets = arrayUnique<Asset>(incomingAssets.concat([compAsset]));
   }
 
   // Claim rewards doesn't emit incoming assets. In order to be able to display information, on the activty page, about claimed asset we decode the call action args.
