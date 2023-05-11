@@ -21,10 +21,10 @@ export function handleUsedLendingPoolV2Added(event: UsedLendingPoolAdded): void 
 }
 
 export function handleUsedLendingPoolV2Removed(event: UsedLendingPoolRemoved): void {
-  // let mapleLiquidityPosition = useMapleLiquidityPosition(event.address.toHex());
-  // let pool = ensureMapleLiquidityPoolV2(event.params.lendingPool);
-  // mapleLiquidityPosition.pools = arrayDiff<string>(mapleLiquidityPosition.pools, [pool.id]);
-  // mapleLiquidityPosition.save();
+  let mapleLiquidityPosition = useMapleLiquidityPosition(event.address.toHex());
+  let pool = ensureMapleLiquidityPoolV2(event.params.lendingPool);
+  mapleLiquidityPosition.pools = arrayDiff<string>(mapleLiquidityPosition.pools, [pool.id]);
+  mapleLiquidityPosition.save();
 }
 
 export function handleMigrationAirdropThresholdNotMet(event: MigrationAirdropThresholdNotMet): void {}

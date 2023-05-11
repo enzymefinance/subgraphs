@@ -15,6 +15,11 @@ export const sources = (variables: Variables): DataSourceUserDeclaration[] => {
       address: variables.persistent.externalPositionFactoryAddress,
     },
     {
+      name: 'GatedRedemptionQueueSharesWrapperFactory',
+      block: variables.block,
+      address: variables.persistent.gatedRedemptionQueueSharesWrapperFactory,
+    },
+    {
       name: 'ProtocolFeeReserveLib',
       block: variables.block,
       address: variables.persistent.protocolFeeReserveLibAddress,
@@ -28,4 +33,7 @@ export const sources = (variables: Variables): DataSourceUserDeclaration[] => {
   ];
 };
 
-export const templates: DataSourceTemplateUserDeclaration[] = [{ name: 'SharesSplitterLib' }];
+export const templates: DataSourceTemplateUserDeclaration[] = [
+  { name: 'SharesSplitterLib' },
+  { name: 'GatedRedemptionQueueSharesWrapperLib' },
+];

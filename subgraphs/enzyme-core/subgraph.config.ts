@@ -34,6 +34,7 @@ export interface Variables {
     addressListRegistryAddress: string;
     dispatcherAddress: string;
     externalPositionFactoryAddress: string;
+    gatedRedemptionQueueSharesWrapperFactory: string;
     protocolFeeReserveLibAddress: string;
     sharesSplitterFactoryAddress: string;
     uintListRegistryAddress: string;
@@ -44,6 +45,7 @@ export interface Variables {
     v4: v4.ReleaseVariables;
   };
   external: {
+    balancerMinterAddress: string;
     curveMinterAddress: string;
     cvxLockerV2Address: string;
     theGraphStakingProxyAddress: string;
@@ -51,6 +53,7 @@ export interface Variables {
     mplAddress: string;
     grtAddress: string;
     lusdAddress: string;
+    compAddress: string;
   };
 }
 
@@ -90,6 +93,7 @@ export const configure: Configurator<Variables> = (variables) => {
         IExternalPositionProxy: 'abis/v4/IExternalPositionProxy.json',
         UniswapV3LiquidityPositionLib: 'abis/v4/UniswapV3LiquidityPositionLib.json',
         IStakingWrapper: 'abis/v4/IStakingWrapper.json',
+        GatedRedemptionQueueSharesWrapperLib: 'abis/GatedRedemptionQueueSharesWrapperLib.json',
       },
       functions: (abis) => [
         abis.ChainlinkAggregator.getFunction('latestAnswer'),
@@ -123,6 +127,7 @@ export const configure: Configurator<Variables> = (variables) => {
         abis.IExternalPositionProxy.getFunction('getExternalPositionType'),
         abis.UniswapV3LiquidityPositionLib.getFunction('getNonFungibleTokenManager'),
         abis.IStakingWrapper.getFunction('getRewardTokens'),
+        abis.GatedRedemptionQueueSharesWrapperLib.getFunction('getVaultProxy'),
       ],
     },
 
@@ -150,10 +155,13 @@ export const configure: Configurator<Variables> = (variables) => {
     {
       name: 'External',
       abis: {
+        BalancerMinter: 'abis/external/BalancerMinter.json',
         CurveLiquidityGaugeV2: 'abis/external/CurveLiquidityGaugeV2.json',
         CurveMinter: 'abis/external/CurveMinter.json',
         CvxLockerV2: 'abis/external/CvxLockerV2.json',
         IMapleV2Pool: 'abis/external/IMapleV2Pool.json',
+        IMapleV2PoolManager: 'abis/external/IMapleV2PoolManager.json',
+        IMapleV2WithdrawalManager: 'abis/external/IMapleV2WithdrawalManager.json',
         MaplePool: 'abis/external/MaplePool.json',
         MapleRewards: 'abis/external/MapleRewards.json',
         NonfungiblePositionManager: 'abis/external/NonfungiblePositionManager.json',
@@ -162,14 +170,18 @@ export const configure: Configurator<Variables> = (variables) => {
         UniswapV3Pool: 'abis/external/UniswapV3Pool.json',
       },
       functions: (abis) => [
+        abis.BalancerMinter.getFunction('getBalancerToken'),
         abis.CurveLiquidityGaugeV2.getFunction('reward_tokens'),
         abis.CurveMinter.getFunction('token'),
         abis.CvxLockerV2.getFunction('userLocks'),
         abis.IMapleV2Pool.getFunction('totalAssets'),
+        abis.IMapleV2Pool.getFunction('manager'),
         abis.IMapleV2Pool.getFunction('unrealizedLosses'),
         abis.IMapleV2Pool.getFunction('totalSupply'),
         abis.IMapleV2Pool.getFunction('convertToExitAssets'),
         abis.IMapleV2Pool.getFunction('asset'),
+        abis.IMapleV2PoolManager.getFunction('withdrawalManager'),
+        abis.IMapleV2WithdrawalManager.getFunction('lockedShares'),
         abis.MaplePool.getFunction('liquidityAsset'),
         abis.MapleRewards.getFunction('stakingToken'),
         abis.NonfungiblePositionManager.getFunction('factory'),

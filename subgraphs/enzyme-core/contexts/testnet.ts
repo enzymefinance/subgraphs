@@ -23,6 +23,7 @@ export const testnet: Context<Variables> = {
       jpyUsd: '0xd647a6fc9bc6402301583c91decc5989d8bc382d',
     },
     external: {
+      balancerMinterAddress: '0x0000000000000000000000000000000000000000',
       curveMinterAddress: testnetV4Deployment.externalContracts.curveMinter,
       cvxLockerV2Address: testnetV4Deployment.externalContracts.voteLockedConvexToken,
       cvxAddress: testnetV4Deployment.namedTokens.cvx.id,
@@ -30,11 +31,13 @@ export const testnet: Context<Variables> = {
       grtAddress: testnetV4Deployment.namedTokens.grt.id,
       theGraphStakingProxyAddress: testnetV4Deployment.externalContracts.theGraphStakingProxy,
       lusdAddress: '0x0000000000000000000000000000000000000000',
+      compAddress: '0x8505b9d2254a7ae468c0e9dd10ccea3a837aef5c',
     },
     persistent: {
       addressListRegistryAddress: testnetV4Deployment.contracts.AddressListRegistry,
       dispatcherAddress: testnetV4Deployment.contracts.Dispatcher,
       externalPositionFactoryAddress: testnetV4Deployment.contracts.ExternalPositionFactory,
+      gatedRedemptionQueueSharesWrapperFactory: '0xc64f8a0455934f99e253d5e6d1a3ae86e1f405d5',
       protocolFeeReserveLibAddress: testnetV4Deployment.contracts.ProtocolFeeReserveLib,
       sharesSplitterFactoryAddress: testnetV4Deployment.contracts.SharesSplitterFactory,
       uintListRegistryAddress: testnetV4Deployment.contracts.UintListRegistry,
@@ -104,6 +107,9 @@ export const testnet: Context<Variables> = {
         arbitraryLoanFixedInterestModuleAddress: testnetV4Deployment.contracts.ArbitraryLoanFixedInterestModule,
         arbitraryLoanTotalNominalDeltaOracleModuleAddress:
           testnetV4Deployment.contracts.ArbitraryLoanTotalNominalDeltaOracleModule,
+        auraBalancerV2LpStakingAdapterAddress: '0x0000000000000000000000000000000000000000',
+        balancerV2LiquidityAdapterAddress: '0x6e7588b7a33741a7da4754168346cab07c7c9c07',
+        compoundV3AdapterAddress: '0xaa1cb33f9659ff7cb1876eba57ee6ae5ea053e99',
         comptrollerLibAddress: testnetV4Deployment.contracts.ComptrollerLib,
         convexCurveLpStakingAdapterAddress: testnetV4Deployment.contracts.ConvexCurveLpStakingAdapter,
         convexCurveLpStakingWrapperFactoryAddress: testnetV4Deployment.contracts.ConvexCurveLpStakingWrapperFactory,

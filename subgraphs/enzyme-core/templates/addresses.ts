@@ -72,6 +72,9 @@ export class Release4Addresses {
   allowedExternalPositionTypesPerManagerPolicyAddress: Address;
   allowedExternalPositionTypesPolicyAddress: Address;
   allowedSharesTransferRecipientsPolicyAddress: Address;
+  auraBalancerV2LpStakingAdapterAddress: Address;
+  balancerV2LiquidityAdapterAddress: Address;
+  compoundV3AdapterAddress: Address;
   comptrollerLibAddress: Address;
   convexCurveLpStakingAdapterAddress: Address;
   convexCurveLpStakingWrapperFactoryAddress: Address;
@@ -175,9 +178,12 @@ export let release4Addresses: Release4Addresses = {
   allowedSharesTransferRecipientsPolicyAddress: Address.fromString(
     '{{releases.v4.allowedSharesTransferRecipientsPolicyAddress}}',
   ),
+  auraBalancerV2LpStakingAdapterAddress:  Address.fromString('{{releases.v4.auraBalancerV2LpStakingAdapterAddress}}'),
+  balancerV2LiquidityAdapterAddress: Address.fromString('{{releases.v4.balancerV2LiquidityAdapterAddress}}'),
+  compoundV3AdapterAddress: Address.fromString('{{releases.v4.compoundV3AdapterAddress}}'),
   comptrollerLibAddress: Address.fromString('{{releases.v4.comptrollerLibAddress}}'),
   convexCurveLpStakingAdapterAddress: Address.fromString('{{releases.v4.convexCurveLpStakingAdapterAddress}}'),
-  convexCurveLpStakingWrapperFactoryAddress: Address.fromString('{{releases.v4.convexCurveLpStakingAdapterAddress}}'),
+  convexCurveLpStakingWrapperFactoryAddress: Address.fromString('{{releases.v4.convexCurveLpStakingWrapperFactoryAddress}}'),
   cumulativeSlippageTolerancePolicyAddress: Address.fromString(
     '{{releases.v4.cumulativeSlippageTolerancePolicyAddress}}',
   ),
@@ -216,6 +222,8 @@ export let wethTokenAddress = Address.fromString('{{wethTokenAddress}}');
 
 export let wrappedNativeTokenAddress = Address.fromString('{{wrappedNativeTokenAddress}}');
 
+export let balancerMinterAddress = Address.fromString('{{external.balancerMinterAddress}}');
+
 export let curveMinterAddress = Address.fromString('{{external.curveMinterAddress}}');
 
 export let cvxAddress = Address.fromString('{{external.cvxAddress}}');
@@ -229,6 +237,8 @@ export let grtAddress = Address.fromString('{{external.grtAddress}}');
 export let theGraphStakingProxyAddress = Address.fromString('{{external.theGraphStakingProxyAddress}}');
 
 export let lusdAddress = Address.fromString('{{external.lusdAddress}}');
+
+export let compAddress = Address.fromString('{{external.compAddress}}');
 
 export class ChainlinkAggregatorAddresses {
   audUsdAddress: Address;

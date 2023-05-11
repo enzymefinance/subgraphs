@@ -125,8 +125,9 @@ export function createMapleLiquidityAssetAmountByPoolTokenAmountV2(
 }
 
 export function createMapleLiquidityAssetAmountByRedeemedPoolTokenAmountV2(
+  sharesOwner: Address,
   mapleLiquidityPool: MapleLiquidityPoolV2,
-  reedemedPoolTokenAmount: BigInt,
+  requestedToReedemShares: BigInt,
   denominationAsset: Asset,
   event: ethereum.Event,
 ): AssetAmount {
@@ -134,15 +135,25 @@ export function createMapleLiquidityAssetAmountByRedeemedPoolTokenAmountV2(
 
   let liquidityAsset = ensureAsset(Address.fromString(mapleLiquidityPool.liquidityAsset));
 
-  let totalPoolTokenAmount = poolContract.totalSupply();
+  let totalShares = poolContract.totalSupply();
 
   let unrealizedLosses = poolContract.unrealizedLosses();
 
   let totalAssets = poolContract.totalAssets();
 
-  let liquidityAmount = reedemedPoolTokenAmount.times(totalAssets.minus(unrealizedLosses)).div(totalPoolTokenAmount);
+  let poolManagerContract = ExternalSdk.bind(Address.fromBytes(mapleLiquidityPool.manager));
 
-  let liquidityAssetAmount = toBigDecimal(liquidityAmount, liquidityAsset.decimals);
+  let withdrawalManager = poolManagerContract.withdrawalManager();
+
+  let withdrawalManagerContract = ExternalSdk.bind(withdrawalManager);
+
+  let currentLockedShares = withdrawalManagerContract.lockedShares(sharesOwner);
+
+  let redeemedShares = requestedToReedemShares.minus(currentLockedShares);
+
+  let redeemedLiquidityAmount = redeemedShares.times(totalAssets.minus(unrealizedLosses)).div(totalShares);
+
+  let liquidityAssetAmount = toBigDecimal(redeemedLiquidityAmount, liquidityAsset.decimals);
 
   return createAssetAmount(liquidityAsset, liquidityAssetAmount, denominationAsset, 'mlp', event);
 }

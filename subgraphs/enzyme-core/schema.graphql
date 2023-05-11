@@ -358,6 +358,7 @@ type Account @entity {
   ownershipNominations: [Vault!]! @derivedFrom(field: "nominatedOwner")
   authUserships: [Comptroller!]! @derivedFrom(field: "authUsers")
   assetManagements: [Vault!]! @derivedFrom(field: "assetManagers")
+  gatedRedemptionQueueSharesWrapperManagements: [GatedRedemptionQueueSharesWrapper!]! @derivedFrom(field: "managers")
 
   deposits: [Deposit!]! @derivedFrom(field: "depositor")
   sharesChanges: [SharesChange!]! @derivedFrom(field: "depositor")
@@ -1205,6 +1206,7 @@ type MapleLiquidityPoolV1 @entity {
 type MapleLiquidityPoolV2 @entity {
   id: ID!
   liquidityAsset: Asset!
+  manager: Bytes!
 }
 
 type MapleLiquidityPosition implements ExternalPosition @entity {
@@ -1412,7 +1414,7 @@ type KilnStakingPosition implements ExternalPosition @entity {
   type: ExternalPositionType!
   active: Boolean!
   stakedEthAmount: BigDecimal!
-  publicKeys: [Bytes!]! 
+  publicKeys: [Bytes!]!
   changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
 }
 
@@ -1442,7 +1444,6 @@ type KilnStakingPositionChange implements Activity & VaultActivity & ExternalPos
   activityCategories: [ActivityCategory!]!
   activityType: ActivityType!
 }
-
 
 type UnknownExternalPosition implements ExternalPosition @entity {
   id: ID!
@@ -1724,4 +1725,122 @@ type ConvexCurveLpStakingWrapper @entity {
   pid: Int!
   lpToken: Asset!
   timestamp: Int!
+}
+
+#################################################
+# GatedRedemptionQueueSharesWrapper
+#################################################
+
+type GatedRedemptionQueueSharesWrapper @entity {
+  id: ID!
+  vault: Vault!
+  managers: [Account!]!
+  redemptionAsset: Asset!
+  firstWindowStart: BigInt!
+  frequency: BigInt!
+  duration: BigInt!
+  relativeSharesCap: BigDecimal!
+  useDepositApprovals: Boolean!
+  useRedemptionApprovals: Boolean!
+  useTransferApprovals: Boolean!
+
+  depositApprovals: [GatedRedemptionQueueSharesWrapperDepositApproval!]! @derivedFrom(field: "wrapper")
+  transferApprovals: [GatedRedemptionQueueSharesWrapperTransferApproval!]! @derivedFrom(field: "wrapper")
+  redemptionApprovals: [GatedRedemptionQueueSharesWrapperRedemptionApproval!]! @derivedFrom(field: "wrapper")
+  redemptionRequests: [GatedRedemptionQueueSharesWrapperRedemptionRequest!]! @derivedFrom(field: "wrapper")
+
+  sharesChanges: [GatedRedemptionQueueSharesWrapperSharesChange!]! @derivedFrom(field: "wrapper")
+  balances: [GatedRedemptionQueueSharesWrapperDepositorBalance!]! @derivedFrom(field: "wrapper")
+}
+
+interface GatedRedemptionQueueSharesWrapperSharesChange {
+  id: ID!
+  timestamp: Int!
+  wrapper: GatedRedemptionQueueSharesWrapper!
+  vault: Vault!
+  shares: BigDecimal!
+}
+
+type GatedRedemptionQueueSharesWrapperDepositApproval @entity {
+  id: ID!
+  timestamp: Int!
+  vault: Vault!
+  wrapper: GatedRedemptionQueueSharesWrapper!
+  account: Account!
+  asset: Asset!
+  amount: BigDecimal!
+}
+
+type GatedRedemptionQueueSharesWrapperDeposit implements GatedRedemptionQueueSharesWrapperSharesChange @entity {
+  id: ID!
+  timestamp: Int!
+  vault: Vault!
+  wrapper: GatedRedemptionQueueSharesWrapper!
+  account: Account!
+  asset: Asset!
+  amount: BigDecimal!
+  shares: BigDecimal!
+}
+
+type GatedRedemptionQueueSharesWrapperTransferApproval  @entity {
+  id: ID!
+  timestamp: Int!
+  vault: Vault!
+  wrapper: GatedRedemptionQueueSharesWrapper!
+  sender: Account!
+  recipient: Account!
+  amount: BigDecimal!
+}
+
+type GatedRedemptionQueueSharesWrapperTransfer implements GatedRedemptionQueueSharesWrapperSharesChange @entity {
+  id: ID!
+  timestamp: Int!
+  vault: Vault!
+  wrapper: GatedRedemptionQueueSharesWrapper!
+  sender: Account!
+  recipient: Account!
+  shares: BigDecimal!
+}
+
+type GatedRedemptionQueueSharesWrapperRedemptionApproval  @entity {
+  id: ID!
+  timestamp: Int!
+  vault: Vault!
+  wrapper: GatedRedemptionQueueSharesWrapper!
+  account: Account!
+  amount: BigDecimal!
+}
+
+type GatedRedemptionQueueSharesWrapperRedemptionRequest  @entity {
+  id: ID!
+  timestamp: Int!
+  vault: Vault!
+  wrapper: GatedRedemptionQueueSharesWrapper!
+  account: Account!
+  shares: BigDecimal!
+  updatedAt: Int!
+}
+
+type GatedRedemptionQueueSharesWrapperRedemption implements GatedRedemptionQueueSharesWrapperSharesChange @entity {
+  id: ID!
+  timestamp: Int!
+  vault: Vault!
+  wrapper: GatedRedemptionQueueSharesWrapper!
+  shares: BigDecimal!
+}
+
+type GatedRedemptionQueueSharesWrapperKick implements GatedRedemptionQueueSharesWrapperSharesChange @entity {
+  id: ID!
+  timestamp: Int!
+  vault: Vault!
+  wrapper: GatedRedemptionQueueSharesWrapper!
+  account: Account!
+  shares: BigDecimal!
+}
+
+type GatedRedemptionQueueSharesWrapperDepositorBalance @entity {
+  id: ID!
+  wrapper: GatedRedemptionQueueSharesWrapper!
+  account: Account!
+  shares: BigDecimal!
 }
