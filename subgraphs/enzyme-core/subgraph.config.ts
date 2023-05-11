@@ -53,6 +53,7 @@ export interface Variables {
     mplAddress: string;
     grtAddress: string;
     lusdAddress: string;
+    compAddress: string;
   };
 }
 
