@@ -31,6 +31,7 @@ export const polygon: Context<Variables> = {
       grtAddress: polygonV4Deployment.namedTokens.grt.id,
       theGraphStakingProxyAddress: polygonV4Deployment.externalContracts.theGraphStakingProxy,
       lusdAddress: '0x0000000000000000000000000000000000000000',
+      compAddress: '0x8505b9d2254a7ae468c0e9dd10ccea3a837aef5c',
     },
     persistent: {
       addressListRegistryAddress: polygonV4Deployment.contracts.AddressListRegistry,
@@ -108,6 +109,7 @@ export const polygon: Context<Variables> = {
           polygonV4Deployment.contracts.ArbitraryLoanTotalNominalDeltaOracleModule,
         auraBalancerV2LpStakingAdapterAddress: '0x0000000000000000000000000000000000000000',
         balancerV2LiquidityAdapterAddress: '0x98302d9486599332890710eddd29b3e317d36104',
+        compoundV3AdapterAddress: '0x360eb57d32bf3a95e9fb0aad2a4629ceca3ef7ac',
         comptrollerLibAddress: polygonV4Deployment.contracts.ComptrollerLib,
         convexCurveLpStakingAdapterAddress: polygonV4Deployment.contracts.ConvexCurveLpStakingAdapter,
         convexCurveLpStakingWrapperFactoryAddress: polygonV4Deployment.contracts.ConvexCurveLpStakingWrapperFactory,
