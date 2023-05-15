@@ -4,7 +4,7 @@
   "private": true,
   "main": "index.ts",
   "dependencies": {
-    "@graphprotocol/graph-ts": "^0.27.0"
+    "@graphprotocol/graph-ts": "^0.30.0"
   },
   "devDependencies": {
     "assemblyscript": "^0.24.1"

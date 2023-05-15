@@ -7,6 +7,8 @@ import {
   PrimitiveAdded,
   PrimitiveRemoved,
   PrimitiveUpdated,
+  StalePrimitiveRemoved,
+  StaleRateThresholdSet,
 } from '../../generated/contracts/ChainlinkPriceFeed3Events';
 import { AssetAdded, AssetRemoved } from '../../generated/schema';
 
@@ -39,3 +41,7 @@ export function handlePrimitiveRemoved(event: PrimitiveRemoved): void {
 }
 
 export function handlePrimitiveUpdated(event: PrimitiveUpdated): void {}
+
+export function handleStalePrimitiveRemoved(event: StalePrimitiveRemoved): void {}
+
+export function handleStaleRateThresholdSet(event: StaleRateThresholdSet): void {}
