@@ -122,7 +122,7 @@ class Subgraph<TVariables = any> {
     const generatedDir = path.join(this.root, 'generated');
     const outputDir = path.join(generatedDir, 'contracts');
 
-    await runGraphCli(['codegen', '--output-dir', outputDir]);
+    await runGraphCli(['codegen', '--skip-migrations', '--output-dir', outputDir]);
 
     fs.renameSync(path.join(outputDir, 'schema.ts'), path.join(generatedDir, 'schema.ts'));
     if (fs.existsSync(path.join(outputDir, 'templates.ts'))) {
@@ -167,6 +167,7 @@ class Subgraph<TVariables = any> {
       this.environment.node,
       '--ipfs',
       this.environment.ipfs,
+      '--skip-migrations',
       '--output-dir',
       path.join(this.root, 'build/subgraph'),
     ]);
