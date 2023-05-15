@@ -3,7 +3,6 @@ import glob from 'glob';
 import handlebars from 'handlebars';
 import path from 'node:path';
 import yargs from 'yargs';
-
 import { Configurator, Context, Contexts, Environment, ManifestValues, Template } from './types';
 import { formatJson, sdkDeclaration, sourceDeclaration, templateDeclaration } from './utils';
 import { runGraphCli } from './runCli';
