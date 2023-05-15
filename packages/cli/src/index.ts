@@ -5,14 +5,14 @@ import path from 'node:path';
 import yargs from 'yargs';
 import { Configurator, Context, Contexts, Environment, ManifestValues, Template } from './types';
 import { formatJson, sdkDeclaration, sourceDeclaration, templateDeclaration } from './utils';
+import { runGraphCli } from './runCli';
 
-const graph = require('@graphprotocol/graph-cli/src/cli').run as (args?: string[]) => Promise<void>;
 const root = path.join(__dirname, '..');
 
 const defaultLocalNode = 'http://localhost:8020/';
 const defaultLocalIpfs = 'http://localhost:5001/';
 const defaultRemoteNode = 'https://api.thegraph.com/deploy/';
-const defaultRemoteIpfs = 'https://api.thegraph.com/ipfs/';
+const defaultRemoteIpfs = 'https://api.thegraph.com/ipfs/api/v0';
 
 class SubgraphLoader<TVariables = any> {
   public readonly contexts: Contexts<TVariables>;
@@ -121,7 +121,8 @@ class Subgraph<TVariables = any> {
   public async generateCode() {
     const generatedDir = path.join(this.root, 'generated');
     const outputDir = path.join(generatedDir, 'contracts');
-    await graph(['codegen', '--skip-migrations', 'true', '--output-dir', outputDir]);
+
+    await runGraphCli(['codegen', '--skip-migrations', '--output-dir', outputDir]);
 
     fs.renameSync(path.join(outputDir, 'schema.ts'), path.join(generatedDir, 'schema.ts'));
     if (fs.existsSync(path.join(outputDir, 'templates.ts'))) {
@@ -159,7 +160,7 @@ class Subgraph<TVariables = any> {
   }
 
   public async deploySubgraph() {
-    await graph([
+    await runGraphCli([
       'deploy',
       this.environment.name,
       '--node',
@@ -167,14 +168,13 @@ class Subgraph<TVariables = any> {
       '--ipfs',
       this.environment.ipfs,
       '--skip-migrations',
-      'true',
       '--output-dir',
       path.join(this.root, 'build/subgraph'),
     ]);
   }
 
   public async buildSubgraph() {
-    await graph(['build', '--skip-migrations', 'true', '--output-dir', path.join(this.root, 'build/subgraph')]);
+    await runGraphCli(['build', '--skip-migrations', '--output-dir', path.join(this.root, 'build/subgraph')]);
   }
 
   public async createSubgraph() {
@@ -182,7 +182,7 @@ class Subgraph<TVariables = any> {
       return;
     }
 
-    await graph(['create', this.environment.name, '--node', this.environment.node]);
+    await runGraphCli(['create', this.environment.name, '--node', this.environment.node]);
   }
 }
 
