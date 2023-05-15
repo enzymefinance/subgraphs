@@ -51,8 +51,8 @@ importers:
   packages/utils:
     dependencies:
       '@graphprotocol/graph-ts':
-        specifier: ^0.27.0
-        version: 0.27.0
+        specifier: ^0.30.0
+        version: 0.30.0
     devDependencies:
       assemblyscript:
         specifier: ^0.24.1
@@ -70,8 +70,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/utils
       '@graphprotocol/graph-ts':
-        specifier: ^0.27.0
-        version: 0.27.0
+        specifier: ^0.30.0
+        version: 0.30.0
       assemblyscript:
         specifier: ^0.24.1
         version: 0.24.1
@@ -88,8 +88,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/utils
       '@graphprotocol/graph-ts':
-        specifier: ^0.27.0
-        version: 0.27.0
+        specifier: ^0.30.0
+        version: 0.30.0
       assemblyscript:
         specifier: ^0.24.1
         version: 0.24.1
@@ -106,8 +106,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/utils
       '@graphprotocol/graph-ts':
-        specifier: ^0.27.0
-        version: 0.27.0
+        specifier: ^0.30.0
+        version: 0.30.0
       assemblyscript:
         specifier: ^0.24.1
         version: 0.24.1
@@ -124,8 +124,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/utils
       '@graphprotocol/graph-ts':
-        specifier: ^0.27.0
-        version: 0.27.0
+        specifier: ^0.30.0
+        version: 0.30.0
       assemblyscript:
         specifier: ^0.24.1
         version: 0.24.1
@@ -142,8 +142,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/utils
       '@graphprotocol/graph-ts':
-        specifier: ^0.27.0
-        version: 0.27.0
+        specifier: ^0.30.0
+        version: 0.30.0
       assemblyscript:
         specifier: ^0.24.1
         version: 0.24.1
@@ -160,8 +160,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/utils
       '@graphprotocol/graph-ts':
-        specifier: ^0.27.0
-        version: 0.27.0
+        specifier: ^0.30.0
+        version: 0.30.0
       assemblyscript:
         specifier: ^0.24.1
         version: 0.24.1
@@ -575,8 +575,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@graphprotocol/graph-ts@0.27.0:
-    resolution: {integrity: sha512-r1SPDIZVQiGMxcY8rhFSM0y7d/xAbQf5vHMWUf59js1KgoyWpM6P3tczZqmQd7JTmeyNsDGIPzd9FeaxllsU4w==}
+  /@graphprotocol/graph-ts@0.30.0:
+    resolution: {integrity: sha512-h5tJqlsZXglGYM0PcBsBOqof4PT0Fr4Z3QBTYN/IjMF3VvRX2A8/bdpqaAnva+2N0uAfXXwRcwcOcW5O35yzXw==}
     dependencies:
       assemblyscript: 0.19.10
 
