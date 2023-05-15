@@ -30,6 +30,7 @@ import {
   RedemptionWindowConfigSet,
   Transfer,
   TransferApproval,
+  TransferForced,
   UseDepositApprovalsSet,
   UseRedemptionApprovalsSet,
   UseTransferApprovalsSet,
@@ -42,6 +43,7 @@ import {
   GatedRedemptionQueueSharesWrapperRedemption,
   GatedRedemptionQueueSharesWrapperRedemptionRequest,
   GatedRedemptionQueueSharesWrapperTransfer,
+  GatedRedemptionQueueSharesWrapperTransferForced,
 } from '../generated/schema';
 
 // Configuration
@@ -234,6 +236,22 @@ export function handleTransfer(event: Transfer): void {
     recipientBalance.shares = recipientBalance.shares.plus(sharesAmount);
     recipientBalance.save();
   }
+}
+
+export function handleTransferForced(event: TransferForced): void {
+  let wrapper = ensureGatedRedemptionQueueSharesWrapper(event.address);
+  let sender = ensureAccount(event.params.sender, event);
+  let recipient = ensureAccount(event.params.recipient, event);
+  let sharesAmount = toBigDecimal(event.params.amount);
+
+  let forced = new GatedRedemptionQueueSharesWrapperTransferForced(uniqueEventId(event));
+  forced.timestamp = event.block.timestamp.toI32();
+  forced.vault = wrapper.vault;
+  forced.wrapper = wrapper.id;
+  forced.sender = sender.id;
+  forced.recipient = recipient.id;
+  forced.shares = sharesAmount;
+  forced.save();
 }
 
 // Redemption

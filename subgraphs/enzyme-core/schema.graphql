@@ -1814,6 +1814,16 @@ type GatedRedemptionQueueSharesWrapperTransfer implements GatedRedemptionQueueSh
   shares: BigDecimal!
 }
 
+type GatedRedemptionQueueSharesWrapperTransferForced implements GatedRedemptionQueueSharesWrapperSharesChange @entity {
+  id: ID!
+  timestamp: Int!
+  vault: Vault!
+  wrapper: GatedRedemptionQueueSharesWrapper!
+  sender: Account!
+  recipient: Account!
+  shares: BigDecimal!
+}
+
 type GatedRedemptionQueueSharesWrapperRedemptionApproval @entity {
   id: ID!
   timestamp: Int!
