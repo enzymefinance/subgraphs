@@ -167,8 +167,6 @@ class Subgraph<TVariables = any> {
       this.environment.node,
       '--ipfs',
       this.environment.ipfs,
-      '--skip-migrations',
-      'true',
       '--output-dir',
       path.join(this.root, 'build/subgraph'),
     ]);

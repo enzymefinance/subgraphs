@@ -1,6 +1,7 @@
 import path from 'path';
 import { spawn } from 'child_process';
 
+// inspired by https://github.com/graphprotocol/graph-tooling/blob/main/packages/cli/tests/cli/util.ts#L92
 function runCommand(
   command: string,
   args: string[] = [],
@@ -21,28 +22,32 @@ function runCommand(
 
     const childProcess = spawn(command, args, { cwd });
 
-    console.log({ cwd, command, args, cli: `${command} ${args.join(' ')}` });
-
     childProcess.on('error', (error) => {
+      console.error(error);
       reject(error);
     });
 
     childProcess.stdout.on('data', (data: Buffer) => {
+      console.log(data.toString());
       stdout += data.toString();
     });
 
     childProcess.stderr.on('data', (data: Buffer) => {
+      console.log(data.toString());
+
       stderr += data.toString();
     });
 
     childProcess.on('exit', (exitCode) => {
+      console.log('exit code', exitCode);
+
       resolve([exitCode, stdout, stderr]);
     });
   });
 }
 
+// inspired by https://github.com/graphprotocol/graph-tooling/blob/main/packages/cli/tests/cli/util.ts#L129
 export function runGraphCli(args: string[], cwd?: string) {
-  // Resolve the path to graph.js
   const graphCli = path.join(__dirname, '..', 'node_modules', '@graphprotocol', 'graph-cli', 'bin', 'run');
 
   return runCommand(graphCli, args, cwd);
