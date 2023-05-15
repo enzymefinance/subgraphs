@@ -10,7 +10,7 @@
     "@enzymefinance/environment": "^4.0.24",
     "@enzymefinance/subgraph-cli": "workspace:*",
     "@enzymefinance/subgraph-utils": "workspace:*",
-    "@graphprotocol/graph-ts": "^0.27.0",
+    "@graphprotocol/graph-ts": "^0.30.0",
     "assemblyscript": "^0.24.1"
   }
 }
