@@ -174,7 +174,7 @@ class Subgraph<TVariables = any> {
   }
 
   public async buildSubgraph() {
-    await runGraphCli(['build', '--output-dir', path.join(this.root, 'build/subgraph')]);
+    await runGraphCli(['build', '--skip-migrations', '--output-dir', path.join(this.root, 'build/subgraph')]);
   }
 
   public async createSubgraph() {
