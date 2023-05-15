@@ -1,7 +1,7 @@
 import path from 'path';
 import { spawn } from 'child_process';
 
-// inspired by https://github.com/graphprotocol/graph-tooling/blob/main/packages/cli/tests/cli/util.ts#L92
+// inspired by https://github.com/graphprotocol/graph-tooling/blob/f9f0b14bc88241aa76da25568baa9343a0d66b4d/packages/cli/tests/cli/util.ts#L92
 function runCommand(
   command: string,
   args: string[] = [],
@@ -46,7 +46,7 @@ function runCommand(
   });
 }
 
-// inspired by https://github.com/graphprotocol/graph-tooling/blob/main/packages/cli/tests/cli/util.ts#L129
+// inspired by https://github.com/graphprotocol/graph-tooling/blob/f9f0b14bc88241aa76da25568baa9343a0d66b4d/packages/cli/tests/cli/util.ts#L129
 export function runGraphCli(args: string[], cwd?: string) {
   const graphCli = path.join(__dirname, '..', 'node_modules', '@graphprotocol', 'graph-cli', 'bin', 'run');
 

@@ -3,6 +3,7 @@ import glob from 'glob';
 import handlebars from 'handlebars';
 import path from 'node:path';
 import yargs from 'yargs';
+
 import { Configurator, Context, Contexts, Environment, ManifestValues, Template } from './types';
 import { formatJson, sdkDeclaration, sourceDeclaration, templateDeclaration } from './utils';
 import { runGraphCli } from './runCli';
@@ -12,7 +13,7 @@ const root = path.join(__dirname, '..');
 const defaultLocalNode = 'http://localhost:8020/';
 const defaultLocalIpfs = 'http://localhost:5001/';
 const defaultRemoteNode = 'https://api.thegraph.com/deploy/';
-const defaultRemoteIpfs = 'https://api.thegraph.com/ipfs/';
+const defaultRemoteIpfs = 'https://api.thegraph.com/ipfs/api/v0';
 
 class SubgraphLoader<TVariables = any> {
   public readonly contexts: Contexts<TVariables>;
