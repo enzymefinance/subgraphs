@@ -3,6 +3,7 @@ import {
   Account,
   Asset,
   GatedRedemptionQueueSharesWrapperDepositApproval,
+  GatedRedemptionQueueSharesWrapperDepositRequest,
   GatedRedemptionQueueSharesWrapper,
   GatedRedemptionQueueSharesWrapperDepositorBalance,
   GatedRedemptionQueueSharesWrapperRedemptionApproval,
@@ -33,6 +34,7 @@ export function ensureGatedRedemptionQueueSharesWrapper(address: Address): Gated
   sharesWrapper.firstWindowStart = ZERO_BI;
   sharesWrapper.frequency = ZERO_BI;
   sharesWrapper.duration = ZERO_BI;
+  sharesWrapper.depositMode = 'DIRECT';
   sharesWrapper.relativeSharesCap = ZERO_BD;
   sharesWrapper.useDepositApprovals = false;
   sharesWrapper.useRedemptionApprovals = false;
@@ -74,6 +76,38 @@ export function ensureGatedRedemptionQueueSharesWrapperDepositApproval(
   approval.save();
 
   return approval;
+}
+
+export function gatedRedemptionQueueSharesWrapperDepositRequestId(
+  wrapper: GatedRedemptionQueueSharesWrapper,
+  account: Account,
+  asset: Asset,
+): string {
+  return gatedRedemptionQueueSharesWrapperId(wrapper, account) + '/' + asset.id;
+}
+
+export function ensureGatedRedemptionQueueSharesWrapperDepositRequest(
+  wrapper: GatedRedemptionQueueSharesWrapper,
+  account: Account,
+  asset: Asset,
+): GatedRedemptionQueueSharesWrapperDepositRequest {
+  let id = gatedRedemptionQueueSharesWrapperDepositRequestId(wrapper, account, asset);
+  let request = GatedRedemptionQueueSharesWrapperDepositRequest.load(id);
+
+  if (request != null) {
+    return request;
+  }
+
+  request = new GatedRedemptionQueueSharesWrapperDepositRequest(id);
+  request.timestamp = 0;
+  request.vault = wrapper.vault;
+  request.wrapper = wrapper.id;
+  request.account = account.id;
+  request.asset = asset.id;
+  request.amount = ZERO_BD;
+  request.save();
+
+  return request;
 }
 
 // Transfer

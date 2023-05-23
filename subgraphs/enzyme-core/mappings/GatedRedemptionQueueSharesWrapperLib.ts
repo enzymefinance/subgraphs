@@ -9,11 +9,15 @@ import {
   ensureGatedRedemptionQueueSharesWrapperRedemptionRequest,
   ensureGatedRedemptionQueueSharesWrapperDepositorBalance,
   gatedRedemptionQueueSharesWrapperRedemptionRequestId,
+  ensureGatedRedemptionQueueSharesWrapperDepositRequest,
 } from '../entities/GatedRedemptionQueueSharesWrapper';
 import {
   Approval,
   DepositApproval,
   Deposited,
+  DepositModeSet,
+  DepositRequestAdded,
+  DepositRequestRemoved,
   Initialized,
   Kicked,
   ManagerAdded,
@@ -26,11 +30,12 @@ import {
   RedemptionWindowConfigSet,
   Transfer,
   TransferApproval,
+  TransferForced,
   UseDepositApprovalsSet,
   UseRedemptionApprovalsSet,
   UseTransferApprovalsSet,
 } from '../generated/contracts/GatedRedemptionQueueSharesWrapperLibEvents';
-import { log, store } from '@graphprotocol/graph-ts';
+import { store } from '@graphprotocol/graph-ts';
 import { UINT256_MAX, ZERO_ADDRESS, ZERO_BD } from '../../../packages/utils/constants';
 import {
   GatedRedemptionQueueSharesWrapperDeposit,
@@ -38,6 +43,7 @@ import {
   GatedRedemptionQueueSharesWrapperRedemption,
   GatedRedemptionQueueSharesWrapperRedemptionRequest,
   GatedRedemptionQueueSharesWrapperTransfer,
+  GatedRedemptionQueueSharesWrapperTransferForced,
 } from '../generated/schema';
 
 // Configuration
@@ -55,6 +61,12 @@ export function handleManagerRemoved(event: ManagerRemoved): void {
 
   let account = ensureAccount(event.params.user, event);
   sharesWrapper.managers = arrayDiff<string>(sharesWrapper.managers, [account.id]);
+  sharesWrapper.save();
+}
+
+export function handleDepositModeSet(event: DepositModeSet): void {
+  let sharesWrapper = ensureGatedRedemptionQueueSharesWrapper(event.address);
+  sharesWrapper.depositMode = event.params.mode == 0 ? 'DIRECT' : 'REQUEST';
   sharesWrapper.save();
 }
 
@@ -115,6 +127,34 @@ export function handleDepositApproval(event: DepositApproval): void {
   }
 }
 
+export function handleDepositRequestAdded(event: DepositRequestAdded): void {
+  let wrapper = ensureGatedRedemptionQueueSharesWrapper(event.address);
+  let account = ensureAccount(event.params.user, event);
+  let asset = ensureAsset(event.params.depositAsset);
+
+  let request = ensureGatedRedemptionQueueSharesWrapperDepositRequest(wrapper, account, asset);
+  request.amount = request.amount.plus(toBigDecimal(event.params.depositAssetAmount, asset.decimals));
+  request.timestamp = event.block.timestamp.toI32();
+  request.save();
+
+  // remove approval if needed
+  if (wrapper.useDepositApprovals == true) {
+    let approval = ensureGatedRedemptionQueueSharesWrapperDepositApproval(wrapper, account, asset);
+    if (approval.amount.notEqual(toBigDecimal(UINT256_MAX, asset.decimals))) {
+      store.remove('GatedRedemptionQueueSharesWrapperDepositApproval', approval.id);
+    }
+  }
+}
+
+export function handleDepositRequestRemoved(event: DepositRequestRemoved): void {
+  let wrapper = ensureGatedRedemptionQueueSharesWrapper(event.address);
+  let account = ensureAccount(event.params.user, event);
+  let asset = ensureAsset(event.params.depositAsset);
+
+  let request = ensureGatedRedemptionQueueSharesWrapperDepositRequest(wrapper, account, asset);
+  store.remove('GatedRedemptionQueueSharesWrapperDepositRequest', request.id);
+}
+
 export function handleDeposited(event: Deposited): void {
   let wrapper = ensureGatedRedemptionQueueSharesWrapper(event.address);
   let account = ensureAccount(event.params.user, event);
@@ -131,13 +171,15 @@ export function handleDeposited(event: Deposited): void {
   deposit.shares = sharesReceived;
   deposit.save();
 
-  // remove approval if needed ()
+  // remove approval if needed
   if (wrapper.useDepositApprovals == true) {
     let approval = ensureGatedRedemptionQueueSharesWrapperDepositApproval(wrapper, account, asset);
     if (approval.amount.notEqual(toBigDecimal(UINT256_MAX, asset.decimals))) {
       store.remove('GatedRedemptionQueueSharesWrapperDepositApproval', approval.id);
     }
   }
+
+  // remove deposit request if needed
 }
 
 // Transfer
@@ -196,6 +238,22 @@ export function handleTransfer(event: Transfer): void {
   }
 }
 
+export function handleTransferForced(event: TransferForced): void {
+  let wrapper = ensureGatedRedemptionQueueSharesWrapper(event.address);
+  let sender = ensureAccount(event.params.sender, event);
+  let recipient = ensureAccount(event.params.recipient, event);
+  let sharesAmount = toBigDecimal(event.params.amount);
+
+  let forced = new GatedRedemptionQueueSharesWrapperTransferForced(uniqueEventId(event));
+  forced.timestamp = event.block.timestamp.toI32();
+  forced.vault = wrapper.vault;
+  forced.wrapper = wrapper.id;
+  forced.sender = sender.id;
+  forced.recipient = recipient.id;
+  forced.shares = sharesAmount;
+  forced.save();
+}
+
 // Redemption
 
 export function handleRedemptionApproval(event: RedemptionApproval): void {
@@ -248,6 +306,7 @@ export function handleRedeemed(event: Redeemed): void {
   redemption.timestamp = event.block.timestamp.toI32();
   redemption.vault = wrapper.vault;
   redemption.wrapper = wrapper.id;
+  redemption.account = account.id;
   redemption.shares = sharesAmount;
   redemption.save();
 

@@ -1739,12 +1739,14 @@ type GatedRedemptionQueueSharesWrapper @entity {
   firstWindowStart: BigInt!
   frequency: BigInt!
   duration: BigInt!
+  depositMode: GatedRedemptionQueueSharesWrapperDepositMode!
   relativeSharesCap: BigDecimal!
   useDepositApprovals: Boolean!
   useRedemptionApprovals: Boolean!
   useTransferApprovals: Boolean!
 
   depositApprovals: [GatedRedemptionQueueSharesWrapperDepositApproval!]! @derivedFrom(field: "wrapper")
+  depositRequests: [GatedRedemptionQueueSharesWrapperDepositRequest!]! @derivedFrom(field: "wrapper")
   transferApprovals: [GatedRedemptionQueueSharesWrapperTransferApproval!]! @derivedFrom(field: "wrapper")
   redemptionApprovals: [GatedRedemptionQueueSharesWrapperRedemptionApproval!]! @derivedFrom(field: "wrapper")
   redemptionRequests: [GatedRedemptionQueueSharesWrapperRedemptionRequest!]! @derivedFrom(field: "wrapper")
@@ -1771,6 +1773,16 @@ type GatedRedemptionQueueSharesWrapperDepositApproval @entity {
   amount: BigDecimal!
 }
 
+type GatedRedemptionQueueSharesWrapperDepositRequest @entity {
+  id: ID!
+  timestamp: Int!
+  vault: Vault!
+  wrapper: GatedRedemptionQueueSharesWrapper!
+  account: Account!
+  asset: Asset!
+  amount: BigDecimal!
+}
+
 type GatedRedemptionQueueSharesWrapperDeposit implements GatedRedemptionQueueSharesWrapperSharesChange @entity {
   id: ID!
   timestamp: Int!
@@ -1782,7 +1794,7 @@ type GatedRedemptionQueueSharesWrapperDeposit implements GatedRedemptionQueueSha
   shares: BigDecimal!
 }
 
-type GatedRedemptionQueueSharesWrapperTransferApproval  @entity {
+type GatedRedemptionQueueSharesWrapperTransferApproval @entity {
   id: ID!
   timestamp: Int!
   vault: Vault!
@@ -1802,7 +1814,17 @@ type GatedRedemptionQueueSharesWrapperTransfer implements GatedRedemptionQueueSh
   shares: BigDecimal!
 }
 
-type GatedRedemptionQueueSharesWrapperRedemptionApproval  @entity {
+type GatedRedemptionQueueSharesWrapperTransferForced implements GatedRedemptionQueueSharesWrapperSharesChange @entity {
+  id: ID!
+  timestamp: Int!
+  vault: Vault!
+  wrapper: GatedRedemptionQueueSharesWrapper!
+  sender: Account!
+  recipient: Account!
+  shares: BigDecimal!
+}
+
+type GatedRedemptionQueueSharesWrapperRedemptionApproval @entity {
   id: ID!
   timestamp: Int!
   vault: Vault!
@@ -1811,7 +1833,7 @@ type GatedRedemptionQueueSharesWrapperRedemptionApproval  @entity {
   amount: BigDecimal!
 }
 
-type GatedRedemptionQueueSharesWrapperRedemptionRequest  @entity {
+type GatedRedemptionQueueSharesWrapperRedemptionRequest @entity {
   id: ID!
   timestamp: Int!
   vault: Vault!
@@ -1826,6 +1848,7 @@ type GatedRedemptionQueueSharesWrapperRedemption implements GatedRedemptionQueue
   timestamp: Int!
   vault: Vault!
   wrapper: GatedRedemptionQueueSharesWrapper!
+  account: Account!
   shares: BigDecimal!
 }
 
@@ -1843,4 +1866,9 @@ type GatedRedemptionQueueSharesWrapperDepositorBalance @entity {
   wrapper: GatedRedemptionQueueSharesWrapper!
   account: Account!
   shares: BigDecimal!
+}
+
+enum GatedRedemptionQueueSharesWrapperDepositMode {
+  DIRECT
+  REQUEST
 }
