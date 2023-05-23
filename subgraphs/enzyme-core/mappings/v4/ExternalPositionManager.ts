@@ -850,35 +850,35 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       );
     }
 
-    // if (actionId == MapleLiquidityPositionActionId.LendV2) {
-    //   let decoded = ethereum.decode('(address,uint256)', event.params.actionArgs);
+    if (actionId == MapleLiquidityPositionActionId.LendV2) {
+      let decoded = ethereum.decode('(address,uint256)', event.params.actionArgs);
 
-    //   if (decoded == null) {
-    //     return;
-    //   }
+      if (decoded == null) {
+        return;
+      }
 
-    //   let tuple = decoded.toTuple();
+      let tuple = decoded.toTuple();
 
-    //   let poolContractAddress = tuple[0].toAddress();
+      let poolContractAddress = tuple[0].toAddress();
 
-    //   let liquidityAssetAmount = tuple[1].toBigInt();
+      let liquidityAssetAmount = tuple[1].toBigInt();
 
-    //   let pool = ensureMapleLiquidityPoolV2(poolContractAddress);
-    //   let assetAmount = createMapleLiquidityAssetAmountV2(pool, liquidityAssetAmount, denominationAsset, event);
+      let pool = ensureMapleLiquidityPoolV2(poolContractAddress);
+      let assetAmount = createMapleLiquidityAssetAmountV2(pool, liquidityAssetAmount, denominationAsset, event);
 
-    //   let asset = ensureAsset(Address.fromString(assetAmount.asset));
+      let asset = ensureAsset(Address.fromString(assetAmount.asset));
 
-    //   createMapleLiquidityPositionChange(
-    //     event.params.externalPosition,
-    //     null,
-    //     pool,
-    //     assetAmount,
-    //     asset,
-    //     'LendV2',
-    //     vault,
-    //     event,
-    //   );
-    // }
+      createMapleLiquidityPositionChange(
+        event.params.externalPosition,
+        null,
+        pool,
+        assetAmount,
+        asset,
+        'LendV2',
+        vault,
+        event,
+      );
+    }
 
     if (actionId == MapleLiquidityPositionActionId.RequestRedeemV2) {
       let decoded = ethereum.decode('(address,uint256)', event.params.actionArgs);
