@@ -108,7 +108,7 @@ export const polygon: Context<Variables> = {
         arbitraryLoanTotalNominalDeltaOracleModuleAddress:
           polygonV4Deployment.contracts.ArbitraryLoanTotalNominalDeltaOracleModule,
         auraBalancerV2LpStakingAdapterAddress: '0x0000000000000000000000000000000000000000',
-        balancerV2LiquidityAdapterAddress: '0x98302d9486599332890710eddd29b3e317d36104',
+        balancerV2LiquidityAdapterAddress: '0xaa7f7b3daaabdeaf828f4c489379160b034d125b',
         compoundV3AdapterAddress: '0x360eb57d32bf3a95e9fb0aad2a4629ceca3ef7ac',
         comptrollerLibAddress: polygonV4Deployment.contracts.ComptrollerLib,
         convexCurveLpStakingAdapterAddress: polygonV4Deployment.contracts.ConvexCurveLpStakingAdapter,
