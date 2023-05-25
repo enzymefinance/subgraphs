@@ -77,6 +77,12 @@ export function handleTransfer(event: Transfer): void {
     return;
   }
 
+  // do not track transfers to self (which can occur with entrance/exit direct fees,
+  // if the depositor is also the fee recipient)
+  if (event.params.from.equals(event.params.to)) {
+    return;
+  }
+
   let vault = useVault(event.address.toHex());
   let shares = toBigDecimal(event.params.value);
 
