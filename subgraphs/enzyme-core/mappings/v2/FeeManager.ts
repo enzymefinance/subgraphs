@@ -1,5 +1,5 @@
-import { toBigDecimal, uniqueEventId, ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
-import { Address, BigDecimal } from '@graphprotocol/graph-ts';
+import { previousUniqueEventId, toBigDecimal, uniqueEventId, ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
+import { Address, BigDecimal, store } from '@graphprotocol/graph-ts';
 import { ensureAccount } from '../../entities/Account';
 import { ensureComptroller } from '../../entities/Comptroller';
 import { getActivityCounter } from '../../entities/Counter';
@@ -110,6 +110,16 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
     paid.activityCategories = ['Vault', 'Depositor'];
     paid.activityType = 'FeeShares';
     paid.save();
+
+    // Remove transfer event entity for direct fee payment
+    let transferOutId = previousUniqueEventId(event, 'SharesTransferredOut');
+    store.remove('SharesTransferredOutEvent', transferOutId);
+
+    let transferInId = previousUniqueEventId(event, 'SharesTransferredIn');
+    store.remove('SharesTransferredInEvent', transferInId);
+
+    let transferId = previousUniqueEventId(event, 'SharesTransfer');
+    store.remove('SharesTransferEvent', transferId);
   } else if (feeSettlementType == 'Mint') {
     // Mint - mint new shares for fee recipient
     let depositor = ensureAccount(event.params.payee, event);
