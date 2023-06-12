@@ -82,26 +82,10 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
     let payeeAccount = ensureAccount(event.params.payee, event);
     let payeeDeposit = ensureDeposit(payeeAccount, vault, event);
 
-    let paid = new FeeSharesPaidEvent(uniqueEventId(event, 'FeeSharesPaid'));
-    paid.vault = vault.id;
-    paid.depositor = payeeAccount.id;
-    paid.deposit = payeeDeposit.id;
-    paid.sharesChangeType = 'FeeSharesPaid';
-    paid.timestamp = event.block.timestamp.toI32();
-    paid.shares = shares;
-    paid.fee = feeId(event.params.comptrollerProxy, event.params.fee);
-    paid.activityCounter = getActivityCounter();
-    paid.activityCategories = ['Vault', 'Depositor'];
-    paid.activityType = 'FeeShares';
-    paid.save();
-
-    let payerAccount = ensureAccount(event.params.payer, event);
-    let payerDeposit = ensureDeposit(payerAccount, vault, event);
-
     let received = new FeeSharesReceivedEvent(uniqueEventId(event, 'FeeSharesReceived'));
     received.vault = vault.id;
-    received.depositor = payerAccount.id;
-    received.deposit = payerDeposit.id;
+    received.depositor = payeeAccount.id;
+    received.deposit = payeeDeposit.id;
     received.sharesChangeType = 'FeeSharesReceived';
     received.timestamp = event.block.timestamp.toI32();
     received.shares = shares;
@@ -110,6 +94,22 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
     received.activityCategories = ['Vault', 'Depositor'];
     received.activityType = 'FeeShares';
     received.save();
+    let paid = new FeeSharesPaidEvent(uniqueEventId(event, 'FeeSharesPaid'));
+
+    let payerAccount = ensureAccount(event.params.payer, event);
+    let payerDeposit = ensureDeposit(payerAccount, vault, event);
+
+    paid.vault = vault.id;
+    paid.depositor = payerAccount.id;
+    paid.deposit = payerDeposit.id;
+    paid.sharesChangeType = 'FeeSharesPaid';
+    paid.timestamp = event.block.timestamp.toI32();
+    paid.shares = shares;
+    paid.fee = feeId(event.params.comptrollerProxy, event.params.fee);
+    paid.activityCounter = getActivityCounter();
+    paid.activityCategories = ['Vault', 'Depositor'];
+    paid.activityType = 'FeeShares';
+    paid.save();
   } else if (feeSettlementType == 'Mint') {
     // Mint - mint new shares for fee recipient
     let depositor = ensureAccount(event.params.payee, event);
