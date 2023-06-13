@@ -107,8 +107,8 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
     paid.shares = shares;
     paid.fee = feeId(event.params.comptrollerProxy, event.params.fee);
     paid.activityCounter = getActivityCounter();
-    paid.activityCategories = ['Vault', 'Depositor'];
-    paid.activityType = 'DepositorShares';
+    paid.activityCategories = ['Depositor'];
+    paid.activityType = 'FeeShares';
     paid.save();
 
     // Remove transfer event entity for direct fee payment
