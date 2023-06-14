@@ -1827,6 +1827,8 @@ type GatedRedemptionQueueSharesWrapperTransferIn implements GatedRedemptionQueue
   sender: Account!
   account: Account!
   shares: BigDecimal!
+  depositorBalance: GatedRedemptionQueueSharesWrapperDepositorBalance!
+
 }
 
 
