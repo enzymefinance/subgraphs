@@ -94,11 +94,11 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
     received.activityCategories = ['Vault', 'Depositor'];
     received.activityType = 'FeeShares';
     received.save();
-    let paid = new FeeSharesPaidEvent(uniqueEventId(event, 'FeeSharesPaid'));
 
     let payerAccount = ensureAccount(event.params.payer, event);
     let payerDeposit = ensureDeposit(payerAccount, vault, event);
 
+    let paid = new FeeSharesPaidEvent(uniqueEventId(event, 'FeeSharesPaid'));
     paid.vault = vault.id;
     paid.depositor = payerAccount.id;
     paid.deposit = payerDeposit.id;
@@ -107,7 +107,7 @@ export function handleFeeSettledForFund(event: FeeSettledForFund): void {
     paid.shares = shares;
     paid.fee = feeId(event.params.comptrollerProxy, event.params.fee);
     paid.activityCounter = getActivityCounter();
-    paid.activityCategories = ['Vault', 'Depositor'];
+    paid.activityCategories = ['Depositor'];
     paid.activityType = 'FeeShares';
     paid.save();
 
