@@ -42,8 +42,10 @@ import {
   GatedRedemptionQueueSharesWrapperKick,
   GatedRedemptionQueueSharesWrapperRedemption,
   GatedRedemptionQueueSharesWrapperRedemptionRequest,
-  GatedRedemptionQueueSharesWrapperTransfer,
-  GatedRedemptionQueueSharesWrapperTransferForced,
+  GatedRedemptionQueueSharesWrapperTransferIn,
+  GatedRedemptionQueueSharesWrapperTransferInForced,
+  GatedRedemptionQueueSharesWrapperTransferOut,
+  GatedRedemptionQueueSharesWrapperTransferOutForced,
 } from '../generated/schema';
 
 // Configuration
@@ -207,14 +209,23 @@ export function handleTransfer(event: Transfer): void {
   let sharesAmount = toBigDecimal(event.params.value);
 
   if (event.params.from.notEqual(ZERO_ADDRESS) && event.params.to.notEqual(ZERO_ADDRESS)) {
-    let transfer = new GatedRedemptionQueueSharesWrapperTransfer(uniqueEventId(event));
-    transfer.timestamp = event.block.timestamp.toI32();
-    transfer.vault = wrapper.vault;
-    transfer.wrapper = wrapper.id;
-    transfer.sender = sender.id;
-    transfer.recipient = recipient.id;
-    transfer.shares = sharesAmount;
-    transfer.save();
+    let transferOut = new GatedRedemptionQueueSharesWrapperTransferOut(uniqueEventId(event, 'TransferOut'));
+    transferOut.timestamp = event.block.timestamp.toI32();
+    transferOut.vault = wrapper.vault;
+    transferOut.wrapper = wrapper.id;
+    transferOut.account = sender.id;
+    transferOut.recipient = recipient.id;
+    transferOut.shares = sharesAmount;
+    transferOut.save();
+
+    let transferIn = new GatedRedemptionQueueSharesWrapperTransferIn(uniqueEventId(event, 'TransferIn'));
+    transferIn.timestamp = event.block.timestamp.toI32();
+    transferIn.vault = wrapper.vault;
+    transferIn.wrapper = wrapper.id;
+    transferIn.sender = sender.id;
+    transferIn.account = recipient.id;
+    transferIn.shares = sharesAmount;
+    transferIn.save();
   }
 
   // remove approval if needed
@@ -244,14 +255,23 @@ export function handleTransferForced(event: TransferForced): void {
   let recipient = ensureAccount(event.params.recipient, event);
   let sharesAmount = toBigDecimal(event.params.amount);
 
-  let forced = new GatedRedemptionQueueSharesWrapperTransferForced(uniqueEventId(event));
-  forced.timestamp = event.block.timestamp.toI32();
-  forced.vault = wrapper.vault;
-  forced.wrapper = wrapper.id;
-  forced.sender = sender.id;
-  forced.recipient = recipient.id;
-  forced.shares = sharesAmount;
-  forced.save();
+  let forcedOut = new GatedRedemptionQueueSharesWrapperTransferOutForced(uniqueEventId(event, 'TransferForcedOut'));
+  forcedOut.timestamp = event.block.timestamp.toI32();
+  forcedOut.vault = wrapper.vault;
+  forcedOut.wrapper = wrapper.id;
+  forcedOut.account = sender.id;
+  forcedOut.recipient = recipient.id;
+  forcedOut.shares = sharesAmount;
+  forcedOut.save();
+
+  let forcedIn = new GatedRedemptionQueueSharesWrapperTransferInForced(uniqueEventId(event, 'TransferForcedIn'));
+  forcedIn.timestamp = event.block.timestamp.toI32();
+  forcedIn.vault = wrapper.vault;
+  forcedIn.wrapper = wrapper.id;
+  forcedIn.sender = sender.id;
+  forcedIn.account = recipient.id;
+  forcedIn.shares = sharesAmount;
+  forcedIn.save();
 }
 
 // Redemption
