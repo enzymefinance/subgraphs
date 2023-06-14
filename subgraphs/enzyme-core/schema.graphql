@@ -1792,8 +1792,7 @@ type GatedRedemptionQueueSharesWrapperDeposit implements GatedRedemptionQueueSha
   vault: Vault!
   wrapper: GatedRedemptionQueueSharesWrapper!
   account: Account!
-  asset: Asset!
-  amount: BigDecimal!
+  depositAssetAmount: AssetAmount!
   shares: BigDecimal!
   depositorBalance: GatedRedemptionQueueSharesWrapperDepositorBalance!
 }

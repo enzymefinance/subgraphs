@@ -228,7 +228,7 @@ export function handleTransfer(event: Transfer): void {
     transferIn.sender = sender.id;
     transferIn.account = recipient.id;
     transferIn.shares = sharesAmount;
-    transferOut.depositorBalance = gatedRedemptionQueueSharesWrapperDepositorBalanceId(wrapper, recipient);
+    transferIn.depositorBalance = gatedRedemptionQueueSharesWrapperDepositorBalanceId(wrapper, recipient);
     transferIn.save();
   }
 
