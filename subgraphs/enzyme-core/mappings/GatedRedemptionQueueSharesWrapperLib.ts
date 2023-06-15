@@ -48,6 +48,7 @@ import {
   GatedRedemptionQueueSharesWrapperTransferOut,
   GatedRedemptionQueueSharesWrapperTransferOutForced,
 } from '../generated/schema';
+import { createAssetAmount } from '../entities/AssetAmount';
 
 // Configuration
 
@@ -169,8 +170,13 @@ export function handleDeposited(event: Deposited): void {
   deposit.vault = wrapper.vault;
   deposit.wrapper = wrapper.id;
   deposit.account = account.id;
-  deposit.asset = asset.id;
-  deposit.amount = toBigDecimal(event.params.depositTokenAmount, asset.decimals);
+  deposit.depositAssetAmount = createAssetAmount(
+    asset,
+    toBigDecimal(event.params.depositTokenAmount, asset.decimals),
+    asset,
+    'gated-redemption-queue-shares-wrapper-deposit',
+    event,
+  ).id;
   deposit.shares = sharesReceived;
   deposit.depositorBalance = gatedRedemptionQueueSharesWrapperDepositorBalanceId(wrapper, account);
   deposit.save();
@@ -334,6 +340,7 @@ export function handleRedeemed(event: Redeemed): void {
   redemption.wrapper = wrapper.id;
   redemption.account = account.id;
   redemption.shares = sharesAmount;
+  redemption.payoutAssetAmounts = new Array<string>();
   redemption.depositorBalance = gatedRedemptionQueueSharesWrapperDepositorBalanceId(wrapper, account);
   redemption.save();
 
@@ -364,6 +371,7 @@ export function handleKicked(event: Kicked): void {
   kick.wrapper = wrapper.id;
   kick.account = account.id;
   kick.shares = sharesAmount;
+  kick.payoutAssetAmounts = new Array<string>();
   kick.depositorBalance = gatedRedemptionQueueSharesWrapperDepositorBalanceId(wrapper, account);
   kick.save();
 }

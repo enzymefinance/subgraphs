@@ -1879,6 +1879,7 @@ type GatedRedemptionQueueSharesWrapperRedemption implements GatedRedemptionQueue
   wrapper: GatedRedemptionQueueSharesWrapper!
   account: Account!
   shares: BigDecimal!
+  payoutAssetAmounts: [AssetAmount!]!
   depositorBalance: GatedRedemptionQueueSharesWrapperDepositorBalance!
 
 }
@@ -1890,6 +1891,7 @@ type GatedRedemptionQueueSharesWrapperKick implements GatedRedemptionQueueShares
   wrapper: GatedRedemptionQueueSharesWrapper!
   account: Account!
   shares: BigDecimal!
+  payoutAssetAmounts: [AssetAmount!]!
   depositorBalance: GatedRedemptionQueueSharesWrapperDepositorBalance!
 }
 
