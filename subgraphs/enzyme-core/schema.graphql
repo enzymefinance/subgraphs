@@ -1416,13 +1416,17 @@ type KilnStakingPosition implements ExternalPosition @entity {
   active: Boolean!
   stakedEthAmount: BigDecimal!
   publicKeys: [Bytes!]!
+  positionValuePaused: Boolean!
   changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
 }
 
 enum KilnStakingPositionChangeType {
   Stake
   ClaimFees
-  WithdrawEth
+  SweepEth
+  Unstake
+  PausePositionValue
+  UnpausePositionValue
 }
 
 enum KilnStakingPositionActionClaimType {

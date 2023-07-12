@@ -1,4 +1,5 @@
 import {
+  arrayDiff,
   arrayUnique,
   logCritical,
   toBigDecimal,
@@ -7,7 +8,16 @@ import {
   ZERO_BD,
   ZERO_BI,
 } from '@enzymefinance/subgraph-utils';
-import { Address, Bytes, DataSourceContext, ethereum, crypto, BigInt, BigDecimal } from '@graphprotocol/graph-ts';
+import {
+  Address,
+  Bytes,
+  DataSourceContext,
+  ethereum,
+  crypto,
+  BigInt,
+  BigDecimal,
+  ByteArray,
+} from '@graphprotocol/graph-ts';
 import { createAaveDebtPosition, createAaveDebtPositionChange } from '../../entities/AaveDebtPosition';
 import {
   createMapleLiquidityAssetAmountV1,
@@ -1500,8 +1510,81 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       );
     }
 
-    if (actionId == KilnStakingPositionActionId.WithdrawEth) {
-      createKilnStakingPositionChange(event.params.externalPosition, 'WithdrawEth', null, [], null, vault, event);
+    if (actionId == KilnStakingPositionActionId.SweepEth) {
+      createKilnStakingPositionChange(event.params.externalPosition, 'SweepEth', null, [], null, vault, event);
+    }
+
+    if (actionId == KilnStakingPositionActionId.Unstake) {
+      let decoded = ethereum.decode('(address,bytes)', event.params.actionArgs);
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+
+      let stakingContractAddress = tuple[0].toAddress();
+      let packedPublicKeys = tuple[1].toBytes();
+
+      ensureKilnStaking(stakingContractAddress);
+
+      let packedPublicKeysArray = new ByteArray(packedPublicKeys.length);
+      packedPublicKeysArray.set(packedPublicKeys);
+
+      let publicKeyLength = 48;
+      let numberOfPublicKeys = packedPublicKeys.length / publicKeyLength;
+
+      let wethAsset = ensureAsset(wethTokenAddress);
+
+      let ethPerNode = BigDecimal.fromString('32');
+      let amount = toBigDecimal(BigInt.fromI32(numberOfPublicKeys), 0).times(ethPerNode);
+      let assetAmount = createAssetAmount(wethAsset, amount, denominationAsset, 'kiln-stake', event);
+
+      // TODO: this needs to be tested once
+      // let publicKeys: Bytes[] = [];
+      // for (let i = 0; i < numberOfPublicKeys; i++) {
+      //   publicKeys.push(
+      //     Bytes.fromUint8Array(packedPublicKeysArray.subarray(i * publicKeyLength, (i + 1) * publicKeyLength - 1)),
+      //   );
+      // }
+
+      // let kilnStakingPosition = useKilnStakingPosition(event.params.externalPosition.toHex());
+      // kilnStakingPosition.publicKeys = arrayDiff(kilnStakingPosition.publicKeys, publicKeys);
+      // kilnStakingPosition.save();
+
+      createKilnStakingPositionChange(
+        event.params.externalPosition,
+        'Unstake',
+        assetAmount,
+        [], // TODO: change to 'publicKeys' once tested,
+        null,
+        vault,
+        event,
+      );
+    }
+
+    if (actionId == KilnStakingPositionActionId.PausePositionValue) {
+      createKilnStakingPositionChange(
+        event.params.externalPosition,
+        'PausePositionValue',
+        null,
+        [],
+        null,
+        vault,
+        event,
+      );
+    }
+
+    if (actionId == KilnStakingPositionActionId.UnpausePositionValue) {
+      createKilnStakingPositionChange(
+        event.params.externalPosition,
+        'UnpausePositionValue',
+        null,
+        [],
+        null,
+        vault,
+        event,
+      );
     }
 
     return;

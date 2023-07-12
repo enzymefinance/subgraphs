@@ -32,6 +32,7 @@ export function createKilnStakingPosition(
   ksp.type = type.id;
   ksp.stakedEthAmount = ZERO_BD;
   ksp.publicKeys = new Array<Bytes>(0);
+  ksp.positionValuePaused = false;
   ksp.save();
 
   return ksp;
