@@ -1564,6 +1564,10 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     }
 
     if (actionId == KilnStakingPositionActionId.PausePositionValue) {
+      let kilnStakingPosition = useKilnStakingPosition(event.params.externalPosition.toHex());
+      kilnStakingPosition.positionValuePaused = true;
+      kilnStakingPosition.save();
+
       createKilnStakingPositionChange(
         event.params.externalPosition,
         'PausePositionValue',
@@ -1576,6 +1580,10 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     }
 
     if (actionId == KilnStakingPositionActionId.UnpausePositionValue) {
+      let kilnStakingPosition = useKilnStakingPosition(event.params.externalPosition.toHex());
+      kilnStakingPosition.positionValuePaused = false;
+      kilnStakingPosition.save();
+
       createKilnStakingPositionChange(
         event.params.externalPosition,
         'UnpausePositionValue',
