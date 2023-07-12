@@ -1540,7 +1540,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let amount = toBigDecimal(BigInt.fromI32(numberOfPublicKeys), 0).times(ethPerNode);
       let assetAmount = createAssetAmount(wethAsset, amount, denominationAsset, 'kiln-stake', event);
 
-      // TODO: this needs to be tested once
+      // TODO: this needs to be tested once the first withdrawal has gone through
       // let publicKeys: Bytes[] = [];
       // for (let i = 0; i < numberOfPublicKeys; i++) {
       //   publicKeys.push(
