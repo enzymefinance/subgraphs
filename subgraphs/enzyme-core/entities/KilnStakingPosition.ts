@@ -7,6 +7,7 @@ import {
   ExternalPositionType,
   AssetAmount,
   KilnStaking,
+  KilnStakingPositionValidator,
 } from '../generated/schema';
 import { KilnStaking4DataSource } from '../generated/templates';
 import { getActivityCounter } from './Counter';
@@ -31,7 +32,6 @@ export function createKilnStakingPosition(
   ksp.active = true;
   ksp.type = type.id;
   ksp.stakedEthAmount = ZERO_BD;
-  ksp.publicKeys = new Array<Bytes>(0);
   ksp.positionValuePaused = false;
   ksp.save();
 
@@ -42,7 +42,7 @@ export function createKilnStakingPositionChange(
   kilnStakingPositionAddress: Address,
   changeType: string,
   assetAmount: AssetAmount | null,
-  publicKeys: Bytes[],
+  validatorIds: Bytes[],
   claimType: string | null,
   vault: Vault,
   event: ethereum.Event,
@@ -52,7 +52,7 @@ export function createKilnStakingPositionChange(
   change.externalPosition = kilnStakingPositionAddress.toHex();
   change.vault = vault.id;
   change.assetAmount = assetAmount != null ? assetAmount.id : null;
-  change.publicKeys = publicKeys;
+  change.validators = validatorIds;
   change.claimType = claimType;
   change.timestamp = event.block.timestamp.toI32();
   change.activityCounter = getActivityCounter();
@@ -76,4 +76,22 @@ export function ensureKilnStaking(stakingContractAddress: Address): KilnStaking 
   }
 
   return kilnStaking;
+}
+
+export function ensureKilnStakingPositionValidator(
+  publicKey: Bytes,
+  kilnStakingPosition: KilnStakingPosition,
+  event: ethereum.Event,
+): KilnStakingPositionValidator {
+  let validator = KilnStakingPositionValidator.load(publicKey);
+  if (!validator) {
+    validator = new KilnStakingPositionValidator(publicKey);
+    validator.timestamp = event.block.timestamp.toI32();
+    validator.kilnStakingPosition = kilnStakingPosition.id;
+    validator.unstakeSignalled = false;
+    validator.unstakeSignalledAt = 0;
+    validator.save();
+  }
+
+  return validator;
 }

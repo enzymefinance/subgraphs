@@ -1,13 +1,4 @@
-import {
-  arrayDiff,
-  arrayUnique,
-  logCritical,
-  toBigDecimal,
-  tuplePrefixBytes,
-  ZERO_ADDRESS,
-  ZERO_BD,
-  ZERO_BI,
-} from '@enzymefinance/subgraph-utils';
+import { arrayUnique, logCritical, toBigDecimal, tuplePrefixBytes, ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
 import {
   Address,
   Bytes,
@@ -54,10 +45,9 @@ import {
   ValidatedVaultProxySetForFund,
 } from '../../generated/contracts/ExternalPositionManager4Events';
 import { ProtocolSdk } from '../../generated/contracts/ProtocolSdk';
-import { Asset, AssetAmount, KilnStaking, KilnStakingPosition } from '../../generated/schema';
+import { Asset, AssetAmount } from '../../generated/schema';
 import {
   ArbitraryLoanPositionLib4DataSource,
-  KilnStaking4DataSource,
   MapleLiquidityPositionLib4DataSource,
   TheGraphDelegationPositionLib4DataSource,
   UniswapV3LiquidityPositionLib4DataSource,
@@ -1548,8 +1538,9 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       //   );
       // }
 
+      // TODO: update KilnStakingPositionValidators (unstakeSignalled, unstakeSignalledAt)
       // let kilnStakingPosition = useKilnStakingPosition(event.params.externalPosition.toHex());
-      // kilnStakingPosition.publicKeys = arrayDiff(kilnStakingPosition.publicKeys, publicKeys);
+      // kilnStakingPosition.validators = arrayDiff(kilnStakingPosition.validators, publicKeys);
       // kilnStakingPosition.save();
 
       createKilnStakingPositionChange(
