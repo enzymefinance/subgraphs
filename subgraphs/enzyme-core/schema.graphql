@@ -1423,7 +1423,7 @@ type KilnStakingPosition implements ExternalPosition @entity {
 type KilnStakingPositionValidator @entity {
   # Validator id is its publicKey
   id: Bytes!
-  timestamp: Int!
+  createdAt: Int!
   kilnStakingPosition: KilnStakingPosition!
   unstakeSignalled: Boolean!
   unstakeSignalledAt: Int!

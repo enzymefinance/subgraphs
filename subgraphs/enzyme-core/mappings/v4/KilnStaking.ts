@@ -5,7 +5,7 @@ export function handleDeposit(event: Deposit): void {
   let kilnStakingPosition = useKilnStakingPosition(event.params.caller.toHex());
 
   let validator = ensureKilnStakingPositionValidator(event.params.publicKey, kilnStakingPosition);
-  validator.timestamp = event.block.timestamp.toI32();
+  validator.createdAt = event.block.timestamp.toI32();
   validator.save();
 }
 

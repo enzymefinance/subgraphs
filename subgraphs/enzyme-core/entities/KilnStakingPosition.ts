@@ -85,7 +85,7 @@ export function ensureKilnStakingPositionValidator(
   let validator = KilnStakingPositionValidator.load(publicKey);
   if (!validator) {
     validator = new KilnStakingPositionValidator(publicKey);
-    validator.timestamp = 0;
+    validator.createdAt = 0;
     validator.kilnStakingPosition = kilnStakingPosition.id;
     validator.unstakeSignalled = false;
     validator.unstakeSignalledAt = 0;
