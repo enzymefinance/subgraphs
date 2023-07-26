@@ -81,12 +81,11 @@ export function ensureKilnStaking(stakingContractAddress: Address): KilnStaking 
 export function ensureKilnStakingPositionValidator(
   publicKey: Bytes,
   kilnStakingPosition: KilnStakingPosition,
-  event: ethereum.Event,
 ): KilnStakingPositionValidator {
   let validator = KilnStakingPositionValidator.load(publicKey);
   if (!validator) {
     validator = new KilnStakingPositionValidator(publicKey);
-    validator.timestamp = event.block.timestamp.toI32();
+    validator.timestamp = 0;
     validator.kilnStakingPosition = kilnStakingPosition.id;
     validator.unstakeSignalled = false;
     validator.unstakeSignalledAt = 0;

@@ -1486,14 +1486,14 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
       let tuple = decoded.toTuple();
 
-      let publicKeys = tuple[1].toBytesArray();
+      let validatorIds = tuple[1].toBytesArray();
       let claimType = tuple[2].toI32();
 
       createKilnStakingPositionChange(
         event.params.externalPosition,
         'ClaimFees',
         null,
-        publicKeys,
+        validatorIds,
         kilnClaimFeeType(claimType),
         vault,
         event,
@@ -1528,26 +1528,21 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
       let ethPerNode = BigDecimal.fromString('32');
       let amount = toBigDecimal(BigInt.fromI32(numberOfPublicKeys), 0).times(ethPerNode);
-      let assetAmount = createAssetAmount(wethAsset, amount, denominationAsset, 'kiln-stake', event);
+      let assetAmount = createAssetAmount(wethAsset, amount, denominationAsset, 'kiln-unstake', event);
 
       // TODO: this needs to be tested once the first withdrawal has gone through
-      // let publicKeys: Bytes[] = [];
+      // let validatorIds: Bytes[] = [];
       // for (let i = 0; i < numberOfPublicKeys; i++) {
-      //   publicKeys.push(
+      //   validatorIds.push(
       //     Bytes.fromUint8Array(packedPublicKeysArray.subarray(i * publicKeyLength, (i + 1) * publicKeyLength - 1)),
       //   );
       // }
-
-      // TODO: update KilnStakingPositionValidators (unstakeSignalled, unstakeSignalledAt)
-      // let kilnStakingPosition = useKilnStakingPosition(event.params.externalPosition.toHex());
-      // kilnStakingPosition.validators = arrayDiff(kilnStakingPosition.validators, publicKeys);
-      // kilnStakingPosition.save();
 
       createKilnStakingPositionChange(
         event.params.externalPosition,
         'Unstake',
         assetAmount,
-        [], // TODO: change to 'publicKeys' once tested,
+        [], // TODO: change from '[]' to 'validatorIds' once tested,
         null,
         vault,
         event,
