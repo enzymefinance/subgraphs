@@ -1415,14 +1415,27 @@ type KilnStakingPosition implements ExternalPosition @entity {
   type: ExternalPositionType!
   active: Boolean!
   stakedEthAmount: BigDecimal!
-  publicKeys: [Bytes!]!
+  positionValuePaused: Boolean!
+  validators: [KilnStakingPositionValidator!]! @derivedFrom(field: "kilnStakingPosition")
   changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
+}
+
+type KilnStakingPositionValidator @entity {
+  # Validator id is its publicKey
+  id: Bytes!
+  createdAt: Int!
+  kilnStakingPosition: KilnStakingPosition!
+  unstakeSignalled: Boolean!
+  unstakeSignalledAt: Int!
 }
 
 enum KilnStakingPositionChangeType {
   Stake
   ClaimFees
-  WithdrawEth
+  SweepEth
+  Unstake
+  PausePositionValue
+  UnpausePositionValue
 }
 
 enum KilnStakingPositionActionClaimType {
@@ -1439,7 +1452,7 @@ type KilnStakingPositionChange implements Activity & VaultActivity & ExternalPos
   kilnStakingPositionChangeType: KilnStakingPositionChangeType!
   stakingContractAddress: Bytes
   assetAmount: AssetAmount
-  publicKeys: [Bytes!]!
+  validators: [KilnStakingPositionValidator!]!
   claimType: KilnStakingPositionActionClaimType
   activityCounter: Int!
   activityCategories: [ActivityCategory!]!
