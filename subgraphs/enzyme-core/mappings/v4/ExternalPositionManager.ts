@@ -1529,20 +1529,18 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let ethPerNode = BigDecimal.fromString('32');
       let amount = toBigDecimal(BigInt.fromI32(numberOfPublicKeys), 0).times(ethPerNode);
       let assetAmount = createAssetAmount(wethAsset, amount, denominationAsset, 'kiln-unstake', event);
-
-      // TODO: this needs to be tested once the first withdrawal has gone through
-      // let validatorIds: Bytes[] = [];
-      // for (let i = 0; i < numberOfPublicKeys; i++) {
-      //   validatorIds.push(
-      //     Bytes.fromUint8Array(packedPublicKeysArray.subarray(i * publicKeyLength, (i + 1) * publicKeyLength - 1)),
-      //   );
-      // }
+      let validatorIds: Bytes[] = [];
+      for (let i = 0; i < numberOfPublicKeys; i++) {
+        validatorIds.push(
+          Bytes.fromUint8Array(packedPublicKeysArray.subarray(i * publicKeyLength, (i + 1) * publicKeyLength - 1)),
+        );
+      }
 
       createKilnStakingPositionChange(
         event.params.externalPosition,
         'Unstake',
         assetAmount,
-        [], // TODO: change from '[]' to 'validatorIds' once tested,
+        validatorIds,
         null,
         vault,
         event,
