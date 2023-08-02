@@ -1,4 +1,4 @@
-export const enum AaveDebtPositionActionId {
+export enum AaveDebtPositionActionId {
   AddCollateral = 0,
   RemoveCollateral = 1,
   Borrow = 2,
@@ -6,7 +6,7 @@ export const enum AaveDebtPositionActionId {
   ClaimRewards = 4,
 }
 
-export const enum CompoundDebtPositionActionId {
+export enum CompoundDebtPositionActionId {
   AddCollateral = 0,
   RemoveCollateral = 1,
   Borrow = 2,
@@ -14,7 +14,7 @@ export const enum CompoundDebtPositionActionId {
   ClaimComp = 4,
 }
 
-export const enum UniswapV3LiquidityPositionActionId {
+export enum UniswapV3LiquidityPositionActionId {
   Mint = 0,
   AddLiquidity = 1,
   RemoveLiquidity = 2,
@@ -72,5 +72,8 @@ export enum TheGraphDelegationPositionActionId {
 export enum KilnStakingPositionActionId {
   Stake = 0,
   ClaimFees = 1,
-  WithdrawEth = 2,
+  SweepEth = 2,
+  Unstake = 3,
+  PausePositionValue = 4,
+  UnpausePositionValue = 5,
 }
