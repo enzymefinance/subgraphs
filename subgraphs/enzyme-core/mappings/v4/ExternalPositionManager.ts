@@ -1504,6 +1504,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       createKilnStakingPositionChange(event.params.externalPosition, 'SweepEth', null, [], null, vault, event);
     }
 
+    // TODO: uncomment once tested
     // if (actionId == KilnStakingPositionActionId.Unstake) {
     // let decoded = ethereum.decode('(address,bytes)', event.params.actionArgs);
 
