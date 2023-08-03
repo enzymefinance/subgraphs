@@ -1504,48 +1504,49 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       createKilnStakingPositionChange(event.params.externalPosition, 'SweepEth', null, [], null, vault, event);
     }
 
-    if (actionId == KilnStakingPositionActionId.Unstake) {
-      let decoded = ethereum.decode('(address,bytes)', event.params.actionArgs);
+    // TODO: uncomment once tested
+    // if (actionId == KilnStakingPositionActionId.Unstake) {
+    // let decoded = ethereum.decode('(address,bytes)', event.params.actionArgs);
 
-      if (decoded == null) {
-        return;
-      }
+    // if (decoded == null) {
+    //   return;
+    // }
 
-      let tuple = decoded.toTuple();
+    // let tuple = decoded.toTuple();
 
-      let stakingContractAddress = tuple[0].toAddress();
-      let packedPublicKeys = tuple[1].toBytes();
+    // let stakingContractAddress = tuple[0].toAddress();
+    // let packedPublicKeys = tuple[1].toBytes();
 
-      ensureKilnStaking(stakingContractAddress);
+    // ensureKilnStaking(stakingContractAddress);
 
-      let packedPublicKeysArray = new ByteArray(packedPublicKeys.length);
-      packedPublicKeysArray.set(packedPublicKeys);
+    // let packedPublicKeysArray = new ByteArray(packedPublicKeys.length);
+    // packedPublicKeysArray.set(packedPublicKeys);
 
-      let publicKeyLength = 48;
-      let numberOfPublicKeys = packedPublicKeys.length / publicKeyLength;
+    // let publicKeyLength = 48;
+    // let numberOfPublicKeys = packedPublicKeys.length / publicKeyLength;
 
-      let wethAsset = ensureAsset(wethTokenAddress);
+    // let wethAsset = ensureAsset(wethTokenAddress);
 
-      let ethPerNode = BigDecimal.fromString('32');
-      let amount = toBigDecimal(BigInt.fromI32(numberOfPublicKeys), 0).times(ethPerNode);
-      let assetAmount = createAssetAmount(wethAsset, amount, denominationAsset, 'kiln-unstake', event);
-      let validatorIds: Bytes[] = [];
-      for (let i = 0; i < numberOfPublicKeys; i++) {
-        validatorIds.push(
-          Bytes.fromUint8Array(packedPublicKeysArray.subarray(i * publicKeyLength, (i + 1) * publicKeyLength - 1)),
-        );
-      }
+    // let ethPerNode = BigDecimal.fromString('32');
+    // let amount = toBigDecimal(BigInt.fromI32(numberOfPublicKeys), 0).times(ethPerNode);
+    // let assetAmount = createAssetAmount(wethAsset, amount, denominationAsset, 'kiln-unstake', event);
+    // let validatorIds: Bytes[] = [];
+    // for (let i = 0; i < numberOfPublicKeys; i++) {
+    //   validatorIds.push(
+    //     Bytes.fromUint8Array(packedPublicKeysArray.subarray(i * publicKeyLength, (i + 1) * publicKeyLength - 1)),
+    //   );
+    // }
 
-      createKilnStakingPositionChange(
-        event.params.externalPosition,
-        'Unstake',
-        assetAmount,
-        validatorIds,
-        null,
-        vault,
-        event,
-      );
-    }
+    // createKilnStakingPositionChange(
+    //   event.params.externalPosition,
+    //   'Unstake',
+    //   assetAmount,
+    //   validatorIds,
+    //   null,
+    //   vault,
+    //   event,
+    // );
+    // }
 
     if (actionId == KilnStakingPositionActionId.PausePositionValue) {
       let kilnStakingPosition = useKilnStakingPosition(event.params.externalPosition.toHex());
