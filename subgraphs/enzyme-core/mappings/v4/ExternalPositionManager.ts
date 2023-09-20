@@ -49,6 +49,7 @@ import { Asset, AssetAmount } from '../../generated/schema';
 import {
   ArbitraryLoanPositionLib4DataSource,
   MapleLiquidityPositionLib4DataSource,
+  StakeWiseV3StakingPositionLib4DataSource,
   TheGraphDelegationPositionLib4DataSource,
   UniswapV3LiquidityPositionLib4DataSource,
 } from '../../generated/templates';
@@ -62,6 +63,7 @@ import {
   LiquityDebtPositionActionId,
   UniswapV3LiquidityPositionActionId,
   KilnStakingPositionActionId,
+  StakeWiseV3StakingPositionActionId,
 } from '../../utils/actionId';
 import { ensureMapleLiquidityPoolV1, ensureMapleLiquidityPoolV2 } from '../../entities/MapleLiquidityPool';
 import { ExternalSdk } from '../../generated/contracts/ExternalSdk';
@@ -100,6 +102,7 @@ import {
   useKilnStakingPosition,
 } from '../../entities/KilnStakingPosition';
 import { kilnClaimFeeType } from '../../utils/kilnClaimFeeType';
+import { createStakeWiseStakingPosition } from '../../entities/StakeWiseStakingPosition';
 
 export function handleExternalPositionDeployedForFund(event: ExternalPositionDeployedForFund): void {
   let type = useExternalPositionType(event.params.externalPositionTypeId);
@@ -158,6 +161,14 @@ export function handleExternalPositionDeployedForFund(event: ExternalPositionDep
 
   if (type.label == 'KILN_STAKING') {
     createKilnStakingPosition(event.params.externalPosition, event.params.vaultProxy, type);
+
+    return;
+  }
+
+  if (type.label == 'STAKE_WISE_V3_STAKING') {
+    createStakeWiseStakingPosition(event.params.externalPosition, event.params.vaultProxy, type);
+
+    StakeWiseV3StakingPositionLib4DataSource.create(event.params.externalPosition);
 
     return;
   }
@@ -1581,6 +1592,20 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     }
 
     return;
+  }
+
+  if (type.label == 'STAKE_WISE_V3_STAKING') {
+    if (actionId == StakeWiseV3StakingPositionActionId.Stake) {
+    }
+
+    if (actionId == StakeWiseV3StakingPositionActionId.Redeem) {
+    }
+
+    if (actionId == StakeWiseV3StakingPositionActionId.EnterExitQueue) {
+    }
+
+    if (actionId == StakeWiseV3StakingPositionActionId.ClaimExitedAssets) {
+    }
   }
 
   createUnknownExternalPositionChange(event.params.externalPosition, vault, event);

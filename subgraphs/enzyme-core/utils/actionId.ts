@@ -77,3 +77,10 @@ export enum KilnStakingPositionActionId {
   PausePositionValue = 4,
   UnpausePositionValue = 5,
 }
+
+export enum StakeWiseV3StakingPositionActionId {
+  Stake = 0,
+  Redeem = 1,
+  EnterExitQueue = 2,
+  ClaimExitedAssets = 3,
+}
