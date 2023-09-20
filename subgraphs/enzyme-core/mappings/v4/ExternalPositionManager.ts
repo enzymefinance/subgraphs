@@ -102,7 +102,11 @@ import {
   useKilnStakingPosition,
 } from '../../entities/KilnStakingPosition';
 import { kilnClaimFeeType } from '../../utils/kilnClaimFeeType';
-import { createStakeWiseStakingPosition } from '../../entities/StakeWiseStakingPosition';
+import {
+  createStakeWiseStakingPosition,
+  createStakeWiseStakingPositionChange,
+  ensureStakeWiseVaultToken,
+} from '../../entities/StakeWiseStakingPosition';
 
 export function handleExternalPositionDeployedForFund(event: ExternalPositionDeployedForFund): void {
   let type = useExternalPositionType(event.params.externalPositionTypeId);
@@ -1596,6 +1600,31 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
   if (type.label == 'STAKE_WISE_V3_STAKING') {
     if (actionId == StakeWiseV3StakingPositionActionId.Stake) {
+      let decoded = ethereum.decode('(address,uint256)', event.params.actionArgs);
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+
+      let stakeWiseVault = tuple[0].toAddress();
+      let amount = toBigDecimal(tuple[1].toBigInt(), 18);
+
+      let stakeWiseVaultToken = ensureStakeWiseVaultToken(stakeWiseVault, event.params.externalPosition);
+
+      let wethAsset = ensureAsset(wethTokenAddress);
+
+      let assetAmount = createAssetAmount(wethAsset, amount, denominationAsset, 'kiln-stake', event);
+
+      createStakeWiseStakingPositionChange(
+        event.params.externalPosition,
+        'Stake',
+        stakeWiseVaultToken,
+        assetAmount,
+        vault,
+        event,
+      );
     }
 
     if (actionId == StakeWiseV3StakingPositionActionId.Redeem) {

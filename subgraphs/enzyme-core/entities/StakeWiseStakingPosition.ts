@@ -1,13 +1,13 @@
 import { logCritical, uniqueEventId, ZERO_BD } from '@enzymefinance/subgraph-utils';
-import { Address, Bytes, ethereum } from '@graphprotocol/graph-ts';
+import { Address, ethereum } from '@graphprotocol/graph-ts';
 import {
   StakeWiseStakingPosition,
   StakeWiseStakingPositionChange,
   Vault,
   ExternalPositionType,
   AssetAmount,
+  StakeWiseVaultToken,
 } from '../generated/schema';
-import { StakeWiseV3StakingPositionLib4DataSource } from '../generated/templates';
 import { getActivityCounter } from './Counter';
 import { useVault } from './Vault';
 
@@ -39,6 +39,7 @@ export function createStakeWiseStakingPosition(
 export function createStakeWiseStakingPositionChange(
   stakeWiseStakingPositionAddress: Address,
   changeType: string,
+  stakeWiseVaultToken: StakeWiseVaultToken,
   assetAmount: AssetAmount | null,
   vault: Vault,
   event: ethereum.Event,
@@ -47,6 +48,7 @@ export function createStakeWiseStakingPositionChange(
   change.stakeWiseStakingPositionChangeType = changeType;
   change.externalPosition = stakeWiseStakingPositionAddress.toHex();
   change.vault = vault.id;
+  change.stakeWiseVaultToken = stakeWiseVaultToken.id;
   change.assetAmount = assetAmount != null ? assetAmount.id : null;
   change.timestamp = event.block.timestamp.toI32();
   change.activityCounter = getActivityCounter();
@@ -58,4 +60,17 @@ export function createStakeWiseStakingPositionChange(
   vault.save();
 
   return change;
+}
+
+export function ensureStakeWiseVaultToken(stakeWiseVault: Address, externalPosition: Address): StakeWiseVaultToken {
+  let id = stakeWiseVault.toHex();
+
+  let stakeWiseVaultToken = StakeWiseVaultToken.load(id);
+  if (!stakeWiseVaultToken) {
+    stakeWiseVaultToken = new StakeWiseVaultToken(id);
+    stakeWiseVaultToken.stakeWiseStakingPosition = externalPosition.toHex();
+    stakeWiseVaultToken.save();
+  }
+
+  return stakeWiseVaultToken;
 }

@@ -1469,6 +1469,11 @@ type StakeWiseStakingPosition implements ExternalPosition @entity {
   changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
 }
 
+type StakeWiseVaultToken @entity {
+  id: ID!
+  stakeWiseStakingPosition: StakeWiseStakingPosition!
+}
+
 enum StakeWiseStakingPositionChangeType {
   Stake
   Redeem,
@@ -1482,6 +1487,7 @@ type StakeWiseStakingPositionChange implements Activity & VaultActivity & Extern
   timestamp: Int!
   externalPosition: ExternalPosition!
   stakeWiseStakingPositionChangeType: StakeWiseStakingPositionChangeType!
+  stakeWiseVaultToken: StakeWiseVaultToken!
   assetAmount: AssetAmount
   activityCounter: Int!
   activityCategories: [ActivityCategory!]!
