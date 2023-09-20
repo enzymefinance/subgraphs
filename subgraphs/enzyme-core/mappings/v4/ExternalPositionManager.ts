@@ -1,4 +1,11 @@
-import { arrayUnique, logCritical, toBigDecimal, tuplePrefixBytes, ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
+import {
+  arrayUnique,
+  logCritical,
+  toBigDecimal,
+  tuplePrefixBytes,
+  ZERO_ADDRESS,
+  ZERO_BD,
+} from '@enzymefinance/subgraph-utils';
 import {
   Address,
   Bytes,
@@ -1611,29 +1618,125 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let stakeWiseVault = tuple[0].toAddress();
       let amount = toBigDecimal(tuple[1].toBigInt(), 18);
 
+      let stakeWiseV3EthVault = ExternalSdk.bind(stakeWiseVault);
+      let shares = toBigDecimal(stakeWiseV3EthVault.convertToShares(tuple[1].toBigInt()), 18);
+
       let stakeWiseVaultToken = ensureStakeWiseVaultToken(stakeWiseVault, event.params.externalPosition);
 
       let wethAsset = ensureAsset(wethTokenAddress);
 
-      let assetAmount = createAssetAmount(wethAsset, amount, denominationAsset, 'kiln-stake', event);
+      let assetAmount = createAssetAmount(wethAsset, amount, denominationAsset, 'stakewise-stake', event);
 
       createStakeWiseStakingPositionChange(
         event.params.externalPosition,
         'Stake',
         stakeWiseVaultToken,
         assetAmount,
+        shares,
         vault,
         event,
       );
     }
 
     if (actionId == StakeWiseV3StakingPositionActionId.Redeem) {
+      let decoded = ethereum.decode('(address,uint256)', event.params.actionArgs);
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+
+      let stakeWiseVault = tuple[0].toAddress();
+      let shares = toBigDecimal(tuple[1].toBigInt(), 18);
+
+      let stakeWiseV3EthVault = ExternalSdk.bind(stakeWiseVault);
+      let amount = toBigDecimal(stakeWiseV3EthVault.convertToAssets(tuple[1].toBigInt()), 18);
+
+      let stakeWiseVaultToken = ensureStakeWiseVaultToken(stakeWiseVault, event.params.externalPosition);
+
+      let wethAsset = ensureAsset(wethTokenAddress);
+
+      let assetAmount = createAssetAmount(wethAsset, amount, denominationAsset, 'stakewise-redeem', event);
+
+      createStakeWiseStakingPositionChange(
+        event.params.externalPosition,
+        'Redeem',
+        stakeWiseVaultToken,
+        assetAmount,
+        shares,
+        vault,
+        event,
+      );
     }
 
     if (actionId == StakeWiseV3StakingPositionActionId.EnterExitQueue) {
+      let decoded = ethereum.decode('(address,uint256)', event.params.actionArgs);
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+
+      let stakeWiseVault = tuple[0].toAddress();
+      let shares = toBigDecimal(tuple[1].toBigInt(), 18);
+
+      let stakeWiseV3EthVault = ExternalSdk.bind(stakeWiseVault);
+      let amount = toBigDecimal(stakeWiseV3EthVault.convertToAssets(tuple[1].toBigInt()), 18);
+
+      let stakeWiseVaultToken = ensureStakeWiseVaultToken(stakeWiseVault, event.params.externalPosition);
+
+      let wethAsset = ensureAsset(wethTokenAddress);
+
+      let assetAmount = createAssetAmount(wethAsset, amount, denominationAsset, 'stakewise-enter-exit-queue', event);
+
+      createStakeWiseStakingPositionChange(
+        event.params.externalPosition,
+        'EnterExitQueue',
+        stakeWiseVaultToken,
+        assetAmount,
+        shares,
+        vault,
+        event,
+      );
     }
 
     if (actionId == StakeWiseV3StakingPositionActionId.ClaimExitedAssets) {
+      let decoded = ethereum.decode('(address,uint256)', event.params.actionArgs);
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+
+      let stakeWiseVault = tuple[0].toAddress();
+      let positionTicket = tuple[1].toBigInt();
+
+      let stakeWiseVaultToken = ensureStakeWiseVaultToken(stakeWiseVault, event.params.externalPosition);
+
+      let wethAsset = ensureAsset(wethTokenAddress);
+
+      // TODO: get correct amounts
+      let assetAmount = createAssetAmount(
+        wethAsset,
+        ZERO_BD,
+        denominationAsset,
+        'stakewise-claim-exited-assets',
+        event,
+      );
+      let shares = ZERO_BD;
+
+      createStakeWiseStakingPositionChange(
+        event.params.externalPosition,
+        'ClaimExitedAssets',
+        stakeWiseVaultToken,
+        assetAmount,
+        shares,
+        vault,
+        event,
+      );
     }
   }
 

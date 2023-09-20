@@ -1,5 +1,5 @@
-import { logCritical, uniqueEventId, ZERO_BD } from '@enzymefinance/subgraph-utils';
-import { Address, ethereum } from '@graphprotocol/graph-ts';
+import { logCritical, uniqueEventId } from '@enzymefinance/subgraph-utils';
+import { Address, BigDecimal, BigInt, ethereum, store } from '@graphprotocol/graph-ts';
 import {
   StakeWiseStakingPosition,
   StakeWiseStakingPositionChange,
@@ -7,6 +7,7 @@ import {
   ExternalPositionType,
   AssetAmount,
   StakeWiseVaultToken,
+  StakeWiseStakingExitRequest,
 } from '../generated/schema';
 import { getActivityCounter } from './Counter';
 import { useVault } from './Vault';
@@ -29,8 +30,6 @@ export function createStakeWiseStakingPosition(
   ksp.vault = useVault(vaultAddress.toHex()).id;
   ksp.active = true;
   ksp.type = type.id;
-  ksp.stakedEthAmount = ZERO_BD;
-  ksp.positionValuePaused = false;
   ksp.save();
 
   return ksp;
@@ -40,7 +39,8 @@ export function createStakeWiseStakingPositionChange(
   stakeWiseStakingPositionAddress: Address,
   changeType: string,
   stakeWiseVaultToken: StakeWiseVaultToken,
-  assetAmount: AssetAmount | null,
+  assetAmount: AssetAmount,
+  shares: BigDecimal,
   vault: Vault,
   event: ethereum.Event,
 ): StakeWiseStakingPositionChange {
@@ -49,7 +49,8 @@ export function createStakeWiseStakingPositionChange(
   change.externalPosition = stakeWiseStakingPositionAddress.toHex();
   change.vault = vault.id;
   change.stakeWiseVaultToken = stakeWiseVaultToken.id;
-  change.assetAmount = assetAmount != null ? assetAmount.id : null;
+  change.assetAmount = assetAmount.id;
+  change.shares = shares;
   change.timestamp = event.block.timestamp.toI32();
   change.activityCounter = getActivityCounter();
   change.activityCategories = ['Vault'];
@@ -73,4 +74,30 @@ export function ensureStakeWiseVaultToken(stakeWiseVault: Address, externalPosit
   }
 
   return stakeWiseVaultToken;
+}
+
+export function stakeWiseStakingExitRequestId(
+  stakeWiseStakingPosition: StakeWiseStakingPosition,
+  stakeWiseVaultToken: StakeWiseVaultToken,
+  positionTicket: BigInt,
+): string {
+  return stakeWiseStakingPosition.id + '/' + stakeWiseVaultToken.id + '/' + positionTicket.toString();
+}
+
+export function createStakeWiseStakingExitRequest(
+  stakeWiseStakingPosition: StakeWiseStakingPosition,
+  stakeWiseVaultToken: StakeWiseVaultToken,
+  positionTicket: BigInt,
+  shares: BigDecimal,
+): StakeWiseStakingExitRequest {
+  let id = stakeWiseStakingExitRequestId(stakeWiseStakingPosition, stakeWiseVaultToken, positionTicket);
+
+  let exitRequest = new StakeWiseStakingExitRequest(id);
+  exitRequest.stakeWiseStakingPosition = stakeWiseStakingPosition.id;
+  exitRequest.stakeWiseVaultToken = stakeWiseVaultToken.id;
+  exitRequest.positionTicket = positionTicket;
+  exitRequest.shares = shares;
+  exitRequest.save();
+
+  return exitRequest;
 }

@@ -168,6 +168,7 @@ export const configure: Configurator<Variables> = (variables) => {
         TheGraphStaking: 'abis/external/TheGraphStaking.json',
         UniswapV3Factory: 'abis/external/UniswapV3Factory.json',
         UniswapV3Pool: 'abis/external/UniswapV3Pool.json',
+        StakeWiseV3EthVault: 'abis/external/StakeWiseV3EthVault.json',
       },
       functions: (abis) => [
         abis.BalancerMinter.getFunction('getBalancerToken'),
@@ -193,6 +194,8 @@ export const configure: Configurator<Variables> = (variables) => {
         abis.UniswapV3Factory.getFunction('getPool'),
         abis.UniswapV3Pool.getFunction('slot0'),
         abis.UniswapV3Pool.getFunction('liquidity'),
+        abis.StakeWiseV3EthVault.getFunction('convertToShares'),
+        abis.StakeWiseV3EthVault.getFunction('convertToAssets'),
       ],
     },
   ];

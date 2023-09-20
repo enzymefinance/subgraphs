@@ -1465,13 +1465,19 @@ type StakeWiseStakingPosition implements ExternalPosition @entity {
   type: ExternalPositionType!
   active: Boolean!
   stakedEthAmount: BigDecimal!
-  positionValuePaused: Boolean!
+  vaultTokens: [StakeWiseVaultToken!]! @derivedFrom(field: "stakeWiseStakingPosition")
+  exitRequests: [StakeWiseStakingExitRequest!]! @derivedFrom(field: "stakeWiseStakingPosition")
   changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
 }
 
+# Question: is the token id (address) unique for all external positions, or can 
+# multiple external positions deposit into the same StakWiseVault?
+# Currently, we assume it's unique.
 type StakeWiseVaultToken @entity {
   id: ID!
+  createdAt: Int!
   stakeWiseStakingPosition: StakeWiseStakingPosition!
+  exitRequests: [StakeWiseStakingExitRequest!]! @derivedFrom(field: "stakeWiseVaultToken")
 }
 
 enum StakeWiseStakingPositionChangeType {
@@ -1488,12 +1494,20 @@ type StakeWiseStakingPositionChange implements Activity & VaultActivity & Extern
   externalPosition: ExternalPosition!
   stakeWiseStakingPositionChangeType: StakeWiseStakingPositionChangeType!
   stakeWiseVaultToken: StakeWiseVaultToken!
-  assetAmount: AssetAmount
+  assetAmount: AssetAmount!
+  shares: BigDecimal!
   activityCounter: Int!
   activityCategories: [ActivityCategory!]!
   activityType: ActivityType!
 }
 
+type StakeWiseStakingExitRequest @entity {
+  id: ID!
+  stakeWiseStakingPosition: StakeWiseStakingPosition!
+  stakeWiseVaultToken: StakeWiseVaultToken!
+  positionTicket: BigInt!
+  shares: BigDecimal! 
+}
 
 type UnknownExternalPosition implements ExternalPosition @entity {
   id: ID!
