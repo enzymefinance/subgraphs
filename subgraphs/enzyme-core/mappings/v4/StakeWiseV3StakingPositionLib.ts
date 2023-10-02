@@ -1,4 +1,4 @@
-import { toBigDecimal } from '@enzymefinance/subgraph-utils';
+import { arrayUnique, toBigDecimal } from '@enzymefinance/subgraph-utils';
 import {
   createStakeWiseStakingExitRequest,
   ensureStakeWiseVaultToken,
@@ -35,7 +35,11 @@ export function handleExitRequestRemoved(event: ExitRequestRemoved): void {
 }
 
 export function handleVaultTokenAdded(event: VaultTokenAdded): void {
-  ensureStakeWiseVaultToken(event.params.stakeWiseVaultAddress, event.address);
+  let stakingPosition = useStakeWiseStakingPosition(event.address.toHex());
+  let vaultToken = ensureStakeWiseVaultToken(event.params.stakeWiseVaultAddress, event.address);
+
+  stakingPosition.vaultTokens = arrayUnique(stakingPosition.vaultTokens.concat([vaultToken.id]));
+  stakingPosition.save();
 }
 
 export function handleVaultTokenRemoved(event: VaultTokenRemoved): void {

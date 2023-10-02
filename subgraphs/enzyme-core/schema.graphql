@@ -1470,11 +1470,6 @@ type StakeWiseStakingPosition implements ExternalPosition @entity {
   changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
 }
 
-# Question: is the token id (address) unique for all external positions, or can 
-# multiple external positions deposit into the same StakeWiseVault?
-# Currently, we assume it's unique.]
-
-# answer: multiple EPs can invest into a singe stakewise vault
 type StakeWiseVaultToken @entity {
   id: ID!
   createdAt: Int!

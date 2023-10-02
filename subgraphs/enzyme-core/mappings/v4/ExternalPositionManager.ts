@@ -113,6 +113,8 @@ import {
   createStakeWiseStakingPosition,
   createStakeWiseStakingPositionChange,
   ensureStakeWiseVaultToken,
+  stakeWiseStakingExitRequestId,
+  useStakeWiseStakingExitRequest,
   useStakeWiseStakingPosition,
 } from '../../entities/StakeWiseStakingPosition';
 
@@ -1639,7 +1641,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       );
 
       let stakingPosition = useStakeWiseStakingPosition(event.params.externalPosition.toHex());
-      stakingPosition.vaultTokens = arrayUnique(stakingPosition.vaultTokens.concat([stakeWiseVaultToken.id]));
+      stakingPosition.stakedEthAmount = stakingPosition.stakedEthAmount.plus(amount);
       stakingPosition.save();
     }
 
@@ -1673,6 +1675,10 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         vault,
         event,
       );
+
+      let stakingPosition = useStakeWiseStakingPosition(event.params.externalPosition.toHex());
+      stakingPosition.stakedEthAmount = stakingPosition.stakedEthAmount.minus(amount);
+      stakingPosition.save();
     }
 
     if (actionId == StakeWiseV3StakingPositionActionId.EnterExitQueue) {
@@ -1705,6 +1711,10 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         vault,
         event,
       );
+
+      let stakingPosition = useStakeWiseStakingPosition(event.params.externalPosition.toHex());
+      stakingPosition.stakedEthAmount = stakingPosition.stakedEthAmount.minus(amount);
+      stakingPosition.save();
     }
 
     if (actionId == StakeWiseV3StakingPositionActionId.ClaimExitedAssets) {
@@ -1719,19 +1729,21 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let stakeWiseVault = tuple[0].toAddress();
       let positionTicket = tuple[1].toBigInt();
 
+      let stakingPosition = useStakeWiseStakingPosition(event.params.externalPosition.toHex());
       let stakeWiseVaultToken = ensureStakeWiseVaultToken(stakeWiseVault, event.params.externalPosition);
 
       let wethAsset = ensureAsset(wethTokenAddress);
 
-      // TODO: get correct amounts
-      let assetAmount = createAssetAmount(
-        wethAsset,
-        ZERO_BD,
-        denominationAsset,
-        'stakewise-claim-exited-assets',
-        event,
-      );
-      let shares = ZERO_BD;
+      let exitRequestId = stakeWiseStakingExitRequestId(stakingPosition, stakeWiseVaultToken, positionTicket);
+      let exitRequest = useStakeWiseStakingExitRequest(exitRequestId);
+
+      const sharesBI = BigInt.fromString(exitRequest.shares.toString()).times(BigInt.fromI32(10).pow(18));
+
+      let stakeWiseV3EthVault = ExternalSdk.bind(stakeWiseVault);
+      let amount = toBigDecimal(stakeWiseV3EthVault.convertToAssets(sharesBI), 18);
+
+      let assetAmount = createAssetAmount(wethAsset, amount, denominationAsset, 'stakewise-claim-exited-assets', event);
+      let shares = toBigDecimal(sharesBI, 18);
 
       createStakeWiseStakingPositionChange(
         event.params.externalPosition,

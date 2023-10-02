@@ -101,3 +101,12 @@ export function createStakeWiseStakingExitRequest(
 
   return exitRequest;
 }
+
+export function useStakeWiseStakingExitRequest(id: string): StakeWiseStakingExitRequest {
+  let exitRequest = StakeWiseStakingExitRequest.load(id);
+  if (exitRequest == null) {
+    logCritical('Failed to load fund {}.', [id]);
+  }
+
+  return exitRequest as StakeWiseStakingExitRequest;
+}
