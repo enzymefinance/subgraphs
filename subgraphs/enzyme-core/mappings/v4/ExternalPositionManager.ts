@@ -113,6 +113,7 @@ import {
   createStakeWiseStakingPosition,
   createStakeWiseStakingPositionChange,
   ensureStakeWiseVaultToken,
+  useStakeWiseStakingPosition,
 } from '../../entities/StakeWiseStakingPosition';
 
 export function handleExternalPositionDeployedForFund(event: ExternalPositionDeployedForFund): void {
@@ -1636,6 +1637,10 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         vault,
         event,
       );
+
+      let stakingPosition = useStakeWiseStakingPosition(event.params.externalPosition.toHex());
+      stakingPosition.vaultTokens = arrayUnique(stakingPosition.vaultTokens.concat([stakeWiseVaultToken.id]));
+      stakingPosition.save();
     }
 
     if (actionId == StakeWiseV3StakingPositionActionId.Redeem) {

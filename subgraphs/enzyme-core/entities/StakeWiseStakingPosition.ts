@@ -13,12 +13,12 @@ import { getActivityCounter } from './Counter';
 import { useVault } from './Vault';
 
 export function useStakeWiseStakingPosition(id: string): StakeWiseStakingPosition {
-  let ksp = StakeWiseStakingPosition.load(id);
-  if (ksp == null) {
+  let position = StakeWiseStakingPosition.load(id);
+  if (position == null) {
     logCritical('Failed to load fund {}.', [id]);
   }
 
-  return ksp as StakeWiseStakingPosition;
+  return position as StakeWiseStakingPosition;
 }
 
 export function createStakeWiseStakingPosition(
@@ -26,13 +26,14 @@ export function createStakeWiseStakingPosition(
   vaultAddress: Address,
   type: ExternalPositionType,
 ): StakeWiseStakingPosition {
-  let ksp = new StakeWiseStakingPosition(externalPositionAddress.toHex());
-  ksp.vault = useVault(vaultAddress.toHex()).id;
-  ksp.active = true;
-  ksp.type = type.id;
-  ksp.save();
+  let position = new StakeWiseStakingPosition(externalPositionAddress.toHex());
+  position.vault = useVault(vaultAddress.toHex()).id;
+  position.vaultTokens = new Array<string>();
+  position.active = true;
+  position.type = type.id;
+  position.save();
 
-  return ksp;
+  return position;
 }
 
 export function createStakeWiseStakingPositionChange(
@@ -69,7 +70,6 @@ export function ensureStakeWiseVaultToken(stakeWiseVault: Address, externalPosit
   let stakeWiseVaultToken = StakeWiseVaultToken.load(id);
   if (!stakeWiseVaultToken) {
     stakeWiseVaultToken = new StakeWiseVaultToken(id);
-    stakeWiseVaultToken.stakeWiseStakingPosition = externalPosition.toHex();
     stakeWiseVaultToken.save();
   }
 
