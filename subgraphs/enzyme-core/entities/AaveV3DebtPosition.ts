@@ -1,5 +1,5 @@
 import { logCritical, uniqueEventId } from '@enzymefinance/subgraph-utils';
-import { Address, ethereum } from '@graphprotocol/graph-ts';
+import { Address, BigInt, ethereum } from '@graphprotocol/graph-ts';
 import {
   AaveV3DebtPosition,
   AaveV3DebtPositionChange,
@@ -34,10 +34,14 @@ export function createAaveV3DebtPosition(
   return aaveV3DebtPosition;
 }
 
+// 255 is the max value of uint8, so we use 255 to indicate null
+// Unfortunately, it seems that we can't set eModeCategoryId to null
+export let noEModeCategoryIdPassed = 255;
+
 export function createAaveV3DebtPositionChange(
   aaveV3DebtPositionAddress: Address,
   assetAmounts: AssetAmount[] | null,
-  eModeCategoryId: number | null,
+  eModeCategoryId: i32,
   changeType: string,
   vault: Vault,
   event: ethereum.Event,
@@ -51,10 +55,7 @@ export function createAaveV3DebtPositionChange(
   change.activityCounter = getActivityCounter();
   change.activityCategories = ['Vault'];
   change.activityType = 'Trade';
-  // 255 is the max value of uint8, so we use 256 to indicate null
-  // Unfortunately, it seems that we can't set eModeCategoryId to null
-  let noEModeCategoryIdPassed = 256;
-  change.eModeCategoryId = eModeCategoryId == null ? noEModeCategoryIdPassed : eModeCategoryId;
+  change.eModeCategoryId = eModeCategoryId;
   change.save();
 
   vault.lastAssetUpdate = event.block.timestamp.toI32();

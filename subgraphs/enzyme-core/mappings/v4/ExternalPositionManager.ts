@@ -101,7 +101,11 @@ import {
   useKilnStakingPosition,
 } from '../../entities/KilnStakingPosition';
 import { kilnClaimFeeType } from '../../utils/kilnClaimFeeType';
-import { createAaveV3DebtPosition, createAaveV3DebtPositionChange } from '../../entities/AaveV3DebtPosition';
+import {
+  createAaveV3DebtPosition,
+  createAaveV3DebtPositionChange,
+  noEModeCategoryIdPassed,
+} from '../../entities/AaveV3DebtPosition';
 
 export function handleExternalPositionDeployedForFund(event: ExternalPositionDeployedForFund): void {
   let type = useExternalPositionType(event.params.externalPositionTypeId);
@@ -298,7 +302,14 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         assetAmounts = assetAmounts.concat([assetAmount]);
       }
 
-      createAaveV3DebtPositionChange(event.params.externalPosition, assetAmounts, null, 'AddCollateral', vault, event);
+      createAaveV3DebtPositionChange(
+        event.params.externalPosition,
+        assetAmounts,
+        noEModeCategoryIdPassed,
+        'AddCollateral',
+        vault,
+        event,
+      );
     }
 
     if (actionId == AaveV3DebtPositionActionId.RemoveCollateral) {
@@ -327,7 +338,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       createAaveV3DebtPositionChange(
         event.params.externalPosition,
         assetAmounts,
-        null,
+        noEModeCategoryIdPassed,
         'RemoveCollateral',
         vault,
         event,
@@ -354,7 +365,14 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         assetAmounts = assetAmounts.concat([assetAmount]);
       }
 
-      createAaveV3DebtPositionChange(event.params.externalPosition, assetAmounts, null, 'Borrow', vault, event);
+      createAaveV3DebtPositionChange(
+        event.params.externalPosition,
+        assetAmounts,
+        noEModeCategoryIdPassed,
+        'Borrow',
+        vault,
+        event,
+      );
     }
 
     if (actionId == AaveV3DebtPositionActionId.RepayBorrow) {
@@ -377,7 +395,14 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         assetAmounts = assetAmounts.concat([assetAmount]);
       }
 
-      createAaveV3DebtPositionChange(event.params.externalPosition, assetAmounts, null, 'RepayBorrow', vault, event);
+      createAaveV3DebtPositionChange(
+        event.params.externalPosition,
+        assetAmounts,
+        noEModeCategoryIdPassed,
+        'RepayBorrow',
+        vault,
+        event,
+      );
     }
 
     if (actionId == AaveV3DebtPositionActionId.SetEMode) {
@@ -399,7 +424,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       createAaveV3DebtPositionChange(
         event.params.externalPosition,
         null,
-        null,
+        noEModeCategoryIdPassed,
         'SetUseReserveAsCollateral',
         vault,
         event,
