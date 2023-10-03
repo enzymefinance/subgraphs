@@ -28,20 +28,16 @@ export function createAaveV3DebtPosition(
   aaveV3DebtPosition.vault = useVault(vaultAddress.toHex()).id;
   aaveV3DebtPosition.active = true;
   aaveV3DebtPosition.type = type.id;
-  aaveV3DebtPosition.eModeCategoryId = 0;
+  aaveV3DebtPosition.eModeCategoryId = BigInt.fromI32(0);
   aaveV3DebtPosition.save();
 
   return aaveV3DebtPosition;
 }
 
-// 255 is the max value of uint8, so we use 255 to indicate null
-// Unfortunately, it seems that we can't set eModeCategoryId to null
-export let noEModeCategoryIdPassed = 255;
-
 export function createAaveV3DebtPositionChange(
   aaveV3DebtPositionAddress: Address,
   assetAmounts: AssetAmount[] | null,
-  eModeCategoryId: i32,
+  eModeCategoryId: BigInt | null,
   changeType: string,
   vault: Vault,
   event: ethereum.Event,
