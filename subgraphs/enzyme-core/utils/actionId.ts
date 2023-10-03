@@ -6,6 +6,15 @@ export enum AaveDebtPositionActionId {
   ClaimRewards = 4,
 }
 
+export enum AaveV3DebtPositionActionId {
+  AddCollateral = 0,
+  RemoveCollateral = 1,
+  Borrow = 2,
+  RepayBorrow = 3,
+  SetEMode = 4,
+  SetUseReserveAsCollateral = 5,
+}
+
 export enum CompoundDebtPositionActionId {
   AddCollateral = 0,
   RemoveCollateral = 1,
