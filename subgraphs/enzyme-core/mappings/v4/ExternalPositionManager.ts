@@ -286,7 +286,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
       let aTokens = tuple[0].toAddressArray();
       let amounts = tuple[1].toBigIntArray();
-      let fromUnderlying = tuple[3].toBoolean();
+      let fromUnderlying = tuple[2].toBoolean();
 
       let assetAmounts: AssetAmount[] = new Array<AssetAmount>();
       for (let i = 0; i < aTokens.length; i++) {
@@ -312,7 +312,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
       let aTokens = tuple[0].toAddressArray();
       let amounts = tuple[1].toBigIntArray();
-      let toUnderlying = tuple[3].toBoolean();
+      let toUnderlying = tuple[2].toBoolean();
 
       let assetAmounts: AssetAmount[] = new Array<AssetAmount>();
       for (let i = 0; i < aTokens.length; i++) {
