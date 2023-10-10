@@ -53,6 +53,7 @@ import {
   VaultOwnershipTransferred,
 } from '../../generated/schema';
 import { useKilnStakingPosition } from '../../entities/KilnStakingPosition';
+import { useAaveV3DebtPosition } from '../../entities/AaveV3DebtPosition';
 
 export function handleTransfer(event: Transfer): void {
   // only track deposit balance if not zero address
@@ -318,6 +319,12 @@ export function handleExternalPositionAdded(event: ExternalPositionAdded): void 
     adp.save();
   }
 
+  if (type.label == 'AAVE_V3_DEBT') {
+    let adp = useAaveV3DebtPosition(event.params.externalPosition.toHex());
+    adp.active = true;
+    adp.save();
+  }
+
   if (type.label == 'UNISWAP_V3_LIQUIDITY') {
     let uv3lp = useUniswapV3LiquidityPosition(event.params.externalPosition.toHex());
     uv3lp.active = true;
@@ -378,6 +385,12 @@ export function handleExternalPositionRemoved(event: ExternalPositionRemoved): v
 
   if (type.label == 'AAVE_DEBT') {
     let adp = useAaveDebtPosition(event.params.externalPosition.toHex());
+    adp.active = false;
+    adp.save();
+  }
+
+  if (type.label == 'AAVE_V3_DEBT') {
+    let adp = useAaveV3DebtPosition(event.params.externalPosition.toHex());
     adp.active = false;
     adp.save();
   }
