@@ -24,6 +24,7 @@ export function handleExitRequestAdded(event: ExitRequestAdded): void {
     stakeWiseVaultToken,
     event.params.positionTicket,
     sharesAmount,
+    event.block.timestamp.toI32(),
   );
 }
 export function handleExitRequestRemoved(event: ExitRequestRemoved): void {

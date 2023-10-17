@@ -89,6 +89,7 @@ export function createStakeWiseStakingExitRequest(
   stakeWiseVaultToken: StakeWiseVaultToken,
   positionTicket: BigInt,
   shares: BigDecimal,
+  timestamp: i32,
 ): StakeWiseStakingExitRequest {
   let id = stakeWiseStakingExitRequestId(stakeWiseStakingPosition, stakeWiseVaultToken, positionTicket);
 
@@ -97,6 +98,7 @@ export function createStakeWiseStakingExitRequest(
   exitRequest.stakeWiseVaultToken = stakeWiseVaultToken.id;
   exitRequest.positionTicket = positionTicket;
   exitRequest.shares = shares;
+  exitRequest.timestamp = timestamp;
   exitRequest.save();
 
   return exitRequest;
