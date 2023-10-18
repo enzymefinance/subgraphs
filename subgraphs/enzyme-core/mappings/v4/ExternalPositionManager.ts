@@ -101,7 +101,11 @@ import {
   useKilnStakingPosition,
 } from '../../entities/KilnStakingPosition';
 import { kilnClaimFeeType } from '../../utils/kilnClaimFeeType';
-import { createAaveV3DebtPosition, createAaveV3DebtPositionChange } from '../../entities/AaveV3DebtPosition';
+import {
+  createAaveV3DebtPosition,
+  createAaveV3DebtPositionChange,
+  setEModeAaveV3DebtPosition,
+} from '../../entities/AaveV3DebtPosition';
 
 export function handleExternalPositionDeployedForFund(event: ExternalPositionDeployedForFund): void {
   let type = useExternalPositionType(event.params.externalPositionTypeId);
@@ -381,15 +385,16 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     }
 
     if (actionId == AaveV3DebtPositionActionId.SetEMode) {
-      let decoded = ethereum.decode('(uint8)', tuplePrefixBytes(event.params.actionArgs));
+      let decoded = ethereum.decode('(uint8)', event.params.actionArgs);
 
       if (decoded == null) {
         return;
       }
 
       let tuple = decoded.toTuple();
-
       let categoryId = tuple[0].toBigInt();
+
+      setEModeAaveV3DebtPosition(event.params.externalPosition, categoryId);
 
       createAaveV3DebtPositionChange(event.params.externalPosition, null, categoryId, 'SetEMode', vault, event);
     }

@@ -11,12 +11,21 @@ import { getActivityCounter } from './Counter';
 import { useVault } from './Vault';
 
 export function useAaveV3DebtPosition(id: string): AaveV3DebtPosition {
-  let cdp = AaveV3DebtPosition.load(id);
-  if (cdp == null) {
+  let adp = AaveV3DebtPosition.load(id);
+  if (adp == null) {
     logCritical('Failed to load fund {}.', [id]);
   }
 
-  return cdp as AaveV3DebtPosition;
+  return adp as AaveV3DebtPosition;
+}
+
+export function setEModeAaveV3DebtPosition(externalPosition: Address, eModeCategoryId: BigInt): AaveV3DebtPosition {
+  let adp = useAaveV3DebtPosition(externalPosition.toHex());
+
+  adp.eModeCategoryId = eModeCategoryId;
+  adp.save();
+
+  return adp as AaveV3DebtPosition;
 }
 
 export function createAaveV3DebtPosition(
