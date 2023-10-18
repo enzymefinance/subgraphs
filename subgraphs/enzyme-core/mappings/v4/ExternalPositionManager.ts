@@ -48,6 +48,7 @@ import { ProtocolSdk } from '../../generated/contracts/ProtocolSdk';
 import { Asset, AssetAmount } from '../../generated/schema';
 import {
   ArbitraryLoanPositionLib4DataSource,
+  LidoWithdrawalsPositionLib4DataSource,
   MapleLiquidityPositionLib4DataSource,
   TheGraphDelegationPositionLib4DataSource,
   UniswapV3LiquidityPositionLib4DataSource,
@@ -62,6 +63,7 @@ import {
   LiquityDebtPositionActionId,
   UniswapV3LiquidityPositionActionId,
   KilnStakingPositionActionId,
+  LidoWithdrawalsActionId,
 } from '../../utils/actionId';
 import { ensureMapleLiquidityPoolV1, ensureMapleLiquidityPoolV2 } from '../../entities/MapleLiquidityPool';
 import { ExternalSdk } from '../../generated/contracts/ExternalSdk';
@@ -100,6 +102,11 @@ import {
   useKilnStakingPosition,
 } from '../../entities/KilnStakingPosition';
 import { kilnClaimFeeType } from '../../utils/kilnClaimFeeType';
+import {
+  createLidoWithdrawalsPosition,
+  createLidoWithdrawalsPositionChange,
+  useLidoWithdrawalsPosition,
+} from '../../entities/LidoWithdrawalsPosition';
 
 export function handleExternalPositionDeployedForFund(event: ExternalPositionDeployedForFund): void {
   let type = useExternalPositionType(event.params.externalPositionTypeId);
@@ -158,6 +165,14 @@ export function handleExternalPositionDeployedForFund(event: ExternalPositionDep
 
   if (type.label == 'KILN_STAKING') {
     createKilnStakingPosition(event.params.externalPosition, event.params.vaultProxy, type);
+
+    return;
+  }
+
+  if (type.label == 'LIDO_WITHDRAWAL') {
+    createLidoWithdrawalsPosition(event.params.externalPosition, event.params.vaultProxy, type);
+
+    LidoWithdrawalsPositionLib4DataSource.create(event.params.externalPosition);
 
     return;
   }
@@ -1581,6 +1596,50 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     }
 
     return;
+  }
+
+  if ((type.label = 'LIDO_WITHDRAWALS')) {
+    if (actionId == LidoWithdrawalsActionId.RequestWithdrawals) {
+      let decoded = ethereum.decode('(uint256[])', tuplePrefixBytes(event.params.actionArgs));
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+
+      let amounts = tuple[0].toBigIntArray().map((value) => toBigDecimal(value, 18));
+
+      createLidoWithdrawalsPositionChange(
+        event.params.externalPosition,
+        'RequestWithdrawals',
+        amounts,
+        null,
+        vault,
+        event,
+      );
+    }
+    if (actionId == LidoWithdrawalsActionId.ClaimWithdrawals) {
+      let decoded = ethereum.decode('(uint256[],uint256[])', tuplePrefixBytes(event.params.actionArgs));
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+
+      let requestIds = tuple[0].toBigIntArray();
+      // There is no value in tracking hints
+
+      createLidoWithdrawalsPositionChange(
+        event.params.externalPosition,
+        'ClaimWithdrawals',
+        null,
+        requestIds,
+        vault,
+        event,
+      );
+    }
   }
 
   createUnknownExternalPositionChange(event.params.externalPosition, vault, event);

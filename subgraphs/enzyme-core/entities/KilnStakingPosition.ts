@@ -16,7 +16,7 @@ import { useVault } from './Vault';
 export function useKilnStakingPosition(id: string): KilnStakingPosition {
   let ksp = KilnStakingPosition.load(id);
   if (ksp == null) {
-    logCritical('Failed to load fund {}.', [id]);
+    logCritical('Failed to load KilnStakingPosition {}.', [id]);
   }
 
   return ksp as KilnStakingPosition;

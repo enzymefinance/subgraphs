@@ -91,4 +91,5 @@ export const templates: DataSourceTemplateUserDeclaration[] = [
   { name: 'ArbitraryLoanPositionLib' },
   { name: 'TheGraphDelegationPositionLib' },
   { name: 'KilnStaking' },
+  { name: 'LidoWithdrawalsPositionLib' },
 ];
