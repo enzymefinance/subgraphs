@@ -169,7 +169,7 @@ export function handleExternalPositionDeployedForFund(event: ExternalPositionDep
     return;
   }
 
-  if (type.label == 'LIDO_WITHDRAWAL') {
+  if (type.label == 'LIDO_WITHDRAWALS') {
     createLidoWithdrawalsPosition(event.params.externalPosition, event.params.vaultProxy, type);
 
     LidoWithdrawalsPositionLib4DataSource.create(event.params.externalPosition);
