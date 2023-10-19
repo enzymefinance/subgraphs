@@ -1,14 +1,5 @@
 import { arrayUnique, logCritical, toBigDecimal, tuplePrefixBytes, ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
-import {
-  Address,
-  Bytes,
-  DataSourceContext,
-  ethereum,
-  crypto,
-  BigInt,
-  BigDecimal,
-  ByteArray,
-} from '@graphprotocol/graph-ts';
+import { Address, Bytes, DataSourceContext, ethereum, crypto, BigDecimal } from '@graphprotocol/graph-ts';
 import { createAaveDebtPosition, createAaveDebtPositionChange } from '../../entities/AaveDebtPosition';
 import {
   createMapleLiquidityAssetAmountV1,
@@ -105,7 +96,6 @@ import { kilnClaimFeeType } from '../../utils/kilnClaimFeeType';
 import {
   createLidoWithdrawalsPosition,
   createLidoWithdrawalsPositionChange,
-  useLidoWithdrawalsPosition,
 } from '../../entities/LidoWithdrawalsPosition';
 
 export function handleExternalPositionDeployedForFund(event: ExternalPositionDeployedForFund): void {

@@ -2,7 +2,6 @@ import { logCritical, toBigDecimal } from '@enzymefinance/subgraph-utils';
 import { RequestAdded, RequestRemoved } from '../../generated/contracts/LidoWithdrawalsPositionLib4Events';
 import { LidoWithdrawalsRequest } from '../../generated/schema';
 import { useLidoWithdrawalsPosition } from '../../entities/LidoWithdrawalsPosition';
-import { i } from '@enzymefinance/environment/dist/environment-9476f6f8';
 
 export function handleRequestAdded(event: RequestAdded): void {
   let request = new LidoWithdrawalsRequest(event.params.id.toString());
