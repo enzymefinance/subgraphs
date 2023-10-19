@@ -1,5 +1,5 @@
 import { arrayUnique, logCritical, toBigDecimal, tuplePrefixBytes, ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
-import { Address, Bytes, DataSourceContext, ethereum, crypto, BigDecimal } from '@graphprotocol/graph-ts';
+import { Address, Bytes, DataSourceContext, ethereum, crypto, BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 import { createAaveDebtPosition, createAaveDebtPositionChange } from '../../entities/AaveDebtPosition';
 import {
   createMapleLiquidityAssetAmountV1,
@@ -1598,7 +1598,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
       let tuple = decoded.toTuple();
 
-      let amounts = tuple[0].toBigIntArray().map((value) => toBigDecimal(value, 18));
+      let amounts = tuple[0].toBigIntArray().map<BigDecimal>((value) => toBigDecimal(value, 18));
 
       createLidoWithdrawalsPositionChange(
         event.params.externalPosition,
