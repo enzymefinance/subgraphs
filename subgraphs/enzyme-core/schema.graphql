@@ -359,7 +359,8 @@ type Account @entity {
   authUserships: [Comptroller!]! @derivedFrom(field: "authUsers")
   assetManagements: [Vault!]! @derivedFrom(field: "assetManagers")
   gatedRedemptionQueueSharesWrapperManagements: [GatedRedemptionQueueSharesWrapper!]! @derivedFrom(field: "managers")
-  gatedRedepmtionQueueSharesWrapperDepositorBalances: [GatedRedemptionQueueSharesWrapperDepositorBalance!]! @derivedFrom(field: "account")
+  gatedRedepmtionQueueSharesWrapperDepositorBalances: [GatedRedemptionQueueSharesWrapperDepositorBalance!]!
+    @derivedFrom(field: "account")
 
   deposits: [Deposit!]! @derivedFrom(field: "depositor")
   sharesChanges: [SharesChange!]! @derivedFrom(field: "depositor")
@@ -1122,6 +1123,37 @@ type AaveDebtPositionChange implements Activity & VaultActivity & ExternalPositi
   activityType: ActivityType!
 }
 
+type AaveV3DebtPosition implements ExternalPosition @entity {
+  id: ID!
+  vault: Vault!
+  type: ExternalPositionType!
+  active: Boolean!
+  eModeCategoryId: BigInt!
+  changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
+}
+
+enum AaveV3DebtPositionChangeType {
+  AddCollateral
+  RemoveCollateral
+  Borrow
+  RepayBorrow
+  SetEMode
+  SetUseReserveAsCollateral
+}
+
+type AaveV3DebtPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: Int!
+  externalPosition: ExternalPosition!
+  aaveV3DebtPositionChangeType: AaveV3DebtPositionChangeType!
+  assetAmounts: [AssetAmount!]
+  eModeCategoryId: BigInt
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
 enum RepaymentTrackingType {
   None
   PrincipalFirst
@@ -1840,11 +1872,10 @@ type GatedRedemptionQueueSharesWrapperTransferIn implements GatedRedemptionQueue
   account: Account!
   shares: BigDecimal!
   depositorBalance: GatedRedemptionQueueSharesWrapperDepositorBalance!
-
 }
 
-
-type GatedRedemptionQueueSharesWrapperTransferOutForced implements GatedRedemptionQueueSharesWrapperSharesChange @entity {
+type GatedRedemptionQueueSharesWrapperTransferOutForced implements GatedRedemptionQueueSharesWrapperSharesChange
+  @entity {
   id: ID!
   timestamp: Int!
   vault: Vault!
@@ -1855,7 +1886,8 @@ type GatedRedemptionQueueSharesWrapperTransferOutForced implements GatedRedempti
   depositorBalance: GatedRedemptionQueueSharesWrapperDepositorBalance!
 }
 
-type GatedRedemptionQueueSharesWrapperTransferInForced implements GatedRedemptionQueueSharesWrapperSharesChange @entity {
+type GatedRedemptionQueueSharesWrapperTransferInForced implements GatedRedemptionQueueSharesWrapperSharesChange
+  @entity {
   id: ID!
   timestamp: Int!
   vault: Vault!
@@ -1894,7 +1926,6 @@ type GatedRedemptionQueueSharesWrapperRedemption implements GatedRedemptionQueue
   shares: BigDecimal!
   payoutAssetAmounts: [AssetAmount!]!
   depositorBalance: GatedRedemptionQueueSharesWrapperDepositorBalance!
-
 }
 
 type GatedRedemptionQueueSharesWrapperKick implements GatedRedemptionQueueSharesWrapperSharesChange @entity {

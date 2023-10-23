@@ -62,6 +62,7 @@ import {
   LiquityDebtPositionActionId,
   UniswapV3LiquidityPositionActionId,
   KilnStakingPositionActionId,
+  AaveV3DebtPositionActionId,
 } from '../../utils/actionId';
 import { ensureMapleLiquidityPoolV1, ensureMapleLiquidityPoolV2 } from '../../entities/MapleLiquidityPool';
 import { ExternalSdk } from '../../generated/contracts/ExternalSdk';
@@ -100,6 +101,11 @@ import {
   useKilnStakingPosition,
 } from '../../entities/KilnStakingPosition';
 import { kilnClaimFeeType } from '../../utils/kilnClaimFeeType';
+import {
+  createAaveV3DebtPosition,
+  createAaveV3DebtPositionChange,
+  setEModeAaveV3DebtPosition,
+} from '../../entities/AaveV3DebtPosition';
 
 export function handleExternalPositionDeployedForFund(event: ExternalPositionDeployedForFund): void {
   let type = useExternalPositionType(event.params.externalPositionTypeId);
@@ -111,6 +117,11 @@ export function handleExternalPositionDeployedForFund(event: ExternalPositionDep
 
   if (type.label == 'AAVE_DEBT') {
     createAaveDebtPosition(event.params.externalPosition, event.params.vaultProxy, type);
+    return;
+  }
+
+  if (type.label == 'AAVE_V3_DEBT') {
+    createAaveV3DebtPosition(event.params.externalPosition, event.params.vaultProxy, type);
     return;
   }
 
@@ -262,6 +273,142 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
     if (actionId == AaveDebtPositionActionId.ClaimRewards) {
       createAaveDebtPositionChange(event.params.externalPosition, null, 'ClaimRewards', vault, event);
+    }
+
+    return;
+  }
+
+  if (type.label == 'AAVE_V3_DEBT') {
+    if (actionId == AaveV3DebtPositionActionId.AddCollateral) {
+      let decoded = ethereum.decode('(address[],uint256[],bool)', tuplePrefixBytes(event.params.actionArgs));
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+
+      let aTokens = tuple[0].toAddressArray();
+      let amounts = tuple[1].toBigIntArray();
+      let fromUnderlying = tuple[2].toBoolean();
+
+      let assetAmounts: AssetAmount[] = new Array<AssetAmount>();
+      for (let i = 0; i < aTokens.length; i++) {
+        let asset = fromUnderlying
+          ? ensureAsset(ExternalSdk.bind(aTokens[i]).UNDERLYING_ASSET_ADDRESS())
+          : ensureAsset(aTokens[i]);
+        let amount = toBigDecimal(amounts[i], asset.decimals);
+        let assetAmount = createAssetAmount(asset, amount, denominationAsset, 'av3dp', event);
+        assetAmounts = assetAmounts.concat([assetAmount]);
+      }
+
+      createAaveV3DebtPositionChange(event.params.externalPosition, assetAmounts, null, 'AddCollateral', vault, event);
+    }
+
+    if (actionId == AaveV3DebtPositionActionId.RemoveCollateral) {
+      let decoded = ethereum.decode('(address[],uint256[],bool)', tuplePrefixBytes(event.params.actionArgs));
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+
+      let aTokens = tuple[0].toAddressArray();
+      let amounts = tuple[1].toBigIntArray();
+      let toUnderlying = tuple[2].toBoolean();
+
+      let assetAmounts: AssetAmount[] = new Array<AssetAmount>();
+      for (let i = 0; i < aTokens.length; i++) {
+        let asset = toUnderlying
+          ? ensureAsset(ExternalSdk.bind(aTokens[i]).UNDERLYING_ASSET_ADDRESS())
+          : ensureAsset(aTokens[i]);
+        let amount = toBigDecimal(amounts[i], asset.decimals);
+        let assetAmount = createAssetAmount(asset, amount, denominationAsset, 'av3dp', event);
+        assetAmounts = assetAmounts.concat([assetAmount]);
+      }
+
+      createAaveV3DebtPositionChange(
+        event.params.externalPosition,
+        assetAmounts,
+        null,
+        'RemoveCollateral',
+        vault,
+        event,
+      );
+    }
+
+    if (actionId == AaveV3DebtPositionActionId.Borrow) {
+      let decoded = ethereum.decode('(address[],uint256[])', tuplePrefixBytes(event.params.actionArgs));
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+
+      let underlyings = tuple[0].toAddressArray();
+      let amounts = tuple[1].toBigIntArray();
+
+      let assetAmounts: AssetAmount[] = new Array<AssetAmount>();
+      for (let i = 0; i < underlyings.length; i++) {
+        let asset = ensureAsset(underlyings[i]);
+        let amount = toBigDecimal(amounts[i], asset.decimals);
+        let assetAmount = createAssetAmount(asset, amount, denominationAsset, 'av3dp', event);
+        assetAmounts = assetAmounts.concat([assetAmount]);
+      }
+
+      createAaveV3DebtPositionChange(event.params.externalPosition, assetAmounts, null, 'Borrow', vault, event);
+    }
+
+    if (actionId == AaveV3DebtPositionActionId.RepayBorrow) {
+      let decoded = ethereum.decode('(address[],uint256[])', tuplePrefixBytes(event.params.actionArgs));
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+
+      let underlyings = tuple[0].toAddressArray();
+      let amounts = tuple[1].toBigIntArray();
+
+      let assetAmounts: AssetAmount[] = new Array<AssetAmount>();
+      for (let i = 0; i < underlyings.length; i++) {
+        let asset = ensureAsset(underlyings[i]);
+        let amount = toBigDecimal(amounts[i], asset.decimals);
+        let assetAmount = createAssetAmount(asset, amount, denominationAsset, 'av3dp', event);
+        assetAmounts = assetAmounts.concat([assetAmount]);
+      }
+
+      createAaveV3DebtPositionChange(event.params.externalPosition, assetAmounts, null, 'RepayBorrow', vault, event);
+    }
+
+    if (actionId == AaveV3DebtPositionActionId.SetEMode) {
+      let decoded = ethereum.decode('(uint8)', event.params.actionArgs);
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+      let categoryId = tuple[0].toBigInt();
+
+      setEModeAaveV3DebtPosition(event.params.externalPosition, categoryId);
+
+      createAaveV3DebtPositionChange(event.params.externalPosition, null, categoryId, 'SetEMode', vault, event);
+    }
+
+    if (actionId == AaveV3DebtPositionActionId.SetUseReserveAsCollateral) {
+      // TODO: handle this event properly, when we will decide to implement it in the frontend
+      createAaveV3DebtPositionChange(
+        event.params.externalPosition,
+        null,
+        null,
+        'SetUseReserveAsCollateral',
+        vault,
+        event,
+      );
     }
 
     return;
