@@ -95,16 +95,14 @@ import {
 } from '../../entities/KilnStakingPosition';
 import { kilnClaimFeeType } from '../../utils/kilnClaimFeeType';
 import {
-<<<<<<< HEAD
   createLidoWithdrawalsPosition,
   createLidoWithdrawalsPositionChange,
 } from '../../entities/LidoWithdrawalsPosition';
-=======
+import {
   createAaveV3DebtPosition,
   createAaveV3DebtPositionChange,
   setEModeAaveV3DebtPosition,
 } from '../../entities/AaveV3DebtPosition';
->>>>>>> 6d1eb164a56567c388419b639f58f9585ef81b6e
 
 export function handleExternalPositionDeployedForFund(event: ExternalPositionDeployedForFund): void {
   let type = useExternalPositionType(event.params.externalPositionTypeId);
