@@ -9,7 +9,6 @@ import {
 } from '../generated/schema';
 import { ProtocolSdk } from '../generated/contracts/ProtocolSdk';
 import { ensureAsset } from './Asset';
-import { createAssetBalance } from './AssetBalance';
 import { getActivityCounter } from './Counter';
 import { useVault } from './Vault';
 import { lusdAddress, wethTokenAddress } from '../generated/addresses';

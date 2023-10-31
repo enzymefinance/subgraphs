@@ -1,16 +1,12 @@
 import { logCritical, toBigDecimal, uniqueEventId } from '@enzymefinance/subgraph-utils';
 import { Address, ethereum } from '@graphprotocol/graph-ts';
-import { ProtocolSdk } from '../generated/contracts/ProtocolSdk';
 import {
-  Asset,
   AaveDebtPosition,
   AaveDebtPositionChange,
   Vault,
   AssetAmount,
   ExternalPositionType,
 } from '../generated/schema';
-import { ensureAsset } from './Asset';
-import { createAssetBalance } from './AssetBalance';
 import { getActivityCounter } from './Counter';
 import { useVault } from './Vault';
 

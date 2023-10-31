@@ -1123,6 +1123,37 @@ type AaveDebtPositionChange implements Activity & VaultActivity & ExternalPositi
   activityType: ActivityType!
 }
 
+type AaveV3DebtPosition implements ExternalPosition @entity {
+  id: ID!
+  vault: Vault!
+  type: ExternalPositionType!
+  active: Boolean!
+  eModeCategoryId: BigInt!
+  changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
+}
+
+enum AaveV3DebtPositionChangeType {
+  AddCollateral
+  RemoveCollateral
+  Borrow
+  RepayBorrow
+  SetEMode
+  SetUseReserveAsCollateral
+}
+
+type AaveV3DebtPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: Int!
+  externalPosition: ExternalPosition!
+  aaveV3DebtPositionChangeType: AaveV3DebtPositionChangeType!
+  assetAmounts: [AssetAmount!]
+  eModeCategoryId: BigInt
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
 enum RepaymentTrackingType {
   None
   PrincipalFirst
