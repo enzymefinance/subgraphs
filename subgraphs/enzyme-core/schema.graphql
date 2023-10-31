@@ -1490,6 +1490,7 @@ type LidoWithdrawalsPositionChange implements Activity & VaultActivity & Externa
 type LidoWithdrawalsRequest @entity {
   id: ID!
   lidoWithdrawalsPosition: LidoWithdrawalsPosition!
+  vault: Vault!
   amount: BigDecimal!
   claimed: Boolean!
   requestedTimestamp: Int!

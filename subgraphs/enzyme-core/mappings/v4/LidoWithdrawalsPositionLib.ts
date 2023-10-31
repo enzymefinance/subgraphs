@@ -4,9 +4,12 @@ import { LidoWithdrawalsRequest } from '../../generated/schema';
 import { useLidoWithdrawalsPosition } from '../../entities/LidoWithdrawalsPosition';
 
 export function handleRequestAdded(event: RequestAdded): void {
+  let externalPosition = useLidoWithdrawalsPosition(event.address.toHex());
+
   let request = new LidoWithdrawalsRequest(event.params.id.toString());
   request.amount = toBigDecimal(event.params.amount, 18);
-  request.lidoWithdrawalsPosition = useLidoWithdrawalsPosition(event.address.toHex()).id;
+  request.lidoWithdrawalsPosition = externalPosition.id;
+  request.vault = externalPosition.vault;
   request.claimed = false;
   request.requestedTimestamp = event.block.timestamp.toI32();
   request.claimedTimestamp = 0;
