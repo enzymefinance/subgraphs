@@ -1777,6 +1777,8 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         event,
       );
     }
+
+    return;
   }
 
   createUnknownExternalPositionChange(event.params.externalPosition, vault, event);
