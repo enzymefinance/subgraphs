@@ -53,6 +53,7 @@ import {
   VaultOwnershipTransferred,
 } from '../../generated/schema';
 import { useKilnStakingPosition } from '../../entities/KilnStakingPosition';
+import { useLidoWithdrawalsPosition } from '../../entities/LidoWithdrawalsPosition';
 import { useAaveV3DebtPosition } from '../../entities/AaveV3DebtPosition';
 
 export function handleTransfer(event: Transfer): void {
@@ -361,6 +362,12 @@ export function handleExternalPositionAdded(event: ExternalPositionAdded): void 
     ksp.save();
   }
 
+  if (type.label == 'LIDO_WITHDRAWALS') {
+    let lwp = useLidoWithdrawalsPosition(event.params.externalPosition.toHex());
+    lwp.active = true;
+    lwp.save();
+  }
+
   let activity = new ExternalPositionAddedEvent(uniqueEventId(event));
   activity.timestamp = event.block.timestamp.toI32();
   activity.vault = event.address.toHex();
@@ -429,6 +436,12 @@ export function handleExternalPositionRemoved(event: ExternalPositionRemoved): v
     let ksp = useKilnStakingPosition(event.params.externalPosition.toHex());
     ksp.active = false;
     ksp.save();
+  }
+
+  if (type.label == 'LIDO_WITHDRAWALS') {
+    let lwp = useLidoWithdrawalsPosition(event.params.externalPosition.toHex());
+    lwp.active = false;
+    lwp.save();
   }
 
   let activity = new ExternalPositionRemovedEvent(uniqueEventId(event));

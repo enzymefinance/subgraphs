@@ -86,3 +86,8 @@ export enum KilnStakingPositionActionId {
   PausePositionValue = 4,
   UnpausePositionValue = 5,
 }
+
+export enum LidoWithdrawalsActionId {
+  RequestWithdrawals = 0,
+  ClaimWithdrawals = 1,
+}

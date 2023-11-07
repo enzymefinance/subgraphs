@@ -1491,6 +1491,43 @@ type KilnStakingPositionChange implements Activity & VaultActivity & ExternalPos
   activityType: ActivityType!
 }
 
+type LidoWithdrawalsPosition implements ExternalPosition @entity {
+  id: ID!
+  vault: Vault!
+  type: ExternalPositionType!
+  active: Boolean!
+  changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
+  withdrawalRequests: [LidoWithdrawalsRequest!]! @derivedFrom(field: "lidoWithdrawalsPosition")
+}
+
+enum LidoWithdrawalsPositionChangeType {
+  RequestWithdrawals
+  ClaimWithdrawals
+}
+
+type LidoWithdrawalsPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: Int!
+  externalPosition: ExternalPosition!
+  lidoWithdrawalsPositionChangeType: LidoWithdrawalsPositionChangeType!
+  amounts: [BigDecimal!]
+  requestIds: [BigInt!]
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
+type LidoWithdrawalsRequest @entity {
+  id: ID!
+  lidoWithdrawalsPosition: LidoWithdrawalsPosition!
+  vault: Vault!
+  amount: BigDecimal!
+  claimed: Boolean!
+  requestedTimestamp: Int!
+  claimedTimestamp: Int!
+}
+
 type UnknownExternalPosition implements ExternalPosition @entity {
   id: ID!
   vault: Vault!
