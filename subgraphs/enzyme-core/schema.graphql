@@ -870,6 +870,18 @@ type MinMaxDepositPolicy implements Policy @entity {
   updatedAt: Int!
 }
 
+type NoDepegOnRedeemSharesForSpecificAssetsPolicy implements Policy @entity {
+  id: ID!
+  policy: Bytes!
+  policyType: PolicyType!
+  comptroller: Comptroller!
+  createdAt: Int!
+  enabled: Boolean!
+  settings: String!
+  assetConfigs: [AssetConfig!]!
+  updatedAt: Int!
+}
+
 type OnlyRemoveDustExternalPositionPolicy implements Policy @entity {
   id: ID!
   policy: Bytes!
@@ -996,6 +1008,15 @@ type AddressList @entity {
   owner: Bytes!
   updateType: AddressListUpdateType!
   items: [Bytes!]!
+}
+
+type AssetConfig @entity {
+  id: ID!
+  address: Bytes!
+  referenceAddress: Bytes!
+  deviationToleranceInBps: Bytes!
+  createdAt: Int!
+  updatedAt: Int!
 }
 
 enum AddressListUpdateType {
