@@ -12,6 +12,7 @@ import { getActivityCounter } from '../../entities/Counter';
 import { ensureCumulativeSlippageTolerancePolicy } from '../../entities/CumulativeSlippageTolerancePolicy';
 import { ensureMinAssetBalancesPostRedemptionPolicy } from '../../entities/MinAssetBalancesPostRedemptionPolicy';
 import { ensureMinMaxDepositPolicy } from '../../entities/MinMaxDepositPolicy';
+import { ensureNoDepegOnRedeemSharesForSpecificAssetsPolicy } from '../../entities/NoDepegOnRedeemSharesForSpecificAssetsPolicy';
 import { ensureOnlyRemoveDustExternalPositionPolicy } from '../../entities/OnlyRemoveDustExternalPositionPolicy';
 import { ensureOnlyUntrackDustOrPricelessAssetsPolicy } from '../../entities/OnlyUntrackDustOrPricelessAssetsPolicy';
 import { policyId } from '../../entities/Policy';
@@ -238,6 +239,13 @@ export function handlePolicyDisabledOnHookForFund(event: PolicyDisabledOnHookFor
 
   if (event.params.policy.equals(release4Addresses.minMaxInvestmentPolicyAddress)) {
     let policy = ensureMinMaxDepositPolicy(comptrollerAddress, policyAddress, event);
+    policy.enabled = false;
+    policy.save();
+    return;
+  }
+
+  if (event.params.policy.equals(release4Addresses.noDepegOnRedeemSharesForSpecificAssetsPolicyAddress)) {
+    let policy = ensureNoDepegOnRedeemSharesForSpecificAssetsPolicy(comptrollerAddress, policyAddress, event);
     policy.enabled = false;
     policy.save();
     return;
