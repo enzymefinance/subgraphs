@@ -654,20 +654,13 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
       let incomingAsset = createAssetAmount(lusdAsset, lusdAmount, denominationAsset, 'ldp-incoming', event);
 
-      let ldp = useLiquityDebtPosition(event.params.externalPosition.toHex());
-
-      let borrowedBalance = ldp.borrowedBalance;
-      let borrowedAmount = getLiquityDebtPositionBorrowedAmount(event.params.externalPosition.toHex());
-      let feeAmount = borrowedAmount.minus(lusdAmount).minus(borrowedBalance);
-      let feeAssetAmount = createAssetAmount(lusdAsset, feeAmount, denominationAsset, 'ldp-fee-asset-amount', event);
-
       createLiquityDebtPositionChange(
         event.params.externalPosition,
         'Borrow',
         [incomingAsset],
         null,
         null,
-        feeAssetAmount,
+        null,
         vault,
         event,
       );
