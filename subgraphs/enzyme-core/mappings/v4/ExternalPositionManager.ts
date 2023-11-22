@@ -571,18 +571,12 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         event,
       );
 
-      let borrowedAmount = getLiquityDebtPositionBorrowedAmount(event.params.externalPosition.toHex());
-
-      let feeAmount = borrowedAmount.minus(lusdAmount).minus(lusdGasCompensationAmountBD);
-      let feeAssetAmount = createAssetAmount(lusdAsset, feeAmount, denominationAsset, 'ldp-fee', event);
-
       createLiquityDebtPositionChange(
         event.params.externalPosition,
         'OpenTrove',
         [incomingAsset],
         outgoingAsset,
         lusdGasCompensationAssetAmount,
-        feeAssetAmount,
         vault,
         event,
       );
@@ -608,7 +602,6 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         [],
         outgoingAsset,
         null,
-        null,
         vault,
         event,
       );
@@ -632,7 +625,6 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         event.params.externalPosition,
         'RemoveCollateral',
         [incomingAsset],
-        null,
         null,
         null,
         vault,
@@ -660,7 +652,6 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         [incomingAsset],
         null,
         null,
-        null,
         vault,
         event,
       );
@@ -685,7 +676,6 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         'Repay',
         [],
         outgoingAsset,
-        null,
         null,
         vault,
         event,
@@ -726,7 +716,6 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         'CloseTrove',
         [collateralAssetAmount, lusdGasCompensationAssetAmount],
         borrowedAssetAmount,
-        null,
         null,
         vault,
         event,

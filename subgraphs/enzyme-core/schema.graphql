@@ -1309,7 +1309,6 @@ type LiquityDebtPositionChange implements Activity & VaultActivity & ExternalPos
   liquityDebtPositionChangeType: LiquityDebtPositionChangeType!
   incomingAssetAmounts: [AssetAmount!]!
   lusdGasCompensationAssetAmount: AssetAmount
-  feeAssetAmount: AssetAmount
   outgoingAssetAmount: AssetAmount
   activityCounter: Int!
   activityCategories: [ActivityCategory!]!
