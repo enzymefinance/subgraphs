@@ -129,6 +129,7 @@ export const ethereum: Context<Variables> = {
         minAssetBalancesPostRedemptionPolicyAddress: suluDeployment.contracts.MinAssetBalancesPostRedemptionPolicy,
         minMaxInvestmentPolicyAddress: suluDeployment.contracts.MinMaxInvestmentPolicy,
         minSharesSupplyFeeAddress: suluDeployment.contracts.MinSharesSupplyFee,
+        noDepegOnRedeemSharesForSpecificAssetsPolicyAddress: suluDeployment.contracts.NoDepegOnRedeemSharesForSpecificAssetsPolicy,
         onlyRemoveDustExternalPositionPolicyAddress: suluDeployment.contracts.OnlyRemoveDustExternalPositionPolicy,
         onlyUntrackDustOrPricelessAssetsPolicyAddress: suluDeployment.contracts.OnlyUntrackDustOrPricelessAssetsPolicy,
         performanceFeeAddress: suluDeployment.contracts.PerformanceFee,
