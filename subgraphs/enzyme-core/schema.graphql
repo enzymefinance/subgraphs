@@ -932,6 +932,7 @@ enum PolicyType {
   MaxConcentration
   MinAssetBalancesPostRedemption
   MinMaxDeposit
+  NoDepegOnRedeemSharesForSpecificAssets
   OnlyRemoveDustExternalPosition
   OnlyUntrackDustOrPricelessAssets
   Unknown
@@ -1014,7 +1015,7 @@ type AssetConfig @entity {
   id: ID!
   address: Bytes!
   referenceAddress: Bytes!
-  deviationToleranceInBps: Bytes!
+  deviationToleranceInBps: Int!
   createdAt: Int!
   updatedAt: Int!
 }
