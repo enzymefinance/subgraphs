@@ -10,7 +10,7 @@
         "internalType": "contract IValueInterpreter",
         "name": "_valueInterpreter",
         "type": "address"
-      },
+      }
     ],
     "stateMutability": "nonpayable",
     "type": "constructor"
