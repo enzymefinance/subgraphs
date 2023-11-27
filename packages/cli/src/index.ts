@@ -3,9 +3,9 @@ import glob from 'glob';
 import handlebars from 'handlebars';
 import path from 'node:path';
 import yargs from 'yargs';
+import { $ } from 'execa';
 import { Configurator, Context, Contexts, Environment, ManifestValues, Template } from './types';
 import { formatJson, sdkDeclaration, sourceDeclaration, templateDeclaration } from './utils';
-import { runGraphCli } from './runCli';
 
 const root = path.join(__dirname, '..');
 
@@ -121,8 +121,10 @@ class Subgraph<TVariables = any> {
   public async generateCode() {
     const generatedDir = path.join(this.root, 'generated');
     const outputDir = path.join(generatedDir, 'contracts');
-
-    await runGraphCli(['codegen', '--skip-migrations', '--output-dir', outputDir]);
+    const command = $`graph codegen --skip-migrations --output-dir ${outputDir}`;
+    command.stdout?.pipe(process.stdout);
+    command.stderr?.pipe(process.stderr);
+    await command
 
     fs.renameSync(path.join(outputDir, 'schema.ts'), path.join(generatedDir, 'schema.ts'));
     if (fs.existsSync(path.join(outputDir, 'templates.ts'))) {
@@ -160,21 +162,17 @@ class Subgraph<TVariables = any> {
   }
 
   public async deploySubgraph() {
-    await runGraphCli([
-      'deploy',
-      this.environment.name,
-      '--node',
-      this.environment.node,
-      '--ipfs',
-      this.environment.ipfs,
-      '--skip-migrations',
-      '--output-dir',
-      path.join(this.root, 'build/subgraph'),
-    ]);
+    const command = $`graph deploy --skip-migrations ${this.environment.name} --node ${this.environment.node} --ipfs ${this.environment.ipfs} --output-dir ${path.join(this.root, 'build/subgraph')}`;
+    command.stdout?.pipe(process.stdout);
+    command.stderr?.pipe(process.stderr);
+    await command
   }
 
   public async buildSubgraph() {
-    await runGraphCli(['build', '--skip-migrations', '--output-dir', path.join(this.root, 'build/subgraph')]);
+    const command = $`graph build --skip-migrations --output-dir ${path.join(this.root, 'build/subgraph')}`;
+    command.stdout?.pipe(process.stdout);
+    command.stderr?.pipe(process.stderr);
+    await command
   }
 
   public async createSubgraph() {
@@ -182,7 +180,10 @@ class Subgraph<TVariables = any> {
       return;
     }
 
-    await runGraphCli(['create', this.environment.name, '--node', this.environment.node]);
+    const command = $`graph create ${this.environment.name} --node ${this.environment.node}`;
+    command.stdout?.pipe(process.stdout);
+    command.stderr?.pipe(process.stderr);
+    await command
   }
 }
 

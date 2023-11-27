@@ -571,18 +571,12 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         event,
       );
 
-      let borrowedAmount = getLiquityDebtPositionBorrowedAmount(event.params.externalPosition.toHex());
-
-      let feeAmount = borrowedAmount.minus(lusdAmount).minus(lusdGasCompensationAmountBD);
-      let feeAssetAmount = createAssetAmount(lusdAsset, feeAmount, denominationAsset, 'ldp-fee', event);
-
       createLiquityDebtPositionChange(
         event.params.externalPosition,
         'OpenTrove',
         [incomingAsset],
         outgoingAsset,
         lusdGasCompensationAssetAmount,
-        feeAssetAmount,
         vault,
         event,
       );
@@ -607,7 +601,6 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         'AddCollateral',
         [],
         outgoingAsset,
-        null,
         null,
         vault,
         event,
@@ -634,7 +627,6 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         [incomingAsset],
         null,
         null,
-        null,
         vault,
         event,
       );
@@ -654,20 +646,12 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
       let incomingAsset = createAssetAmount(lusdAsset, lusdAmount, denominationAsset, 'ldp-incoming', event);
 
-      let ldp = useLiquityDebtPosition(event.params.externalPosition.toHex());
-
-      let borrowedBalance = ldp.borrowedBalance;
-      let borrowedAmount = getLiquityDebtPositionBorrowedAmount(event.params.externalPosition.toHex());
-      let feeAmount = borrowedAmount.minus(lusdAmount).minus(borrowedBalance);
-      let feeAssetAmount = createAssetAmount(lusdAsset, feeAmount, denominationAsset, 'ldp-fee-asset-amount', event);
-
       createLiquityDebtPositionChange(
         event.params.externalPosition,
         'Borrow',
         [incomingAsset],
         null,
         null,
-        feeAssetAmount,
         vault,
         event,
       );
@@ -692,7 +676,6 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         'Repay',
         [],
         outgoingAsset,
-        null,
         null,
         vault,
         event,
@@ -733,7 +716,6 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         'CloseTrove',
         [collateralAssetAmount, lusdGasCompensationAssetAmount],
         borrowedAssetAmount,
-        null,
         null,
         vault,
         event,
