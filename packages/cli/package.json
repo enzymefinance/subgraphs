@@ -5,21 +5,27 @@
   "main": "src/index.ts",
   "types": "src/types.ts",
   "bin": {
-    "enzyme-graph": "bin/cli.cjs"
+    "enzyme-graph": "bin/enzyme-graph.ts"
   },
   "dependencies": {
     "@ethersproject/abi": "^5.7.0",
-    "@graphprotocol/graph-cli": "^0.51.0",
+    "@graphprotocol/graph-cli": "^0.62.0",
     "ethers": "^5.7.2",
+    "execa": "^8.0.1",
     "glob": "^7.2.0",
     "handlebars": "^4.7.7",
     "ts-node": "^10.9.1",
     "yargs": "^17.3.1"
   },
+  "peerDependencies": {
+    "@graphprotocol/graph-cli": "^0.62.0",
+    "tsx": "^4.5.0"
+  },
   "devDependencies": {
     "@types/glob": "^7.2.0",
     "@types/node": "^18.11.9",
     "@types/yargs": "^17.0.15",
+    "tsx": "^4.5.0",
     "typescript": "^4.6.4"
   }
 }
