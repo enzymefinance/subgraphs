@@ -878,7 +878,9 @@ type NoDepegOnRedeemSharesForSpecificAssetsPolicy implements Policy @entity {
   createdAt: Int!
   enabled: Boolean!
   settings: String!
-  assetConfigs: [AssetConfig!]!
+  assets: [Bytes!]!
+  referenceAssets: [Bytes!]!
+  deviationTolerancesInBps: [Int!]!
   updatedAt: Int!
 }
 
@@ -1009,15 +1011,6 @@ type AddressList @entity {
   owner: Bytes!
   updateType: AddressListUpdateType!
   items: [Bytes!]!
-}
-
-type AssetConfig @entity {
-  id: ID!
-  address: Bytes!
-  referenceAddress: Bytes!
-  deviationToleranceInBps: Int!
-  createdAt: Int!
-  updatedAt: Int!
 }
 
 enum AddressListUpdateType {

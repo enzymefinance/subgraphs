@@ -1,4 +1,4 @@
-import { Address, ethereum } from '@graphprotocol/graph-ts';
+import { Address, Bytes, ethereum } from '@graphprotocol/graph-ts';
 import { NoDepegOnRedeemSharesForSpecificAssetsPolicy } from '../generated/schema';
 import { policyId } from './Policy';
 
@@ -18,7 +18,9 @@ export function ensureNoDepegOnRedeemSharesForSpecificAssetsPolicy(
   policy.policy = policyAddress;
   policy.policyType = 'NoDepegOnRedeemSharesForSpecificAssets';
   policy.comptroller = comptrollerAddress.toHex();
-  policy.assetConfigs = new Array<string>();
+  policy.assets = new Array<Bytes>();
+  policy.referenceAssets = new Array<Bytes>();
+  policy.deviationTolerancesInBps = new Array<i32>();
   policy.createdAt = event.block.timestamp.toI32();
   policy.updatedAt = 0;
   policy.enabled = true;
