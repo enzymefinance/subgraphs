@@ -129,6 +129,14 @@ export function handlePolicyEnabledForFund(event: PolicyEnabledForFund): void {
     return;
   }
 
+  if (event.params.policy.equals(release4Addresses.noDepegOnRedeemSharesForSpecificAssetsPolicyAddress)) {
+    let policy = ensureNoDepegOnRedeemSharesForSpecificAssetsPolicy(comptrollerAddress, policyAddress, event);
+    policy.enabled = true;
+    policy.settings = event.params.settingsData.toHex();
+    policy.save();
+    return;
+  }
+
   if (event.params.policy.equals(release4Addresses.onlyRemoveDustExternalPositionPolicyAddress)) {
     let policy = ensureOnlyRemoveDustExternalPositionPolicy(comptrollerAddress, policyAddress, event);
     policy.enabled = true;
