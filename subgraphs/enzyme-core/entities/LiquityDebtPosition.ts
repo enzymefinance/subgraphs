@@ -9,7 +9,6 @@ import {
 } from '../generated/schema';
 import { ProtocolSdk } from '../generated/contracts/ProtocolSdk';
 import { ensureAsset } from './Asset';
-import { createAssetBalance } from './AssetBalance';
 import { getActivityCounter } from './Counter';
 import { useVault } from './Vault';
 import { lusdAddress, wethTokenAddress } from '../generated/addresses';
@@ -45,7 +44,6 @@ export function createLiquityDebtPositionChange(
   incomingAssetAmounts: AssetAmount[],
   outgoingAssetAmount: AssetAmount | null,
   lusdGasCompensationAssetAmount: AssetAmount | null,
-  feeAssetAmount: AssetAmount | null,
   vault: Vault,
   event: ethereum.Event,
 ): LiquityDebtPositionChange {
@@ -56,7 +54,6 @@ export function createLiquityDebtPositionChange(
   change.outgoingAssetAmount = outgoingAssetAmount != null ? outgoingAssetAmount.id : null;
   change.lusdGasCompensationAssetAmount =
     lusdGasCompensationAssetAmount != null ? lusdGasCompensationAssetAmount.id : null;
-  change.feeAssetAmount = feeAssetAmount != null ? feeAssetAmount.id : null;
   change.vault = vault.id;
   change.timestamp = event.block.timestamp.toI32();
   change.activityCounter = getActivityCounter();

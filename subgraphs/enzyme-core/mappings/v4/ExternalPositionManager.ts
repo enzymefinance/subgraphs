@@ -1,21 +1,5 @@
-import {
-  arrayUnique,
-  logCritical,
-  toBigDecimal,
-  tuplePrefixBytes,
-  ZERO_ADDRESS,
-  ZERO_BD,
-} from '@enzymefinance/subgraph-utils';
-import {
-  Address,
-  Bytes,
-  DataSourceContext,
-  ethereum,
-  crypto,
-  BigInt,
-  BigDecimal,
-  ByteArray,
-} from '@graphprotocol/graph-ts';
+import { arrayUnique, logCritical, toBigDecimal, tuplePrefixBytes, ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
+import { Address, Bytes, DataSourceContext, ethereum, crypto, BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 import { createAaveDebtPosition, createAaveDebtPositionChange } from '../../entities/AaveDebtPosition';
 import {
   createMapleLiquidityAssetAmountV1,
@@ -55,6 +39,7 @@ import { ProtocolSdk } from '../../generated/contracts/ProtocolSdk';
 import { Asset, AssetAmount } from '../../generated/schema';
 import {
   ArbitraryLoanPositionLib4DataSource,
+  LidoWithdrawalsPositionLib4DataSource,
   MapleLiquidityPositionLib4DataSource,
   StakeWiseV3StakingPositionLib4DataSource,
   TheGraphDelegationPositionLib4DataSource,
@@ -70,6 +55,8 @@ import {
   LiquityDebtPositionActionId,
   UniswapV3LiquidityPositionActionId,
   KilnStakingPositionActionId,
+  LidoWithdrawalsActionId,
+  AaveV3DebtPositionActionId,
   StakeWiseV3StakingPositionActionId,
 } from '../../utils/actionId';
 import { ensureMapleLiquidityPoolV1, ensureMapleLiquidityPoolV2 } from '../../entities/MapleLiquidityPool';
@@ -110,12 +97,20 @@ import {
 } from '../../entities/KilnStakingPosition';
 import { kilnClaimFeeType } from '../../utils/kilnClaimFeeType';
 import {
-  createStakeWiseStakingPosition,
-  createStakeWiseStakingPositionChange,
+  createLidoWithdrawalsPosition,
+  createLidoWithdrawalsPositionChange,
+} from '../../entities/LidoWithdrawalsPosition';
+import {
+  createAaveV3DebtPosition,
+  createAaveV3DebtPositionChange,
+  setEModeAaveV3DebtPosition,
+} from '../../entities/AaveV3DebtPosition';
+import {
   ensureStakeWiseVaultToken,
+  createStakeWiseStakingPositionChange,
+  useStakeWiseStakingPosition,
   stakeWiseStakingExitRequestId,
   useStakeWiseStakingExitRequest,
-  useStakeWiseStakingPosition,
 } from '../../entities/StakeWiseStakingPosition';
 
 export function handleExternalPositionDeployedForFund(event: ExternalPositionDeployedForFund): void {
@@ -128,6 +123,11 @@ export function handleExternalPositionDeployedForFund(event: ExternalPositionDep
 
   if (type.label == 'AAVE_DEBT') {
     createAaveDebtPosition(event.params.externalPosition, event.params.vaultProxy, type);
+    return;
+  }
+
+  if (type.label == 'AAVE_V3_DEBT') {
+    createAaveV3DebtPosition(event.params.externalPosition, event.params.vaultProxy, type);
     return;
   }
 
@@ -179,10 +179,10 @@ export function handleExternalPositionDeployedForFund(event: ExternalPositionDep
     return;
   }
 
-  if (type.label == 'STAKE_WISE_V3_STAKING') {
-    createStakeWiseStakingPosition(event.params.externalPosition, event.params.vaultProxy, type);
+  if (type.label == 'LIDO_WITHDRAWALS') {
+    createLidoWithdrawalsPosition(event.params.externalPosition, event.params.vaultProxy, type);
 
-    StakeWiseV3StakingPositionLib4DataSource.create(event.params.externalPosition);
+    LidoWithdrawalsPositionLib4DataSource.create(event.params.externalPosition);
 
     return;
   }
@@ -287,6 +287,142 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
     if (actionId == AaveDebtPositionActionId.ClaimRewards) {
       createAaveDebtPositionChange(event.params.externalPosition, null, 'ClaimRewards', vault, event);
+    }
+
+    return;
+  }
+
+  if (type.label == 'AAVE_V3_DEBT') {
+    if (actionId == AaveV3DebtPositionActionId.AddCollateral) {
+      let decoded = ethereum.decode('(address[],uint256[],bool)', tuplePrefixBytes(event.params.actionArgs));
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+
+      let aTokens = tuple[0].toAddressArray();
+      let amounts = tuple[1].toBigIntArray();
+      let fromUnderlying = tuple[2].toBoolean();
+
+      let assetAmounts: AssetAmount[] = new Array<AssetAmount>();
+      for (let i = 0; i < aTokens.length; i++) {
+        let asset = fromUnderlying
+          ? ensureAsset(ExternalSdk.bind(aTokens[i]).UNDERLYING_ASSET_ADDRESS())
+          : ensureAsset(aTokens[i]);
+        let amount = toBigDecimal(amounts[i], asset.decimals);
+        let assetAmount = createAssetAmount(asset, amount, denominationAsset, 'av3dp', event);
+        assetAmounts = assetAmounts.concat([assetAmount]);
+      }
+
+      createAaveV3DebtPositionChange(event.params.externalPosition, assetAmounts, null, 'AddCollateral', vault, event);
+    }
+
+    if (actionId == AaveV3DebtPositionActionId.RemoveCollateral) {
+      let decoded = ethereum.decode('(address[],uint256[],bool)', tuplePrefixBytes(event.params.actionArgs));
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+
+      let aTokens = tuple[0].toAddressArray();
+      let amounts = tuple[1].toBigIntArray();
+      let toUnderlying = tuple[2].toBoolean();
+
+      let assetAmounts: AssetAmount[] = new Array<AssetAmount>();
+      for (let i = 0; i < aTokens.length; i++) {
+        let asset = toUnderlying
+          ? ensureAsset(ExternalSdk.bind(aTokens[i]).UNDERLYING_ASSET_ADDRESS())
+          : ensureAsset(aTokens[i]);
+        let amount = toBigDecimal(amounts[i], asset.decimals);
+        let assetAmount = createAssetAmount(asset, amount, denominationAsset, 'av3dp', event);
+        assetAmounts = assetAmounts.concat([assetAmount]);
+      }
+
+      createAaveV3DebtPositionChange(
+        event.params.externalPosition,
+        assetAmounts,
+        null,
+        'RemoveCollateral',
+        vault,
+        event,
+      );
+    }
+
+    if (actionId == AaveV3DebtPositionActionId.Borrow) {
+      let decoded = ethereum.decode('(address[],uint256[])', tuplePrefixBytes(event.params.actionArgs));
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+
+      let underlyings = tuple[0].toAddressArray();
+      let amounts = tuple[1].toBigIntArray();
+
+      let assetAmounts: AssetAmount[] = new Array<AssetAmount>();
+      for (let i = 0; i < underlyings.length; i++) {
+        let asset = ensureAsset(underlyings[i]);
+        let amount = toBigDecimal(amounts[i], asset.decimals);
+        let assetAmount = createAssetAmount(asset, amount, denominationAsset, 'av3dp', event);
+        assetAmounts = assetAmounts.concat([assetAmount]);
+      }
+
+      createAaveV3DebtPositionChange(event.params.externalPosition, assetAmounts, null, 'Borrow', vault, event);
+    }
+
+    if (actionId == AaveV3DebtPositionActionId.RepayBorrow) {
+      let decoded = ethereum.decode('(address[],uint256[])', tuplePrefixBytes(event.params.actionArgs));
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+
+      let underlyings = tuple[0].toAddressArray();
+      let amounts = tuple[1].toBigIntArray();
+
+      let assetAmounts: AssetAmount[] = new Array<AssetAmount>();
+      for (let i = 0; i < underlyings.length; i++) {
+        let asset = ensureAsset(underlyings[i]);
+        let amount = toBigDecimal(amounts[i], asset.decimals);
+        let assetAmount = createAssetAmount(asset, amount, denominationAsset, 'av3dp', event);
+        assetAmounts = assetAmounts.concat([assetAmount]);
+      }
+
+      createAaveV3DebtPositionChange(event.params.externalPosition, assetAmounts, null, 'RepayBorrow', vault, event);
+    }
+
+    if (actionId == AaveV3DebtPositionActionId.SetEMode) {
+      let decoded = ethereum.decode('(uint8)', event.params.actionArgs);
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+      let categoryId = tuple[0].toBigInt();
+
+      setEModeAaveV3DebtPosition(event.params.externalPosition, categoryId);
+
+      createAaveV3DebtPositionChange(event.params.externalPosition, null, categoryId, 'SetEMode', vault, event);
+    }
+
+    if (actionId == AaveV3DebtPositionActionId.SetUseReserveAsCollateral) {
+      // TODO: handle this event properly, when we will decide to implement it in the frontend
+      createAaveV3DebtPositionChange(
+        event.params.externalPosition,
+        null,
+        null,
+        'SetUseReserveAsCollateral',
+        vault,
+        event,
+      );
     }
 
     return;
@@ -444,18 +580,12 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         event,
       );
 
-      let borrowedAmount = getLiquityDebtPositionBorrowedAmount(event.params.externalPosition.toHex());
-
-      let feeAmount = borrowedAmount.minus(lusdAmount).minus(lusdGasCompensationAmountBD);
-      let feeAssetAmount = createAssetAmount(lusdAsset, feeAmount, denominationAsset, 'ldp-fee', event);
-
       createLiquityDebtPositionChange(
         event.params.externalPosition,
         'OpenTrove',
         [incomingAsset],
         outgoingAsset,
         lusdGasCompensationAssetAmount,
-        feeAssetAmount,
         vault,
         event,
       );
@@ -480,7 +610,6 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         'AddCollateral',
         [],
         outgoingAsset,
-        null,
         null,
         vault,
         event,
@@ -507,7 +636,6 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         [incomingAsset],
         null,
         null,
-        null,
         vault,
         event,
       );
@@ -527,20 +655,12 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
       let incomingAsset = createAssetAmount(lusdAsset, lusdAmount, denominationAsset, 'ldp-incoming', event);
 
-      let ldp = useLiquityDebtPosition(event.params.externalPosition.toHex());
-
-      let borrowedBalance = ldp.borrowedBalance;
-      let borrowedAmount = getLiquityDebtPositionBorrowedAmount(event.params.externalPosition.toHex());
-      let feeAmount = borrowedAmount.minus(lusdAmount).minus(borrowedBalance);
-      let feeAssetAmount = createAssetAmount(lusdAsset, feeAmount, denominationAsset, 'ldp-fee-asset-amount', event);
-
       createLiquityDebtPositionChange(
         event.params.externalPosition,
         'Borrow',
         [incomingAsset],
         null,
         null,
-        feeAssetAmount,
         vault,
         event,
       );
@@ -560,16 +680,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
       let outgoingAsset = createAssetAmount(lusdAsset, lusdAmount, denominationAsset, 'ldp-outgoing', event);
 
-      createLiquityDebtPositionChange(
-        event.params.externalPosition,
-        'Repay',
-        [],
-        outgoingAsset,
-        null,
-        null,
-        vault,
-        event,
-      );
+      createLiquityDebtPositionChange(event.params.externalPosition, 'Repay', [], outgoingAsset, null, vault, event);
     }
 
     if (actionId == LiquityDebtPositionActionId.CloseTrove) {
@@ -606,7 +717,6 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         'CloseTrove',
         [collateralAssetAmount, lusdGasCompensationAssetAmount],
         borrowedAssetAmount,
-        null,
         null,
         vault,
         event,
@@ -1600,6 +1710,52 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         null,
         [],
         null,
+        vault,
+        event,
+      );
+    }
+
+    return;
+  }
+
+  if ((type.label = 'LIDO_WITHDRAWALS')) {
+    if (actionId == LidoWithdrawalsActionId.RequestWithdrawals) {
+      let decoded = ethereum.decode('(uint256[])', tuplePrefixBytes(event.params.actionArgs));
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+
+      let amounts = tuple[0].toBigIntArray().map<BigDecimal>((value) => toBigDecimal(value, 18));
+
+      createLidoWithdrawalsPositionChange(
+        event.params.externalPosition,
+        'RequestWithdrawals',
+        amounts,
+        null,
+        vault,
+        event,
+      );
+    }
+    if (actionId == LidoWithdrawalsActionId.ClaimWithdrawals) {
+      let decoded = ethereum.decode('(uint256[],uint256[])', tuplePrefixBytes(event.params.actionArgs));
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+
+      let requestIds = tuple[0].toBigIntArray();
+      // There is no value in tracking hints
+
+      createLidoWithdrawalsPositionChange(
+        event.params.externalPosition,
+        'ClaimWithdrawals',
+        null,
+        requestIds,
         vault,
         event,
       );
