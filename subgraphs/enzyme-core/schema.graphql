@@ -880,7 +880,7 @@ type NoDepegOnRedeemSharesForSpecificAssetsPolicy implements Policy @entity {
   settings: String!
   assets: [Bytes!]!
   referenceAssets: [Bytes!]!
-  deviationTolerancesInBps: [Int!]!
+  deviationTolerances: [BigDecimal!]!
   updatedAt: Int!
 }
 
