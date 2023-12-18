@@ -870,6 +870,20 @@ type MinMaxDepositPolicy implements Policy @entity {
   updatedAt: Int!
 }
 
+type NoDepegOnRedeemSharesForSpecificAssetsPolicy implements Policy @entity {
+  id: ID!
+  policy: Bytes!
+  policyType: PolicyType!
+  comptroller: Comptroller!
+  createdAt: Int!
+  enabled: Boolean!
+  settings: String!
+  assets: [Bytes!]!
+  referenceAssets: [Bytes!]!
+  deviationTolerances: [BigDecimal!]!
+  updatedAt: Int!
+}
+
 type OnlyRemoveDustExternalPositionPolicy implements Policy @entity {
   id: ID!
   policy: Bytes!
@@ -920,6 +934,7 @@ enum PolicyType {
   MaxConcentration
   MinAssetBalancesPostRedemption
   MinMaxDeposit
+  NoDepegOnRedeemSharesForSpecificAssets
   OnlyRemoveDustExternalPosition
   OnlyUntrackDustOrPricelessAssets
   Unknown

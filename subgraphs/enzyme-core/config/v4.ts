@@ -32,6 +32,7 @@ export interface ReleaseVariables {
   minAssetBalancesPostRedemptionPolicyAddress: string;
   minMaxInvestmentPolicyAddress: string;
   minSharesSupplyFeeAddress: string;
+  noDepegOnRedeemSharesForSpecificAssetsPolicyAddress: string;
   onlyRemoveDustExternalPositionPolicyAddress: string;
   onlyUntrackDustOrPricelessAssetsPolicyAddress: string;
   performanceFeeAddress: string;
@@ -74,6 +75,10 @@ export const sources = (variables: ReleaseVariables): DataSourceUserDeclaration[
   { name: 'MinAssetBalancesPostRedemptionPolicy', address: variables.minAssetBalancesPostRedemptionPolicyAddress },
   { name: 'MinMaxInvestmentPolicy', address: variables.minMaxInvestmentPolicyAddress },
   { name: 'MinSharesSupplyFee', address: variables.minSharesSupplyFeeAddress },
+  {
+    name: 'NoDepegOnRedeemSharesForSpecificAssetsPolicy',
+    address: variables.noDepegOnRedeemSharesForSpecificAssetsPolicyAddress,
+  },
   { name: 'OnlyRemoveDustExternalPositionPolicy', address: variables.onlyRemoveDustExternalPositionPolicyAddress },
   { name: 'OnlyUntrackDustOrPricelessAssetsPolicy', address: variables.onlyUntrackDustOrPricelessAssetsPolicyAddress },
   { name: 'PerformanceFee', address: variables.performanceFeeAddress },

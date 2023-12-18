@@ -49,6 +49,11 @@ export const abisV4 = [
   { name: 'MinMaxInvestmentPolicy', version: '4', file: './abis/v4/MinMaxInvestmentPolicy.json' },
   { name: 'MinSharesSupplyFee', version: '4', file: './abis/v4/MinSharesSupplyFee.json' },
   {
+    name: 'NoDepegOnRedeemSharesForSpecificAssetsPolicy',
+    version: '4',
+    file: './abis/v4/NoDepegOnRedeemSharesForSpecificAssetsPolicy.json'
+  },
+  {
     name: 'OnlyRemoveDustExternalPositionPolicy',
     version: '4',
     file: './abis/v4/OnlyRemoveDustExternalPositionPolicy.json',

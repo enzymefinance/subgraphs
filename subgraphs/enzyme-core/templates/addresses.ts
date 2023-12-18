@@ -93,6 +93,7 @@ export class Release4Addresses {
   minAssetBalancesPostRedemptionPolicyAddress: Address;
   minMaxInvestmentPolicyAddress: Address;
   minSharesSupplyFeeAddress: Address;
+  noDepegOnRedeemSharesForSpecificAssetsPolicyAddress: Address;
   onlyRemoveDustExternalPositionPolicyAddress: Address;
   onlyUntrackDustOrPricelessAssetsPolicyAddress: Address;
   performanceFeeAddress: Address;
@@ -203,6 +204,9 @@ export let release4Addresses: Release4Addresses = {
   ),
   minMaxInvestmentPolicyAddress: Address.fromString('{{releases.v4.minMaxInvestmentPolicyAddress}}'),
   minSharesSupplyFeeAddress: Address.fromString('{{releases.v4.minSharesSupplyFeeAddress}}'),
+  noDepegOnRedeemSharesForSpecificAssetsPolicyAddress: Address.fromString(
+    '{{releases.v4.noDepegOnRedeemSharesForSpecificAssetsPolicyAddress}}',
+  ),
   onlyRemoveDustExternalPositionPolicyAddress: Address.fromString(
     '{{releases.v4.onlyRemoveDustExternalPositionPolicyAddress}}',
   ),
