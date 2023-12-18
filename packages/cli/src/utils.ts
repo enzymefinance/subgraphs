@@ -49,7 +49,7 @@ function sanitizeFragmentJson(fragment: Mutable<JsonFragment>) {
 }
 
 function formatParams(params: utils.ParamType[]) {
-  return params.map((param) => `${param.indexed ? 'indexed ' : ''}${param.type}`).join(',');
+  return params.map((param) => `${param.indexed ? 'indexed ' : ''}${param.format('sighash')}`).join(',');
 }
 
 export function eventDeclaration(input: EventHandlerUserDeclaration): EventHandlerDeclaration {

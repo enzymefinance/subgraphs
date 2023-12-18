@@ -128,6 +128,7 @@ export const testnet: Context<Variables> = {
         minAssetBalancesPostRedemptionPolicyAddress: testnetV4Deployment.contracts.MinAssetBalancesPostRedemptionPolicy,
         minMaxInvestmentPolicyAddress: testnetV4Deployment.contracts.MinMaxInvestmentPolicy,
         minSharesSupplyFeeAddress: testnetV4Deployment.contracts.MinSharesSupplyFee,
+        noDepegOnRedeemSharesForSpecificAssetsPolicyAddress: '0x91cf2e3a615428f1f14fa3240b8dd52a2bdae649',
         onlyRemoveDustExternalPositionPolicyAddress: testnetV4Deployment.contracts.OnlyRemoveDustExternalPositionPolicy,
         onlyUntrackDustOrPricelessAssetsPolicyAddress:
           testnetV4Deployment.contracts.OnlyUntrackDustOrPricelessAssetsPolicy,
