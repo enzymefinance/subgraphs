@@ -92,6 +92,30 @@ importers:
         specifier: ^4.5.0
         version: 4.5.0
 
+  subgraphs/diva-staking:
+    devDependencies:
+      '@enzymefinance/environment':
+        specifier: ^4.0.30
+        version: 4.0.30
+      '@enzymefinance/subgraph-cli':
+        specifier: workspace:*
+        version: link:../../packages/cli
+      '@enzymefinance/subgraph-utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
+      '@graphprotocol/graph-cli':
+        specifier: ^0.62.0
+        version: 0.62.0(@types/node@18.18.13)(node-fetch@3.3.2)(typescript@4.9.5)
+      '@graphprotocol/graph-ts':
+        specifier: ^0.31.0
+        version: 0.31.0
+      assemblyscript:
+        specifier: ^0.24.1
+        version: 0.24.1
+      tsx:
+        specifier: ^4.5.0
+        version: 4.5.0
+
   subgraphs/enzyme-core:
     devDependencies:
       '@enzymefinance/environment':

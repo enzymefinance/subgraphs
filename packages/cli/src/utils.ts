@@ -69,6 +69,7 @@ function resolveUserDefinedPath(input: string, root: string): string {
 
     return require.resolve(input);
   } catch (e) {
+    console.log(e);
     throw new Error(`Failed to resolve user-defined path ${input} at ${root}.`);
   }
 }

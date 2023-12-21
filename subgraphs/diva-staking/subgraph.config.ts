@@ -2,15 +2,15 @@ import { Configurator, Contexts, DataSourceUserDeclaration } from '@enzymefinanc
 
 interface Variables {
   block: number;
-  vaultETH: string;
-  vaultstETH: string;
+  ethVault: string;
+  stEthVault: string;
 }
 
-const name = 'enzymefinance/diva';
+const name = 'enzymefinance/diva-staking';
 
 const variables: Variables = {
-  vaultstETH: '0x1ce8aafb51e79f6bdc0ef2ebd6fd34b00620f6db',
-  vaultETH: '0x16770d642e882e1769ce4ac8612b8bc0601506fc',
+  stEthVault: '0x1ce8aafb51e79f6bdc0ef2ebd6fd34b00620f6db',
+  ethVault: '0x16770d642e882e1769ce4ac8612b8bc0601506fc',
   block: 18162907, // Creation of stETH vault (it was create before ETH vault)
 };
 
@@ -32,15 +32,17 @@ export const contexts: Contexts<Variables> = {
 export const configure: Configurator<Variables> = (variables) => {
   const sources: DataSourceUserDeclaration[] = [
     {
-      name: 'VaultstETH',
+      name: 'StEthVault',
       block: variables.block,
-      address: variables.vaultstETH,
+      address: variables.stEthVault,
+      abi: './abis/VaultLib.json',
       events: (abi) => [abi.getEvent('AccessorSet')],
     },
     {
-      name: 'VaultETH',
+      name: 'EthVault',
       block: variables.block,
-      address: variables.vaultETH,
+      address: variables.ethVault,
+      abi: './abis/VaultLib.json',
       events: (abi) => [abi.getEvent('AccessorSet')],
     },
   ];
