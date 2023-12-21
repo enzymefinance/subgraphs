@@ -1,0 +1,4 @@
+type Comptroller @entity {
+  id: ID!
+  vault: Bytes!
+}

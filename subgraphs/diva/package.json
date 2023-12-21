@@ -1,0 +1,18 @@
+{
+  "name": "@enzymefinance/vault-shares-subgraph",
+  "private": true,
+  "scripts": {
+    "codegen": "enzyme-graph codegen",
+    "build": "enzyme-graph build",
+    "upload": "enzyme-graph deploy"
+  },
+  "devDependencies": {
+    "@enzymefinance/environment": "^4.0.30",
+    "@enzymefinance/subgraph-cli": "workspace:*",
+    "@enzymefinance/subgraph-utils": "workspace:*",
+    "@graphprotocol/graph-cli": "^0.62.0",
+    "@graphprotocol/graph-ts": "^0.31.0",
+    "assemblyscript": "^0.24.1",
+    "tsx": "^4.5.0"
+  }
+}
