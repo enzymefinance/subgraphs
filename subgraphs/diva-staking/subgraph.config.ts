@@ -1,4 +1,10 @@
-import { Configurator, Contexts, DataSourceUserDeclaration } from '@enzymefinance/subgraph-cli';
+import {
+  Configurator,
+  Contexts,
+  DataSourceUserDeclaration,
+  DataSourceTemplateUserDeclaration,
+  SdkUserDeclaration,
+} from '@enzymefinance/subgraph-cli';
 
 interface Variables {
   block: number;
@@ -47,5 +53,23 @@ export const configure: Configurator<Variables> = (variables) => {
     },
   ];
 
-  return { sources };
+  const templates: DataSourceTemplateUserDeclaration[] = [
+    { name: 'ComptrollerLib', events: (abi) => [abi.getEvent('SharesBought'), abi.getEvent('SharesRedeemed')] },
+  ];
+
+  const sdks: SdkUserDeclaration[] = [
+    {
+      name: 'Protocol',
+      abis: {
+        VaultLib: './abis/VaultLib.json',
+        ComptrollerLib: './abis/ComptrollerLib.json',
+      },
+      functions: (abis) => [
+        abis.VaultLib.getFunction('getAccessor'),
+        abis.ComptrollerLib.getFunction('calcGrossShareValue'),
+      ],
+    },
+  ];
+
+  return { sources, templates, sdks };
 };
