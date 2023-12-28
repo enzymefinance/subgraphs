@@ -2,3 +2,19 @@ type Comptroller @entity {
   id: ID!
   vault: Bytes!
 }
+
+type Deposit @entity {
+  id: ID!
+  depositor: Bytes!
+  amounts: [BigInt!]!
+  trancheIds: [Int]!
+  createdAt: Int!
+}
+
+type Depositor @entity {
+  id: ID!
+  amounts: [BigInt!]!
+  trancheIds: [Int]!
+  updatedAt: Int!
+  createdAt: Int!
+}
