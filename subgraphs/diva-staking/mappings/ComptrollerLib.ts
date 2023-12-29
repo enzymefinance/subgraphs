@@ -1,16 +1,18 @@
-import { BigInt } from '@graphprotocol/graph-ts';
 import { createDeposit } from '../entities/Deposit';
 import { SharesBought, SharesRedeemed } from '../generated/contracts/ComptrollerLibEvents';
 import { calcVaultsGav } from '../utils/calcVaultsGav';
-import { getDepositTranches, getRedemptionTranches } from '../utils/tranches';
+import {
+  getAccruedRewards,
+  getDepositTranches,
+  getRedemptionTranches,
+  stakingDeadlineTimestamp,
+} from '../utils/tranches';
 import { getDepositor, createOrUpdateDepositor, updateDepositor } from '../entities/Depositor';
 import { createRedemption } from '../entities/Redemption';
 
-let stakingDeadline = BigInt.fromI32(1709251200); // 1st March 2024
-
 export function handleSharesBought(event: SharesBought): void {
   // skip deposits after staking deadline
-  if (stakingDeadline >= event.block.timestamp) {
+  if (stakingDeadlineTimestamp >= event.block.timestamp) {
     return;
   }
 
@@ -32,12 +34,13 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
     return;
   }
 
-  // assumption that vault only holds stETH or WETH
+  // assumption that vault will redeem divaETH
   let redeemAmount = event.params.receivedAssetAmounts[0];
 
   let tranches = getRedemptionTranches(depositor.trancheAmounts, redeemAmount);
+  let accruedRewards = getAccruedRewards(event.block.timestamp, tranches);
 
-  createRedemption(event.params.redeemer, tranches, event);
+  createRedemption(event.params.redeemer, tranches, accruedRewards, event);
 
   updateDepositor(depositor, tranches, event);
 }

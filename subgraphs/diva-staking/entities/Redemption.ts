@@ -9,6 +9,7 @@ function redemptionId(redeemer: Address, event: ethereum.Event): string {
 export function createRedemption(
   redeemer: Address,
   tranches: { amount: BigInt; id: number }[],
+  accruedRewards: { firstClaimAmount: BigInt; secondClaimAmount: BigInt },
   event: ethereum.Event,
 ): Redemption {
   let redemption = new Redemption(redemptionId(redeemer, event));
@@ -16,6 +17,8 @@ export function createRedemption(
   redemption.redeemer = redeemer;
   redemption.amounts = tranches.map<BigInt>((tranche) => tranche.amount);
   redemption.trancheIds = tranches.map<number>((tranche) => tranche.id);
+  redemption.firstClaimAmount = accruedRewards.firstClaimAmount;
+  redemption.secondClaimAmount = accruedRewards.secondClaimAmount;
   redemption.createdAt = event.block.timestamp.toI32();
   redemption.save();
 
