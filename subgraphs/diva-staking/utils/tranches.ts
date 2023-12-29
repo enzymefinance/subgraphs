@@ -1,6 +1,6 @@
 import { BigInt } from '@graphprotocol/graph-ts';
 
-const tranches = [
+export const tranchesConfig = [
   {
     threshold: BigInt.fromI32(10_000),
   },
@@ -33,44 +33,76 @@ const tranches = [
   },
 ];
 
-// vaultsGavBeforeDeposit 10_500
-// investmentAmount 15_000
 export function getDepositTranches(
   vaultsGavBeforeDeposit: BigInt,
   investmentAmount: BigInt,
 ): { amount: BigInt; id: number }[] {
   let tranchesDepositedTo: { amount: BigInt; id: number }[] = [];
-  let amountLeftToClassify = investmentAmount;
+  let amountLeftToDeposit = investmentAmount;
   let vaultsGav = vaultsGavBeforeDeposit;
 
-  for (let i = 0; i < tranches.length; i++) {
-    let currentTranche = tranches[i];
+  for (let i = 0; i < tranchesConfig.length; i++) {
+    let currentTranche = tranchesConfig[i];
 
     // if gav is greater than tranche threshold skip that tranche
     if (currentTranche.threshold < vaultsGav) {
       continue;
     }
 
-    let vaultsGavAndAmountLeftToClassify = vaultsGav.plus(amountLeftToClassify); // 25_500
+    let vaultsGavAndAmountLeftToClassify = vaultsGav.plus(amountLeftToDeposit);
 
     // check if invested amount left is lower than threshold, if yes then full investment amount left belongs to that tranche completly
     if (currentTranche.threshold >= vaultsGavAndAmountLeftToClassify) {
       tranchesDepositedTo.push({
-        amount: amountLeftToClassify,
+        amount: amountLeftToDeposit,
         id: i,
       });
       break;
     }
 
-    let amountInvestedToCurrentTranche = currentTranche.threshold.minus(vaultsGav); // 20_000 - 10_500 = 9_500
-    amountLeftToClassify = amountLeftToClassify.minus(amountInvestedToCurrentTranche); // 15_000 - 9_500 = 5_500
+    let amountInvestedToCurrentTranche = currentTranche.threshold.minus(vaultsGav);
+    amountLeftToDeposit = amountLeftToDeposit.minus(amountInvestedToCurrentTranche);
     tranchesDepositedTo.push({
       amount: amountInvestedToCurrentTranche,
       id: i,
     });
 
-    vaultsGav = vaultsGav.plus(amountInvestedToCurrentTranche); // 20_000
+    vaultsGav = vaultsGav.plus(amountInvestedToCurrentTranche);
   }
 
   return tranchesDepositedTo;
+}
+
+export function getRedemptionTranches(
+  trancheAmounts: BigInt[],
+  redeemAmount: BigInt,
+): { amount: BigInt; id: number }[] {
+  let tranchesRedeemedFrom: { amount: BigInt; id: number }[] = [];
+  let amountLeftToRedeem = redeemAmount;
+
+  for (let i = trancheAmounts.length - 1; i >= 0; i--) {
+    let currentTrancheAmount = trancheAmounts[i];
+
+    // skip tranches without money deposited to
+    if (currentTrancheAmount == BigInt.fromI32(0)) {
+      continue;
+    }
+
+    if (currentTrancheAmount >= amountLeftToRedeem) {
+      tranchesRedeemedFrom.push({
+        amount: amountLeftToRedeem.neg(),
+        id: i,
+      });
+      // we have redeemed all the funds, end the algorithm
+      break;
+    } else {
+      tranchesRedeemedFrom.push({
+        amount: currentTrancheAmount.neg(),
+        id: i,
+      });
+      amountLeftToRedeem = amountLeftToRedeem.minus(currentTrancheAmount);
+    }
+  }
+
+  return tranchesRedeemedFrom;
 }
