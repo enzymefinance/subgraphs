@@ -111,6 +111,7 @@ import {
   useStakeWiseStakingPosition,
   stakeWiseStakingExitRequestId,
   useStakeWiseStakingExitRequest,
+  createStakeWiseStakingPosition,
 } from '../../entities/StakeWiseStakingPosition';
 
 export function handleExternalPositionDeployedForFund(event: ExternalPositionDeployedForFund): void {
@@ -183,6 +184,14 @@ export function handleExternalPositionDeployedForFund(event: ExternalPositionDep
     createLidoWithdrawalsPosition(event.params.externalPosition, event.params.vaultProxy, type);
 
     LidoWithdrawalsPositionLib4DataSource.create(event.params.externalPosition);
+
+    return;
+  }
+
+  if (type.label == 'STAKE_WISE_V3_STAKING') {
+    createStakeWiseStakingPosition(event.params.externalPosition, event.params.vaultProxy, type);
+
+    StakeWiseV3StakingPositionLib4DataSource.create(event.params.externalPosition);
 
     return;
   }
