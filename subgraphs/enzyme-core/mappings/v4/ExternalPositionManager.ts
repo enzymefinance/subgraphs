@@ -188,7 +188,8 @@ export function handleExternalPositionDeployedForFund(event: ExternalPositionDep
     return;
   }
 
-  if (type.label == 'STAKE_WISE_V3_STAKING') {
+  // Maybe not the right label?
+  if (type.label == 'STAKEWISE_V3') {
     createStakeWiseStakingPosition(event.params.externalPosition, event.params.vaultProxy, type);
 
     StakeWiseV3StakingPositionLib4DataSource.create(event.params.externalPosition);
@@ -1773,7 +1774,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     return;
   }
 
-  if (type.label == 'STAKE_WISE_V3_STAKING') {
+  if (type.label == 'STAKEWISE_V3') {
     if (actionId == StakeWiseV3StakingPositionActionId.Stake) {
       let decoded = ethereum.decode('(address,uint256)', event.params.actionArgs);
 
