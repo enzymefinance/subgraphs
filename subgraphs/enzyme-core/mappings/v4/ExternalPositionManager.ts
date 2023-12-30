@@ -188,7 +188,6 @@ export function handleExternalPositionDeployedForFund(event: ExternalPositionDep
     return;
   }
 
-  // Maybe not the right label?
   if (type.label == 'STAKEWISE_V3') {
     createStakeWiseStakingPosition(event.params.externalPosition, event.params.vaultProxy, type);
 
