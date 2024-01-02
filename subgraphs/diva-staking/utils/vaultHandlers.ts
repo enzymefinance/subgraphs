@@ -1,10 +1,9 @@
 import { createComptroller } from '../entities/Comptroller';
 
-import { AccessorSet as EthVaultAccessorSet } from '../generated/contracts/EthVaultEvents';
-import { AccessorSet as StEthVaultEventsAccessorSet } from '../generated/contracts/StEthVaultEvents';
 import { ComptrollerLibDataSource } from '../generated/templates';
+import { Address } from '@graphprotocol/graph-ts';
 
-export function handleAccessorSet(event: EthVaultAccessorSet | StEthVaultEventsAccessorSet): void {
-  createComptroller(event.params.nextAccessor, event.address);
-  ComptrollerLibDataSource.create(event.params.nextAccessor);
+export function handleAccessorSet(nextAccessor: Address, vault: Address): void {
+  createComptroller(nextAccessor, vault);
+  ComptrollerLibDataSource.create(nextAccessor);
 }

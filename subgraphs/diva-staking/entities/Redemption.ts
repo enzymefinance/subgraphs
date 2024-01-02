@@ -1,22 +1,23 @@
 import { BigInt, Address, ethereum } from '@graphprotocol/graph-ts';
 import { uniqueEventId } from '@enzymefinance/subgraph-utils';
 import { Redemption } from '../generated/schema';
+import { Claim, Tranche } from '../utils/tranches';
 
 function redemptionId(redeemer: Address, event: ethereum.Event): string {
-  return redeemer + '/' + uniqueEventId(event);
+  return redeemer.toString() + '/' + uniqueEventId(event);
 }
 
 export function createRedemption(
   redeemer: Address,
-  tranches: { amount: BigInt; id: number }[],
-  accruedRewards: { firstClaimAmount: BigInt; secondClaimAmount: BigInt },
+  tranches: Tranche[],
+  accruedRewards: Claim,
   event: ethereum.Event,
 ): Redemption {
   let redemption = new Redemption(redemptionId(redeemer, event));
 
   redemption.redeemer = redeemer;
   redemption.amounts = tranches.map<BigInt>((tranche) => tranche.amount);
-  redemption.trancheIds = tranches.map<number>((tranche) => tranche.id);
+  redemption.trancheIds = tranches.map<i32>((tranche) => tranche.id as i32);
   redemption.firstClaimAmount = accruedRewards.firstClaimAmount;
   redemption.secondClaimAmount = accruedRewards.secondClaimAmount;
   redemption.createdAt = event.block.timestamp.toI32();

@@ -1,10 +1,10 @@
 import { BigInt, Address, ethereum } from '@graphprotocol/graph-ts';
 import { Depositor } from '../generated/schema';
-import { tranchesConfig } from '../utils/tranches';
+import { Tranche, tranchesConfig } from '../utils/tranches';
 
 export function createOrUpdateDepositor(
   depositorAddress: Address,
-  tranches: { amount: BigInt; id: number }[],
+  tranches: Tranche[],
   event: ethereum.Event,
 ): Depositor {
   let depositor = getDepositor(depositorAddress);
@@ -16,17 +16,13 @@ export function createOrUpdateDepositor(
   return createDepositor(depositorAddress, tranches, event);
 }
 
-export function updateDepositor(
-  depositor: Depositor,
-  tranches: { amount: BigInt; id: number }[],
-  event: ethereum.Event,
-): Depositor {
+export function updateDepositor(depositor: Depositor, tranches: Tranche[], event: ethereum.Event): Depositor {
   let trancheAmounts = depositor.trancheAmounts;
   for (let i = 0; i < tranches.length; i++) {
     let tranche = tranches[i];
 
     // tranche.amount can be on minus when redeeming
-    trancheAmounts[tranche.id] = trancheAmounts[tranche.id].plus(tranche.amount);
+    trancheAmounts[tranche.id as i32] = trancheAmounts[tranche.id as i32].plus(tranche.amount);
   }
   depositor.trancheAmounts = trancheAmounts;
   depositor.updatedAt = event.block.timestamp.toI32();
@@ -36,11 +32,7 @@ export function updateDepositor(
   return depositor;
 }
 
-export function createDepositor(
-  depositorAddress: Address,
-  tranches: { amount: BigInt; id: number }[],
-  event: ethereum.Event,
-): Depositor {
+export function createDepositor(depositorAddress: Address, tranches: Tranche[], event: ethereum.Event): Depositor {
   let depositor = new Depositor(depositorAddress.toHex());
 
   // init array with zeroes
@@ -49,7 +41,7 @@ export function createDepositor(
   for (let i = 0; i < tranches.length; i++) {
     let tranche = tranches[i];
 
-    trancheAmounts[tranche.id] = tranche.amount;
+    trancheAmounts[tranche.id as i32] = tranche.amount;
   }
 
   depositor.trancheAmounts = trancheAmounts;

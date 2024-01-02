@@ -1,46 +1,63 @@
 import { BigInt } from '@graphprotocol/graph-ts';
 
-export const tranchesConfig = [
-  {
-    threshold: BigInt.fromI32(10_000),
-    divPerEthPerDay: 2.5,
-  },
-  {
-    threshold: BigInt.fromI32(20_000),
-    divPerEthPerDay: 2.25,
-  },
-  {
-    threshold: BigInt.fromI32(30_000),
-    divPerEthPerDay: 2,
-  },
-  {
-    threshold: BigInt.fromI32(40_000),
-    divPerEthPerDay: 1.9,
-  },
-  {
-    threshold: BigInt.fromI32(50_000),
-    divPerEthPerDay: 1.75,
-  },
-  {
-    threshold: BigInt.fromI32(60_000),
-    divPerEthPerDay: 1.6,
-  },
-  {
-    threshold: BigInt.fromI32(70_000),
-    divPerEthPerDay: 1.55,
-  },
-  {
-    threshold: BigInt.fromI32(80_000),
-    divPerEthPerDay: 1.5,
-  },
-  {
-    threshold: BigInt.fromI32(90_000),
-    divPerEthPerDay: 1.4,
-  },
-  {
-    threshold: BigInt.fromI32(100_000),
-    divPerEthPerDay: 1.3,
-  },
+export class Tranche {
+  amount: BigInt;
+  id: number;
+
+  constructor(amount: BigInt, id: number) {
+    this.amount = amount;
+    this.id = id;
+  }
+}
+
+export class TrancheConfig {
+  threshold: BigInt;
+  divPerEthPerDay: number;
+
+  constructor(threshold: BigInt, divPerEthPerDay: number) {
+    this.threshold = threshold;
+    this.divPerEthPerDay = divPerEthPerDay;
+  }
+}
+
+export let tranchesConfig: TrancheConfig[] = [
+  new TrancheConfig(BigInt.fromI32(10_000), 2.5),
+  // {
+  //   threshold: BigInt.fromI32(20_000),
+  //   divPerEthPerDay: 2.25,
+  // },
+  // {
+  //   threshold: BigInt.fromI32(30_000),
+  //   divPerEthPerDay: 2,
+  // },
+  // {
+  //   threshold: BigInt.fromI32(40_000),
+  //   divPerEthPerDay: 1.9,
+  // },
+  // {
+  //   threshold: BigInt.fromI32(50_000),
+  //   divPerEthPerDay: 1.75,
+  // },
+  // {
+  //   threshold: BigInt.fromI32(60_000),
+  //   divPerEthPerDay: 1.6,
+  // },
+  // {
+  //   threshold: BigInt.fromI32(70_000),
+  //   divPerEthPerDay: 1.55,
+  // },
+  // {
+  //   threshold: BigInt.fromI32(80_000),
+  //   divPerEthPerDay: 1.5,
+  // },
+  // {
+  //   threshold: BigInt.fromI32(90_000),
+  //   divPerEthPerDay: 1.4,
+  // },
+  // {
+  //   threshold: BigInt.fromI32(100_000),
+  //   divPerEthPerDay: 1.3,
+  // },
 ];
 
 let mainnetLaunchTimestamp = BigInt.fromI32(1711839600); // 31st March 2024
@@ -49,13 +66,10 @@ let cooldownDays = 30;
 let stakingDeadlineBeforeLaunchDays = 30;
 let stakingDeadlineBeforeLaunchUnix = BigInt.fromI32(stakingDeadlineBeforeLaunchDays).times(dayUnix);
 export let stakingDeadlineTimestamp = mainnetLaunchTimestamp.minus(stakingDeadlineBeforeLaunchUnix);
-let stakingPeriodDays = 183;
+let stakingPeriodDays = 183 as i32;
 
-export function getDepositTranches(
-  vaultsGavBeforeDeposit: BigInt,
-  investmentAmount: BigInt,
-): { amount: BigInt; id: number }[] {
-  let tranchesDepositedTo: { amount: BigInt; id: number }[] = [];
+export function getDepositTranches(vaultsGavBeforeDeposit: BigInt, investmentAmount: BigInt): Tranche[] {
+  let tranchesDepositedTo: Tranche[] = [];
   let amountLeftToDeposit = investmentAmount;
   let vaultsGav = vaultsGavBeforeDeposit;
 
@@ -71,19 +85,13 @@ export function getDepositTranches(
 
     // check if invested amount left is lower than threshold, if yes then full investment amount left belongs to that tranche completly
     if (currentTranche.threshold >= vaultsGavAndAmountLeftToClassify) {
-      tranchesDepositedTo.push({
-        amount: amountLeftToDeposit,
-        id: i,
-      });
+      tranchesDepositedTo.push(new Tranche(amountLeftToDeposit, i));
       break;
     }
 
     let amountInvestedToCurrentTranche = currentTranche.threshold.minus(vaultsGav);
     amountLeftToDeposit = amountLeftToDeposit.minus(amountInvestedToCurrentTranche);
-    tranchesDepositedTo.push({
-      amount: amountInvestedToCurrentTranche,
-      id: i,
-    });
+    tranchesDepositedTo.push(new Tranche(amountInvestedToCurrentTranche, i));
 
     vaultsGav = vaultsGav.plus(amountInvestedToCurrentTranche);
   }
@@ -91,11 +99,8 @@ export function getDepositTranches(
   return tranchesDepositedTo;
 }
 
-export function getRedemptionTranches(
-  trancheAmounts: BigInt[],
-  redeemAmount: BigInt,
-): { amount: BigInt; id: number }[] {
-  let tranchesRedeemedFrom: { amount: BigInt; id: number }[] = [];
+export function getRedemptionTranches(trancheAmounts: BigInt[], redeemAmount: BigInt): Tranche[] {
+  let tranchesRedeemedFrom: Tranche[] = [];
   let amountLeftToRedeem = redeemAmount;
 
   for (let i = trancheAmounts.length - 1; i >= 0; i--) {
@@ -107,17 +112,11 @@ export function getRedemptionTranches(
     }
 
     if (currentTrancheAmount >= amountLeftToRedeem) {
-      tranchesRedeemedFrom.push({
-        amount: amountLeftToRedeem.neg(),
-        id: i,
-      });
+      tranchesRedeemedFrom.push(new Tranche(amountLeftToRedeem.neg(), i));
       // we have redeemed all the funds, end the algorithm
       break;
     } else {
-      tranchesRedeemedFrom.push({
-        amount: currentTrancheAmount.neg(),
-        id: i,
-      });
+      tranchesRedeemedFrom.push(new Tranche(currentTrancheAmount.neg(), i));
       amountLeftToRedeem = amountLeftToRedeem.minus(currentTrancheAmount);
     }
   }
@@ -125,16 +124,23 @@ export function getRedemptionTranches(
   return tranchesRedeemedFrom;
 }
 
-export function getAccruedRewards(
-  currentTimestamp: BigInt,
-  tranches: { amount: BigInt; id: number }[],
-): { firstClaimAmount: BigInt; secondClaimAmount: BigInt } {
+export class Claim {
+  firstClaimAmount: BigInt;
+  secondClaimAmount: BigInt;
+
+  constructor(firstClaimAmount: BigInt, secondClaimAmount: BigInt) {
+    this.firstClaimAmount = firstClaimAmount;
+    this.secondClaimAmount = secondClaimAmount;
+  }
+}
+
+export function getAccruedRewards(currentTimestamp: BigInt, tranches: Tranche[]): Claim {
   if (currentTimestamp < mainnetLaunchTimestamp) {
-    return { firstClaimAmount: BigInt.fromI32(0), secondClaimAmount: BigInt.fromI32(0) };
+    return new Claim(BigInt.fromI32(0), BigInt.fromI32(0));
   }
 
   let daysStaked = currentTimestamp.minus(stakingDeadlineTimestamp).div(dayUnix).toI32();
-  daysStaked = Math.max(daysStaked, stakingPeriodDays); // rewards accrue max until staking period ends
+  daysStaked = Math.max(daysStaked, stakingPeriodDays) as i32; // rewards accrue max until staking period ends
 
   let firstClaimAmount = BigInt.fromI32(0);
   let secondClaimAmount = BigInt.fromI32(0);
@@ -143,7 +149,7 @@ export function getAccruedRewards(
     let tranche = tranches[i];
     let trancheAccruedRewards = getTrancheAccruedRewards(
       tranche.amount,
-      tranchesConfig[tranche.id].divPerEthPerDay,
+      tranchesConfig[tranche.id as i32].divPerEthPerDay,
       daysStaked,
     );
 
@@ -151,33 +157,31 @@ export function getAccruedRewards(
     secondClaimAmount = secondClaimAmount.plus(trancheAccruedRewards.firstClaimAmount);
   }
 
-  return { firstClaimAmount, secondClaimAmount };
+  return new Claim(firstClaimAmount, secondClaimAmount);
 }
 
-function getTrancheAccruedRewards(
-  amount: BigInt,
-  divPerEthPerDay: number,
-  daysStaked: number,
-): { firstClaimAmount: BigInt; secondClaimAmount: BigInt } {
+function getTrancheAccruedRewards(amount: BigInt, divPerEthPerDay: number, daysStaked: number): Claim {
   // scale numbers so we won't loose precision
   let scale = 10 ** 6;
+  let scaleBigInt = BigInt.fromI64(scale);
 
   if (daysStaked <= cooldownDays) {
     // first half is available after cooldown, and second after staking ends
     let firstClaimAmount = amount
-      .times(BigInt.fromU64(divPerEthPerDay * daysStaked * scale).div(BigInt.fromI32(2)))
-      .div(BigInt.fromU64(scale));
+      .times(BigInt.fromI64((divPerEthPerDay * daysStaked * scale) as i64).div(BigInt.fromI32(2)))
+      .div(scaleBigInt);
 
-    return { firstClaimAmount, secondClaimAmount: firstClaimAmount };
+    return new Claim(firstClaimAmount, firstClaimAmount);
   }
   // first half is available after cooldown period, and second after staking ends
   let firstClaimAmount = amount
-    .times(BigInt.fromU64(divPerEthPerDay * cooldownDays * scale).div(BigInt.fromI32(2)))
-    .div(BigInt.fromU64(scale));
+    .times(BigInt.fromI64((divPerEthPerDay * cooldownDays * scale) as i64))
+    .div(BigInt.fromI32(2))
+    .div(scaleBigInt);
 
   let secondClaimAmount = amount
-    .times(BigInt.fromU64(divPerEthPerDay * (daysStaked - cooldownDays) * scale))
-    .div(BigInt.fromU64(scale));
+    .times(BigInt.fromI64((divPerEthPerDay * (daysStaked - cooldownDays) * scale) as i64))
+    .div(scaleBigInt);
 
-  return { firstClaimAmount, secondClaimAmount: firstClaimAmount.plus(secondClaimAmount) };
+  return new Claim(firstClaimAmount, firstClaimAmount.plus(secondClaimAmount));
 }
