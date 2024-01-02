@@ -1,10 +1,10 @@
-import { BigInt, Address, ethereum } from '@graphprotocol/graph-ts';
+import { BigInt, Address, ethereum, log } from '@graphprotocol/graph-ts';
 import { uniqueEventId } from '@enzymefinance/subgraph-utils';
 import { Deposit } from '../generated/schema';
 import { Tranche } from '../utils/tranches';
 
 function depositId(depositor: Address, event: ethereum.Event): string {
-  return depositor.toString() + '/' + uniqueEventId(event);
+  return depositor.toHexString() + '/' + uniqueEventId(event);
 }
 
 export function createDeposit(depositor: Address, tranches: Tranche[], event: ethereum.Event): Deposit {

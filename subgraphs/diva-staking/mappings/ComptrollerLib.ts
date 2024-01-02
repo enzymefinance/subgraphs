@@ -12,7 +12,7 @@ import { createRedemption } from '../entities/Redemption';
 
 export function handleSharesBought(event: SharesBought): void {
   // skip deposits after staking deadline
-  if (stakingDeadlineTimestamp >= event.block.timestamp) {
+  if (stakingDeadlineTimestamp < event.block.timestamp) {
     return;
   }
 

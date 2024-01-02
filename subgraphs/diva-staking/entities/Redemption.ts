@@ -4,7 +4,7 @@ import { Redemption } from '../generated/schema';
 import { Claim, Tranche } from '../utils/tranches';
 
 function redemptionId(redeemer: Address, event: ethereum.Event): string {
-  return redeemer.toString() + '/' + uniqueEventId(event);
+  return redeemer.toHexString() + '/' + uniqueEventId(event);
 }
 
 export function createRedemption(
