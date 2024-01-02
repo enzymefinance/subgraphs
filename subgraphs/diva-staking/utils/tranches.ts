@@ -22,45 +22,19 @@ export class TrancheConfig {
 
 export let tranchesConfig: TrancheConfig[] = [
   new TrancheConfig(BigInt.fromI32(10_000), 2.5),
-  // {
-  //   threshold: BigInt.fromI32(20_000),
-  //   divPerEthPerDay: 2.25,
-  // },
-  // {
-  //   threshold: BigInt.fromI32(30_000),
-  //   divPerEthPerDay: 2,
-  // },
-  // {
-  //   threshold: BigInt.fromI32(40_000),
-  //   divPerEthPerDay: 1.9,
-  // },
-  // {
-  //   threshold: BigInt.fromI32(50_000),
-  //   divPerEthPerDay: 1.75,
-  // },
-  // {
-  //   threshold: BigInt.fromI32(60_000),
-  //   divPerEthPerDay: 1.6,
-  // },
-  // {
-  //   threshold: BigInt.fromI32(70_000),
-  //   divPerEthPerDay: 1.55,
-  // },
-  // {
-  //   threshold: BigInt.fromI32(80_000),
-  //   divPerEthPerDay: 1.5,
-  // },
-  // {
-  //   threshold: BigInt.fromI32(90_000),
-  //   divPerEthPerDay: 1.4,
-  // },
-  // {
-  //   threshold: BigInt.fromI32(100_000),
-  //   divPerEthPerDay: 1.3,
-  // },
+  new TrancheConfig(BigInt.fromI32(20_000), 2.25),
+  new TrancheConfig(BigInt.fromI32(30_000), 2),
+  new TrancheConfig(BigInt.fromI32(40_000), 1.9),
+  new TrancheConfig(BigInt.fromI32(50_000), 1.75),
+  new TrancheConfig(BigInt.fromI32(60_000), 1.6),
+  new TrancheConfig(BigInt.fromI32(70_000), 1.55),
+  new TrancheConfig(BigInt.fromI32(80_000), 1.5),
+  new TrancheConfig(BigInt.fromI32(90_000), 1.4),
+  new TrancheConfig(BigInt.fromI32(100_000), 1.3),
 ];
 
-let mainnetLaunchTimestamp = BigInt.fromI32(1711839600); // 31st March 2024
+// let mainnetLaunchTimestamp = BigInt.fromI32(1711839600); // 31st March 2024
+let mainnetLaunchTimestamp = BigInt.fromI32(1698793200); // 1st Nob 2023
 let dayUnix = BigInt.fromI32(60 * 60 * 24); // 1 day
 let cooldownDays = 30;
 let stakingDeadlineBeforeLaunchDays = 30;
