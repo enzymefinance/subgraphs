@@ -71,6 +71,7 @@ export function ensureStakeWiseVaultToken(stakeWiseVault: Address, externalPosit
   let stakeWiseVaultToken = StakeWiseVaultToken.load(id);
   if (!stakeWiseVaultToken) {
     stakeWiseVaultToken = new StakeWiseVaultToken(id);
+    stakeWiseVaultToken.createdAt = 0;
     stakeWiseVaultToken.save();
   }
 
