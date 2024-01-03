@@ -3,10 +3,10 @@ import { GeneralInfo } from '../generated/schema';
 
 let generalInfoId = 'general.info';
 
-export function increaseDepositorCounter(event: ethereum.Event): GeneralInfo {
+export function updateDepositorCounter(amount: number, event: ethereum.Event): GeneralInfo {
   let generalInfo = ensureGeneralInfo();
 
-  generalInfo.depositorsCounter = generalInfo.depositorsCounter + 1;
+  generalInfo.depositorsCounter = (generalInfo.depositorsCounter + amount) as i32;
   generalInfo.updatedAt = event.block.timestamp.toI32();
   generalInfo.save();
 

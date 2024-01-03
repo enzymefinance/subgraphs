@@ -22,6 +22,7 @@ type Depositor @entity {
   trancheAmounts: [BigInt!]!
   updatedAt: Int!
   createdAt: Int!
+  shares: BigInt!
 }
 
 type Redemption @entity {

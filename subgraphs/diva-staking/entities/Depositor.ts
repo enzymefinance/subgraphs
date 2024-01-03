@@ -2,7 +2,12 @@ import { BigInt, Address, ethereum } from '@graphprotocol/graph-ts';
 import { Depositor } from '../generated/schema';
 import { Tranche, tranchesConfig } from '../utils/tranches';
 
-export function updateDepositor(depositor: Depositor, tranches: Tranche[], event: ethereum.Event): Depositor {
+export function updateDepositor(
+  depositor: Depositor,
+  tranches: Tranche[],
+  shares: BigInt,
+  event: ethereum.Event,
+): Depositor {
   let trancheAmounts = depositor.trancheAmounts;
   for (let i = 0; i < tranches.length; i++) {
     let tranche = tranches[i];
@@ -12,13 +17,19 @@ export function updateDepositor(depositor: Depositor, tranches: Tranche[], event
   }
   depositor.trancheAmounts = trancheAmounts;
   depositor.updatedAt = event.block.timestamp.toI32();
+  depositor.shares = depositor.shares.plus(shares);
 
   depositor.save();
 
   return depositor;
 }
 
-export function createDepositor(depositorAddress: Address, tranches: Tranche[], event: ethereum.Event): Depositor {
+export function createDepositor(
+  depositorAddress: Address,
+  tranches: Tranche[],
+  shares: BigInt,
+  event: ethereum.Event,
+): Depositor {
   let depositor = new Depositor(depositorAddress.toHex());
 
   // init array with zeroes
@@ -31,6 +42,7 @@ export function createDepositor(depositorAddress: Address, tranches: Tranche[], 
   }
 
   depositor.trancheAmounts = trancheAmounts;
+  depositor.shares = shares;
   depositor.createdAt = event.block.timestamp.toI32();
   depositor.updatedAt = event.block.timestamp.toI32();
 
