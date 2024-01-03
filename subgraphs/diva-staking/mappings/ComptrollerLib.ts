@@ -7,7 +7,7 @@ import {
   getRedemptionTranches,
   stakingDeadlineTimestamp,
 } from '../utils/tranches';
-import { getDepositor, createOrUpdateDepositor, updateDepositor, createDepositor } from '../entities/Depositor';
+import { getDepositor, updateDepositor, createDepositor } from '../entities/Depositor';
 import { createRedemption } from '../entities/Redemption';
 import { increaseDepositorCounter } from '../entities/GeneralInfo';
 
@@ -24,8 +24,6 @@ export function handleSharesBought(event: SharesBought): void {
   let tranches = getDepositTranches(vaultsGavBeforeDeposit, investmentAmount);
 
   createDeposit(event.params.buyer, tranches, event);
-
-  createOrUpdateDepositor(event.params.buyer, tranches, event);
 
   let depositor = getDepositor(event.params.buyer);
 

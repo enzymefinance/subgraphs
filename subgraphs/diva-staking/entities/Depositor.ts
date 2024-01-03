@@ -2,20 +2,6 @@ import { BigInt, Address, ethereum } from '@graphprotocol/graph-ts';
 import { Depositor } from '../generated/schema';
 import { Tranche, tranchesConfig } from '../utils/tranches';
 
-export function createOrUpdateDepositor(
-  depositorAddress: Address,
-  tranches: Tranche[],
-  event: ethereum.Event,
-): Depositor {
-  let depositor = getDepositor(depositorAddress);
-
-  if (depositor) {
-    return updateDepositor(depositor, tranches, event);
-  }
-
-  return createDepositor(depositorAddress, tranches, event);
-}
-
 export function updateDepositor(depositor: Depositor, tranches: Tranche[], event: ethereum.Event): Depositor {
   let trancheAmounts = depositor.trancheAmounts;
   for (let i = 0; i < tranches.length; i++) {
