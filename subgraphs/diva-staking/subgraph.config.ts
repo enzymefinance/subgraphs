@@ -18,7 +18,7 @@ const name = 'enzymefinance/diva-staking';
 const variables: Variables = {
   stEthVault: '0x1ce8aafb51e79f6bdc0ef2ebd6fd34b00620f6db',
   ethVault: '0x16770d642e882e1769ce4ac8612b8bc0601506fc',
-  block: 18162907, // Creation of stETH vault (it was create before ETH vault)
+  block: 18162907, // Creation of stETH vault (it was created before ETH vault)
 };
 
 const network = 'mainnet';

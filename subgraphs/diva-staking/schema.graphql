@@ -13,7 +13,7 @@ type Deposit @entity {
   id: ID!
   depositor: Bytes!
   amounts: [BigInt!]!
-  trancheIds: [Int]!
+  trancheIds: [Int!]!
   createdAt: Int!
 }
 
