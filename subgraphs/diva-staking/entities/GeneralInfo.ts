@@ -1,14 +1,16 @@
-import { BigInt, Address, ethereum } from '@graphprotocol/graph-ts';
+import { ethereum } from '@graphprotocol/graph-ts';
 import { GeneralInfo } from '../generated/schema';
 
 let generalInfoId = 'general.info';
 
-export function increaseDepositorCounter(event: ethereum.Event) {
+export function increaseDepositorCounter(event: ethereum.Event): GeneralInfo {
   let generalInfo = ensureGeneralInfo();
 
   generalInfo.depositorsCounter = generalInfo.depositorsCounter + 1;
   generalInfo.updatedAt = event.block.timestamp.toI32();
   generalInfo.save();
+
+  return generalInfo;
 }
 
 function ensureGeneralInfo(): GeneralInfo {
