@@ -28,7 +28,7 @@ type Redemption @entity {
   id: ID!
   redeemer: Bytes!
   amounts: [BigInt!]! # amounts are stored as negatives
-  trancheIds: [Int]!
+  trancheIds: [Int!]!
   firstClaimAmount: BigInt!
   secondClaimAmount: BigInt!
   createdAt: Int!
