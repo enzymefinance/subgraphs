@@ -1,3 +1,9 @@
+type GeneralInfo @entity {
+  id: ID!
+  depositorsCounter: Int!
+  updatedAt: Int!
+}
+
 type Comptroller @entity {
   id: ID!
   vault: Bytes!

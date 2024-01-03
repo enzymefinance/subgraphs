@@ -7,8 +7,9 @@ import {
   getRedemptionTranches,
   stakingDeadlineTimestamp,
 } from '../utils/tranches';
-import { getDepositor, createOrUpdateDepositor, updateDepositor } from '../entities/Depositor';
+import { getDepositor, createOrUpdateDepositor, updateDepositor, createDepositor } from '../entities/Depositor';
 import { createRedemption } from '../entities/Redemption';
+import { increaseDepositorCounter } from '../entities/GeneralInfo';
 
 export function handleSharesBought(event: SharesBought): void {
   // skip deposits after staking deadline
@@ -25,6 +26,15 @@ export function handleSharesBought(event: SharesBought): void {
   createDeposit(event.params.buyer, tranches, event);
 
   createOrUpdateDepositor(event.params.buyer, tranches, event);
+
+  let depositor = getDepositor(event.params.buyer);
+
+  if (depositor) {
+    updateDepositor(depositor, tranches, event);
+  } else {
+    createDepositor(event.params.buyer, tranches, event);
+    increaseDepositorCounter(event);
+  }
 }
 
 export function handleSharesRedeemed(event: SharesRedeemed): void {
