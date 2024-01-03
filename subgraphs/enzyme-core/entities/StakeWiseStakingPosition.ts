@@ -1,4 +1,4 @@
-import { logCritical, uniqueEventId } from '@enzymefinance/subgraph-utils';
+import { ZERO_BD, logCritical, uniqueEventId } from '@enzymefinance/subgraph-utils';
 import { Address, BigDecimal, BigInt, ethereum, store } from '@graphprotocol/graph-ts';
 import {
   StakeWiseStakingPosition,
@@ -31,6 +31,7 @@ export function createStakeWiseStakingPosition(
   position.vaultTokens = new Array<string>();
   position.active = true;
   position.type = type.id;
+  position.stakedEthAmount = ZERO_BD;
   position.save();
 
   return position;
