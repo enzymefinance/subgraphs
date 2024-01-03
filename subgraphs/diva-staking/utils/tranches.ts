@@ -33,8 +33,7 @@ export let tranchesConfig: TrancheConfig[] = [
   new TrancheConfig(BigInt.fromI32(100_00).times(BigInt.fromI32(10).pow(18)), 1.3),
 ];
 
-// let mainnetLaunchTimestamp = BigInt.fromI32(1711839600); // 31st March 2024
-let mainnetLaunchTimestamp = BigInt.fromI32(1698793200); // 1st Nov 2023
+let mainnetLaunchTimestamp = BigInt.fromI32(1711839600); // 31st March 2024
 let dayUnix = BigInt.fromI32(60 * 60 * 24); // 1 day
 let cooldownDays = 30;
 let stakingDeadlineBeforeLaunchDays = 30;
