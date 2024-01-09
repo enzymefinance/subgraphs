@@ -1727,7 +1727,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     return;
   }
 
-  if ((type.label = 'LIDO_WITHDRAWALS')) {
+  if (type.label == 'LIDO_WITHDRAWALS') {
     if (actionId == LidoWithdrawalsActionId.RequestWithdrawals) {
       let decoded = ethereum.decode('(uint256[])', tuplePrefixBytes(event.params.actionArgs));
 
@@ -1748,6 +1748,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         event,
       );
     }
+
     if (actionId == LidoWithdrawalsActionId.ClaimWithdrawals) {
       let decoded = ethereum.decode('(uint256[],uint256[])', tuplePrefixBytes(event.params.actionArgs));
 
@@ -1920,6 +1921,8 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         event,
       );
     }
+
+    return;
   }
 
   createUnknownExternalPositionChange(event.params.externalPosition, vault, event);
