@@ -37,10 +37,11 @@ export let tranchesConfig: TrancheConfig[] = [
 let mainnetLaunchTimestamp = BigInt.fromI32(1711839600); // 31st March 2024
 let dayUnix = BigInt.fromI32(60 * 60 * 24); // 1 day
 let cooldownDays = 30;
-let stakingDeadlineBeforeLaunchDays = 30;
-let stakingDeadlineBeforeLaunchUnix = BigInt.fromI32(stakingDeadlineBeforeLaunchDays).times(dayUnix);
-export let stakingDeadlineTimestamp = mainnetLaunchTimestamp.minus(stakingDeadlineBeforeLaunchUnix);
+let stakingStartBeforeLaunchDays = 30;
+let stakingStartTimestamp = mainnetLaunchTimestamp.minus(BigInt.fromI32(stakingStartBeforeLaunchDays).times(dayUnix));
+let cooldownEndTimestamp = mainnetLaunchTimestamp.plus(BigInt.fromI32(cooldownDays).times(dayUnix));
 let stakingPeriodDays = 183 as i32;
+export let stakingEndTimestamp = stakingStartTimestamp.plus(BigInt.fromI32(stakingPeriodDays).times(dayUnix));
 
 // DEPOSIT
 
@@ -81,12 +82,12 @@ export function getDepositTranches(vaultsGavBeforeDeposit: BigDecimal, investmen
 class RedemptionTranchesForDepositResponse {
   tranches: Tranche[];
   amountLeftToRedeem: BigDecimal;
-  depositId: string;
+  deposit: Deposit;
 
-  constructor(tranches: Tranche[], amountLeftToRedeem: BigDecimal, depositId: string) {
+  constructor(tranches: Tranche[], amountLeftToRedeem: BigDecimal, deposit: Deposit) {
     this.tranches = tranches;
     this.amountLeftToRedeem = amountLeftToRedeem;
-    this.depositId = depositId;
+    this.deposit = deposit;
   }
 }
 
@@ -127,15 +128,15 @@ function getRedemptionTranchesForDeposit(
     }
 
     if (currentTrancheAmount >= amountLeftToRedeem) {
-      tranchesRedeemedFrom.push(new Tranche(amountLeftToRedeem.neg(), i));
+      tranchesRedeemedFrom.push(new Tranche(amountLeftToRedeem, i));
       break; // we have redeemed all the funds, end the algorithm
     } else {
-      tranchesRedeemedFrom.push(new Tranche(currentTrancheAmount.neg(), i));
+      tranchesRedeemedFrom.push(new Tranche(currentTrancheAmount, i));
       amountLeftToRedeem = amountLeftToRedeem.minus(currentTrancheAmount);
     }
   }
 
-  return new RedemptionTranchesForDepositResponse(tranchesRedeemedFrom, amountLeftToRedeem, deposit.id);
+  return new RedemptionTranchesForDepositResponse(tranchesRedeemedFrom, amountLeftToRedeem, deposit);
 }
 
 export function getSumOfRedemptionTranches(
@@ -164,6 +165,52 @@ export function getSumOfRedemptionTranches(
 
 // REWARDS
 
+function secondsToFullDays(seconds: BigInt): i32 {
+  return seconds.div(dayUnix).toI32();
+}
+
+class DaysStakedResponse {
+  firstStepDays: i32;
+  secondStepDays: i32;
+
+  constructor(firstStepDays: i32, secondStepDays: i32) {
+    this.firstStepDays = firstStepDays;
+    this.secondStepDays = secondStepDays;
+  }
+}
+
+function getDaysStaked(depositUpdatedAt: BigInt, currentTimestamp: BigInt): DaysStakedResponse {
+  let depositStakingStartTimestamp =
+    depositUpdatedAt < stakingStartTimestamp ? stakingStartTimestamp : depositUpdatedAt;
+
+  if (currentTimestamp < cooldownEndTimestamp) {
+    // redeem happened before cooldown period ended
+    return new DaysStakedResponse(secondsToFullDays(currentTimestamp.minus(depositStakingStartTimestamp)), 0);
+  }
+
+  if (depositStakingStartTimestamp < cooldownEndTimestamp) {
+    // stake happened before cooldown period ended
+    // redeem happened after cooldown period ended
+    return new DaysStakedResponse(
+      secondsToFullDays(cooldownEndTimestamp.minus(depositStakingStartTimestamp)),
+      Math.min(
+        secondsToFullDays(currentTimestamp.minus(cooldownEndTimestamp)),
+        stakingPeriodDays - cooldownDays - stakingStartBeforeLaunchDays,
+      ),
+    );
+  }
+
+  if (depositStakingStartTimestamp < stakingEndTimestamp) {
+    // stake happened after cooldown period ended
+    // redeem happened after cooldown period and before staking ended
+    return new DaysStakedResponse(0, secondsToFullDays(currentTimestamp.minus(depositStakingStartTimestamp)));
+  }
+
+  // stake happened after cooldown period ended
+  // redeem happened after stake period ended
+  return new DaysStakedResponse(0, secondsToFullDays(stakingEndTimestamp.minus(depositStakingStartTimestamp)));
+}
+
 export class Claim {
   firstClaimAmount: BigDecimal;
   secondClaimAmount: BigDecimal;
@@ -174,54 +221,53 @@ export class Claim {
   }
 }
 
-// export function getAccruedRewards(currentTimestamp: BigInt, tranches: Tranche[]): Claim {
-//   if (currentTimestamp < mainnetLaunchTimestamp) {
-//     return new Claim(BigDecimal.zero(), BigDecimal.zero());
-//   }
+export function getAccruedRewards(
+  currentTimestamp: BigInt,
+  redemptionTranchesForDeposits: RedemptionTranchesForDepositResponse[],
+): Claim {
+  if (currentTimestamp < mainnetLaunchTimestamp) {
+    return new Claim(BigDecimal.zero(), BigDecimal.zero());
+  }
 
-//   let daysStaked = currentTimestamp.minus(stakingDeadlineTimestamp).div(dayUnix).toI32();
-//   daysStaked = Math.min(daysStaked, stakingPeriodDays) as i32; // rewards accrue max until staking period ends
+  let firstClaimAmount = BigDecimal.zero();
+  let secondClaimAmount = BigDecimal.zero();
 
-//   let firstClaimAmount = BigDecimal.zero();
-//   let secondClaimAmount = BigDecimal.zero();
+  for (let i = 0; i < redemptionTranchesForDeposits.length; i++) {
+    let redemptionTranchesForDeposit = redemptionTranchesForDeposits[i];
 
-//   for (let i = 0; i < tranches.length; i++) {
-//     let tranche = tranches[i];
-//     let trancheAccruedRewards = getTrancheAccruedRewards(
-//       tranche.amount.neg(), // redemption has minus sign, so we have to reverse it
-//       tranchesConfig[tranche.id as i32].divPerEthPerDay,
-//       daysStaked,
-//     );
+    let updatedAt = BigInt.fromI64(redemptionTranchesForDeposit.deposit.updatedAt);
+    let daysStaked = getDaysStaked(updatedAt, currentTimestamp);
 
-//     firstClaimAmount = firstClaimAmount.plus(trancheAccruedRewards.firstClaimAmount);
-//     secondClaimAmount = secondClaimAmount.plus(trancheAccruedRewards.secondClaimAmount);
-//   }
+    for (let i = 0; i < redemptionTranchesForDeposit.tranches.length; i++) {
+      let tranche = redemptionTranchesForDeposit.tranches[i];
 
-//   return new Claim(firstClaimAmount, secondClaimAmount);
-// }
+      let trancheAccruedRewards = getTrancheAccruedRewards(
+        tranche.amount,
+        tranchesConfig[tranche.id as i32].divPerEthPerDay,
+        daysStaked.firstStepDays,
+        daysStaked.secondStepDays,
+      );
 
-// function getTrancheAccruedRewards(amount: BigDecimal, divPerEthPerDay: BigDecimal, daysStaked: number): Claim {
-//   // scale numbers so we won't loose precision
-//   let scale = 10 ** 6;
-//   let scaleBigDecimal = BigDecimal.fromU64(scale);
+      firstClaimAmount = firstClaimAmount.plus(trancheAccruedRewards.firstClaimAmount);
+      secondClaimAmount = secondClaimAmount.plus(trancheAccruedRewards.secondClaimAmount);
+    }
+  }
 
-//   if (daysStaked <= cooldownDays) {
-//     // first half is available after cooldown, and second after staking ends
-//     let firstClaimAmount = amount
-//       .times(BigDecimal.fromU64((divPerEthPerDay * daysStaked * scale) as u64).div(BigDecimal.fromI32(2)))
-//       .div(scaleBigDecimal);
+  return new Claim(firstClaimAmount, secondClaimAmount);
+}
 
-//     return new Claim(firstClaimAmount, firstClaimAmount);
-//   }
-//   // first half is available after cooldown period, and second after staking ends
-//   let firstClaimAmount = amount
-//     .times(BigDecimal.fromU64((divPerEthPerDay * cooldownDays * scale) as u64))
-//     .div(BigDecimal.fromI32(2))
-//     .div(scaleBigDecimal);
+function getTrancheAccruedRewards(
+  amount: BigDecimal,
+  divPerEthPerDay: BigDecimal,
+  firstStepStakeDays: number,
+  secondStepDaysStaked: number,
+): Claim {
+  let halfOfFirstClaimAmount = amount
+    .times(divPerEthPerDay)
+    .times(BigDecimal.fromString(firstStepStakeDays.toString()))
+    .div(BigDecimal.fromString('2'));
 
-//   let secondClaimAmount = amount
-//     .times(BigDecimal.fromU64((divPerEthPerDay * (daysStaked - cooldownDays) * scale) as i64))
-//     .div(scaleBigDecimal);
+  let secondClaimAmount = amount.times(divPerEthPerDay).times(BigDecimal.fromString(secondStepDaysStaked.toString()));
 
-//   return new Claim(firstClaimAmount, firstClaimAmount.plus(secondClaimAmount));
-// }
+  return new Claim(halfOfFirstClaimAmount, halfOfFirstClaimAmount.plus(secondClaimAmount));
+}

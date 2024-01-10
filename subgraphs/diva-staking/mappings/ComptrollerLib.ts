@@ -1,10 +1,12 @@
 import { createDeposit, decreaseTrancheAmountsOfDeposit } from '../entities/Deposit';
 import { SharesBought, SharesRedeemed } from '../generated/contracts/ComptrollerLibEvents';
 import {
+  getAccruedRewards,
   // getAccruedRewards,
   getDepositTranches,
   getRedemptionTranchesForDeposits,
   getSumOfRedemptionTranches,
+  stakingEndTimestamp,
 } from '../utils/tranches';
 import {
   useDepositor,
@@ -19,6 +21,10 @@ import { ensureGeneralInfo, updateDepositorCounter, updateVaulsGav } from '../en
 import { toBigDecimal } from '@enzymefinance/subgraph-utils';
 
 export function handleSharesBought(event: SharesBought): void {
+  if (stakingEndTimestamp < event.block.timestamp) {
+    return; // staking period ended
+  }
+
   let vaultsGavBeforeDeposit = ensureGeneralInfo().vaultsGav;
   let investmentAmount = toBigDecimal(event.params.investmentAmount, 18); // all possible to deposit assets has 18 decimals
   updateVaulsGav(investmentAmount, event);
@@ -48,22 +54,14 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
   updateVaulsGav(redeemAmount.neg(), event);
 
   let tranches = getRedemptionTranchesForDeposits(getDepositorDeposits(event.params.redeemer), redeemAmount);
+  let accruedRewards = getAccruedRewards(event.block.timestamp, tranches);
+  createRedemption(event.params.redeemer, getSumOfRedemptionTranches(tranches), accruedRewards, event);
   for (let i = 0; i < tranches.length; i++) {
     let tranche = tranches[i];
-    decreaseTrancheAmountsOfDeposit(tranche.depositId, tranche.tranches, event);
+    decreaseTrancheAmountsOfDeposit(tranche.deposit.id, tranche.tranches, event);
   }
 
-  // let accruedRewards = getAccruedRewards(event.block.timestamp, tranches);
-
-  createRedemption(event.params.redeemer, getSumOfRedemptionTranches(tranches), accruedRewards, event);
-
-  let updatedDepositor = updateDepositor(
-    depositor,
-    toBigDecimal(event.params.sharesAmount, 18).neg(),
-    redeemAmount.neg(),
-    event,
-  );
-
+  let updatedDepositor = updateDepositor(depositor, sharesAmount.neg(), redeemAmount.neg(), event);
   if (updatedDepositor.shares.equals(BigDecimal.zero())) {
     updateDepositorCounter(-1, event); // decrease by 1
   }
