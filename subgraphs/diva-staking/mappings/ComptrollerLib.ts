@@ -24,8 +24,10 @@ export function handleSharesBought(event: SharesBought): void {
     return; // staking period ended
   }
 
-  let vaultsGavBeforeDeposit = ensureGeneralInfo().vaultsGav;
+  let sharesReceived = toBigDecimal(event.params.sharesReceived, 18);
   let investmentAmount = toBigDecimal(event.params.investmentAmount, 18); // all possible to deposit assets has 18 decimals
+
+  let vaultsGavBeforeDeposit = ensureGeneralInfo().vaultsGav;
   updateVaultsGav(investmentAmount, event);
 
   let tranches = getDepositTranches(vaultsGavBeforeDeposit, investmentAmount);
@@ -33,7 +35,6 @@ export function handleSharesBought(event: SharesBought): void {
   createDeposit(event.params.buyer, tranches, event);
 
   let depositor = getDepositor(event.params.buyer);
-  let sharesReceived = toBigDecimal(event.params.sharesReceived, 18);
 
   if (depositor) {
     updateDepositor(depositor, sharesReceived, investmentAmount, event);

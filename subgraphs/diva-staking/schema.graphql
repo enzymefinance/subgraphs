@@ -16,7 +16,6 @@ type Deposit @entity {
   createdAt: Int!
   updatedAt: Int!
   depositor: Depositor!
-  shares: BigDecimal!
 }
 
 type Depositor @entity {
