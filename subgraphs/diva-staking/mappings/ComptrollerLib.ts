@@ -2,7 +2,6 @@ import { createDeposit, decreaseTrancheAmountsOfDeposit } from '../entities/Depo
 import { SharesBought, SharesRedeemed } from '../generated/contracts/ComptrollerLibEvents';
 import {
   getAccruedRewards,
-  // getAccruedRewards,
   getDepositTranches,
   getRedemptionTranchesForDeposits,
   getSumOfRedemptionTranches,

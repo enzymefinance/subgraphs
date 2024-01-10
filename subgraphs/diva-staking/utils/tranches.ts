@@ -36,11 +36,11 @@ export let tranchesConfig: TrancheConfig[] = [
 
 let mainnetLaunchTimestamp = BigInt.fromI32(1711839600); // 31st March 2024
 let dayUnix = BigInt.fromI32(60 * 60 * 24); // 1 day
-let cooldownDays = 30;
-let stakingStartBeforeLaunchDays = 30;
+let cooldownDays: i32 = 30;
+let stakingStartBeforeLaunchDays: i32 = 30;
 let stakingStartTimestamp = mainnetLaunchTimestamp.minus(BigInt.fromI32(stakingStartBeforeLaunchDays).times(dayUnix));
 let cooldownEndTimestamp = mainnetLaunchTimestamp.plus(BigInt.fromI32(cooldownDays).times(dayUnix));
-let stakingPeriodDays = 183 as i32;
+let stakingPeriodDays: i32 = 183;
 export let stakingEndTimestamp = stakingStartTimestamp.plus(BigInt.fromI32(stakingPeriodDays).times(dayUnix));
 
 // DEPOSIT
@@ -139,6 +139,7 @@ function getRedemptionTranchesForDeposit(
   return new RedemptionTranchesForDepositResponse(tranchesRedeemedFrom, amountLeftToRedeem, deposit);
 }
 
+let redemptionTrancheForDepositId: number; // as Closures are not implemented yet this is hack suggested by https://www.assemblyscript.org/status.html (check Closures in the table)
 export function getSumOfRedemptionTranches(
   redemptionTranchesForDeposits: RedemptionTranchesForDepositResponse[],
 ): Tranche[] {
@@ -150,9 +151,10 @@ export function getSumOfRedemptionTranches(
     for (let i = 0; i < redemptionTranchesForDeposit.length; i++) {
       let redemptionTrancheForDeposit = redemptionTranchesForDeposit[i];
 
-      if (tranches.some((tranche) => tranche.id == redemptionTrancheForDeposit.id)) {
+      redemptionTrancheForDepositId = redemptionTrancheForDeposit.id;
+      if (tranches.some((tranche) => tranche.id == redemptionTrancheForDepositId)) {
         // check if trancheId already exists
-        let trancheIndex = tranches.findIndex((tranche) => tranche.id == redemptionTrancheForDeposit.id);
+        let trancheIndex = tranches.findIndex((tranche) => tranche.id == redemptionTrancheForDepositId);
         tranches[trancheIndex].amount = tranches[trancheIndex].amount.plus(redemptionTrancheForDeposit.amount); // if yes, add amount to existing trancheId
       } else {
         tranches.push(redemptionTrancheForDeposit); // if no, add new tranche
@@ -196,7 +198,7 @@ function getDaysStaked(depositUpdatedAt: BigInt, currentTimestamp: BigInt): Days
       Math.min(
         secondsToFullDays(currentTimestamp.minus(cooldownEndTimestamp)),
         stakingPeriodDays - cooldownDays - stakingStartBeforeLaunchDays,
-      ),
+      ) as i32,
     );
   }
 
