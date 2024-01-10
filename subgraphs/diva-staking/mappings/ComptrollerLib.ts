@@ -1,11 +1,18 @@
-import { createDeposit } from '../entities/Deposit';
+import { createDeposit, decreaseTrancheAmountsOfDeposit } from '../entities/Deposit';
 import { SharesBought, SharesRedeemed } from '../generated/contracts/ComptrollerLibEvents';
 import {
   // getAccruedRewards,
   getDepositTranches,
-  getRedemptionTranches,
+  getRedemptionTranchesForDeposits,
+  getSumOfRedemptionTranches,
 } from '../utils/tranches';
-import { useDepositor, updateDepositor, createDepositor, getDepositor } from '../entities/Depositor';
+import {
+  useDepositor,
+  updateDepositor,
+  createDepositor,
+  getDepositor,
+  getDepositorDeposits,
+} from '../entities/Depositor';
 import { createRedemption } from '../entities/Redemption';
 import { BigDecimal } from '@graphprotocol/graph-ts';
 import { ensureGeneralInfo, updateDepositorCounter, updateVaulsGav } from '../entities/GeneralInfo';
@@ -40,12 +47,15 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
 
   updateVaulsGav(redeemAmount.neg(), event);
 
-  let deposits = depositor.deposits.entries[0].key;
+  let tranches = getRedemptionTranchesForDeposits(getDepositorDeposits(event.params.redeemer), redeemAmount);
+  for (let i = 0; i < tranches.length; i++) {
+    let tranche = tranches[i];
+    decreaseTrancheAmountsOfDeposit(tranche.depositId, tranche.tranches, event);
+  }
 
-  let tranches = getRedemptionTranches(depositor.deposits, redeemAmount);
   // let accruedRewards = getAccruedRewards(event.block.timestamp, tranches);
 
-  // createRedemption(event.params.redeemer, tranches, accruedRewards, event);
+  createRedemption(event.params.redeemer, getSumOfRedemptionTranches(tranches), accruedRewards, event);
 
   let updatedDepositor = updateDepositor(
     depositor,

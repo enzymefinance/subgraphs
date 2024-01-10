@@ -1,5 +1,5 @@
 import { Address, ethereum, BigDecimal } from '@graphprotocol/graph-ts';
-import { uniqueEventId } from '@enzymefinance/subgraph-utils';
+import { logCritical, uniqueEventId } from '@enzymefinance/subgraph-utils';
 import { Deposit, Depositor } from '../generated/schema';
 import { Tranche, tranchesConfig } from '../utils/tranches';
 
@@ -22,24 +22,37 @@ export function createDeposit(depositor: Address, tranches: Tranche[], event: et
   deposit.trancheAmounts = trancheAmounts;
   deposit.depositor = depositor;
   deposit.createdAt = event.block.timestamp.toI32();
+  deposit.updatedAt = event.block.timestamp.toI32();
   deposit.save();
 
   return deposit;
 }
 
-export function decreaseDeposit(
+export function useDeposit(depositId: string): Deposit {
+  let deposit = Deposit.load(depositId);
+  if (deposit == null) {
+    logCritical('Failed to load deposit {}.', [depositId.toString()]);
+  }
+
+  return deposit as Deposit;
+}
+
+export function decreaseTrancheAmountsOfDeposit(
   depositId: string,
   tranches: Tranche[],
   event: ethereum.Event,
-): Depositor {
-  let deposit =  Deposit.load(depositId));
+): Deposit {
+  let deposit = useDeposit(depositId);
 
+  let trancheAmounts = deposit.trancheAmounts;
   for (let i = 0; i < tranches.length; i++) {
     let tranche = tranches[i];
 
-    // tranche.amount can be on minus when redeeming
-    trancheAmounts[tranche.id as i32] = trancheAmounts[tranche.id as i32].plus(tranche.amount);
+    trancheAmounts[tranche.id as i32] = trancheAmounts[tranche.id as i32].minus(tranche.amount);
   }
-  depositor.trancheAmounts = trancheAmounts;
+  deposit.trancheAmounts = trancheAmounts;
+  deposit.updatedAt = event.block.timestamp.toI32();
+  deposit.save();
 
+  return deposit;
 }

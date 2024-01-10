@@ -1,4 +1,4 @@
-import { BigInt, Address, ethereum, BigDecimal } from '@graphprotocol/graph-ts';
+import { Address, ethereum, BigDecimal } from '@graphprotocol/graph-ts';
 import { uniqueEventId } from '@enzymefinance/subgraph-utils';
 import { Redemption } from '../generated/schema';
 import { Claim, Tranche } from '../utils/tranches';

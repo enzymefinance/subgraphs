@@ -1,6 +1,7 @@
 import { Address, ethereum, BigDecimal } from '@graphprotocol/graph-ts';
-import { Depositor } from '../generated/schema';
+import { Deposit, Depositor } from '../generated/schema';
 import { logCritical } from '@enzymefinance/subgraph-utils';
+import { useDeposit } from './Deposit';
 
 export function updateDepositor(
   depositor: Depositor,
@@ -61,4 +62,15 @@ export function ensureDepositor(depositorAddress: Address, event: ethereum.Event
   depositor.updatedAt = event.block.timestamp.toI32();
 
   return depositor as Depositor;
+}
+
+export function getDepositorDeposits(depositorAddress: Address): Deposit[] {
+  let depositor = useDepositor(depositorAddress);
+
+  let deposits: Deposit[] = [];
+  for (let i = 0; i < depositor.deposits.entries.length; i++) {
+    deposits.push(useDeposit(depositor.deposits.entries[i].key));
+  }
+
+  return deposits;
 }

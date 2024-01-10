@@ -1,4 +1,5 @@
 import { BigDecimal, BigInt } from '@graphprotocol/graph-ts';
+import { Deposit } from '../generated/schema';
 
 export class Tranche {
   amount: BigDecimal;
@@ -41,6 +42,8 @@ let stakingDeadlineBeforeLaunchUnix = BigInt.fromI32(stakingDeadlineBeforeLaunch
 export let stakingDeadlineTimestamp = mainnetLaunchTimestamp.minus(stakingDeadlineBeforeLaunchUnix);
 let stakingPeriodDays = 183 as i32;
 
+// DEPOSIT
+
 export function getDepositTranches(vaultsGavBeforeDeposit: BigDecimal, investmentAmount: BigDecimal): Tranche[] {
   let tranchesDepositedTo: Tranche[] = [];
   let amountLeftToDeposit = investmentAmount;
@@ -73,12 +76,50 @@ export function getDepositTranches(vaultsGavBeforeDeposit: BigDecimal, investmen
   return tranchesDepositedTo;
 }
 
-export function getRedemptionTranches(trancheAmounts: BigDecimal[], redeemAmount: BigDecimal): Tranche[] {
+// REDEMPTION
+
+class RedemptionTranchesForDepositResponse {
+  tranches: Tranche[];
+  amountLeftToRedeem: BigDecimal;
+  depositId: string;
+
+  constructor(tranches: Tranche[], amountLeftToRedeem: BigDecimal, depositId: string) {
+    this.tranches = tranches;
+    this.amountLeftToRedeem = amountLeftToRedeem;
+    this.depositId = depositId;
+  }
+}
+
+export function getRedemptionTranchesForDeposits(
+  deposits: Deposit[],
+  redeemAmount: BigDecimal,
+): RedemptionTranchesForDepositResponse[] {
+  let redemptionTranchesForDeposits: RedemptionTranchesForDepositResponse[] = [];
+  let amountLeftToRedeem = redeemAmount;
+
+  for (let i = deposits.length - 1; i >= 0; i--) {
+    if (amountLeftToRedeem.equals(BigDecimal.zero())) {
+      break; // all amount redeemed
+    }
+
+    let redemptionTranchesForDeposit = getRedemptionTranchesForDeposit(deposits[i], amountLeftToRedeem);
+    redemptionTranchesForDeposits.push(redemptionTranchesForDeposit);
+
+    amountLeftToRedeem = amountLeftToRedeem.minus(redemptionTranchesForDeposit.amountLeftToRedeem);
+  }
+
+  return redemptionTranchesForDeposits;
+}
+
+function getRedemptionTranchesForDeposit(
+  deposit: Deposit,
+  redeemAmount: BigDecimal,
+): RedemptionTranchesForDepositResponse {
   let tranchesRedeemedFrom: Tranche[] = [];
   let amountLeftToRedeem = redeemAmount;
 
-  for (let i = trancheAmounts.length - 1; i >= 0; i--) {
-    let currentTrancheAmount = trancheAmounts[i];
+  for (let i = deposit.trancheAmounts.length - 1; i >= 0; i--) {
+    let currentTrancheAmount = deposit.trancheAmounts[i];
 
     // skip tranches without money deposited to
     if (currentTrancheAmount == BigDecimal.zero()) {
@@ -87,16 +128,41 @@ export function getRedemptionTranches(trancheAmounts: BigDecimal[], redeemAmount
 
     if (currentTrancheAmount >= amountLeftToRedeem) {
       tranchesRedeemedFrom.push(new Tranche(amountLeftToRedeem.neg(), i));
-      // we have redeemed all the funds, end the algorithm
-      break;
+      break; // we have redeemed all the funds, end the algorithm
     } else {
       tranchesRedeemedFrom.push(new Tranche(currentTrancheAmount.neg(), i));
       amountLeftToRedeem = amountLeftToRedeem.minus(currentTrancheAmount);
     }
   }
 
-  return tranchesRedeemedFrom;
+  return new RedemptionTranchesForDepositResponse(tranchesRedeemedFrom, amountLeftToRedeem, deposit.id);
 }
+
+export function getSumOfRedemptionTranches(
+  redemptionTranchesForDeposits: RedemptionTranchesForDepositResponse[],
+): Tranche[] {
+  let tranches: Tranche[] = [];
+
+  for (let i = 0; i < redemptionTranchesForDeposits.length; i++) {
+    let redemptionTranchesForDeposit = redemptionTranchesForDeposits[i].tranches;
+
+    for (let i = 0; i < redemptionTranchesForDeposit.length; i++) {
+      let redemptionTrancheForDeposit = redemptionTranchesForDeposit[i];
+
+      if (tranches.some((tranche) => tranche.id == redemptionTrancheForDeposit.id)) {
+        // check if trancheId already exists
+        let trancheIndex = tranches.findIndex((tranche) => tranche.id == redemptionTrancheForDeposit.id);
+        tranches[trancheIndex].amount = tranches[trancheIndex].amount.plus(redemptionTrancheForDeposit.amount); // if yes, add amount to existing trancheId
+      } else {
+        tranches.push(redemptionTrancheForDeposit); // if no, add new tranche
+      }
+    }
+  }
+
+  return tranches;
+}
+
+// REWARDS
 
 export class Claim {
   firstClaimAmount: BigDecimal;
