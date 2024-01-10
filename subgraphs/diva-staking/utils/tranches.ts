@@ -139,7 +139,7 @@ function getRedemptionTranchesForDeposit(
   return new RedemptionTranchesForDepositResponse(tranchesRedeemedFrom, amountLeftToRedeem, deposit);
 }
 
-let redemptionTrancheForDepositId: number; // as Closures are not implemented yet this is hack suggested by https://www.assemblyscript.org/status.html (check Closures in the table)
+let redemptionTrancheForDepositId: number; // as Closures are not implemented yet this is hack suggested by https://www.assemblyscript.org/status.html#on-closures
 export function getSumOfRedemptionTranches(
   redemptionTranchesForDeposits: RedemptionTranchesForDepositResponse[],
 ): Tranche[] {

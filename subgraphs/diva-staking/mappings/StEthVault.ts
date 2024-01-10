@@ -1,6 +1,8 @@
+import { createComptroller } from '../entities/Comptroller';
 import { AccessorSet } from '../generated/contracts/StEthVaultEvents';
-import * as vaultHandlers from '../utils/vaultHandlers';
+import { ComptrollerLibDataSource } from '../generated/templates';
 
 export function handleAccessorSet(event: AccessorSet): void {
-  vaultHandlers.handleAccessorSet(event.params.nextAccessor, event.address);
+  createComptroller(event.params.nextAccessor, event.address);
+  ComptrollerLibDataSource.create(event.params.nextAccessor);
 }

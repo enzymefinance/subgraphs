@@ -1,6 +1,6 @@
 import { Address, ethereum, BigDecimal } from '@graphprotocol/graph-ts';
 import { logCritical, uniqueEventId } from '@enzymefinance/subgraph-utils';
-import { Deposit, Depositor } from '../generated/schema';
+import { Deposit } from '../generated/schema';
 import { Tranche, tranchesConfig } from '../utils/tranches';
 
 function depositId(depositor: Address, event: ethereum.Event): string {
