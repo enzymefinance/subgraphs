@@ -1,23 +1,16 @@
-import { BigInt, Address, ethereum } from '@graphprotocol/graph-ts';
+import { Address, ethereum, BigDecimal } from '@graphprotocol/graph-ts';
 import { Depositor } from '../generated/schema';
-import { Tranche, tranchesConfig } from '../utils/tranches';
+import { logCritical } from '@enzymefinance/subgraph-utils';
 
 export function updateDepositor(
   depositor: Depositor,
-  tranches: Tranche[],
-  shares: BigInt,
+  shares: BigDecimal,
+  amount: BigDecimal,
   event: ethereum.Event,
 ): Depositor {
-  let trancheAmounts = depositor.trancheAmounts;
-  for (let i = 0; i < tranches.length; i++) {
-    let tranche = tranches[i];
-
-    // tranche.amount can be on minus when redeeming
-    trancheAmounts[tranche.id as i32] = trancheAmounts[tranche.id as i32].plus(tranche.amount);
-  }
-  depositor.trancheAmounts = trancheAmounts;
   depositor.updatedAt = event.block.timestamp.toI32();
   depositor.shares = depositor.shares.plus(shares);
+  depositor.amount = depositor.amount.plus(amount);
 
   depositor.save();
 
@@ -26,23 +19,14 @@ export function updateDepositor(
 
 export function createDepositor(
   depositorAddress: Address,
-  tranches: Tranche[],
-  shares: BigInt,
+  shares: BigDecimal,
+  amount: BigDecimal,
   event: ethereum.Event,
 ): Depositor {
-  let depositor = new Depositor(depositorAddress.toHex());
+  let depositor = new Depositor(depositorAddress);
 
-  // init array with zeroes
-  let trancheAmounts = tranchesConfig.map<BigInt>(() => BigInt.fromI32(0));
-
-  for (let i = 0; i < tranches.length; i++) {
-    let tranche = tranches[i];
-
-    trancheAmounts[tranche.id as i32] = tranche.amount;
-  }
-
-  depositor.trancheAmounts = trancheAmounts;
   depositor.shares = shares;
+  depositor.amount = amount;
   depositor.createdAt = event.block.timestamp.toI32();
   depositor.updatedAt = event.block.timestamp.toI32();
 
@@ -52,6 +36,29 @@ export function createDepositor(
 }
 
 export function getDepositor(depositorAddress: Address): Depositor | null {
-  let depositor = Depositor.load(depositorAddress.toHex());
+  let depositor = Depositor.load(depositorAddress);
   return depositor;
+}
+
+export function useDepositor(depositorAddress: Address): Depositor {
+  let depositor = Depositor.load(depositorAddress);
+  if (depositor == null) {
+    logCritical('Failed to load depositor {}.', [depositorAddress.toString()]);
+  }
+
+  return depositor as Depositor;
+}
+
+export function ensureDepositor(depositorAddress: Address, event: ethereum.Event): Depositor {
+  let depositor = Depositor.load(depositorAddress);
+  if (depositor) {
+    return depositor;
+  }
+  depositor = new Depositor(depositorAddress);
+  depositor.shares = BigDecimal.zero();
+  depositor.amount = BigDecimal.zero();
+  depositor.createdAt = event.block.timestamp.toI32();
+  depositor.updatedAt = event.block.timestamp.toI32();
+
+  return depositor as Depositor;
 }

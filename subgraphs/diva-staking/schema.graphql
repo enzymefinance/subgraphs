@@ -1,6 +1,7 @@
 type GeneralInfo @entity {
   id: ID!
   depositorsCounter: Int!
+  vaultsGav: BigDecimal! #GAV of stETH + ETH vaults
   updatedAt: Int!
 }
 
@@ -11,26 +12,29 @@ type Comptroller @entity {
 
 type Deposit @entity {
   id: ID!
-  depositor: Bytes!
-  amounts: [BigInt!]!
-  trancheIds: [Int!]!
+  trancheAmounts: [BigDecimal!]!
   createdAt: Int!
+  updatedAt: Int!
+  depositor: Depositor!
+  shares: BigDecimal!
 }
 
 type Depositor @entity {
-  id: ID!
-  trancheAmounts: [BigInt!]!
+  id: Bytes!
   updatedAt: Int!
   createdAt: Int!
-  shares: BigInt!
+  amount: BigDecimal!
+  shares: BigDecimal!
+  deposits: [Deposit!]! @derivedFrom(field: "depositor")
+  redemptions: [Redemption!]! @derivedFrom(field: "redeemer")
 }
 
 type Redemption @entity {
   id: ID!
-  redeemer: Bytes!
-  amounts: [BigInt!]! # amounts are stored as negatives
+  redeemer: Depositor!
+  amounts: [BigDecimal!]!
   trancheIds: [Int!]!
-  firstClaimAmount: BigInt!
-  secondClaimAmount: BigInt!
+  firstClaimAmount: BigDecimal!
+  secondClaimAmount: BigDecimal!
   createdAt: Int!
 }

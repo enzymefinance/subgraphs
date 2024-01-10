@@ -1,60 +1,60 @@
 import { createDeposit } from '../entities/Deposit';
 import { SharesBought, SharesRedeemed } from '../generated/contracts/ComptrollerLibEvents';
-import { calcVaultsGav } from '../utils/calcVaultsGav';
 import {
-  getAccruedRewards,
+  // getAccruedRewards,
   getDepositTranches,
   getRedemptionTranches,
-  stakingDeadlineTimestamp,
 } from '../utils/tranches';
-import { getDepositor, updateDepositor, createDepositor } from '../entities/Depositor';
+import { useDepositor, updateDepositor, createDepositor, getDepositor } from '../entities/Depositor';
 import { createRedemption } from '../entities/Redemption';
-import { store } from '@graphprotocol/graph-ts';
-import { updateDepositorCounter } from '../entities/GeneralInfo';
+import { BigDecimal } from '@graphprotocol/graph-ts';
+import { ensureGeneralInfo, updateDepositorCounter, updateVaulsGav } from '../entities/GeneralInfo';
+import { toBigDecimal } from '@enzymefinance/subgraph-utils';
 
 export function handleSharesBought(event: SharesBought): void {
-  // skip deposits after staking deadline
-  if (stakingDeadlineTimestamp < event.block.timestamp) {
-    return;
-  }
-
-  let vaultsGav = calcVaultsGav();
-  let investmentAmount = event.params.investmentAmount;
-  let vaultsGavBeforeDeposit = vaultsGav.minus(investmentAmount);
+  let vaultsGavBeforeDeposit = ensureGeneralInfo().vaultsGav;
+  let investmentAmount = toBigDecimal(event.params.investmentAmount, 18); // all possible to deposit assets has 18 decimals
+  updateVaulsGav(investmentAmount, event);
 
   let tranches = getDepositTranches(vaultsGavBeforeDeposit, investmentAmount);
 
   createDeposit(event.params.buyer, tranches, event);
 
   let depositor = getDepositor(event.params.buyer);
+  let sharesReceived = toBigDecimal(event.params.sharesReceived, 18);
 
   if (depositor) {
-    updateDepositor(depositor, tranches, event.params.sharesReceived, event);
+    updateDepositor(depositor, sharesReceived, investmentAmount, event);
   } else {
-    createDepositor(event.params.buyer, tranches, event.params.sharesReceived, event);
+    createDepositor(event.params.buyer, sharesReceived, investmentAmount, event);
     updateDepositorCounter(1, event); // increase by 1
   }
 }
 
 export function handleSharesRedeemed(event: SharesRedeemed): void {
-  let depositor = getDepositor(event.params.redeemer);
+  let depositor = useDepositor(event.params.redeemer);
 
-  if (depositor == null) {
-    return;
-  }
+  let sharesAmount = toBigDecimal(event.params.sharesAmount, 18);
 
-  // assumption that vault will redeem ETH/stETH/divaETH
-  let redeemAmount = event.params.receivedAssetAmounts[0];
+  let redeemAmount = depositor.amount.times(sharesAmount).div(depositor.shares);
 
-  let tranches = getRedemptionTranches(depositor.trancheAmounts, redeemAmount);
-  let accruedRewards = getAccruedRewards(event.block.timestamp, tranches);
+  updateVaulsGav(redeemAmount.neg(), event);
 
-  createRedemption(event.params.redeemer, tranches, accruedRewards, event);
+  let deposits = depositor.deposits.entries[0].key;
 
-  let updatedDepositor = updateDepositor(depositor, tranches, event.params.sharesAmount.neg(), event);
+  let tranches = getRedemptionTranches(depositor.deposits, redeemAmount);
+  // let accruedRewards = getAccruedRewards(event.block.timestamp, tranches);
 
-  if (updatedDepositor.shares.isZero()) {
-    store.remove('Depositor', updatedDepositor.id);
+  // createRedemption(event.params.redeemer, tranches, accruedRewards, event);
+
+  let updatedDepositor = updateDepositor(
+    depositor,
+    toBigDecimal(event.params.sharesAmount, 18).neg(),
+    redeemAmount.neg(),
+    event,
+  );
+
+  if (updatedDepositor.shares.equals(BigDecimal.zero())) {
     updateDepositorCounter(-1, event); // decrease by 1
   }
 }
