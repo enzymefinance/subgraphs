@@ -20,6 +20,7 @@ export function createDeposit(depositor: Address, tranches: Tranche[], event: et
   }
 
   deposit.trancheAmounts = trancheAmounts;
+  deposit.initialTrancheAmounts = trancheAmounts;
   deposit.depositor = depositor;
   deposit.createdAt = event.block.timestamp.toI32();
   deposit.updatedAt = event.block.timestamp.toI32();

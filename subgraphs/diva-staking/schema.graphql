@@ -12,6 +12,7 @@ type Comptroller @entity {
 
 type Deposit @entity {
   id: ID!
+  initialTrancheAmounts: [BigDecimal!]! #stored for historical purposes
   trancheAmounts: [BigDecimal!]!
   createdAt: Int!
   updatedAt: Int!
