@@ -28,7 +28,7 @@ export function handleSharesBought(event: SharesBought): void {
   let investmentAmount = toBigDecimal(event.params.investmentAmount, 18); // all possible to deposit assets has 18 decimals
 
   let vaultsGavBeforeDeposit = ensureGeneralInfo().vaultsGav;
-  updateVaultsGav(investmentAmount, event);
+  updateVaultsGav(investmentAmount, event); // we are using 1 ETH = 1 stETH rate
 
   let tranches = getDepositTranches(vaultsGavBeforeDeposit, investmentAmount);
 
