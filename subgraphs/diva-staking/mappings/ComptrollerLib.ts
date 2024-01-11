@@ -53,7 +53,9 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
 
   updateVaultsGav(redeemAmount.neg(), event);
 
-  let tranches = getRedemptionTranchesForDeposits(getDepositorDeposits(event.params.redeemer), redeemAmount);
+  let deposits = getDepositorDeposits(event.params.redeemer);
+
+  let tranches = getRedemptionTranchesForDeposits(deposits, redeemAmount);
   let accruedRewards = getAccruedRewards(event.block.timestamp, tranches);
   createRedemption(event.params.redeemer, getSumOfRedemptionTranches(tranches), accruedRewards, event);
   for (let i = 0; i < tranches.length; i++) {
