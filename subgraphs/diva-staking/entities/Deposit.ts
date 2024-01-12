@@ -1,4 +1,4 @@
-import { Address, ethereum, BigDecimal } from '@graphprotocol/graph-ts';
+import { Address, ethereum, BigDecimal, log } from '@graphprotocol/graph-ts';
 import { logCritical, uniqueEventId } from '@enzymefinance/subgraph-utils';
 import { Deposit } from '../generated/schema';
 import { Tranche, tranchesConfig } from '../utils/tranches';
@@ -46,8 +46,17 @@ export function decreaseTrancheAmountsOfDeposit(
   let deposit = useDeposit(depositId);
 
   let trancheAmounts = deposit.trancheAmounts;
+
   for (let i = 0; i < tranches.length; i++) {
     let tranche = tranches[i];
+    // if (deposit.depositor.equals(Address.fromString('0x7fc530b07d5b4ce4d31255a2ee23af254db12932'))) {
+    //   log.warning('trancheAmounts: {}, trancheId: {}, trancheAmount: {}, depositId: {}', [
+    //     trancheAmounts[tranche.id as i32].toString(),
+    //     tranche.id.toString(),
+    //     tranche.amount.toString(),
+    //     deposit.id,
+    //   ]);
+    // }
 
     trancheAmounts[tranche.id as i32] = trancheAmounts[tranche.id as i32].minus(tranche.amount);
   }

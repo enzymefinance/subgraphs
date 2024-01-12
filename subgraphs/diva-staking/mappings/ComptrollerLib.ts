@@ -55,12 +55,14 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
 
   let deposits = getDepositorDeposits(event.params.redeemer);
 
-  let tranches = getRedemptionTranchesForDeposits(deposits, redeemAmount);
-  let accruedRewards = getAccruedRewards(event.block.timestamp, tranches);
-  createRedemption(event.params.redeemer, getSumOfRedemptionTranches(tranches), accruedRewards, event);
-  for (let i = 0; i < tranches.length; i++) {
-    let tranche = tranches[i];
-    decreaseTrancheAmountsOfDeposit(tranche.deposit.id, tranche.tranches, event);
+  let redemptionTranches = getRedemptionTranchesForDeposits(deposits, redeemAmount);
+
+  let accruedRewards = getAccruedRewards(event.block.timestamp, redemptionTranches);
+  createRedemption(event.params.redeemer, getSumOfRedemptionTranches(redemptionTranches), accruedRewards, event);
+
+  for (let i = 0; i < redemptionTranches.length; i++) {
+    let redemptionTranche = redemptionTranches[i];
+    decreaseTrancheAmountsOfDeposit(redemptionTranche.deposit.id, redemptionTranche.tranches, event);
   }
 
   let updatedDepositor = updateDepositor(depositor, sharesAmount.neg(), redeemAmount.neg(), event);

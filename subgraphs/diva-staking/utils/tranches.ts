@@ -98,7 +98,7 @@ export function getRedemptionTranchesForDeposits(
   let redemptionTranchesForDeposits: RedemptionTranchesForDepositResponse[] = [];
   let amountLeftToRedeem = redeemAmount;
 
-  for (let i = deposits.length - 1; i >= 0; i--) {
+  for (let i = 0; i < deposits.length; i++) {
     if (amountLeftToRedeem.equals(BigDecimal.zero())) {
       break; // all amount redeemed
     }
@@ -153,12 +153,15 @@ export function getSumOfRedemptionTranches(
       let redemptionTrancheForDeposit = redemptionTranchesForDeposit[i];
 
       redemptionTrancheForDepositId = redemptionTrancheForDeposit.id;
+
+      // check if trancheId already exists
       if (tranches.some((tranche) => tranche.id == redemptionTrancheForDepositId)) {
-        // check if trancheId already exists
+        // if yes, add amount to existing trancheId
         let trancheIndex = tranches.findIndex((tranche) => tranche.id == redemptionTrancheForDepositId);
-        tranches[trancheIndex].amount = tranches[trancheIndex].amount.plus(redemptionTrancheForDeposit.amount); // if yes, add amount to existing trancheId
+        tranches[trancheIndex].amount = tranches[trancheIndex].amount.plus(redemptionTrancheForDeposit.amount);
       } else {
-        tranches.push(redemptionTrancheForDeposit); // if no, add new tranche
+        // if no, add new tranche
+        tranches.push(new Tranche(redemptionTrancheForDeposit.amount, redemptionTrancheForDeposit.id)); // even though redemptionTrancheForDeposit is also Tranche type we create new Tranche class in order not to have reference to old Tranche, that can result in bug when we modify tranche
       }
     }
   }
