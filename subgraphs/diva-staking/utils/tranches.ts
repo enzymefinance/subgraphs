@@ -34,7 +34,7 @@ export let tranchesConfig: TrancheConfig[] = [
   new TrancheConfig(BigDecimal.fromString('100000'), BigDecimal.fromString('1.3')),
 ];
 
-let mainnetLaunchTimestamp = BigInt.fromI32(1711839600); // 31st March 2024
+let mainnetLaunchTimestamp = BigInt.fromI32(1701388800); // 1st Dec 2023
 let dayUnix = BigInt.fromI32(60 * 60 * 24); // 1 day
 let cooldownDays: i32 = 30;
 let stakingStartBeforeLaunchDays: i32 = 30;
@@ -106,7 +106,7 @@ export function getRedemptionTranchesForDeposits(
     let redemptionTranchesForDeposit = getRedemptionTranchesForDeposit(deposits[i], amountLeftToRedeem);
     redemptionTranchesForDeposits.push(redemptionTranchesForDeposit);
 
-    amountLeftToRedeem = amountLeftToRedeem.minus(redemptionTranchesForDeposit.amountLeftToRedeem);
+    amountLeftToRedeem = redemptionTranchesForDeposit.amountLeftToRedeem;
   }
 
   return redemptionTranchesForDeposits;
@@ -129,6 +129,7 @@ function getRedemptionTranchesForDeposit(
 
     if (currentTrancheAmount >= amountLeftToRedeem) {
       tranchesRedeemedFrom.push(new Tranche(amountLeftToRedeem, i));
+      amountLeftToRedeem = BigDecimal.zero();
       break; // we have redeemed all the funds, end the algorithm
     } else {
       tranchesRedeemedFrom.push(new Tranche(currentTrancheAmount, i));
