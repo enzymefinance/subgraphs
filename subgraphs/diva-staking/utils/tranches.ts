@@ -1,4 +1,4 @@
-import { BigDecimal, BigInt } from '@graphprotocol/graph-ts';
+import { BigDecimal, BigInt, log } from '@graphprotocol/graph-ts';
 import { Deposit } from '../generated/schema';
 
 export class Tranche {
@@ -34,7 +34,7 @@ export let tranchesConfig: TrancheConfig[] = [
   new TrancheConfig(BigDecimal.fromString('100000'), BigDecimal.fromString('1.3')),
 ];
 
-let mainnetLaunchTimestamp = BigInt.fromI32(1701388800); // 1st Dec 2023
+let mainnetLaunchTimestamp = BigInt.fromI32(1711839600); // 31st March 2024
 let dayUnix = BigInt.fromI32(60 * 60 * 24); // 1 day
 let cooldownDays: i32 = 30;
 let stakingStartBeforeLaunchDays: i32 = 30;
@@ -185,9 +185,9 @@ class DaysStakedResponse {
   }
 }
 
-function getDaysStaked(depositUpdatedAt: BigInt, currentTimestamp: BigInt): DaysStakedResponse {
+function getDaysStaked(depositCreatedAt: BigInt, currentTimestamp: BigInt): DaysStakedResponse {
   let depositStakingStartTimestamp =
-    depositUpdatedAt < stakingStartTimestamp ? stakingStartTimestamp : depositUpdatedAt;
+    depositCreatedAt < stakingStartTimestamp ? stakingStartTimestamp : depositCreatedAt;
 
   if (currentTimestamp < cooldownEndTimestamp) {
     // redeem happened before cooldown period ended
@@ -241,8 +241,8 @@ export function getAccruedRewards(
   for (let i = 0; i < redemptionTranchesForDeposits.length; i++) {
     let redemptionTranchesForDeposit = redemptionTranchesForDeposits[i];
 
-    let updatedAt = BigInt.fromI64(redemptionTranchesForDeposit.deposit.updatedAt);
-    let daysStaked = getDaysStaked(updatedAt, currentTimestamp);
+    let createdAt = BigInt.fromI64(redemptionTranchesForDeposit.deposit.createdAt);
+    let daysStaked = getDaysStaked(createdAt, currentTimestamp);
 
     for (let i = 0; i < redemptionTranchesForDeposit.tranches.length; i++) {
       let tranche = redemptionTranchesForDeposit.tranches[i];

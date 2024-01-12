@@ -53,7 +53,7 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
 
   updateVaultsGav(redeemAmount.neg(), event);
 
-  let deposits = getDepositorDeposits(event.params.redeemer);
+  let deposits = getDepositorDeposits(event.params.redeemer).sort((a, b) => b.createdAt - a.createdAt);
 
   let redemptionTranches = getRedemptionTranchesForDeposits(deposits, redeemAmount);
 
