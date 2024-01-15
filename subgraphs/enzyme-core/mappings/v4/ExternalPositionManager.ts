@@ -1903,7 +1903,9 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let exitRequestId = stakeWiseStakingExitRequestId(stakingPosition, stakeWiseVaultToken, positionTicket);
       let exitRequest = useStakeWiseStakingExitRequest(exitRequestId);
 
-      const sharesBI = BigInt.fromString(exitRequest.shares.toString()).times(BigInt.fromI32(10).pow(18));
+      const sharesBI = BigInt.fromString(
+        exitRequest.shares.times(BigDecimal.fromString('1000000000000000000')).toString(),
+      );
 
       let stakeWiseV3EthVault = ExternalSdk.bind(stakeWiseVault);
       let amount = toBigDecimal(stakeWiseV3EthVault.convertToAssets(sharesBI), 18);
