@@ -18,9 +18,10 @@ import { createRedemption } from '../entities/Redemption';
 import { BigDecimal } from '@graphprotocol/graph-ts';
 import {
   ensureGeneralInfo,
-  updateDepositorCounter,
+  increaseDepositorCounter,
   increaseVaultsGav,
   decreaseVaultsGav,
+  decreaseDepositorCounter,
 } from '../entities/GeneralInfo';
 import { toBigDecimal } from '@enzymefinance/subgraph-utils';
 
@@ -45,7 +46,7 @@ export function handleSharesBought(event: SharesBought): void {
     updateDepositor(depositor, sharesReceived, investmentAmount, event);
   } else {
     createDepositor(event.params.buyer, sharesReceived, investmentAmount, event);
-    updateDepositorCounter(1, event); // increase by 1
+    increaseDepositorCounter(1, event);
   }
 }
 
@@ -72,6 +73,6 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
 
   let updatedDepositor = updateDepositor(depositor, sharesAmount.neg(), redeemAmount.neg(), event);
   if (updatedDepositor.shares.equals(BigDecimal.zero())) {
-    updateDepositorCounter(-1, event); // decrease by 1
+    decreaseDepositorCounter(-1, event);
   }
 }
