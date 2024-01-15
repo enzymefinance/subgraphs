@@ -1909,14 +1909,13 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let amount = toBigDecimal(stakeWiseV3EthVault.convertToAssets(sharesBI), 18);
 
       let assetAmount = createAssetAmount(wethAsset, amount, denominationAsset, 'stakewise-claim-exited-assets', event);
-      let shares = toBigDecimal(sharesBI, 18);
 
       createStakeWiseStakingPositionChange(
         event.params.externalPosition,
         'ClaimExitedAssets',
         stakeWiseVaultToken,
         assetAmount,
-        shares,
+        exitRequest.shares,
         vault,
         event,
       );
