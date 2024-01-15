@@ -16,7 +16,12 @@ import {
 } from '../entities/Depositor';
 import { createRedemption } from '../entities/Redemption';
 import { BigDecimal } from '@graphprotocol/graph-ts';
-import { ensureGeneralInfo, updateDepositorCounter, updateVaulsGav as updateVaultsGav } from '../entities/GeneralInfo';
+import {
+  ensureGeneralInfo,
+  updateDepositorCounter,
+  increaseVaultsGav,
+  decreaseVaultsGav,
+} from '../entities/GeneralInfo';
 import { toBigDecimal } from '@enzymefinance/subgraph-utils';
 
 export function handleSharesBought(event: SharesBought): void {
@@ -28,7 +33,7 @@ export function handleSharesBought(event: SharesBought): void {
   let investmentAmount = toBigDecimal(event.params.investmentAmount, 18); // all possible to deposit assets has 18 decimals
 
   let vaultsGavBeforeDeposit = ensureGeneralInfo().vaultsGav;
-  updateVaultsGav(investmentAmount, event); // we are using 1 ETH = 1 stETH rate
+  increaseVaultsGav(investmentAmount, event); // we are using 1 ETH = 1 stETH rate
 
   let tranches = getDepositTranches(vaultsGavBeforeDeposit, investmentAmount);
 
@@ -51,7 +56,7 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
 
   let redeemAmount = depositor.amount.times(sharesAmount).div(depositor.shares);
 
-  updateVaultsGav(redeemAmount.neg(), event);
+  decreaseVaultsGav(redeemAmount, event);
 
   let deposits = getDepositorDeposits(event.params.redeemer).sort((a, b) => b.createdAt - a.createdAt);
 

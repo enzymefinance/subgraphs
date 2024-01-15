@@ -54,7 +54,7 @@ export function getDepositTranches(vaultsGavBeforeDeposit: BigDecimal, investmen
     let currentTranche = tranchesConfig[i];
 
     // if gav is greater than tranche threshold skip that tranche
-    if (currentTranche.threshold < vaultsGav) {
+    if (currentTranche.threshold <= vaultsGav) {
       continue;
     }
 
@@ -265,8 +265,8 @@ export function getAccruedRewards(
 function getTrancheAccruedRewards(
   amount: BigDecimal,
   divPerEthPerDay: BigDecimal,
-  firstStepStakeDays: number,
-  secondStepDaysStaked: number,
+  firstStepStakeDays: i32,
+  secondStepDaysStaked: i32,
 ): Claim {
   let halfOfFirstClaimAmount = amount
     .times(divPerEthPerDay)
