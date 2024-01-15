@@ -3,6 +3,7 @@ import {
   createStakeWiseStakingExitRequest,
   ensureStakeWiseVaultToken,
   stakeWiseStakingExitRequestId,
+  useStakeWiseStakingExitRequest,
   useStakeWiseStakingPosition,
 } from '../../entities/StakeWiseStakingPosition';
 import {
@@ -32,7 +33,9 @@ export function handleExitRequestRemoved(event: ExitRequestRemoved): void {
   let stakeWiseVaultToken = ensureStakeWiseVaultToken(event.params.stakeWiseVaultAddress, event.address);
 
   let id = stakeWiseStakingExitRequestId(stakeWiseStakingPosition, stakeWiseVaultToken, event.params.positionTicket);
-  store.remove('StakeWiseStakingExitRequest', id);
+  let exitRequest = useStakeWiseStakingExitRequest(id);
+  exitRequest.removed = true;
+  exitRequest.save()
 }
 
 export function handleVaultTokenAdded(event: VaultTokenAdded): void {

@@ -15,7 +15,7 @@ import { useVault } from './Vault';
 export function useStakeWiseStakingPosition(id: string): StakeWiseStakingPosition {
   let position = StakeWiseStakingPosition.load(id);
   if (position == null) {
-    logCritical('Failed to load fund {}.', [id]);
+    logCritical('Failed to load stakewise staking position {}.', [id]);
   }
 
   return position as StakeWiseStakingPosition;
@@ -101,6 +101,7 @@ export function createStakeWiseStakingExitRequest(
   exitRequest.positionTicket = positionTicket;
   exitRequest.shares = shares;
   exitRequest.timestamp = timestamp;
+  exitRequest.removed = false;
   exitRequest.save();
 
   return exitRequest;
@@ -109,7 +110,7 @@ export function createStakeWiseStakingExitRequest(
 export function useStakeWiseStakingExitRequest(id: string): StakeWiseStakingExitRequest {
   let exitRequest = StakeWiseStakingExitRequest.load(id);
   if (exitRequest == null) {
-    logCritical('Failed to load fund {}.', [id]);
+    logCritical('Failed to load stakewise staking exit request {}.', [id]);
   }
 
   return exitRequest as StakeWiseStakingExitRequest;

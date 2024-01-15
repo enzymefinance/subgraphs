@@ -1588,6 +1588,7 @@ type StakeWiseStakingExitRequest @entity {
   positionTicket: BigInt!
   shares: BigDecimal!
   timestamp: Int!
+  removed: Boolean!
 }
 
 type UnknownExternalPosition implements ExternalPosition @entity {
