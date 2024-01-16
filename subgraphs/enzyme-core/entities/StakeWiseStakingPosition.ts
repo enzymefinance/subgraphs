@@ -100,8 +100,8 @@ export function createStakeWiseStakingExitRequest(
   exitRequest.stakeWiseVaultToken = stakeWiseVaultToken.id;
   exitRequest.positionTicket = positionTicket;
   exitRequest.shares = shares;
-  exitRequest.timestamp = timestamp;
-  exitRequest.removed = false;
+  exitRequest.createdAt = timestamp;
+  exitRequest.claimed = false;
   exitRequest.save();
 
   return exitRequest;

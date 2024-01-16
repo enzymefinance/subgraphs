@@ -34,8 +34,9 @@ export function handleExitRequestRemoved(event: ExitRequestRemoved): void {
 
   let id = stakeWiseStakingExitRequestId(stakeWiseStakingPosition, stakeWiseVaultToken, event.params.positionTicket);
   let exitRequest = useStakeWiseStakingExitRequest(id);
-  exitRequest.removed = true;
-  exitRequest.save()
+  exitRequest.claimed = true;
+  exitRequest.claimedAt = event.block.timestamp.toI32();
+  exitRequest.save();
 }
 
 export function handleVaultTokenAdded(event: VaultTokenAdded): void {

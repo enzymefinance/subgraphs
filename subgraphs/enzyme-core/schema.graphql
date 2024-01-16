@@ -1583,12 +1583,13 @@ type StakeWiseStakingPositionChange implements Activity & VaultActivity & Extern
 
 type StakeWiseStakingExitRequest @entity {
   id: ID!
+  createdAt: Int!
+  claimed: Boolean!
+  claimedAt: Int
   stakeWiseStakingPosition: StakeWiseStakingPosition!
   stakeWiseVaultToken: StakeWiseVaultToken!
   positionTicket: BigInt!
   shares: BigDecimal!
-  timestamp: Int!
-  removed: Boolean!
 }
 
 type UnknownExternalPosition implements ExternalPosition @entity {
