@@ -73,6 +73,6 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
 
   let updatedDepositor = updateDepositor(depositor, sharesAmount.neg(), redeemAmount.neg(), event);
   if (updatedDepositor.shares.equals(BigDecimal.zero())) {
-    decreaseDepositorCounter(-1, event);
+    decreaseDepositorCounter(1, event);
   }
 }

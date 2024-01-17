@@ -14,10 +14,10 @@ export function increaseDepositorCounter(numberOfNewDepositors: i32, event: ethe
   return generalInfo;
 }
 
-export function decreaseDepositorCounter(numberOfNewDepositors: i32, event: ethereum.Event): GeneralInfo {
+export function decreaseDepositorCounter(numberOfDepositors: i32, event: ethereum.Event): GeneralInfo {
   let generalInfo = ensureGeneralInfo();
 
-  generalInfo.depositorsCounterActive = (generalInfo.depositorsCounterActive - numberOfNewDepositors) as i32;
+  generalInfo.depositorsCounterActive = (generalInfo.depositorsCounterActive - numberOfDepositors) as i32;
   generalInfo.updatedAt = event.block.timestamp.toI32();
   generalInfo.save();
 
