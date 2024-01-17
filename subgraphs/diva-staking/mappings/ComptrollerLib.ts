@@ -15,7 +15,7 @@ import {
   getDepositorDeposits,
 } from '../entities/Depositor';
 import { createRedemption } from '../entities/Redemption';
-import { BigDecimal } from '@graphprotocol/graph-ts';
+import { Address, BigDecimal } from '@graphprotocol/graph-ts';
 import {
   ensureGeneralInfo,
   increaseDepositorCounter,
@@ -40,7 +40,7 @@ export function handleSharesBought(event: SharesBought): void {
   let tranches = getDepositTranches(vaultsGavBeforeDeposit, investmentAmount);
 
   let comptroller = useComptroller(event.address);
-  createDeposit(event.params.buyer, tranches, comptroller.vault, event);
+  createDeposit(event.params.buyer, tranches, Address.fromBytes(comptroller.vault), event);
 
   let depositor = getDepositor(event.params.buyer);
 
@@ -71,7 +71,7 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
     event.params.redeemer,
     getSumOfRedemptionTranches(redemptionTranches),
     accruedRewards,
-    comptroller.vault,
+    Address.fromBytes(comptroller.vault),
     event,
   );
 
