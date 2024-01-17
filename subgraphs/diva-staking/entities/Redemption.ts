@@ -11,11 +11,13 @@ export function createRedemption(
   redeemer: Address,
   tranches: Tranche[],
   accruedRewards: Claim,
+  vault: Address,
   event: ethereum.Event,
 ): Redemption {
   let redemption = new Redemption(redemptionId(redeemer, event));
 
   redemption.redeemer = redeemer;
+  redemption.vault = vault;
   redemption.amounts = tranches.map<BigDecimal>((tranche) => tranche.amount);
   redemption.trancheIds = tranches.map<i32>((tranche) => tranche.id as i32);
   redemption.firstClaimAmount = accruedRewards.firstClaimAmount;

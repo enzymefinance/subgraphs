@@ -24,6 +24,7 @@ import {
   decreaseDepositorCounter,
 } from '../entities/GeneralInfo';
 import { toBigDecimal } from '@enzymefinance/subgraph-utils';
+import { useComptroller } from '../entities/Comptroller';
 
 export function handleSharesBought(event: SharesBought): void {
   if (stakingEndTimestamp < event.block.timestamp) {
@@ -38,7 +39,8 @@ export function handleSharesBought(event: SharesBought): void {
 
   let tranches = getDepositTranches(vaultsGavBeforeDeposit, investmentAmount);
 
-  createDeposit(event.params.buyer, tranches, event);
+  let comptroller = useComptroller(event.address);
+  createDeposit(event.params.buyer, tranches, comptroller.vault, event);
 
   let depositor = getDepositor(event.params.buyer);
 
@@ -63,8 +65,15 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
 
   let redemptionTranches = getRedemptionTranchesForDeposits(deposits, redeemAmount);
 
+  let comptroller = useComptroller(event.address);
   let accruedRewards = getAccruedRewards(event.block.timestamp, redemptionTranches);
-  createRedemption(event.params.redeemer, getSumOfRedemptionTranches(redemptionTranches), accruedRewards, event);
+  createRedemption(
+    event.params.redeemer,
+    getSumOfRedemptionTranches(redemptionTranches),
+    accruedRewards,
+    comptroller.vault,
+    event,
+  );
 
   for (let i = 0; i < redemptionTranches.length; i++) {
     let redemptionTranche = redemptionTranches[i];

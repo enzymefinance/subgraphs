@@ -18,6 +18,7 @@ type Deposit @entity {
   createdAt: Int!
   updatedAt: Int!
   depositor: Depositor!
+  vault: Bytes!
 }
 
 type Depositor @entity {
@@ -38,4 +39,5 @@ type Redemption @entity {
   firstClaimAmount: BigDecimal!
   secondClaimAmount: BigDecimal!
   createdAt: Int!
+  vault: Bytes!
 }

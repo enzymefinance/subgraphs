@@ -7,7 +7,7 @@ function depositId(depositor: Address, event: ethereum.Event): string {
   return depositor.toHexString() + '/' + uniqueEventId(event);
 }
 
-export function createDeposit(depositor: Address, tranches: Tranche[], event: ethereum.Event): Deposit {
+export function createDeposit(depositor: Address, tranches: Tranche[], vault: Address, event: ethereum.Event): Deposit {
   let deposit = new Deposit(depositId(depositor, event));
 
   // init array with zeroes
@@ -22,6 +22,7 @@ export function createDeposit(depositor: Address, tranches: Tranche[], event: et
   deposit.trancheAmounts = trancheAmounts;
   deposit.initialTrancheAmounts = trancheAmounts;
   deposit.depositor = depositor;
+  deposit.vault = vault;
   deposit.createdAt = event.block.timestamp.toI32();
   deposit.updatedAt = event.block.timestamp.toI32();
   deposit.save();
