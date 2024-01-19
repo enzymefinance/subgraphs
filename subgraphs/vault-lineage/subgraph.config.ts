@@ -8,6 +8,7 @@ interface Variables {
 }
 
 const name = 'enzymefinance/vault-lineage';
+const hostedNetworkName = 'enzyme-vault-lineage';
 
 export const contexts: Contexts<Variables> = {
   ethereum: {

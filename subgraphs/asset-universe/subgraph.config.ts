@@ -33,6 +33,7 @@ interface Variables {
 }
 
 const name = 'enzymefinance/asset-universe';
+const hostedNetworkName = 'enzyme-asset-universe';
 
 const deployments = {
   ethereum: getEnvironment(Deployment.ETHEREUM, Version.SULU),

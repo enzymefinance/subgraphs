@@ -13,6 +13,7 @@ interface Variables {
 }
 
 const name = 'enzymefinance/vault-shares';
+const hostedNetworkName = 'enzyme-vault-shares';
 
 export const contexts: Contexts<Variables> = {
   ethereum: {
