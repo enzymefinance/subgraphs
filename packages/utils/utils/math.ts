@@ -25,8 +25,7 @@ export function fromBigDecimal(quantity: BigDecimal, decimals: i32 = 18): BigInt
 
   let resultAsString = quantity.times(multiplicator).toString();
 
-  // remove any superfluous decimals
-  if (resultAsString.indexOf('.') != -1) {
+  if (resultAsString.includes('.') == true) {
     logCritical('Cannot convert BigDecimal {} to BigInt using {} decimals.', [
       quantity.toString(),
       decimals.toString(),
