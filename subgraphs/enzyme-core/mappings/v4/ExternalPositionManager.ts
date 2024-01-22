@@ -1,4 +1,11 @@
-import { arrayUnique, logCritical, toBigDecimal, tuplePrefixBytes, ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
+import {
+  arrayUnique,
+  fromBigDecimal,
+  logCritical,
+  toBigDecimal,
+  tuplePrefixBytes,
+  ZERO_ADDRESS,
+} from '@enzymefinance/subgraph-utils';
 import { Address, Bytes, DataSourceContext, ethereum, crypto, BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 import { createAaveDebtPosition, createAaveDebtPositionChange } from '../../entities/AaveDebtPosition';
 import {
@@ -1903,9 +1910,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let exitRequestId = stakeWiseStakingExitRequestId(stakingPosition, stakeWiseVaultToken, positionTicket);
       let exitRequest = useStakeWiseStakingExitRequest(exitRequestId);
 
-      const sharesBI = BigInt.fromString(
-        exitRequest.shares.times(BigDecimal.fromString('1000000000000000000')).toString(),
-      );
+      const sharesBI = fromBigDecimal(exitRequest.shares);
 
       let stakeWiseV3EthVault = ExternalSdk.bind(stakeWiseVault);
       let amount = toBigDecimal(stakeWiseV3EthVault.convertToAssets(sharesBI), 18);

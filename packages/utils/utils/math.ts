@@ -1,5 +1,6 @@
 import { BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 import { UINT256_MAX, UINT256_MAX_BD, ZERO_BD, ZERO_BI } from '../constants';
+import { logCritical } from './logging';
 
 export function toBigDecimal(quantity: BigInt, decimals: i32 = 18): BigDecimal {
   if (quantity.equals(UINT256_MAX)) {
@@ -11,6 +12,28 @@ export function toBigDecimal(quantity: BigInt, decimals: i32 = 18): BigDecimal {
       .pow(decimals as u8)
       .toBigDecimal(),
   );
+}
+
+export function fromBigDecimal(quantity: BigDecimal, decimals: i32 = 18): BigInt {
+  if (quantity.equals(UINT256_MAX_BD)) {
+    return UINT256_MAX;
+  }
+
+  let multiplicator = BigInt.fromI32(10)
+    .pow(decimals as u8)
+    .toBigDecimal();
+
+  let resultAsString = quantity.times(multiplicator).toString();
+
+  // remove any superfluous decimals
+  if (resultAsString.indexOf('.') != -1) {
+    logCritical('Cannot convert BigDecimal {} to BigInt using {} decimals.', [
+      quantity.toString(),
+      decimals.toString(),
+    ]);
+  }
+
+  return BigInt.fromString(resultAsString);
 }
 
 export function minBigDecimal(values: BigDecimal[]): BigDecimal {
