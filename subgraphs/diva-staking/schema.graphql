@@ -32,7 +32,15 @@ interface Activity {
   vault: Bytes!
   depositor: Depositor!
   gavBeforeActivity: BigDecimal!
+  activityType: ActivityType!
   activityCounter: Int!
+  amount: BigDecimal!
+  trancheAmounts: [BigDecimal!]!
+}
+
+enum ActivityType {
+  Deposit
+  Redemption
 }
 
 type Deposit implements Activity @entity {
@@ -42,7 +50,9 @@ type Deposit implements Activity @entity {
   vault: Bytes!
   depositor: Depositor!
   gavBeforeActivity: BigDecimal!
+  activityType: ActivityType!
   activityCounter: Int!
+  amount: BigDecimal!
   initialTrancheAmounts: [BigDecimal!]! #stored for historical purposes
   trancheAmounts: [BigDecimal!]!
 }
@@ -53,9 +63,10 @@ type Redemption implements Activity @entity {
   vault: Bytes!
   depositor: Depositor!
   gavBeforeActivity: BigDecimal!
+  activityType: ActivityType!
   activityCounter: Int!
-  amounts: [BigDecimal!]!
-  trancheIds: [Int!]!
+  amount: BigDecimal!
+  trancheAmounts: [BigDecimal!]!
   firstClaimAmount: BigDecimal!
   secondClaimAmount: BigDecimal!
 }
