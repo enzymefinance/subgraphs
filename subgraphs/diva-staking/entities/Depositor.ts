@@ -46,8 +46,8 @@ export function ensureDepositor(depositorAddress: Address, event: ethereum.Event
   depositor.updatedAt = event.block.timestamp.toI32();
 
   let generalInfo = ensureGeneralInfo();
-  generalInfo.depositorsCounterActive = (generalInfo.depositorsCounterActive + 1) as i32;
-  generalInfo.depositorsCounterOverall = (generalInfo.depositorsCounterOverall + 1) as i32;
+  generalInfo.depositorsCounterActive = generalInfo.depositorsCounterActive + 1;
+  generalInfo.depositorsCounterOverall = generalInfo.depositorsCounterOverall + 1;
   generalInfo.updatedAt = event.block.timestamp.toI32();
   generalInfo.save();
 

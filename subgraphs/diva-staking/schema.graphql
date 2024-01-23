@@ -6,6 +6,11 @@ type GeneralInfo @entity {
   updatedAt: Int!
 }
 
+type ActivityCounter @entity {
+  id: ID!
+  count: Int!
+}
+
 type Comptroller @entity {
   id: ID!
   vault: Bytes!
@@ -28,6 +33,7 @@ interface Activity {
   vault: Bytes!
   depositor: Depositor!
   gavBeforeActivity: BigDecimal!
+  activityCounter: Int!
 }
 
 type Deposit implements Activity @entity {
@@ -37,6 +43,7 @@ type Deposit implements Activity @entity {
   vault: Bytes!
   depositor: Depositor!
   gavBeforeActivity: BigDecimal!
+  activityCounter: Int!
   initialTrancheAmounts: [BigDecimal!]! #stored for historical purposes
   trancheAmounts: [BigDecimal!]!
 }
@@ -47,6 +54,7 @@ type Redemption implements Activity @entity {
   vault: Bytes!
   depositor: Depositor!
   gavBeforeActivity: BigDecimal!
+  activityCounter: Int!
   amounts: [BigDecimal!]!
   trancheIds: [Int!]!
   firstClaimAmount: BigDecimal!

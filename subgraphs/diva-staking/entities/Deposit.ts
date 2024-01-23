@@ -2,6 +2,7 @@ import { Address, ethereum, BigDecimal, log } from '@graphprotocol/graph-ts';
 import { ZERO_BD, logCritical, uniqueEventId } from '@enzymefinance/subgraph-utils';
 import { Deposit, Depositor } from '../generated/schema';
 import { Tranche, tranchesConfig } from '../utils/tranches';
+import { getActivityCounter } from './ActivityCounter';
 
 function depositId(depositor: Depositor, event: ethereum.Event): string {
   return depositor.id.toHex() + '/' + uniqueEventId(event);
@@ -16,7 +17,7 @@ export function createDeposit(depositor: Depositor, tranches: Tranche[], gavBefo
   for (let i = 0; i < tranches.length; i++) {
     let tranche = tranches[i];
 
-    trancheAmounts[tranche.id as i32] = tranche.amount;
+    trancheAmounts[tranche.id] = tranche.amount;
   }
 
   deposit.trancheAmounts = trancheAmounts;
@@ -26,6 +27,7 @@ export function createDeposit(depositor: Depositor, tranches: Tranche[], gavBefo
   deposit.createdAt = event.block.timestamp.toI32();
   deposit.updatedAt = event.block.timestamp.toI32();
   deposit.gavBeforeActivity = gavBeforeActivity;
+  deposit.activityCounter = getActivityCounter()
   deposit.save();
 
   return deposit;

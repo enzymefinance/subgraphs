@@ -82,7 +82,7 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
   depositor.save();
 
   if (depositor.shares.equals(BigDecimal.zero())) {
-    generalInfo.depositorsCounterActive = (generalInfo.depositorsCounterActive - 1) as i32;
+    generalInfo.depositorsCounterActive = generalInfo.depositorsCounterActive - 1;
   }
 
   generalInfo.vaultsGav = generalInfo.vaultsGav.minus(redeemAmount);

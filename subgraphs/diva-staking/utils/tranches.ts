@@ -4,9 +4,9 @@ import { useDeposit } from '../entities/Deposit';
 
 export class Tranche {
   amount: BigDecimal;
-  id: number;
+  id: i32;
 
-  constructor(amount: BigDecimal, id: number) {
+  constructor(amount: BigDecimal, id: i32) {
     this.amount = amount;
     this.id = id;
   }
@@ -182,7 +182,7 @@ export function decreaseTrancheAmountsOfDeposit(
   for (let i = 0; i < tranches.length; i++) {
     let tranche = tranches[i];
 
-    trancheAmounts[tranche.id as i32] = trancheAmounts[tranche.id as i32].minus(tranche.amount);
+    trancheAmounts[tranche.id] = trancheAmounts[tranche.id].minus(tranche.amount);
   }
   deposit.trancheAmounts = trancheAmounts;
   deposit.updatedAt = updatedAt;
@@ -272,7 +272,7 @@ export function getAccruedRewards(
 
       let trancheAccruedRewards = getTrancheAccruedRewards(
         tranche.amount,
-        tranchesConfig[tranche.id as i32].divPerEthPerDay,
+        tranchesConfig[tranche.id].divPerEthPerDay,
         daysStaked.firstStepDays,
         daysStaked.secondStepDays,
       );
