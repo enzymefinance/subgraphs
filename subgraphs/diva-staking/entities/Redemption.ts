@@ -8,6 +8,7 @@ export function createRedemption(
   depositor: Depositor,
   tranches: Tranche[],
   accruedRewards: Claim,
+  shares: BigDecimal,
   gavBeforeActivity: BigDecimal,
   vault: Address,
   event: ethereum.Event,
@@ -23,9 +24,10 @@ export function createRedemption(
     let tranche = tranches[i];
 
     trancheAmounts[tranche.id] = tranche.amount;
-    amount = amount.plus(tranche.amount)
+    amount = amount.plus(tranche.amount);
   }
 
+  redemption.shares = shares;
   redemption.amount = amount.neg();
   redemption.trancheAmounts = trancheAmounts;
   redemption.depositor = depositor.id;

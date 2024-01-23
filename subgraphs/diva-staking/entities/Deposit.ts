@@ -7,6 +7,7 @@ import { increaseCounter } from './Counter';
 export function createDeposit(
   depositor: Depositor,
   tranches: Tranche[],
+  shares: BigDecimal,
   gavBeforeActivity: BigDecimal,
   vault: Address,
   event: ethereum.Event,
@@ -25,7 +26,9 @@ export function createDeposit(
     amount = amount.plus(tranche.amount);
   }
 
+  deposit.shares = shares;
   deposit.amount = amount;
+  deposit.initialAmount = amount;
   deposit.trancheAmounts = trancheAmounts;
   deposit.initialTrancheAmounts = trancheAmounts;
   deposit.depositor = depositor.id;

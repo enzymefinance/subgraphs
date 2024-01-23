@@ -51,7 +51,7 @@ export function handleSharesBought(event: SharesBought): void {
 
   let tranches = getDepositTranches(gavBeforeActivity, investmentAmount);
 
-  createDeposit(depositor, tranches, gavBeforeActivity, Address.fromBytes(comptroller.vault), event);
+  createDeposit(depositor, tranches, sharesReceived, gavBeforeActivity, Address.fromBytes(comptroller.vault), event);
 
   increaseCounter(depositsCounterId, timestamp);
   increaseAmount(sumOfDepositsAmountId, investmentAmount, timestamp);
@@ -79,6 +79,7 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
     depositor,
     getSumOfRedemptionTranches(redemptionTranches),
     accruedRewards,
+    sharesAmount,
     gavBeforeActivity,
     Address.fromBytes(comptroller.vault),
     event,

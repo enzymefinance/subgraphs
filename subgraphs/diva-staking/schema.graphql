@@ -34,6 +34,7 @@ interface Activity {
   gavBeforeActivity: BigDecimal!
   activityType: ActivityType!
   activityCounter: Int!
+  shares: BigDecimal!
   amount: BigDecimal!
   trancheAmounts: [BigDecimal!]!
 }
@@ -52,6 +53,8 @@ type Deposit implements Activity @entity {
   gavBeforeActivity: BigDecimal!
   activityType: ActivityType!
   activityCounter: Int!
+  shares: BigDecimal!
+  initialAmount: BigDecimal!
   amount: BigDecimal!
   initialTrancheAmounts: [BigDecimal!]! #stored for historical purposes
   trancheAmounts: [BigDecimal!]!
@@ -65,6 +68,7 @@ type Redemption implements Activity @entity {
   gavBeforeActivity: BigDecimal!
   activityType: ActivityType!
   activityCounter: Int!
+  shares: BigDecimal!
   amount: BigDecimal!
   trancheAmounts: [BigDecimal!]!
   firstClaimAmount: BigDecimal!

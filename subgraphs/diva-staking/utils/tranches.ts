@@ -174,12 +174,16 @@ export function decreaseTrancheAmountsOfDeposit(depositId: string, tranches: Tra
   let deposit = useDeposit(depositId);
 
   let trancheAmounts = deposit.trancheAmounts;
+  let amount = deposit.amount;
 
   for (let i = 0; i < tranches.length; i++) {
     let tranche = tranches[i];
 
     trancheAmounts[tranche.id] = trancheAmounts[tranche.id].minus(tranche.amount);
+    amount = amount.minus(tranche.amount);
   }
+
+  deposit.amount = amount;
   deposit.trancheAmounts = trancheAmounts;
   deposit.updatedAt = updatedAt;
   deposit.save();
