@@ -11,7 +11,7 @@ export function createTrancheAmount(
   endStakingAt: i32,
   event: ethereum.Event,
 ): TrancheAmount {
-  let trancheAmount = new TrancheAmount(uniqueEventId(event));
+  let trancheAmount = new TrancheAmount(uniqueEventId(event, trancheId.toString()));
 
   let accruedRewards = getAccruedRewardsForTrancheAmount(
     amount,
