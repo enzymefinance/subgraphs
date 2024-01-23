@@ -11,33 +11,44 @@ type Comptroller @entity {
   vault: Bytes!
 }
 
-type Deposit @entity {
-  id: ID!
-  initialTrancheAmounts: [BigDecimal!]! #stored for historical purposes
-  trancheAmounts: [BigDecimal!]!
-  createdAt: Int!
-  updatedAt: Int!
-  depositor: Depositor!
-  vault: Bytes!
-}
-
 type Depositor @entity {
   id: Bytes!
   updatedAt: Int!
   createdAt: Int!
   amount: BigDecimal!
   shares: BigDecimal!
+  activities: [Activity!]! @derivedFrom(field: "depositor")
   deposits: [Deposit!]! @derivedFrom(field: "depositor")
-  redemptions: [Redemption!]! @derivedFrom(field: "redeemer")
+  redemptions: [Redemption!]! @derivedFrom(field: "depositor")
 }
 
-type Redemption @entity {
+interface Activity {
   id: ID!
-  redeemer: Depositor!
+  createdAt: Int!
+  vault: Bytes!
+  depositor: Depositor!
+  gavBeforeActivity: BigDecimal!
+}
+
+type Deposit implements Activity @entity {
+  id: ID!
+  createdAt: Int!
+  updatedAt: Int!
+  vault: Bytes!
+  depositor: Depositor!
+  gavBeforeActivity: BigDecimal!
+  initialTrancheAmounts: [BigDecimal!]! #stored for historical purposes
+  trancheAmounts: [BigDecimal!]!
+}
+
+type Redemption implements Activity @entity {
+  id: ID!
+  createdAt: Int!
+  vault: Bytes!
+  depositor: Depositor!
+  gavBeforeActivity: BigDecimal!
   amounts: [BigDecimal!]!
   trancheIds: [Int!]!
   firstClaimAmount: BigDecimal!
   secondClaimAmount: BigDecimal!
-  createdAt: Int!
-  vault: Bytes!
 }

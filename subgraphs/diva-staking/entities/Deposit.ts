@@ -1,13 +1,13 @@
 import { Address, ethereum, BigDecimal, log } from '@graphprotocol/graph-ts';
-import { logCritical, uniqueEventId } from '@enzymefinance/subgraph-utils';
-import { Deposit } from '../generated/schema';
+import { ZERO_BD, logCritical, uniqueEventId } from '@enzymefinance/subgraph-utils';
+import { Deposit, Depositor } from '../generated/schema';
 import { Tranche, tranchesConfig } from '../utils/tranches';
 
-function depositId(depositor: Address, event: ethereum.Event): string {
-  return depositor.toHexString() + '/' + uniqueEventId(event);
+function depositId(depositor: Depositor, event: ethereum.Event): string {
+  return depositor.id.toHex() + '/' + uniqueEventId(event);
 }
 
-export function createDeposit(depositor: Address, tranches: Tranche[], vault: Address, event: ethereum.Event): Deposit {
+export function createDeposit(depositor: Depositor, tranches: Tranche[], gavBeforeActivity: BigDecimal, vault: Address, event: ethereum.Event): Deposit {
   let deposit = new Deposit(depositId(depositor, event));
 
   // init array with zeroes
@@ -21,10 +21,11 @@ export function createDeposit(depositor: Address, tranches: Tranche[], vault: Ad
 
   deposit.trancheAmounts = trancheAmounts;
   deposit.initialTrancheAmounts = trancheAmounts;
-  deposit.depositor = depositor;
+  deposit.depositor = depositor.id;
   deposit.vault = vault;
   deposit.createdAt = event.block.timestamp.toI32();
   deposit.updatedAt = event.block.timestamp.toI32();
+  deposit.gavBeforeActivity = gavBeforeActivity;
   deposit.save();
 
   return deposit;
@@ -39,23 +40,3 @@ export function useDeposit(depositId: string): Deposit {
   return deposit as Deposit;
 }
 
-export function decreaseTrancheAmountsOfDeposit(
-  depositId: string,
-  tranches: Tranche[],
-  event: ethereum.Event,
-): Deposit {
-  let deposit = useDeposit(depositId);
-
-  let trancheAmounts = deposit.trancheAmounts;
-
-  for (let i = 0; i < tranches.length; i++) {
-    let tranche = tranches[i];
-
-    trancheAmounts[tranche.id as i32] = trancheAmounts[tranche.id as i32].minus(tranche.amount);
-  }
-  deposit.trancheAmounts = trancheAmounts;
-  deposit.updatedAt = event.block.timestamp.toI32();
-  deposit.save();
-
-  return deposit;
-}

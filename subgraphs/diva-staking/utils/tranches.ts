@@ -1,5 +1,6 @@
 import { BigDecimal, BigInt, log } from '@graphprotocol/graph-ts';
 import { Deposit } from '../generated/schema';
+import { useDeposit } from '../entities/Deposit';
 
 export class Tranche {
   amount: BigDecimal;
@@ -168,6 +169,28 @@ export function getSumOfRedemptionTranches(
 
   return tranches;
 }
+
+export function decreaseTrancheAmountsOfDeposit(
+  depositId: string,
+  tranches: Tranche[],
+  updatedAt: i32,
+): Deposit {
+  let deposit = useDeposit(depositId);
+
+  let trancheAmounts = deposit.trancheAmounts;
+
+  for (let i = 0; i < tranches.length; i++) {
+    let tranche = tranches[i];
+
+    trancheAmounts[tranche.id as i32] = trancheAmounts[tranche.id as i32].minus(tranche.amount);
+  }
+  deposit.trancheAmounts = trancheAmounts;
+  deposit.updatedAt = updatedAt;
+  deposit.save();
+
+  return deposit;
+}
+
 
 // REWARDS
 

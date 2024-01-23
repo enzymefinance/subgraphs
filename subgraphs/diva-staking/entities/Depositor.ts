@@ -2,21 +2,8 @@ import { Address, ethereum, BigDecimal, log } from '@graphprotocol/graph-ts';
 import { Deposit, DepositLoader, Depositor } from '../generated/schema';
 import { logCritical } from '@enzymefinance/subgraph-utils';
 import { useDeposit } from './Deposit';
+import { ensureGeneralInfo } from './GeneralInfo';
 
-export function updateDepositor(
-  depositor: Depositor,
-  shares: BigDecimal,
-  amount: BigDecimal,
-  event: ethereum.Event,
-): Depositor {
-  depositor.updatedAt = event.block.timestamp.toI32();
-  depositor.shares = depositor.shares.plus(shares);
-  depositor.amount = depositor.amount.plus(amount);
-
-  depositor.save();
-
-  return depositor;
-}
 
 export function createDepositor(
   depositorAddress: Address,
@@ -36,11 +23,6 @@ export function createDepositor(
   return depositor;
 }
 
-export function getDepositor(depositorAddress: Address): Depositor | null {
-  let depositor = Depositor.load(depositorAddress);
-  return depositor;
-}
-
 export function useDepositor(depositorAddress: Address): Depositor {
   let depositor = Depositor.load(depositorAddress);
   if (depositor == null) {
@@ -52,19 +34,22 @@ export function useDepositor(depositorAddress: Address): Depositor {
 
 export function ensureDepositor(depositorAddress: Address, event: ethereum.Event): Depositor {
   let depositor = Depositor.load(depositorAddress);
+
   if (depositor) {
     return depositor;
   }
+
   depositor = new Depositor(depositorAddress);
   depositor.shares = BigDecimal.zero();
   depositor.amount = BigDecimal.zero();
   depositor.createdAt = event.block.timestamp.toI32();
   depositor.updatedAt = event.block.timestamp.toI32();
 
-  return depositor as Depositor;
-}
+  let generalInfo = ensureGeneralInfo();
+  generalInfo.depositorsCounterActive = (generalInfo.depositorsCounterActive + 1) as i32;
+  generalInfo.depositorsCounterOverall = (generalInfo.depositorsCounterOverall + 1) as i32;
+  generalInfo.updatedAt = event.block.timestamp.toI32();
+  generalInfo.save();
 
-export function getDepositorDeposits(depositorAddress: Address): Deposit[] {
-  let depositor = useDepositor(depositorAddress);
-  return depositor.deposits.load();
+  return depositor as Depositor;
 }

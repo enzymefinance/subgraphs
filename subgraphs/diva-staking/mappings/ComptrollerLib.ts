@@ -1,6 +1,7 @@
-import { createDeposit, decreaseTrancheAmountsOfDeposit } from '../entities/Deposit';
+import { createDeposit } from '../entities/Deposit';
 import { SharesBought, SharesRedeemed } from '../generated/contracts/ComptrollerLibEvents';
 import {
+  decreaseTrancheAmountsOfDeposit,
   getAccruedRewards,
   getDepositTranches,
   getRedemptionTranchesForDeposits,
@@ -9,19 +10,12 @@ import {
 } from '../utils/tranches';
 import {
   useDepositor,
-  updateDepositor,
-  createDepositor,
-  getDepositor,
-  getDepositorDeposits,
+  ensureDepositor,
 } from '../entities/Depositor';
 import { createRedemption } from '../entities/Redemption';
 import { Address, BigDecimal } from '@graphprotocol/graph-ts';
 import {
   ensureGeneralInfo,
-  increaseDepositorCounter,
-  increaseVaultsGav,
-  decreaseVaultsGav,
-  decreaseDepositorCounter,
 } from '../entities/GeneralInfo';
 import { toBigDecimal } from '@enzymefinance/subgraph-utils';
 import { useComptroller } from '../entities/Comptroller';
@@ -34,22 +28,22 @@ export function handleSharesBought(event: SharesBought): void {
   let sharesReceived = toBigDecimal(event.params.sharesReceived, 18);
   let investmentAmount = toBigDecimal(event.params.investmentAmount, 18); // all possible to deposit assets has 18 decimals
 
-  let vaultsGavBeforeDeposit = ensureGeneralInfo().vaultsGav;
-  increaseVaultsGav(investmentAmount, event); // we are using 1 ETH = 1 stETH rate
-
-  let tranches = getDepositTranches(vaultsGavBeforeDeposit, investmentAmount);
+  let generalInfo = ensureGeneralInfo();
 
   let comptroller = useComptroller(event.address);
-  createDeposit(event.params.buyer, tranches, Address.fromBytes(comptroller.vault), event);
 
-  let depositor = getDepositor(event.params.buyer);
+  let depositor = ensureDepositor(event.params.buyer, event);
+  depositor.shares = depositor.shares.plus(sharesReceived);
+  depositor.amount = depositor.amount.plus(investmentAmount)
+  depositor.save();
 
-  if (depositor) {
-    updateDepositor(depositor, sharesReceived, investmentAmount, event);
-  } else {
-    createDepositor(event.params.buyer, sharesReceived, investmentAmount, event);
-    increaseDepositorCounter(1, event);
-  }
+  let tranches = getDepositTranches(generalInfo.vaultsGav, investmentAmount);
+
+  createDeposit(depositor, tranches, generalInfo.vaultsGav, Address.fromBytes(comptroller.vault), event);
+
+  generalInfo.vaultsGav = generalInfo.vaultsGav.plus(investmentAmount);
+  generalInfo.updatedAt = event.block.timestamp.toI32();
+  generalInfo.save();
 }
 
 export function handleSharesRedeemed(event: SharesRedeemed): void {
@@ -59,29 +53,39 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
 
   let redeemAmount = depositor.amount.times(sharesAmount).div(depositor.shares);
 
-  decreaseVaultsGav(redeemAmount, event);
+  let generalInfo = ensureGeneralInfo();
 
-  let deposits = getDepositorDeposits(event.params.redeemer).sort((a, b) => b.createdAt - a.createdAt);
+  let deposits = depositor.deposits.load().sort((a, b) => b.createdAt - a.createdAt);
 
   let redemptionTranches = getRedemptionTranchesForDeposits(deposits, redeemAmount);
 
   let comptroller = useComptroller(event.address);
   let accruedRewards = getAccruedRewards(event.block.timestamp, redemptionTranches);
+
   createRedemption(
-    event.params.redeemer,
+    depositor,
     getSumOfRedemptionTranches(redemptionTranches),
     accruedRewards,
+    generalInfo.vaultsGav,
     Address.fromBytes(comptroller.vault),
     event,
   );
 
   for (let i = 0; i < redemptionTranches.length; i++) {
     let redemptionTranche = redemptionTranches[i];
-    decreaseTrancheAmountsOfDeposit(redemptionTranche.deposit.id, redemptionTranche.tranches, event);
+    decreaseTrancheAmountsOfDeposit(redemptionTranche.deposit.id, redemptionTranche.tranches, event.block.timestamp.toI32());
   }
 
-  let updatedDepositor = updateDepositor(depositor, sharesAmount.neg(), redeemAmount.neg(), event);
-  if (updatedDepositor.shares.equals(BigDecimal.zero())) {
-    decreaseDepositorCounter(1, event);
+  depositor.shares = depositor.shares.minus(sharesAmount);
+  depositor.amount = depositor.amount.minus(redeemAmount);
+  depositor.updatedAt = event.block.timestamp.toI32()
+  depositor.save();
+
+  if (depositor.shares.equals(BigDecimal.zero())) {
+    generalInfo.depositorsCounterActive = (generalInfo.depositorsCounterActive - 1) as i32;
   }
+
+  generalInfo.vaultsGav = generalInfo.vaultsGav.minus(redeemAmount);
+  generalInfo.updatedAt = event.block.timestamp.toI32();
+  generalInfo.save();
 }
