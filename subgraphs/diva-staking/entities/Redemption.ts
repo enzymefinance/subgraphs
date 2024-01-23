@@ -26,7 +26,7 @@ export function createRedemption(
     amount = amount.plus(tranche.amount)
   }
 
-  redemption.amount = amount;
+  redemption.amount = amount.neg();
   redemption.trancheAmounts = trancheAmounts;
   redemption.depositor = depositor.id;
   redemption.vault = vault;
