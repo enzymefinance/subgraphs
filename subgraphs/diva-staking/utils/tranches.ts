@@ -1,6 +1,7 @@
-import { BigDecimal, BigInt, log } from '@graphprotocol/graph-ts';
+import { BigDecimal } from '@graphprotocol/graph-ts';
 import { Deposit } from '../generated/schema';
 import { useDeposit } from '../entities/Deposit';
+import { ZERO_BD } from '@enzymefinance/subgraph-utils';
 
 export class Tranche {
   amount: BigDecimal;
@@ -35,15 +36,6 @@ export let tranchesConfig: TrancheConfig[] = [
   new TrancheConfig(BigDecimal.fromString('100000'), BigDecimal.fromString('1.3')),
 ];
 
-let mainnetLaunchTimestamp = BigInt.fromI32(1711839600); // 31st March 2024
-let dayUnix = BigInt.fromI32(60 * 60 * 24); // 1 day
-let cooldownDays: i32 = 30;
-let stakingStartBeforeLaunchDays: i32 = 30;
-let stakingStartTimestamp = mainnetLaunchTimestamp.minus(BigInt.fromI32(stakingStartBeforeLaunchDays).times(dayUnix));
-let cooldownEndTimestamp = mainnetLaunchTimestamp.plus(BigInt.fromI32(cooldownDays).times(dayUnix));
-let stakingPeriodDays: i32 = 183;
-export let stakingEndTimestamp = stakingStartTimestamp.plus(BigInt.fromI32(stakingPeriodDays).times(dayUnix));
-
 // DEPOSIT
 
 export function getDepositTranches(vaultsGavBeforeDeposit: BigDecimal, investmentAmount: BigDecimal): Tranche[] {
@@ -59,10 +51,8 @@ export function getDepositTranches(vaultsGavBeforeDeposit: BigDecimal, investmen
       continue;
     }
 
-    let vaultsGavAndAmountLeftToClassify = vaultsGav.plus(amountLeftToDeposit);
-
-    // check if invested amount left is lower than threshold, if yes then full investment amount left belongs to that tranche completly
-    if (currentTranche.threshold >= vaultsGavAndAmountLeftToClassify) {
+    // check if invested amount left is lower than threshold, if yes then full investment amount left belongs to that tranche completely
+    if (currentTranche.threshold >= vaultsGav.plus(amountLeftToDeposit)) {
       tranchesDepositedTo.push(new Tranche(amountLeftToDeposit, i));
       break;
     }
@@ -80,7 +70,7 @@ export function getDepositTranches(vaultsGavBeforeDeposit: BigDecimal, investmen
 
 // REDEMPTION
 
-class RedemptionTranchesForDepositResponse {
+export class RedemptionTranchesForDepositResponse {
   tranches: Tranche[];
   amountLeftToRedeem: BigDecimal;
   deposit: Deposit;
@@ -92,19 +82,22 @@ class RedemptionTranchesForDepositResponse {
   }
 }
 
-export function getRedemptionTranchesForDeposits(
+export function getRedemptionTranchesForAllDeposits(
   deposits: Deposit[],
   redeemAmount: BigDecimal,
 ): RedemptionTranchesForDepositResponse[] {
   let redemptionTranchesForDeposits: RedemptionTranchesForDepositResponse[] = [];
   let amountLeftToRedeem = redeemAmount;
 
+  // sort deposits by creation date descending (last deposit will be used first for redemption)
+  deposits = deposits.sort((a, b) => b.createdAt - a.createdAt);
+
   for (let i = 0; i < deposits.length; i++) {
-    if (amountLeftToRedeem.equals(BigDecimal.zero())) {
+    if (amountLeftToRedeem.equals(ZERO_BD)) {
       break; // all amount redeemed
     }
 
-    let redemptionTranchesForDeposit = getRedemptionTranchesForDeposit(deposits[i], amountLeftToRedeem);
+    let redemptionTranchesForDeposit = getRedemptionTranchesForSingleDeposit(deposits[i], amountLeftToRedeem);
     redemptionTranchesForDeposits.push(redemptionTranchesForDeposit);
 
     amountLeftToRedeem = redemptionTranchesForDeposit.amountLeftToRedeem;
@@ -113,25 +106,26 @@ export function getRedemptionTranchesForDeposits(
   return redemptionTranchesForDeposits;
 }
 
-function getRedemptionTranchesForDeposit(
+function getRedemptionTranchesForSingleDeposit(
   deposit: Deposit,
   redeemAmount: BigDecimal,
 ): RedemptionTranchesForDepositResponse {
   let tranchesRedeemedFrom: Tranche[] = [];
   let amountLeftToRedeem = redeemAmount;
 
+  // redeem from highest tranches (with least rewards) first
   for (let i = deposit.trancheAmounts.length - 1; i >= 0; i--) {
     let currentTrancheAmount = deposit.trancheAmounts[i];
 
     // skip tranches without money deposited to
-    if (currentTrancheAmount == BigDecimal.zero()) {
+    if (currentTrancheAmount.equals(ZERO_BD)) {
       continue;
     }
 
     if (currentTrancheAmount >= amountLeftToRedeem) {
       tranchesRedeemedFrom.push(new Tranche(amountLeftToRedeem, i));
-      amountLeftToRedeem = BigDecimal.zero();
-      break; // we have redeemed all the funds, end the algorithm
+      amountLeftToRedeem = ZERO_BD;
+      break; // we have redeemed all the funds
     } else {
       tranchesRedeemedFrom.push(new Tranche(currentTrancheAmount, i));
       amountLeftToRedeem = amountLeftToRedeem.minus(currentTrancheAmount);
@@ -141,28 +135,35 @@ function getRedemptionTranchesForDeposit(
   return new RedemptionTranchesForDepositResponse(tranchesRedeemedFrom, amountLeftToRedeem, deposit);
 }
 
-let redemptionTrancheForDepositId: number; // as Closures are not implemented yet this is hack suggested by https://www.assemblyscript.org/status.html#on-closures
-export function getSumOfRedemptionTranches(
-  redemptionTranchesForDeposits: RedemptionTranchesForDepositResponse[],
+export function getAggregatedRedemptionTranches(
+  redemptionTranchesForAllDeposits: RedemptionTranchesForDepositResponse[],
 ): Tranche[] {
   let tranches: Tranche[] = [];
 
-  for (let i = 0; i < redemptionTranchesForDeposits.length; i++) {
-    let redemptionTranchesForDeposit = redemptionTranchesForDeposits[i].tranches;
+  for (let i = 0; i < redemptionTranchesForAllDeposits.length; i++) {
+    let redemptionTranchesForSingleDeposit = redemptionTranchesForAllDeposits[i].tranches;
 
-    for (let i = 0; i < redemptionTranchesForDeposit.length; i++) {
-      let redemptionTrancheForDeposit = redemptionTranchesForDeposit[i];
+    for (let j = 0; j < redemptionTranchesForSingleDeposit.length; j++) {
+      let singleRedemptionTrancheForSingleDeposit = redemptionTranchesForSingleDeposit[j];
 
-      redemptionTrancheForDepositId = redemptionTrancheForDeposit.id;
+      // check if tranche already exists
+      let trancheAlreadyExists = false;
+      for (let k = 0; k < tranches.length; k++) {
+        let tranche = tranches[k];
 
-      // check if trancheId already exists
-      if (tranches.some((tranche) => tranche.id == redemptionTrancheForDepositId)) {
-        // if yes, add amount to existing trancheId
-        let trancheIndex = tranches.findIndex((tranche) => tranche.id == redemptionTrancheForDepositId);
-        tranches[trancheIndex].amount = tranches[trancheIndex].amount.plus(redemptionTrancheForDeposit.amount);
-      } else {
-        // if no, add new tranche
-        tranches.push(new Tranche(redemptionTrancheForDeposit.amount, redemptionTrancheForDeposit.id)); // even though redemptionTrancheForDeposit is also Tranche type we create new Tranche class in order not to have reference to old Tranche, that can result in bug when we modify tranche
+        if (tranche.id === singleRedemptionTrancheForSingleDeposit.id) {
+          tranches[k].amount = tranches[k].amount.plus(singleRedemptionTrancheForSingleDeposit.amount);
+          trancheAlreadyExists = true;
+          break;
+        }
+      }
+
+      if (trancheAlreadyExists == false) {
+        // even though redemptionTrancheForDeposit is also Tranche type we create new Tranche class in order not to have reference to old Tranche,
+        // which could result in bug when we modify tranche
+        tranches.push(
+          new Tranche(singleRedemptionTrancheForSingleDeposit.amount, singleRedemptionTrancheForSingleDeposit.id),
+        );
       }
     }
   }
@@ -170,7 +171,7 @@ export function getSumOfRedemptionTranches(
   return tranches;
 }
 
-export function decreaseTrancheAmountsOfDeposit(depositId: string, tranches: Tranche[], updatedAt: i32): Deposit {
+export function decreaseDepositTrancheAmounts(depositId: string, tranches: Tranche[], updatedAt: i32): Deposit {
   let deposit = useDeposit(depositId);
 
   let trancheAmounts = deposit.trancheAmounts;
@@ -192,110 +193,3 @@ export function decreaseTrancheAmountsOfDeposit(depositId: string, tranches: Tra
 }
 
 // REWARDS
-
-function secondsToFullDays(seconds: BigInt): i32 {
-  return seconds.div(dayUnix).toI32();
-}
-
-class DaysStakedResponse {
-  firstStepDays: i32;
-  secondStepDays: i32;
-
-  constructor(firstStepDays: i32, secondStepDays: i32) {
-    this.firstStepDays = firstStepDays;
-    this.secondStepDays = secondStepDays;
-  }
-}
-
-function getDaysStaked(depositCreatedAt: BigInt, currentTimestamp: BigInt): DaysStakedResponse {
-  let depositStakingStartTimestamp =
-    depositCreatedAt < stakingStartTimestamp ? stakingStartTimestamp : depositCreatedAt;
-
-  if (currentTimestamp < cooldownEndTimestamp) {
-    // redeem happened before cooldown period ended
-    return new DaysStakedResponse(secondsToFullDays(currentTimestamp.minus(depositStakingStartTimestamp)), 0);
-  }
-
-  if (depositStakingStartTimestamp < cooldownEndTimestamp) {
-    // stake happened before cooldown period ended
-    // redeem happened after cooldown period ended
-    return new DaysStakedResponse(
-      secondsToFullDays(cooldownEndTimestamp.minus(depositStakingStartTimestamp)),
-      Math.min(
-        secondsToFullDays(currentTimestamp.minus(cooldownEndTimestamp)),
-        stakingPeriodDays - cooldownDays - stakingStartBeforeLaunchDays,
-      ) as i32,
-    );
-  }
-
-  if (depositStakingStartTimestamp < stakingEndTimestamp) {
-    // stake happened after cooldown period ended
-    // redeem happened after cooldown period and before staking ended
-    return new DaysStakedResponse(0, secondsToFullDays(currentTimestamp.minus(depositStakingStartTimestamp)));
-  }
-
-  // stake happened after cooldown period ended
-  // redeem happened after stake period ended
-  return new DaysStakedResponse(0, secondsToFullDays(stakingEndTimestamp.minus(depositStakingStartTimestamp)));
-}
-
-export class Claim {
-  firstClaimAmount: BigDecimal;
-  secondClaimAmount: BigDecimal;
-
-  constructor(firstClaimAmount: BigDecimal, secondClaimAmount: BigDecimal) {
-    this.firstClaimAmount = firstClaimAmount;
-    this.secondClaimAmount = secondClaimAmount;
-  }
-}
-
-export function getAccruedRewards(
-  currentTimestamp: BigInt,
-  redemptionTranchesForDeposits: RedemptionTranchesForDepositResponse[],
-): Claim {
-  if (currentTimestamp < mainnetLaunchTimestamp) {
-    return new Claim(BigDecimal.zero(), BigDecimal.zero());
-  }
-
-  let firstClaimAmount = BigDecimal.zero();
-  let secondClaimAmount = BigDecimal.zero();
-
-  for (let i = 0; i < redemptionTranchesForDeposits.length; i++) {
-    let redemptionTranchesForDeposit = redemptionTranchesForDeposits[i];
-
-    let createdAt = BigInt.fromI64(redemptionTranchesForDeposit.deposit.createdAt);
-    let daysStaked = getDaysStaked(createdAt, currentTimestamp);
-
-    for (let i = 0; i < redemptionTranchesForDeposit.tranches.length; i++) {
-      let tranche = redemptionTranchesForDeposit.tranches[i];
-
-      let trancheAccruedRewards = getTrancheAccruedRewards(
-        tranche.amount,
-        tranchesConfig[tranche.id].divPerEthPerDay,
-        daysStaked.firstStepDays,
-        daysStaked.secondStepDays,
-      );
-
-      firstClaimAmount = firstClaimAmount.plus(trancheAccruedRewards.firstClaimAmount);
-      secondClaimAmount = secondClaimAmount.plus(trancheAccruedRewards.secondClaimAmount);
-    }
-  }
-
-  return new Claim(firstClaimAmount, secondClaimAmount);
-}
-
-function getTrancheAccruedRewards(
-  amount: BigDecimal,
-  divPerEthPerDay: BigDecimal,
-  firstStepStakeDays: i32,
-  secondStepDaysStaked: i32,
-): Claim {
-  let halfOfFirstClaimAmount = amount
-    .times(divPerEthPerDay)
-    .times(BigDecimal.fromString(firstStepStakeDays.toString()))
-    .div(BigDecimal.fromString('2'));
-
-  let secondClaimAmount = amount.times(divPerEthPerDay).times(BigDecimal.fromString(secondStepDaysStaked.toString()));
-
-  return new Claim(halfOfFirstClaimAmount, halfOfFirstClaimAmount.plus(secondClaimAmount));
-}

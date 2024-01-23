@@ -1,12 +1,10 @@
 import { createDeposit } from '../entities/Deposit';
 import { SharesBought, SharesRedeemed } from '../generated/contracts/ComptrollerLibEvents';
 import {
-  decreaseTrancheAmountsOfDeposit,
-  getAccruedRewards,
+  decreaseDepositTrancheAmounts,
   getDepositTranches,
-  getRedemptionTranchesForDeposits,
-  getSumOfRedemptionTranches,
-  stakingEndTimestamp,
+  getRedemptionTranchesForAllDeposits,
+  getAggregatedRedemptionTranches,
 } from '../utils/tranches';
 import { useDepositor, ensureDepositor } from '../entities/Depositor';
 import { createRedemption } from '../entities/Redemption';
@@ -29,6 +27,9 @@ import {
   sumOfDepositsAmountId,
   sumOfRedemptionsAmountId,
 } from '../entities/Amount';
+
+import { getAccruedRewards } from '../utils/rewards';
+import { stakingEndTimestamp } from '../utils/constants';
 
 export function handleSharesBought(event: SharesBought): void {
   if (stakingEndTimestamp < event.block.timestamp) {
@@ -68,16 +69,17 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
 
   let gavBeforeActivity = getAmount(currentGavAmountId);
 
-  let deposits = depositor.deposits.load().sort((a, b) => b.createdAt - a.createdAt);
+  let deposits = depositor.deposits.load();
 
-  let redemptionTranches = getRedemptionTranchesForDeposits(deposits, redeemAmount);
+  let redemptionTranches = getRedemptionTranchesForAllDeposits(deposits, redeemAmount);
+  let aggregatedRedemptionTranches = getAggregatedRedemptionTranches(redemptionTranches);
 
   let comptroller = useComptroller(event.address);
   let accruedRewards = getAccruedRewards(event.block.timestamp, redemptionTranches);
 
   createRedemption(
     depositor,
-    getSumOfRedemptionTranches(redemptionTranches),
+    aggregatedRedemptionTranches,
     accruedRewards,
     sharesAmount,
     gavBeforeActivity,
@@ -87,7 +89,8 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
 
   for (let i = 0; i < redemptionTranches.length; i++) {
     let redemptionTranche = redemptionTranches[i];
-    decreaseTrancheAmountsOfDeposit(
+
+    decreaseDepositTrancheAmounts(
       redemptionTranche.deposit.id,
       redemptionTranche.tranches,
       event.block.timestamp.toI32(),

@@ -1,5 +1,5 @@
 {
-  "name": "@enzymefinance/vault-shares-subgraph",
+  "name": "@enzymefinance/diva-staking-subgraph",
   "private": true,
   "scripts": {
     "codegen": "enzyme-graph codegen",

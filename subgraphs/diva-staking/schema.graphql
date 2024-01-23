@@ -71,6 +71,6 @@ type Redemption implements Activity @entity {
   shares: BigDecimal!
   amount: BigDecimal!
   trancheAmounts: [BigDecimal!]!
-  firstClaimAmount: BigDecimal!
-  secondClaimAmount: BigDecimal!
+  firstPhaseAccruedRewards: BigDecimal!
+  secondPhaseAccruedRewards: BigDecimal!
 }
