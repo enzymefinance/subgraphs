@@ -36,7 +36,7 @@ interface Activity {
   activityCounter: Int!
   shares: BigDecimal!
   amount: BigDecimal!
-  trancheAmounts: [BigDecimal!]!
+  trancheAmounts: [TrancheAmount!]!
 }
 
 enum ActivityType {
@@ -56,8 +56,10 @@ type Deposit implements Activity @entity {
   shares: BigDecimal!
   initialAmount: BigDecimal!
   amount: BigDecimal!
-  initialTrancheAmounts: [BigDecimal!]! #stored for historical purposes
-  trancheAmounts: [BigDecimal!]!
+  initialTrancheAmounts: [TrancheAmount!]! 
+  trancheAmounts: [TrancheAmount!]!
+  firstPhaseAccruedRewards: BigDecimal!
+  secondPhaseAccruedRewards: BigDecimal!  
 }
 
 type Redemption implements Activity @entity {
@@ -70,7 +72,17 @@ type Redemption implements Activity @entity {
   activityCounter: Int!
   shares: BigDecimal!
   amount: BigDecimal!
-  trancheAmounts: [BigDecimal!]!
+  trancheAmounts: [TrancheAmount!]!
   firstPhaseAccruedRewards: BigDecimal!
   secondPhaseAccruedRewards: BigDecimal!
+}
+
+type TrancheAmount @entity {
+  id: ID!
+  trancheId: Int!
+  amount: BigDecimal! 
+  startStakingAt: Int!
+  endStakingAt: Int!
+  firstPhaseAccruedRewards: BigDecimal!
+  secondPhaseAccruedRewards: BigDecimal!  
 }
