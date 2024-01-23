@@ -1,28 +1,41 @@
 import { Address, ethereum, BigDecimal } from '@graphprotocol/graph-ts';
-import { uniqueEventId } from '@enzymefinance/subgraph-utils';
-import { Redemption } from '../generated/schema';
-import { Claim, Tranche } from '../utils/tranches';
-
-function redemptionId(redeemer: Address, event: ethereum.Event): string {
-  return redeemer.toHexString() + '/' + uniqueEventId(event);
-}
+import { ZERO_BD, uniqueEventId } from '@enzymefinance/subgraph-utils';
+import { Depositor, Redemption } from '../generated/schema';
+import { Claim, Tranche, tranchesConfig } from '../utils/tranches';
+import { activitiesCounterId, increaseCounter } from './Counter';
 
 export function createRedemption(
-  redeemer: Address,
+  depositor: Depositor,
   tranches: Tranche[],
   accruedRewards: Claim,
+  gavBeforeActivity: BigDecimal,
   vault: Address,
   event: ethereum.Event,
 ): Redemption {
-  let redemption = new Redemption(redemptionId(redeemer, event));
+  let redemption = new Redemption(uniqueEventId(event));
+  let timestamp = event.block.timestamp.toI32();
 
-  redemption.redeemer = redeemer;
+  // init array with zeroes
+  let trancheAmounts = tranchesConfig.map<BigDecimal>(() => ZERO_BD);
+  let amount = ZERO_BD;
+
+  for (let i = 0; i < tranches.length; i++) {
+    let tranche = tranches[i];
+
+    trancheAmounts[tranche.id] = tranche.amount;
+    amount = amount.plus(tranche.amount)
+  }
+
+  redemption.amount = amount.neg();
+  redemption.trancheAmounts = trancheAmounts;
+  redemption.depositor = depositor.id;
   redemption.vault = vault;
-  redemption.amounts = tranches.map<BigDecimal>((tranche) => tranche.amount);
-  redemption.trancheIds = tranches.map<i32>((tranche) => tranche.id as i32);
+  redemption.gavBeforeActivity = gavBeforeActivity;
+  redemption.activityType = 'Redemption';
+  redemption.activityCounter = increaseCounter(activitiesCounterId, timestamp);
   redemption.firstClaimAmount = accruedRewards.firstClaimAmount;
   redemption.secondClaimAmount = accruedRewards.secondClaimAmount;
-  redemption.createdAt = event.block.timestamp.toI32();
+  redemption.createdAt = timestamp;
   redemption.save();
 
   return redemption;

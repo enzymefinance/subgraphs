@@ -1,23 +1,17 @@
-type GeneralInfo @entity {
+type Amount @entity {
   id: ID!
-  depositorsCounterActive: Int! # takes into account only active stakers
-  depositorsCounterOverall: Int! # takes into account also those who unstaked
-  vaultsGav: BigDecimal! #GAV of stETH + ETH vaults
   updatedAt: Int!
+  amount: BigDecimal!
+}
+
+type Counter @entity {
+  id: ID!
+  updatedAt: Int!
+  count: Int!
 }
 
 type Comptroller @entity {
   id: ID!
-  vault: Bytes!
-}
-
-type Deposit @entity {
-  id: ID!
-  initialTrancheAmounts: [BigDecimal!]! #stored for historical purposes
-  trancheAmounts: [BigDecimal!]!
-  createdAt: Int!
-  updatedAt: Int!
-  depositor: Depositor!
   vault: Bytes!
 }
 
@@ -27,17 +21,52 @@ type Depositor @entity {
   createdAt: Int!
   amount: BigDecimal!
   shares: BigDecimal!
+  activities: [Activity!]! @derivedFrom(field: "depositor")
   deposits: [Deposit!]! @derivedFrom(field: "depositor")
-  redemptions: [Redemption!]! @derivedFrom(field: "redeemer")
+  redemptions: [Redemption!]! @derivedFrom(field: "depositor")
 }
 
-type Redemption @entity {
+interface Activity {
   id: ID!
-  redeemer: Depositor!
-  amounts: [BigDecimal!]!
-  trancheIds: [Int!]!
-  firstClaimAmount: BigDecimal!
-  secondClaimAmount: BigDecimal!
   createdAt: Int!
   vault: Bytes!
+  depositor: Depositor!
+  gavBeforeActivity: BigDecimal!
+  activityType: ActivityType!
+  activityCounter: Int!
+  amount: BigDecimal!
+  trancheAmounts: [BigDecimal!]!
+}
+
+enum ActivityType {
+  Deposit
+  Redemption
+}
+
+type Deposit implements Activity @entity {
+  id: ID!
+  createdAt: Int!
+  updatedAt: Int!
+  vault: Bytes!
+  depositor: Depositor!
+  gavBeforeActivity: BigDecimal!
+  activityType: ActivityType!
+  activityCounter: Int!
+  amount: BigDecimal!
+  initialTrancheAmounts: [BigDecimal!]! #stored for historical purposes
+  trancheAmounts: [BigDecimal!]!
+}
+
+type Redemption implements Activity @entity {
+  id: ID!
+  createdAt: Int!
+  vault: Bytes!
+  depositor: Depositor!
+  gavBeforeActivity: BigDecimal!
+  activityType: ActivityType!
+  activityCounter: Int!
+  amount: BigDecimal!
+  trancheAmounts: [BigDecimal!]!
+  firstClaimAmount: BigDecimal!
+  secondClaimAmount: BigDecimal!
 }

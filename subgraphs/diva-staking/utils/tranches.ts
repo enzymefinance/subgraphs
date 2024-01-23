@@ -1,11 +1,12 @@
 import { BigDecimal, BigInt, log } from '@graphprotocol/graph-ts';
 import { Deposit } from '../generated/schema';
+import { useDeposit } from '../entities/Deposit';
 
 export class Tranche {
   amount: BigDecimal;
-  id: number;
+  id: i32;
 
-  constructor(amount: BigDecimal, id: number) {
+  constructor(amount: BigDecimal, id: i32) {
     this.amount = amount;
     this.id = id;
   }
@@ -169,6 +170,23 @@ export function getSumOfRedemptionTranches(
   return tranches;
 }
 
+export function decreaseTrancheAmountsOfDeposit(depositId: string, tranches: Tranche[], updatedAt: i32): Deposit {
+  let deposit = useDeposit(depositId);
+
+  let trancheAmounts = deposit.trancheAmounts;
+
+  for (let i = 0; i < tranches.length; i++) {
+    let tranche = tranches[i];
+
+    trancheAmounts[tranche.id] = trancheAmounts[tranche.id].minus(tranche.amount);
+  }
+  deposit.trancheAmounts = trancheAmounts;
+  deposit.updatedAt = updatedAt;
+  deposit.save();
+
+  return deposit;
+}
+
 // REWARDS
 
 function secondsToFullDays(seconds: BigInt): i32 {
@@ -249,7 +267,7 @@ export function getAccruedRewards(
 
       let trancheAccruedRewards = getTrancheAccruedRewards(
         tranche.amount,
-        tranchesConfig[tranche.id as i32].divPerEthPerDay,
+        tranchesConfig[tranche.id].divPerEthPerDay,
         daysStaked.firstStepDays,
         daysStaked.secondStepDays,
       );

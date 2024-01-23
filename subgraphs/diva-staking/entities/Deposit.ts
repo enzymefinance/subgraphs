@@ -1,30 +1,40 @@
-import { Address, ethereum, BigDecimal, log } from '@graphprotocol/graph-ts';
-import { logCritical, uniqueEventId } from '@enzymefinance/subgraph-utils';
-import { Deposit } from '../generated/schema';
+import { Address, ethereum, BigDecimal } from '@graphprotocol/graph-ts';
+import { ZERO_BD, logCritical, uniqueEventId } from '@enzymefinance/subgraph-utils';
+import { Deposit, Depositor } from '../generated/schema';
 import { Tranche, tranchesConfig } from '../utils/tranches';
+import { increaseCounter } from './Counter';
 
-function depositId(depositor: Address, event: ethereum.Event): string {
-  return depositor.toHexString() + '/' + uniqueEventId(event);
-}
-
-export function createDeposit(depositor: Address, tranches: Tranche[], vault: Address, event: ethereum.Event): Deposit {
-  let deposit = new Deposit(depositId(depositor, event));
+export function createDeposit(
+  depositor: Depositor,
+  tranches: Tranche[],
+  gavBeforeActivity: BigDecimal,
+  vault: Address,
+  event: ethereum.Event,
+): Deposit {
+  let deposit = new Deposit(uniqueEventId(event));
+  let timestamp = event.block.timestamp.toI32();
 
   // init array with zeroes
-  let trancheAmounts = tranchesConfig.map<BigDecimal>(() => BigDecimal.zero());
+  let trancheAmounts = tranchesConfig.map<BigDecimal>(() => ZERO_BD);
+  let amount = ZERO_BD;
 
   for (let i = 0; i < tranches.length; i++) {
     let tranche = tranches[i];
 
-    trancheAmounts[tranche.id as i32] = tranche.amount;
+    trancheAmounts[tranche.id] = tranche.amount;
+    amount = amount.plus(tranche.amount);
   }
 
+  deposit.amount = amount;
   deposit.trancheAmounts = trancheAmounts;
   deposit.initialTrancheAmounts = trancheAmounts;
-  deposit.depositor = depositor;
+  deposit.depositor = depositor.id;
   deposit.vault = vault;
-  deposit.createdAt = event.block.timestamp.toI32();
-  deposit.updatedAt = event.block.timestamp.toI32();
+  deposit.createdAt = timestamp;
+  deposit.updatedAt = timestamp;
+  deposit.gavBeforeActivity = gavBeforeActivity;
+  deposit.activityType = 'Deposit';
+  deposit.activityCounter = increaseCounter('activities', timestamp);
   deposit.save();
 
   return deposit;
@@ -37,25 +47,4 @@ export function useDeposit(depositId: string): Deposit {
   }
 
   return deposit as Deposit;
-}
-
-export function decreaseTrancheAmountsOfDeposit(
-  depositId: string,
-  tranches: Tranche[],
-  event: ethereum.Event,
-): Deposit {
-  let deposit = useDeposit(depositId);
-
-  let trancheAmounts = deposit.trancheAmounts;
-
-  for (let i = 0; i < tranches.length; i++) {
-    let tranche = tranches[i];
-
-    trancheAmounts[tranche.id as i32] = trancheAmounts[tranche.id as i32].minus(tranche.amount);
-  }
-  deposit.trancheAmounts = trancheAmounts;
-  deposit.updatedAt = event.block.timestamp.toI32();
-  deposit.save();
-
-  return deposit;
 }
