@@ -1,13 +1,12 @@
-type GeneralInfo @entity {
+type Amount @entity {
   id: ID!
-  depositorsCounterActive: Int! # takes into account only active stakers
-  depositorsCounterOverall: Int! # takes into account also those who unstaked
-  vaultsGav: BigDecimal! #GAV of stETH + ETH vaults
   updatedAt: Int!
+  amount: BigDecimal!
 }
 
-type ActivityCounter @entity {
+type Counter @entity {
   id: ID!
+  updatedAt: Int!
   count: Int!
 }
 

@@ -1,15 +1,18 @@
-import { Address, ethereum, BigDecimal, log } from '@graphprotocol/graph-ts';
-import { ZERO_BD, logCritical, uniqueEventId } from '@enzymefinance/subgraph-utils';
+import { Address, ethereum, BigDecimal } from '@graphprotocol/graph-ts';
+import { logCritical, uniqueEventId } from '@enzymefinance/subgraph-utils';
 import { Deposit, Depositor } from '../generated/schema';
 import { Tranche, tranchesConfig } from '../utils/tranches';
-import { getActivityCounter } from './ActivityCounter';
+import { increaseCounter } from './Counter';
 
-function depositId(depositor: Depositor, event: ethereum.Event): string {
-  return depositor.id.toHex() + '/' + uniqueEventId(event);
-}
-
-export function createDeposit(depositor: Depositor, tranches: Tranche[], gavBeforeActivity: BigDecimal, vault: Address, event: ethereum.Event): Deposit {
-  let deposit = new Deposit(depositId(depositor, event));
+export function createDeposit(
+  depositor: Depositor,
+  tranches: Tranche[],
+  gavBeforeActivity: BigDecimal,
+  vault: Address,
+  event: ethereum.Event,
+): Deposit {
+  let deposit = new Deposit(uniqueEventId(event));
+  let timestamp = event.block.timestamp.toI32();
 
   // init array with zeroes
   let trancheAmounts = tranchesConfig.map<BigDecimal>(() => BigDecimal.zero());
@@ -24,10 +27,10 @@ export function createDeposit(depositor: Depositor, tranches: Tranche[], gavBefo
   deposit.initialTrancheAmounts = trancheAmounts;
   deposit.depositor = depositor.id;
   deposit.vault = vault;
-  deposit.createdAt = event.block.timestamp.toI32();
-  deposit.updatedAt = event.block.timestamp.toI32();
+  deposit.createdAt = timestamp;
+  deposit.updatedAt = timestamp;
   deposit.gavBeforeActivity = gavBeforeActivity;
-  deposit.activityCounter = getActivityCounter()
+  deposit.activityCounter = increaseCounter('activities', timestamp);
   deposit.save();
 
   return deposit;
@@ -41,4 +44,3 @@ export function useDeposit(depositId: string): Deposit {
 
   return deposit as Deposit;
 }
-

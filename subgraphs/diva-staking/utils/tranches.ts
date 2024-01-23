@@ -170,11 +170,7 @@ export function getSumOfRedemptionTranches(
   return tranches;
 }
 
-export function decreaseTrancheAmountsOfDeposit(
-  depositId: string,
-  tranches: Tranche[],
-  updatedAt: i32,
-): Deposit {
+export function decreaseTrancheAmountsOfDeposit(depositId: string, tranches: Tranche[], updatedAt: i32): Deposit {
   let deposit = useDeposit(depositId);
 
   let trancheAmounts = deposit.trancheAmounts;
@@ -190,7 +186,6 @@ export function decreaseTrancheAmountsOfDeposit(
 
   return deposit;
 }
-
 
 // REWARDS
 

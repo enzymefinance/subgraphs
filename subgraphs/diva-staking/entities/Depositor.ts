@@ -1,9 +1,7 @@
-import { Address, ethereum, BigDecimal, log } from '@graphprotocol/graph-ts';
-import { Deposit, DepositLoader, Depositor } from '../generated/schema';
-import { logCritical } from '@enzymefinance/subgraph-utils';
-import { useDeposit } from './Deposit';
-import { ensureGeneralInfo } from './GeneralInfo';
-
+import { Address, ethereum, BigDecimal } from '@graphprotocol/graph-ts';
+import { Depositor } from '../generated/schema';
+import { ZERO_BD, logCritical } from '@enzymefinance/subgraph-utils';
+import { activeDepositorsCounterId, depositorsCounterId, increaseCounter } from './Counter';
 
 export function createDepositor(
   depositorAddress: Address,
@@ -12,12 +10,12 @@ export function createDepositor(
   event: ethereum.Event,
 ): Depositor {
   let depositor = new Depositor(depositorAddress);
+  let timestamp = event.block.timestamp.toI32();
 
   depositor.shares = shares;
   depositor.amount = amount;
-  depositor.createdAt = event.block.timestamp.toI32();
-  depositor.updatedAt = event.block.timestamp.toI32();
-
+  depositor.createdAt = timestamp;
+  depositor.updatedAt = timestamp;
   depositor.save();
 
   return depositor;
@@ -25,6 +23,7 @@ export function createDepositor(
 
 export function useDepositor(depositorAddress: Address): Depositor {
   let depositor = Depositor.load(depositorAddress);
+
   if (depositor == null) {
     logCritical('Failed to load depositor {}.', [depositorAddress.toString()]);
   }
@@ -34,22 +33,21 @@ export function useDepositor(depositorAddress: Address): Depositor {
 
 export function ensureDepositor(depositorAddress: Address, event: ethereum.Event): Depositor {
   let depositor = Depositor.load(depositorAddress);
+  let timestamp = event.block.timestamp.toI32();
 
-  if (depositor) {
+  if (depositor != null) {
     return depositor;
   }
 
   depositor = new Depositor(depositorAddress);
-  depositor.shares = BigDecimal.zero();
-  depositor.amount = BigDecimal.zero();
-  depositor.createdAt = event.block.timestamp.toI32();
-  depositor.updatedAt = event.block.timestamp.toI32();
+  depositor.shares = ZERO_BD;
+  depositor.amount = ZERO_BD;
+  depositor.createdAt = timestamp;
+  depositor.updatedAt = timestamp;
+  depositor.save();
 
-  let generalInfo = ensureGeneralInfo();
-  generalInfo.depositorsCounterActive = generalInfo.depositorsCounterActive + 1;
-  generalInfo.depositorsCounterOverall = generalInfo.depositorsCounterOverall + 1;
-  generalInfo.updatedAt = event.block.timestamp.toI32();
-  generalInfo.save();
+  increaseCounter(depositorsCounterId, timestamp);
+  increaseCounter(activeDepositorsCounterId, timestamp);
 
   return depositor as Depositor;
 }
