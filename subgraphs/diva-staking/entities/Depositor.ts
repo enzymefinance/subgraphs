@@ -1,4 +1,4 @@
-import { Address, ethereum, BigDecimal } from '@graphprotocol/graph-ts';
+import { Address, ethereum } from '@graphprotocol/graph-ts';
 import { Depositor } from '../generated/schema';
 import { ZERO_BD, logCritical } from '@enzymefinance/subgraph-utils';
 import { activeDepositorsCounterId, depositorsCounterId, increaseCounter } from './Counter';

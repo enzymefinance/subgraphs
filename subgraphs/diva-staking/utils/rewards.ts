@@ -10,7 +10,7 @@ import {
   stakingStartTimestamp,
 } from './constants';
 
-class DaysStakedResponse {
+class DaysStaked {
   firstPhaseStakingDays: i32;
   secondPhaseStakingDays: i32;
 
@@ -44,48 +44,50 @@ function secondsToFullDays(seconds: BigInt): i32 {
   return seconds.div(ONE_DAY).toI32();
 }
 
-function calculateFullStakingDays(depositCreatedAt: BigInt, redemptionTimestamp: BigInt): DaysStakedResponse {
-  // Calculate full staking days for redemptions
-  // Note that this doesn't run for the cases without redemption (since there is no event to run it for)
-  let depositStakingStartTimestamp =
+function calculateFullStakingDays(depositCreatedAt: BigInt, redemptionTimestamp: BigInt): DaysStaked {
+  // Calculate full staking days for a given redemption timestamp
+
+  // Earliest possible staking time is stakingStartTimestamp
+  let normalizedStartStakingTimestamp =
     depositCreatedAt < stakingStartTimestamp ? stakingStartTimestamp : depositCreatedAt;
 
-  if (redemptionTimestamp < mainnetLaunchTimestamp) {
-    // Redemption happened before mainnet launch
+  // Latest possible redemption time is stakingEndTimestamp
+  let normalizedEndStakingTimestamp =
+    redemptionTimestamp > stakingEndTimestamp ? stakingEndTimestamp : redemptionTimestamp;
+
+  if (normalizedEndStakingTimestamp < mainnetLaunchTimestamp) {
+    // Redemption happens before mainnet launch
     // -> no rewards whatsoever
-    return new DaysStakedResponse(0, 0);
+    return new DaysStaked(0, 0);
   }
 
-  if (redemptionTimestamp < cooldownEndTimestamp) {
-    // Redemption happened after mainnet launch but before cooldown period ended
-    // -> rewards only for first claim
-    return new DaysStakedResponse(secondsToFullDays(redemptionTimestamp.minus(depositStakingStartTimestamp)), 0);
+  if (normalizedEndStakingTimestamp < cooldownEndTimestamp) {
+    // Redemption happens after mainnet launch but before cooldown period ended
+    // -> rewards only for first phase
+    return new DaysStaked(secondsToFullDays(normalizedEndStakingTimestamp.minus(normalizedStartStakingTimestamp)), 0);
   }
 
-  if (depositStakingStartTimestamp < cooldownEndTimestamp) {
+  if (normalizedStartStakingTimestamp <= cooldownEndTimestamp) {
     // Staking happened before cooldown period ended
     // Redemption happened after cooldown period ended
-    // -> rewards for first and second claim
-    return new DaysStakedResponse(
-      secondsToFullDays(cooldownEndTimestamp.minus(depositStakingStartTimestamp)),
-      Math.min(
-        secondsToFullDays(redemptionTimestamp.minus(cooldownEndTimestamp)),
-        stakingPeriodDays - cooldownDays - stakingStartBeforeLaunchDays,
-      ) as i32,
+    // -> rewards for first and second phase
+    return new DaysStaked(
+      secondsToFullDays(cooldownEndTimestamp.minus(normalizedStartStakingTimestamp)),
+      secondsToFullDays(normalizedEndStakingTimestamp.minus(cooldownEndTimestamp)),
     );
   }
 
-  if (depositStakingStartTimestamp < stakingEndTimestamp) {
+  if (normalizedStartStakingTimestamp < stakingEndTimestamp) {
     // Staking happened after cooldown period ended
     // Redemption happened after cooldown period and before staking ended
-    // -> rewards only for second claim
-    return new DaysStakedResponse(0, secondsToFullDays(redemptionTimestamp.minus(depositStakingStartTimestamp)));
+    // -> rewards only for second phase
+    return new DaysStaked(0, secondsToFullDays(normalizedEndStakingTimestamp.minus(normalizedStartStakingTimestamp)));
   }
 
   // Staking happened after cooldown period ended
   // Redemption happened after stake period ended
   // -> rewards only for second claim
-  return new DaysStakedResponse(0, secondsToFullDays(stakingEndTimestamp.minus(depositStakingStartTimestamp)));
+  return new DaysStaked(0, secondsToFullDays(stakingEndTimestamp.minus(normalizedStartStakingTimestamp)));
 }
 
 export function getRewardsForTrancheAmount(

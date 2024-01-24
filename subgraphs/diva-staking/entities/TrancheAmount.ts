@@ -2,7 +2,7 @@ import { ethereum, BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 import { TrancheAmount } from '../generated/schema';
 import { logCritical, uniqueEventId } from '@enzymefinance/subgraph-utils';
 import { getRewardsForTrancheAmount } from '../utils/rewards';
-import { tranchesConfig } from '../utils/constants';
+import { stakingTranchesConfiguration } from '../utils/constants';
 
 export function createTrancheAmount(
   trancheId: i32,
@@ -24,7 +24,7 @@ export function createTrancheAmount(
 
   let rewards = getRewardsForTrancheAmount(
     amount,
-    tranchesConfig[trancheId].divaPerEthPerDay,
+    stakingTranchesConfiguration[trancheId].divaPerEthPerDay,
     BigInt.fromI32(startStakingAt),
     BigInt.fromI32(endStakingAt),
   );
@@ -58,7 +58,7 @@ export function updateTrancheAmount(id: string, updatedAmount: BigDecimal, times
 
   let accruedRewards = getRewardsForTrancheAmount(
     updatedAmount,
-    tranchesConfig[trancheAmount.trancheId].divaPerEthPerDay,
+    stakingTranchesConfiguration[trancheAmount.trancheId].divaPerEthPerDay,
     BigInt.fromI32(trancheAmount.startStakingAt),
     BigInt.fromI32(trancheAmount.endStakingAt),
   );

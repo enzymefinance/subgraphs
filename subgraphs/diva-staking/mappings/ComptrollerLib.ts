@@ -3,9 +3,7 @@ import { SharesBought, SharesRedeemed } from '../generated/contracts/Comptroller
 import { createRedemptionTrancheAmountsForAllDeposits, createDepositTrancheAmounts } from '../utils/tranches';
 import { useDepositor, ensureDepositor } from '../entities/Depositor';
 import { createRedemption } from '../entities/Redemption';
-import { Address } from '@graphprotocol/graph-ts';
 import { ZERO_BD, logCritical, toBigDecimal } from '@enzymefinance/subgraph-utils';
-import { useComptroller } from '../entities/Comptroller';
 import {
   activeDepositorsCounterId,
   decreaseCounter,
@@ -24,7 +22,7 @@ import {
 import { stakingEndTimestamp } from '../utils/constants';
 
 export function handleSharesBought(event: SharesBought): void {
-  if (event.block.timestamp.le(stakingEndTimestamp)) {
+  if (event.block.timestamp.ge(stakingEndTimestamp)) {
     // staking period ended
     return;
   }
@@ -51,7 +49,7 @@ export function handleSharesBought(event: SharesBought): void {
 }
 
 export function handleSharesRedeemed(event: SharesRedeemed): void {
-  if (event.block.timestamp.le(stakingEndTimestamp)) {
+  if (event.block.timestamp.ge(stakingEndTimestamp)) {
     // staking period ended
     return;
   }
@@ -60,32 +58,32 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
 
   let depositor = useDepositor(event.params.redeemer);
 
-  if (depositor.shares.equals(ZERO_BD)) {
+  if (depositor.shares == ZERO_BD) {
     logCritical('Depositor {} does not own any shares.', [depositor.id.toHex()]);
   }
 
-  let sharesAmount = toBigDecimal(event.params.sharesAmount);
-  let redeemAmount = depositor.amount.times(sharesAmount).div(depositor.shares).truncate(18);
+  let sharesRedeemed = toBigDecimal(event.params.sharesAmount);
+  let redemptionAmount = depositor.amount.times(sharesRedeemed).div(depositor.shares).truncate(18);
 
-  depositor.shares = depositor.shares.minus(sharesAmount);
-  depositor.amount = depositor.amount.minus(redeemAmount);
+  depositor.shares = depositor.shares.minus(sharesRedeemed);
+  depositor.amount = depositor.amount.minus(redemptionAmount);
   depositor.updatedAt = timestamp;
   depositor.save();
 
   let gavBeforeActivity = getAmount(currentGavAmountId);
   let redemptionTrancheAmounts = createRedemptionTrancheAmountsForAllDeposits(
     depositor.deposits.load(),
-    redeemAmount,
+    redemptionAmount,
     event,
   );
 
-  createRedemption(depositor, redemptionTrancheAmounts, sharesAmount, gavBeforeActivity, event.address, event);
+  createRedemption(depositor, redemptionTrancheAmounts, sharesRedeemed, gavBeforeActivity, event.address, event);
 
-  if (depositor.shares.equals(ZERO_BD)) {
+  if (depositor.shares == ZERO_BD) {
     decreaseCounter(activeDepositorsCounterId, timestamp);
   }
 
   increaseCounter(redemptionsCounterId, timestamp);
-  increaseAmount(sumOfRedemptionsAmountId, redeemAmount, timestamp);
-  decreaseAmount(currentGavAmountId, redeemAmount, timestamp);
+  increaseAmount(sumOfRedemptionsAmountId, redemptionAmount, timestamp);
+  decreaseAmount(currentGavAmountId, redemptionAmount, timestamp);
 }

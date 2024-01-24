@@ -19,7 +19,7 @@ export let stakingPeriodDays: i32 = 183;
 
 export let stakingEndTimestamp = stakingStartTimestamp.plus(BigInt.fromI32(stakingPeriodDays).times(ONE_DAY));
 
-export class TrancheConfig {
+export class StakingTranchesConfiguration {
   threshold: BigDecimal;
   divaPerEthPerDay: BigDecimal;
 
@@ -29,15 +29,15 @@ export class TrancheConfig {
   }
 }
 
-export let tranchesConfig: TrancheConfig[] = [
-  new TrancheConfig(BigDecimal.fromString('10000'), BigDecimal.fromString('2.5')),
-  new TrancheConfig(BigDecimal.fromString('20000'), BigDecimal.fromString('2.25')),
-  new TrancheConfig(BigDecimal.fromString('30000'), BigDecimal.fromString('2')),
-  new TrancheConfig(BigDecimal.fromString('40000'), BigDecimal.fromString('1.9')),
-  new TrancheConfig(BigDecimal.fromString('50000'), BigDecimal.fromString('1.75')),
-  new TrancheConfig(BigDecimal.fromString('60000'), BigDecimal.fromString('1.6')),
-  new TrancheConfig(BigDecimal.fromString('70000'), BigDecimal.fromString('1.55')),
-  new TrancheConfig(BigDecimal.fromString('80000'), BigDecimal.fromString('1.5')),
-  new TrancheConfig(BigDecimal.fromString('90000'), BigDecimal.fromString('1.4')),
-  new TrancheConfig(BigDecimal.fromString('100000'), BigDecimal.fromString('1.3')),
+export let stakingTranchesConfiguration: StakingTranchesConfiguration[] = [
+  new StakingTranchesConfiguration(BigDecimal.fromString('10000'), BigDecimal.fromString('2.5')),
+  new StakingTranchesConfiguration(BigDecimal.fromString('20000'), BigDecimal.fromString('2.25')),
+  new StakingTranchesConfiguration(BigDecimal.fromString('30000'), BigDecimal.fromString('2')),
+  new StakingTranchesConfiguration(BigDecimal.fromString('40000'), BigDecimal.fromString('1.9')),
+  new StakingTranchesConfiguration(BigDecimal.fromString('50000'), BigDecimal.fromString('1.75')),
+  new StakingTranchesConfiguration(BigDecimal.fromString('60000'), BigDecimal.fromString('1.6')),
+  new StakingTranchesConfiguration(BigDecimal.fromString('70000'), BigDecimal.fromString('1.55')),
+  new StakingTranchesConfiguration(BigDecimal.fromString('80000'), BigDecimal.fromString('1.5')),
+  new StakingTranchesConfiguration(BigDecimal.fromString('90000'), BigDecimal.fromString('1.4')),
+  new StakingTranchesConfiguration(BigDecimal.fromString('100000'), BigDecimal.fromString('1.3')),
 ];
