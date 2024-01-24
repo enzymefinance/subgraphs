@@ -1,25 +1,17 @@
-import { BigDecimal } from '@graphprotocol/graph-ts';
-import { Deposit } from '../generated/schema';
-import { useDeposit } from '../entities/Deposit';
+import { BigDecimal, ethereum } from '@graphprotocol/graph-ts';
+import { Deposit, TrancheAmount } from '../generated/schema';
+import { updateRewardsForDeposit } from '../entities/Deposit';
 import { ZERO_BD } from '@enzymefinance/subgraph-utils';
-
-export class Tranche {
-  amount: BigDecimal;
-  id: i32;
-
-  constructor(amount: BigDecimal, id: i32) {
-    this.amount = amount;
-    this.id = id;
-  }
-}
+import { createTrancheAmount, updateTrancheAmount, useTrancheAmount } from '../entities/TrancheAmount';
+import { stakingEndTimestamp } from './constants';
 
 export class TrancheConfig {
   threshold: BigDecimal;
-  divPerEthPerDay: BigDecimal;
+  divaPerEthPerDay: BigDecimal;
 
-  constructor(threshold: BigDecimal, divPerEthPerDay: BigDecimal) {
+  constructor(threshold: BigDecimal, divaPerEthPerDay: BigDecimal) {
     this.threshold = threshold;
-    this.divPerEthPerDay = divPerEthPerDay;
+    this.divaPerEthPerDay = divaPerEthPerDay;
   }
 }
 
@@ -38,29 +30,54 @@ export let tranchesConfig: TrancheConfig[] = [
 
 // DEPOSIT
 
-export function getDepositTranches(vaultsGavBeforeDeposit: BigDecimal, investmentAmount: BigDecimal): Tranche[] {
-  let tranchesDepositedTo: Tranche[] = [];
+export function createDepositTrancheAmounts(
+  vaultsGavBeforeDeposit: BigDecimal,
+  investmentAmount: BigDecimal,
+  event: ethereum.Event,
+): TrancheAmount[] {
+  let tranchesDepositedTo: TrancheAmount[] = [];
   let amountLeftToDeposit = investmentAmount;
   let vaultsGav = vaultsGavBeforeDeposit;
+  let timestamp = event.block.timestamp.toI32();
 
   for (let i = 0; i < tranchesConfig.length; i++) {
     let currentTranche = tranchesConfig[i];
 
-    // if gav is greater than tranche threshold skip that tranche
+    // If the current total GAV is greater than tranche threshold, then skip the tranche
     if (currentTranche.threshold <= vaultsGav) {
       continue;
     }
 
-    // check if invested amount left is lower than threshold, if yes then full investment amount left belongs to that tranche completely
+    // If remaining deposit amount is lower than the tranche threshold, then the full remaining deposit amount is allocated to the tranche
     if (currentTranche.threshold >= vaultsGav.plus(amountLeftToDeposit)) {
-      tranchesDepositedTo.push(new Tranche(amountLeftToDeposit, i));
-      break;
+      let fullTrancheAmount = createTrancheAmount(
+        i,
+        amountLeftToDeposit,
+        timestamp,
+        stakingEndTimestamp.toI32(),
+        'deposit',
+        event,
+      );
+
+      tranchesDepositedTo.push(fullTrancheAmount);
+
+      break; //
     }
 
+    // Deposit amount is partially allocated to the tranche
     let amountInvestedToCurrentTranche = currentTranche.threshold.minus(vaultsGav);
     amountLeftToDeposit = amountLeftToDeposit.minus(amountInvestedToCurrentTranche);
 
-    tranchesDepositedTo.push(new Tranche(amountInvestedToCurrentTranche, i));
+    let partialTrancheAmount = createTrancheAmount(
+      i,
+      amountInvestedToCurrentTranche,
+      timestamp,
+      stakingEndTimestamp.toI32(),
+      'deposit',
+      event,
+    );
+
+    tranchesDepositedTo.push(partialTrancheAmount);
 
     vaultsGav = vaultsGav.plus(amountInvestedToCurrentTranche);
   }
@@ -70,26 +87,28 @@ export function getDepositTranches(vaultsGavBeforeDeposit: BigDecimal, investmen
 
 // REDEMPTION
 
-export class RedemptionTranchesForDepositResponse {
-  tranches: Tranche[];
+class RedemptionTrancheAmountsForDeposit {
+  trancheAmounts: TrancheAmount[];
   amountLeftToRedeem: BigDecimal;
   deposit: Deposit;
 
-  constructor(tranches: Tranche[], amountLeftToRedeem: BigDecimal, deposit: Deposit) {
-    this.tranches = tranches;
+  constructor(trancheAmounts: TrancheAmount[], amountLeftToRedeem: BigDecimal, deposit: Deposit) {
+    this.trancheAmounts = trancheAmounts;
     this.amountLeftToRedeem = amountLeftToRedeem;
     this.deposit = deposit;
   }
 }
 
-export function getRedemptionTranchesForAllDeposits(
+export function createRedemptionTrancheAmountsForAllDeposits(
   deposits: Deposit[],
   redeemAmount: BigDecimal,
-): RedemptionTranchesForDepositResponse[] {
-  let redemptionTranchesForDeposits: RedemptionTranchesForDepositResponse[] = [];
+  event: ethereum.Event,
+): TrancheAmount[] {
+  let redemptionTranchesForDeposits: TrancheAmount[] = [];
   let amountLeftToRedeem = redeemAmount;
+  let redemptionTimestamp = event.block.timestamp.toI32();
 
-  // sort deposits by creation date descending (last deposit will be used first for redemption)
+  // Sort deposits by creation date descending (last deposit will be used first for redemption)
   deposits = deposits.sort((a, b) => b.createdAt - a.createdAt);
 
   for (let i = 0; i < deposits.length; i++) {
@@ -97,8 +116,15 @@ export function getRedemptionTranchesForAllDeposits(
       break; // all amount redeemed
     }
 
-    let redemptionTranchesForDeposit = getRedemptionTranchesForSingleDeposit(deposits[i], amountLeftToRedeem);
-    redemptionTranchesForDeposits.push(redemptionTranchesForDeposit);
+    let redemptionTranchesForDeposit = createRedemptionTrancheAmountsForSingleDeposit(
+      deposits[i],
+      amountLeftToRedeem,
+      event,
+    );
+
+    updateRewardsForDeposit(deposits[i], redemptionTimestamp);
+
+    redemptionTranchesForDeposits = redemptionTranchesForDeposits.concat(redemptionTranchesForDeposit.trancheAmounts);
 
     amountLeftToRedeem = redemptionTranchesForDeposit.amountLeftToRedeem;
   }
@@ -106,90 +132,66 @@ export function getRedemptionTranchesForAllDeposits(
   return redemptionTranchesForDeposits;
 }
 
-function getRedemptionTranchesForSingleDeposit(
+function createRedemptionTrancheAmountsForSingleDeposit(
   deposit: Deposit,
   redeemAmount: BigDecimal,
-): RedemptionTranchesForDepositResponse {
-  let tranchesRedeemedFrom: Tranche[] = [];
+  event: ethereum.Event,
+): RedemptionTrancheAmountsForDeposit {
+  let redemptionTrancheAmounts: TrancheAmount[] = [];
   let amountLeftToRedeem = redeemAmount;
+  let redemptionTimestamp = event.block.timestamp.toI32();
 
   // redeem from highest tranches (with least rewards) first
   for (let i = deposit.trancheAmounts.length - 1; i >= 0; i--) {
-    let currentTrancheAmount = deposit.trancheAmounts[i];
+    let depositTrancheAmount = useTrancheAmount(deposit.trancheAmounts[i]);
 
     // skip tranches without money deposited to
-    if (currentTrancheAmount.equals(ZERO_BD)) {
+    if (depositTrancheAmount.amount.equals(ZERO_BD)) {
       continue;
     }
 
-    if (currentTrancheAmount >= amountLeftToRedeem) {
-      tranchesRedeemedFrom.push(new Tranche(amountLeftToRedeem, i));
+    if (depositTrancheAmount.amount >= amountLeftToRedeem) {
+      // Redemption tranche amount fits within the deposit tranche
+      redemptionTrancheAmounts.push(
+        createTrancheAmount(
+          i,
+          amountLeftToRedeem,
+          depositTrancheAmount.startStakingAt,
+          redemptionTimestamp,
+          'redemption' + '/' + deposit.id,
+          event,
+        ),
+      );
+
       amountLeftToRedeem = ZERO_BD;
+
+      // Reduce original deposit tranche amount
+      updateTrancheAmount(
+        depositTrancheAmount.id,
+        depositTrancheAmount.amount.minus(amountLeftToRedeem),
+        redemptionTimestamp,
+      );
+
       break; // we have redeemed all the funds
     } else {
-      tranchesRedeemedFrom.push(new Tranche(currentTrancheAmount, i));
-      amountLeftToRedeem = amountLeftToRedeem.minus(currentTrancheAmount);
+      // Redemption tranche amount does not fully fit within the deposit tranche
+      redemptionTrancheAmounts.push(
+        createTrancheAmount(
+          i,
+          depositTrancheAmount.amount,
+          depositTrancheAmount.startStakingAt,
+          redemptionTimestamp,
+          'redemption' + '/' + deposit.id,
+          event,
+        ),
+      );
+
+      amountLeftToRedeem = amountLeftToRedeem.minus(depositTrancheAmount.amount);
+
+      // Reduce original deposit tranche amount
+      updateTrancheAmount(depositTrancheAmount.id, ZERO_BD, redemptionTimestamp);
     }
   }
 
-  return new RedemptionTranchesForDepositResponse(tranchesRedeemedFrom, amountLeftToRedeem, deposit);
+  return new RedemptionTrancheAmountsForDeposit(redemptionTrancheAmounts, amountLeftToRedeem, deposit);
 }
-
-export function getAggregatedRedemptionTranches(
-  redemptionTranchesForAllDeposits: RedemptionTranchesForDepositResponse[],
-): Tranche[] {
-  let tranches: Tranche[] = [];
-
-  for (let i = 0; i < redemptionTranchesForAllDeposits.length; i++) {
-    let redemptionTranchesForSingleDeposit = redemptionTranchesForAllDeposits[i].tranches;
-
-    for (let j = 0; j < redemptionTranchesForSingleDeposit.length; j++) {
-      let singleRedemptionTrancheForSingleDeposit = redemptionTranchesForSingleDeposit[j];
-
-      // check if tranche already exists
-      let trancheAlreadyExists = false;
-      for (let k = 0; k < tranches.length; k++) {
-        let tranche = tranches[k];
-
-        if (tranche.id === singleRedemptionTrancheForSingleDeposit.id) {
-          tranches[k].amount = tranches[k].amount.plus(singleRedemptionTrancheForSingleDeposit.amount);
-          trancheAlreadyExists = true;
-          break;
-        }
-      }
-
-      if (trancheAlreadyExists == false) {
-        // even though redemptionTrancheForDeposit is also Tranche type we create new Tranche class in order not to have reference to old Tranche,
-        // which could result in bug when we modify tranche
-        tranches.push(
-          new Tranche(singleRedemptionTrancheForSingleDeposit.amount, singleRedemptionTrancheForSingleDeposit.id),
-        );
-      }
-    }
-  }
-
-  return tranches;
-}
-
-export function decreaseDepositTrancheAmounts(depositId: string, tranches: Tranche[], updatedAt: i32): Deposit {
-  let deposit = useDeposit(depositId);
-
-  let trancheAmounts = deposit.trancheAmounts;
-  let amount = deposit.amount;
-
-  for (let i = 0; i < tranches.length; i++) {
-    let tranche = tranches[i];
-
-    trancheAmounts[tranche.id] = trancheAmounts[tranche.id].minus(tranche.amount);
-    amount = amount.minus(tranche.amount);
-  }
-
-  deposit.amount = amount;
-  deposit.trancheAmounts = trancheAmounts;
-  deposit.updatedAt = updatedAt;
-  deposit.save();
-
-  return deposit;
-}
-
-// REWARDS

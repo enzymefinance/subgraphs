@@ -1,4 +1,4 @@
-import { ONE_DAY, ZERO_BD, logCritical } from '@enzymefinance/subgraph-utils';
+import { ONE_DAY, logCritical } from '@enzymefinance/subgraph-utils';
 import { BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 import {
   cooldownDays,
@@ -9,7 +9,6 @@ import {
   stakingStartBeforeLaunchDays,
   stakingStartTimestamp,
 } from './constants';
-import { RedemptionTranchesForDepositResponse, tranchesConfig } from './tranches';
 
 class DaysStakedResponse {
   firstPhaseStakingDays: i32;
@@ -87,51 +86,22 @@ function calculateFullStakingDays(depositCreatedAt: BigInt, redemptionTimestamp:
   return new DaysStakedResponse(0, secondsToFullDays(stakingEndTimestamp.minus(depositStakingStartTimestamp)));
 }
 
-export function getAccruedRewards(
-  redemptionTimestamp: BigInt,
-  redemptionTranchesForDeposits: RedemptionTranchesForDepositResponse[],
-): AccruedRewards {
-  let firstPhaseAccruedRewards = ZERO_BD;
-  let secondPhaseAccruedRewards = ZERO_BD;
-
-  for (let i = 0; i < redemptionTranchesForDeposits.length; i++) {
-    let redemptionTranchesForDeposit = redemptionTranchesForDeposits[i];
-
-    let createdAt = BigInt.fromI64(redemptionTranchesForDeposit.deposit.createdAt);
-    let fullStakingDays = calculateFullStakingDays(createdAt, redemptionTimestamp);
-
-    for (let i = 0; i < redemptionTranchesForDeposit.tranches.length; i++) {
-      let tranche = redemptionTranchesForDeposit.tranches[i];
-
-      let trancheAccruedRewards = getAccruedRewardsForSingleTranche(
-        tranche.amount,
-        tranchesConfig[tranche.id].divPerEthPerDay,
-        fullStakingDays.firstPhaseStakingDays,
-        fullStakingDays.secondPhaseStakingDays,
-      );
-
-      firstPhaseAccruedRewards = firstPhaseAccruedRewards.plus(trancheAccruedRewards.firstPhaseAccruedRewards);
-      secondPhaseAccruedRewards = secondPhaseAccruedRewards.plus(trancheAccruedRewards.secondPhaseAccruedRewards);
-    }
-  }
-
-  return new AccruedRewards(firstPhaseAccruedRewards, secondPhaseAccruedRewards);
-}
-
-function getAccruedRewardsForSingleTranche(
+export function getAccruedRewardsForTrancheAmount(
   stakedEthAmount: BigDecimal,
   divaTokensPerEthPerDay: BigDecimal,
-  firstPhaseStakingDays: i32,
-  secondPhaseStakingDays: i32,
+  startStakingAt: BigInt,
+  endStakingAt: BigInt,
 ): AccruedRewards {
+  let fullStakingDays = calculateFullStakingDays(startStakingAt, endStakingAt);
+
   let halfOfFirstClaimAmount = stakedEthAmount
     .times(divaTokensPerEthPerDay)
-    .times(BigInt.fromI32(firstPhaseStakingDays).toBigDecimal())
+    .times(BigInt.fromI32(fullStakingDays.firstPhaseStakingDays).toBigDecimal())
     .div(BigDecimal.fromString('2'));
 
   let secondClaimAmount = stakedEthAmount
     .times(divaTokensPerEthPerDay)
-    .times(BigInt.fromI32(secondPhaseStakingDays).toBigDecimal());
+    .times(BigInt.fromI32(fullStakingDays.secondPhaseStakingDays).toBigDecimal());
 
   return new AccruedRewards(halfOfFirstClaimAmount, halfOfFirstClaimAmount.plus(secondClaimAmount));
 }

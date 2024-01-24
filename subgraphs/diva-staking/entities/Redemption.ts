@@ -1,14 +1,11 @@
 import { Address, ethereum, BigDecimal } from '@graphprotocol/graph-ts';
 import { ZERO_BD, uniqueEventId } from '@enzymefinance/subgraph-utils';
-import { Depositor, Redemption } from '../generated/schema';
-import { Tranche, tranchesConfig } from '../utils/tranches';
+import { Depositor, Redemption, TrancheAmount } from '../generated/schema';
 import { activitiesCounterId, increaseCounter } from './Counter';
-import { AccruedRewards } from '../utils/rewards';
 
 export function createRedemption(
   depositor: Depositor,
-  tranches: Tranche[],
-  accruedRewards: AccruedRewards,
+  trancheAmounts: TrancheAmount[],
   shares: BigDecimal,
   gavBeforeActivity: BigDecimal,
   vault: Address,
@@ -18,26 +15,28 @@ export function createRedemption(
   let timestamp = event.block.timestamp.toI32();
 
   // init array with zeroes
-  let trancheAmounts = tranchesConfig.map<BigDecimal>(() => ZERO_BD);
   let amount = ZERO_BD;
+  let firstPhaseAccruedRewards = ZERO_BD;
+  let secondPhaseAccruedRewards = ZERO_BD;
 
-  for (let i = 0; i < tranches.length; i++) {
-    let tranche = tranches[i];
+  for (let i = 0; i < trancheAmounts.length; i++) {
+    let trancheAmount = trancheAmounts[i];
 
-    trancheAmounts[tranche.id] = tranche.amount;
-    amount = amount.plus(tranche.amount);
+    amount = amount.plus(trancheAmount.amount);
+    firstPhaseAccruedRewards = firstPhaseAccruedRewards.plus(trancheAmount.firstPhaseAccruedRewards);
+    secondPhaseAccruedRewards = secondPhaseAccruedRewards.plus(trancheAmount.secondPhaseAccruedRewards);
   }
 
   redemption.shares = shares;
-  redemption.amount = amount.neg();
-  redemption.trancheAmounts = trancheAmounts;
+  redemption.amount = amount;
+  redemption.trancheAmounts = trancheAmounts.map<string>((trancheAmount) => trancheAmount.id);
   redemption.depositor = depositor.id;
   redemption.vault = vault;
   redemption.gavBeforeActivity = gavBeforeActivity;
   redemption.activityType = 'Redemption';
   redemption.activityCounter = increaseCounter(activitiesCounterId, timestamp);
-  redemption.firstPhaseAccruedRewards = accruedRewards.firstPhaseAccruedRewards;
-  redemption.secondPhaseAccruedRewards = accruedRewards.secondPhaseAccruedRewards;
+  redemption.firstPhaseAccruedRewards = firstPhaseAccruedRewards;
+  redemption.secondPhaseAccruedRewards = secondPhaseAccruedRewards;
   redemption.createdAt = timestamp;
   redemption.save();
 

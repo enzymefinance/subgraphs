@@ -1,15 +1,9 @@
 import { createDeposit } from '../entities/Deposit';
 import { SharesBought, SharesRedeemed } from '../generated/contracts/ComptrollerLibEvents';
-import {
-  decreaseDepositTrancheAmounts,
-  getDepositTranches,
-  getRedemptionTranchesForAllDeposits,
-  getAggregatedRedemptionTranches,
-} from '../utils/tranches';
+import { createRedemptionTrancheAmountsForAllDeposits, createDepositTrancheAmounts } from '../utils/tranches';
 import { useDepositor, ensureDepositor } from '../entities/Depositor';
 import { createRedemption } from '../entities/Redemption';
 import { Address } from '@graphprotocol/graph-ts';
-
 import { ZERO_BD, toBigDecimal } from '@enzymefinance/subgraph-utils';
 import { useComptroller } from '../entities/Comptroller';
 import {
@@ -27,8 +21,6 @@ import {
   sumOfDepositsAmountId,
   sumOfRedemptionsAmountId,
 } from '../entities/Amount';
-
-import { getAccruedRewards } from '../utils/rewards';
 import { stakingEndTimestamp } from '../utils/constants';
 
 export function handleSharesBought(event: SharesBought): void {
@@ -50,7 +42,7 @@ export function handleSharesBought(event: SharesBought): void {
   depositor.amount = depositor.amount.plus(investmentAmount);
   depositor.save();
 
-  let tranches = getDepositTranches(gavBeforeActivity, investmentAmount);
+  let tranches = createDepositTrancheAmounts(gavBeforeActivity, investmentAmount, event);
 
   createDeposit(depositor, tranches, sharesReceived, gavBeforeActivity, Address.fromBytes(comptroller.vault), event);
 
@@ -71,31 +63,18 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
 
   let deposits = depositor.deposits.load();
 
-  let redemptionTranches = getRedemptionTranchesForAllDeposits(deposits, redeemAmount);
-  let aggregatedRedemptionTranches = getAggregatedRedemptionTranches(redemptionTranches);
+  let redemptionTrancheAmounts = createRedemptionTrancheAmountsForAllDeposits(deposits, redeemAmount, event);
 
   let comptroller = useComptroller(event.address);
-  let accruedRewards = getAccruedRewards(event.block.timestamp, redemptionTranches);
 
   createRedemption(
     depositor,
-    aggregatedRedemptionTranches,
-    accruedRewards,
+    redemptionTrancheAmounts,
     sharesAmount,
     gavBeforeActivity,
     Address.fromBytes(comptroller.vault),
     event,
   );
-
-  for (let i = 0; i < redemptionTranches.length; i++) {
-    let redemptionTranche = redemptionTranches[i];
-
-    decreaseDepositTrancheAmounts(
-      redemptionTranche.deposit.id,
-      redemptionTranche.tranches,
-      event.block.timestamp.toI32(),
-    );
-  }
 
   depositor.shares = depositor.shares.minus(sharesAmount);
   depositor.amount = depositor.amount.minus(redeemAmount);
