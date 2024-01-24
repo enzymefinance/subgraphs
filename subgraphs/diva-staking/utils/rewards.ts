@@ -28,7 +28,7 @@ class DaysStaked {
   }
 }
 
-export class Rewards {
+class Rewards {
   firstPhaseRewards: BigDecimal;
   secondPhaseRewards: BigDecimal;
   totalRewards: BigDecimal;
@@ -93,10 +93,10 @@ function calculateFullStakingDays(depositCreatedAt: BigInt, redemptionTimestamp:
 export function getRewardsForTrancheAmount(
   stakedEthAmount: BigDecimal,
   divaTokensPerEthPerDay: BigDecimal,
-  startStakingAt: BigInt,
-  endStakingAt: BigInt,
+  startStakingAt: i32,
+  endStakingAt: i32,
 ): Rewards {
-  let fullStakingDays = calculateFullStakingDays(startStakingAt, endStakingAt);
+  let fullStakingDays = calculateFullStakingDays(BigInt.fromI32(startStakingAt), BigInt.fromI32(endStakingAt));
 
   let halfOfFirstClaimAmount = stakedEthAmount
     .times(divaTokensPerEthPerDay)

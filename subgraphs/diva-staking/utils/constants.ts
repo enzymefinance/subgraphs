@@ -19,7 +19,7 @@ export let stakingPeriodDays: i32 = 183;
 
 export let stakingEndTimestamp = stakingStartTimestamp.plus(BigInt.fromI32(stakingPeriodDays).times(ONE_DAY));
 
-export class StakingTranchesConfiguration {
+class StakingTranchesConfiguration {
   threshold: BigDecimal;
   divaPerEthPerDay: BigDecimal;
 
