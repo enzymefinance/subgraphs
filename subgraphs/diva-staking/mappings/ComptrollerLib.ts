@@ -1,13 +1,9 @@
 import { createDeposit } from '../entities/Deposit';
 import { SharesBought, SharesRedeemed } from '../generated/contracts/ComptrollerLibEvents';
-import {
-  createRedemptionTrancheAmountsForAllDeposits as getRedemptionTrancheAmountsForAllDeposits,
-  getDepositTrancheAmounts,
-} from '../utils/tranches';
+import { createRedemptionTrancheAmountsForAllDeposits, createDepositTrancheAmounts } from '../utils/tranches';
 import { useDepositor, ensureDepositor } from '../entities/Depositor';
 import { createRedemption } from '../entities/Redemption';
 import { Address } from '@graphprotocol/graph-ts';
-
 import { ZERO_BD, toBigDecimal } from '@enzymefinance/subgraph-utils';
 import { useComptroller } from '../entities/Comptroller';
 import {
@@ -25,7 +21,6 @@ import {
   sumOfDepositsAmountId,
   sumOfRedemptionsAmountId,
 } from '../entities/Amount';
-
 import { stakingEndTimestamp } from '../utils/constants';
 
 export function handleSharesBought(event: SharesBought): void {
@@ -47,7 +42,7 @@ export function handleSharesBought(event: SharesBought): void {
   depositor.amount = depositor.amount.plus(investmentAmount);
   depositor.save();
 
-  let tranches = getDepositTrancheAmounts(gavBeforeActivity, investmentAmount, event);
+  let tranches = createDepositTrancheAmounts(gavBeforeActivity, investmentAmount, event);
 
   createDeposit(depositor, tranches, sharesReceived, gavBeforeActivity, Address.fromBytes(comptroller.vault), event);
 
@@ -68,7 +63,7 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
 
   let deposits = depositor.deposits.load();
 
-  let redemptionTrancheAmounts = getRedemptionTrancheAmountsForAllDeposits(deposits, redeemAmount, event);
+  let redemptionTrancheAmounts = createRedemptionTrancheAmountsForAllDeposits(deposits, redeemAmount, event);
 
   let comptroller = useComptroller(event.address);
 

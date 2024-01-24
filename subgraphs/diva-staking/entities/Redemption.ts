@@ -1,9 +1,7 @@
 import { Address, ethereum, BigDecimal } from '@graphprotocol/graph-ts';
 import { ZERO_BD, uniqueEventId } from '@enzymefinance/subgraph-utils';
 import { Depositor, Redemption, TrancheAmount } from '../generated/schema';
-import { tranchesConfig } from '../utils/tranches';
 import { activitiesCounterId, increaseCounter } from './Counter';
-import { AccruedRewards } from '../utils/rewards';
 
 export function createRedemption(
   depositor: Depositor,
@@ -30,7 +28,7 @@ export function createRedemption(
   }
 
   redemption.shares = shares;
-  redemption.amount = amount.neg();
+  redemption.amount = amount;
   redemption.trancheAmounts = trancheAmounts.map<string>((trancheAmount) => trancheAmount.id);
   redemption.depositor = depositor.id;
   redemption.vault = vault;

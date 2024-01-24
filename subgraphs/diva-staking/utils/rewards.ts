@@ -1,4 +1,4 @@
-import { ONE_DAY, ZERO_BD, logCritical } from '@enzymefinance/subgraph-utils';
+import { ONE_DAY, logCritical } from '@enzymefinance/subgraph-utils';
 import { BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 import {
   cooldownDays,

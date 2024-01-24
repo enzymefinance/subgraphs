@@ -1,7 +1,7 @@
 import { BigDecimal, ethereum } from '@graphprotocol/graph-ts';
 import { Deposit, TrancheAmount } from '../generated/schema';
-import { updateRewardsForDeposit, useDeposit } from '../entities/Deposit';
-import { ZERO_BD, logCritical } from '@enzymefinance/subgraph-utils';
+import { updateRewardsForDeposit } from '../entities/Deposit';
+import { ZERO_BD } from '@enzymefinance/subgraph-utils';
 import { createTrancheAmount, updateTrancheAmount, useTrancheAmount } from '../entities/TrancheAmount';
 import { stakingEndTimestamp } from './constants';
 
@@ -30,7 +30,7 @@ export let tranchesConfig: TrancheConfig[] = [
 
 // DEPOSIT
 
-export function getDepositTrancheAmounts(
+export function createDepositTrancheAmounts(
   vaultsGavBeforeDeposit: BigDecimal,
   investmentAmount: BigDecimal,
   event: ethereum.Event,
