@@ -79,6 +79,8 @@ type Redemption implements Activity @entity {
 
 type TrancheAmount @entity {
   id: ID!
+  createdAt: Int!
+  updatedAt: Int!
   trancheId: Int!
   amount: BigDecimal! 
   startStakingAt: Int!

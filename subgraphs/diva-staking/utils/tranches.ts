@@ -1,8 +1,8 @@
 import { BigDecimal, ethereum } from '@graphprotocol/graph-ts';
 import { Deposit, TrancheAmount } from '../generated/schema';
-import { useDeposit } from '../entities/Deposit';
-import { ZERO_BD } from '@enzymefinance/subgraph-utils';
-import { createTrancheAmount, useTrancheAmount } from '../entities/TrancheAmount';
+import { updateRewardsForDeposit, useDeposit } from '../entities/Deposit';
+import { ZERO_BD, logCritical } from '@enzymefinance/subgraph-utils';
+import { createTrancheAmount, updateTrancheAmount, useTrancheAmount } from '../entities/TrancheAmount';
 import { stakingEndTimestamp } from './constants';
 
 export class TrancheConfig {
@@ -43,12 +43,12 @@ export function getDepositTrancheAmounts(
   for (let i = 0; i < tranchesConfig.length; i++) {
     let currentTranche = tranchesConfig[i];
 
-    // if gav is greater than tranche threshold skip that tranche
+    // If the current total GAV is greater than tranche threshold, then skip the tranche
     if (currentTranche.threshold <= vaultsGav) {
       continue;
     }
 
-    // check if invested amount left is lower than threshold, if yes then full investment amount left belongs to that tranche completely
+    // If remaining deposit amount is lower than the tranche threshold, then the full remaining deposit amount is allocated to the tranche
     if (currentTranche.threshold >= vaultsGav.plus(amountLeftToDeposit)) {
       let fullTrancheAmount = createTrancheAmount(
         i,
@@ -57,10 +57,13 @@ export function getDepositTrancheAmounts(
         stakingEndTimestamp.toI32(),
         event,
       );
+
       tranchesDepositedTo.push(fullTrancheAmount);
-      break;
+
+      break; //
     }
 
+    // Deposit amount is partially allocated to the tranche
     let amountInvestedToCurrentTranche = currentTranche.threshold.minus(vaultsGav);
     amountLeftToDeposit = amountLeftToDeposit.minus(amountInvestedToCurrentTranche);
 
@@ -71,6 +74,7 @@ export function getDepositTrancheAmounts(
       stakingEndTimestamp.toI32(),
       event,
     );
+
     tranchesDepositedTo.push(partialTrancheAmount);
 
     vaultsGav = vaultsGav.plus(amountInvestedToCurrentTranche);
@@ -101,7 +105,7 @@ export function createRedemptionTrancheAmountsForAllDeposits(
   let redemptionTranchesForDeposits: TrancheAmount[] = [];
   let amountLeftToRedeem = redeemAmount;
 
-  // sort deposits by creation date descending (last deposit will be used first for redemption)
+  // Sort deposits by creation date descending (last deposit will be used first for redemption)
   deposits = deposits.sort((a, b) => b.createdAt - a.createdAt);
 
   for (let i = 0; i < deposits.length; i++) {
@@ -114,6 +118,9 @@ export function createRedemptionTrancheAmountsForAllDeposits(
       amountLeftToRedeem,
       event,
     );
+
+    updateRewardsForDeposit(deposits[i], event.block.timestamp.toI32());
+
     redemptionTranchesForDeposits = redemptionTranchesForDeposits.concat(redemptionTranchesForDeposit.trancheAmounts);
 
     amountLeftToRedeem = redemptionTranchesForDeposit.amountLeftToRedeem;
@@ -141,16 +148,23 @@ function createRedemptionTrancheAmountsForSingleDeposit(
     }
 
     if (depositTrancheAmount.amount >= amountLeftToRedeem) {
+      // Redemption tranche amount fits within the deposit tranche
       redemptionTrancheAmounts.push(
         createTrancheAmount(i, amountLeftToRedeem, depositTrancheAmount.startStakingAt, redemptionTimestamp, event),
       );
 
-      depositTrancheAmount.amount = depositTrancheAmount.amount.minus(amountLeftToRedeem);
-      depositTrancheAmount.save();
-
       amountLeftToRedeem = ZERO_BD;
+
+      // Reduce original deposit tranche amount
+      updateTrancheAmount(
+        depositTrancheAmount.id,
+        depositTrancheAmount.amount.minus(amountLeftToRedeem),
+        redemptionTimestamp,
+      );
+
       break; // we have redeemed all the funds
     } else {
+      // Redemption tranche amount does not fully fit within the deposit tranche
       redemptionTrancheAmounts.push(
         createTrancheAmount(
           i,
@@ -161,10 +175,10 @@ function createRedemptionTrancheAmountsForSingleDeposit(
         ),
       );
 
-      depositTrancheAmount.amount = ZERO_BD;
-      depositTrancheAmount.save();
-
       amountLeftToRedeem = amountLeftToRedeem.minus(depositTrancheAmount.amount);
+
+      // Reduce original deposit tranche amount
+      updateTrancheAmount(depositTrancheAmount.id, ZERO_BD, redemptionTimestamp);
     }
   }
 
