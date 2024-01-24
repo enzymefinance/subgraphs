@@ -152,33 +152,39 @@ function createRedemptionTrancheAmountsForSingleDeposit(
 
     if (depositTrancheAmount.amount >= amountLeftToRedeem) {
       // Redemption tranche amount fits within the deposit tranche
+
+      let amountToRedeemWithinTranche = amountLeftToRedeem;
+
       redemptionTrancheAmounts.push(
         createTrancheAmount(
-          i,
-          amountLeftToRedeem,
+          depositTrancheAmount.trancheId,
+          amountToRedeemWithinTranche,
           depositTrancheAmount.startStakingAt,
           redemptionTimestamp,
           'redemption' + '/' + deposit.id,
           event,
         ),
       );
-
-      amountLeftToRedeem = ZERO_BD;
 
       // Reduce original deposit tranche amount
       updateTrancheAmount(
         depositTrancheAmount.id,
-        depositTrancheAmount.amount.minus(amountLeftToRedeem),
+        depositTrancheAmount.amount.minus(amountToRedeemWithinTranche),
         redemptionTimestamp,
       );
+
+      amountLeftToRedeem = amountLeftToRedeem.minus(amountToRedeemWithinTranche); // zero
 
       break; // we have redeemed all the funds
     } else {
       // Redemption tranche amount does not fully fit within the deposit tranche
+
+      let amountToRedeemWithinTranche = depositTrancheAmount.amount;
+
       redemptionTrancheAmounts.push(
         createTrancheAmount(
-          i,
-          depositTrancheAmount.amount,
+          depositTrancheAmount.trancheId,
+          amountToRedeemWithinTranche,
           depositTrancheAmount.startStakingAt,
           redemptionTimestamp,
           'redemption' + '/' + deposit.id,
@@ -186,10 +192,14 @@ function createRedemptionTrancheAmountsForSingleDeposit(
         ),
       );
 
-      amountLeftToRedeem = amountLeftToRedeem.minus(depositTrancheAmount.amount);
-
       // Reduce original deposit tranche amount
-      updateTrancheAmount(depositTrancheAmount.id, ZERO_BD, redemptionTimestamp);
+      updateTrancheAmount(
+        depositTrancheAmount.id,
+        depositTrancheAmount.amount.minus(amountToRedeemWithinTranche), // zero
+        redemptionTimestamp,
+      );
+
+      amountLeftToRedeem = amountLeftToRedeem.minus(amountToRedeemWithinTranche);
     }
   }
 
