@@ -3,24 +3,6 @@ import { Depositor } from '../generated/schema';
 import { ZERO_BD, logCritical } from '@enzymefinance/subgraph-utils';
 import { activeDepositorsCounterId, depositorsCounterId, increaseCounter } from './Counter';
 
-export function createDepositor(
-  depositorAddress: Address,
-  shares: BigDecimal,
-  amount: BigDecimal,
-  event: ethereum.Event,
-): Depositor {
-  let depositor = new Depositor(depositorAddress);
-  let timestamp = event.block.timestamp.toI32();
-
-  depositor.shares = shares;
-  depositor.amount = amount;
-  depositor.createdAt = timestamp;
-  depositor.updatedAt = timestamp;
-  depositor.save();
-
-  return depositor;
-}
-
 export function useDepositor(depositorAddress: Address): Depositor {
   let depositor = Depositor.load(depositorAddress);
 

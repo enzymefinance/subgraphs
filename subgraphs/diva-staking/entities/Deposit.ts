@@ -3,28 +3,32 @@ import { ZERO_BD, logCritical, uniqueEventId } from '@enzymefinance/subgraph-uti
 import { Deposit, Depositor, TrancheAmount } from '../generated/schema';
 import { increaseCounter } from './Counter';
 import { createTrancheAmount, useTrancheAmount } from './TrancheAmount';
+import { useComptroller } from './Comptroller';
 
 export function createDeposit(
   depositor: Depositor,
   trancheAmounts: TrancheAmount[],
   shares: BigDecimal,
   gavBeforeActivity: BigDecimal,
-  vault: Address,
+  comptroller: Address,
   event: ethereum.Event,
 ): Deposit {
   let deposit = new Deposit(uniqueEventId(event));
   let timestamp = event.block.timestamp.toI32();
 
   let amount = ZERO_BD;
-  let firstPhaseAccruedRewards = ZERO_BD;
-  let secondPhaseAccruedRewards = ZERO_BD;
+  let firstPhaseRewards = ZERO_BD;
+  let secondPhaseRewards = ZERO_BD;
+  let totalRewards = ZERO_BD;
   let initialTrancheAmounts: TrancheAmount[] = [];
   for (let i = 0; i < trancheAmounts.length; i++) {
     let trancheAmount = trancheAmounts[i];
 
     amount = amount.plus(trancheAmount.amount);
-    firstPhaseAccruedRewards = firstPhaseAccruedRewards.plus(trancheAmount.firstPhaseAccruedRewards);
-    secondPhaseAccruedRewards = secondPhaseAccruedRewards.plus(trancheAmount.secondPhaseAccruedRewards);
+    firstPhaseRewards = firstPhaseRewards.plus(trancheAmount.firstPhaseRewards);
+    secondPhaseRewards = secondPhaseRewards.plus(trancheAmount.secondPhaseRewards);
+    totalRewards = totalRewards.plus(trancheAmount.totalRewards);
+
     initialTrancheAmounts.push(
       createTrancheAmount(
         trancheAmount.trancheId,
@@ -43,14 +47,15 @@ export function createDeposit(
   deposit.trancheAmounts = trancheAmounts.map<string>((trancheAmount) => trancheAmount.id);
   deposit.initialTrancheAmounts = initialTrancheAmounts.map<string>((trancheAmount) => trancheAmount.id);
   deposit.depositor = depositor.id;
-  deposit.vault = vault;
+  deposit.vault = useComptroller(comptroller).vault;
   deposit.createdAt = timestamp;
   deposit.updatedAt = timestamp;
   deposit.gavBeforeActivity = gavBeforeActivity;
   deposit.activityType = 'Deposit';
   deposit.activityCounter = increaseCounter('activities', timestamp);
-  deposit.firstPhaseAccruedRewards = firstPhaseAccruedRewards;
-  deposit.secondPhaseAccruedRewards = secondPhaseAccruedRewards;
+  deposit.firstPhaseRewards = firstPhaseRewards;
+  deposit.secondPhaseRewards = secondPhaseRewards;
+  deposit.totalRewards = totalRewards;
   deposit.save();
 
   return deposit;
@@ -67,20 +72,24 @@ export function useDeposit(id: string): Deposit {
 
 export function updateRewardsForDeposit(deposit: Deposit, timestamp: i32): Deposit {
   let amount = ZERO_BD;
-  let firstPhaseAccruedRewards = ZERO_BD;
-  let secondPhaseAccruedRewards = ZERO_BD;
+  let firstPhaseRewards = ZERO_BD;
+  let secondPhaseRewards = ZERO_BD;
+  let totalRewards = ZERO_BD;
+
   for (let i = 0; i < deposit.trancheAmounts.length; i++) {
     let trancheAmount = useTrancheAmount(deposit.trancheAmounts[i]);
 
     amount = amount.plus(trancheAmount.amount);
-    firstPhaseAccruedRewards = firstPhaseAccruedRewards.plus(trancheAmount.firstPhaseAccruedRewards);
-    secondPhaseAccruedRewards = secondPhaseAccruedRewards.plus(trancheAmount.secondPhaseAccruedRewards);
+    firstPhaseRewards = firstPhaseRewards.plus(trancheAmount.firstPhaseRewards);
+    secondPhaseRewards = secondPhaseRewards.plus(trancheAmount.secondPhaseRewards);
+    totalRewards = totalRewards.plus(trancheAmount.totalRewards);
   }
 
   deposit.updatedAt = timestamp;
   deposit.amount = amount;
-  deposit.firstPhaseAccruedRewards = firstPhaseAccruedRewards;
-  deposit.secondPhaseAccruedRewards = secondPhaseAccruedRewards;
+  deposit.firstPhaseRewards = firstPhaseRewards;
+  deposit.secondPhaseRewards = secondPhaseRewards;
+  deposit.totalRewards = totalRewards;
   deposit.save();
 
   return deposit;

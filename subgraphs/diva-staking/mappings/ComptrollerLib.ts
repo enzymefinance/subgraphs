@@ -4,7 +4,7 @@ import { createRedemptionTrancheAmountsForAllDeposits, createDepositTrancheAmoun
 import { useDepositor, ensureDepositor } from '../entities/Depositor';
 import { createRedemption } from '../entities/Redemption';
 import { Address } from '@graphprotocol/graph-ts';
-import { ZERO_BD, toBigDecimal } from '@enzymefinance/subgraph-utils';
+import { ZERO_BD, logCritical, toBigDecimal } from '@enzymefinance/subgraph-utils';
 import { useComptroller } from '../entities/Comptroller';
 import {
   activeDepositorsCounterId,
@@ -24,27 +24,26 @@ import {
 import { stakingEndTimestamp } from '../utils/constants';
 
 export function handleSharesBought(event: SharesBought): void {
-  if (stakingEndTimestamp < event.block.timestamp) {
-    return; // staking period ended
+  if (event.block.timestamp.le(stakingEndTimestamp)) {
+    // staking period ended
+    return;
   }
 
   let timestamp = event.block.timestamp.toI32();
 
-  let sharesReceived = toBigDecimal(event.params.sharesReceived, 18);
-  let investmentAmount = toBigDecimal(event.params.investmentAmount, 18); // all possible to deposit assets has 18 decimals
-
-  let gavBeforeActivity = getAmount(currentGavAmountId);
-
-  let comptroller = useComptroller(event.address);
+  let sharesReceived = toBigDecimal(event.params.sharesReceived);
+  let investmentAmount = toBigDecimal(event.params.investmentAmount);
 
   let depositor = ensureDepositor(event.params.buyer, event);
   depositor.shares = depositor.shares.plus(sharesReceived);
   depositor.amount = depositor.amount.plus(investmentAmount);
+  depositor.updatedAt = timestamp;
   depositor.save();
 
+  let gavBeforeActivity = getAmount(currentGavAmountId);
   let tranches = createDepositTrancheAmounts(gavBeforeActivity, investmentAmount, event);
 
-  createDeposit(depositor, tranches, sharesReceived, gavBeforeActivity, Address.fromBytes(comptroller.vault), event);
+  createDeposit(depositor, tranches, sharesReceived, gavBeforeActivity, event.address, event);
 
   increaseCounter(depositsCounterId, timestamp);
   increaseAmount(sumOfDepositsAmountId, investmentAmount, timestamp);
@@ -52,34 +51,35 @@ export function handleSharesBought(event: SharesBought): void {
 }
 
 export function handleSharesRedeemed(event: SharesRedeemed): void {
-  let depositor = useDepositor(event.params.redeemer);
+  if (event.block.timestamp.le(stakingEndTimestamp)) {
+    // staking period ended
+    return;
+  }
+
   let timestamp = event.block.timestamp.toI32();
 
-  let sharesAmount = toBigDecimal(event.params.sharesAmount, 18);
+  let depositor = useDepositor(event.params.redeemer);
 
+  if (depositor.shares.equals(ZERO_BD)) {
+    logCritical('Depositor {} does not own any shares.', [depositor.id.toHex()]);
+  }
+
+  let sharesAmount = toBigDecimal(event.params.sharesAmount);
   let redeemAmount = depositor.amount.times(sharesAmount).div(depositor.shares).truncate(18);
-
-  let gavBeforeActivity = getAmount(currentGavAmountId);
-
-  let deposits = depositor.deposits.load();
-
-  let redemptionTrancheAmounts = createRedemptionTrancheAmountsForAllDeposits(deposits, redeemAmount, event);
-
-  let comptroller = useComptroller(event.address);
-
-  createRedemption(
-    depositor,
-    redemptionTrancheAmounts,
-    sharesAmount,
-    gavBeforeActivity,
-    Address.fromBytes(comptroller.vault),
-    event,
-  );
 
   depositor.shares = depositor.shares.minus(sharesAmount);
   depositor.amount = depositor.amount.minus(redeemAmount);
   depositor.updatedAt = timestamp;
   depositor.save();
+
+  let gavBeforeActivity = getAmount(currentGavAmountId);
+  let redemptionTrancheAmounts = createRedemptionTrancheAmountsForAllDeposits(
+    depositor.deposits.load(),
+    redeemAmount,
+    event,
+  );
+
+  createRedemption(depositor, redemptionTrancheAmounts, sharesAmount, gavBeforeActivity, event.address, event);
 
   if (depositor.shares.equals(ZERO_BD)) {
     decreaseCounter(activeDepositorsCounterId, timestamp);

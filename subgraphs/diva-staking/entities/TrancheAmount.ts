@@ -1,8 +1,8 @@
 import { ethereum, BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 import { TrancheAmount } from '../generated/schema';
 import { logCritical, uniqueEventId } from '@enzymefinance/subgraph-utils';
-import { getAccruedRewardsForTrancheAmount } from '../utils/rewards';
-import { tranchesConfig } from '../utils/tranches';
+import { getRewardsForTrancheAmount } from '../utils/rewards';
+import { tranchesConfig } from '../utils/constants';
 
 export function createTrancheAmount(
   trancheId: i32,
@@ -22,7 +22,7 @@ export function createTrancheAmount(
 
   let trancheAmount = new TrancheAmount(trancheAmountId);
 
-  let accruedRewards = getAccruedRewardsForTrancheAmount(
+  let rewards = getRewardsForTrancheAmount(
     amount,
     tranchesConfig[trancheId].divaPerEthPerDay,
     BigInt.fromI32(startStakingAt),
@@ -35,8 +35,9 @@ export function createTrancheAmount(
   trancheAmount.amount = amount;
   trancheAmount.startStakingAt = startStakingAt;
   trancheAmount.endStakingAt = endStakingAt;
-  trancheAmount.firstPhaseAccruedRewards = accruedRewards.firstPhaseAccruedRewards;
-  trancheAmount.secondPhaseAccruedRewards = accruedRewards.secondPhaseAccruedRewards;
+  trancheAmount.firstPhaseRewards = rewards.firstPhaseRewards;
+  trancheAmount.secondPhaseRewards = rewards.secondPhaseRewards;
+  trancheAmount.totalRewards = rewards.totalRewards;
   trancheAmount.save();
 
   return trancheAmount;
@@ -55,7 +56,7 @@ export function useTrancheAmount(id: string): TrancheAmount {
 export function updateTrancheAmount(id: string, updatedAmount: BigDecimal, timestamp: i32): TrancheAmount {
   let trancheAmount = useTrancheAmount(id);
 
-  let accruedRewards = getAccruedRewardsForTrancheAmount(
+  let accruedRewards = getRewardsForTrancheAmount(
     updatedAmount,
     tranchesConfig[trancheAmount.trancheId].divaPerEthPerDay,
     BigInt.fromI32(trancheAmount.startStakingAt),
@@ -64,8 +65,9 @@ export function updateTrancheAmount(id: string, updatedAmount: BigDecimal, times
 
   trancheAmount.updatedAt = timestamp;
   trancheAmount.amount = updatedAmount;
-  trancheAmount.firstPhaseAccruedRewards = accruedRewards.firstPhaseAccruedRewards;
-  trancheAmount.secondPhaseAccruedRewards = accruedRewards.secondPhaseAccruedRewards;
+  trancheAmount.firstPhaseRewards = accruedRewards.firstPhaseRewards;
+  trancheAmount.secondPhaseRewards = accruedRewards.secondPhaseRewards;
+  trancheAmount.totalRewards = accruedRewards.totalRewards;
   trancheAmount.save();
 
   return trancheAmount;

@@ -19,22 +19,24 @@ class DaysStakedResponse {
     this.secondPhaseStakingDays = secondPhaseStakingDays;
 
     if (this.firstPhaseStakingDays > stakingStartBeforeLaunchDays + cooldownDays) {
-      logCritical('Invalid firstStepDays', []);
+      logCritical('Invalid firstPhaseStakingDays', []);
     }
 
     if (this.secondPhaseStakingDays > stakingPeriodDays - stakingStartBeforeLaunchDays) {
-      logCritical('Invalid secondStepDays');
+      logCritical('Invalid secondPhaseStakingDays');
     }
   }
 }
 
-export class AccruedRewards {
-  firstPhaseAccruedRewards: BigDecimal;
-  secondPhaseAccruedRewards: BigDecimal;
+export class Rewards {
+  firstPhaseRewards: BigDecimal;
+  secondPhaseRewards: BigDecimal;
+  totalRewards: BigDecimal;
 
-  constructor(firstPhaseAccruedRewards: BigDecimal, secondPhaseAccruedRewards: BigDecimal) {
-    this.firstPhaseAccruedRewards = firstPhaseAccruedRewards;
-    this.secondPhaseAccruedRewards = secondPhaseAccruedRewards;
+  constructor(firstPhaseRewards: BigDecimal, secondPhaseRewards: BigDecimal, totalRewards: BigDecimal) {
+    this.firstPhaseRewards = firstPhaseRewards;
+    this.secondPhaseRewards = secondPhaseRewards;
+    this.totalRewards = totalRewards;
   }
 }
 
@@ -86,12 +88,12 @@ function calculateFullStakingDays(depositCreatedAt: BigInt, redemptionTimestamp:
   return new DaysStakedResponse(0, secondsToFullDays(stakingEndTimestamp.minus(depositStakingStartTimestamp)));
 }
 
-export function getAccruedRewardsForTrancheAmount(
+export function getRewardsForTrancheAmount(
   stakedEthAmount: BigDecimal,
   divaTokensPerEthPerDay: BigDecimal,
   startStakingAt: BigInt,
   endStakingAt: BigInt,
-): AccruedRewards {
+): Rewards {
   let fullStakingDays = calculateFullStakingDays(startStakingAt, endStakingAt);
 
   let halfOfFirstClaimAmount = stakedEthAmount
@@ -103,5 +105,9 @@ export function getAccruedRewardsForTrancheAmount(
     .times(divaTokensPerEthPerDay)
     .times(BigInt.fromI32(fullStakingDays.secondPhaseStakingDays).toBigDecimal());
 
-  return new AccruedRewards(halfOfFirstClaimAmount, halfOfFirstClaimAmount.plus(secondClaimAmount));
+  return new Rewards(
+    halfOfFirstClaimAmount,
+    halfOfFirstClaimAmount.plus(secondClaimAmount),
+    halfOfFirstClaimAmount.plus(halfOfFirstClaimAmount.plus(secondClaimAmount)),
+  );
 }
