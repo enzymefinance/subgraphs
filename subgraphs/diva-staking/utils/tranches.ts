@@ -55,6 +55,7 @@ export function getDepositTrancheAmounts(
         amountLeftToDeposit,
         timestamp,
         stakingEndTimestamp.toI32(),
+        'deposit',
         event,
       );
 
@@ -72,6 +73,7 @@ export function getDepositTrancheAmounts(
       amountInvestedToCurrentTranche,
       timestamp,
       stakingEndTimestamp.toI32(),
+      'deposit',
       event,
     );
 
@@ -104,6 +106,7 @@ export function createRedemptionTrancheAmountsForAllDeposits(
 ): TrancheAmount[] {
   let redemptionTranchesForDeposits: TrancheAmount[] = [];
   let amountLeftToRedeem = redeemAmount;
+  let redemptionTimestamp = event.block.timestamp.toI32();
 
   // Sort deposits by creation date descending (last deposit will be used first for redemption)
   deposits = deposits.sort((a, b) => b.createdAt - a.createdAt);
@@ -119,7 +122,7 @@ export function createRedemptionTrancheAmountsForAllDeposits(
       event,
     );
 
-    updateRewardsForDeposit(deposits[i], event.block.timestamp.toI32());
+    updateRewardsForDeposit(deposits[i], redemptionTimestamp);
 
     redemptionTranchesForDeposits = redemptionTranchesForDeposits.concat(redemptionTranchesForDeposit.trancheAmounts);
 
@@ -150,7 +153,14 @@ function createRedemptionTrancheAmountsForSingleDeposit(
     if (depositTrancheAmount.amount >= amountLeftToRedeem) {
       // Redemption tranche amount fits within the deposit tranche
       redemptionTrancheAmounts.push(
-        createTrancheAmount(i, amountLeftToRedeem, depositTrancheAmount.startStakingAt, redemptionTimestamp, event),
+        createTrancheAmount(
+          i,
+          amountLeftToRedeem,
+          depositTrancheAmount.startStakingAt,
+          redemptionTimestamp,
+          'redemption' + '/' + deposit.id,
+          event,
+        ),
       );
 
       amountLeftToRedeem = ZERO_BD;
@@ -171,6 +181,7 @@ function createRedemptionTrancheAmountsForSingleDeposit(
           depositTrancheAmount.amount,
           depositTrancheAmount.startStakingAt,
           redemptionTimestamp,
+          'redemption' + '/' + deposit.id,
           event,
         ),
       );

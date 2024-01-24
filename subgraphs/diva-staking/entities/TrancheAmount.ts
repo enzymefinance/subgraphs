@@ -9,9 +9,18 @@ export function createTrancheAmount(
   amount: BigDecimal,
   startStakingAt: i32,
   endStakingAt: i32,
+  suffix: string,
   event: ethereum.Event,
 ): TrancheAmount {
-  let trancheAmount = new TrancheAmount(uniqueEventId(event, trancheId.toString()));
+  let trancheAmountId = uniqueEventId(event, suffix + '/' + trancheId.toString());
+
+  // This shouldn't happen - but if it does we want to know (and then we have to change the id function)
+  let potentiallyExistingTrancheAmount = TrancheAmount.load(trancheAmountId);
+  if (potentiallyExistingTrancheAmount != null) {
+    logCritical('TrancheAmount with id {} already exists!', [trancheAmountId]);
+  }
+
+  let trancheAmount = new TrancheAmount(trancheAmountId);
 
   let accruedRewards = getAccruedRewardsForTrancheAmount(
     amount,
