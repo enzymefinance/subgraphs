@@ -5,6 +5,7 @@
 This repository contains the various subgraphs that Enzyme Finance uses:
 
 - [asset-universe](subgraphs/asset-universe/)
+- [diva-staking](subgraphs/diva-staking/)
 - [enzyme-core](subgraphs/enzyme-core/)
 - [mln-token](subgraphs/mln-token/)
 - [vault-balances](subgraphs/vault-balances/)
@@ -65,13 +66,16 @@ pnpm upload <context>
 All subgraphs are deployed on the hosted network:
 
 - [asset-universe](https://thegraph.com/hosted-service/subgraph/enzymefinance/asset-universe)
+- [diva-staking](https://thegraph.com/hosted-service/subgraph/enzymefinance/diva-staking)
 - [enzyme-core](https://thegraph.com/hosted-service/subgraph/enzymefinance/enzyme-core)
 - [mln-token](https://thegraph.com/hosted-service/subgraph/enzymefinance/mln-token)
 - [vault-balances](https://thegraph.com/hosted-service/subgraph/enzymefinance/vault-balances)
 - [vault-lineage](https://thegraph.com/hosted-service/subgraph/enzymefinance/vault-lineage)
 - [vault-shares](https://thegraph.com/hosted-service/subgraph/enzymefinance/vault-shares)
-- [diva](https://thegraph.com/hosted-service/subgraph/enzymefinance/diva)
 
 Some subgraphs are also deployed on the decentralized network:
 
-- [vault-lineage](https://thegraph.com/explorer/subgraphs/471kuUZjCjg75KhH8AdpUzpsnre1BsEWLJPhXG9KeZyg?view=Overview)
+- [asset-universe](https://thegraph.com/explorer/subgraphs/3Qt5kSKwdBgdLFsF2XEJ9EDQFNmuoJuXVo52QcyTMThf?view=Overview&chain=mainnet)
+- [vault-balances](https://thegraph.com/explorer/subgraphs/Gno9igCD6UZaenKzAYSDXhsBE4eEybxGBqqN1pPH7NSR?view=Overview&chain=mainnet)
+- [vault-lineage](https://thegraph.com/explorer/subgraphs/471kuUZjCjg75KhH8AdpUzpsnre1BsEWLJPhXG9KeZyg?view=Overview&chain=mainnet)
+- [vault-shares](https://thegraph.com/explorer/subgraphs/5fQN1uMK6uEswACUmN7HmvdMr3QLRhYDBrX8GngbR2Tn?view=Overview&chain=mainnet)
