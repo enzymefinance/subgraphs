@@ -16,7 +16,7 @@ import { store } from '@graphprotocol/graph-ts';
 
 export function handleExitRequestAdded(event: ExitRequestAdded): void {
   let stakeWiseStakingPosition = useStakeWiseStakingPosition(event.address.toHex());
-  let stakeWiseVaultToken = ensureStakeWiseVaultToken(event.params.stakeWiseVaultAddress, event.address);
+  let stakeWiseVaultToken = ensureStakeWiseVaultToken(event.params.stakeWiseVaultAddress, event);
 
   let sharesAmount = toBigDecimal(event.params.sharesAmount, 18);
 
@@ -30,7 +30,7 @@ export function handleExitRequestAdded(event: ExitRequestAdded): void {
 }
 export function handleExitRequestRemoved(event: ExitRequestRemoved): void {
   let stakeWiseStakingPosition = useStakeWiseStakingPosition(event.address.toHex());
-  let stakeWiseVaultToken = ensureStakeWiseVaultToken(event.params.stakeWiseVaultAddress, event.address);
+  let stakeWiseVaultToken = ensureStakeWiseVaultToken(event.params.stakeWiseVaultAddress, event);
 
   let id = stakeWiseStakingExitRequestId(stakeWiseStakingPosition, stakeWiseVaultToken, event.params.positionTicket);
   let exitRequest = useStakeWiseStakingExitRequest(id);
@@ -41,7 +41,7 @@ export function handleExitRequestRemoved(event: ExitRequestRemoved): void {
 
 export function handleVaultTokenAdded(event: VaultTokenAdded): void {
   let stakingPosition = useStakeWiseStakingPosition(event.address.toHex());
-  let vaultToken = ensureStakeWiseVaultToken(event.params.stakeWiseVaultAddress, event.address);
+  let vaultToken = ensureStakeWiseVaultToken(event.params.stakeWiseVaultAddress, event);
 
   stakingPosition.vaultTokens = arrayUnique(stakingPosition.vaultTokens.concat([vaultToken.id]));
   stakingPosition.save();

@@ -65,13 +65,13 @@ export function createStakeWiseStakingPositionChange(
   return change;
 }
 
-export function ensureStakeWiseVaultToken(stakeWiseVault: Address, externalPosition: Address): StakeWiseVaultToken {
+export function ensureStakeWiseVaultToken(stakeWiseVault: Address, event: ethereum.Event): StakeWiseVaultToken {
   let id = stakeWiseVault.toHex();
 
   let stakeWiseVaultToken = StakeWiseVaultToken.load(id);
   if (!stakeWiseVaultToken) {
     stakeWiseVaultToken = new StakeWiseVaultToken(id);
-    stakeWiseVaultToken.createdAt = 0;
+    stakeWiseVaultToken.createdAt = event.block.timestamp.toI32();
     stakeWiseVaultToken.save();
   }
 

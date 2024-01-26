@@ -1221,12 +1221,12 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
       let withdrewWhileUndelegatingAssetAmount = withdrewWhileUndelegatingAssetAmountBD.gt(BigDecimal.fromString('0'))
         ? createAssetAmount(
-            grtAsset,
-            withdrewWhileUndelegatingAssetAmountBD,
-            denominationAsset,
-            'grt-withdrew-while-undelegating-asset-amount',
-            event,
-          )
+          grtAsset,
+          withdrewWhileUndelegatingAssetAmountBD,
+          denominationAsset,
+          'grt-withdrew-while-undelegating-asset-amount',
+          event,
+        )
         : null;
 
       createTheGraphDelegationPositionChange(
@@ -1797,7 +1797,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let stakeWiseV3EthVault = ExternalSdk.bind(stakeWiseVault);
       let shares = toBigDecimal(stakeWiseV3EthVault.convertToShares(tuple[1].toBigInt()), 18);
 
-      let stakeWiseVaultToken = ensureStakeWiseVaultToken(stakeWiseVault, event.params.externalPosition);
+      let stakeWiseVaultToken = ensureStakeWiseVaultToken(stakeWiseVault, event);
 
       let wethAsset = ensureAsset(wethTokenAddress);
 
@@ -1833,7 +1833,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let stakeWiseV3EthVault = ExternalSdk.bind(stakeWiseVault);
       let amount = toBigDecimal(stakeWiseV3EthVault.convertToAssets(tuple[1].toBigInt()), 18);
 
-      let stakeWiseVaultToken = ensureStakeWiseVaultToken(stakeWiseVault, event.params.externalPosition);
+      let stakeWiseVaultToken = ensureStakeWiseVaultToken(stakeWiseVault, event);
 
       let wethAsset = ensureAsset(wethTokenAddress);
 
@@ -1869,7 +1869,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let stakeWiseV3EthVault = ExternalSdk.bind(stakeWiseVault);
       let amount = toBigDecimal(stakeWiseV3EthVault.convertToAssets(tuple[1].toBigInt()), 18);
 
-      let stakeWiseVaultToken = ensureStakeWiseVaultToken(stakeWiseVault, event.params.externalPosition);
+      let stakeWiseVaultToken = ensureStakeWiseVaultToken(stakeWiseVault, event);
 
       let wethAsset = ensureAsset(wethTokenAddress);
 
@@ -1903,7 +1903,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let positionTicket = tuple[1].toBigInt();
 
       let stakingPosition = useStakeWiseStakingPosition(event.params.externalPosition.toHex());
-      let stakeWiseVaultToken = ensureStakeWiseVaultToken(stakeWiseVault, event.params.externalPosition);
+      let stakeWiseVaultToken = ensureStakeWiseVaultToken(stakeWiseVault, event);
 
       let wethAsset = ensureAsset(wethTokenAddress);
 
@@ -1934,5 +1934,5 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
   createUnknownExternalPositionChange(event.params.externalPosition, vault, event);
 }
 
-export function handleExternalPositionTypeInfoUpdated(event: ExternalPositionTypeInfoUpdated): void {}
-export function handleValidatedVaultProxySetForFund(event: ValidatedVaultProxySetForFund): void {}
+export function handleExternalPositionTypeInfoUpdated(event: ExternalPositionTypeInfoUpdated): void { }
+export function handleValidatedVaultProxySetForFund(event: ValidatedVaultProxySetForFund): void { }
