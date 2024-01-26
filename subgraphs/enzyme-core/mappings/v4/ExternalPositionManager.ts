@@ -1,4 +1,11 @@
-import { arrayUnique, logCritical, toBigDecimal, tuplePrefixBytes, ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
+import {
+  arrayUnique,
+  fromBigDecimal,
+  logCritical,
+  toBigDecimal,
+  tuplePrefixBytes,
+  ZERO_ADDRESS,
+} from '@enzymefinance/subgraph-utils';
 import { Address, Bytes, DataSourceContext, ethereum, crypto, BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 import { createAaveDebtPosition, createAaveDebtPositionChange } from '../../entities/AaveDebtPosition';
 import {
@@ -41,6 +48,7 @@ import {
   ArbitraryLoanPositionLib4DataSource,
   LidoWithdrawalsPositionLib4DataSource,
   MapleLiquidityPositionLib4DataSource,
+  StakeWiseV3StakingPositionLib4DataSource,
   TheGraphDelegationPositionLib4DataSource,
   UniswapV3LiquidityPositionLib4DataSource,
 } from '../../generated/templates';
@@ -56,6 +64,7 @@ import {
   KilnStakingPositionActionId,
   LidoWithdrawalsActionId,
   AaveV3DebtPositionActionId,
+  StakeWiseV3StakingPositionActionId,
 } from '../../utils/actionId';
 import { ensureMapleLiquidityPoolV1, ensureMapleLiquidityPoolV2 } from '../../entities/MapleLiquidityPool';
 import { ExternalSdk } from '../../generated/contracts/ExternalSdk';
@@ -103,6 +112,14 @@ import {
   createAaveV3DebtPositionChange,
   setEModeAaveV3DebtPosition,
 } from '../../entities/AaveV3DebtPosition';
+import {
+  ensureStakeWiseVaultToken,
+  createStakeWiseStakingPositionChange,
+  useStakeWiseStakingPosition,
+  stakeWiseStakingExitRequestId,
+  useStakeWiseStakingExitRequest,
+  createStakeWiseStakingPosition,
+} from '../../entities/StakeWiseStakingPosition';
 
 export function handleExternalPositionDeployedForFund(event: ExternalPositionDeployedForFund): void {
   let type = useExternalPositionType(event.params.externalPositionTypeId);
@@ -174,6 +191,14 @@ export function handleExternalPositionDeployedForFund(event: ExternalPositionDep
     createLidoWithdrawalsPosition(event.params.externalPosition, event.params.vaultProxy, type);
 
     LidoWithdrawalsPositionLib4DataSource.create(event.params.externalPosition);
+
+    return;
+  }
+
+  if (type.label == 'STAKEWISE_V3') {
+    createStakeWiseStakingPosition(event.params.externalPosition, event.params.vaultProxy, type);
+
+    StakeWiseV3StakingPositionLib4DataSource.create(event.params.externalPosition);
 
     return;
   }
@@ -671,15 +696,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
       let outgoingAsset = createAssetAmount(lusdAsset, lusdAmount, denominationAsset, 'ldp-outgoing', event);
 
-      createLiquityDebtPositionChange(
-        event.params.externalPosition,
-        'Repay',
-        [],
-        outgoingAsset,
-        null,
-        vault,
-        event,
-      );
+      createLiquityDebtPositionChange(event.params.externalPosition, 'Repay', [], outgoingAsset, null, vault, event);
     }
 
     if (actionId == LiquityDebtPositionActionId.CloseTrove) {
@@ -1204,12 +1221,12 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
       let withdrewWhileUndelegatingAssetAmount = withdrewWhileUndelegatingAssetAmountBD.gt(BigDecimal.fromString('0'))
         ? createAssetAmount(
-            grtAsset,
-            withdrewWhileUndelegatingAssetAmountBD,
-            denominationAsset,
-            'grt-withdrew-while-undelegating-asset-amount',
-            event,
-          )
+          grtAsset,
+          withdrewWhileUndelegatingAssetAmountBD,
+          denominationAsset,
+          'grt-withdrew-while-undelegating-asset-amount',
+          event,
+        )
         : null;
 
       createTheGraphDelegationPositionChange(
@@ -1717,7 +1734,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     return;
   }
 
-  if ((type.label = 'LIDO_WITHDRAWALS')) {
+  if (type.label == 'LIDO_WITHDRAWALS') {
     if (actionId == LidoWithdrawalsActionId.RequestWithdrawals) {
       let decoded = ethereum.decode('(uint256[])', tuplePrefixBytes(event.params.actionArgs));
 
@@ -1738,6 +1755,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         event,
       );
     }
+
     if (actionId == LidoWithdrawalsActionId.ClaimWithdrawals) {
       let decoded = ethereum.decode('(uint256[],uint256[])', tuplePrefixBytes(event.params.actionArgs));
 
@@ -1763,8 +1781,158 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     return;
   }
 
+  if (type.label == 'STAKEWISE_V3') {
+    if (actionId == StakeWiseV3StakingPositionActionId.Stake) {
+      let decoded = ethereum.decode('(address,uint256)', event.params.actionArgs);
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+
+      let stakeWiseVault = tuple[0].toAddress();
+      let amount = toBigDecimal(tuple[1].toBigInt(), 18);
+
+      let stakeWiseV3EthVault = ExternalSdk.bind(stakeWiseVault);
+      let shares = toBigDecimal(stakeWiseV3EthVault.convertToShares(tuple[1].toBigInt()), 18);
+
+      let stakeWiseVaultToken = ensureStakeWiseVaultToken(stakeWiseVault, event);
+
+      let wethAsset = ensureAsset(wethTokenAddress);
+
+      let assetAmount = createAssetAmount(wethAsset, amount, denominationAsset, 'stakewise-stake', event);
+
+      createStakeWiseStakingPositionChange(
+        event.params.externalPosition,
+        'Stake',
+        stakeWiseVaultToken,
+        assetAmount,
+        shares,
+        vault,
+        event,
+      );
+
+      let stakingPosition = useStakeWiseStakingPosition(event.params.externalPosition.toHex());
+      stakingPosition.stakedEthAmount = stakingPosition.stakedEthAmount.plus(amount);
+      stakingPosition.save();
+    }
+
+    if (actionId == StakeWiseV3StakingPositionActionId.Redeem) {
+      let decoded = ethereum.decode('(address,uint256)', event.params.actionArgs);
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+
+      let stakeWiseVault = tuple[0].toAddress();
+      let shares = toBigDecimal(tuple[1].toBigInt(), 18);
+
+      let stakeWiseV3EthVault = ExternalSdk.bind(stakeWiseVault);
+      let amount = toBigDecimal(stakeWiseV3EthVault.convertToAssets(tuple[1].toBigInt()), 18);
+
+      let stakeWiseVaultToken = ensureStakeWiseVaultToken(stakeWiseVault, event);
+
+      let wethAsset = ensureAsset(wethTokenAddress);
+
+      let assetAmount = createAssetAmount(wethAsset, amount, denominationAsset, 'stakewise-redeem', event);
+
+      createStakeWiseStakingPositionChange(
+        event.params.externalPosition,
+        'Redeem',
+        stakeWiseVaultToken,
+        assetAmount,
+        shares,
+        vault,
+        event,
+      );
+
+      let stakingPosition = useStakeWiseStakingPosition(event.params.externalPosition.toHex());
+      stakingPosition.stakedEthAmount = stakingPosition.stakedEthAmount.minus(amount);
+      stakingPosition.save();
+    }
+
+    if (actionId == StakeWiseV3StakingPositionActionId.EnterExitQueue) {
+      let decoded = ethereum.decode('(address,uint256)', event.params.actionArgs);
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+
+      let stakeWiseVault = tuple[0].toAddress();
+      let shares = toBigDecimal(tuple[1].toBigInt(), 18);
+
+      let stakeWiseV3EthVault = ExternalSdk.bind(stakeWiseVault);
+      let amount = toBigDecimal(stakeWiseV3EthVault.convertToAssets(tuple[1].toBigInt()), 18);
+
+      let stakeWiseVaultToken = ensureStakeWiseVaultToken(stakeWiseVault, event);
+
+      let wethAsset = ensureAsset(wethTokenAddress);
+
+      let assetAmount = createAssetAmount(wethAsset, amount, denominationAsset, 'stakewise-enter-exit-queue', event);
+
+      createStakeWiseStakingPositionChange(
+        event.params.externalPosition,
+        'EnterExitQueue',
+        stakeWiseVaultToken,
+        assetAmount,
+        shares,
+        vault,
+        event,
+      );
+
+      let stakingPosition = useStakeWiseStakingPosition(event.params.externalPosition.toHex());
+      stakingPosition.stakedEthAmount = stakingPosition.stakedEthAmount.minus(amount);
+      stakingPosition.save();
+    }
+
+    if (actionId == StakeWiseV3StakingPositionActionId.ClaimExitedAssets) {
+      let decoded = ethereum.decode('(address,uint256)', event.params.actionArgs);
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+
+      let stakeWiseVault = tuple[0].toAddress();
+      let positionTicket = tuple[1].toBigInt();
+
+      let stakingPosition = useStakeWiseStakingPosition(event.params.externalPosition.toHex());
+      let stakeWiseVaultToken = ensureStakeWiseVaultToken(stakeWiseVault, event);
+
+      let wethAsset = ensureAsset(wethTokenAddress);
+
+      let exitRequestId = stakeWiseStakingExitRequestId(stakingPosition, stakeWiseVaultToken, positionTicket);
+      let exitRequest = useStakeWiseStakingExitRequest(exitRequestId);
+
+      const sharesBI = fromBigDecimal(exitRequest.shares);
+
+      let stakeWiseV3EthVault = ExternalSdk.bind(stakeWiseVault);
+      let amount = toBigDecimal(stakeWiseV3EthVault.convertToAssets(sharesBI), 18);
+
+      let assetAmount = createAssetAmount(wethAsset, amount, denominationAsset, 'stakewise-claim-exited-assets', event);
+
+      createStakeWiseStakingPositionChange(
+        event.params.externalPosition,
+        'ClaimExitedAssets',
+        stakeWiseVaultToken,
+        assetAmount,
+        exitRequest.shares,
+        vault,
+        event,
+      );
+    }
+
+    return;
+  }
+
   createUnknownExternalPositionChange(event.params.externalPosition, vault, event);
 }
 
-export function handleExternalPositionTypeInfoUpdated(event: ExternalPositionTypeInfoUpdated): void {}
-export function handleValidatedVaultProxySetForFund(event: ValidatedVaultProxySetForFund): void {}
+export function handleExternalPositionTypeInfoUpdated(event: ExternalPositionTypeInfoUpdated): void { }
+export function handleValidatedVaultProxySetForFund(event: ValidatedVaultProxySetForFund): void { }
