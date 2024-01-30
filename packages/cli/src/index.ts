@@ -1,9 +1,9 @@
 import fs from 'node:fs';
-import glob from 'glob';
-import handlebars from 'handlebars';
 import path from 'node:path';
-import yargs from 'yargs';
 import { $ } from 'execa';
+import glob, { globSync } from 'glob';
+import handlebars from 'handlebars';
+import yargs from 'yargs';
 import { Configurator, Context, Contexts, Environment, ManifestValues, Template } from './types';
 import { formatJson, sdkDeclaration, sourceDeclaration, templateDeclaration } from './utils';
 
@@ -131,7 +131,7 @@ class Subgraph<TVariables = any> {
       fs.renameSync(path.join(outputDir, 'templates.ts'), path.join(generatedDir, 'templates.ts'));
     }
 
-    const globbed = glob.sync('**/*', { cwd: outputDir, absolute: true });
+    const globbed = globSync('**/*', { cwd: outputDir, absolute: true });
     const files = globbed.filter((item) => fs.statSync(item).isFile());
     const directories = globbed
       .filter((item) => fs.statSync(item).isDirectory())

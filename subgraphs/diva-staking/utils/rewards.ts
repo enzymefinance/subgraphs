@@ -48,11 +48,11 @@ function calculateFullStakingDays(depositCreatedAt: BigInt, redemptionTimestamp:
   // Calculate full staking days for a given redemption timestamp
 
   // Earliest possible staking time is stakingStartTimestamp
-  let normalizedStartStakingTimestamp =
+  const normalizedStartStakingTimestamp =
     depositCreatedAt < stakingStartTimestamp ? stakingStartTimestamp : depositCreatedAt;
 
   // Latest possible redemption time is stakingEndTimestamp
-  let normalizedEndStakingTimestamp =
+  const normalizedEndStakingTimestamp =
     redemptionTimestamp > stakingEndTimestamp ? stakingEndTimestamp : redemptionTimestamp;
 
   if (normalizedEndStakingTimestamp < mainnetLaunchTimestamp) {
@@ -96,16 +96,18 @@ export function getRewardsForTrancheAmount(
   startStakingAt: i32,
   endStakingAt: i32,
 ): Rewards {
-  let fullStakingDays = calculateFullStakingDays(BigInt.fromI32(startStakingAt), BigInt.fromI32(endStakingAt));
+  const fullStakingDays = calculateFullStakingDays(BigInt.fromI32(startStakingAt), BigInt.fromI32(endStakingAt));
 
-  let halfOfFirstClaimAmount = stakedEthAmount
+  const halfOfFirstClaimAmount = stakedEthAmount
     .times(divaTokensPerEthPerDay)
     .times(BigInt.fromI32(fullStakingDays.firstPhaseStakingDays).toBigDecimal())
-    .div(BigDecimal.fromString('2'));
+    .div(BigDecimal.fromString('2'))
+    .truncate(18);
 
-  let secondClaimAmount = stakedEthAmount
+  const secondClaimAmount = stakedEthAmount
     .times(divaTokensPerEthPerDay)
-    .times(BigInt.fromI32(fullStakingDays.secondPhaseStakingDays).toBigDecimal());
+    .times(BigInt.fromI32(fullStakingDays.secondPhaseStakingDays).toBigDecimal())
+    .truncate(18);
 
   return new Rewards(
     halfOfFirstClaimAmount,
