@@ -1,14 +1,14 @@
-import { Address, ethereum, BigDecimal } from '@graphprotocol/graph-ts';
 import { ZERO_BD, uniqueEventId } from '@enzymefinance/subgraph-utils';
+import { Address, BigDecimal, ethereum } from '@graphprotocol/graph-ts';
 import { Depositor, Redemption, TrancheAmount } from '../generated/schema';
-import { activitiesCounterId, increaseCounter } from './Counter';
 import { useComptroller } from './Comptroller';
+import { activitiesCounterId, increaseCounter } from './Counter';
 
 export function createRedemption(
   depositor: Depositor,
   trancheAmounts: TrancheAmount[],
   shares: BigDecimal,
-  gavBeforeActivity: BigDecimal,
+  tvlBeforeActivity: BigDecimal,
   comptroller: Address,
   event: ethereum.Event,
 ): Redemption {
@@ -36,7 +36,7 @@ export function createRedemption(
   redemption.trancheAmounts = trancheAmounts.map<string>((trancheAmount) => trancheAmount.id);
   redemption.depositor = depositor.id;
   redemption.vault = useComptroller(comptroller).vault;
-  redemption.gavBeforeActivity = gavBeforeActivity;
+  redemption.tvlBeforeActivity = tvlBeforeActivity;
   redemption.activityType = 'Redemption';
   redemption.activityCounter = increaseCounter(activitiesCounterId, timestamp);
   redemption.firstPhaseRewards = firstPhaseRewards;

@@ -31,7 +31,7 @@ interface Activity {
   createdAt: Int!
   vault: Bytes!
   depositor: Depositor!
-  gavBeforeActivity: BigDecimal!
+  tvlBeforeActivity: BigDecimal!
   activityType: ActivityType!
   activityCounter: Int!
   shares: BigDecimal!
@@ -53,7 +53,7 @@ type Deposit implements Activity @entity {
   updatedAt: Int!
   vault: Bytes!
   depositor: Depositor!
-  gavBeforeActivity: BigDecimal!
+  tvlBeforeActivity: BigDecimal!
   activityType: ActivityType!
   activityCounter: Int!
   shares: BigDecimal!
@@ -71,7 +71,7 @@ type Redemption implements Activity @entity {
   createdAt: Int!
   vault: Bytes!
   depositor: Depositor!
-  gavBeforeActivity: BigDecimal!
+  tvlBeforeActivity: BigDecimal!
   activityType: ActivityType!
   activityCounter: Int!
   shares: BigDecimal!

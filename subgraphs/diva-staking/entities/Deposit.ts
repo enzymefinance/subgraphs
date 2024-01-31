@@ -1,15 +1,15 @@
-import { Address, ethereum, BigDecimal } from '@graphprotocol/graph-ts';
 import { ZERO_BD, logCritical, uniqueEventId } from '@enzymefinance/subgraph-utils';
+import { Address, BigDecimal, ethereum } from '@graphprotocol/graph-ts';
 import { Deposit, Depositor, TrancheAmount } from '../generated/schema';
+import { useComptroller } from './Comptroller';
 import { increaseCounter } from './Counter';
 import { createTrancheAmount, useTrancheAmount } from './TrancheAmount';
-import { useComptroller } from './Comptroller';
 
 export function createDeposit(
   depositor: Depositor,
   trancheAmounts: TrancheAmount[],
   shares: BigDecimal,
-  gavBeforeActivity: BigDecimal,
+  tvlBeforeActivity: BigDecimal,
   comptroller: Address,
   event: ethereum.Event,
 ): Deposit {
@@ -50,7 +50,7 @@ export function createDeposit(
   deposit.vault = useComptroller(comptroller).vault;
   deposit.createdAt = timestamp;
   deposit.updatedAt = timestamp;
-  deposit.gavBeforeActivity = gavBeforeActivity;
+  deposit.tvlBeforeActivity = tvlBeforeActivity;
   deposit.activityType = 'Deposit';
   deposit.activityCounter = increaseCounter('activities', timestamp);
   deposit.firstPhaseRewards = firstPhaseRewards;

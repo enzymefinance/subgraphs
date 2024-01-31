@@ -1,9 +1,12 @@
-import { createDeposit } from '../entities/Deposit';
-import { SharesBought, SharesRedeemed } from '../generated/contracts/ComptrollerLibEvents';
-import { createRedemptionTrancheAmountsForAllDeposits, createDepositTrancheAmounts } from '../utils/tranches';
-import { useDepositor, ensureDepositor } from '../entities/Depositor';
-import { createRedemption } from '../entities/Redemption';
 import { ZERO_BD, logCritical, toBigDecimal } from '@enzymefinance/subgraph-utils';
+import {
+  currentTvlAmountId,
+  decreaseAmount,
+  getAmount,
+  increaseAmount,
+  sumOfDepositsAmountId,
+  sumOfRedemptionsAmountId,
+} from '../entities/Amount';
 import {
   activeDepositorsCounterId,
   decreaseCounter,
@@ -11,15 +14,12 @@ import {
   increaseCounter,
   redemptionsCounterId,
 } from '../entities/Counter';
-import {
-  currentGavAmountId,
-  decreaseAmount,
-  getAmount,
-  increaseAmount,
-  sumOfDepositsAmountId,
-  sumOfRedemptionsAmountId,
-} from '../entities/Amount';
+import { createDeposit } from '../entities/Deposit';
+import { ensureDepositor, useDepositor } from '../entities/Depositor';
+import { createRedemption } from '../entities/Redemption';
+import { SharesBought, SharesRedeemed } from '../generated/contracts/ComptrollerLibEvents';
 import { stakingEndTimestamp } from '../utils/constants';
+import { createDepositTrancheAmounts, createRedemptionTrancheAmountsForAllDeposits } from '../utils/tranches';
 
 export function handleSharesBought(event: SharesBought): void {
   if (event.block.timestamp.ge(stakingEndTimestamp)) {
@@ -38,14 +38,14 @@ export function handleSharesBought(event: SharesBought): void {
   depositor.updatedAt = timestamp;
   depositor.save();
 
-  let gavBeforeActivity = getAmount(currentGavAmountId);
-  let tranches = createDepositTrancheAmounts(gavBeforeActivity, investmentAmount, event);
+  let tvlBeforeActivity = getAmount(currentTvlAmountId);
+  let tranches = createDepositTrancheAmounts(tvlBeforeActivity, investmentAmount, event);
 
-  createDeposit(depositor, tranches, sharesReceived, gavBeforeActivity, event.address, event);
+  createDeposit(depositor, tranches, sharesReceived, tvlBeforeActivity, event.address, event);
 
   increaseCounter(depositsCounterId, timestamp);
   increaseAmount(sumOfDepositsAmountId, investmentAmount, timestamp);
-  increaseAmount(currentGavAmountId, investmentAmount, timestamp);
+  increaseAmount(currentTvlAmountId, investmentAmount, timestamp);
 }
 
 export function handleSharesRedeemed(event: SharesRedeemed): void {
@@ -70,20 +70,20 @@ export function handleSharesRedeemed(event: SharesRedeemed): void {
   depositor.updatedAt = timestamp;
   depositor.save();
 
-  let gavBeforeActivity = getAmount(currentGavAmountId);
+  let tvlBeforeActivity = getAmount(currentTvlAmountId);
   let redemptionTrancheAmounts = createRedemptionTrancheAmountsForAllDeposits(
     depositor.deposits.load(),
     redemptionAmount,
     event,
   );
 
-  createRedemption(depositor, redemptionTrancheAmounts, sharesRedeemed, gavBeforeActivity, event.address, event);
+  createRedemption(depositor, redemptionTrancheAmounts, sharesRedeemed, tvlBeforeActivity, event.address, event);
 
-  if (depositor.shares == ZERO_BD) {
+  if (depositor.shares === ZERO_BD) {
     decreaseCounter(activeDepositorsCounterId, timestamp);
   }
 
   increaseCounter(redemptionsCounterId, timestamp);
   increaseAmount(sumOfRedemptionsAmountId, redemptionAmount, timestamp);
-  decreaseAmount(currentGavAmountId, redemptionAmount, timestamp);
+  decreaseAmount(currentTvlAmountId, redemptionAmount, timestamp);
 }

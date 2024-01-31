@@ -1,18 +1,18 @@
-import { BigDecimal, ethereum } from '@graphprotocol/graph-ts';
-import { Deposit, TrancheAmount } from '../generated/schema';
-import { updateRewardsForDeposit } from '../entities/Deposit';
 import { ZERO_BD, logCritical } from '@enzymefinance/subgraph-utils';
+import { BigDecimal, ethereum } from '@graphprotocol/graph-ts';
+import { updateRewardsForDeposit } from '../entities/Deposit';
 import { createTrancheAmount, updateTrancheAmount, useTrancheAmount } from '../entities/TrancheAmount';
+import { Deposit, TrancheAmount } from '../generated/schema';
 import { stakingEndTimestamp, stakingTranchesConfiguration } from './constants';
 
 export function createDepositTrancheAmounts(
-  vaultsGavBeforeDeposit: BigDecimal,
+  vaultsTvlBeforeDeposit: BigDecimal,
   investmentAmount: BigDecimal,
   event: ethereum.Event,
 ): TrancheAmount[] {
   let tranchesDepositedTo: TrancheAmount[] = [];
   let amountLeftToDeposit = investmentAmount;
-  let vaultsGav = vaultsGavBeforeDeposit;
+  let vaultsGav = vaultsTvlBeforeDeposit;
   let timestamp = event.block.timestamp.toI32();
 
   for (let i = 0; i < stakingTranchesConfiguration.length; i++) {
@@ -73,9 +73,9 @@ export function createRedemptionTrancheAmountsForAllDeposits(
   let depositTrancheAmounts: TrancheAmount[] = [];
   let depositsForDepositTrancheAmounts: Deposit[] = [];
 
-  deposits = deposits.sort((a, b) => b.createdAt - a.createdAt);
-  for (let i = 0; i < deposits.length; i++) {
-    let deposit = deposits[i];
+  let sortedDeposits = deposits.sort((a, b) => b.createdAt - a.createdAt);
+  for (let i = 0; i < sortedDeposits.length; i++) {
+    let deposit = sortedDeposits[i];
     let trancheAmounts = deposit.trancheAmounts
       .map<TrancheAmount>((trancheAmountId) => useTrancheAmount(trancheAmountId))
       .sort((a, b) => b.trancheId - a.trancheId);
