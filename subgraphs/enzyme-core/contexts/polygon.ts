@@ -128,7 +128,7 @@ export const polygon: Context<Variables> = {
         minAssetBalancesPostRedemptionPolicyAddress: polygonV4Deployment.contracts.MinAssetBalancesPostRedemptionPolicy,
         minMaxInvestmentPolicyAddress: polygonV4Deployment.contracts.MinMaxInvestmentPolicy,
         minSharesSupplyFeeAddress: polygonV4Deployment.contracts.MinSharesSupplyFee,
-        noDepegOnRedeemSharesForSpecificAssetsPolicyAddress: "0x0069111def5258f692d88bde2116c9c211cf8b04",
+        noDepegOnRedeemSharesForSpecificAssetsPolicyAddress: '0x0069111def5258f692d88bde2116c9c211cf8b04',
         onlyRemoveDustExternalPositionPolicyAddress: polygonV4Deployment.contracts.OnlyRemoveDustExternalPositionPolicy,
         onlyUntrackDustOrPricelessAssetsPolicyAddress:
           polygonV4Deployment.contracts.OnlyUntrackDustOrPricelessAssetsPolicy,

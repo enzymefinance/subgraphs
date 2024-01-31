@@ -671,15 +671,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
       let outgoingAsset = createAssetAmount(lusdAsset, lusdAmount, denominationAsset, 'ldp-outgoing', event);
 
-      createLiquityDebtPositionChange(
-        event.params.externalPosition,
-        'Repay',
-        [],
-        outgoingAsset,
-        null,
-        vault,
-        event,
-      );
+      createLiquityDebtPositionChange(event.params.externalPosition, 'Repay', [], outgoingAsset, null, vault, event);
     }
 
     if (actionId == LiquityDebtPositionActionId.CloseTrove) {

@@ -73,11 +73,13 @@ export function createRedemptionTrancheAmountsForAllDeposits(
   let depositTrancheAmounts: TrancheAmount[] = [];
   let depositsForDepositTrancheAmounts: Deposit[] = [];
 
-  let sortedDeposits = deposits.sort((a, b) => b.createdAt - a.createdAt);
+  // sort by activity counter descending to use latest deposit first
+  let sortedDeposits = deposits.sort((a, b) => b.activityCounter - a.activityCounter);
   for (let i = 0; i < sortedDeposits.length; i++) {
     let deposit = sortedDeposits[i];
     let trancheAmounts = deposit.trancheAmounts
       .map<TrancheAmount>((trancheAmountId) => useTrancheAmount(trancheAmountId))
+      // sort by trancheId descending to use higher tranches (with less rewards) first
       .sort((a, b) => b.trancheId - a.trancheId);
 
     for (let j = 0; j < trancheAmounts.length; j++) {
