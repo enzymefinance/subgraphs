@@ -1542,6 +1542,56 @@ type LidoWithdrawalsRequest @entity {
   claimedTimestamp: Int!
 }
 
+type StakeWiseStakingPosition implements ExternalPosition @entity {
+  id: ID!
+  vault: Vault!
+  type: ExternalPositionType!
+  active: Boolean!
+  stakedEthAmount: BigDecimal!
+  vaultTokens: [StakeWiseVaultToken!]!
+  exitRequests: [StakeWiseStakingExitRequest!]! @derivedFrom(field: "stakeWiseStakingPosition")
+  changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
+}
+
+type StakeWiseVaultToken @entity {
+  id: ID!
+  createdAt: Int!
+  stakeWiseStakingPosition: [StakeWiseStakingPosition!]! @derivedFrom(field: "vaultTokens")
+  exitRequests: [StakeWiseStakingExitRequest!]! @derivedFrom(field: "stakeWiseVaultToken")
+}
+
+enum StakeWiseStakingPositionChangeType {
+  Stake
+  Redeem
+  EnterExitQueue
+  ClaimExitedAssets
+}
+
+type StakeWiseStakingPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: Int!
+  externalPosition: ExternalPosition!
+  stakeWiseStakingPositionChangeType: StakeWiseStakingPositionChangeType!
+  stakeWiseVaultToken: StakeWiseVaultToken!
+  assetAmount: AssetAmount!
+  shares: BigDecimal!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
+type StakeWiseStakingExitRequest @entity {
+  id: ID!
+  createdAt: Int!
+  claimed: Boolean!
+  claimedAt: Int
+  stakeWiseStakingPosition: StakeWiseStakingPosition!
+  stakeWiseVaultToken: StakeWiseVaultToken!
+  positionTicket: BigInt!
+  shares: BigDecimal!
+}
+
 type UnknownExternalPosition implements ExternalPosition @entity {
   id: ID!
   vault: Vault!

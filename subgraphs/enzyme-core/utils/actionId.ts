@@ -87,6 +87,13 @@ export enum KilnStakingPositionActionId {
   UnpausePositionValue = 5,
 }
 
+export enum StakeWiseV3StakingPositionActionId {
+  Stake = 0,
+  Redeem = 1,
+  EnterExitQueue = 2,
+  ClaimExitedAssets = 3,
+}
+
 export enum LidoWithdrawalsActionId {
   RequestWithdrawals = 0,
   ClaimWithdrawals = 1,
