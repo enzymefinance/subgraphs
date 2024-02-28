@@ -1,0 +1,96 @@
+type Amount @entity {
+  id: ID!
+  updatedAt: Int!
+  amount: BigDecimal!
+}
+
+type Counter @entity {
+  id: ID!
+  updatedAt: Int!
+  count: Int!
+}
+
+type Comptroller @entity {
+  id: ID!
+  vault: Bytes!
+}
+
+type Depositor @entity {
+  id: Bytes!
+  updatedAt: Int!
+  createdAt: Int!
+  amount: BigDecimal!
+  shares: BigDecimal!
+  activities: [Activity!]! @derivedFrom(field: "depositor")
+  deposits: [Deposit!]! @derivedFrom(field: "depositor")
+  redemptions: [Redemption!]! @derivedFrom(field: "depositor")
+}
+
+interface Activity {
+  id: ID!
+  createdAt: Int!
+  vault: Bytes!
+  depositor: Depositor!
+  tvlBeforeActivity: BigDecimal!
+  activityType: ActivityType!
+  activityCounter: Int!
+  shares: BigDecimal!
+  amount: BigDecimal!
+  trancheAmounts: [TrancheAmount!]!
+  firstPhaseRewards: BigDecimal!
+  secondPhaseRewards: BigDecimal!
+  totalRewards: BigDecimal!
+}
+
+enum ActivityType {
+  Deposit
+  Redemption
+}
+
+type Deposit implements Activity @entity {
+  id: ID!
+  createdAt: Int!
+  updatedAt: Int!
+  vault: Bytes!
+  depositor: Depositor!
+  tvlBeforeActivity: BigDecimal!
+  activityType: ActivityType!
+  activityCounter: Int!
+  shares: BigDecimal!
+  initialAmount: BigDecimal!
+  amount: BigDecimal!
+  initialTrancheAmounts: [TrancheAmount!]! 
+  trancheAmounts: [TrancheAmount!]!
+  firstPhaseRewards: BigDecimal!
+  secondPhaseRewards: BigDecimal!
+  totalRewards: BigDecimal!
+}
+
+type Redemption implements Activity @entity {
+  id: ID!
+  createdAt: Int!
+  vault: Bytes!
+  depositor: Depositor!
+  tvlBeforeActivity: BigDecimal!
+  activityType: ActivityType!
+  activityCounter: Int!
+  shares: BigDecimal!
+  amount: BigDecimal!
+  trancheAmounts: [TrancheAmount!]!
+  firstPhaseRewards: BigDecimal!
+  secondPhaseRewards: BigDecimal!
+  totalRewards: BigDecimal!
+}
+
+type TrancheAmount @entity {
+  id: ID!
+  createdAt: Int!
+  updatedAt: Int!
+  trancheId: Int!
+  amount: BigDecimal! 
+  startStakingAt: Int!
+  endStakingAt: Int!
+  firstPhaseRewards: BigDecimal!
+  secondPhaseRewards: BigDecimal! 
+  totalRewards: BigDecimal!
+}

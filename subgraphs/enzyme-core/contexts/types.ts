@@ -75,7 +75,7 @@ export interface Release4Addresses {
   managementFeeAddress: string;
   minAssetBalancesPostRedemptionPolicyAddress: string;
   minMaxInvestmentPolicyAddress: string;
-  noDepegOnRedeemSharesForSpecificAssetsPolicyAddress: string,
+  noDepegOnRedeemSharesForSpecificAssetsPolicyAddress: string;
   onlyRemoveDustExternalPositionPolicyAddress: string;
   onlyUntrackDustOrPricelessAssetsPolicyAddress: string;
   performanceFeeAddress: string;
