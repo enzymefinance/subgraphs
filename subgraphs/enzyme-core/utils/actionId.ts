@@ -54,6 +54,7 @@ export enum LiquityDebtPositionActionId {
   Borrow = 3,
   Repay = 4,
   CloseTrove = 5,
+  ClaimCollateral = 6,
 }
 
 export enum ConvexVotingPositionActionId {

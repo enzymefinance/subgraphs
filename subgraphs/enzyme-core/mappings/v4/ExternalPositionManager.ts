@@ -6,7 +6,7 @@ import {
   tuplePrefixBytes,
   ZERO_ADDRESS,
 } from '@enzymefinance/subgraph-utils';
-import { Address, Bytes, DataSourceContext, ethereum, crypto, BigDecimal, BigInt } from '@graphprotocol/graph-ts';
+import { Address, Bytes, DataSourceContext, ethereum, crypto, BigDecimal } from '@graphprotocol/graph-ts';
 import { createAaveDebtPosition, createAaveDebtPositionChange } from '../../entities/AaveDebtPosition';
 import {
   createMapleLiquidityAssetAmountV1,
@@ -20,7 +20,6 @@ import {
 import {
   createLiquityDebtPosition,
   createLiquityDebtPositionChange,
-  getLiquityDebtPositionBorrowedAmount,
   lusdGasCompensationAmountBD,
   trackLiquityDebtPosition,
   useLiquityDebtPosition,
@@ -586,7 +585,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
       let lusdAsset = ensureAsset(lusdAddress);
       let lusdAmount = toBigDecimal(tuple[2].toBigInt(), lusdAsset.decimals);
-      let incomingAsset = createAssetAmount(lusdAsset, lusdAmount, denominationAsset, 'ldp-incoming', event);
+      let incomingAssetAsset = createAssetAmount(lusdAsset, lusdAmount, denominationAsset, 'ldp-incoming', event);
 
       let lusdGasCompensationAssetAmount = createAssetAmount(
         lusdAsset,
@@ -599,7 +598,8 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       createLiquityDebtPositionChange(
         event.params.externalPosition,
         'OpenTrove',
-        [incomingAsset],
+        [incomingAssetAsset],
+        [lusdAsset],
         outgoingAsset,
         lusdGasCompensationAssetAmount,
         vault,
@@ -625,6 +625,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         event.params.externalPosition,
         'AddCollateral',
         [],
+        [],
         outgoingAsset,
         null,
         vault,
@@ -644,12 +645,13 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let wethAsset = ensureAsset(wethTokenAddress);
       let wethAmount = toBigDecimal(tuple[0].toBigInt(), wethAsset.decimals);
 
-      let incomingAsset = createAssetAmount(wethAsset, wethAmount, denominationAsset, 'ldp-incoming', event);
+      let incomingAssetAmount = createAssetAmount(wethAsset, wethAmount, denominationAsset, 'ldp-incoming', event);
 
       createLiquityDebtPositionChange(
         event.params.externalPosition,
         'RemoveCollateral',
-        [incomingAsset],
+        [incomingAssetAmount],
+        [wethAsset],
         null,
         null,
         vault,
@@ -669,12 +671,13 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let lusdAsset = ensureAsset(lusdAddress);
       let lusdAmount = toBigDecimal(tuple[1].toBigInt(), lusdAsset.decimals);
 
-      let incomingAsset = createAssetAmount(lusdAsset, lusdAmount, denominationAsset, 'ldp-incoming', event);
+      let incomingAssetAmount = createAssetAmount(lusdAsset, lusdAmount, denominationAsset, 'ldp-incoming', event);
 
       createLiquityDebtPositionChange(
         event.params.externalPosition,
         'Borrow',
-        [incomingAsset],
+        [incomingAssetAmount],
+        [lusdAsset],
         null,
         null,
         vault,
@@ -696,7 +699,16 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
       let outgoingAsset = createAssetAmount(lusdAsset, lusdAmount, denominationAsset, 'ldp-outgoing', event);
 
-      createLiquityDebtPositionChange(event.params.externalPosition, 'Repay', [], outgoingAsset, null, vault, event);
+      createLiquityDebtPositionChange(
+        event.params.externalPosition,
+        'Repay',
+        [],
+        [],
+        outgoingAsset,
+        null,
+        vault,
+        event,
+      );
     }
 
     if (actionId == LiquityDebtPositionActionId.CloseTrove) {
@@ -732,7 +744,23 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         event.params.externalPosition,
         'CloseTrove',
         [collateralAssetAmount, lusdGasCompensationAssetAmount],
+        [wethAsset, lusdAsset],
         borrowedAssetAmount,
+        null,
+        vault,
+        event,
+      );
+    }
+
+    if (actionId == LiquityDebtPositionActionId.ClaimCollateral) {
+      let wethAsset = ensureAsset(wethTokenAddress);
+
+      createLiquityDebtPositionChange(
+        event.params.externalPosition,
+        'ClaimCollateral',
+        [],
+        [wethAsset],
+        null,
         null,
         vault,
         event,
@@ -1221,12 +1249,12 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
       let withdrewWhileUndelegatingAssetAmount = withdrewWhileUndelegatingAssetAmountBD.gt(BigDecimal.fromString('0'))
         ? createAssetAmount(
-          grtAsset,
-          withdrewWhileUndelegatingAssetAmountBD,
-          denominationAsset,
-          'grt-withdrew-while-undelegating-asset-amount',
-          event,
-        )
+            grtAsset,
+            withdrewWhileUndelegatingAssetAmountBD,
+            denominationAsset,
+            'grt-withdrew-while-undelegating-asset-amount',
+            event,
+          )
         : null;
 
       createTheGraphDelegationPositionChange(
@@ -1934,5 +1962,5 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
   createUnknownExternalPositionChange(event.params.externalPosition, vault, event);
 }
 
-export function handleExternalPositionTypeInfoUpdated(event: ExternalPositionTypeInfoUpdated): void { }
-export function handleValidatedVaultProxySetForFund(event: ValidatedVaultProxySetForFund): void { }
+export function handleExternalPositionTypeInfoUpdated(event: ExternalPositionTypeInfoUpdated): void {}
+export function handleValidatedVaultProxySetForFund(event: ValidatedVaultProxySetForFund): void {}
