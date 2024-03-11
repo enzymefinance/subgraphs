@@ -1314,6 +1314,7 @@ enum LiquityDebtPositionChangeType {
   Borrow
   Repay
   CloseTrove
+  ClaimCollateral
 }
 
 type LiquityDebtPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
@@ -1323,6 +1324,7 @@ type LiquityDebtPositionChange implements Activity & VaultActivity & ExternalPos
   externalPosition: ExternalPosition!
   liquityDebtPositionChangeType: LiquityDebtPositionChangeType!
   incomingAssetAmounts: [AssetAmount!]!
+  incomingAssets: [Asset!]!
   lusdGasCompensationAssetAmount: AssetAmount
   outgoingAssetAmount: AssetAmount
   activityCounter: Int!

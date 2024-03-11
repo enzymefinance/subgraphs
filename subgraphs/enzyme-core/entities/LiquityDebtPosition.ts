@@ -6,6 +6,7 @@ import {
   LiquityDebtPositionChange,
   ExternalPositionType,
   Vault,
+  Asset,
 } from '../generated/schema';
 import { ProtocolSdk } from '../generated/contracts/ProtocolSdk';
 import { ensureAsset } from './Asset';
@@ -42,6 +43,7 @@ export function createLiquityDebtPositionChange(
   liquityDebtPositionAddress: Address,
   changeType: string,
   incomingAssetAmounts: AssetAmount[],
+  incomingAssets: Asset[],
   outgoingAssetAmount: AssetAmount | null,
   lusdGasCompensationAssetAmount: AssetAmount | null,
   vault: Vault,
@@ -51,6 +53,7 @@ export function createLiquityDebtPositionChange(
   change.liquityDebtPositionChangeType = changeType;
   change.externalPosition = liquityDebtPositionAddress.toHex();
   change.incomingAssetAmounts = incomingAssetAmounts.map<string>((assetAmount) => assetAmount.id);
+  change.incomingAssets = incomingAssets.map<string>((asset) => asset.id);
   change.outgoingAssetAmount = outgoingAssetAmount != null ? outgoingAssetAmount.id : null;
   change.lusdGasCompensationAssetAmount =
     lusdGasCompensationAssetAmount != null ? lusdGasCompensationAssetAmount.id : null;
@@ -65,20 +68,6 @@ export function createLiquityDebtPositionChange(
   vault.save();
 
   return change;
-}
-
-export function getLiquityDebtPositionBorrowedAmount(id: string): BigDecimal {
-  let ldpContract = ProtocolSdk.bind(Address.fromString(id));
-
-  let borrowed = ldpContract.getDebtAssets();
-
-  if (borrowed.value0.length === 0) {
-    return ZERO_BD;
-  }
-
-  let borrowedAsset = ensureAsset(lusdAddress);
-
-  return toBigDecimal(borrowed.value1[0], borrowedAsset.decimals);
 }
 
 export function trackLiquityDebtPosition(id: string): void {
