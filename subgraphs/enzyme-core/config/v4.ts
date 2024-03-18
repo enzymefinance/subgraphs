@@ -8,6 +8,7 @@ export interface ReleaseVariables {
   allowedDepositRecipientsPolicyAddress: string;
   allowedExternalPositionTypesPerManagerPolicyAddress: string;
   allowedExternalPositionTypesPolicyAddress: string;
+  allowedRedeemersForSpecificAssetsPolicyAddress: string;
   allowedSharesTransferRecipientsPolicyAddress: string;
   arbitraryLoanFixedInterestModuleAddress: string;
   arbitraryLoanTotalNominalDeltaOracleModuleAddress: string;
@@ -54,6 +55,7 @@ export const sources = (variables: ReleaseVariables): DataSourceUserDeclaration[
     address: variables.allowedExternalPositionTypesPerManagerPolicyAddress,
   },
   { name: 'AllowedExternalPositionTypesPolicy', address: variables.allowedExternalPositionTypesPolicyAddress },
+  { name: 'AllowedRedeemersForSpecificAssetsPolicy', address: variables.allowedRedeemersForSpecificAssetsPolicyAddress },
   { name: 'AllowedSharesTransferRecipientsPolicy', address: variables.allowedSharesTransferRecipientsPolicyAddress },
   { name: 'ArbitraryLoanFixedInterestModule', address: variables.arbitraryLoanFixedInterestModuleAddress },
   {
