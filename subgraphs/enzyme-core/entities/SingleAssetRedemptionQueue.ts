@@ -10,13 +10,10 @@ export function ensureSingleAssetRedemptionQueue(address: Address, event: ethere
     return queue;
   }
 
-  let redemptionQueueContract = ProtocolSdk.bind(address);
-  let vaultAddress = redemptionQueueContract.getVaultProxy();
-
   queue = new SingleAssetRedemptionQueue(address.toHex());
   queue.creator = ZERO_ADDRESS.toString();
   queue.createdAt = event.block.timestamp.toI32();
-  queue.vault = vaultAddress.toHex();
+  queue.vault = ZERO_ADDRESS.toString();
   queue.redemptionAsset = ZERO_ADDRESS;
   queue.bypassableSharesThreshold = ZERO_BD;
   queue.shutdown = false;
@@ -31,7 +28,6 @@ export function ensureSingleAssetRedemptionQueueRequest(id: BigInt, event:ethere
   if (request != null) {
     return request;
   }
-
 
   request = new SingleAssetRedemptionQueueRequest(id.toString());
   request.createdAt = event.block.timestamp.toI32();
