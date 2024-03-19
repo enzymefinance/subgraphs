@@ -2062,13 +2062,14 @@ enum GatedRedemptionQueueSharesWrapperDepositMode {
 
 type SingleAssetRedemptionQueue @entity {
   id: ID!
-  creator: Account!
   createdAt: Int!
+  creator: Account!
   vault: Vault!
   redemptionAsset: Bytes!
   bypassableSharesThreshold: BigDecimal!
   shutdown: Boolean!
   managers: SingleAssetRedemptionQueueManager @derivedFrom(field: "singleAssetRedemptionQueue")
+  requests: SingleAssetRedemptionQueueRequest @derivedFrom(field: "singleAssetRedemptionQueue")
 }
 
 type SingleAssetRedemptionQueueManager @entity {
@@ -2082,6 +2083,14 @@ type SingleAssetRedemptionQueueRequest @entity {
   createdAt: Int!
   user: Bytes!
   sharesAmount: BigDecimal!
+  singleAssetRedemptionQueue: SingleAssetRedemptionQueue!
+  redemptionAssetAmount: AssetAmount
+  redeemed: Boolean!
+  redeemedAt: Int
+  bypassed: Boolean!
+  bypassedAt: Int
+  withdrawn: Boolean!
+  withdrawnAt: Int
 }
 
 
