@@ -38,6 +38,7 @@ export interface Variables {
     gatedRedemptionQueueSharesWrapperFactory: string;
     protocolFeeReserveLibAddress: string;
     sharesSplitterFactoryAddress: string;
+    singleAssetRedemptionQueueFactoryAddress: string;
     uintListRegistryAddress: string;
   };
   releases: {
