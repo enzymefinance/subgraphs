@@ -35,11 +35,8 @@ export function ensureSingleAssetRedemptionQueueRequest(id: BigInt, event:ethere
   request.user = ZERO_ADDRESS;
   request.singleAssetRedemptionQueue = ZERO_ADDRESS.toString();
   request.bypassed = false;
-  request.bypassedAt = 0;
   request.withdrawn = false;
-  request.withdrawnAt = 0;
   request.redeemed = false;
-  request.redeemedAt = 0;
   request.save();
 
   return request;

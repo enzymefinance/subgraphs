@@ -3,6 +3,16 @@
     "type": "constructor",
     "inputs": [
       {
+        "name": "_addressListRegistry",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "_gsnTrustedForwardersAddressListId",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
         "name": "_globalConfigProxy",
         "type": "address",
         "internalType": "address"
