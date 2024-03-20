@@ -102,5 +102,6 @@ export function handleRequestWithdrawn(event: RequestWithdrawn): void {
 export function handleShutdown(event: Shutdown): void {
   let redemptionQueue = ensureSingleAssetRedemptionQueue(event.address, event);
   redemptionQueue.shutdown = true;
+  redemptionQueue.shutdownAt = event.block.timestamp.toI32();
   redemptionQueue.save();
 }

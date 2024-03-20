@@ -2068,6 +2068,7 @@ type SingleAssetRedemptionQueue @entity {
   redemptionAsset: Bytes!
   bypassableSharesThreshold: BigDecimal!
   shutdown: Boolean!
+  shutdownAt: Int
   managers: SingleAssetRedemptionQueueManager @derivedFrom(field: "singleAssetRedemptionQueue")
   requests: SingleAssetRedemptionQueueRequest @derivedFrom(field: "singleAssetRedemptionQueue")
 }
