@@ -752,6 +752,17 @@ type AllowedExternalPositionTypesPolicy implements Policy @entity {
   externalPositionTypes: [BigInt!]!
 }
 
+type AllowedRedeemersForSpecificAssetsPolicy implements Policy @entity {
+  id: ID!
+  policy: Bytes!
+  policyType: PolicyType!
+  comptroller: Comptroller!
+  createdAt: Int!
+  enabled: Boolean!
+  settings: String!
+  addressLists: [AddressList!]!
+}
+
 type AllowedSharesTransferRecipientsPolicy implements Policy @entity {
   id: ID!
   policy: Bytes!

@@ -24,6 +24,7 @@ import {
   ValidatedVaultProxySetForFund,
 } from '../../generated/contracts/PolicyManager4Events';
 import { PolicyDisabledForVault, PolicyEnabledForVault } from '../../generated/schema';
+import { ensureAllowedRedeemersForSpecificAssetsPolicy } from '../../entities/AllowedRedeemersForSpecificAssetsPolicy';
 
 export function handlePolicyEnabledForFund(event: PolicyEnabledForFund): void {
   let comptrollerAddress = event.params.comptrollerProxy;
@@ -91,6 +92,14 @@ export function handlePolicyEnabledForFund(event: PolicyEnabledForFund): void {
 
   if (event.params.policy.equals(release4Addresses.allowedExternalPositionTypesPolicyAddress)) {
     let policy = ensureAllowedExternalPositionTypesPolicy(comptrollerAddress, policyAddress, event);
+    policy.enabled = true;
+    policy.settings = event.params.settingsData.toHex();
+    policy.save();
+    return;
+  }
+
+  if (event.params.policy.equals(release4Addresses.allowedRedeemersForSpecificAssetsPolicyAddress)) {
+    let policy = ensureAllowedRedeemersForSpecificAssetsPolicy(comptrollerAddress, policyAddress, event);
     policy.enabled = true;
     policy.settings = event.params.settingsData.toHex();
     policy.save();
@@ -219,6 +228,13 @@ export function handlePolicyDisabledOnHookForFund(event: PolicyDisabledOnHookFor
 
   if (event.params.policy.equals(release4Addresses.allowedExternalPositionTypesPerManagerPolicyAddress)) {
     let policy = ensureAllowedExternalPositionTypesPerManagerPolicy(comptrollerAddress, policyAddress, event);
+    policy.enabled = false;
+    policy.save();
+    return;
+  }
+
+  if (event.params.policy.equals(release4Addresses.allowedRedeemersForSpecificAssetsPolicyAddress)) {
+    let policy = ensureAllowedRedeemersForSpecificAssetsPolicy(comptrollerAddress, policyAddress, event);
     policy.enabled = false;
     policy.save();
     return;

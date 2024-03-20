@@ -71,6 +71,7 @@ export class Release4Addresses {
   allowedDepositRecipientsPolicyAddress: Address;
   allowedExternalPositionTypesPerManagerPolicyAddress: Address;
   allowedExternalPositionTypesPolicyAddress: Address;
+  allowedRedeemersForSpecificAssetsPolicyAddress:Address;
   allowedSharesTransferRecipientsPolicyAddress: Address;
   auraBalancerV2LpStakingAdapterAddress: Address;
   balancerV2LiquidityAdapterAddress: Address;
@@ -176,6 +177,7 @@ export let release4Addresses: Release4Addresses = {
   allowedExternalPositionTypesPolicyAddress: Address.fromString(
     '{{releases.v4.allowedExternalPositionTypesPolicyAddress}}',
   ),
+  allowedRedeemersForSpecificAssetsPolicyAddress: Address.fromString('{{releases.v4.allowedRedeemersForSpecificAssetsPolicyAddress}}'),
   allowedSharesTransferRecipientsPolicyAddress: Address.fromString(
     '{{releases.v4.allowedSharesTransferRecipientsPolicyAddress}}',
   ),

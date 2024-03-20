@@ -57,6 +57,7 @@ export interface Release4Addresses {
   allowedAssetsForRedemptionPolicyAddress: string;
   allowedDepositRecipientsPolicyAddress: string;
   allowedExternalPositionTypesPolicyAddress: string;
+  allowedRedeemersForSpecificAssetsPolicyAddress: string;
   allowedSharesTransferRecipientsPolicyAddress: string;
   auraBalancerV2LpStakingAdapterAddress: string;
   balancerV2LiquidityAdapterAddress: string;

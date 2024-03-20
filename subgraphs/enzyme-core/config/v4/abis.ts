@@ -51,7 +51,7 @@ export const abisV4 = [
   {
     name: 'NoDepegOnRedeemSharesForSpecificAssetsPolicy',
     version: '4',
-    file: './abis/v4/NoDepegOnRedeemSharesForSpecificAssetsPolicy.json'
+    file: './abis/v4/NoDepegOnRedeemSharesForSpecificAssetsPolicy.json',
   },
   {
     name: 'OnlyRemoveDustExternalPositionPolicy',
