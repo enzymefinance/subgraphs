@@ -102,7 +102,7 @@ export const polygon: Context<Variables> = {
         allowedExternalPositionTypesPerManagerPolicyAddress:
           polygonV4Deployment.contracts.AllowedExternalPositionTypesPerManagerPolicy,
         allowedExternalPositionTypesPolicyAddress: polygonV4Deployment.contracts.AllowedExternalPositionTypesPolicy,
-        allowedRedeemersForSpecificAssetsPolicyAddress: "0x0000000000000000000000000000000000000000",
+        allowedRedeemersForSpecificAssetsPolicyAddress: '0x0000000000000000000000000000000000000000',
         allowedSharesTransferRecipientsPolicyAddress:
           polygonV4Deployment.contracts.AllowedSharesTransferRecipientsPolicy,
         arbitraryLoanFixedInterestModuleAddress: polygonV4Deployment.contracts.ArbitraryLoanFixedInterestModule,

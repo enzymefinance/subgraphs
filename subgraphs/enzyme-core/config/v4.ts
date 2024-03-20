@@ -55,7 +55,10 @@ export const sources = (variables: ReleaseVariables): DataSourceUserDeclaration[
     address: variables.allowedExternalPositionTypesPerManagerPolicyAddress,
   },
   { name: 'AllowedExternalPositionTypesPolicy', address: variables.allowedExternalPositionTypesPolicyAddress },
-  { name: 'AllowedRedeemersForSpecificAssetsPolicy', address: variables.allowedRedeemersForSpecificAssetsPolicyAddress },
+  {
+    name: 'AllowedRedeemersForSpecificAssetsPolicy',
+    address: variables.allowedRedeemersForSpecificAssetsPolicyAddress,
+  },
   { name: 'AllowedSharesTransferRecipientsPolicy', address: variables.allowedSharesTransferRecipientsPolicyAddress },
   { name: 'ArbitraryLoanFixedInterestModule', address: variables.arbitraryLoanFixedInterestModuleAddress },
   {

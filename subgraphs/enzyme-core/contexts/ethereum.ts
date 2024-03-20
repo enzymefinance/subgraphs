@@ -104,7 +104,7 @@ export const ethereum: Context<Variables> = {
         allowedExternalPositionTypesPerManagerPolicyAddress:
           suluDeployment.contracts.AllowedExternalPositionTypesPerManagerPolicy,
         allowedExternalPositionTypesPolicyAddress: suluDeployment.contracts.AllowedExternalPositionTypesPolicy,
-        allowedRedeemersForSpecificAssetsPolicyAddress: "0x0000000000000000000000000000000000000000",
+        allowedRedeemersForSpecificAssetsPolicyAddress: '0x0000000000000000000000000000000000000000',
         allowedSharesTransferRecipientsPolicyAddress: suluDeployment.contracts.AllowedSharesTransferRecipientsPolicy,
         arbitraryLoanFixedInterestModuleAddress: suluDeployment.contracts.ArbitraryLoanFixedInterestModule,
         arbitraryLoanTotalNominalDeltaOracleModuleAddress:
