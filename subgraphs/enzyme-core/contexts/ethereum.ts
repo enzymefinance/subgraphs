@@ -42,6 +42,7 @@ export const ethereum: Context<Variables> = {
       gatedRedemptionQueueSharesWrapperFactory: '0x73b9c40530311b49b526f230d01bdf5725b3290d',
       protocolFeeReserveLibAddress: suluDeployment.contracts.ProtocolFeeReserveLib,
       sharesSplitterFactoryAddress: suluDeployment.contracts.SharesSplitterFactory,
+      singleAssetRedemptionQueueFactoryAddress: "0x0000000000000000000000000000000000000000",
       uintListRegistryAddress: suluDeployment.contracts.UintListRegistry,
     },
     releases: {
