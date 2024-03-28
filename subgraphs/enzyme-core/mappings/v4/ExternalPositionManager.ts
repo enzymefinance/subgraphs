@@ -120,7 +120,7 @@ import {
   useStakeWiseStakingExitRequest,
   createStakeWiseStakingPosition,
 } from '../../entities/StakeWiseStakingPosition';
-import { createPendleV2Position, createPendleV2PositionChange } from '../../entities/PendleV2Position';
+import { createPendleV2Position, createPendleV2PositionChange, ensurePendleV2Market, ensurePendleV2PrincipleTokenWithMarketAndDuration, usePendleV2Position } from '../../entities/PendleV2Position';
 
 export function handleExternalPositionDeployedForFund(event: ExternalPositionDeployedForFund): void {
   let type = useExternalPositionType(event.params.externalPositionTypeId);
@@ -1828,12 +1828,24 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         return;
       }
 
-      // TODO: update
       let tuple = decoded.toTuple();
 
-      let amounts = tuple[0].toBigIntArray().map<BigDecimal>((value) => toBigDecimal(value, 18));
+      let principleToken = tuple[0].toAddress();
+      let market = tuple[1].toAddress();
+      let duration = tuple[2].toI32();
+      let depositToken = ensureAsset(tuple[3].toAddress());
+      let depositAmount = toBigDecimal(tuple[4].toBigInt(), depositToken.decimals);
 
-      createPendleV2PositionChange(event.params.externalPosition, 'BuyPrincipalToken', vault, event);
+      let pendleMarket = ensurePendleV2Market(market);
+      pendleMarket.duration = duration;
+      pendleMarket.save();
+
+      ensurePendleV2PrincipleTokenWithMarketAndDuration(event.address, principleToken, market)
+
+      let change = createPendleV2PositionChange(event.params.externalPosition, 'BuyPrincipalToken', vault, event);
+      change.assetAmount = createAssetAmount(depositToken, depositAmount, denominationAsset, "pendle-buy-pt", event).id;
+      change.lpMarket = pendleMarket.id;
+      change.save();
     }
 
     if (actionId == PendleV2ActionId.SellPrincipalToken) {
@@ -1843,14 +1855,21 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         return;
       }
 
-      // TODO: update
       let tuple = decoded.toTuple();
 
-      let requestIds = tuple[0].toBigIntArray();
-      // There is no value in tracking hints
+      let principleToken = tuple[0].toAddress();
+      let market = tuple[1].toAddress();
+      let withdrawalToken = ensureAsset(tuple[2].toAddress());
+      let withdrawalAmount = toBigDecimal(tuple[3].toBigInt(), withdrawalToken.decimals);
 
-      createPendleV2PositionChange(event.params.externalPosition, 'SellPrincipalToken', vault, event);
-      return;
+      let pendleMarket = ensurePendleV2Market(market)
+
+      ensurePendleV2PrincipleTokenWithMarketAndDuration(event.address, principleToken, market)
+
+      let change = createPendleV2PositionChange(event.params.externalPosition, 'SellPrincipalToken', vault, event);
+      change.assetAmount = createAssetAmount(withdrawalToken, withdrawalAmount, denominationAsset, 'pendle-sell-pt', event).id;
+      change.lpMarket = pendleMarket.id;
+      change.save();
     }
 
     if (actionId == PendleV2ActionId.AddLiquidity) {
@@ -1863,14 +1882,25 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         return;
       }
 
-      // TODO: update
       let tuple = decoded.toTuple();
 
-      let requestIds = tuple[0].toBigIntArray();
-      // There is no value in tracking hints
+      let market = tuple[0].toAddress();
+      let duration = tuple[1].toI32();
+      let depositToken = ensureAsset(tuple[2].toAddress());
+      let depositAmount = toBigDecimal(tuple[3].toBigInt(), depositToken.decimals);
 
-      createPendleV2PositionChange(event.params.externalPosition, 'AddLiquidity', vault, event);
-      return;
+      let pendleMarket = ensurePendleV2Market(market);
+      pendleMarket.duration = duration;
+      pendleMarket.save();
+
+      let position = usePendleV2Position(event.address.toHex());
+      position.lpMarkets = arrayUnique(position.lpMarkets.concat([pendleMarket.id]));
+      position.save();
+
+      let change = createPendleV2PositionChange(event.params.externalPosition, 'AddLiquidity', vault, event);
+      change.assetAmount = createAssetAmount(depositToken, depositAmount, denominationAsset, "pendle-add-liquidity", event).id;
+      change.lpMarket = pendleMarket.id;
+      change.save();
     }
 
     if (actionId == PendleV2ActionId.RemoveLiquidity) {
@@ -1880,14 +1910,22 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         return;
       }
 
-      // TODO: update
       let tuple = decoded.toTuple();
 
-      let requestIds = tuple[0].toBigIntArray();
-      // There is no value in tracking hints
+      let market = tuple[0].toAddress();
+      let withdrawalToken = ensureAsset(tuple[1].toAddress());
+      let withdrawalAmount = toBigDecimal(tuple[2].toBigInt(), withdrawalToken.decimals);
 
-      createPendleV2PositionChange(event.params.externalPosition, 'RemoveLiquidity', vault, event);
-      return;
+      let pendleMarket = ensurePendleV2Market(market);
+
+      let position = usePendleV2Position(event.address.toHex());
+      position.lpMarkets = arrayUnique(position.lpMarkets.concat([pendleMarket.id]));
+      position.save();
+
+      let change = createPendleV2PositionChange(event.params.externalPosition, 'RemoveLiquidity', vault, event);
+      change.assetAmount = createAssetAmount(withdrawalToken, withdrawalAmount, denominationAsset, "pendle-remove-liquidity", event).id;
+      change.lpMarket = pendleMarket.id;
+      change.save();
     }
 
     if (actionId == PendleV2ActionId.ClaimRewards) {
@@ -1897,15 +1935,22 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         return;
       }
 
-      // TODO: update
       let tuple = decoded.toTuple();
 
-      let requestIds = tuple[0].toBigIntArray();
-      // There is no value in tracking hints
+      let assetAddresses = tuple[0].toAddressArray();
 
-      createPendleV2PositionChange(event.params.externalPosition, 'ClaimRewards', vault, event);
-      return;
+      let assets = new Array<string>(assetAddresses.length)
+      for (let i: i32 = 0; i < assetAddresses.length; i++) {
+        let assetAddress = assetAddresses[i];
+        assets[i] = ensureAsset(assetAddress).id;
+      }
+
+      let change = createPendleV2PositionChange(event.params.externalPosition, 'ClaimRewards', vault, event);
+      change.assets = assets;
+      change.save()
     }
+
+    return;
   }
 
   if (type.label == 'STAKEWISE_V3') {

@@ -1549,14 +1549,29 @@ type PendleV2Position implements ExternalPosition @entity {
   vault: Vault!
   type: ExternalPositionType!
   active: Boolean!
+  principalTokens: [PendleV2PrincipleTokenWithMarketAndDuration!]! @derivedFrom(field: "pendleV2Position")
+  lpMarkets: [PendleV2Market!]! 
   changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
 }
 
+type PendleV2Market @entity {
+  id: ID!
+  duration: Int!
+}
+
+type PendleV2PrincipleTokenWithMarketAndDuration @entity {
+  id: ID!
+  pendleV2Position: PendleV2Position!
+  principalToken: Asset!
+  market: PendleV2Market!
+}
+
 enum PendleV2PositionChangeType {
-  Stake
-  Redeem
-  EnterExitQueue
-  ClaimExitedAssets
+  BuyPrincipalToken
+  SellPrincipalToken
+  AddLiquidity 
+  RemoveLiquidity 
+  ClaimRewards
 }
 
 type PendleV2PositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
@@ -1565,6 +1580,9 @@ type PendleV2PositionChange implements Activity & VaultActivity & ExternalPositi
   timestamp: Int!
   externalPosition: ExternalPosition!
   pendleV2PositionChangeType: PendleV2PositionChangeType!
+  assets: [Asset!]!
+  assetAmount: AssetAmount
+  lpMarket: PendleV2Market
   activityCounter: Int!
   activityCategories: [ActivityCategory!]!
   activityType: ActivityType!
