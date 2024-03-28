@@ -1544,6 +1544,33 @@ type LidoWithdrawalsRequest @entity {
   claimedTimestamp: Int!
 }
 
+type PendleV2Position implements ExternalPosition @entity {
+  id: ID!
+  vault: Vault!
+  type: ExternalPositionType!
+  active: Boolean!
+  changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
+}
+
+enum PendleV2PositionChangeType {
+  Stake
+  Redeem
+  EnterExitQueue
+  ClaimExitedAssets
+}
+
+type PendleV2PositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: Int!
+  externalPosition: ExternalPosition!
+  pendleV2PositionChangeType: PendleV2PositionChangeType!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
+
 type StakeWiseStakingPosition implements ExternalPosition @entity {
   id: ID!
   vault: Vault!
@@ -1611,6 +1638,8 @@ type UnknownExternalPositionChange implements Activity & VaultActivity & Externa
   activityCategories: [ActivityCategory!]!
   activityType: ActivityType!
 }
+
+
 
 #################################################
 # Gas Relayer
