@@ -1,0 +1,294 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_addressListRegistry",
+        "type": "address"
+      },
+      {
+        "internalType": "uint32",
+        "name": "_minimumPricingDuration",
+        "type": "uint32"
+      },
+      {
+        "internalType": "uint32",
+        "name": "_maximumPricingDuration",
+        "type": "uint32"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_pendleMarketFactoriesListId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_pendlePtOracleAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_pendleRouterAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_wrappedNativeAssetAddress",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "exchangeRate",
+        "type": "int256"
+      }
+    ],
+    "name": "MarketExchangeRateBelowOne",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "MarketExpired",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "MarketProportionMustNotEqualOne",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "rateScalar",
+        "type": "int256"
+      }
+    ],
+    "name": "MarketRateScalarBelowZero",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "totalPt",
+        "type": "int256"
+      },
+      {
+        "internalType": "int256",
+        "name": "totalAsset",
+        "type": "int256"
+      }
+    ],
+    "name": "MarketZeroTotalPtOrTotalAsset",
+    "type": "error"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "lpToken",
+        "type": "address"
+      }
+    ],
+    "name": "LpTokenAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "lpToken",
+        "type": "address"
+      }
+    ],
+    "name": "LpTokenRemoved",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "market",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint32",
+        "name": "pricingDuration",
+        "type": "uint32"
+      }
+    ],
+    "name": "OracleDurationForMarketAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "principalToken",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "market",
+        "type": "address"
+      }
+    ],
+    "name": "PrincipalTokenAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "principalToken",
+        "type": "address"
+      }
+    ],
+    "name": "PrincipalTokenRemoved",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "getDebtAssets",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "assets_",
+        "type": "address[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "amounts_",
+        "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getLPTokens",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "lpTokenAddresses_",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getManagedAssets",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "assets_",
+        "type": "address[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "amounts_",
+        "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_principalTokenAddress",
+        "type": "address"
+      }
+    ],
+    "name": "getMarketForPrincipalToken",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "marketAddress_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_marketAddress",
+        "type": "address"
+      }
+    ],
+    "name": "getOraclePricingDurationForMarket",
+    "outputs": [
+      {
+        "internalType": "uint32",
+        "name": "pricingDuration_",
+        "type": "uint32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getPrincipalTokens",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "principalTokenAddresses_",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
+      }
+    ],
+    "name": "init",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes",
+        "name": "_actionData",
+        "type": "bytes"
+      }
+    ],
+    "name": "receiveCallFromVault",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

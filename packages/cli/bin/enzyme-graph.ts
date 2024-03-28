@@ -1,6 +1,6 @@
 #!/usr/bin/env tsx
 
-import "../src"
+import '../src';
 
 process.on('SIGINT', () => {
   process.exit();

@@ -64,6 +64,7 @@ import {
   LidoWithdrawalsActionId,
   AaveV3DebtPositionActionId,
   StakeWiseV3StakingPositionActionId,
+  PendleV2ActionId,
 } from '../../utils/actionId';
 import { ensureMapleLiquidityPoolV1, ensureMapleLiquidityPoolV2 } from '../../entities/MapleLiquidityPool';
 import { ExternalSdk } from '../../generated/contracts/ExternalSdk';
@@ -119,6 +120,7 @@ import {
   useStakeWiseStakingExitRequest,
   createStakeWiseStakingPosition,
 } from '../../entities/StakeWiseStakingPosition';
+import { createPendleV2Position, createPendleV2PositionChange } from '../../entities/PendleV2Position';
 
 export function handleExternalPositionDeployedForFund(event: ExternalPositionDeployedForFund): void {
   let type = useExternalPositionType(event.params.externalPositionTypeId);
@@ -190,6 +192,12 @@ export function handleExternalPositionDeployedForFund(event: ExternalPositionDep
     createLidoWithdrawalsPosition(event.params.externalPosition, event.params.vaultProxy, type);
 
     LidoWithdrawalsPositionLib4DataSource.create(event.params.externalPosition);
+
+    return;
+  }
+
+  if (type.label == 'PENDLE_V2') {
+    createPendleV2Position(event.params.externalPosition, event.params.vaultProxy, type);
 
     return;
   }
@@ -1249,12 +1257,12 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
       let withdrewWhileUndelegatingAssetAmount = withdrewWhileUndelegatingAssetAmountBD.gt(BigDecimal.fromString('0'))
         ? createAssetAmount(
-            grtAsset,
-            withdrewWhileUndelegatingAssetAmountBD,
-            denominationAsset,
-            'grt-withdrew-while-undelegating-asset-amount',
-            event,
-          )
+          grtAsset,
+          withdrewWhileUndelegatingAssetAmountBD,
+          denominationAsset,
+          'grt-withdrew-while-undelegating-asset-amount',
+          event,
+        )
         : null;
 
       createTheGraphDelegationPositionChange(
@@ -1809,6 +1817,97 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     return;
   }
 
+  if (type.label == 'PENDLE_V2') {
+    if (actionId == PendleV2ActionId.BuyPrincipalToken) {
+      let decoded = ethereum.decode(
+        '(address,address,uint32,address,uint256,tuple(uint256,uint256,uint256,uint256,uint256),uint256)',
+        event.params.actionArgs,
+      );
+
+      if (decoded == null) {
+        return;
+      }
+
+      // TODO: update
+      let tuple = decoded.toTuple();
+
+      let amounts = tuple[0].toBigIntArray().map<BigDecimal>((value) => toBigDecimal(value, 18));
+
+      createPendleV2PositionChange(event.params.externalPosition, 'BuyPrincipalToken', vault, event);
+    }
+
+    if (actionId == PendleV2ActionId.SellPrincipalToken) {
+      let decoded = ethereum.decode('(address,addreess,address,uint256,uint256)', event.params.actionArgs);
+
+      if (decoded == null) {
+        return;
+      }
+
+      // TODO: update
+      let tuple = decoded.toTuple();
+
+      let requestIds = tuple[0].toBigIntArray();
+      // There is no value in tracking hints
+
+      createPendleV2PositionChange(event.params.externalPosition, 'SellPrincipalToken', vault, event);
+      return;
+    }
+
+    if (actionId == PendleV2ActionId.AddLiquidity) {
+      let decoded = ethereum.decode(
+        '(address,uint32,address,uint256,tuple(uint256,uint256,uint256,uint256,uint256),uint256)',
+        event.params.actionArgs,
+      );
+
+      if (decoded == null) {
+        return;
+      }
+
+      // TODO: update
+      let tuple = decoded.toTuple();
+
+      let requestIds = tuple[0].toBigIntArray();
+      // There is no value in tracking hints
+
+      createPendleV2PositionChange(event.params.externalPosition, 'AddLiquidity', vault, event);
+      return;
+    }
+
+    if (actionId == PendleV2ActionId.RemoveLiquidity) {
+      let decoded = ethereum.decode('(address,address,uint256,uint256,uint256)', event.params.actionArgs);
+
+      if (decoded == null) {
+        return;
+      }
+
+      // TODO: update
+      let tuple = decoded.toTuple();
+
+      let requestIds = tuple[0].toBigIntArray();
+      // There is no value in tracking hints
+
+      createPendleV2PositionChange(event.params.externalPosition, 'RemoveLiquidity', vault, event);
+      return;
+    }
+
+    if (actionId == PendleV2ActionId.ClaimRewards) {
+      let decoded = ethereum.decode('(address[])', tuplePrefixBytes(event.params.actionArgs));
+
+      if (decoded == null) {
+        return;
+      }
+
+      // TODO: update
+      let tuple = decoded.toTuple();
+
+      let requestIds = tuple[0].toBigIntArray();
+      // There is no value in tracking hints
+
+      createPendleV2PositionChange(event.params.externalPosition, 'ClaimRewards', vault, event);
+      return;
+    }
+  }
+
   if (type.label == 'STAKEWISE_V3') {
     if (actionId == StakeWiseV3StakingPositionActionId.Stake) {
       let decoded = ethereum.decode('(address,uint256)', event.params.actionArgs);
@@ -1962,5 +2061,5 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
   createUnknownExternalPositionChange(event.params.externalPosition, vault, event);
 }
 
-export function handleExternalPositionTypeInfoUpdated(event: ExternalPositionTypeInfoUpdated): void {}
-export function handleValidatedVaultProxySetForFund(event: ValidatedVaultProxySetForFund): void {}
+export function handleExternalPositionTypeInfoUpdated(event: ExternalPositionTypeInfoUpdated): void { }
+export function handleValidatedVaultProxySetForFund(event: ValidatedVaultProxySetForFund): void { }

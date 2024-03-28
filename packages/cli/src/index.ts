@@ -124,7 +124,7 @@ class Subgraph<TVariables = any> {
     const command = $`graph codegen --skip-migrations --output-dir ${outputDir}`;
     command.stdout?.pipe(process.stdout);
     command.stderr?.pipe(process.stderr);
-    await command
+    await command;
 
     fs.renameSync(path.join(outputDir, 'schema.ts'), path.join(generatedDir, 'schema.ts'));
     if (fs.existsSync(path.join(outputDir, 'templates.ts'))) {
@@ -165,14 +165,14 @@ class Subgraph<TVariables = any> {
     const command = $`graph deploy --skip-migrations ${this.environment.name} --node ${this.environment.node} --ipfs ${this.environment.ipfs} --output-dir ${path.join(this.root, 'build/subgraph')}`;
     command.stdout?.pipe(process.stdout);
     command.stderr?.pipe(process.stderr);
-    await command
+    await command;
   }
 
   public async buildSubgraph() {
     const command = $`graph build --skip-migrations --output-dir ${path.join(this.root, 'build/subgraph')}`;
     command.stdout?.pipe(process.stdout);
     command.stderr?.pipe(process.stderr);
-    await command
+    await command;
   }
 
   public async createSubgraph() {
@@ -183,7 +183,7 @@ class Subgraph<TVariables = any> {
     const command = $`graph create ${this.environment.name} --node ${this.environment.node}`;
     command.stdout?.pipe(process.stdout);
     command.stderr?.pipe(process.stderr);
-    await command
+    await command;
   }
 }
 
