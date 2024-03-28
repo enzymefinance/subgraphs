@@ -146,7 +146,7 @@ export function handleOwnerSet(event: OwnerSet): void {
   vault.save();
 }
 
-export function handleAccessorSet(event: AccessorSet): void { }
+export function handleAccessorSet(event: AccessorSet): void {}
 
 export function handleAssetManagerAdded(event: AssetManagerAdded): void {
   let assetManager = ensureAssetManager(event.params.manager, event);
@@ -486,6 +486,6 @@ export function handleEthReceived(event: EthReceived): void {
   vault.save();
 }
 
-export function handleApproval(event: Approval): void { }
-export function handleAssetWithdrawn(event: AssetWithdrawn): void { }
-export function handleVaultLibSet(event: VaultLibSet): void { }
+export function handleApproval(event: Approval): void {}
+export function handleAssetWithdrawn(event: AssetWithdrawn): void {}
+export function handleVaultLibSet(event: VaultLibSet): void {}
