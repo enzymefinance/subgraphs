@@ -48,8 +48,8 @@ export function createPendleV2PositionChange(
   change.pendleV2PositionChangeType = changeType;
   change.externalPosition = position.toHex();
   change.assets = new Array<string>(0);
-  change.assetAmount = null;
-  change.market = null;
+  change.assetAmounts = new Array<string>(0);
+  change.markets = new Array<string>(0);
   change.vault = vault.id;
   change.timestamp = event.block.timestamp.toI32();
   change.activityCounter = getActivityCounter();
@@ -63,13 +63,13 @@ export function createPendleV2PositionChange(
   return change;
 }
 
-function pendleV2AllowedMarketId(vault: Vault, marketAddress: Address): string {
-  return vault.id + '/' + marketAddress.toHex()
+function pendleV2AllowedMarketId(vaultAddress: Address, marketAddress: Address): string {
+  return vaultAddress.toHex() + '/' + marketAddress.toHex()
 }
 
 
-export function ensurePendleV2AllowedMarket(vault: Vault, marketAddress: Address): PendleV2AllowedMarket {
-  let id = pendleV2AllowedMarketId(vault, marketAddress);
+export function createPendleV2AllowedMarket(vaultAddress: Address, marketAddress: Address): PendleV2AllowedMarket {
+  let id = pendleV2AllowedMarketId(vaultAddress, marketAddress);
 
   let market = PendleV2AllowedMarket.load(id);
 
@@ -85,11 +85,23 @@ export function ensurePendleV2AllowedMarket(vault: Vault, marketAddress: Address
   }
 
   market = new PendleV2AllowedMarket(id);
-  market.vault = vault.id;
+  market.vault = vaultAddress;
   market.duration = 0;
   market.principalToken = ensureAsset(tokens.value.getPt_()).id;
   market.active = true;
   market.save();
 
   return market;
+}
+
+export function usePendleV2AllowedMarket(vaultAddress: Address, marketAddress: Address): PendleV2AllowedMarket {
+  let id = pendleV2AllowedMarketId(vaultAddress, marketAddress);
+
+  let market = PendleV2AllowedMarket.load(id);
+
+  if (market == null) {
+    logCritical('PendleV2AllowedMarket {} not found', [id]);
+  }
+
+  return market as PendleV2AllowedMarket;
 }

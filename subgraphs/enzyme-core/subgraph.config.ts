@@ -190,6 +190,7 @@ export const configure: Configurator<Variables> = (variables) => {
         abis.IMapleV2PoolManager.getFunction('withdrawalManager'),
         abis.IMapleV2WithdrawalManager.getFunction('lockedShares'),
         abis.IPendleV2Market.getFunction('readTokens'),
+        abis.IPendleV2Market.getFunction('getRewardTokens'),
         abis.MaplePool.getFunction('liquidityAsset'),
         abis.MapleRewards.getFunction('stakingToken'),
         abis.NonfungiblePositionManager.getFunction('factory'),

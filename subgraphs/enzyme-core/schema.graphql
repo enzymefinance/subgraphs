@@ -1556,7 +1556,7 @@ type PendleV2Position implements ExternalPosition @entity {
 
 type PendleV2AllowedMarket @entity {
   id: ID!
-  vault: Vault!
+  vault: Bytes!
   market: Bytes!
   duration: Int!
   principalToken: Asset!
@@ -1578,8 +1578,8 @@ type PendleV2PositionChange implements Activity & VaultActivity & ExternalPositi
   externalPosition: ExternalPosition!
   pendleV2PositionChangeType: PendleV2PositionChangeType!
   assets: [Asset!]!
-  assetAmount: AssetAmount
-  market: PendleV2AllowedMarket
+  assetAmounts: [AssetAmount!]!
+  markets: [PendleV2AllowedMarket!]!
   activityCounter: Int!
   activityCategories: [ActivityCategory!]!
   activityType: ActivityType!
