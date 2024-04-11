@@ -17,7 +17,12 @@ export const sources = (variables: Variables): DataSourceUserDeclaration[] => {
     {
       name: 'GatedRedemptionQueueSharesWrapperFactory',
       block: variables.block,
-      address: variables.persistent.gatedRedemptionQueueSharesWrapperFactory,
+      address: variables.persistent.gatedRedemptionQueueSharesWrapperFactoryAddress,
+    },
+    {
+      name: 'PendleMarketsRegistry',
+      block: variables.block, 
+      address: variables.persistent.pendleMarketsRegistryAddress,
     },
     {
       name: 'ProtocolFeeReserveLib',

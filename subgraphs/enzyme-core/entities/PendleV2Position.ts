@@ -1,16 +1,17 @@
 import { Address, ethereum } from '@graphprotocol/graph-ts';
 import {
   ExternalPositionType,
-  PendleV2Market,
+  PendleV2AllowedMarket,
   PendleV2Position,
   PendleV2PositionChange,
-  PendleV2PrincipleTokenWithMarketAndDuration,
   Vault,
 } from '../generated/schema';
 import { useVault } from './Vault';
 import { getActivityCounter } from './Counter';
 import { logCritical, uniqueEventId } from '@enzymefinance/subgraph-utils';
 import { ensureAsset } from './Asset';
+import { ExternalSdk } from '../generated/contracts/ExternalSdk';
+
 
 export function usePendleV2Position(id: string): PendleV2Position {
   let position = PendleV2Position.load(id);
@@ -30,7 +31,8 @@ export function createPendleV2Position(
   position.vault = useVault(vaultAddress.toHex()).id;
   position.active = true;
   position.type = type.id;
-  position.lpMarkets = new Array<string>(0);
+  position.principalTokenHoldings = new Array<string>(0);
+  position.lpTokenHoldings = new Array<string>(0);
   position.save();
 
   return position;
@@ -47,7 +49,7 @@ export function createPendleV2PositionChange(
   change.externalPosition = position.toHex();
   change.assets = new Array<string>(0);
   change.assetAmount = null;
-  change.lpMarket = null;
+  change.market = null;
   change.vault = vault.id;
   change.timestamp = event.block.timestamp.toI32();
   change.activityCounter = getActivityCounter();
@@ -61,46 +63,33 @@ export function createPendleV2PositionChange(
   return change;
 }
 
-export function ensurePendleV2Market(marketAddress: Address): PendleV2Market {
-  let market = PendleV2Market.load(marketAddress.toHex());
+function pendleV2AllowedMarketId(vault: Vault, marketAddress: Address): string {
+  return vault.id + '/' + marketAddress.toHex()
+}
+
+
+export function ensurePendleV2AllowedMarket(vault: Vault, marketAddress: Address): PendleV2AllowedMarket {
+  let id = pendleV2AllowedMarketId(vault, marketAddress);
+
+  let market = PendleV2AllowedMarket.load(id);
 
   if (market) {
     return market;
   }
 
-  market = new PendleV2Market(marketAddress.toHex());
+  let pendleMarketContract = ExternalSdk.bind(marketAddress);
+  let tokens = pendleMarketContract.try_readTokens();
+
+  if (tokens.reverted == true) {
+    logCritical('Unable to read Pendle tokens for market {}',[marketAddress.toHex()]);
+  }
+
+  market = new PendleV2AllowedMarket(id);
+  market.vault = vault.id;
   market.duration = 0;
+  market.principalToken = ensureAsset(tokens.value.getPt_()).id;
+  market.active = true;
   market.save();
 
   return market;
-}
-
-function getPendleV2PrincipleTokenWithMarketAndDurationId(
-  externalPosition: Address,
-  principleToken: Address,
-  market: Address,
-): string {
-  return externalPosition.toHex() + '/' + principleToken.toHex() + '/' + market.toHex();
-}
-
-export function ensurePendleV2PrincipleTokenWithMarketAndDuration(
-  externalPosition: Address,
-  principleToken: Address,
-  market: Address,
-): PendleV2PrincipleTokenWithMarketAndDuration {
-  let id = getPendleV2PrincipleTokenWithMarketAndDurationId(externalPosition, principleToken, market);
-
-  let item = PendleV2PrincipleTokenWithMarketAndDuration.load(id);
-
-  if (item) {
-    return item;
-  }
-
-  item = new PendleV2PrincipleTokenWithMarketAndDuration(id);
-  item.pendleV2Position = usePendleV2Position(externalPosition.toHex()).id;
-  item.principalToken = ensureAsset(principleToken).id;
-  item.market = ensurePendleV2Market(market).id;
-  item.save();
-
-  return item;
 }

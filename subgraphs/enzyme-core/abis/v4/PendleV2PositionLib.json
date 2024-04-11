@@ -3,19 +3,9 @@
     "type": "constructor",
     "inputs": [
       {
-        "name": "_addressListRegistry",
+        "name": "_addressListRegistryAddress",
         "type": "address",
         "internalType": "address"
-      },
-      {
-        "name": "_minimumPricingDuration",
-        "type": "uint32",
-        "internalType": "uint32"
-      },
-      {
-        "name": "_maximumPricingDuration",
-        "type": "uint32",
-        "internalType": "uint32"
       },
       {
         "name": "_pendleMarketFactoriesListId",
@@ -23,9 +13,9 @@
         "internalType": "uint256"
       },
       {
-        "name": "_pendleSyTokensListId",
-        "type": "uint256",
-        "internalType": "uint256"
+        "name": "_pendleMarketsRegistryAddress",
+        "type": "address",
+        "internalType": "address"
       },
       {
         "name": "_pendlePtOracleAddress",
@@ -115,25 +105,6 @@
   },
   {
     "type": "function",
-    "name": "getOraclePricingDurationForMarket",
-    "inputs": [
-      {
-        "name": "_marketAddress",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "pricingDuration_",
-        "type": "uint32",
-        "internalType": "uint32"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
     "name": "getPrincipalTokens",
     "inputs": [],
     "outputs": [
@@ -150,7 +121,7 @@
     "name": "init",
     "inputs": [
       {
-        "name": "",
+        "name": "_data",
         "type": "bytes",
         "internalType": "bytes"
       }
@@ -193,25 +164,6 @@
         "type": "address",
         "indexed": true,
         "internalType": "address"
-      }
-    ],
-    "anonymous": false
-  },
-  {
-    "type": "event",
-    "name": "OracleDurationForMarketAdded",
-    "inputs": [
-      {
-        "name": "market",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
-      },
-      {
-        "name": "pricingDuration",
-        "type": "uint32",
-        "indexed": true,
-        "internalType": "uint32"
       }
     ],
     "anonymous": false

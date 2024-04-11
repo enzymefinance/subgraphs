@@ -39,7 +39,8 @@ export const ethereum: Context<Variables> = {
       addressListRegistryAddress: suluDeployment.contracts.AddressListRegistry,
       dispatcherAddress: suluDeployment.contracts.Dispatcher,
       externalPositionFactoryAddress: suluDeployment.contracts.ExternalPositionFactory,
-      gatedRedemptionQueueSharesWrapperFactory: '0x73b9c40530311b49b526f230d01bdf5725b3290d',
+      gatedRedemptionQueueSharesWrapperFactoryAddress: '0x73b9c40530311b49b526f230d01bdf5725b3290d',
+      pendleMarketsRegistryAddress: "0x73b9c40530311b49b526f230d01bdf5725b3290d", // placeholder until deployment is ready
       protocolFeeReserveLibAddress: suluDeployment.contracts.ProtocolFeeReserveLib,
       sharesSplitterFactoryAddress: suluDeployment.contracts.SharesSplitterFactory,
       uintListRegistryAddress: suluDeployment.contracts.UintListRegistry,
