@@ -1869,8 +1869,8 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let pendleMarket = ensurePendleV2AllowedMarket(vault, market);
 
       let balance = tokenBalance(Address.fromString(pendleMarket.principalToken), event.params.externalPosition);
-      if (balance != null && balance.isZero()) {
-        let position = usePendleV2Position(event.address.toHex());
+      if (balance && balance.isZero()) {
+        let position = usePendleV2Position(event.params.externalPosition.toHex());
         //  TODO: check if this is correct. There could be several markets for a single principle token.
         position.principalTokenHoldings = arrayDiff(position.principalTokenHoldings, [pendleMarket.id]);
         position.save();
@@ -1938,8 +1938,8 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let pendleMarket = ensurePendleV2AllowedMarket(vault, market);
 
       let balance = tokenBalance(market, event.params.externalPosition);
-      if (balance != null && balance.isZero()) {
-        let position = usePendleV2Position(event.address.toHex());
+      if (balance && balance.isZero()) {
+        let position = usePendleV2Position(event.params.externalPosition.toHex());
         position.lpTokenHoldings = arrayDiff(position.lpTokenHoldings, [pendleMarket.id]);
         position.save();
       }
