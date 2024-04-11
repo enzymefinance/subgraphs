@@ -21,7 +21,7 @@ export const sources = (variables: Variables): DataSourceUserDeclaration[] => {
     },
     {
       name: 'PendleMarketsRegistry',
-      block: variables.block, 
+      block: variables.block,
       address: variables.persistent.pendleMarketsRegistryAddress,
     },
     {

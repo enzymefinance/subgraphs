@@ -1848,7 +1848,9 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       position.save();
 
       let change = createPendleV2PositionChange(event.params.externalPosition, 'BuyPrincipalToken', vault, event);
-      change.assetAmounts = [createAssetAmount(depositToken, depositAmount, denominationAsset, 'pendle-buy-pt', event).id];
+      change.assetAmounts = [
+        createAssetAmount(depositToken, depositAmount, denominationAsset, 'pendle-buy-pt', event).id,
+      ];
       change.markets = [pendleMarket.id];
       change.save();
     }
@@ -1877,13 +1879,9 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       }
 
       let change = createPendleV2PositionChange(event.params.externalPosition, 'SellPrincipalToken', vault, event);
-      change.assetAmounts = [createAssetAmount(
-        withdrawalToken,
-        withdrawalAmount,
-        denominationAsset,
-        'pendle-sell-pt',
-        event,
-      ).id];
+      change.assetAmounts = [
+        createAssetAmount(withdrawalToken, withdrawalAmount, denominationAsset, 'pendle-sell-pt', event).id,
+      ];
       change.markets = [pendleMarket.id];
       change.save();
     }
@@ -1911,13 +1909,9 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       position.save();
 
       let change = createPendleV2PositionChange(event.params.externalPosition, 'AddLiquidity', vault, event);
-      change.assetAmounts = [createAssetAmount(
-        depositToken,
-        depositAmount,
-        denominationAsset,
-        'pendle-add-liquidity',
-        event,
-      ).id]
+      change.assetAmounts = [
+        createAssetAmount(depositToken, depositAmount, denominationAsset, 'pendle-add-liquidity', event).id,
+      ];
       change.markets = [pendleMarket.id];
       change.save();
     }
@@ -1945,13 +1939,9 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       }
 
       let change = createPendleV2PositionChange(event.params.externalPosition, 'RemoveLiquidity', vault, event);
-      change.assetAmounts = [createAssetAmount(
-        withdrawalToken,
-        withdrawalAmount,
-        denominationAsset,
-        'pendle-remove-liquidity',
-        event,
-      ).id];
+      change.assetAmounts = [
+        createAssetAmount(withdrawalToken, withdrawalAmount, denominationAsset, 'pendle-remove-liquidity', event).id,
+      ];
       change.markets = [pendleMarket.id];
       change.save();
     }
@@ -1979,7 +1969,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         if (rewardTokensCall.reverted == false) {
           let rewardTokens = rewardTokensCall.value;
 
-          let rewardAssetIds = rewardTokens.map<string>(rewardToken => ensureAsset(rewardToken).id);
+          let rewardAssetIds = rewardTokens.map<string>((rewardToken) => ensureAsset(rewardToken).id);
           assets = arrayUnique(assets.concat(rewardAssetIds));
         }
       }

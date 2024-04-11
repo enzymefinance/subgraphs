@@ -12,7 +12,6 @@ import { logCritical, uniqueEventId } from '@enzymefinance/subgraph-utils';
 import { ensureAsset } from './Asset';
 import { ExternalSdk } from '../generated/contracts/ExternalSdk';
 
-
 export function usePendleV2Position(id: string): PendleV2Position {
   let position = PendleV2Position.load(id);
   if (position == null) {
@@ -64,9 +63,8 @@ export function createPendleV2PositionChange(
 }
 
 function pendleV2AllowedMarketId(vaultAddress: Address, marketAddress: Address): string {
-  return vaultAddress.toHex() + '/' + marketAddress.toHex()
+  return vaultAddress.toHex() + '/' + marketAddress.toHex();
 }
-
 
 export function createPendleV2AllowedMarket(vaultAddress: Address, marketAddress: Address): PendleV2AllowedMarket {
   let id = pendleV2AllowedMarketId(vaultAddress, marketAddress);
@@ -81,7 +79,7 @@ export function createPendleV2AllowedMarket(vaultAddress: Address, marketAddress
   let tokens = pendleMarketContract.try_readTokens();
 
   if (tokens.reverted == true) {
-    logCritical('Unable to read Pendle tokens for market {}',[marketAddress.toHex()]);
+    logCritical('Unable to read Pendle tokens for market {}', [marketAddress.toHex()]);
   }
 
   market = new PendleV2AllowedMarket(id);
