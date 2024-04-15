@@ -66,7 +66,7 @@ function pendleV2AllowedMarketId(vaultAddress: Address, marketAddress: Address):
   return vaultAddress.toHex() + '/' + marketAddress.toHex();
 }
 
-export function createPendleV2AllowedMarket(vaultAddress: Address, marketAddress: Address): PendleV2AllowedMarket {
+export function ensurePendleV2AllowedMarket(vaultAddress: Address, marketAddress: Address): PendleV2AllowedMarket {
   let id = pendleV2AllowedMarketId(vaultAddress, marketAddress);
 
   let market = PendleV2AllowedMarket.load(id);
