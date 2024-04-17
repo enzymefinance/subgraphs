@@ -40,7 +40,7 @@ export const testnet: Context<Variables> = {
       gatedRedemptionQueueSharesWrapperFactory: '0xd188ab263828d0bece1442da7dee7e0ae76f709c',
       protocolFeeReserveLibAddress: testnetV4Deployment.contracts.ProtocolFeeReserveLib,
       sharesSplitterFactoryAddress: testnetV4Deployment.contracts.SharesSplitterFactory,
-      singleAssetRedemptionQueueFactoryAddress: "0x0000000000000000000000000000000000000000",
+      singleAssetRedemptionQueueFactoryAddress: "0xad1980b3301557eae118275e79c2554cb6efbd5a",
       uintListRegistryAddress: testnetV4Deployment.contracts.UintListRegistry,
     },
     releases: {
