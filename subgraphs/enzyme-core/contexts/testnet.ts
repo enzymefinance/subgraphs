@@ -102,6 +102,7 @@ export const testnet: Context<Variables> = {
         allowedExternalPositionTypesPerManagerPolicyAddress:
           testnetV4Deployment.contracts.AllowedExternalPositionTypesPerManagerPolicy,
         allowedExternalPositionTypesPolicyAddress: testnetV4Deployment.contracts.AllowedExternalPositionTypesPolicy,
+        allowedRedeemersForSpecificAssetsPolicyAddress: '0xb4343ac6c53cba47aef22470c351f92e89bf7170',
         allowedSharesTransferRecipientsPolicyAddress:
           testnetV4Deployment.contracts.AllowedSharesTransferRecipientsPolicy,
         arbitraryLoanFixedInterestModuleAddress: testnetV4Deployment.contracts.ArbitraryLoanFixedInterestModule,
