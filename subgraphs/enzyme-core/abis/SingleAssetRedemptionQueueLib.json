@@ -473,5 +473,10 @@
     "type": "error",
     "name": "UndefinedVaultProxy",
     "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "ZeroShares",
+    "inputs": []
   }
 ]
