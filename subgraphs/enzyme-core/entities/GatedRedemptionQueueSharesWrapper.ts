@@ -25,7 +25,7 @@ export function ensureGatedRedemptionQueueSharesWrapper(address: Address): Gated
   }
 
   let sharesWrapperContract = ProtocolSdk.bind(address);
-  let vaultAddress = sharesWrapperContract.getVaultProxy1();
+  let vaultAddress = sharesWrapperContract.getVaultProxy();
 
   sharesWrapper = new GatedRedemptionQueueSharesWrapper(address.toHex());
   sharesWrapper.vault = vaultAddress.toHex();

@@ -40,6 +40,7 @@ export const polygon: Context<Variables> = {
       gatedRedemptionQueueSharesWrapperFactory: '0x7a68d541af898c14fbd5ecbda3b402b18d8c17d4',
       protocolFeeReserveLibAddress: polygonV4Deployment.contracts.ProtocolFeeReserveLib,
       sharesSplitterFactoryAddress: polygonV4Deployment.contracts.SharesSplitterFactory,
+      singleAssetRedemptionQueueFactoryAddress: "0x4b6b342ba8bb29e2d1b542532e6b7be1cae026b9",
       uintListRegistryAddress: polygonV4Deployment.contracts.UintListRegistry,
     },
     releases: {
