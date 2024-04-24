@@ -12,7 +12,7 @@ interface Variables {
   start: number;
 }
 
-const name = 'enzymefinance/vault-shares';
+const name = 'enzyme-vault-shares';
 
 export const contexts: Contexts<Variables> = {
   ethereum: {
