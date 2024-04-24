@@ -1,6 +1,6 @@
 import { Configurator, Contexts, DataSourceUserDeclaration } from '@enzymefinance/subgraph-cli';
 
-const name = 'enzyme-mln-token';
+const name = 'mln-token';
 
 export const contexts: Contexts<{}> = {
   ethereum: {
