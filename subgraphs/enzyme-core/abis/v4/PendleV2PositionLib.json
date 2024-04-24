@@ -3,22 +3,7 @@
     "type": "constructor",
     "inputs": [
       {
-        "name": "_addressListRegistryAddress",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "_pendleMarketFactoriesListId",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
         "name": "_pendleMarketsRegistryAddress",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "_pendlePtOracleAddress",
         "type": "address",
         "internalType": "address"
       },
@@ -86,25 +71,6 @@
   },
   {
     "type": "function",
-    "name": "getMarketForPrincipalToken",
-    "inputs": [
-      {
-        "name": "_principalTokenAddress",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "marketAddress_",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
     "name": "getPrincipalTokens",
     "inputs": [],
     "outputs": [
@@ -121,7 +87,7 @@
     "name": "init",
     "inputs": [
       {
-        "name": "_data",
+        "name": "",
         "type": "bytes",
         "internalType": "bytes"
       }
@@ -174,12 +140,6 @@
     "inputs": [
       {
         "name": "principalToken",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
-      },
-      {
-        "name": "market",
         "type": "address",
         "indexed": true,
         "internalType": "address"
