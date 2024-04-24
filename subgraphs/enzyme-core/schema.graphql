@@ -935,6 +935,7 @@ enum PolicyType {
   AllowedDepositRecipients
   AllowedExternalPositionTypesPerManager
   AllowedExternalPositionTypes
+  AllowedRedeemersForSpecificAssets
   AllowedSharesTransferRecipients
   AssetBlacklist
   AssetWhitelist
