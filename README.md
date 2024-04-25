@@ -4,13 +4,13 @@
 
 This repository contains the various subgraphs that Enzyme Finance uses:
 
-- [asset-universe](subgraphs/asset-universe/)
-- [diva-staking](subgraphs/diva-staking/)
+- [enzyme-asset-universe](subgraphs/asset-universe/)
 - [enzyme-core](subgraphs/enzyme-core/)
+- [enzyme-diva-staking](subgraphs/diva-staking/)
+- [enzyme-vault-balances](subgraphs/vault-balances/)
+- [enzyme-vault-lineage](subgraphs/vault-lineage/)
+- [enzyme-vault-shares](subgraphs/vault-shares/)
 - [mln-token](subgraphs/mln-token/)
-- [vault-balances](subgraphs/vault-balances/)
-- [vault-lineage](subgraphs/vault-lineage/)
-- [vault-shares](subgraphs/vault-shares/)
 
 ## Installation
 
@@ -52,7 +52,7 @@ pnpm build <context>
 To deploy a subgraph to the default location, you need to be logged into the Graph CLI:
 
 ```sh
-pnpm graph auth
+pnpm graph auth --studio
 ```
 
 Once logged in, go to the subgraph directory (in `/subgraphs/name-of-subgraph`) and run
@@ -63,19 +63,23 @@ pnpm upload <context>
 
 ## Deployed subgraphs
 
-All subgraphs are deployed on the hosted network:
+All subgraphs are deployed on the Graph network:
 
-- [asset-universe](https://thegraph.com/hosted-service/subgraph/enzymefinance/asset-universe)
-- [diva-staking](https://thegraph.com/hosted-service/subgraph/enzymefinance/diva-staking)
-- [enzyme-core](https://thegraph.com/hosted-service/subgraph/enzymefinance/enzyme-core)
-- [mln-token](https://thegraph.com/hosted-service/subgraph/enzymefinance/mln-token)
-- [vault-balances](https://thegraph.com/hosted-service/subgraph/enzymefinance/vault-balances)
-- [vault-lineage](https://thegraph.com/hosted-service/subgraph/enzymefinance/vault-lineage)
-- [vault-shares](https://thegraph.com/hosted-service/subgraph/enzymefinance/vault-shares)
+### Ethereum
 
-Some subgraphs are also deployed on the decentralized network:
+- [enzyme-asset-universe](https://thegraph.com/explorer/subgraphs/4ZW3mDNgpDVy68RipQLJxvRw1FReJTfvA7nbB52J4Gjg)
+- [enzyme-core](https://thegraph.com/explorer/subgraphs/9DLBBLep5UyU16kUQRvxBCMqko4q9XzuE4XsMMpARhKK)
+- [enzyme-diva-staking](https://thegraph.com/explorer/subgraphs/7BwBCYDVsVViTKQjRtbGA63SoCkxQe7XsMYtQYijQyfn)
+- [enzyme-vault-balances](https://thegraph.com/explorer/subgraphs/HwR7jTExHWNvQetTxRYEMQ5hywHyUkierAYvnGS7pBUS)
+- [enzyme-vault-lineage](https://thegraph.com/explorer/subgraphs/5FdivFcUPmVSqCFkv3jqJh3QYjHjh1ztzd7GHiCAMP1h)
+- [enzyme-vault-shares](https://thegraph.com/explorer/subgraphs/6p2L2gQ4Hw4Dh2kxZFDJbcqtbv44vrJbrBEh3EjS7qVo)
+- [mln-token](https://thegraph.com/explorer/subgraphs/F76JsnQYRhnyHSs2Hx1NbDpUiDNd2jrqVEqnMx6bgdPk)
 
-- [asset-universe](https://thegraph.com/explorer/subgraphs/3Qt5kSKwdBgdLFsF2XEJ9EDQFNmuoJuXVo52QcyTMThf?view=Overview&chain=mainnet)
-- [vault-balances](https://thegraph.com/explorer/subgraphs/Gno9igCD6UZaenKzAYSDXhsBE4eEybxGBqqN1pPH7NSR?view=Overview&chain=mainnet)
-- [vault-lineage](https://thegraph.com/explorer/subgraphs/471kuUZjCjg75KhH8AdpUzpsnre1BsEWLJPhXG9KeZyg?view=Overview&chain=mainnet)
-- [vault-shares](https://thegraph.com/explorer/subgraphs/5fQN1uMK6uEswACUmN7HmvdMr3QLRhYDBrX8GngbR2Tn?view=Overview&chain=mainnet)
+### Polygon
+
+- [enzyme-asset-universe-polygon](https://thegraph.com/explorer/subgraphs/6gfWidQ9TBcHLyUPuL343dw8LpvXW7sALPPHpcZi7SKz)
+- [enzyme-core-polygon](https://thegraph.com/explorer/subgraphs/GCAHDyqvZBLMwqdb9U7AqWAN4t4TSwR3aXMHDoUUFuRV)
+- [enzyme-vault-balances-polygon](https://thegraph.com/explorer/subgraphs/tLbAAASbNgTZuqkVdPMs8RJBXLs9WZS7758t1maT86C)
+- [enzyme-vault-lineage-polygon](https://thegraph.com/explorer/subgraphs/hQMwVerKMpt8ChLU33jhZ4GLmcP8q2fBhJzw4JRFq4q)
+- [enzyme-vault-shares-polygon](https://thegraph.com/explorer/subgraphs/7Tahv9dmeKKcF2SUeHU3ZN4X52y8KGwPo5UaFidJb1hr)
+
