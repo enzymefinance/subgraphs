@@ -1,0 +1,134 @@
+[
+  {
+    "type": "constructor",
+    "inputs": [
+      {
+        "name": "_allowedMorphoBlueVaultsListId",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "_morphoBlueAddress",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "_uintListRegistryAddress",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "getDebtAssets",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "assets_",
+        "type": "address[]",
+        "internalType": "address[]"
+      },
+      {
+        "name": "amounts_",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getManagedAssets",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "assets_",
+        "type": "address[]",
+        "internalType": "address[]"
+      },
+      {
+        "name": "amounts_",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getMarketIds",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "marketIds_",
+        "type": "bytes32[]",
+        "internalType": "bytes32[]"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "init",
+    "inputs": [
+      {
+        "name": "",
+        "type": "bytes",
+        "internalType": "bytes"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "receiveCallFromVault",
+    "inputs": [
+      {
+        "name": "_actionData",
+        "type": "bytes",
+        "internalType": "bytes"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "event",
+    "name": "MarketIdAdded",
+    "inputs": [
+      {
+        "name": "marketId",
+        "type": "bytes32",
+        "indexed": true,
+        "internalType": "bytes32"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "MarketIdRemoved",
+    "inputs": [
+      {
+        "name": "marketId",
+        "type": "bytes32",
+        "indexed": true,
+        "internalType": "bytes32"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "error",
+    "name": "DisallowedMarket",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InvalidActionId",
+    "inputs": []
+  }
+]
