@@ -54,6 +54,15 @@ export function createMorphoBluePosition(
     return position;
   }
   
+  export function useMorphoBluePosition(id: string): MorphoBluePosition {
+    let position = MorphoBluePosition.load(id);
+    if (position == null) {
+      logCritical('Failed to load MorphoBluePosition {}.', [id]);
+    }
+  
+    return position as MorphoBluePosition;
+  }
+
   export function createMorphoBluePositionChange(
     MorphoBluePositionAddress: Address,
     changeType: string,
