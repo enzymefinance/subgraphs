@@ -6,7 +6,7 @@ import { Deployment, Version } from '@enzymefinance/environment';
 const testnetV4Deployment = getEnvironment(Deployment.TESTNET, Version.SULU);
 
 export const testnet: Context<Variables> = {
-  name: 'enzymefinance/enzyme-core-testnet',
+  name: 'enzyme-core-testnet',
   network: 'matic',
   variables: {
     block: 25731749,

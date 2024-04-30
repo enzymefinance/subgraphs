@@ -16,7 +16,7 @@ interface Variables {
   start: number;
 }
 
-const name = 'enzymefinance/vault-balances';
+const name = 'enzyme-vault-balances';
 
 const deployments = {
   ethereum: getEnvironment(Deployment.ETHEREUM),
