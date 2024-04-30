@@ -1587,7 +1587,7 @@ type MorphoBlueMarket @entity {
   morpheBluePosition: MorphoBluePosition!
   loanToken: Asset!
   collateralToken: Asset!
-  removed: Boolean! 
+  removed: Boolean!
 }
 
 enum MorphoBluePositionChangeType {
@@ -1859,6 +1859,7 @@ enum ActivityType {
   ProtocolFee
   Trade
   VaultSettings
+  TrackAsset
 }
 
 interface Activity {

@@ -11,7 +11,7 @@ export function trackAsset(vault: Vault, asset: Asset, type: string, event: ethe
   trackAsset.type = type;
   trackAsset.activityCounter = getActivityCounter();
   trackAsset.activityCategories = ['Vault'];
-  trackAsset.activityType = 'Trade';
+  trackAsset.activityType = 'TrackAsset';
   trackAsset.save();
 
   vault.lastAssetUpdate = event.block.timestamp.toI32();
