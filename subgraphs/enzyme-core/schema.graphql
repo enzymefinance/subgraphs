@@ -23,8 +23,6 @@ enum SharesChangeType {
 }
 
 enum TradeType {
-  ADD_TRACKED_ASSETS
-  APPROVE_ASSETS
   CLAIM_REWARDS
   CLAIM_REWARDS_AND_REINVEST
   CLAIM_REWARDS_AND_SWAP
@@ -1029,6 +1027,26 @@ enum AddressListUpdateType {
   AddOnly
   RemoveOnly
   AddAndRemove
+}
+
+#################################################
+# TrackingAssets
+#################################################
+
+enum TrackAssetType {
+  Add
+  Remove
+}
+
+type TrackAsset implements Activity & VaultActivity @entity {
+  id: ID!
+  vault: Vault!
+  asset: Asset!
+  timestamp: Int!
+  type: TrackAssetType!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
 }
 
 #################################################
@@ -2104,5 +2122,3 @@ type SingleAssetRedemptionQueueRequest @entity {
   withdrawn: Boolean!
   withdrawnAt: Int
 }
-
-

@@ -56,6 +56,7 @@ import { useKilnStakingPosition } from '../../entities/KilnStakingPosition';
 import { useLidoWithdrawalsPosition } from '../../entities/LidoWithdrawalsPosition';
 import { useAaveV3DebtPosition } from '../../entities/AaveV3DebtPosition';
 import { useStakeWiseStakingPosition } from '../../entities/StakeWiseStakingPosition';
+import { trackAsset } from '../../entities/TrackAsset';
 
 export function handleTransfer(event: Transfer): void {
   // only track deposit balance if not zero address
@@ -237,6 +238,8 @@ export function handleTrackedAssetAdded(event: TrackedAssetAdded): void {
   let vault = useVault(event.address.toHex());
   vault.trackedAssets = arrayUnique<string>(vault.trackedAssets.concat([trackedAsset.id]));
   vault.save();
+
+  trackAsset(vault, trackedAsset, 'Add', event);
 }
 
 export function handleTrackedAssetRemoved(event: TrackedAssetRemoved): void {
@@ -245,6 +248,8 @@ export function handleTrackedAssetRemoved(event: TrackedAssetRemoved): void {
   let vault = useVault(event.address.toHex());
   vault.trackedAssets = arrayDiff<string>(vault.trackedAssets, [trackedAsset.id]);
   vault.save();
+
+  trackAsset(vault, trackedAsset, 'Remove', event);
 }
 
 export function handleProtocolFeePaidInShares(event: ProtocolFeePaidInShares): void {
