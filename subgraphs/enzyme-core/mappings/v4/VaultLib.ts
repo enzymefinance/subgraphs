@@ -57,6 +57,7 @@ import { useLidoWithdrawalsPosition } from '../../entities/LidoWithdrawalsPositi
 import { useAaveV3DebtPosition } from '../../entities/AaveV3DebtPosition';
 import { useStakeWiseStakingPosition } from '../../entities/StakeWiseStakingPosition';
 import { trackAsset } from '../../entities/TrackAsset';
+import { useMorphoBluePosition } from '../../entities/MorphoBluePosition';
 
 export function handleTransfer(event: Transfer): void {
   // only track deposit balance if not zero address
@@ -380,6 +381,12 @@ export function handleExternalPositionAdded(event: ExternalPositionAdded): void 
     ssp.save();
   }
 
+  if (type.label == 'MORPHO_BLUE') {
+    let mbp = useMorphoBluePosition(event.params.externalPosition.toHex());
+    mbp.active = true;
+    mbp.save();
+  }
+
   let activity = new ExternalPositionAddedEvent(uniqueEventId(event));
   activity.timestamp = event.block.timestamp.toI32();
   activity.vault = event.address.toHex();
@@ -460,6 +467,12 @@ export function handleExternalPositionRemoved(event: ExternalPositionRemoved): v
     let ssp = useStakeWiseStakingPosition(event.params.externalPosition.toHex());
     ssp.active = false;
     ssp.save();
+  }
+
+  if (type.label == 'MORPHO_BLUE') {
+    let mbp = useMorphoBluePosition(event.params.externalPosition.toHex());
+    mbp.active = false;
+    mbp.save();
   }
 
   let activity = new ExternalPositionRemovedEvent(uniqueEventId(event));

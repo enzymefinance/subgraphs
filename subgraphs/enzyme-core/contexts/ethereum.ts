@@ -8,7 +8,7 @@ const v3Deployment = getEnvironment(Deployment.ETHEREUM, Version.ENCORE);
 const suluDeployment = getEnvironment(Deployment.ETHEREUM, Version.SULU);
 
 export const ethereum: Context<Variables> = {
-  name: 'enzymefinance/enzyme-core',
+  name: 'enzyme-core',
   network: 'mainnet',
   variables: {
     block: 11636493,
@@ -34,6 +34,7 @@ export const ethereum: Context<Variables> = {
       theGraphStakingProxyAddress: suluDeployment.externalContracts.theGraphStakingProxy,
       lusdAddress: '0x5f98805a4e8be255a32880fdec7f6728c6568ba0',
       compAddress: '0xc00e94cb662c3520282e6f5717214004a7f26888',
+      morphoBlueAddress: "0xbbbbbbbbbb9cc5e90e3b3af64bdaf62c37eeffcb",
     },
     persistent: {
       addressListRegistryAddress: suluDeployment.contracts.AddressListRegistry,
@@ -42,7 +43,7 @@ export const ethereum: Context<Variables> = {
       gatedRedemptionQueueSharesWrapperFactory: '0x73b9c40530311b49b526f230d01bdf5725b3290d',
       protocolFeeReserveLibAddress: suluDeployment.contracts.ProtocolFeeReserveLib,
       sharesSplitterFactoryAddress: suluDeployment.contracts.SharesSplitterFactory,
-      singleAssetRedemptionQueueFactoryAddress: "0xfe84d5209054254389c9d6a754b821f3a297d56a",
+      singleAssetRedemptionQueueFactoryAddress: '0xfe84d5209054254389c9d6a754b821f3a297d56a',
       uintListRegistryAddress: suluDeployment.contracts.UintListRegistry,
     },
     releases: {

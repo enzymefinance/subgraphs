@@ -6,7 +6,7 @@ import { Deployment, Version } from '@enzymefinance/environment';
 const polygonV4Deployment = getEnvironment(Deployment.POLYGON, Version.SULU);
 
 export const polygon: Context<Variables> = {
-  name: 'enzymefinance/enzyme-core-polygon',
+  name: 'enzyme-core-polygon',
   network: 'matic',
   variables: {
     block: 25825424,
@@ -32,6 +32,7 @@ export const polygon: Context<Variables> = {
       theGraphStakingProxyAddress: polygonV4Deployment.externalContracts.theGraphStakingProxy,
       lusdAddress: '0x0000000000000000000000000000000000000000',
       compAddress: '0x8505b9d2254a7ae468c0e9dd10ccea3a837aef5c',
+      morphoBlueAddress: "0x0000000000000000000000000000000000000000",
     },
     persistent: {
       addressListRegistryAddress: polygonV4Deployment.contracts.AddressListRegistry,
@@ -40,7 +41,7 @@ export const polygon: Context<Variables> = {
       gatedRedemptionQueueSharesWrapperFactory: '0x7a68d541af898c14fbd5ecbda3b402b18d8c17d4',
       protocolFeeReserveLibAddress: polygonV4Deployment.contracts.ProtocolFeeReserveLib,
       sharesSplitterFactoryAddress: polygonV4Deployment.contracts.SharesSplitterFactory,
-      singleAssetRedemptionQueueFactoryAddress: "0x4b6b342ba8bb29e2d1b542532e6b7be1cae026b9",
+      singleAssetRedemptionQueueFactoryAddress: '0x4b6b342ba8bb29e2d1b542532e6b7be1cae026b9',
       uintListRegistryAddress: polygonV4Deployment.contracts.UintListRegistry,
     },
     releases: {

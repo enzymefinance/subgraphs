@@ -32,7 +32,7 @@ interface Variables {
   };
 }
 
-const name = 'enzymefinance/asset-universe';
+const name = 'enzyme-asset-universe';
 
 const deployments = {
   ethereum: getEnvironment(Deployment.ETHEREUM, Version.SULU),

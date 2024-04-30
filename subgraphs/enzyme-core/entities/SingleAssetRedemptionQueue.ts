@@ -22,7 +22,10 @@ export function ensureSingleAssetRedemptionQueue(address: Address, event: ethere
   return queue;
 }
 
-export function ensureSingleAssetRedemptionQueueRequest(id: BigInt, event:ethereum.Event): SingleAssetRedemptionQueueRequest {
+export function ensureSingleAssetRedemptionQueueRequest(
+  id: BigInt,
+  event: ethereum.Event,
+): SingleAssetRedemptionQueueRequest {
   let request = SingleAssetRedemptionQueueRequest.load(id.toString());
 
   if (request != null) {

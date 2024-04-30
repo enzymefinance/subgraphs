@@ -6,7 +6,7 @@ import { Deployment, Version } from '@enzymefinance/environment';
 const testnetV4Deployment = getEnvironment(Deployment.TESTNET, Version.SULU);
 
 export const testnet: Context<Variables> = {
-  name: 'enzymefinance/enzyme-core-testnet',
+  name: 'enzyme-core-testnet',
   network: 'matic',
   variables: {
     block: 25731749,
@@ -32,6 +32,7 @@ export const testnet: Context<Variables> = {
       theGraphStakingProxyAddress: testnetV4Deployment.externalContracts.theGraphStakingProxy,
       lusdAddress: '0x0000000000000000000000000000000000000000',
       compAddress: '0x8505b9d2254a7ae468c0e9dd10ccea3a837aef5c',
+      morphoBlueAddress: "0x0000000000000000000000000000000000000000",
     },
     persistent: {
       addressListRegistryAddress: testnetV4Deployment.contracts.AddressListRegistry,
@@ -40,7 +41,7 @@ export const testnet: Context<Variables> = {
       gatedRedemptionQueueSharesWrapperFactory: '0xd188ab263828d0bece1442da7dee7e0ae76f709c',
       protocolFeeReserveLibAddress: testnetV4Deployment.contracts.ProtocolFeeReserveLib,
       sharesSplitterFactoryAddress: testnetV4Deployment.contracts.SharesSplitterFactory,
-      singleAssetRedemptionQueueFactoryAddress: "0xad1980b3301557eae118275e79c2554cb6efbd5a",
+      singleAssetRedemptionQueueFactoryAddress: '0xad1980b3301557eae118275e79c2554cb6efbd5a',
       uintListRegistryAddress: testnetV4Deployment.contracts.UintListRegistry,
     },
     releases: {
