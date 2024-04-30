@@ -11,7 +11,7 @@ interface Variables {
   stEthVault: string;
 }
 
-const name = 'enzymefinance/diva-staking';
+const name = 'enzyme-diva-staking';
 
 const variables: Variables = {
   stEthVault: '0x1ce8aafb51e79f6bdc0ef2ebd6fd34b00620f6db',

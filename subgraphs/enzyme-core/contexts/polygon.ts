@@ -6,7 +6,7 @@ import { Deployment, Version } from '@enzymefinance/environment';
 const polygonV4Deployment = getEnvironment(Deployment.POLYGON, Version.SULU);
 
 export const polygon: Context<Variables> = {
-  name: 'enzymefinance/enzyme-core-polygon',
+  name: 'enzyme-core-polygon',
   network: 'matic',
   variables: {
     block: 25825424,
