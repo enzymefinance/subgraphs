@@ -14,7 +14,8 @@ import {
   Transfer,
   VaultLibSet,
 } from '../../generated/contracts/VaultLib3Events';
-import { trackAsset } from '../../entities/TrackAsset';
+import { trackedAssetAdded } from '../../entities/TrackedAssetAdded';
+import { trackedAssetRemoved } from '../../entities/TrackedAssetRemoved';
 
 export function handleAccessorSet(event: AccessorSet): void {}
 
@@ -41,7 +42,7 @@ export function handleTrackedAssetAdded(event: TrackedAssetAdded): void {
   vault.trackedAssets = arrayUnique<string>(vault.trackedAssets.concat([asset.id]));
   vault.save();
 
-  trackAsset(vault, asset, 'Add', event);
+  trackedAssetAdded(vault, asset, event);
 }
 
 export function handleTrackedAssetRemoved(event: TrackedAssetRemoved): void {
@@ -51,7 +52,7 @@ export function handleTrackedAssetRemoved(event: TrackedAssetRemoved): void {
   vault.trackedAssets = arrayDiff<string>(vault.trackedAssets, [asset.id]);
   vault.save();
 
-  trackAsset(vault, asset, 'Remove', event);
+  trackedAssetRemoved(vault, asset, event);
 }
 
 export function handleVaultLibSet(event: VaultLibSet): void {}
