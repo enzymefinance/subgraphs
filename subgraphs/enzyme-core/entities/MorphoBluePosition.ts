@@ -27,7 +27,7 @@ export function ensureMorphoBlueMarket(morphoBluePosition: Address, marketId: By
   }
 
   let contract = ExternalSdk.bind(morphoBlueAddress);
-  let marketParams = contract.try_idToMarketParams(Address.fromBytes(marketId));
+  let marketParams = contract.try_idToMarketParams(marketId);
 
   if (marketParams.reverted) {
     logCritical('Unable to obtain market params for market id {}', [marketId.toHex()]);
