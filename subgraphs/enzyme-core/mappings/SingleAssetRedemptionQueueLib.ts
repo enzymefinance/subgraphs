@@ -16,15 +16,11 @@ import {
   RequestWithdrawn,
   Shutdown,
 } from '../generated/contracts/SingleAssetRedemptionQueueLibEvents';
-import { Address, store } from '@graphprotocol/graph-ts';
+import { Address } from '@graphprotocol/graph-ts';
 import { createAssetAmount } from '../entities/AssetAmount';
 import { ensureAsset } from '../entities/Asset';
 import { ensureComptroller } from '../entities/Comptroller';
 import { ensureAccount } from '../entities/Account';
-
-function managerId(redemptionQueue: Address, user: Address): string {
-  return redemptionQueue.toHex() + '/' + user.toHex();
-}
 
 export function handleBypassableSharesThresholdSet(event: BypassableSharesThresholdSet): void {
   let redemptionQueue = ensureSingleAssetRedemptionQueue(event.address, event);
@@ -78,10 +74,13 @@ export function handleRedeemed(event: Redeemed): void {
 }
 
 export function handleRedemptionRequestAdded(event: RedemptionRequestAdded): void {
+  let queue = ensureSingleAssetRedemptionQueue(event.address, event);
+
   let request = ensureSingleAssetRedemptionQueueRequest(event.params.id, event);
   request.createdAt = event.block.timestamp.toI32();
   request.sharesAmount = toBigDecimal(event.params.sharesAmount);
-  request.user = event.params.user;
+  request.account = ensureAccount(event.params.user, event).id;
+  request.vault = useVault(queue.vault).id;
   request.singleAssetRedemptionQueue = ensureSingleAssetRedemptionQueue(event.address, event).id;
   request.save();
 }
