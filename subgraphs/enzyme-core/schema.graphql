@@ -361,6 +361,7 @@ type Account @entity {
   gatedRedemptionQueueSharesWrapperManagements: [GatedRedemptionQueueSharesWrapper!]! @derivedFrom(field: "managers")
   gatedRedepmtionQueueSharesWrapperDepositorBalances: [GatedRedemptionQueueSharesWrapperDepositorBalance!]!
     @derivedFrom(field: "account")
+  singleAssetRedemptionQueueManagers: [SingleAssetRedemptionQueue!]! @derivedFrom(field: "managers")
 
   deposits: [Deposit!]! @derivedFrom(field: "depositor")
   sharesChanges: [SharesChange!]! @derivedFrom(field: "depositor")
@@ -2113,21 +2114,15 @@ enum GatedRedemptionQueueSharesWrapperDepositMode {
 
 type SingleAssetRedemptionQueue @entity {
   id: ID!
+  vault: Vault!
+  managers: [Account!]!
   createdAt: Int!
   creator: Account!
-  vault: Vault!
   redemptionAsset: Bytes!
   bypassableSharesThreshold: BigDecimal!
   shutdown: Boolean!
   shutdownAt: Int
-  managers: SingleAssetRedemptionQueueManager @derivedFrom(field: "singleAssetRedemptionQueue")
   requests: SingleAssetRedemptionQueueRequest @derivedFrom(field: "singleAssetRedemptionQueue")
-}
-
-type SingleAssetRedemptionQueueManager @entity {
-  id: ID!
-  manager: Bytes!
-  singleAssetRedemptionQueue: SingleAssetRedemptionQueue!
 }
 
 type SingleAssetRedemptionQueueRequest @entity {
