@@ -752,6 +752,17 @@ type AllowedExternalPositionTypesPolicy implements Policy @entity {
   externalPositionTypes: [BigInt!]!
 }
 
+type AllowedRedeemersForSpecificAssetsPolicy implements Policy @entity {
+  id: ID!
+  policy: Bytes!
+  policyType: PolicyType!
+  comptroller: Comptroller!
+  createdAt: Int!
+  enabled: Boolean!
+  settings: String!
+  addressLists: [AddressList!]!
+}
+
 type AllowedSharesTransferRecipientsPolicy implements Policy @entity {
   id: ID!
   policy: Bytes!
@@ -1549,8 +1560,8 @@ type PendleV2Position implements ExternalPosition @entity {
   vault: Vault!
   type: ExternalPositionType!
   active: Boolean!
-  principalTokenHoldings: [PendleV2AllowedMarket!]! 
-  lpTokenHoldings: [PendleV2AllowedMarket!]! 
+  principalTokenHoldings: [PendleV2AllowedMarket!]!
+  lpTokenHoldings: [PendleV2AllowedMarket!]!
   changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
 }
 
@@ -1566,8 +1577,8 @@ type PendleV2AllowedMarket @entity {
 enum PendleV2PositionChangeType {
   BuyPrincipalToken
   SellPrincipalToken
-  AddLiquidity 
-  RemoveLiquidity 
+  AddLiquidity
+  RemoveLiquidity
   ClaimRewards
 }
 
@@ -1580,6 +1591,45 @@ type PendleV2PositionChange implements Activity & VaultActivity & ExternalPositi
   assets: [Asset!]!
   assetAmounts: [AssetAmount!]!
   markets: [PendleV2AllowedMarket!]!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
+type MorphoBluePosition implements ExternalPosition @entity {
+  id: ID!
+  vault: Vault!
+  type: ExternalPositionType!
+  active: Boolean!
+  changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
+}
+
+type MorphoBlueMarket @entity {
+  id: ID!
+  marketId: Bytes!
+  morpheBluePosition: MorphoBluePosition!
+  loanToken: Asset!
+  collateralToken: Asset!
+  removed: Boolean!
+}
+
+enum MorphoBluePositionChangeType {
+  Lend
+  Redeem
+  AddCollateral
+  RemoveCollateral
+  Borrow
+  Repay
+}
+
+type MorphoBluePositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: Int!
+  externalPosition: ExternalPosition!
+  morphoBluePositionChangeType: MorphoBluePositionChangeType!
+  market: MorphoBlueMarket!
+  assetAmount: AssetAmount!
   activityCounter: Int!
   activityCategories: [ActivityCategory!]!
   activityType: ActivityType!
@@ -1652,8 +1702,6 @@ type UnknownExternalPositionChange implements Activity & VaultActivity & Externa
   activityCategories: [ActivityCategory!]!
   activityType: ActivityType!
 }
-
-
 
 #################################################
 # Gas Relayer
@@ -2097,4 +2145,42 @@ type GatedRedemptionQueueSharesWrapperDepositorBalance @entity {
 enum GatedRedemptionQueueSharesWrapperDepositMode {
   DIRECT
   REQUEST
+}
+
+#################################################
+# Single Asset Redemption Queue
+#################################################
+
+type SingleAssetRedemptionQueue @entity {
+  id: ID!
+  createdAt: Int!
+  creator: Account!
+  vault: Vault!
+  redemptionAsset: Bytes!
+  bypassableSharesThreshold: BigDecimal!
+  shutdown: Boolean!
+  shutdownAt: Int
+  managers: SingleAssetRedemptionQueueManager @derivedFrom(field: "singleAssetRedemptionQueue")
+  requests: SingleAssetRedemptionQueueRequest @derivedFrom(field: "singleAssetRedemptionQueue")
+}
+
+type SingleAssetRedemptionQueueManager @entity {
+  id: ID!
+  manager: Bytes!
+  singleAssetRedemptionQueue: SingleAssetRedemptionQueue!
+}
+
+type SingleAssetRedemptionQueueRequest @entity {
+  id: ID!
+  createdAt: Int!
+  user: Bytes!
+  sharesAmount: BigDecimal!
+  singleAssetRedemptionQueue: SingleAssetRedemptionQueue!
+  redemptionAssetAmount: AssetAmount
+  redeemed: Boolean!
+  redeemedAt: Int
+  bypassed: Boolean!
+  bypassedAt: Int
+  withdrawn: Boolean!
+  withdrawnAt: Int
 }

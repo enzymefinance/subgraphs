@@ -6,7 +6,7 @@ import { Deployment, Version } from '@enzymefinance/environment';
 const testnetV4Deployment = getEnvironment(Deployment.TESTNET, Version.SULU);
 
 export const testnet: Context<Variables> = {
-  name: 'enzymefinance/enzyme-core-testnet',
+  name: 'enzyme-core-testnet',
   network: 'matic',
   variables: {
     block: 25731749,
@@ -32,6 +32,7 @@ export const testnet: Context<Variables> = {
       theGraphStakingProxyAddress: testnetV4Deployment.externalContracts.theGraphStakingProxy,
       lusdAddress: '0x0000000000000000000000000000000000000000',
       compAddress: '0x8505b9d2254a7ae468c0e9dd10ccea3a837aef5c',
+      morphoBlueAddress: "0x0000000000000000000000000000000000000000",
     },
     persistent: {
       addressListRegistryAddress: testnetV4Deployment.contracts.AddressListRegistry,
@@ -41,6 +42,7 @@ export const testnet: Context<Variables> = {
       pendleMarketsRegistryAddress: '0x0000000000000000000000000000000000000000',
       protocolFeeReserveLibAddress: testnetV4Deployment.contracts.ProtocolFeeReserveLib,
       sharesSplitterFactoryAddress: testnetV4Deployment.contracts.SharesSplitterFactory,
+      singleAssetRedemptionQueueFactoryAddress: '0xad1980b3301557eae118275e79c2554cb6efbd5a',
       uintListRegistryAddress: testnetV4Deployment.contracts.UintListRegistry,
     },
     releases: {
@@ -103,6 +105,7 @@ export const testnet: Context<Variables> = {
         allowedExternalPositionTypesPerManagerPolicyAddress:
           testnetV4Deployment.contracts.AllowedExternalPositionTypesPerManagerPolicy,
         allowedExternalPositionTypesPolicyAddress: testnetV4Deployment.contracts.AllowedExternalPositionTypesPolicy,
+        allowedRedeemersForSpecificAssetsPolicyAddress: '0xb4343ac6c53cba47aef22470c351f92e89bf7170',
         allowedSharesTransferRecipientsPolicyAddress:
           testnetV4Deployment.contracts.AllowedSharesTransferRecipientsPolicy,
         arbitraryLoanFixedInterestModuleAddress: testnetV4Deployment.contracts.ArbitraryLoanFixedInterestModule,

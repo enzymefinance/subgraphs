@@ -11,7 +11,7 @@ const root = path.join(__dirname, '..');
 
 const defaultLocalNode = 'http://localhost:8020/';
 const defaultLocalIpfs = 'http://localhost:5001/';
-const defaultRemoteNode = 'https://api.thegraph.com/deploy/';
+const defaultRemoteNode = 'https://api.studio.thegraph.com/deploy/';
 const defaultRemoteIpfs = 'https://api.thegraph.com/ipfs/api/v0';
 
 class SubgraphLoader<TVariables = any> {
@@ -67,7 +67,7 @@ class Subgraph<TVariables = any> {
     public readonly environment: Environment<TVariables>,
     public readonly root: string,
     public readonly templates: Template[] = [],
-  ) {}
+  ) { }
 
   public async generateManifest() {
     const templateFile = path.join(root, 'templates/subgraph.template.yaml');
@@ -162,7 +162,7 @@ class Subgraph<TVariables = any> {
   }
 
   public async deploySubgraph() {
-    const command = $`graph deploy --skip-migrations ${this.environment.name} --node ${this.environment.node} --ipfs ${this.environment.ipfs} --output-dir ${path.join(this.root, 'build/subgraph')}`;
+    const command = $`graph deploy --studio --skip-migrations ${this.environment.name} --node ${this.environment.node} --ipfs ${this.environment.ipfs} --output-dir ${path.join(this.root, 'build/subgraph')}`;
     command.stdout?.pipe(process.stdout);
     command.stderr?.pipe(process.stderr);
     await command;
@@ -180,7 +180,7 @@ class Subgraph<TVariables = any> {
       return;
     }
 
-    const command = $`graph create ${this.environment.name} --node ${this.environment.node}`;
+    const command = $`graph create --studio ${this.environment.name} --node ${this.environment.node}`;
     command.stdout?.pipe(process.stdout);
     command.stderr?.pipe(process.stderr);
     await command;
@@ -223,7 +223,7 @@ yargs
   .command<Args>(
     'codegen <context>',
     'Generate the subgraph manifest and code.',
-    () => {},
+    () => { },
     async ({ subgraph }) => {
       console.log('Generating event abis');
       await subgraph.generateAbis();
@@ -238,7 +238,7 @@ yargs
   .command<Args>(
     'build <context>',
     'Compile the subgraph code into the wasm runtimes.',
-    () => {},
+    () => { },
     async ({ subgraph }) => {
       console.log('Generating code');
       await subgraph.buildSubgraph();
@@ -247,7 +247,7 @@ yargs
   .command<Args>(
     'deploy <context>',
     'Deploy the subgraph.',
-    () => {},
+    () => { },
     async ({ subgraph }) => {
       console.log('Generating event abis');
       await subgraph.generateAbis();

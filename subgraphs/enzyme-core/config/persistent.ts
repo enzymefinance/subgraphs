@@ -34,11 +34,17 @@ export const sources = (variables: Variables): DataSourceUserDeclaration[] => {
       block: variables.block,
       address: variables.persistent.sharesSplitterFactoryAddress,
     },
+    {
+      name: 'SingleAssetRedemptionQueueFactory',
+      block: variables.block,
+      address: variables.persistent.singleAssetRedemptionQueueFactoryAddress,
+    },
     { name: 'UintListRegistry', block: variables.block, address: variables.persistent.uintListRegistryAddress },
   ];
 };
 
 export const templates: DataSourceTemplateUserDeclaration[] = [
-  { name: 'SharesSplitterLib' },
   { name: 'GatedRedemptionQueueSharesWrapperLib' },
+  { name: 'SharesSplitterLib' },
+  { name: 'SingleAssetRedemptionQueueLib' },
 ];

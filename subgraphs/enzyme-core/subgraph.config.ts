@@ -39,6 +39,7 @@ export interface Variables {
     pendleMarketsRegistryAddress: string;
     protocolFeeReserveLibAddress: string;
     sharesSplitterFactoryAddress: string;
+    singleAssetRedemptionQueueFactoryAddress: string;
     uintListRegistryAddress: string;
   };
   releases: {
@@ -56,6 +57,7 @@ export interface Variables {
     grtAddress: string;
     lusdAddress: string;
     compAddress: string;
+    morphoBlueAddress: string;
   };
 }
 
@@ -96,7 +98,6 @@ export const configure: Configurator<Variables> = (variables) => {
         IExternalPositionProxy: 'abis/v4/IExternalPositionProxy.json',
         UniswapV3LiquidityPositionLib: 'abis/v4/UniswapV3LiquidityPositionLib.json',
         IStakingWrapper: 'abis/v4/IStakingWrapper.json',
-        GatedRedemptionQueueSharesWrapperLib: 'abis/GatedRedemptionQueueSharesWrapperLib.json',
       },
       functions: (abis) => [
         abis.ChainlinkAggregator.getFunction('latestAnswer'),
@@ -130,7 +131,6 @@ export const configure: Configurator<Variables> = (variables) => {
         abis.IExternalPositionProxy.getFunction('getExternalPositionType'),
         abis.UniswapV3LiquidityPositionLib.getFunction('getNonFungibleTokenManager'),
         abis.IStakingWrapper.getFunction('getRewardTokens'),
-        abis.GatedRedemptionQueueSharesWrapperLib.getFunction('getVaultProxy'),
       ],
     },
 
@@ -169,6 +169,7 @@ export const configure: Configurator<Variables> = (variables) => {
         IPendleV2Market: 'abis/external/IPendleV2Market.json',
         MaplePool: 'abis/external/MaplePool.json',
         MapleRewards: 'abis/external/MapleRewards.json',
+        MorphoBlue: 'abis/external/MorphoBlue.json',
         NonfungiblePositionManager: 'abis/external/NonfungiblePositionManager.json',
         TheGraphStaking: 'abis/external/TheGraphStaking.json',
         UniswapV3Factory: 'abis/external/UniswapV3Factory.json',
@@ -193,6 +194,7 @@ export const configure: Configurator<Variables> = (variables) => {
         abis.IPendleV2Market.getFunction('getRewardTokens'),
         abis.MaplePool.getFunction('liquidityAsset'),
         abis.MapleRewards.getFunction('stakingToken'),
+        abis.MorphoBlue.getFunction('idToMarketParams'),
         abis.NonfungiblePositionManager.getFunction('factory'),
         abis.NonfungiblePositionManager.getFunction('positions'),
         abis.NonfungiblePositionManager.getFunction('tokenURI'),
