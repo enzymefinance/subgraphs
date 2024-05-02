@@ -1,8 +1,6 @@
 import { Address, BigInt, ethereum } from '@graphprotocol/graph-ts';
-import { Account, SingleAssetRedemptionQueue, SingleAssetRedemptionQueueRequest } from '../generated/schema';
-import { ProtocolSdk } from '../generated/contracts/ProtocolSdk';
+import { SingleAssetRedemptionQueue, SingleAssetRedemptionQueueRequest } from '../generated/schema';
 import { ZERO_ADDRESS, ZERO_BD } from '@enzymefinance/subgraph-utils';
-import { Z } from '@enzymefinance/environment/dist/environment-9476f6f8';
 
 export function ensureSingleAssetRedemptionQueue(address: Address, event: ethereum.Event): SingleAssetRedemptionQueue {
   let queue = SingleAssetRedemptionQueue.load(address.toHex());
