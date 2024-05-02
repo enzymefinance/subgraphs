@@ -935,6 +935,7 @@ enum PolicyType {
   AllowedDepositRecipients
   AllowedExternalPositionTypesPerManager
   AllowedExternalPositionTypes
+  AllowedRedeemersForSpecificAssets
   AllowedSharesTransferRecipients
   AssetBlacklist
   AssetWhitelist
@@ -1569,7 +1570,7 @@ type MorphoBlueMarket @entity {
   morpheBluePosition: MorphoBluePosition!
   loanToken: Asset!
   collateralToken: Asset!
-  removed: Boolean! 
+  removed: Boolean!
 }
 
 enum MorphoBluePositionChangeType {
