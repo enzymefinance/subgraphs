@@ -1,10 +1,10 @@
 import { uniqueEventId } from '@enzymefinance/subgraph-utils';
 import { ethereum } from '@graphprotocol/graph-ts';
-import { Asset, TrackedAssetAdded, Vault } from '../generated/schema';
+import { Asset, TrackedAssetRemoved, Vault } from '../generated/schema';
 import { getActivityCounter } from './Counter';
 
 export function trackedAssetRemoved(vault: Vault, asset: Asset, event: ethereum.Event): void {
-  let trackAsset = new TrackedAssetAdded(uniqueEventId(event));
+  let trackAsset = new TrackedAssetRemoved(uniqueEventId(event));
   trackAsset.vault = vault.id;
   trackAsset.asset = asset.id;
   trackAsset.timestamp = event.block.timestamp.toI32();
