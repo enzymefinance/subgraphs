@@ -85,6 +85,7 @@ export function ensurePendleV2AllowedMarket(vaultAddress: Address, marketAddress
   market = new PendleV2AllowedMarket(id);
   market.vault = vaultAddress;
   market.duration = 0;
+  market.market = marketAddress;
   market.principalToken = ensureAsset(tokens.value.getPt_()).id;
   market.active = true;
   market.save();
