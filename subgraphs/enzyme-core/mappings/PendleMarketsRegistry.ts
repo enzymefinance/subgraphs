@@ -1,4 +1,4 @@
-import { MarketForUserUpdated } from '../generated/contracts/PendleMarketsRegistryEvents';
+import { MarketForUserUpdated, PtForUserUpdated } from '../generated/contracts/PendleMarketsRegistryEvents';
 import { ensurePendleV2AllowedMarket } from '../entities/PendleV2Position';
 
 export function handleMarketForUserUpdated(event: MarketForUserUpdated): void {
@@ -9,4 +9,4 @@ export function handleMarketForUserUpdated(event: MarketForUserUpdated): void {
   market.save();
 }
 
-export function handlePtForUserUpdated(): void {}
+export function handlePtForUserUpdated(event: PtForUserUpdated): void {}
