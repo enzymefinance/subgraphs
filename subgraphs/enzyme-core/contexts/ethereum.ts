@@ -34,7 +34,7 @@ export const ethereum: Context<Variables> = {
       theGraphStakingProxyAddress: suluDeployment.externalContracts.theGraphStakingProxy,
       lusdAddress: '0x5f98805a4e8be255a32880fdec7f6728c6568ba0',
       compAddress: '0xc00e94cb662c3520282e6f5717214004a7f26888',
-      morphoBlueAddress: "0xbbbbbbbbbb9cc5e90e3b3af64bdaf62c37eeffcb",
+      // morphoBlueAddress: "0xbbbbbbbbbb9cc5e90e3b3af64bdaf62c37eeffcb",
     },
     persistent: {
       addressListRegistryAddress: suluDeployment.contracts.AddressListRegistry,

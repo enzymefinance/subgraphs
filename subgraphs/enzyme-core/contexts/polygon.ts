@@ -32,7 +32,7 @@ export const polygon: Context<Variables> = {
       theGraphStakingProxyAddress: polygonV4Deployment.externalContracts.theGraphStakingProxy,
       lusdAddress: '0x0000000000000000000000000000000000000000',
       compAddress: '0x8505b9d2254a7ae468c0e9dd10ccea3a837aef5c',
-      morphoBlueAddress: "0x0000000000000000000000000000000000000000",
+      // morphoBlueAddress: "0x0000000000000000000000000000000000000000",
     },
     persistent: {
       addressListRegistryAddress: polygonV4Deployment.contracts.AddressListRegistry,

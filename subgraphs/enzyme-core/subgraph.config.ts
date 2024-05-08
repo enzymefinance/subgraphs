@@ -57,7 +57,7 @@ export interface Variables {
     grtAddress: string;
     lusdAddress: string;
     compAddress: string;
-    morphoBlueAddress: string;
+    // morphoBlueAddress: string;
   };
 }
 
@@ -169,7 +169,7 @@ export const configure: Configurator<Variables> = (variables) => {
         IPendleV2Market: 'abis/external/IPendleV2Market.json',
         MaplePool: 'abis/external/MaplePool.json',
         MapleRewards: 'abis/external/MapleRewards.json',
-        MorphoBlue: 'abis/external/MorphoBlue.json',
+        // MorphoBlue: 'abis/external/MorphoBlue.json',
         NonfungiblePositionManager: 'abis/external/NonfungiblePositionManager.json',
         TheGraphStaking: 'abis/external/TheGraphStaking.json',
         UniswapV3Factory: 'abis/external/UniswapV3Factory.json',
@@ -194,7 +194,7 @@ export const configure: Configurator<Variables> = (variables) => {
         abis.IPendleV2Market.getFunction('getRewardTokens'),
         abis.MaplePool.getFunction('liquidityAsset'),
         abis.MapleRewards.getFunction('stakingToken'),
-        abis.MorphoBlue.getFunction('idToMarketParams'),
+        // abis.MorphoBlue.getFunction('idToMarketParams'),
         abis.NonfungiblePositionManager.getFunction('factory'),
         abis.NonfungiblePositionManager.getFunction('positions'),
         abis.NonfungiblePositionManager.getFunction('tokenURI'),
