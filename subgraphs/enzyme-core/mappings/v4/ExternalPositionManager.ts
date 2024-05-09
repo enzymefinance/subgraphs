@@ -212,6 +212,8 @@ export function handleExternalPositionDeployedForFund(event: ExternalPositionDep
 
   if (type.label == 'PENDLE_V2') {
     createPendleV2Position(event.params.externalPosition, event.params.vaultProxy, type);
+
+    return;
   }
 
   // if (type.label == 'MORPHO_BLUE') {
