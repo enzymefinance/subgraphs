@@ -1858,7 +1858,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
       let pendleMarket = usePendleV2AllowedMarket(Address.fromString(vault.id), market);
 
-      let position = usePendleV2Position(event.address.toHex());
+      let position = usePendleV2Position(event.params.externalPosition.toHex());
       position.principalTokenHoldings = arrayUnique(position.principalTokenHoldings.concat([pendleMarket.id]));
       position.save();
 
@@ -1921,7 +1921,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
       let pendleMarket = usePendleV2AllowedMarket(Address.fromString(vault.id), market);
 
-      let position = usePendleV2Position(event.address.toHex());
+      let position = usePendleV2Position(event.params.externalPosition.toHex());
       position.lpTokenHoldings = arrayUnique(position.lpTokenHoldings.concat([pendleMarket.id]));
       position.save();
 
