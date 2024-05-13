@@ -1881,12 +1881,15 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let tuple = decoded.toTuple();
 
       let market = tuple[0].toAddress();
-      let withdrawalToken = ensureAsset(tuple[1].toAddress());
-      let withdrawalAmount = toBigDecimal(tuple[2].toBigInt(), withdrawalToken.decimals);
 
       let pendleMarket = usePendleV2AllowedMarket(Address.fromString(vault.id), market);
 
-      let balance = tokenBalance(Address.fromString(pendleMarket.principalToken), event.params.externalPosition);
+      let principalTokenAddress = Address.fromString(pendleMarket.principalToken);
+
+      let principalToken = ensureAsset(principalTokenAddress);
+      let principalTokenAmount = toBigDecimal(tuple[2].toBigInt(), principalToken.decimals);
+
+      let balance = tokenBalance(principalTokenAddress, event.params.externalPosition);
       if (balance && balance.isZero()) {
         let position = usePendleV2Position(event.params.externalPosition.toHex());
         //  TODO: check if this is correct. There could be several markets for a single principle token.
@@ -1895,9 +1898,9 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       }
 
       let change = createPendleV2PositionChange(event.params.externalPosition, 'SellPrincipalToken', vault, event);
-      change.assets = [withdrawalToken.id];
+      change.assets = [principalToken.id];
       change.assetAmounts = [
-        createAssetAmount(withdrawalToken, withdrawalAmount, denominationAsset, 'pendle-sell-pt', event).id,
+        createAssetAmount(principalToken, principalTokenAmount, denominationAsset, 'pendle-sell-pt', event).id,
       ];
       change.markets = [pendleMarket.id];
       change.save();
@@ -1944,8 +1947,8 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let tuple = decoded.toTuple();
 
       let market = tuple[0].toAddress();
-      let withdrawalToken = ensureAsset(tuple[1].toAddress());
-      let withdrawalAmount = toBigDecimal(tuple[2].toBigInt(), withdrawalToken.decimals);
+      let lpToken = ensureAsset(market);
+      let lpTokenAmount = toBigDecimal(tuple[2].toBigInt(), lpToken.decimals);
 
       let pendleMarket = usePendleV2AllowedMarket(Address.fromString(vault.id), market);
 
@@ -1957,9 +1960,9 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       }
 
       let change = createPendleV2PositionChange(event.params.externalPosition, 'RemoveLiquidity', vault, event);
-      change.assets = [withdrawalToken.id];
+      change.assets = [lpToken.id];
       change.assetAmounts = [
-        createAssetAmount(withdrawalToken, withdrawalAmount, denominationAsset, 'pendle-remove-liquidity', event).id,
+        createAssetAmount(lpToken, lpTokenAmount, denominationAsset, 'pendle-remove-liquidity', event).id,
       ];
       change.markets = [pendleMarket.id];
       change.save();
