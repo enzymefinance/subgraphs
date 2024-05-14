@@ -100,6 +100,14 @@ export enum LidoWithdrawalsActionId {
   ClaimWithdrawals = 1,
 }
 
+export enum PendleV2ActionId {
+  BuyPrincipalToken = 0,
+  SellPrincipalToken = 1,
+  AddLiquidity = 2,
+  RemoveLiquidity = 3,
+  ClaimRewards = 4,
+}
+
 // export enum MorphoBlueActionId {
 //   Lend = 0,
 //   Redeem = 1,

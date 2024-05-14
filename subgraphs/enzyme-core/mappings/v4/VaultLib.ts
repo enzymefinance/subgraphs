@@ -56,6 +56,7 @@ import { useKilnStakingPosition } from '../../entities/KilnStakingPosition';
 import { useLidoWithdrawalsPosition } from '../../entities/LidoWithdrawalsPosition';
 import { useAaveV3DebtPosition } from '../../entities/AaveV3DebtPosition';
 import { useStakeWiseStakingPosition } from '../../entities/StakeWiseStakingPosition';
+import { usePendleV2Position } from '../../entities/PendleV2Position';
 // import { useMorphoBluePosition } from '../../entities/MorphoBluePosition';
 
 export function handleTransfer(event: Transfer): void {
@@ -370,6 +371,12 @@ export function handleExternalPositionAdded(event: ExternalPositionAdded): void 
     lwp.save();
   }
 
+  if (type.label == 'PENDLE_V2') {
+    let pp = usePendleV2Position(event.params.externalPosition.toHex());
+    pp.active = true;
+    pp.save();
+  }
+
   if (type.label == 'STAKEWISE_V3') {
     let ssp = useStakeWiseStakingPosition(event.params.externalPosition.toHex());
     ssp.active = true;
@@ -456,6 +463,12 @@ export function handleExternalPositionRemoved(event: ExternalPositionRemoved): v
     let lwp = useLidoWithdrawalsPosition(event.params.externalPosition.toHex());
     lwp.active = false;
     lwp.save();
+  }
+
+  if (type.label == 'PENDLE_V2') {
+    let pp = usePendleV2Position(event.params.externalPosition.toHex());
+    pp.active = false;
+    pp.save();
   }
 
   if (type.label == 'STAKEWISE_V3') {

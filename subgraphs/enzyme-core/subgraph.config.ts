@@ -35,7 +35,8 @@ export interface Variables {
     addressListRegistryAddress: string;
     dispatcherAddress: string;
     externalPositionFactoryAddress: string;
-    gatedRedemptionQueueSharesWrapperFactory: string;
+    gatedRedemptionQueueSharesWrapperFactoryAddress: string;
+    pendleMarketsRegistryAddress: string;
     protocolFeeReserveLibAddress: string;
     sharesSplitterFactoryAddress: string;
     singleAssetRedemptionQueueFactoryAddress: string;
@@ -165,6 +166,7 @@ export const configure: Configurator<Variables> = (variables) => {
         IMapleV2Pool: 'abis/external/IMapleV2Pool.json',
         IMapleV2PoolManager: 'abis/external/IMapleV2PoolManager.json',
         IMapleV2WithdrawalManager: 'abis/external/IMapleV2WithdrawalManager.json',
+        IPendleV2Market: 'abis/external/IPendleV2Market.json',
         MaplePool: 'abis/external/MaplePool.json',
         MapleRewards: 'abis/external/MapleRewards.json',
         // MorphoBlue: 'abis/external/MorphoBlue.json',
@@ -188,6 +190,8 @@ export const configure: Configurator<Variables> = (variables) => {
         abis.IMapleV2Pool.getFunction('asset'),
         abis.IMapleV2PoolManager.getFunction('withdrawalManager'),
         abis.IMapleV2WithdrawalManager.getFunction('lockedShares'),
+        abis.IPendleV2Market.getFunction('readTokens'),
+        abis.IPendleV2Market.getFunction('getRewardTokens'),
         abis.MaplePool.getFunction('liquidityAsset'),
         abis.MapleRewards.getFunction('stakingToken'),
         // abis.MorphoBlue.getFunction('idToMarketParams'),

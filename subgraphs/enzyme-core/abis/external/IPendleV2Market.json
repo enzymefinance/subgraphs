@@ -1,0 +1,70 @@
+[
+    {
+      "type": "function",
+      "name": "factory",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "factoryAddress_",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "getRewardTokens",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "rewardTokenAddresses_",
+          "type": "address[]",
+          "internalType": "address[]"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "readTokens",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "sy_",
+          "type": "address",
+          "internalType": "contract IPendleV2StandardizedYield"
+        },
+        {
+          "name": "pt_",
+          "type": "address",
+          "internalType": "contract IPendleV2PrincipalToken"
+        },
+        {
+          "name": "yt_",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "redeemRewards",
+      "inputs": [
+        {
+          "name": "_user",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "rewardAmounts_",
+          "type": "uint256[]",
+          "internalType": "uint256[]"
+        }
+      ],
+      "stateMutability": "nonpayable"
+    }
+  ]
