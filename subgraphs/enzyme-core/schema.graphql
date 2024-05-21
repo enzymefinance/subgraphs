@@ -1557,6 +1557,47 @@ type LidoWithdrawalsRequest @entity {
   claimedTimestamp: Int!
 }
 
+type PendleV2Position implements ExternalPosition @entity {
+  id: ID!
+  vault: Vault!
+  type: ExternalPositionType!
+  active: Boolean!
+  principalTokenHoldings: [PendleV2AllowedMarket!]!
+  lpTokenHoldings: [PendleV2AllowedMarket!]!
+  changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
+}
+
+type PendleV2AllowedMarket @entity {
+  id: ID!
+  vault: Bytes!
+  market: Bytes!
+  duration: Int!
+  principalToken: Asset!
+  active: Boolean!
+}
+
+enum PendleV2PositionChangeType {
+  BuyPrincipalToken
+  SellPrincipalToken
+  AddLiquidity
+  RemoveLiquidity
+  ClaimRewards
+}
+
+type PendleV2PositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: Int!
+  externalPosition: ExternalPosition!
+  pendleV2PositionChangeType: PendleV2PositionChangeType!
+  assets: [Asset!]!
+  assetAmounts: [AssetAmount!]!
+  markets: [PendleV2AllowedMarket!]!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
 # type MorphoBluePosition implements ExternalPosition @entity {
 #   id: ID!
 #   vault: Vault!
