@@ -13,6 +13,7 @@ import { Deployment } from '@enzymefinance/environment';
 interface Variables {
   dispatcher: string;
   weth: string;
+  savingsDai: string;
   start: number;
 }
 
@@ -31,6 +32,7 @@ export const contexts: Contexts<Variables> = {
     variables: {
       dispatcher: deployments.ethereum.contracts.Dispatcher,
       weth: deployments.ethereum.namedTokens.weth.id,
+      savingsDai: '0x83f20f44975d03b1b09e64809b757c47f942beea',
       start: 11681281,
     },
   },
@@ -40,6 +42,7 @@ export const contexts: Contexts<Variables> = {
     variables: {
       dispatcher: deployments.polygon.contracts.Dispatcher,
       weth: deployments.polygon.namedTokens.weth.id,
+      savingsDai: '0x0000000000000000000000000000000000000000',
       start: 26191606,
     },
   },
@@ -49,6 +52,7 @@ export const contexts: Contexts<Variables> = {
     variables: {
       dispatcher: deployments.testnet.contracts.Dispatcher,
       weth: deployments.testnet.namedTokens.weth.id,
+      savingsDai: '0x0000000000000000000000000000000000000000',
       start: 25731749,
     },
   },
@@ -84,6 +88,13 @@ export const configure: Configurator<Variables> = (variables) => {
       abi: 'abis/ERC20.json',
       block: variables.start,
       events: (abi) => [abi.getEvent('Transfer')],
+    },
+    {
+      name: 'SavingsDai',
+      abi: 'abis/SavingsDai.json',
+      block: variables.start,
+      address: variables.savingsDai,
+      events: (abi) => [abi.getEvent('Deposit'), abi.getEvent('Withdraw')],
     },
   ];
 
