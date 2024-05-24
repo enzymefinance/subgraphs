@@ -15,6 +15,7 @@ export function ensureSingleAssetRedemptionQueue(address: Address, event: ethere
   queue.vault = ZERO_ADDRESS.toHex();
   queue.redemptionAsset = ZERO_ADDRESS;
   queue.bypassableSharesThreshold = ZERO_BD;
+  queue.managers = new Array<string>();
   queue.shutdown = false;
   queue.save();
 
