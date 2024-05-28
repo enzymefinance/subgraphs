@@ -35,7 +35,8 @@ export interface Variables {
     addressListRegistryAddress: string;
     dispatcherAddress: string;
     externalPositionFactoryAddress: string;
-    gatedRedemptionQueueSharesWrapperFactory: string;
+    gatedRedemptionQueueSharesWrapperFactoryAddress: string;
+    pendleMarketsRegistryAddress: string;
     protocolFeeReserveLibAddress: string;
     sharesSplitterFactoryAddress: string;
     singleAssetRedemptionQueueFactoryAddress: string;
@@ -56,7 +57,7 @@ export interface Variables {
     grtAddress: string;
     lusdAddress: string;
     compAddress: string;
-    morphoBlueAddress: string;
+    // morphoBlueAddress: string;
   };
 }
 
@@ -165,9 +166,10 @@ export const configure: Configurator<Variables> = (variables) => {
         IMapleV2Pool: 'abis/external/IMapleV2Pool.json',
         IMapleV2PoolManager: 'abis/external/IMapleV2PoolManager.json',
         IMapleV2WithdrawalManager: 'abis/external/IMapleV2WithdrawalManager.json',
+        IPendleV2Market: 'abis/external/IPendleV2Market.json',
         MaplePool: 'abis/external/MaplePool.json',
         MapleRewards: 'abis/external/MapleRewards.json',
-        MorphoBlue: 'abis/external/MorphoBlue.json',
+        // MorphoBlue: 'abis/external/MorphoBlue.json',
         NonfungiblePositionManager: 'abis/external/NonfungiblePositionManager.json',
         TheGraphStaking: 'abis/external/TheGraphStaking.json',
         UniswapV3Factory: 'abis/external/UniswapV3Factory.json',
@@ -188,9 +190,11 @@ export const configure: Configurator<Variables> = (variables) => {
         abis.IMapleV2Pool.getFunction('asset'),
         abis.IMapleV2PoolManager.getFunction('withdrawalManager'),
         abis.IMapleV2WithdrawalManager.getFunction('lockedShares'),
+        abis.IPendleV2Market.getFunction('readTokens'),
+        abis.IPendleV2Market.getFunction('getRewardTokens'),
         abis.MaplePool.getFunction('liquidityAsset'),
         abis.MapleRewards.getFunction('stakingToken'),
-        abis.MorphoBlue.getFunction('idToMarketParams'),
+        // abis.MorphoBlue.getFunction('idToMarketParams'),
         abis.NonfungiblePositionManager.getFunction('factory'),
         abis.NonfungiblePositionManager.getFunction('positions'),
         abis.NonfungiblePositionManager.getFunction('tokenURI'),

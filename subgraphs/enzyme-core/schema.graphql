@@ -933,6 +933,7 @@ enum PolicyType {
   AllowedDepositRecipients
   AllowedExternalPositionTypesPerManager
   AllowedExternalPositionTypes
+  AllowedRedeemersForSpecificAssets
   AllowedSharesTransferRecipients
   AssetBlacklist
   AssetWhitelist
@@ -1577,44 +1578,85 @@ type LidoWithdrawalsRequest @entity {
   claimedTimestamp: Int!
 }
 
-type MorphoBluePosition implements ExternalPosition @entity {
+type PendleV2Position implements ExternalPosition @entity {
   id: ID!
   vault: Vault!
   type: ExternalPositionType!
   active: Boolean!
+  principalTokenHoldings: [PendleV2AllowedMarket!]!
+  lpTokenHoldings: [PendleV2AllowedMarket!]!
   changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
 }
 
-type MorphoBlueMarket @entity {
+type PendleV2AllowedMarket @entity {
   id: ID!
-  marketId: Bytes!
-  morpheBluePosition: MorphoBluePosition!
-  loanToken: Asset!
-  collateralToken: Asset!
-  removed: Boolean!
+  vault: Bytes!
+  market: Bytes!
+  duration: Int!
+  principalToken: Asset!
+  active: Boolean!
 }
 
-enum MorphoBluePositionChangeType {
-  Lend
-  Redeem
-  AddCollateral
-  RemoveCollateral
-  Borrow
-  Repay
+enum PendleV2PositionChangeType {
+  BuyPrincipalToken
+  SellPrincipalToken
+  AddLiquidity
+  RemoveLiquidity
+  ClaimRewards
 }
 
-type MorphoBluePositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+type PendleV2PositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
   id: ID!
   vault: Vault!
   timestamp: Int!
   externalPosition: ExternalPosition!
-  morphoBluePositionChangeType: MorphoBluePositionChangeType!
-  market: MorphoBlueMarket!
-  assetAmount: AssetAmount!
+  pendleV2PositionChangeType: PendleV2PositionChangeType!
+  assets: [Asset!]!
+  assetAmounts: [AssetAmount!]!
+  markets: [PendleV2AllowedMarket!]!
   activityCounter: Int!
   activityCategories: [ActivityCategory!]!
   activityType: ActivityType!
 }
+
+# type MorphoBluePosition implements ExternalPosition @entity {
+#   id: ID!
+#   vault: Vault!
+#   type: ExternalPositionType!
+#   active: Boolean!
+#   changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
+# }
+
+# type MorphoBlueMarket @entity {
+#   id: ID!
+#   marketId: Bytes!
+#   morpheBluePosition: MorphoBluePosition!
+#   loanToken: Asset!
+#   collateralToken: Asset!
+#   removed: Boolean!
+# }
+
+# enum MorphoBluePositionChangeType {
+#   Lend
+#   Redeem
+#   AddCollateral
+#   RemoveCollateral
+#   Borrow
+#   Repay
+# }
+
+# type MorphoBluePositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+#   id: ID!
+#   vault: Vault!
+#   timestamp: Int!
+#   externalPosition: ExternalPosition!
+#   morphoBluePositionChangeType: MorphoBluePositionChangeType!
+#   market: MorphoBlueMarket!
+#   assetAmount: AssetAmount!
+#   activityCounter: Int!
+#   activityCategories: [ActivityCategory!]!
+#   activityType: ActivityType!
+# }
 
 type StakeWiseStakingPosition implements ExternalPosition @entity {
   id: ID!

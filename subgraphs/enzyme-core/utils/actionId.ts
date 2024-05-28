@@ -100,11 +100,19 @@ export enum LidoWithdrawalsActionId {
   ClaimWithdrawals = 1,
 }
 
-export enum MorphoBlueActionId {
-  Lend = 0,
-  Redeem = 1,
-  AddCollateral = 2,
-  RemoveCollateral = 3,
-  Borrow = 4,
-  Repay = 5,
+export enum PendleV2ActionId {
+  BuyPrincipalToken = 0,
+  SellPrincipalToken = 1,
+  AddLiquidity = 2,
+  RemoveLiquidity = 3,
+  ClaimRewards = 4,
 }
+
+// export enum MorphoBlueActionId {
+//   Lend = 0,
+//   Redeem = 1,
+//   AddCollateral = 2,
+//   RemoveCollateral = 3,
+//   Borrow = 4,
+//   Repay = 5,
+// }
