@@ -56,6 +56,8 @@ import { useKilnStakingPosition } from '../../entities/KilnStakingPosition';
 import { useLidoWithdrawalsPosition } from '../../entities/LidoWithdrawalsPosition';
 import { useAaveV3DebtPosition } from '../../entities/AaveV3DebtPosition';
 import { useStakeWiseStakingPosition } from '../../entities/StakeWiseStakingPosition';
+import { trackedAssetAdded } from '../../entities/TrackedAssetAdded';
+import { trackedAssetRemoved } from '../../entities/TrackedAssetRemoved';
 import { usePendleV2Position } from '../../entities/PendleV2Position';
 // import { useMorphoBluePosition } from '../../entities/MorphoBluePosition';
 
@@ -239,6 +241,8 @@ export function handleTrackedAssetAdded(event: TrackedAssetAdded): void {
   let vault = useVault(event.address.toHex());
   vault.trackedAssets = arrayUnique<string>(vault.trackedAssets.concat([trackedAsset.id]));
   vault.save();
+
+  trackedAssetAdded(vault, trackedAsset, event);
 }
 
 export function handleTrackedAssetRemoved(event: TrackedAssetRemoved): void {
@@ -247,6 +251,8 @@ export function handleTrackedAssetRemoved(event: TrackedAssetRemoved): void {
   let vault = useVault(event.address.toHex());
   vault.trackedAssets = arrayDiff<string>(vault.trackedAssets, [trackedAsset.id]);
   vault.save();
+
+  trackedAssetRemoved(vault, trackedAsset, event);
 }
 
 export function handleProtocolFeePaidInShares(event: ProtocolFeePaidInShares): void {

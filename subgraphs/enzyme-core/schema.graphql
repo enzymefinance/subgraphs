@@ -23,7 +23,6 @@ enum SharesChangeType {
 }
 
 enum TradeType {
-  ADD_TRACKED_ASSETS
   APPROVE_ASSETS
   CLAIM_REWARDS
   CLAIM_REWARDS_AND_REINVEST
@@ -31,7 +30,6 @@ enum TradeType {
   LEND
   LEND_AND_STAKE
   REDEEM
-  REMOVE_TRACKED_ASSETS
   STAKE
   TAKE_ORDER
   UNKNOWN
@@ -1033,6 +1031,30 @@ enum AddressListUpdateType {
 }
 
 #################################################
+# TrackingAssets
+#################################################
+
+type TrackedAssetAdded implements Activity & VaultActivity @entity {
+  id: ID!
+  vault: Vault!
+  asset: Asset!
+  timestamp: Int!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
+type TrackedAssetRemoved implements Activity & VaultActivity @entity {
+  id: ID!
+  vault: Vault!
+  asset: Asset!
+  timestamp: Int!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
+#################################################
 # Trading
 #################################################
 
@@ -1883,6 +1905,8 @@ enum ActivityType {
   ProtocolFee
   Trade
   VaultSettings
+  TrackedAssetAdded
+  TrackedAssetRemoved
 }
 
 interface Activity {
