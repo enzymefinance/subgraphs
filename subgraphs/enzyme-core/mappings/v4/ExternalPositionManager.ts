@@ -45,6 +45,7 @@ import {
 import { ProtocolSdk } from '../../generated/contracts/ProtocolSdk';
 import { Asset, AssetAmount } from '../../generated/schema';
 import {
+  AlicePositionLib4DataSource,
   ArbitraryLoanPositionLib4DataSource,
   LidoWithdrawalsPositionLib4DataSource,
   MapleLiquidityPositionLib4DataSource,
@@ -67,6 +68,7 @@ import {
   AaveV3DebtPositionActionId,
   StakeWiseV3StakingPositionActionId,
   PendleV2ActionId,
+  AliceActionId,
   // MorphoBlueActionId,
 } from '../../utils/actionId';
 import { ensureMapleLiquidityPoolV1, ensureMapleLiquidityPoolV2 } from '../../entities/MapleLiquidityPool';
@@ -130,6 +132,7 @@ import {
   usePendleV2Position,
 } from '../../entities/PendleV2Position';
 import { tokenBalance } from '../../utils/tokenCalls';
+import { createAlicePosition, createAlicePositionChange } from '../../entities/AlicePosition';
 // import {
 //   createMorphoBluePosition,
 //   createMorphoBluePositionChange,
@@ -228,6 +231,14 @@ export function handleExternalPositionDeployedForFund(event: ExternalPositionDep
     createStakeWiseStakingPosition(event.params.externalPosition, event.params.vaultProxy, type);
 
     StakeWiseV3StakingPositionLib4DataSource.create(event.params.externalPosition);
+
+    return;
+  }
+
+  if (type.label == 'ALICE') {
+    createAlicePosition(event.params.externalPosition, event.params.vaultProxy, type);
+
+    AlicePositionLib4DataSource.create(event.params.externalPosition);
 
     return;
   }
@@ -2325,6 +2336,46 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
   //   }
   //   return;
   // }
+
+  if (type.label == 'ALICE') {
+    if (actionId == AliceActionId.PlaceOrder) {
+      let decoded = ethereum.decode('(tuple(uint16,bool,uint256,uint256)', event.params.actionArgs);
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+
+      createAlicePositionChange(event.params.externalPosition, 'PlaceOrder', vault, event);
+    }
+
+    if (actionId == AliceActionId.RefundOrder) {
+      let decoded = ethereum.decode('tuple(uint256,uint16,bool,uint256,uint256,uint256)', event.params.actionArgs);
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+
+      createAlicePositionChange(event.params.externalPosition, 'RefundOrder', vault, event);
+    }
+
+    if (actionId == AliceActionId.Sweep) {
+      let decoded = ethereum.decode('tuple(uint256[])', event.params.actionArgs);
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+
+      createAlicePositionChange(event.params.externalPosition, 'Sweep', vault, event);
+    }
+
+    return;
+  }
 
   createUnknownExternalPositionChange(event.params.externalPosition, vault, event);
 }

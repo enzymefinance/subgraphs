@@ -1708,6 +1708,32 @@ type StakeWiseStakingExitRequest @entity {
   shares: BigDecimal!
 }
 
+type AlicePosition implements ExternalPosition @entity {
+  id: ID!
+  vault: Vault!
+  type: ExternalPositionType!
+  active: Boolean!
+  changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
+}
+
+enum AlicePositionChangeType {
+  Stake
+  Redeem
+  EnterExitQueue
+  ClaimExitedAssets
+}
+
+type AlicePositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: Int!
+  externalPosition: ExternalPosition!
+  alicePositionChangeType: AlicePositionChangeType!
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
 type UnknownExternalPosition implements ExternalPosition @entity {
   id: ID!
   vault: Vault!
