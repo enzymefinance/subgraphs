@@ -1,4 +1,4 @@
-import { toBigDecimal } from '@enzymefinance/subgraph-utils';
+import { arrayDiff, arrayUnique, toBigDecimal } from '@enzymefinance/subgraph-utils';
 import {
   ensureSingleAssetRedemptionQueue,
   ensureSingleAssetRedemptionQueueRequest,
@@ -16,15 +16,11 @@ import {
   RequestWithdrawn,
   Shutdown,
 } from '../generated/contracts/SingleAssetRedemptionQueueLibEvents';
-import { SingleAssetRedemptionQueueManager } from '../generated/schema';
-import { Address, store } from '@graphprotocol/graph-ts';
+import { Address } from '@graphprotocol/graph-ts';
 import { createAssetAmount } from '../entities/AssetAmount';
 import { ensureAsset } from '../entities/Asset';
 import { ensureComptroller } from '../entities/Comptroller';
-
-function managerId(redemptionQueue: Address, user: Address): string {
-  return redemptionQueue.toHex() + '/' + user.toHex();
-}
+import { ensureAccount } from '../entities/Account';
 
 export function handleBypassableSharesThresholdSet(event: BypassableSharesThresholdSet): void {
   let redemptionQueue = ensureSingleAssetRedemptionQueue(event.address, event);
@@ -45,18 +41,19 @@ export function handleRedemptionAssetSet(event: RedemptionAssetSet): void {
 }
 
 export function handleManagerAdded(event: ManagerAdded): void {
-  let id = managerId(event.address, event.params.user);
+  let manager = ensureAccount(event.params.user, event);
 
-  let manager = new SingleAssetRedemptionQueueManager(id);
-  manager.manager = event.params.user;
-  manager.singleAssetRedemptionQueue = ensureSingleAssetRedemptionQueue(event.address, event).id;
-  manager.save();
+  let redemptionQueue = ensureSingleAssetRedemptionQueue(event.address, event);
+  redemptionQueue.managers = arrayUnique(redemptionQueue.managers.concat([manager.id]));
+  redemptionQueue.save();
 }
 
 export function handleManagerRemoved(event: ManagerRemoved): void {
-  let id = managerId(event.address, event.params.user);
+  let manager = ensureAccount(event.params.user, event);
 
-  store.remove('SingleAssetRedemptionQueueManager', id);
+  let redemptionQueue = ensureSingleAssetRedemptionQueue(event.address, event);
+  redemptionQueue.managers = arrayDiff(redemptionQueue.managers, [manager.id]);
+  redemptionQueue.save();
 }
 
 export function handleRedeemed(event: Redeemed): void {
@@ -77,10 +74,13 @@ export function handleRedeemed(event: Redeemed): void {
 }
 
 export function handleRedemptionRequestAdded(event: RedemptionRequestAdded): void {
+  let queue = ensureSingleAssetRedemptionQueue(event.address, event);
+
   let request = ensureSingleAssetRedemptionQueueRequest(event.params.id, event);
   request.createdAt = event.block.timestamp.toI32();
   request.sharesAmount = toBigDecimal(event.params.sharesAmount);
-  request.user = event.params.user;
+  request.account = ensureAccount(event.params.user, event).id;
+  request.vault = useVault(queue.vault).id;
   request.singleAssetRedemptionQueue = ensureSingleAssetRedemptionQueue(event.address, event).id;
   request.save();
 }
