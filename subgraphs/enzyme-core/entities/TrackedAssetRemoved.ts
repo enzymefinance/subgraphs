@@ -10,7 +10,7 @@ export function trackedAssetRemoved(vault: Vault, asset: Asset, event: ethereum.
   trackAsset.timestamp = event.block.timestamp.toI32();
   trackAsset.activityCounter = getActivityCounter();
   trackAsset.activityCategories = ['Vault'];
-  trackAsset.activityType = 'TrackedAssetRemoved';
+  trackAsset.activityType = 'VaultSettings';
   trackAsset.save();
 
   vault.lastAssetUpdate = event.block.timestamp.toI32();

@@ -1906,8 +1906,6 @@ enum ActivityType {
   ProtocolFee
   Trade
   VaultSettings
-  TrackedAssetAdded
-  TrackedAssetRemoved
 }
 
 interface Activity {
