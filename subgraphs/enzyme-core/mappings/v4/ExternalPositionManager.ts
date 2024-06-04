@@ -2363,7 +2363,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     }
 
     if (actionId == AliceActionId.Sweep) {
-      let decoded = ethereum.decode('tuple(uint256[])', event.params.actionArgs);
+      let decoded = ethereum.decode('tuple(uint256[])', tuplePrefixBytes(event.params.actionArgs));
 
       if (decoded == null) {
         return;
