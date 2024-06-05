@@ -43,7 +43,7 @@ import {
   ValidatedVaultProxySetForFund,
 } from '../../generated/contracts/ExternalPositionManager4Events';
 import { ProtocolSdk } from '../../generated/contracts/ProtocolSdk';
-import { Asset, AssetAmount } from '../../generated/schema';
+import { AliceOrder, Asset, AssetAmount } from '../../generated/schema';
 import {
   AlicePositionLib4DataSource,
   ArbitraryLoanPositionLib4DataSource,
@@ -80,7 +80,14 @@ import {
   updateConvexVotingPositionWithdrawOrRelock,
   useConvexVotingPosition,
 } from '../../entities/ConvexVotingPosition';
-import { cvxAddress, lusdAddress, grtAddress, wethTokenAddress, mplAddress } from '../../generated/addresses';
+import {
+  cvxAddress,
+  lusdAddress,
+  grtAddress,
+  wethTokenAddress,
+  mplAddress,
+  aliceOrderManagerAddress,
+} from '../../generated/addresses';
 import {
   createTheGraphDelegationPosition,
   createTheGraphDelegationPositionChange,
@@ -132,7 +139,12 @@ import {
   usePendleV2Position,
 } from '../../entities/PendleV2Position';
 import { tokenBalance } from '../../utils/tokenCalls';
-import { createAlicePosition, createAlicePositionChange } from '../../entities/AlicePosition';
+import {
+  aliceOrderId,
+  createAlicePosition,
+  createAlicePositionChange,
+  useAliceOrder,
+} from '../../entities/AlicePosition';
 // import {
 //   createMorphoBluePosition,
 //   createMorphoBluePositionChange,
@@ -2346,8 +2358,54 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       }
 
       let tuple = decoded.toTuple();
+      let innerTuple = tuple[0].toTuple();
+      let instrumentId = innerTuple[0].toI32();
+      let isBuyOrder = innerTuple[1].toBoolean();
+      let quantityToSell = innerTuple[2].toBigInt();
+      let limitAmountToGet = innerTuple[3].toBigInt();
 
-      createAlicePositionChange(event.params.externalPosition, 'PlaceOrder', vault, event);
+      let orderManagerContract = ExternalSdk.bind(aliceOrderManagerAddress);
+      let instrumentCall = orderManagerContract.try_getInstrument(instrumentId, true);
+
+      if (instrumentCall.reverted == true) {
+        return;
+      }
+
+      let baseAsset = instrumentCall.value.base.equals(ZERO_ADDRESS)
+        ? ensureAsset(wethTokenAddress)
+        : ensureAsset(instrumentCall.value.base);
+      let quoteAsset = instrumentCall.value.quote.equals(ZERO_ADDRESS)
+        ? ensureAsset(wethTokenAddress)
+        : ensureAsset(instrumentCall.value.quote);
+
+      let outgoingAsset = isBuyOrder == true ? quoteAsset : baseAsset;
+      let incomingAsset = isBuyOrder == true ? baseAsset : quoteAsset;
+
+      let outgoingAssetAmount = createAssetAmount(
+        outgoingAsset,
+        toBigDecimal(quantityToSell, outgoingAsset.decimals),
+        denominationAsset,
+        'alice-sell',
+        event,
+      );
+
+      let minIncomingAssetAmount = createAssetAmount(
+        incomingAsset,
+        toBigDecimal(limitAmountToGet, incomingAsset.decimals),
+        denominationAsset,
+        'alice-buy',
+        event,
+      );
+
+      createAlicePositionChange(
+        event.params.externalPosition,
+        [],
+        outgoingAssetAmount,
+        minIncomingAssetAmount,
+        'PlaceOrder',
+        vault,
+        event,
+      );
     }
 
     if (actionId == AliceActionId.RefundOrder) {
@@ -2358,8 +2416,57 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       }
 
       let tuple = decoded.toTuple();
+      let innerTuple = tuple[0].toTuple();
+      let orderId = innerTuple[0].toBigInt();
+      let instrumentId = innerTuple[1].toI32();
+      let isBuyOrder = innerTuple[2].toBoolean();
+      let quantityToSell = innerTuple[3].toBigInt();
+      let limitAmountToGet = innerTuple[4].toBigInt();
 
-      createAlicePositionChange(event.params.externalPosition, 'RefundOrder', vault, event);
+      let orderManagerContract = ExternalSdk.bind(aliceOrderManagerAddress);
+      let instrumentCall = orderManagerContract.try_getInstrument(instrumentId, true);
+
+      if (instrumentCall.reverted == true) {
+        return;
+      }
+
+      let aliceOrder = useAliceOrder(aliceOrderId(event.address, orderId));
+
+      let baseAsset = instrumentCall.value.base.equals(ZERO_ADDRESS)
+        ? ensureAsset(wethTokenAddress)
+        : ensureAsset(instrumentCall.value.base);
+      let quoteAsset = instrumentCall.value.quote.equals(ZERO_ADDRESS)
+        ? ensureAsset(wethTokenAddress)
+        : ensureAsset(instrumentCall.value.quote);
+
+      let outgoingAsset = isBuyOrder == true ? quoteAsset : baseAsset;
+      let incomingAsset = isBuyOrder == true ? baseAsset : quoteAsset;
+
+      let outgoingAssetAmount = createAssetAmount(
+        outgoingAsset,
+        toBigDecimal(quantityToSell, outgoingAsset.decimals),
+        denominationAsset,
+        'alice-sell',
+        event,
+      );
+
+      let minIncomingAssetAmount = createAssetAmount(
+        incomingAsset,
+        toBigDecimal(limitAmountToGet, incomingAsset.decimals),
+        denominationAsset,
+        'alice-buy',
+        event,
+      );
+
+      createAlicePositionChange(
+        event.params.externalPosition,
+        [aliceOrder],
+        outgoingAssetAmount,
+        minIncomingAssetAmount,
+        'RefundOrder',
+        vault,
+        event,
+      );
     }
 
     if (actionId == AliceActionId.Sweep) {
@@ -2370,8 +2477,16 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       }
 
       let tuple = decoded.toTuple();
+      let innerTuple = tuple[0].toTuple();
+      let orderIds = innerTuple[0].toBigIntArray();
 
-      createAlicePositionChange(event.params.externalPosition, 'Sweep', vault, event);
+      let orders = new Array<AliceOrder>(orderIds.length);
+      for (let i: i32 = 0; i < orderIds.length; i++) {
+        let orderId = aliceOrderId(event.address, orderIds[i]);
+        orders.push(useAliceOrder(orderId));
+      }
+
+      createAlicePositionChange(event.params.externalPosition, orders, null, null, 'Sweep', vault, event);
     }
 
     return;

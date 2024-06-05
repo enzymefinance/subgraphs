@@ -1,6 +1,13 @@
 import { logCritical, uniqueEventId } from '@enzymefinance/subgraph-utils';
-import { AlicePosition, AlicePositionChange, ExternalPositionType, Vault } from '../generated/schema';
-import { Address, ethereum } from '@graphprotocol/graph-ts';
+import {
+  AliceOrder,
+  AlicePosition,
+  AlicePositionChange,
+  AssetAmount,
+  ExternalPositionType,
+  Vault,
+} from '../generated/schema';
+import { Address, BigInt, ethereum } from '@graphprotocol/graph-ts';
 import { useVault } from './Vault';
 import { getActivityCounter } from './Counter';
 
@@ -29,11 +36,17 @@ export function createAlicePosition(
 
 export function createAlicePositionChange(
   alicePositionAddress: Address,
+  orders: AliceOrder[],
+  outgoingAssetAmount: AssetAmount | null,
+  minIncomingAssetAmount: AssetAmount | null,
   changeType: string,
   vault: Vault,
   event: ethereum.Event,
 ): AlicePositionChange {
   let change = new AlicePositionChange(uniqueEventId(event));
+  change.outgoingAssetAmount = outgoingAssetAmount != null ? outgoingAssetAmount.id : null;
+  change.incomingAssetAmount = minIncomingAssetAmount != null ? minIncomingAssetAmount.id : null;
+  change.orders = orders.map<string>((order) => order.id);
   change.alicePositionChangeType = changeType;
   change.externalPosition = alicePositionAddress.toHex();
   change.vault = vault.id;
@@ -47,4 +60,17 @@ export function createAlicePositionChange(
   vault.save();
 
   return change;
+}
+
+export function aliceOrderId(externalPosition: Address, orderId: BigInt): string {
+  return externalPosition.toHex() + '/' + orderId.toString();
+}
+
+export function useAliceOrder(id: string): AliceOrder {
+  let order = AliceOrder.load(id);
+  if (order == null) {
+    logCritical('Failed to load fund {}.', [id]);
+  }
+
+  return order as AliceOrder;
 }
