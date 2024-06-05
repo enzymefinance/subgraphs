@@ -1,15 +1,14 @@
-import { Address, BigInt } from '@graphprotocol/graph-ts';
+import { Address } from '@graphprotocol/graph-ts';
 import { OrderIdAdded, OrderIdRemoved } from '../../generated/contracts/AlicePositionLib4Events';
 import { AliceOrder } from '../../generated/schema';
-import { aliceOrderId, useAliceOrder, useAlicePosition } from '../../entities/AlicePosition';
+import { useAliceOrder, useAlicePosition } from '../../entities/AlicePosition';
 import { ensureAsset } from '../../entities/Asset';
 import { createAssetAmount } from '../../entities/AssetAmount';
-import { logCritical, toBigDecimal } from '@enzymefinance/subgraph-utils';
+import { toBigDecimal } from '@enzymefinance/subgraph-utils';
 import { useVault } from '../../entities/Vault';
 import { ensureComptroller } from '../../entities/Comptroller';
 
 function handleOrderIdAdded(event: OrderIdAdded): void {
-  let id = aliceOrderId(event.address, event.params.orderId);
   let position = useAlicePosition(event.address.toHex());
   let vault = useVault(position.vault);
   let comptroller = ensureComptroller(Address.fromString(vault.comptroller), event);
@@ -26,8 +25,7 @@ function handleOrderIdAdded(event: OrderIdAdded): void {
 
   let incomingAsset = ensureAsset(event.params.orderDetails.incomingAssetAddress);
 
-  let order = new AliceOrder(id);
-  order.orderID = event.params.orderId;
+  let order = new AliceOrder(event.params.orderId.toString());
   order.alicePosition = position.id;
   order.outgoingAssetAmount = outgoingAssetAmount.id;
   order.incomingAsset = incomingAsset.id;
@@ -35,7 +33,7 @@ function handleOrderIdAdded(event: OrderIdAdded): void {
   order.save();
 }
 export function handleOrderIdRemoved(event: OrderIdRemoved): void {
-  let order = useAliceOrder(aliceOrderId(event.address, event.params.orderId));
+  let order = useAliceOrder(event.params.orderId.toString());
 
   order.removed = true;
   order.save();

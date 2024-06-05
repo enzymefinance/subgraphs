@@ -139,12 +139,7 @@ import {
   usePendleV2Position,
 } from '../../entities/PendleV2Position';
 import { tokenBalance } from '../../utils/tokenCalls';
-import {
-  aliceOrderId,
-  createAlicePosition,
-  createAlicePositionChange,
-  useAliceOrder,
-} from '../../entities/AlicePosition';
+import { createAlicePosition, createAlicePositionChange, useAliceOrder } from '../../entities/AlicePosition';
 // import {
 //   createMorphoBluePosition,
 //   createMorphoBluePositionChange,
@@ -2399,7 +2394,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
       createAlicePositionChange(
         event.params.externalPosition,
-        [],
+        new Array<AliceOrder>(0),
         outgoingAssetAmount,
         minIncomingAssetAmount,
         'PlaceOrder',
@@ -2430,7 +2425,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         return;
       }
 
-      let aliceOrder = useAliceOrder(aliceOrderId(event.address, orderId));
+      let aliceOrder = useAliceOrder(orderId.toString());
 
       let baseAsset = instrumentCall.value.base.equals(ZERO_ADDRESS)
         ? ensureAsset(wethTokenAddress)
@@ -2480,11 +2475,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let innerTuple = tuple[0].toTuple();
       let orderIds = innerTuple[0].toBigIntArray();
 
-      let orders = new Array<AliceOrder>(orderIds.length);
-      for (let i: i32 = 0; i < orderIds.length; i++) {
-        let orderId = aliceOrderId(event.address, orderIds[i]);
-        orders.push(useAliceOrder(orderId));
-      }
+      let orders = orderIds.map<AliceOrder>((orderId) => useAliceOrder(orderId.toString()));
 
       createAlicePositionChange(event.params.externalPosition, orders, null, null, 'Sweep', vault, event);
     }

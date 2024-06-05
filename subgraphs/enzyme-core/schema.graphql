@@ -1718,7 +1718,6 @@ type AlicePosition implements ExternalPosition @entity {
 
 type AliceOrder @entity {
   id: ID!
-  orderID: BigInt!
   alicePosition: AlicePosition!
   outgoingAssetAmount: AssetAmount!
   incomingAsset: Asset!

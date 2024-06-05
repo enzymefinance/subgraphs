@@ -62,10 +62,6 @@ export function createAlicePositionChange(
   return change;
 }
 
-export function aliceOrderId(externalPosition: Address, orderId: BigInt): string {
-  return externalPosition.toHex() + '/' + orderId.toString();
-}
-
 export function useAliceOrder(id: string): AliceOrder {
   let order = AliceOrder.load(id);
   if (order == null) {
