@@ -10,7 +10,7 @@ export function trackedAssetAdded(vault: Vault, asset: Asset, event: ethereum.Ev
   trackAsset.timestamp = event.block.timestamp.toI32();
   trackAsset.activityCounter = getActivityCounter();
   trackAsset.activityCategories = ['Vault'];
-  trackAsset.activityType = 'TrackedAssetAdded';
+  trackAsset.activityType = 'VaultSettings';
   trackAsset.save();
 
   vault.lastAssetUpdate = event.block.timestamp.toI32();
