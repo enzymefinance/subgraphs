@@ -1714,6 +1714,7 @@ type AlicePosition implements ExternalPosition @entity {
   vault: Vault!
   type: ExternalPositionType!
   active: Boolean!
+  orders: [AliceOrder!]! @derivedFrom(field: "alicePosition")
   changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
 }
 
