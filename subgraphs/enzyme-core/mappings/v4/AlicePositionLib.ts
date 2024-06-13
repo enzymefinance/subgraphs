@@ -26,6 +26,7 @@ function handleOrderIdAdded(event: OrderIdAdded): void {
   let incomingAsset = ensureAsset(event.params.orderDetails.incomingAssetAddress);
 
   let order = new AliceOrder(event.params.orderId.toString());
+  order.createdAt = event.block.timestamp.toI32();
   order.alicePosition = position.id;
   order.outgoingAssetAmount = outgoingAssetAmount.id;
   order.incomingAsset = incomingAsset.id;

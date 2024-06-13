@@ -1720,11 +1720,12 @@ type AlicePosition implements ExternalPosition @entity {
 
 type AliceOrder @entity {
   id: ID!
+  createdAt: Int!
   alicePosition: AlicePosition!
   outgoingAssetAmount: AssetAmount!
   incomingAsset: Asset!
   removed: Boolean!
-  removedAt: Int!
+  removedAt: Int
 }
 
 enum AlicePositionChangeType {
