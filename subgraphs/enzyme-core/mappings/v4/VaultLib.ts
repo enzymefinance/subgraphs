@@ -59,6 +59,7 @@ import { useStakeWiseStakingPosition } from '../../entities/StakeWiseStakingPosi
 import { trackedAssetAdded } from '../../entities/TrackedAssetAdded';
 import { trackedAssetRemoved } from '../../entities/TrackedAssetRemoved';
 import { usePendleV2Position } from '../../entities/PendleV2Position';
+import { useAlicePosition } from '../../entities/AlicePosition';
 // import { useMorphoBluePosition } from '../../entities/MorphoBluePosition';
 
 export function handleTransfer(event: Transfer): void {
@@ -395,6 +396,12 @@ export function handleExternalPositionAdded(event: ExternalPositionAdded): void 
   //   mbp.save();
   // }
 
+  if (type.label == 'ALICE') {
+    let ap = useAlicePosition(event.params.externalPosition.toHex());
+    ap.active = true;
+    ap.save();
+  }
+
   let activity = new ExternalPositionAddedEvent(uniqueEventId(event));
   activity.timestamp = event.block.timestamp.toI32();
   activity.vault = event.address.toHex();
@@ -481,6 +488,12 @@ export function handleExternalPositionRemoved(event: ExternalPositionRemoved): v
     let ssp = useStakeWiseStakingPosition(event.params.externalPosition.toHex());
     ssp.active = false;
     ssp.save();
+  }
+
+  if (type.label == 'ALICE') {
+    let ap = useAlicePosition(event.params.externalPosition.toHex());
+    ap.active = false;
+    ap.save();
   }
 
   // if (type.label == 'MORPHO_BLUE') {

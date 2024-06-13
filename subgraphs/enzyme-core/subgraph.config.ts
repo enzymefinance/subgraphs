@@ -58,6 +58,7 @@ export interface Variables {
     lusdAddress: string;
     compAddress: string;
     // morphoBlueAddress: string;
+    aliceOrderManager: string;
   };
 }
 
@@ -158,6 +159,7 @@ export const configure: Configurator<Variables> = (variables) => {
     {
       name: 'External',
       abis: {
+        AliceOrderManager: 'abis/external/IAliceOrderManager.json',
         BalancerMinter: 'abis/external/BalancerMinter.json',
         CurveLiquidityGaugeV2: 'abis/external/CurveLiquidityGaugeV2.json',
         CurveMinter: 'abis/external/CurveMinter.json',
@@ -177,6 +179,7 @@ export const configure: Configurator<Variables> = (variables) => {
         StakeWiseV3EthVault: 'abis/external/StakeWiseV3EthVault.json',
       },
       functions: (abis) => [
+        abis.AliceOrderManager.getFunction('getInstrument'),
         abis.BalancerMinter.getFunction('getBalancerToken'),
         abis.CurveLiquidityGaugeV2.getFunction('reward_tokens'),
         abis.CurveMinter.getFunction('token'),
