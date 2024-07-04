@@ -33,7 +33,7 @@ export const arbitrum: Context<Variables> = {
     },
     persistent: {
       addressListRegistryAddress: '0x0000000000000000000000000000000000000000',
-      dispatcherAddress: '0x0000000000000000000000000000000000000000',
+      dispatcherAddress: '0x0000000000000000000000000000000000000001',
       externalPositionFactoryAddress: '0x0000000000000000000000000000000000000000',
       gatedRedemptionQueueSharesWrapperFactoryAddress: '0x0000000000000000000000000000000000000000',
       pendleMarketsRegistryAddress: '0x0000000000000000000000000000000000000000',

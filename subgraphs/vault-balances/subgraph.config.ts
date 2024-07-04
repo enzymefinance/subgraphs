@@ -30,7 +30,7 @@ export const contexts: Contexts<Variables> = {
     name: `${name}-arbitrum`,
     network: 'arbitrum-one',
     variables: {
-      dispatcher: '0x0000000000000000000000000000000000000000',
+      dispatcher: '0x0000000000000000000000000000000000000001',
       weth: '0x0000000000000000000000000000000000000000',
       savingsDai: '0x0000000000000000000000000000000000000000',
       start: 1,
