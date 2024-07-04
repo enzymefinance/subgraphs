@@ -11,7 +11,7 @@ const name = 'enzyme-vault-lineage';
 
 export const contexts: Contexts<Variables> = {
   arbitrum: {
-    name,
+    name: `${name}-arbitrum`,
     network: 'arbitrum-one',
     variables: {
       dispatcher: '0x0000000000000000000000000000000000000000',

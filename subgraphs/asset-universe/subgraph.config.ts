@@ -96,7 +96,7 @@ const testnet: Variables = {
 
 export const contexts: Contexts<Variables> = {
   arbitrum: {
-    name,
+    name: `${name}-arbitrum`,
     network: 'arbitrum-one',
     variables: arbitrum,
   },

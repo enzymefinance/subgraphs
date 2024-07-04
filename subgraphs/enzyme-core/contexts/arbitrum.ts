@@ -4,7 +4,7 @@ import { Deployment, Version } from '@enzymefinance/environment';
 
 export const arbitrum: Context<Variables> = {
   name: 'enzyme-core-arbitrum',
-  network: 'matic',
+  network: 'arbitrum-one',
   variables: {
     block: 1,
     wethTokenAddress: '0x0000000000000000000000000000000000000000',
