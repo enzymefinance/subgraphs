@@ -10,6 +10,14 @@ interface Variables {
 const name = 'enzyme-vault-lineage';
 
 export const contexts: Contexts<Variables> = {
+  arbitrum: {
+    name,
+    network: 'arbitrum-one',
+    variables: {
+      dispatcher: '0x0000000000000000000000000000000000000000',
+      start: 1,
+    },
+  },
   ethereum: {
     name,
     network: 'mainnet',

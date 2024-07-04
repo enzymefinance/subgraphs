@@ -61,6 +61,17 @@ const ethereum: Variables = {
   },
 };
 
+const arbitrum: Variables = {
+  wethTokenAddress: '0x0000000000000000000000000000000000000000',
+  startBlock: 1,
+  releaseConfiguration: {
+    v4: {
+      fundDeployer: '0x0000000000000000000000000000000000000000',
+      valueInterpreter: '0x0000000000000000000000000000000000000000',
+    },
+  },
+};
+
 const polygon: Variables = {
   wethTokenAddress: deployments.polygon.namedTokens.weth.id,
   startBlock: 25825424,
@@ -84,6 +95,11 @@ const testnet: Variables = {
 };
 
 export const contexts: Contexts<Variables> = {
+  arbitrum: {
+    name,
+    network: 'arbitrum-one',
+    variables: arbitrum,
+  },
   ethereum: {
     name,
     network: 'mainnet',
