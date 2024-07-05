@@ -7,8 +7,8 @@ export const arbitrum: Context<Variables> = {
   network: 'arbitrum-one',
   variables: {
     block: 228702052,
-    wethTokenAddress: '0x0000000000000000000000000000000000000000',
-    wrappedNativeTokenAddress: '0x0000000000000000000000000000000000000000',
+    wethTokenAddress: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
+    wrappedNativeTokenAddress: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
     chainlinkAggregatorAddresses: {
       audUsd: '0x0000000000000000000000000000000000000000',
       btcEth: '0x0000000000000000000000000000000000000000',
