@@ -10,14 +10,14 @@ export const arbitrum: Context<Variables> = {
     wethTokenAddress: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
     wrappedNativeTokenAddress: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
     chainlinkAggregatorAddresses: {
-      audUsd: '0x0000000000000000000000000000000000000000',
-      btcEth: '0x0000000000000000000000000000000000000000',
-      btcusd: '0x0000000000000000000000000000000000000000',
-      chfusd: '0x0000000000000000000000000000000000000000',
-      ethUsd: '0x0000000000000000000000000000000000000000',
-      eurUsd: '0x0000000000000000000000000000000000000000',
-      gbpUsd: '0x0000000000000000000000000000000000000000',
-      jpyUsd: '0x0000000000000000000000000000000000000000',
+      audUsd: '0x9854e9a850e7c354c1de177ea953a6b1fba8fc22',
+      btcEth: '0xc5a90a6d7e4af242da238ffe279e9f2ba0c64b2e',
+      btcusd: '0x6ce185860a4963106506c203335a2910413708e9',
+      chfusd: '0xe32accc8c4ec03f6e75bd3621bfc9fbb234e1fc3',
+      ethUsd: '0x639fe6ab55c921f74e7fac1ee960c0b6293ba612',
+      eurUsd: '0xa14d53bc1f1c0f31b4aa3bd109344e5009051a84',
+      gbpUsd: '0x9c4424fd84c6661f97d8d6b3fc3c1aac2bedd137',
+      jpyUsd: '0x3dd6e51cb9cae717d5a8778cf79a04029f9cfdf8',
     },
     external: {
       balancerMinterAddress: '0x0000000000000000000000000000000000000000',
@@ -40,7 +40,7 @@ export const arbitrum: Context<Variables> = {
       protocolFeeReserveLibAddress: '0x6043f1759c01e383546e367572744027189ce555',
       sharesSplitterFactoryAddress: '0x0000000000000000000000000000000000000000',
       singleAssetRedemptionQueueFactoryAddress: '0x0000000000000000000000000000000000000000',
-      uintListRegistryAddress: '0x0000000000000000000000000000000000000000',
+      uintListRegistryAddress: '0xc2fa51e4574f705ce2b1801c0d46ec7c983586ac',
     },
     releases: {
       v2: {
