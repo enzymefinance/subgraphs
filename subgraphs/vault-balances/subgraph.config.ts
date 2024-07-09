@@ -30,10 +30,10 @@ export const contexts: Contexts<Variables> = {
     name: `${name}-arbitrum`,
     network: 'arbitrum-one',
     variables: {
-      dispatcher: '0xe45ae6058e637f76dea18f04154f1e6b5b21249e',
-      weth: '0x0000000000000000000000000000000000000000',
+      dispatcher: '0x8da28441a4c594fd2fac72726c1412d8cf9e4a19',
+      weth: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
       savingsDai: '0x0000000000000000000000000000000000000000',
-      start: 228702052,
+      start: 230330283,
     },
   },
   ethereum: {

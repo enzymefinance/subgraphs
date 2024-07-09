@@ -62,12 +62,12 @@ const ethereum: Variables = {
 };
 
 const arbitrum: Variables = {
-  wethTokenAddress: '0x0000000000000000000000000000000000000001',
-  startBlock: 228702052,
+  wethTokenAddress: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
+  startBlock: 230330283,
   releaseConfiguration: {
     v4: {
-      fundDeployer: '0x93a7493ead63b51fc2c67905dad1202cd593e683',
-      valueInterpreter: '0x32d94c6fb25fc6d7e84806122b331b8360c8222d',
+      fundDeployer: '0xa2b4c827de13d4e9801ea1ca837524a1a148dec3',
+      valueInterpreter: '0xdd5f18a52a63ececf502a165a459d33be5c0a06c',
     },
   },
 };
