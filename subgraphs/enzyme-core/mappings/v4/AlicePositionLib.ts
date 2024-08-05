@@ -8,7 +8,7 @@ import { toBigDecimal } from '@enzymefinance/subgraph-utils';
 import { useVault } from '../../entities/Vault';
 import { ensureComptroller } from '../../entities/Comptroller';
 
-function handleOrderIdAdded(event: OrderIdAdded): void {
+export function handleOrderIdAdded(event: OrderIdAdded): void {
   let position = useAlicePosition(event.address.toHex());
   let vault = useVault(position.vault);
   let comptroller = ensureComptroller(Address.fromString(vault.comptroller), event);
