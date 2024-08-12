@@ -2170,10 +2170,8 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
   if (type.label == 'GMX_V2_LEVERAGE_TRADING') {
     if (actionId == GMXV2LeverageTradingActionId.CreateOrder) {
-      // let addresses = 'tuple(address,address)';
-      // let numbers = 'tuple(uint256,uint256,uint256,uint256,uint256,uint256)';
       let decoded = ethereum.decode(
-        '(tuple(tuple(address,address),tuple(uint256,uint256,uint256,uint256,uint256,uint256),uint8,uint8,bool,address,bool)',
+        'tuple(tuple(address,address),tuple(uint256,uint256,uint256,uint256,uint256,uint256),uint8,uint8,bool,address,bool)',
         event.params.actionArgs,
       );
 
@@ -2233,6 +2231,163 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         isLong,
         exchangeRouter,
         [market],
+        null,
+        event,
+      );
+    }
+
+    if (actionId == GMXV2LeverageTradingActionId.UpdateOrder) {
+      let decoded = ethereum.decode(
+        'tuple(bytes32,uint256,uint256,uint256,uint256,bool,address)',
+        event.params.actionArgs,
+      );
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+      let innerTuple = tuple[0].toTuple();
+
+      let orderKey = tuple[0].toBytes();
+      let sizeDeltaUsd = toBigDecimal(innerTuple[1].toBigInt(), gmxUsdDecimals);
+      let acceptablePrice = toBigDecimal(innerTuple[2].toBigInt(), gmxUsdDecimals);
+      let triggerPrice = toBigDecimal(innerTuple[3].toBigInt(), gmxUsdDecimals);
+      let exchangeRouter = innerTuple[6].toAddress();
+
+      createGMXV2LeverageTradingPositionChange(
+        event.params.externalPosition,
+        'UpdateOrder',
+        vault,
+        null,
+        null,
+        null,
+        null,
+        sizeDeltaUsd,
+        triggerPrice,
+        acceptablePrice,
+        null,
+        exchangeRouter,
+        null,
+        orderKey,
+        event,
+      );
+    }
+
+    if (actionId == GMXV2LeverageTradingActionId.CancelOrder) {
+      let decoded = ethereum.decode('tuple(bytes32,address)', event.params.actionArgs);
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+      let innerTuple = tuple[0].toTuple();
+
+      let orderKey = innerTuple[0].toBytes();
+      let exchangeRouter = innerTuple[1].toAddress();
+
+      createGMXV2LeverageTradingPositionChange(
+        event.params.externalPosition,
+        'CancelOrder',
+        vault,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        exchangeRouter,
+        null,
+        orderKey,
+        event,
+      );
+    }
+
+    if (actionId == GMXV2LeverageTradingActionId.ClaimFundingFees) {
+      let decoded = ethereum.decode('tuple(address[],address[],address)', event.params.actionArgs);
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+      let innerTuple = tuple[0].toTuple();
+
+      let markets = innerTuple[0].toAddressArray();
+      let assets = innerTuple[1].toAddressArray();
+      let exchangeRouter = innerTuple[2].toAddress();
+
+      createGMXV2LeverageTradingPositionChange(
+        event.params.externalPosition,
+        'ClaimFundingFees',
+        vault,
+        assets.map<Asset>((asset) => ensureAsset(asset)),
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        exchangeRouter,
+        markets,
+        null,
+        event,
+      );
+    }
+
+    if (actionId == GMXV2LeverageTradingActionId.ClaimCollateral) {
+      let decoded = ethereum.decode('tuple(address[],address[],uint256[],address)', event.params.actionArgs);
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+      let innerTuple = tuple[0].toTuple();
+
+      let markets = innerTuple[0].toAddressArray();
+      let assets = innerTuple[1].toAddressArray();
+      let exchangeRouter = innerTuple[3].toAddress();
+
+      createGMXV2LeverageTradingPositionChange(
+        event.params.externalPosition,
+        'ClaimCollateral',
+        vault,
+        assets.map<Asset>((asset) => ensureAsset(asset)),
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        exchangeRouter,
+        markets,
+        null,
+        event,
+      );
+    }
+
+    if (actionId == GMXV2LeverageTradingActionId.Sweep) {
+      createGMXV2LeverageTradingPositionChange(
+        event.params.externalPosition,
+        'Sweep',
+        vault,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
         event,
       );
     }

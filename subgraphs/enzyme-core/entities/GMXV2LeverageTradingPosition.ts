@@ -40,31 +40,35 @@ export function createGMXV2LeverageTradingPositionChange(
   position: Address,
   changeType: string,
   vault: Vault,
-  assets: Asset[],
-  assetAmount: AssetAmount,
-  executionFee: AssetAmount,
-  orderType: string,
-  sizeDeltaUsd: BigDecimal,
-  triggerPrice: BigDecimal,
-  acceptablePrice: BigDecimal,
-  isLong: boolean,
-  exchangeRouter: Address,
-  markets: Address[],
+  assets: Asset[] | null,
+  assetAmount: AssetAmount | null,
+  executionFee: AssetAmount | null,
+  orderType: string | null,
+  sizeDeltaUsd: BigDecimal | null,
+  triggerPrice: BigDecimal | null,
+  acceptablePrice: BigDecimal | null,
+  isLong: boolean | null,
+  exchangeRouter: Address | null,
+  markets: Address[] | null,
+  orderKey: Bytes | null,
   event: ethereum.Event,
 ): GMXV2LeverageTradingPositionChange {
   let change = new GMXV2LeverageTradingPositionChange(uniqueEventId(event));
   change.gmxV2LeverageTradingPositionChangeType = changeType;
   change.externalPosition = position.toHex();
-  change.assets = assets.map<string>((asset) => asset.id);
-  change.assetAmount = assetAmount.id;
-  change.executionFee = executionFee.id;
+  change.assets = assets == null ? null : assets.map<string>((asset) => asset.id);
+  change.assetAmount = assetAmount == null ? null : assetAmount.id;
+  change.executionFee = executionFee == null ? null : executionFee.id;
   change.orderType = orderType;
   change.sizeDeltaUsd = sizeDeltaUsd;
   change.triggerPrice = triggerPrice;
   change.acceptablePrice = acceptablePrice;
-  change.isLong = isLong;
+  if (isLong != null) {
+    change.isLong = isLong;
+  }
   change.exchangeRouter = exchangeRouter;
   change.markets = markets;
+  change.orderKey = orderKey;
   change.vault = vault.id;
   change.timestamp = event.block.timestamp.toI32();
   change.activityCounter = getActivityCounter();
