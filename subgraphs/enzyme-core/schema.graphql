@@ -1709,6 +1709,58 @@ type StakeWiseStakingExitRequest @entity {
   shares: BigDecimal!
 }
 
+type GMXV2LeverageTradingPosition implements ExternalPosition @entity {
+  id: ID!
+  vault: Vault!
+  type: ExternalPositionType!
+  active: Boolean!
+  changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
+  trackedAssets: [Asset!]!
+  trackedMarkets: [Bytes!]!
+}
+
+enum GMXV2LeverageTradingOrderType {
+  MarketSwap
+  LimitSwap
+  MarketIncrease
+  LimitIncrease
+  MarketDecrease
+  LimitDecrease
+  StopLossDecrease
+  Liquidation
+}
+
+enum GMXV2LeverageTradingPositionChangeType {
+  CreateOrder
+  UpdateOrder
+  CancelOrder
+  ClaimFundingFees
+  ClaimCollateral
+  Sweep
+}
+
+type GMXV2LeverageTradingPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: Int!
+  externalPosition: ExternalPosition!
+  gmxV2LeverageTradingPositionChangeType: GMXV2LeverageTradingPositionChangeType!
+  assets: [Asset!]
+  assetAmounts: [AssetAmount!]
+  orderType: GMXV2LeverageTradingOrderType
+  sizeDeltaUsd: BigDecimal
+  triggerPrice: BigDecimal
+  acceptablePrice: BigDecimal
+  executionFee: BigDecimal
+  isLong: Boolean
+  key: Bytes
+  exchangeRouter: Bytes
+  markets: [Bytes!]
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
 type UnknownExternalPosition implements ExternalPosition @entity {
   id: ID!
   vault: Vault!

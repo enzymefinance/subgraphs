@@ -67,6 +67,7 @@ import {
   AaveV3DebtPositionActionId,
   StakeWiseV3StakingPositionActionId,
   PendleV2ActionId,
+  GMXV2LeverageTradingActionId,
   // MorphoBlueActionId,
 } from '../../utils/actionId';
 import { ensureMapleLiquidityPoolV1, ensureMapleLiquidityPoolV2 } from '../../entities/MapleLiquidityPool';
@@ -130,6 +131,7 @@ import {
   usePendleV2Position,
 } from '../../entities/PendleV2Position';
 import { tokenBalance } from '../../utils/tokenCalls';
+import { createGMXV2LeverageTradingPosition } from '../../entities/GMXV2LeverageTradingPosition';
 // import {
 //   createMorphoBluePosition,
 //   createMorphoBluePositionChange,
@@ -212,6 +214,12 @@ export function handleExternalPositionDeployedForFund(event: ExternalPositionDep
 
   if (type.label == 'PENDLE_V2') {
     createPendleV2Position(event.params.externalPosition, event.params.vaultProxy, type);
+
+    return;
+  }
+
+  if (type.label == 'GMX_V2_LEVERAGE_TRADING') {
+    createGMXV2LeverageTradingPosition(event.params.externalPosition, event.params.vaultProxy, type);
 
     return;
   }
@@ -2153,6 +2161,30 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     }
 
     return;
+  }
+
+  if (type.label == 'GMX_V2_LEVERAGE_TRADING') {
+    if (actionId == GMXV2LeverageTradingActionId.CreateOrder) {
+      // let addresses = 'tuple(address,address)';
+      // let numbers = 'tuple(uint256,uint256,uint256,uint256,uint256,uint256)';
+      let decoded = ethereum.decode(
+        '(tuple(tuple(address,address),tuple(uint256,uint256,uint256,uint256,uint256,uint256),uint8,uint8,bool,address,bool)',
+        event.params.actionArgs,
+      );
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+      let innerTuple = tuple[0].toTuple();
+
+      let addresses = innerTuple[0].toTuple();
+      let numbers = innerTuple[1].toTuple();
+
+      let market = addresses[0].toAddress();
+      let initialCollateralToken = addresses[1].toAddress();
+    }
   }
 
   // if (type.label == 'MORPHO_BLUE') {
