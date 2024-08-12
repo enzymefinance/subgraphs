@@ -46,6 +46,7 @@ import { ProtocolSdk } from '../../generated/contracts/ProtocolSdk';
 import { Asset, AssetAmount } from '../../generated/schema';
 import {
   ArbitraryLoanPositionLib4DataSource,
+  GMXV2LeverageTradingPositionLib4DataSource,
   LidoWithdrawalsPositionLib4DataSource,
   MapleLiquidityPositionLib4DataSource,
   // MorphoBluePositionLib4DataSource,
@@ -226,6 +227,7 @@ export function handleExternalPositionDeployedForFund(event: ExternalPositionDep
   if (type.label == 'GMX_V2_LEVERAGE_TRADING') {
     createGMXV2LeverageTradingPosition(event.params.externalPosition, event.params.vaultProxy, type);
 
+    GMXV2LeverageTradingPositionLib4DataSource.create(event.params.externalPosition);
     return;
   }
 
