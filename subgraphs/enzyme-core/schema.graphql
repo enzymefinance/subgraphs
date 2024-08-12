@@ -1741,7 +1741,7 @@ type GMXV2LeverageTradingPositionChange implements Activity & VaultActivity & Ex
   sizeDeltaUsd: BigDecimal
   triggerPrice: BigDecimal
   acceptablePrice: BigDecimal
-  isLong: Boolean
+  isLong: BigInt
   orderKey: Bytes
   exchangeRouter: Bytes
   markets: [Bytes!]

@@ -47,8 +47,7 @@ export function createGMXV2LeverageTradingPositionChange(
   sizeDeltaUsd: BigDecimal | null,
   triggerPrice: BigDecimal | null,
   acceptablePrice: BigDecimal | null,
-  isLong: boolean,
-  isLongKnown: boolean,
+  isLong: BigInt | null,
   exchangeRouter: Address | null,
   markets: Address[] | null,
   orderKey: Bytes | null,
@@ -64,9 +63,7 @@ export function createGMXV2LeverageTradingPositionChange(
   change.sizeDeltaUsd = sizeDeltaUsd;
   change.triggerPrice = triggerPrice;
   change.acceptablePrice = acceptablePrice;
-  if (isLongKnown) {
-    change.isLong = isLong;
-  }
+  change.isLong = isLong;
   change.exchangeRouter = exchangeRouter;
   change.markets = markets == null ? null : markets.map<Bytes>((market) => market as Bytes);
   change.orderKey = orderKey;
