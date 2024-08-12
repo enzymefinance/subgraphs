@@ -131,7 +131,12 @@ import {
   usePendleV2Position,
 } from '../../entities/PendleV2Position';
 import { tokenBalance } from '../../utils/tokenCalls';
-import { createGMXV2LeverageTradingPosition } from '../../entities/GMXV2LeverageTradingPosition';
+import {
+  createGMXV2LeverageTradingPosition,
+  createGMXV2LeverageTradingPositionChange,
+  gmxUsdDecimals,
+  GMXV2LeverageTradingOrderType,
+} from '../../entities/GMXV2LeverageTradingPosition';
 // import {
 //   createMorphoBluePosition,
 //   createMorphoBluePositionChange,
@@ -2176,14 +2181,60 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         return;
       }
 
+      let wethAsset = ensureAsset(wethTokenAddress);
+
       let tuple = decoded.toTuple();
       let innerTuple = tuple[0].toTuple();
 
       let addresses = innerTuple[0].toTuple();
       let numbers = innerTuple[1].toTuple();
+      let orderType = innerTuple[2].toI32();
+      let isLong = innerTuple[4].toBoolean();
+      let exchangeRouter = innerTuple[5].toAddress();
 
       let market = addresses[0].toAddress();
-      let initialCollateralToken = addresses[1].toAddress();
+      let initialCollateralToken = ensureAsset(addresses[1].toAddress());
+
+      let sizeDeltaUsd = toBigDecimal(numbers[0].toBigInt(), gmxUsdDecimals);
+      let initialCollateralDeltaAmount = toBigDecimal(numbers[1].toBigInt(), initialCollateralToken.decimals);
+      let triggerPrice = toBigDecimal(numbers[2].toBigInt(), gmxUsdDecimals);
+      let acceptablePrice = toBigDecimal(numbers[3].toBigInt(), gmxUsdDecimals);
+      let executionFee = toBigDecimal(numbers[4].toBigInt(), wethAsset.decimals);
+
+      let isCollateralTokenWeth = Address.fromString(initialCollateralToken.id) == wethTokenAddress;
+
+      let assetAmount = createAssetAmount(
+        initialCollateralToken,
+        isCollateralTokenWeth ? initialCollateralDeltaAmount.minus(executionFee) : initialCollateralDeltaAmount,
+        denominationAsset,
+        'initial-collateral-token',
+        event,
+      );
+
+      let executionFeeAssetAmount = createAssetAmount(
+        wethAsset,
+        executionFee,
+        denominationAsset,
+        'execution-fee',
+        event,
+      );
+
+      createGMXV2LeverageTradingPositionChange(
+        event.params.externalPosition,
+        'CreateOrder',
+        vault,
+        isCollateralTokenWeth ? [wethAsset] : [initialCollateralToken, wethAsset],
+        assetAmount,
+        executionFeeAssetAmount,
+        GMXV2LeverageTradingOrderType[orderType],
+        sizeDeltaUsd,
+        triggerPrice,
+        acceptablePrice,
+        isLong,
+        exchangeRouter,
+        [market],
+        event,
+      );
     }
   }
 

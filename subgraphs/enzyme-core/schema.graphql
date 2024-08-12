@@ -1746,7 +1746,8 @@ type GMXV2LeverageTradingPositionChange implements Activity & VaultActivity & Ex
   externalPosition: ExternalPosition!
   gmxV2LeverageTradingPositionChangeType: GMXV2LeverageTradingPositionChangeType!
   assets: [Asset!]
-  assetAmounts: [AssetAmount!]
+  assetAmount: AssetAmount
+  executionFee: AssetAmount
   orderType: GMXV2LeverageTradingOrderType
   sizeDeltaUsd: BigDecimal
   triggerPrice: BigDecimal
