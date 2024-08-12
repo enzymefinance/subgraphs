@@ -136,7 +136,6 @@ import {
   createGMXV2LeverageTradingPosition,
   createGMXV2LeverageTradingPositionChange,
   gmxUsdDecimals,
-  GMXV2LeverageTradingOrderType,
 } from '../../entities/GMXV2LeverageTradingPosition';
 // import {
 //   createMorphoBluePosition,
@@ -2188,7 +2187,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
       let addresses = innerTuple[0].toTuple();
       let numbers = innerTuple[1].toTuple();
-      let orderType = innerTuple[2].toI32();
+      let orderType = innerTuple[2].toBigInt();
       let isLong = innerTuple[4].toBoolean();
       let exchangeRouter = innerTuple[5].toAddress();
 
@@ -2226,11 +2225,12 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         isCollateralTokenWeth ? [wethAsset] : [initialCollateralToken, wethAsset],
         assetAmount,
         executionFeeAssetAmount,
-        GMXV2LeverageTradingOrderType[orderType],
+        orderType,
         sizeDeltaUsd,
         triggerPrice,
         acceptablePrice,
         isLong,
+        true,
         exchangeRouter,
         [market],
         null,
@@ -2268,7 +2268,8 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         sizeDeltaUsd,
         triggerPrice,
         acceptablePrice,
-        null,
+        false,
+        false,
         exchangeRouter,
         null,
         orderKey,
@@ -2300,7 +2301,8 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         null,
         null,
         null,
-        null,
+        false,
+        false,
         exchangeRouter,
         null,
         orderKey,
@@ -2333,7 +2335,8 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         null,
         null,
         null,
-        null,
+        false,
+        false,
         exchangeRouter,
         markets,
         null,
@@ -2366,7 +2369,8 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         null,
         null,
         null,
-        null,
+        false,
+        false,
         exchangeRouter,
         markets,
         null,
@@ -2386,7 +2390,8 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         null,
         null,
         null,
-        null,
+        false,
+        false,
         null,
         null,
         null,

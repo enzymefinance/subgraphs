@@ -1719,17 +1719,6 @@ type GMXV2LeverageTradingPosition implements ExternalPosition @entity {
   trackedMarkets: [Bytes!]!
 }
 
-enum GMXV2LeverageTradingOrderType {
-  MarketSwap
-  LimitSwap
-  MarketIncrease
-  LimitIncrease
-  MarketDecrease
-  LimitDecrease
-  StopLossDecrease
-  Liquidation
-}
-
 enum GMXV2LeverageTradingPositionChangeType {
   CreateOrder
   UpdateOrder
@@ -1748,11 +1737,10 @@ type GMXV2LeverageTradingPositionChange implements Activity & VaultActivity & Ex
   assets: [Asset!]
   assetAmount: AssetAmount
   executionFee: AssetAmount
-  orderType: GMXV2LeverageTradingOrderType
+  orderType: BigInt
   sizeDeltaUsd: BigDecimal
   triggerPrice: BigDecimal
   acceptablePrice: BigDecimal
-  executionFee: BigDecimal
   isLong: Boolean
   orderKey: Bytes
   exchangeRouter: Bytes

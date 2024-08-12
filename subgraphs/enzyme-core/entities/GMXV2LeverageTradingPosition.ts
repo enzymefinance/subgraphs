@@ -1,4 +1,4 @@
-import { Address, BigDecimal, Bytes, ethereum } from '@graphprotocol/graph-ts';
+import { Address, BigDecimal, BigInt, Bytes, ethereum } from '@graphprotocol/graph-ts';
 import {
   Asset,
   AssetAmount,
@@ -43,11 +43,12 @@ export function createGMXV2LeverageTradingPositionChange(
   assets: Asset[] | null,
   assetAmount: AssetAmount | null,
   executionFee: AssetAmount | null,
-  orderType: string | null,
+  orderType: BigInt | null,
   sizeDeltaUsd: BigDecimal | null,
   triggerPrice: BigDecimal | null,
   acceptablePrice: BigDecimal | null,
-  isLong: boolean | null,
+  isLong: boolean,
+  isLongKnown: boolean,
   exchangeRouter: Address | null,
   markets: Address[] | null,
   orderKey: Bytes | null,
@@ -63,11 +64,11 @@ export function createGMXV2LeverageTradingPositionChange(
   change.sizeDeltaUsd = sizeDeltaUsd;
   change.triggerPrice = triggerPrice;
   change.acceptablePrice = acceptablePrice;
-  if (isLong != null) {
+  if (isLongKnown) {
     change.isLong = isLong;
   }
   change.exchangeRouter = exchangeRouter;
-  change.markets = markets;
+  change.markets = markets == null ? null : markets.map<Bytes>((market) => market as Bytes);
   change.orderKey = orderKey;
   change.vault = vault.id;
   change.timestamp = event.block.timestamp.toI32();
@@ -80,17 +81,6 @@ export function createGMXV2LeverageTradingPositionChange(
   vault.save();
 
   return change;
-}
-
-export enum GMXV2LeverageTradingOrderType {
-  MarketSwap = 0,
-  LimitSwap = 1,
-  MarketIncrease = 2,
-  LimitIncrease = 3,
-  MarketDecrease = 4,
-  LimitDecrease = 5,
-  StopLossDecrease = 6,
-  Liquidation = 7,
 }
 
 export let gmxUsdDecimals = 30;
