@@ -36,6 +36,7 @@ export function handleOrderIdAdded(event: OrderIdAdded): void {
   order.removed = false;
   order.save();
 }
+
 export function handleOrderIdRemoved(event: OrderIdRemoved): void {
   let order = useAliceOrder(event.params.orderId.toString());
 

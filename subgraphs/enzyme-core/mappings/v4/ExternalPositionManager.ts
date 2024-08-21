@@ -2404,7 +2404,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     }
 
     if (actionId == AliceActionId.RefundOrder) {
-      let decoded = ethereum.decode('tuple(uint256,uint16,bool,uint256,uint256,uint256)', event.params.actionArgs);
+      let decoded = ethereum.decode('(tuple(uint256,uint16,bool,uint256,uint256,uint256))', event.params.actionArgs);
 
       if (decoded == null) {
         return;
@@ -2465,7 +2465,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     }
 
     if (actionId == AliceActionId.Sweep) {
-      let decoded = ethereum.decode('tuple(uint256[])', tuplePrefixBytes(event.params.actionArgs));
+      let decoded = ethereum.decode('(tuple(uint256[]))', tuplePrefixBytes(event.params.actionArgs));
 
       if (decoded == null) {
         return;
