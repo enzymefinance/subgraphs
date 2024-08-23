@@ -1,24 +1,5 @@
 [
   {
-    "type": "constructor",
-    "inputs": [
-      { "name": "_wrappedNativeToken", "type": "address", "internalType": "contract IWETH" },
-      { "name": "_dataStore", "type": "address", "internalType": "contract IGMXV2DataStore" },
-      {
-        "name": "_chainlinkPriceFeedProvider",
-        "type": "address",
-        "internalType": "contract IGMXV2ChainlinkPriceFeedProvider"
-      },
-      { "name": "_reader", "type": "address", "internalType": "contract IGMXV2Reader" },
-      { "name": "_roleStore", "type": "address", "internalType": "contract IGMXV2RoleStore" },
-      { "name": "_callbackGasLimit", "type": "uint256", "internalType": "uint256" },
-      { "name": "_referralCode", "type": "bytes32", "internalType": "bytes32" },
-      { "name": "_referralStorageAddress", "type": "address", "internalType": "address" },
-      { "name": "_uiFeeReceiverAddress", "type": "address", "internalType": "address" }
-    ],
-    "stateMutability": "nonpayable"
-  },
-  {
     "type": "function",
     "name": "afterOrderExecution",
     "inputs": [
@@ -26,12 +7,12 @@
       {
         "name": "_order",
         "type": "tuple",
-        "internalType": "struct IGMXV2Order.Props",
+        "internalType": "struct IGMXV2LeverageTradingPositionLib.Props",
         "components": [
           {
             "name": "addresses",
             "type": "tuple",
-            "internalType": "struct IGMXV2Order.Addresses",
+            "internalType": "struct IGMXV2LeverageTradingPositionLib.Addresses",
             "components": [
               { "name": "account", "type": "address", "internalType": "address" },
               { "name": "receiver", "type": "address", "internalType": "address" },
@@ -46,13 +27,13 @@
           {
             "name": "numbers",
             "type": "tuple",
-            "internalType": "struct IGMXV2Order.Numbers",
+            "internalType": "struct IGMXV2LeverageTradingPositionLib.Numbers",
             "components": [
-              { "name": "orderType", "type": "uint8", "internalType": "enum IGMXV2Order.OrderType" },
+              { "name": "orderType", "type": "uint8", "internalType": "IGMXV2LeverageTradingPositionLib.OrderType" },
               {
                 "name": "decreasePositionSwapType",
                 "type": "uint8",
-                "internalType": "enum IGMXV2Order.DecreasePositionSwapType"
+                "internalType": "IGMXV2LeverageTradingPositionLib.DecreasePositionSwapType"
               },
               { "name": "sizeDeltaUsd", "type": "uint256", "internalType": "uint256" },
               { "name": "initialCollateralDeltaAmount", "type": "uint256", "internalType": "uint256" },
@@ -68,7 +49,7 @@
           {
             "name": "flags",
             "type": "tuple",
-            "internalType": "struct IGMXV2Order.Flags",
+            "internalType": "struct IGMXV2LeverageTradingPositionLib.Flags",
             "components": [
               { "name": "isLong", "type": "bool", "internalType": "bool" },
               { "name": "shouldUnwrapNativeToken", "type": "bool", "internalType": "bool" },
@@ -81,17 +62,17 @@
       {
         "name": "",
         "type": "tuple",
-        "internalType": "struct IGMXV2Event.EventLogData",
+        "internalType": "struct IGMXV2LeverageTradingPositionLib.EventLogData",
         "components": [
           {
             "name": "addressItems",
             "type": "tuple",
-            "internalType": "struct IGMXV2Event.AddressItems",
+            "internalType": "struct IGMXV2LeverageTradingPositionLib.AddressItems",
             "components": [
               {
                 "name": "items",
                 "type": "tuple[]",
-                "internalType": "struct IGMXV2Event.AddressKeyValue[]",
+                "internalType": "struct IGMXV2LeverageTradingPositionLib.AddressKeyValue[]",
                 "components": [
                   { "name": "key", "type": "string", "internalType": "string" },
                   { "name": "value", "type": "address", "internalType": "address" }
@@ -100,7 +81,7 @@
               {
                 "name": "arrayItems",
                 "type": "tuple[]",
-                "internalType": "struct IGMXV2Event.AddressArrayKeyValue[]",
+                "internalType": "struct IGMXV2LeverageTradingPositionLib.AddressArrayKeyValue[]",
                 "components": [
                   { "name": "key", "type": "string", "internalType": "string" },
                   { "name": "value", "type": "address[]", "internalType": "address[]" }
@@ -111,12 +92,12 @@
           {
             "name": "uintItems",
             "type": "tuple",
-            "internalType": "struct IGMXV2Event.UintItems",
+            "internalType": "struct IGMXV2LeverageTradingPositionLib.UintItems",
             "components": [
               {
                 "name": "items",
                 "type": "tuple[]",
-                "internalType": "struct IGMXV2Event.UintKeyValue[]",
+                "internalType": "struct IGMXV2LeverageTradingPositionLib.UintKeyValue[]",
                 "components": [
                   { "name": "key", "type": "string", "internalType": "string" },
                   { "name": "value", "type": "uint256", "internalType": "uint256" }
@@ -125,7 +106,7 @@
               {
                 "name": "arrayItems",
                 "type": "tuple[]",
-                "internalType": "struct IGMXV2Event.UintArrayKeyValue[]",
+                "internalType": "struct IGMXV2LeverageTradingPositionLib.UintArrayKeyValue[]",
                 "components": [
                   { "name": "key", "type": "string", "internalType": "string" },
                   { "name": "value", "type": "uint256[]", "internalType": "uint256[]" }
@@ -136,12 +117,12 @@
           {
             "name": "intItems",
             "type": "tuple",
-            "internalType": "struct IGMXV2Event.IntItems",
+            "internalType": "struct IGMXV2LeverageTradingPositionLib.IntItems",
             "components": [
               {
                 "name": "items",
                 "type": "tuple[]",
-                "internalType": "struct IGMXV2Event.IntKeyValue[]",
+                "internalType": "struct IGMXV2LeverageTradingPositionLib.IntKeyValue[]",
                 "components": [
                   { "name": "key", "type": "string", "internalType": "string" },
                   { "name": "value", "type": "int256", "internalType": "int256" }
@@ -150,7 +131,7 @@
               {
                 "name": "arrayItems",
                 "type": "tuple[]",
-                "internalType": "struct IGMXV2Event.IntArrayKeyValue[]",
+                "internalType": "struct IGMXV2LeverageTradingPositionLib.IntArrayKeyValue[]",
                 "components": [
                   { "name": "key", "type": "string", "internalType": "string" },
                   { "name": "value", "type": "int256[]", "internalType": "int256[]" }
@@ -161,12 +142,12 @@
           {
             "name": "boolItems",
             "type": "tuple",
-            "internalType": "struct IGMXV2Event.BoolItems",
+            "internalType": "struct IGMXV2LeverageTradingPositionLib.BoolItems",
             "components": [
               {
                 "name": "items",
                 "type": "tuple[]",
-                "internalType": "struct IGMXV2Event.BoolKeyValue[]",
+                "internalType": "struct IGMXV2LeverageTradingPositionLib.BoolKeyValue[]",
                 "components": [
                   { "name": "key", "type": "string", "internalType": "string" },
                   { "name": "value", "type": "bool", "internalType": "bool" }
@@ -175,7 +156,7 @@
               {
                 "name": "arrayItems",
                 "type": "tuple[]",
-                "internalType": "struct IGMXV2Event.BoolArrayKeyValue[]",
+                "internalType": "struct IGMXV2LeverageTradingPositionLib.BoolArrayKeyValue[]",
                 "components": [
                   { "name": "key", "type": "string", "internalType": "string" },
                   { "name": "value", "type": "bool[]", "internalType": "bool[]" }
@@ -186,12 +167,12 @@
           {
             "name": "bytes32Items",
             "type": "tuple",
-            "internalType": "struct IGMXV2Event.Bytes32Items",
+            "internalType": "struct IGMXV2LeverageTradingPositionLib.Bytes32Items",
             "components": [
               {
                 "name": "items",
                 "type": "tuple[]",
-                "internalType": "struct IGMXV2Event.Bytes32KeyValue[]",
+                "internalType": "struct IGMXV2LeverageTradingPositionLib.Bytes32KeyValue[]",
                 "components": [
                   { "name": "key", "type": "string", "internalType": "string" },
                   { "name": "value", "type": "bytes32", "internalType": "bytes32" }
@@ -200,7 +181,7 @@
               {
                 "name": "arrayItems",
                 "type": "tuple[]",
-                "internalType": "struct IGMXV2Event.Bytes32ArrayKeyValue[]",
+                "internalType": "struct IGMXV2LeverageTradingPositionLib.Bytes32ArrayKeyValue[]",
                 "components": [
                   { "name": "key", "type": "string", "internalType": "string" },
                   { "name": "value", "type": "bytes32[]", "internalType": "bytes32[]" }
@@ -211,12 +192,12 @@
           {
             "name": "bytesItems",
             "type": "tuple",
-            "internalType": "struct IGMXV2Event.BytesItems",
+            "internalType": "struct IGMXV2LeverageTradingPositionLib.BytesItems",
             "components": [
               {
                 "name": "items",
                 "type": "tuple[]",
-                "internalType": "struct IGMXV2Event.BytesKeyValue[]",
+                "internalType": "struct IGMXV2LeverageTradingPositionLib.BytesKeyValue[]",
                 "components": [
                   { "name": "key", "type": "string", "internalType": "string" },
                   { "name": "value", "type": "bytes", "internalType": "bytes" }
@@ -225,7 +206,7 @@
               {
                 "name": "arrayItems",
                 "type": "tuple[]",
-                "internalType": "struct IGMXV2Event.BytesArrayKeyValue[]",
+                "internalType": "struct IGMXV2LeverageTradingPositionLib.BytesArrayKeyValue[]",
                 "components": [
                   { "name": "key", "type": "string", "internalType": "string" },
                   { "name": "value", "type": "bytes[]", "internalType": "bytes[]" }
@@ -236,12 +217,12 @@
           {
             "name": "stringItems",
             "type": "tuple",
-            "internalType": "struct IGMXV2Event.StringItems",
+            "internalType": "struct IGMXV2LeverageTradingPositionLib.StringItems",
             "components": [
               {
                 "name": "items",
                 "type": "tuple[]",
-                "internalType": "struct IGMXV2Event.StringKeyValue[]",
+                "internalType": "struct IGMXV2LeverageTradingPositionLib.StringKeyValue[]",
                 "components": [
                   { "name": "key", "type": "string", "internalType": "string" },
                   { "name": "value", "type": "string", "internalType": "string" }
@@ -250,7 +231,7 @@
               {
                 "name": "arrayItems",
                 "type": "tuple[]",
-                "internalType": "struct IGMXV2Event.StringArrayKeyValue[]",
+                "internalType": "struct IGMXV2LeverageTradingPositionLib.StringArrayKeyValue[]",
                 "components": [
                   { "name": "key", "type": "string", "internalType": "string" },
                   { "name": "value", "type": "string[]", "internalType": "string[]" }
@@ -272,7 +253,7 @@
       {
         "name": "info_",
         "type": "tuple",
-        "internalType": "struct GMXV2LeverageTradingPositionLibBase1.ClaimableCollateralInfo",
+        "internalType": "struct IGMXV2LeverageTradingPositionLib.ClaimableCollateralInfo",
         "components": [
           { "name": "token", "type": "address", "internalType": "address" },
           { "name": "market", "type": "address", "internalType": "address" },
@@ -311,6 +292,13 @@
   },
   {
     "type": "function",
+    "name": "getMarketToIsCallbackContractSet",
+    "inputs": [{ "name": "_market", "type": "address", "internalType": "address" }],
+    "outputs": [{ "name": "isCallbackContractSet_", "type": "bool", "internalType": "bool" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "getTrackedAssets",
     "inputs": [],
     "outputs": [{ "name": "trackedAssets_", "type": "address[]", "internalType": "address[]" }],
@@ -340,10 +328,7 @@
   {
     "type": "event",
     "name": "CallbackContractSet",
-    "inputs": [
-      { "name": "exchangeRouter", "type": "address", "indexed": false, "internalType": "address" },
-      { "name": "market", "type": "address", "indexed": false, "internalType": "address" }
-    ],
+    "inputs": [{ "name": "market", "type": "address", "indexed": false, "internalType": "address" }],
     "anonymous": false
   },
   {
@@ -388,6 +373,6 @@
   {
     "type": "error",
     "name": "InvalidOrderType",
-    "inputs": [{ "name": "orderType", "type": "uint8", "internalType": "enum IGMXV2Order.OrderType" }]
+    "inputs": [{ "name": "orderType", "type": "uint8", "internalType": "IGMXV2LeverageTradingPositionLib.OrderType" }]
   }
 ]
