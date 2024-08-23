@@ -132,6 +132,7 @@ import {
   usePendleV2Position,
 } from '../../entities/PendleV2Position';
 import { tokenBalance } from '../../utils/tokenCalls';
+import { ZERO_BD } from '@enzymefinance/subgraph-utils';
 import {
   createGMXV2LeverageTradingPosition,
   createGMXV2LeverageTradingPositionChange,
@@ -2239,7 +2240,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
     if (actionId == GMXV2LeverageTradingActionId.UpdateOrder) {
       let decoded = ethereum.decode(
-        'tuple(bytes32,uint256,uint256,uint256,uint256,bool,address)',
+        'tuple(bytes32,uint256,uint256,uint256,uint256,bool,uint256,address)',
         event.params.actionArgs,
       );
 
@@ -2254,15 +2255,27 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let sizeDeltaUsd = toBigDecimal(innerTuple[1].toBigInt(), gmxUsdDecimals);
       let acceptablePrice = toBigDecimal(innerTuple[2].toBigInt(), gmxUsdDecimals);
       let triggerPrice = toBigDecimal(innerTuple[3].toBigInt(), gmxUsdDecimals);
-      let exchangeRouter = innerTuple[6].toAddress();
+      let wethAsset = ensureAsset(wethTokenAddress);
+      let executionFeeIncrease = toBigDecimal(innerTuple[6].toBigInt(), wethAsset.decimals);
+      let exchangeRouter = innerTuple[7].toAddress();
+
+      let executionFeeAssetAmount = createAssetAmount(
+        wethAsset,
+        executionFeeIncrease,
+        denominationAsset,
+        'execution-fee',
+        event,
+      );
+
+      let isExecutionFeeZero = executionFeeIncrease.equals(ZERO_BD);
 
       createGMXV2LeverageTradingPositionChange(
         event.params.externalPosition,
         'UpdateOrder',
         vault,
+        isExecutionFeeZero ? null : [wethAsset],
         null,
-        null,
-        null,
+        isExecutionFeeZero ? null : executionFeeAssetAmount,
         null,
         sizeDeltaUsd,
         triggerPrice,
