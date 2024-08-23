@@ -106,7 +106,7 @@ export const arbitrum: Context<Variables> = {
         arbitraryLoanFixedInterestModuleAddress: '0x0000000000000000000000000000000000000000',
         arbitraryLoanTotalNominalDeltaOracleModuleAddress: '0x0000000000000000000000000000000000000000',
         auraBalancerV2LpStakingAdapterAddress: '0x0000000000000000000000000000000000000000',
-        balancerV2LiquidityAdapterAddress: '0x0000000000000000000000000000000000000000',
+        balancerV2LiquidityAdapterAddress: '0xb3ea1f2f3d2cdbd81a3de91fdf9a2f3e3acd66c1',
         compoundV3AdapterAddress: '0x0000000000000000000000000000000000000000',
         comptrollerLibAddress: '0x3868c0fc34b6ece124c6ab122f6f29e978be6661',
         convexCurveLpStakingAdapterAddress: '0x0000000000000000000000000000000000000000',
