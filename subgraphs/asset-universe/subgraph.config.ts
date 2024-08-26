@@ -61,6 +61,17 @@ const ethereum: Variables = {
   },
 };
 
+const arbitrum: Variables = {
+  wethTokenAddress: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
+  startBlock: 230330283,
+  releaseConfiguration: {
+    v4: {
+      fundDeployer: '0xa2b4c827de13d4e9801ea1ca837524a1a148dec3',
+      valueInterpreter: '0xdd5f18a52a63ececf502a165a459d33be5c0a06c',
+    },
+  },
+};
+
 const polygon: Variables = {
   wethTokenAddress: deployments.polygon.namedTokens.weth.id,
   startBlock: 25825424,
@@ -84,6 +95,11 @@ const testnet: Variables = {
 };
 
 export const contexts: Contexts<Variables> = {
+  arbitrum: {
+    name: `${name}-arbitrum`,
+    network: 'arbitrum-one',
+    variables: arbitrum,
+  },
   ethereum: {
     name,
     network: 'mainnet',
