@@ -26,6 +26,16 @@ const deployments = {
 };
 
 export const contexts: Contexts<Variables> = {
+  arbitrum: {
+    name: `${name}-arbitrum`,
+    network: 'arbitrum-one',
+    variables: {
+      dispatcher: '0x8da28441a4c594fd2fac72726c1412d8cf9e4a19',
+      weth: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
+      savingsDai: '0x0000000000000000000000000000000000000000',
+      start: 230330283,
+    },
+  },
   ethereum: {
     name,
     network: 'mainnet',
