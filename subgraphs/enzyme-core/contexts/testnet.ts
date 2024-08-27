@@ -119,6 +119,7 @@ export const testnet: Context<Variables> = {
         convexCurveLpStakingWrapperFactoryAddress: testnetV4Deployment.contracts.ConvexCurveLpStakingWrapperFactory,
         cumulativeSlippageTolerancePolicyAddress: testnetV4Deployment.contracts.CumulativeSlippageTolerancePolicy,
         curveLiquidityAdapterAddress: testnetV4Deployment.contracts.CurveLiquidityAdapter,
+        disallowedAdapterIncomingAssetsPolicyAddress: '0x0000000000000000000000000000000000000000',
         entranceRateBurnFeeAddress: testnetV4Deployment.contracts.EntranceRateBurnFee,
         entranceRateDirectFeeAddress: testnetV4Deployment.contracts.EntranceRateDirectFee,
         exitRateBurnFeeAddress: testnetV4Deployment.contracts.ExitRateBurnFee,

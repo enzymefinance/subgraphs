@@ -81,6 +81,7 @@ export class Release4Addresses {
   convexCurveLpStakingWrapperFactoryAddress: Address;
   cumulativeSlippageTolerancePolicyAddress: Address;
   curveLiquidityAdapterAddress: Address;
+  disallowedAdapterIncomingAssetsPolicyAddress: Address;
   entranceRateBurnFeeAddress: Address;
   entranceRateDirectFeeAddress: Address;
   exitRateBurnFeeAddress: Address;
@@ -191,7 +192,9 @@ export let release4Addresses: Release4Addresses = {
     '{{releases.v4.cumulativeSlippageTolerancePolicyAddress}}',
   ),
   curveLiquidityAdapterAddress: Address.fromString('{{releases.v4.curveLiquidityAdapterAddress}}'),
-  entranceRateBurnFeeAddress: Address.fromString('{{releases.v4.entranceRateBurnFeeAddress}}'),
+  disallowedAdapterIncomingAssetsPolicyAddress: Address.fromString(
+    '{{releases.v4.disallowedAdapterIncomingAssetsPolicyAddress}}',
+  ),entranceRateBurnFeeAddress: Address.fromString('{{releases.v4.entranceRateBurnFeeAddress}}'),
   entranceRateDirectFeeAddress: Address.fromString('{{releases.v4.entranceRateDirectFeeAddress}}'),
   exitRateBurnFeeAddress: Address.fromString('{{releases.v4.exitRateBurnFeeAddress}}'),
   exitRateDirectFeeAddress: Address.fromString('{{releases.v4.exitRateDirectFeeAddress}}'),

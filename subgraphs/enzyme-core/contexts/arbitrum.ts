@@ -113,6 +113,7 @@ export const arbitrum: Context<Variables> = {
         convexCurveLpStakingWrapperFactoryAddress: '0x0000000000000000000000000000000000000000',
         cumulativeSlippageTolerancePolicyAddress: '0x487f6a8a93c2be5a296ead2c3fbc3fceed4ac599',
         curveLiquidityAdapterAddress: '0x0000000000000000000000000000000000000000',
+        disallowedAdapterIncomingAssetsPolicyAddress: '0x5c9348fbedb75c39f0e84396618accab6c01f847',
         entranceRateBurnFeeAddress: '0x6180b98d85afbd904016c7ea08eb41cba77a1c08',
         entranceRateDirectFeeAddress: '0xbd35b273453eb3a977f2757f92b20e8c0b33c0b2',
         exitRateBurnFeeAddress: '0x8bdb929f16c2ce833c3c3176ba5c607e20949010',

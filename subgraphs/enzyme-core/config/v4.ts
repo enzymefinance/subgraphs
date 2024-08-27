@@ -20,6 +20,7 @@ export interface ReleaseVariables {
   convexCurveLpStakingWrapperFactoryAddress: string;
   cumulativeSlippageTolerancePolicyAddress: string;
   curveLiquidityAdapterAddress: string;
+  disallowedAdapterIncomingAssetsPolicyAddress: string;
   entranceRateBurnFeeAddress: string;
   entranceRateDirectFeeAddress: string;
   exitRateBurnFeeAddress: string;
@@ -67,6 +68,7 @@ export const sources = (variables: ReleaseVariables): DataSourceUserDeclaration[
   },
   { name: 'ConvexCurveLpStakingWrapperFactory', address: variables.convexCurveLpStakingWrapperFactoryAddress },
   { name: 'CumulativeSlippageTolerancePolicy', address: variables.cumulativeSlippageTolerancePolicyAddress },
+  { name: 'DisallowedAdapterIncomingAssetsPolicy', address: variables.disallowedAdapterIncomingAssetsPolicyAddress },
   { name: 'EntranceRateBurnFee', address: variables.entranceRateBurnFeeAddress },
   { name: 'EntranceRateDirectFee', address: variables.entranceRateDirectFeeAddress },
   { name: 'ExitRateBurnFee', address: variables.exitRateBurnFeeAddress },
