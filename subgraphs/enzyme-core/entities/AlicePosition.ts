@@ -65,7 +65,7 @@ export function createAlicePositionChange(
 export function useAliceOrder(id: string): AliceOrder {
   let order = AliceOrder.load(id);
   if (order == null) {
-    logCritical('Failed to load fund {}.', [id]);
+    logCritical('Failed to load AliceOrder {}.', [id]);
   }
 
   return order as AliceOrder;
