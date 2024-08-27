@@ -14,7 +14,7 @@ import { getActivityCounter } from './Counter';
 export function useAlicePosition(id: string): AlicePosition {
   let position = AlicePosition.load(id);
   if (position == null) {
-    logCritical('Failed to load fund {}.', [id]);
+    logCritical('Failed to load AlicePosition {}.', [id]);
   }
 
   return position as AlicePosition;
