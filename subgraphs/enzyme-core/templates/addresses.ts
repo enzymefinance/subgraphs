@@ -248,6 +248,8 @@ export let compAddress = Address.fromString('{{external.compAddress}}');
 
 // export let morphoBlueAddress = Address.fromString('{{external.morphoBlueAddress}}');
 
+export let aliceOrderManagerAddress = Address.fromString('{{external.aliceOrderManager}}');
+
 export class ChainlinkAggregatorAddresses {
   audUsdAddress: Address;
   btcEthAddress: Address;
