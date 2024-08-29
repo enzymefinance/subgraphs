@@ -1750,6 +1750,45 @@ type GMXV2LeverageTradingPositionChange implements Activity & VaultActivity & Ex
   activityType: ActivityType!
 }
 
+type AlicePosition implements ExternalPosition @entity {
+  id: ID!
+  vault: Vault!
+  type: ExternalPositionType!
+  active: Boolean!
+  orders: [AliceOrder!]! @derivedFrom(field: "alicePosition")
+  changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
+}
+
+type AliceOrder @entity {
+  id: ID!
+  createdAt: Int!
+  alicePosition: AlicePosition!
+  outgoingAssetAmount: AssetAmount!
+  incomingAsset: Asset!
+  removed: Boolean!
+  removedAt: Int
+}
+
+enum AlicePositionChangeType {
+  PlaceOrder
+  RefundOrder
+  Sweep
+}
+
+type AlicePositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: Int!
+  externalPosition: ExternalPosition!
+  alicePositionChangeType: AlicePositionChangeType!
+  orders: [AliceOrder!]!
+  outgoingAssetAmount: AssetAmount
+  incomingAssetAmount: AssetAmount
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
 type UnknownExternalPosition implements ExternalPosition @entity {
   id: ID!
   vault: Vault!

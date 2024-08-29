@@ -105,4 +105,5 @@ export const templates: DataSourceTemplateUserDeclaration[] = [
   { name: 'LidoWithdrawalsPositionLib' },
   { name: 'GMXV2LeverageTradingPositionLib' },
   { name: 'MorphoBluePositionLib' },
+  { name: 'AlicePositionLib' },
 ];

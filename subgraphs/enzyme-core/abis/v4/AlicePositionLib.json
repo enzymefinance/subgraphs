@@ -1,0 +1,188 @@
+[
+  {
+    "type": "constructor",
+    "inputs": [
+      {
+        "name": "_aliceOrderManagerAddress",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "_wrappedNativeAssetAddress",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "getDebtAssets",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "assets_",
+        "type": "address[]",
+        "internalType": "address[]"
+      },
+      {
+        "name": "amounts_",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getManagedAssets",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "assets_",
+        "type": "address[]",
+        "internalType": "address[]"
+      },
+      {
+        "name": "amounts_",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getOrderDetails",
+    "inputs": [
+      {
+        "name": "_orderId",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "orderDetails_",
+        "type": "tuple",
+        "internalType": "struct AlicePositionLibBase1.OrderDetails",
+        "components": [
+          {
+            "name": "outgoingAssetAddress",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "incomingAssetAddress",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "outgoingAmount",
+            "type": "uint256",
+            "internalType": "uint256"
+          }
+        ]
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getOrderIds",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "orderIds_",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "init",
+    "inputs": [
+      {
+        "name": "",
+        "type": "bytes",
+        "internalType": "bytes"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "receiveCallFromVault",
+    "inputs": [
+      {
+        "name": "_actionData",
+        "type": "bytes",
+        "internalType": "bytes"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "event",
+    "name": "OrderIdAdded",
+    "inputs": [
+      {
+        "name": "orderId",
+        "type": "uint256",
+        "indexed": true,
+        "internalType": "uint256"
+      },
+      {
+        "name": "orderDetails",
+        "type": "tuple",
+        "indexed": false,
+        "internalType": "struct AlicePositionLibBase1.OrderDetails",
+        "components": [
+          {
+            "name": "outgoingAssetAddress",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "incomingAssetAddress",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "outgoingAmount",
+            "type": "uint256",
+            "internalType": "uint256"
+          }
+        ]
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "OrderIdRemoved",
+    "inputs": [
+      {
+        "name": "orderId",
+        "type": "uint256",
+        "indexed": true,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "error",
+    "name": "InvalidActionId",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "OrderNotSettledOrCancelled",
+    "inputs": []
+  }
+]
