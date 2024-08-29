@@ -2423,6 +2423,8 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         event,
       );
     }
+
+    return;
   }
 
   // if (type.label == 'MORPHO_BLUE') {
