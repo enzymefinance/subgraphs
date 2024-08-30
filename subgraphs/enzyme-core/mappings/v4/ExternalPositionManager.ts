@@ -2192,7 +2192,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     if (actionId == GMXV2LeverageTradingActionId.CreateOrder) {
       let decoded = ethereum.decode(
         '(tuple(tuple(address,address),tuple(uint256,uint256,uint256,uint256,uint256,uint256),uint8,uint8,bool,address,bool))',
-        event.params.actionArgs,
+        tuplePrefixBytes(event.params.actionArgs),
       );
 
       if (decoded == null) {
