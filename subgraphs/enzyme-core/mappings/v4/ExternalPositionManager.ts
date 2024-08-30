@@ -2269,7 +2269,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let tuple = decoded.toTuple();
       let innerTuple = tuple[0].toTuple();
 
-      let orderKey = tuple[0].toBytes();
+      let orderKey = innerTuple[0].toBytes();
       let sizeDeltaUsd = toBigDecimal(innerTuple[1].toBigInt(), gmxUsdDecimals);
       let acceptablePrice = toBigDecimal(innerTuple[2].toBigInt(), gmxUsdDecimals);
       let triggerPrice = toBigDecimal(innerTuple[3].toBigInt(), gmxUsdDecimals);
