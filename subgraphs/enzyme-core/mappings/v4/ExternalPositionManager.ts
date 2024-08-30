@@ -2191,7 +2191,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
   if (type.label == 'GMX_V2_LEVERAGE_TRADING') {
     if (actionId == GMXV2LeverageTradingActionId.CreateOrder) {
       let decoded = ethereum.decode(
-        'tuple(tuple(address,address),tuple(uint256,uint256,uint256,uint256,uint256,uint256),uint8,uint8,bool,address,bool)',
+        '(tuple(tuple(address,address),tuple(uint256,uint256,uint256,uint256,uint256,uint256),uint8,uint8,bool,address,bool))',
         event.params.actionArgs,
       );
 
@@ -2258,7 +2258,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
     if (actionId == GMXV2LeverageTradingActionId.UpdateOrder) {
       let decoded = ethereum.decode(
-        'tuple(bytes32,uint256,uint256,uint256,uint256,bool,uint256,address)',
+        '(tuple(bytes32,uint256,uint256,uint256,uint256,bool,uint256,address))',
         event.params.actionArgs,
       );
 
@@ -2307,7 +2307,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     }
 
     if (actionId == GMXV2LeverageTradingActionId.CancelOrder) {
-      let decoded = ethereum.decode('tuple(bytes32,address)', event.params.actionArgs);
+      let decoded = ethereum.decode('(tuple(bytes32,address))', event.params.actionArgs);
 
       if (decoded == null) {
         return;
@@ -2339,7 +2339,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     }
 
     if (actionId == GMXV2LeverageTradingActionId.ClaimFundingFees) {
-      let decoded = ethereum.decode('tuple(address[],address[],address)', event.params.actionArgs);
+      let decoded = ethereum.decode('(tuple(address[],address[],address))', tuplePrefixBytes(event.params.actionArgs));
 
       if (decoded == null) {
         return;
@@ -2372,7 +2372,10 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     }
 
     if (actionId == GMXV2LeverageTradingActionId.ClaimCollateral) {
-      let decoded = ethereum.decode('tuple(address[],address[],uint256[],address)', event.params.actionArgs);
+      let decoded = ethereum.decode(
+        '(tuple(address[],address[],uint256[],address))',
+        tuplePrefixBytes(event.params.actionArgs),
+      );
 
       if (decoded == null) {
         return;
@@ -2600,7 +2603,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
   if (type.label == 'ALICE') {
     if (actionId == AliceActionId.PlaceOrder) {
-      let decoded = ethereum.decode('(tuple(uint16,bool,uint256,uint256)', event.params.actionArgs);
+      let decoded = ethereum.decode('(tuple(uint16,bool,uint256,uint256))', event.params.actionArgs);
 
       if (decoded == null) {
         return;
