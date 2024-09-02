@@ -2211,7 +2211,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let market = innerTuple[0].toAddress();
       let initialCollateralToken = ensureAsset(innerTuple[1].toAddress());
 
-      let sizeDeltaUsd = toBigDecimal(innerTuple[3].toBigInt(), gmxUsdDecimals);
+      let sizeDeltaUsd = toBigDecimal(innerTuple[2].toBigInt(), gmxUsdDecimals);
       let initialCollateralDeltaAmount = toBigDecimal(innerTuple[3].toBigInt(), initialCollateralToken.decimals);
       let triggerPrice = toBigDecimal(innerTuple[4].toBigInt(), gmxUsdDecimals);
       let acceptablePrice = toBigDecimal(innerTuple[5].toBigInt(), gmxUsdDecimals);
