@@ -2369,41 +2369,41 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       );
     }
 
-    if (actionId == GMXV2LeverageTradingActionId.ClaimCollateral) {
-      let decoded = ethereum.decode(
-        '(tuple(address[],address[],uint256[],address))',
-        tuplePrefixBytes(event.params.actionArgs),
-      );
+    // if (actionId == GMXV2LeverageTradingActionId.ClaimCollateral) {
+    //   let decoded = ethereum.decode(
+    //     '(tuple(address[],address[],uint256[],address))',
+    //     tuplePrefixBytes(event.params.actionArgs),
+    //   );
 
-      if (decoded == null) {
-        return;
-      }
+    //   if (decoded == null) {
+    //     return;
+    //   }
 
-      let tuple = decoded.toTuple();
-      let innerTuple = tuple[0].toTuple();
+    //   let tuple = decoded.toTuple();
+    //   let innerTuple = tuple[0].toTuple();
 
-      let markets = innerTuple[0].toAddressArray();
-      let assets = innerTuple[1].toAddressArray();
-      let exchangeRouter = innerTuple[3].toAddress();
+    //   let markets = innerTuple[0].toAddressArray();
+    //   let assets = innerTuple[1].toAddressArray();
+    //   let exchangeRouter = innerTuple[3].toAddress();
 
-      createGMXV2LeverageTradingPositionChange(
-        event.params.externalPosition,
-        'ClaimCollateral',
-        vault,
-        assets.map<Asset>((asset) => ensureAsset(asset)),
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        exchangeRouter,
-        markets,
-        null,
-        event,
-      );
-    }
+    //   createGMXV2LeverageTradingPositionChange(
+    //     event.params.externalPosition,
+    //     'ClaimCollateral',
+    //     vault,
+    //     assets.map<Asset>((asset) => ensureAsset(asset)),
+    //     null,
+    //     null,
+    //     null,
+    //     null,
+    //     null,
+    //     null,
+    //     null,
+    //     exchangeRouter,
+    //     markets,
+    //     null,
+    //     event,
+    //   );
+    // }
 
     if (actionId == GMXV2LeverageTradingActionId.Sweep) {
       createGMXV2LeverageTradingPositionChange(
