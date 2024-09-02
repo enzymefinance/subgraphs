@@ -30,6 +30,7 @@ export const arbitrum: Context<Variables> = {
       lusdAddress: '0x0000000000000000000000000000000000000000',
       compAddress: '0x354a6da3fcde098f8389cad84b0182725c6c91de',
       // morphoBlueAddress: "0x0000000000000000000000000000000000000000",
+      aliceOrderManager: '0x0000000000000000000000000000000000000000',
     },
     persistent: {
       addressListRegistryAddress: '0x2c6bef68dabf0494bb5f727e63c8fb54f7d2c287',

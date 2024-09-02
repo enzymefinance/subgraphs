@@ -116,3 +116,9 @@ export enum PendleV2ActionId {
 //   Borrow = 4,
 //   Repay = 5,
 // }
+
+export enum AliceActionId {
+  PlaceOrder = 0,
+  RefundOrder = 1,
+  Sweep = 2,
+}
