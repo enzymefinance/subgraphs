@@ -2213,8 +2213,8 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
       let sizeDeltaUsd = toBigDecimal(innerTuple[2].toBigInt(), gmxUsdDecimals);
       let initialCollateralDeltaAmount = toBigDecimal(innerTuple[3].toBigInt(), initialCollateralToken.decimals);
-      let triggerPrice = toBigDecimal(innerTuple[4].toBigInt(), gmxUsdDecimals);
-      let acceptablePrice = toBigDecimal(innerTuple[5].toBigInt(), gmxUsdDecimals);
+      let triggerPrice = innerTuple[4].toBigInt();
+      let acceptablePrice = innerTuple[5].toBigInt();
       let executionFee = toBigDecimal(innerTuple[6].toBigInt(), wethAsset.decimals);
 
       let isCollateralTokenWeth = Address.fromString(initialCollateralToken.id) == wethTokenAddress;
@@ -2269,8 +2269,8 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
       let orderKey = innerTuple[0].toBytes();
       let sizeDeltaUsd = toBigDecimal(innerTuple[1].toBigInt(), gmxUsdDecimals);
-      let acceptablePrice = toBigDecimal(innerTuple[2].toBigInt(), gmxUsdDecimals);
-      let triggerPrice = toBigDecimal(innerTuple[3].toBigInt(), gmxUsdDecimals);
+      let acceptablePrice = innerTuple[2].toBigInt();
+      let triggerPrice = innerTuple[3].toBigInt();
       let wethAsset = ensureAsset(wethTokenAddress);
       let executionFeeIncrease = toBigDecimal(innerTuple[6].toBigInt(), wethAsset.decimals);
       let exchangeRouter = innerTuple[7].toAddress();
