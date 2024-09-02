@@ -2191,7 +2191,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
   if (type.label == 'GMX_V2_LEVERAGE_TRADING') {
     if (actionId == GMXV2LeverageTradingActionId.CreateOrder) {
       let decoded = ethereum.decode(
-        '(tuple(tuple(address,address),tuple(uint256,uint256,uint256,uint256,uint256,uint256),uint8,uint8,bool,address,bool))',
+        '(tuple(address,address,uint256,uint256,uint256,uint256,uint256,uint256,uint8,uint8,bool,address,bool))',
         tuplePrefixBytes(event.params.actionArgs),
       );
 
@@ -2204,20 +2204,18 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let tuple = decoded.toTuple();
       let innerTuple = tuple[0].toTuple();
 
-      let addresses = innerTuple[0].toTuple();
-      let numbers = innerTuple[1].toTuple();
-      let orderType = innerTuple[2].toBigInt();
-      let isLong = innerTuple[4].toBoolean();
-      let exchangeRouter = innerTuple[5].toAddress();
+      let orderType = innerTuple[8].toBigInt();
+      let isLong = innerTuple[10].toBoolean();
+      let exchangeRouter = innerTuple[11].toAddress();
 
-      let market = addresses[0].toAddress();
-      let initialCollateralToken = ensureAsset(addresses[1].toAddress());
+      let market = innerTuple[0].toAddress();
+      let initialCollateralToken = ensureAsset(innerTuple[1].toAddress());
 
-      let sizeDeltaUsd = toBigDecimal(numbers[0].toBigInt(), gmxUsdDecimals);
-      let initialCollateralDeltaAmount = toBigDecimal(numbers[1].toBigInt(), initialCollateralToken.decimals);
-      let triggerPrice = toBigDecimal(numbers[2].toBigInt(), gmxUsdDecimals);
-      let acceptablePrice = toBigDecimal(numbers[3].toBigInt(), gmxUsdDecimals);
-      let executionFee = toBigDecimal(numbers[4].toBigInt(), wethAsset.decimals);
+      let sizeDeltaUsd = toBigDecimal(innerTuple[3].toBigInt(), gmxUsdDecimals);
+      let initialCollateralDeltaAmount = toBigDecimal(innerTuple[3].toBigInt(), initialCollateralToken.decimals);
+      let triggerPrice = toBigDecimal(innerTuple[4].toBigInt(), gmxUsdDecimals);
+      let acceptablePrice = toBigDecimal(innerTuple[5].toBigInt(), gmxUsdDecimals);
+      let executionFee = toBigDecimal(innerTuple[6].toBigInt(), wethAsset.decimals);
 
       let isCollateralTokenWeth = Address.fromString(initialCollateralToken.id) == wethTokenAddress;
 
