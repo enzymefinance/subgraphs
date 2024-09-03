@@ -14,7 +14,7 @@ import { logCritical, uniqueEventId } from '@enzymefinance/subgraph-utils';
 export function useGMXV2LeverageTradingPosition(id: string): GMXV2LeverageTradingPosition {
   let position = GMXV2LeverageTradingPosition.load(id);
   if (position == null) {
-    logCritical('Failed to load fund {}.', [id]);
+    logCritical('Failed to load position {}.', [id]);
   }
 
   return position as GMXV2LeverageTradingPosition;

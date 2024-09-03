@@ -13,7 +13,7 @@ import { useVault } from './Vault';
 export function useAaveV3DebtPosition(id: string): AaveV3DebtPosition {
   let adp = AaveV3DebtPosition.load(id);
   if (adp == null) {
-    logCritical('Failed to load fund {}.', [id]);
+    logCritical('Failed to load position {}.', [id]);
   }
 
   return adp as AaveV3DebtPosition;
