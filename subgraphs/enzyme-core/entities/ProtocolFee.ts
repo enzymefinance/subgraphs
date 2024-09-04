@@ -26,7 +26,7 @@ export function useProtocolFee(vaultAddress: Address, protocolFeeTrackerAddress:
   let protocolFee = new ProtocolFee(id) as ProtocolFee;
 
   if (protocolFee == null) {
-    logCritical('Failed to load fund {}.', [id]);
+    logCritical('Failed to load fee {}.', [id]);
   }
 
   return protocolFee;

@@ -1,0 +1,378 @@
+[
+  {
+    "type": "function",
+    "name": "afterOrderExecution",
+    "inputs": [
+      { "name": "", "type": "bytes32", "internalType": "bytes32" },
+      {
+        "name": "_order",
+        "type": "tuple",
+        "internalType": "struct IGMXV2LeverageTradingPositionLib.Props",
+        "components": [
+          {
+            "name": "addresses",
+            "type": "tuple",
+            "internalType": "struct IGMXV2LeverageTradingPositionLib.Addresses",
+            "components": [
+              { "name": "account", "type": "address", "internalType": "address" },
+              { "name": "receiver", "type": "address", "internalType": "address" },
+              { "name": "cancellationReceiver", "type": "address", "internalType": "address" },
+              { "name": "callbackContract", "type": "address", "internalType": "address" },
+              { "name": "uiFeeReceiver", "type": "address", "internalType": "address" },
+              { "name": "market", "type": "address", "internalType": "address" },
+              { "name": "initialCollateralToken", "type": "address", "internalType": "address" },
+              { "name": "swapPath", "type": "address[]", "internalType": "address[]" }
+            ]
+          },
+          {
+            "name": "numbers",
+            "type": "tuple",
+            "internalType": "struct IGMXV2LeverageTradingPositionLib.Numbers",
+            "components": [
+              { "name": "orderType", "type": "uint8", "internalType": "IGMXV2LeverageTradingPositionLib.OrderType" },
+              {
+                "name": "decreasePositionSwapType",
+                "type": "uint8",
+                "internalType": "IGMXV2LeverageTradingPositionLib.DecreasePositionSwapType"
+              },
+              { "name": "sizeDeltaUsd", "type": "uint256", "internalType": "uint256" },
+              { "name": "initialCollateralDeltaAmount", "type": "uint256", "internalType": "uint256" },
+              { "name": "triggerPrice", "type": "uint256", "internalType": "uint256" },
+              { "name": "acceptablePrice", "type": "uint256", "internalType": "uint256" },
+              { "name": "executionFee", "type": "uint256", "internalType": "uint256" },
+              { "name": "callbackGasLimit", "type": "uint256", "internalType": "uint256" },
+              { "name": "minOutputAmount", "type": "uint256", "internalType": "uint256" },
+              { "name": "updatedAtBlock", "type": "uint256", "internalType": "uint256" },
+              { "name": "updatedAtTime", "type": "uint256", "internalType": "uint256" }
+            ]
+          },
+          {
+            "name": "flags",
+            "type": "tuple",
+            "internalType": "struct IGMXV2LeverageTradingPositionLib.Flags",
+            "components": [
+              { "name": "isLong", "type": "bool", "internalType": "bool" },
+              { "name": "shouldUnwrapNativeToken", "type": "bool", "internalType": "bool" },
+              { "name": "isFrozen", "type": "bool", "internalType": "bool" },
+              { "name": "autoCancel", "type": "bool", "internalType": "bool" }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "",
+        "type": "tuple",
+        "internalType": "struct IGMXV2LeverageTradingPositionLib.EventLogData",
+        "components": [
+          {
+            "name": "addressItems",
+            "type": "tuple",
+            "internalType": "struct IGMXV2LeverageTradingPositionLib.AddressItems",
+            "components": [
+              {
+                "name": "items",
+                "type": "tuple[]",
+                "internalType": "struct IGMXV2LeverageTradingPositionLib.AddressKeyValue[]",
+                "components": [
+                  { "name": "key", "type": "string", "internalType": "string" },
+                  { "name": "value", "type": "address", "internalType": "address" }
+                ]
+              },
+              {
+                "name": "arrayItems",
+                "type": "tuple[]",
+                "internalType": "struct IGMXV2LeverageTradingPositionLib.AddressArrayKeyValue[]",
+                "components": [
+                  { "name": "key", "type": "string", "internalType": "string" },
+                  { "name": "value", "type": "address[]", "internalType": "address[]" }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "uintItems",
+            "type": "tuple",
+            "internalType": "struct IGMXV2LeverageTradingPositionLib.UintItems",
+            "components": [
+              {
+                "name": "items",
+                "type": "tuple[]",
+                "internalType": "struct IGMXV2LeverageTradingPositionLib.UintKeyValue[]",
+                "components": [
+                  { "name": "key", "type": "string", "internalType": "string" },
+                  { "name": "value", "type": "uint256", "internalType": "uint256" }
+                ]
+              },
+              {
+                "name": "arrayItems",
+                "type": "tuple[]",
+                "internalType": "struct IGMXV2LeverageTradingPositionLib.UintArrayKeyValue[]",
+                "components": [
+                  { "name": "key", "type": "string", "internalType": "string" },
+                  { "name": "value", "type": "uint256[]", "internalType": "uint256[]" }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "intItems",
+            "type": "tuple",
+            "internalType": "struct IGMXV2LeverageTradingPositionLib.IntItems",
+            "components": [
+              {
+                "name": "items",
+                "type": "tuple[]",
+                "internalType": "struct IGMXV2LeverageTradingPositionLib.IntKeyValue[]",
+                "components": [
+                  { "name": "key", "type": "string", "internalType": "string" },
+                  { "name": "value", "type": "int256", "internalType": "int256" }
+                ]
+              },
+              {
+                "name": "arrayItems",
+                "type": "tuple[]",
+                "internalType": "struct IGMXV2LeverageTradingPositionLib.IntArrayKeyValue[]",
+                "components": [
+                  { "name": "key", "type": "string", "internalType": "string" },
+                  { "name": "value", "type": "int256[]", "internalType": "int256[]" }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "boolItems",
+            "type": "tuple",
+            "internalType": "struct IGMXV2LeverageTradingPositionLib.BoolItems",
+            "components": [
+              {
+                "name": "items",
+                "type": "tuple[]",
+                "internalType": "struct IGMXV2LeverageTradingPositionLib.BoolKeyValue[]",
+                "components": [
+                  { "name": "key", "type": "string", "internalType": "string" },
+                  { "name": "value", "type": "bool", "internalType": "bool" }
+                ]
+              },
+              {
+                "name": "arrayItems",
+                "type": "tuple[]",
+                "internalType": "struct IGMXV2LeverageTradingPositionLib.BoolArrayKeyValue[]",
+                "components": [
+                  { "name": "key", "type": "string", "internalType": "string" },
+                  { "name": "value", "type": "bool[]", "internalType": "bool[]" }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "bytes32Items",
+            "type": "tuple",
+            "internalType": "struct IGMXV2LeverageTradingPositionLib.Bytes32Items",
+            "components": [
+              {
+                "name": "items",
+                "type": "tuple[]",
+                "internalType": "struct IGMXV2LeverageTradingPositionLib.Bytes32KeyValue[]",
+                "components": [
+                  { "name": "key", "type": "string", "internalType": "string" },
+                  { "name": "value", "type": "bytes32", "internalType": "bytes32" }
+                ]
+              },
+              {
+                "name": "arrayItems",
+                "type": "tuple[]",
+                "internalType": "struct IGMXV2LeverageTradingPositionLib.Bytes32ArrayKeyValue[]",
+                "components": [
+                  { "name": "key", "type": "string", "internalType": "string" },
+                  { "name": "value", "type": "bytes32[]", "internalType": "bytes32[]" }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "bytesItems",
+            "type": "tuple",
+            "internalType": "struct IGMXV2LeverageTradingPositionLib.BytesItems",
+            "components": [
+              {
+                "name": "items",
+                "type": "tuple[]",
+                "internalType": "struct IGMXV2LeverageTradingPositionLib.BytesKeyValue[]",
+                "components": [
+                  { "name": "key", "type": "string", "internalType": "string" },
+                  { "name": "value", "type": "bytes", "internalType": "bytes" }
+                ]
+              },
+              {
+                "name": "arrayItems",
+                "type": "tuple[]",
+                "internalType": "struct IGMXV2LeverageTradingPositionLib.BytesArrayKeyValue[]",
+                "components": [
+                  { "name": "key", "type": "string", "internalType": "string" },
+                  { "name": "value", "type": "bytes[]", "internalType": "bytes[]" }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "stringItems",
+            "type": "tuple",
+            "internalType": "struct IGMXV2LeverageTradingPositionLib.StringItems",
+            "components": [
+              {
+                "name": "items",
+                "type": "tuple[]",
+                "internalType": "struct IGMXV2LeverageTradingPositionLib.StringKeyValue[]",
+                "components": [
+                  { "name": "key", "type": "string", "internalType": "string" },
+                  { "name": "value", "type": "string", "internalType": "string" }
+                ]
+              },
+              {
+                "name": "arrayItems",
+                "type": "tuple[]",
+                "internalType": "struct IGMXV2LeverageTradingPositionLib.StringArrayKeyValue[]",
+                "components": [
+                  { "name": "key", "type": "string", "internalType": "string" },
+                  { "name": "value", "type": "string[]", "internalType": "string[]" }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "getClaimableCollateralKeyToClaimableCollateralInfo",
+    "inputs": [{ "name": "_key", "type": "bytes32", "internalType": "bytes32" }],
+    "outputs": [
+      {
+        "name": "info_",
+        "type": "tuple",
+        "internalType": "struct IGMXV2LeverageTradingPositionLib.ClaimableCollateralInfo",
+        "components": [
+          { "name": "token", "type": "address", "internalType": "address" },
+          { "name": "market", "type": "address", "internalType": "address" },
+          { "name": "timeKey", "type": "uint256", "internalType": "uint256" }
+        ]
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getClaimableCollateralKeys",
+    "inputs": [],
+    "outputs": [{ "name": "claimableCollateralKeys_", "type": "bytes32[]", "internalType": "bytes32[]" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getDebtAssets",
+    "inputs": [],
+    "outputs": [
+      { "name": "assets_", "type": "address[]", "internalType": "address[]" },
+      { "name": "amounts_", "type": "uint256[]", "internalType": "uint256[]" }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getManagedAssets",
+    "inputs": [],
+    "outputs": [
+      { "name": "assets_", "type": "address[]", "internalType": "address[]" },
+      { "name": "amounts_", "type": "uint256[]", "internalType": "uint256[]" }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getMarketToIsCallbackContractSet",
+    "inputs": [{ "name": "_market", "type": "address", "internalType": "address" }],
+    "outputs": [{ "name": "isCallbackContractSet_", "type": "bool", "internalType": "bool" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getTrackedAssets",
+    "inputs": [],
+    "outputs": [{ "name": "trackedAssets_", "type": "address[]", "internalType": "address[]" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getTrackedMarkets",
+    "inputs": [],
+    "outputs": [{ "name": "trackedMarkets_", "type": "address[]", "internalType": "address[]" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "init",
+    "inputs": [{ "name": "", "type": "bytes", "internalType": "bytes" }],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "receiveCallFromVault",
+    "inputs": [{ "name": "_actionData", "type": "bytes", "internalType": "bytes" }],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "event",
+    "name": "CallbackContractSet",
+    "inputs": [{ "name": "market", "type": "address", "indexed": false, "internalType": "address" }],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "ClaimableCollateralAdded",
+    "inputs": [
+      { "name": "claimableCollateralKey", "type": "bytes32", "indexed": false, "internalType": "bytes32" },
+      { "name": "token", "type": "address", "indexed": false, "internalType": "address" },
+      { "name": "market", "type": "address", "indexed": false, "internalType": "address" },
+      { "name": "timeKey", "type": "uint256", "indexed": false, "internalType": "uint256" }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "ClaimableCollateralRemoved",
+    "inputs": [{ "name": "claimableCollateralKey", "type": "bytes32", "indexed": false, "internalType": "bytes32" }],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "TrackedAssetAdded",
+    "inputs": [{ "name": "asset", "type": "address", "indexed": false, "internalType": "address" }],
+    "anonymous": false
+  },
+  { "type": "event", "name": "TrackedAssetsCleared", "inputs": [], "anonymous": false },
+  {
+    "type": "event",
+    "name": "TrackedMarketAdded",
+    "inputs": [{ "name": "market", "type": "address", "indexed": false, "internalType": "address" }],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "TrackedMarketRemoved",
+    "inputs": [{ "name": "market", "type": "address", "indexed": false, "internalType": "address" }],
+    "anonymous": false
+  },
+  { "type": "error", "name": "InvalidActionId", "inputs": [] },
+  { "type": "error", "name": "InvalidCallbackAccount", "inputs": [] },
+  { "type": "error", "name": "InvalidHandler", "inputs": [] },
+  {
+    "type": "error",
+    "name": "InvalidOrderType",
+    "inputs": [{ "name": "orderType", "type": "uint8", "internalType": "IGMXV2LeverageTradingPositionLib.OrderType" }]
+  }
+]

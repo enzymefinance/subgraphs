@@ -59,6 +59,7 @@ import { useStakeWiseStakingPosition } from '../../entities/StakeWiseStakingPosi
 import { trackedAssetAdded } from '../../entities/TrackedAssetAdded';
 import { trackedAssetRemoved } from '../../entities/TrackedAssetRemoved';
 import { usePendleV2Position } from '../../entities/PendleV2Position';
+import { useGMXV2LeverageTradingPosition } from '../../entities/GMXV2LeverageTradingPosition';
 import { useAlicePosition } from '../../entities/AlicePosition';
 // import { useMorphoBluePosition } from '../../entities/MorphoBluePosition';
 
@@ -390,6 +391,12 @@ export function handleExternalPositionAdded(event: ExternalPositionAdded): void 
     ssp.save();
   }
 
+  if (type.label == 'GMX_V2_LEVERAGE_TRADING') {
+    let pp = useGMXV2LeverageTradingPosition(event.params.externalPosition.toHex());
+    pp.active = true;
+    pp.save();
+  }
+
   // if (type.label == 'MORPHO_BLUE') {
   //   let mbp = useMorphoBluePosition(event.params.externalPosition.toHex());
   //   mbp.active = true;
@@ -488,6 +495,12 @@ export function handleExternalPositionRemoved(event: ExternalPositionRemoved): v
     let ssp = useStakeWiseStakingPosition(event.params.externalPosition.toHex());
     ssp.active = false;
     ssp.save();
+  }
+
+  if (type.label == 'GMX_V2_LEVERAGE_TRADING') {
+    let pp = useGMXV2LeverageTradingPosition(event.params.externalPosition.toHex());
+    pp.active = false;
+    pp.save();
   }
 
   if (type.label == 'ALICE') {

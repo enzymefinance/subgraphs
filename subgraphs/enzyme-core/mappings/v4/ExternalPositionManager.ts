@@ -7,7 +7,7 @@ import {
   tuplePrefixBytes,
   ZERO_ADDRESS,
 } from '@enzymefinance/subgraph-utils';
-import { Address, Bytes, DataSourceContext, ethereum, crypto, BigDecimal } from '@graphprotocol/graph-ts';
+import { Address, Bytes, DataSourceContext, ethereum, crypto, BigDecimal, BigInt } from '@graphprotocol/graph-ts';
 import { createAaveDebtPosition, createAaveDebtPositionChange } from '../../entities/AaveDebtPosition';
 import {
   createMapleLiquidityAssetAmountV1,
@@ -47,6 +47,7 @@ import { AliceOrder, Asset, AssetAmount } from '../../generated/schema';
 import {
   AlicePositionLib4DataSource,
   ArbitraryLoanPositionLib4DataSource,
+  GMXV2LeverageTradingPositionLib4DataSource,
   LidoWithdrawalsPositionLib4DataSource,
   MapleLiquidityPositionLib4DataSource,
   // MorphoBluePositionLib4DataSource,
@@ -68,6 +69,7 @@ import {
   AaveV3DebtPositionActionId,
   StakeWiseV3StakingPositionActionId,
   PendleV2ActionId,
+  GMXV2LeverageTradingActionId,
   AliceActionId,
   // MorphoBlueActionId,
 } from '../../utils/actionId';
@@ -139,6 +141,12 @@ import {
   usePendleV2Position,
 } from '../../entities/PendleV2Position';
 import { tokenBalance } from '../../utils/tokenCalls';
+import { ZERO_BD } from '@enzymefinance/subgraph-utils';
+import {
+  createGMXV2LeverageTradingPosition,
+  createGMXV2LeverageTradingPositionChange,
+  gmxUsdDecimals,
+} from '../../entities/GMXV2LeverageTradingPosition';
 import { createAlicePosition, createAlicePositionChange, useAliceOrder } from '../../entities/AlicePosition';
 // import {
 //   createMorphoBluePosition,
@@ -223,6 +231,13 @@ export function handleExternalPositionDeployedForFund(event: ExternalPositionDep
   if (type.label == 'PENDLE_V2') {
     createPendleV2Position(event.params.externalPosition, event.params.vaultProxy, type);
 
+    return;
+  }
+
+  if (type.label == 'GMX_V2_LEVERAGE_TRADING') {
+    createGMXV2LeverageTradingPosition(event.params.externalPosition, event.params.vaultProxy, type);
+
+    GMXV2LeverageTradingPositionLib4DataSource.create(event.params.externalPosition);
     return;
   }
 
@@ -2173,6 +2188,246 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     return;
   }
 
+  if (type.label == 'GMX_V2_LEVERAGE_TRADING') {
+    if (actionId == GMXV2LeverageTradingActionId.CreateOrder) {
+      let decoded = ethereum.decode(
+        '(tuple(address,address,uint256,uint256,uint256,uint256,uint256,uint256,uint8,uint8,bool,address,bool))',
+        event.params.actionArgs,
+      );
+
+      if (decoded == null) {
+        return;
+      }
+
+      let wethAsset = ensureAsset(wethTokenAddress);
+
+      let tuple = decoded.toTuple();
+      let innerTuple = tuple[0].toTuple();
+
+      let orderType = innerTuple[8].toBigInt();
+      let isLong = innerTuple[10].toBoolean();
+      let exchangeRouter = innerTuple[11].toAddress();
+
+      let market = innerTuple[0].toAddress();
+      let initialCollateralToken = ensureAsset(innerTuple[1].toAddress());
+
+      let sizeDeltaUsd = toBigDecimal(innerTuple[2].toBigInt(), gmxUsdDecimals);
+      let initialCollateralDeltaAmount = toBigDecimal(innerTuple[3].toBigInt(), initialCollateralToken.decimals);
+      let triggerPrice = innerTuple[4].toBigInt();
+      let acceptablePrice = innerTuple[5].toBigInt();
+      let executionFee = toBigDecimal(innerTuple[6].toBigInt(), wethAsset.decimals);
+
+      let isCollateralTokenWeth = Address.fromString(initialCollateralToken.id) == wethTokenAddress;
+
+      let assetAmount = createAssetAmount(
+        initialCollateralToken,
+        isCollateralTokenWeth ? initialCollateralDeltaAmount.minus(executionFee) : initialCollateralDeltaAmount,
+        denominationAsset,
+        'initial-collateral-token',
+        event,
+      );
+
+      let executionFeeAssetAmount = createAssetAmount(
+        wethAsset,
+        executionFee,
+        denominationAsset,
+        'execution-fee',
+        event,
+      );
+
+      createGMXV2LeverageTradingPositionChange(
+        event.params.externalPosition,
+        'CreateOrder',
+        vault,
+        isCollateralTokenWeth ? [wethAsset] : [initialCollateralToken, wethAsset],
+        assetAmount,
+        executionFeeAssetAmount,
+        orderType,
+        sizeDeltaUsd,
+        triggerPrice,
+        acceptablePrice,
+        isLong ? BigInt.fromI32(1) : BigInt.fromI32(0),
+        exchangeRouter,
+        [market],
+        null,
+        event,
+      );
+    }
+
+    if (actionId == GMXV2LeverageTradingActionId.UpdateOrder) {
+      let decoded = ethereum.decode(
+        '(tuple(bytes32,uint256,uint256,uint256,uint256,bool,uint256,address))',
+        event.params.actionArgs,
+      );
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+      let innerTuple = tuple[0].toTuple();
+
+      let orderKey = innerTuple[0].toBytes();
+      let sizeDeltaUsd = toBigDecimal(innerTuple[1].toBigInt(), gmxUsdDecimals);
+      let acceptablePrice = innerTuple[2].toBigInt();
+      let triggerPrice = innerTuple[3].toBigInt();
+      let wethAsset = ensureAsset(wethTokenAddress);
+      let executionFeeIncrease = toBigDecimal(innerTuple[6].toBigInt(), wethAsset.decimals);
+      let exchangeRouter = innerTuple[7].toAddress();
+
+      let executionFeeAssetAmount = createAssetAmount(
+        wethAsset,
+        executionFeeIncrease,
+        denominationAsset,
+        'execution-fee',
+        event,
+      );
+
+      let isExecutionFeeZero = executionFeeIncrease.equals(ZERO_BD);
+
+      createGMXV2LeverageTradingPositionChange(
+        event.params.externalPosition,
+        'UpdateOrder',
+        vault,
+        isExecutionFeeZero ? null : [wethAsset],
+        null,
+        isExecutionFeeZero ? null : executionFeeAssetAmount,
+        null,
+        sizeDeltaUsd,
+        triggerPrice,
+        acceptablePrice,
+        null,
+        exchangeRouter,
+        null,
+        orderKey,
+        event,
+      );
+    }
+
+    if (actionId == GMXV2LeverageTradingActionId.CancelOrder) {
+      let decoded = ethereum.decode('(tuple(bytes32,address))', event.params.actionArgs);
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+      let innerTuple = tuple[0].toTuple();
+
+      let orderKey = innerTuple[0].toBytes();
+      let exchangeRouter = innerTuple[1].toAddress();
+
+      createGMXV2LeverageTradingPositionChange(
+        event.params.externalPosition,
+        'CancelOrder',
+        vault,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        exchangeRouter,
+        null,
+        orderKey,
+        event,
+      );
+    }
+
+    if (actionId == GMXV2LeverageTradingActionId.ClaimFundingFees) {
+      let decoded = ethereum.decode('(tuple(address[],address[],address))', tuplePrefixBytes(event.params.actionArgs));
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+      let innerTuple = tuple[0].toTuple();
+
+      let markets = innerTuple[0].toAddressArray();
+      let assets = innerTuple[1].toAddressArray();
+      let exchangeRouter = innerTuple[2].toAddress();
+
+      createGMXV2LeverageTradingPositionChange(
+        event.params.externalPosition,
+        'ClaimFundingFees',
+        vault,
+        assets.map<Asset>((asset) => ensureAsset(asset)),
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        exchangeRouter,
+        markets,
+        null,
+        event,
+      );
+    }
+
+    // if (actionId == GMXV2LeverageTradingActionId.ClaimCollateral) {
+    //   let decoded = ethereum.decode(
+    //     '(tuple(address[],address[],uint256[],address))',
+    //     tuplePrefixBytes(event.params.actionArgs),
+    //   );
+
+    //   if (decoded == null) {
+    //     return;
+    //   }
+
+    //   let tuple = decoded.toTuple();
+    //   let innerTuple = tuple[0].toTuple();
+
+    //   let markets = innerTuple[0].toAddressArray();
+    //   let assets = innerTuple[1].toAddressArray();
+    //   let exchangeRouter = innerTuple[3].toAddress();
+
+    //   createGMXV2LeverageTradingPositionChange(
+    //     event.params.externalPosition,
+    //     'ClaimCollateral',
+    //     vault,
+    //     assets.map<Asset>((asset) => ensureAsset(asset)),
+    //     null,
+    //     null,
+    //     null,
+    //     null,
+    //     null,
+    //     null,
+    //     null,
+    //     exchangeRouter,
+    //     markets,
+    //     null,
+    //     event,
+    //   );
+    // }
+
+    if (actionId == GMXV2LeverageTradingActionId.Sweep) {
+      createGMXV2LeverageTradingPositionChange(
+        event.params.externalPosition,
+        'Sweep',
+        vault,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        event,
+      );
+    }
+
+    return;
+  }
+
   // if (type.label == 'MORPHO_BLUE') {
   //   if (actionId == MorphoBlueActionId.Lend) {
   //     let decoded = ethereum.decode('(bytes32,uint256)', event.params.actionArgs);
@@ -2346,7 +2601,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
   if (type.label == 'ALICE') {
     if (actionId == AliceActionId.PlaceOrder) {
-      let decoded = ethereum.decode('(tuple(uint16,bool,uint256,uint256)', event.params.actionArgs);
+      let decoded = ethereum.decode('(tuple(uint16,bool,uint256,uint256))', event.params.actionArgs);
 
       if (decoded == null) {
         return;
