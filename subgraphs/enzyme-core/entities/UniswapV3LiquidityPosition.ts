@@ -15,7 +15,7 @@ import { useVault } from './Vault';
 export function useUniswapV3LiquidityPosition(id: string): UniswapV3LiquidityPosition {
   let ulp = UniswapV3LiquidityPosition.load(id);
   if (ulp == null) {
-    logCritical('Failed to load fund {}.', [id]);
+    logCritical('Failed to load position {}.', [id]);
   }
 
   return ulp as UniswapV3LiquidityPosition;

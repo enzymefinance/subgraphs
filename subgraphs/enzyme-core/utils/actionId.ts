@@ -108,6 +108,15 @@ export enum PendleV2ActionId {
   ClaimRewards = 4,
 }
 
+export enum GMXV2LeverageTradingActionId {
+  CreateOrder = 0,
+  UpdateOrder = 1,
+  CancelOrder = 2,
+  ClaimFundingFees = 3,
+  ClaimCollateral = 4,
+  Sweep = 5,
+}
+
 // export enum MorphoBlueActionId {
 //   Lend = 0,
 //   Redeem = 1,

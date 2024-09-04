@@ -15,7 +15,7 @@ import { ExternalSdk } from '../generated/contracts/ExternalSdk';
 export function usePendleV2Position(id: string): PendleV2Position {
   let position = PendleV2Position.load(id);
   if (position == null) {
-    logCritical('Failed to load fund {}.', [id]);
+    logCritical('Failed to load position {}.', [id]);
   }
 
   return position as PendleV2Position;
