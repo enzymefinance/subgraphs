@@ -25,6 +25,7 @@ import {
 } from '../../generated/contracts/PolicyManager4Events';
 import { PolicyDisabledForVault, PolicyEnabledForVault } from '../../generated/schema';
 import { ensureAllowedRedeemersForSpecificAssetsPolicy } from '../../entities/AllowedRedeemersForSpecificAssetsPolicy';
+import { ensureDisallowedAdapterIncomingAssetsPolicy } from '../../entities/DisallowedAdapterIncomingAssetsPolicy';
 
 export function handlePolicyEnabledForFund(event: PolicyEnabledForFund): void {
   let comptrollerAddress = event.params.comptrollerProxy;
@@ -116,6 +117,14 @@ export function handlePolicyEnabledForFund(event: PolicyEnabledForFund): void {
 
   if (event.params.policy.equals(release4Addresses.cumulativeSlippageTolerancePolicyAddress)) {
     let policy = ensureCumulativeSlippageTolerancePolicy(comptrollerAddress, policyAddress, event);
+    policy.enabled = true;
+    policy.settings = event.params.settingsData.toHex();
+    policy.save();
+    return;
+  }
+
+  if (event.params.policy.equals(release4Addresses.disallowedAdapterIncomingAssetsPolicyAddress)) {
+    let policy = ensureDisallowedAdapterIncomingAssetsPolicy(comptrollerAddress, policyAddress, event);
     policy.enabled = true;
     policy.settings = event.params.settingsData.toHex();
     policy.save();
@@ -249,6 +258,13 @@ export function handlePolicyDisabledOnHookForFund(event: PolicyDisabledOnHookFor
 
   if (event.params.policy.equals(release4Addresses.cumulativeSlippageTolerancePolicyAddress)) {
     let policy = ensureCumulativeSlippageTolerancePolicy(comptrollerAddress, policyAddress, event);
+    policy.enabled = false;
+    policy.save();
+    return;
+  }
+
+  if (event.params.policy.equals(release4Addresses.disallowedAdapterIncomingAssetsPolicyAddress)) {
+    let policy = ensureDisallowedAdapterIncomingAssetsPolicy(comptrollerAddress, policyAddress, event);
     policy.enabled = false;
     policy.save();
     return;

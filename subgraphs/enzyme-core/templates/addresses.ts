@@ -71,7 +71,7 @@ export class Release4Addresses {
   allowedDepositRecipientsPolicyAddress: Address;
   allowedExternalPositionTypesPerManagerPolicyAddress: Address;
   allowedExternalPositionTypesPolicyAddress: Address;
-  allowedRedeemersForSpecificAssetsPolicyAddress:Address;
+  allowedRedeemersForSpecificAssetsPolicyAddress: Address;
   allowedSharesTransferRecipientsPolicyAddress: Address;
   auraBalancerV2LpStakingAdapterAddress: Address;
   balancerV2LiquidityAdapterAddress: Address;
@@ -81,6 +81,7 @@ export class Release4Addresses {
   convexCurveLpStakingWrapperFactoryAddress: Address;
   cumulativeSlippageTolerancePolicyAddress: Address;
   curveLiquidityAdapterAddress: Address;
+  disallowedAdapterIncomingAssetsPolicyAddress: Address;
   entranceRateBurnFeeAddress: Address;
   entranceRateDirectFeeAddress: Address;
   exitRateBurnFeeAddress: Address;
@@ -177,20 +178,27 @@ export let release4Addresses: Release4Addresses = {
   allowedExternalPositionTypesPolicyAddress: Address.fromString(
     '{{releases.v4.allowedExternalPositionTypesPolicyAddress}}',
   ),
-  allowedRedeemersForSpecificAssetsPolicyAddress: Address.fromString('{{releases.v4.allowedRedeemersForSpecificAssetsPolicyAddress}}'),
+  allowedRedeemersForSpecificAssetsPolicyAddress: Address.fromString(
+    '{{releases.v4.allowedRedeemersForSpecificAssetsPolicyAddress}}',
+  ),
   allowedSharesTransferRecipientsPolicyAddress: Address.fromString(
     '{{releases.v4.allowedSharesTransferRecipientsPolicyAddress}}',
   ),
-  auraBalancerV2LpStakingAdapterAddress:  Address.fromString('{{releases.v4.auraBalancerV2LpStakingAdapterAddress}}'),
+  auraBalancerV2LpStakingAdapterAddress: Address.fromString('{{releases.v4.auraBalancerV2LpStakingAdapterAddress}}'),
   balancerV2LiquidityAdapterAddress: Address.fromString('{{releases.v4.balancerV2LiquidityAdapterAddress}}'),
   compoundV3AdapterAddress: Address.fromString('{{releases.v4.compoundV3AdapterAddress}}'),
   comptrollerLibAddress: Address.fromString('{{releases.v4.comptrollerLibAddress}}'),
   convexCurveLpStakingAdapterAddress: Address.fromString('{{releases.v4.convexCurveLpStakingAdapterAddress}}'),
-  convexCurveLpStakingWrapperFactoryAddress: Address.fromString('{{releases.v4.convexCurveLpStakingWrapperFactoryAddress}}'),
+  convexCurveLpStakingWrapperFactoryAddress: Address.fromString(
+    '{{releases.v4.convexCurveLpStakingWrapperFactoryAddress}}',
+  ),
   cumulativeSlippageTolerancePolicyAddress: Address.fromString(
     '{{releases.v4.cumulativeSlippageTolerancePolicyAddress}}',
   ),
   curveLiquidityAdapterAddress: Address.fromString('{{releases.v4.curveLiquidityAdapterAddress}}'),
+  disallowedAdapterIncomingAssetsPolicyAddress: Address.fromString(
+    '{{releases.v4.disallowedAdapterIncomingAssetsPolicyAddress}}',
+  ),
   entranceRateBurnFeeAddress: Address.fromString('{{releases.v4.entranceRateBurnFeeAddress}}'),
   entranceRateDirectFeeAddress: Address.fromString('{{releases.v4.entranceRateDirectFeeAddress}}'),
   exitRateBurnFeeAddress: Address.fromString('{{releases.v4.exitRateBurnFeeAddress}}'),

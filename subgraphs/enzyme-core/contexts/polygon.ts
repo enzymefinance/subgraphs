@@ -120,6 +120,7 @@ export const polygon: Context<Variables> = {
         convexCurveLpStakingWrapperFactoryAddress: polygonV4Deployment.contracts.ConvexCurveLpStakingWrapperFactory,
         cumulativeSlippageTolerancePolicyAddress: polygonV4Deployment.contracts.CumulativeSlippageTolerancePolicy,
         curveLiquidityAdapterAddress: polygonV4Deployment.contracts.CurveLiquidityAdapter,
+        disallowedAdapterIncomingAssetsPolicyAddress: '0x45be6669cc53fb2f6ae7f5e302482e30113888fb',
         entranceRateBurnFeeAddress: polygonV4Deployment.contracts.EntranceRateBurnFee,
         entranceRateDirectFeeAddress: polygonV4Deployment.contracts.EntranceRateDirectFee,
         exitRateBurnFeeAddress: polygonV4Deployment.contracts.ExitRateBurnFee,

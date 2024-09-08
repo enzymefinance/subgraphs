@@ -121,6 +121,7 @@ export const ethereum: Context<Variables> = {
         convexCurveLpStakingWrapperFactoryAddress: suluDeployment.contracts.ConvexCurveLpStakingWrapperFactory,
         cumulativeSlippageTolerancePolicyAddress: suluDeployment.contracts.CumulativeSlippageTolerancePolicy,
         curveLiquidityAdapterAddress: suluDeployment.contracts.CurveLiquidityAdapter,
+        disallowedAdapterIncomingAssetsPolicyAddress: '0x5e216f370e3555feb9a0575a57ada732a9e50386',
         entranceRateBurnFeeAddress: suluDeployment.contracts.EntranceRateBurnFee,
         entranceRateDirectFeeAddress: suluDeployment.contracts.EntranceRateDirectFee,
         exitRateBurnFeeAddress: suluDeployment.contracts.ExitRateBurnFee,

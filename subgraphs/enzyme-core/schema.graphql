@@ -832,6 +832,17 @@ type DepositorWhitelistPolicy implements Policy @entity {
   updatedAt: Int!
 }
 
+type DisallowedAdapterIncomingAssetsPolicy implements Policy @entity {
+  id: ID!
+  policy: Bytes!
+  policyType: PolicyType!
+  comptroller: Comptroller!
+  createdAt: Int!
+  enabled: Boolean!
+  settings: String!
+  addressLists: [AddressList!]!
+}
+
 type GuaranteedRedemptionPolicy implements Policy @entity {
   id: ID!
   policy: Bytes!
@@ -941,6 +952,7 @@ enum PolicyType {
   BuySharesCallerWhitelist
   CumulativeSlippageTolerance
   DepositorWhitelist
+  DisallowedAdapterIncomingAssets
   GuaranteedRedemption
   MaxConcentration
   MinAssetBalancesPostRedemption
