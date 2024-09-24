@@ -1334,66 +1334,67 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     }
 
     if (actionId == TheGraphDelegationPositionActionId.Withdraw) {
-      let decoded = ethereum.decode('(address,address)', event.params.actionArgs);
+      return;
+      // let decoded = ethereum.decode('(address,address)', event.params.actionArgs);
 
-      if (decoded == null) {
-        return;
-      }
+      // if (decoded == null) {
+      //   return;
+      // }
 
-      let tuple = decoded.toTuple();
+      // let tuple = decoded.toTuple();
 
-      let indexer = tuple[0].toAddress();
-      let newIndexer = tuple[1].toAddress();
+      // let indexer = tuple[0].toAddress();
+      // let newIndexer = tuple[1].toAddress();
 
-      let isRedelegating = newIndexer.notEqual(ZERO_ADDRESS);
+      // let isRedelegating = newIndexer.notEqual(ZERO_ADDRESS);
 
-      let delegationToIndexerId = getTheGraphDelegationToIndexerId(event.params.externalPosition, indexer);
+      // let delegationToIndexerId = getTheGraphDelegationToIndexerId(event.params.externalPosition, indexer);
 
-      let beforeWithdrawTokensLocked = useTheGraphDelegationToIndexer(delegationToIndexerId).tokensLocked;
+      // let beforeWithdrawTokensLocked = useTheGraphDelegationToIndexer(delegationToIndexerId).tokensLocked;
 
-      let afterWithdrawGraphDelegationToIndexer = trackTheGraphDelegationToIndexer(
-        event.params.externalPosition,
-        indexer,
-        event,
-      );
+      // let afterWithdrawGraphDelegationToIndexer = trackTheGraphDelegationToIndexer(
+      //   event.params.externalPosition,
+      //   indexer,
+      //   event,
+      // );
 
-      let afterWithdrawTokensLocked = BigDecimal.fromString('0');
-      // if null then the graph delegation was deleted by remove indexer event
-      if (afterWithdrawGraphDelegationToIndexer != null) {
-        afterWithdrawTokensLocked = afterWithdrawGraphDelegationToIndexer.tokensLocked;
-      }
+      // let afterWithdrawTokensLocked = BigDecimal.fromString('0');
+      // // if null then the graph delegation was deleted by remove indexer event
+      // if (afterWithdrawGraphDelegationToIndexer != null) {
+      //   afterWithdrawTokensLocked = afterWithdrawGraphDelegationToIndexer.tokensLocked;
+      // }
 
-      let tokensLockedDiffAmount = beforeWithdrawTokensLocked.minus(afterWithdrawTokensLocked);
-      let grtAsset = ensureAsset(grtAddress);
-      let feeAssetAmount: AssetAmount | null = null;
-      let assetAmount: AssetAmount;
+      // let tokensLockedDiffAmount = beforeWithdrawTokensLocked.minus(afterWithdrawTokensLocked);
+      // let grtAsset = ensureAsset(grtAddress);
+      // let feeAssetAmount: AssetAmount | null = null;
+      // let assetAmount: AssetAmount;
 
-      if (isRedelegating) {
-        let feeAmount = tokensLockedDiffAmount.times(getDelegationTaxPercentage());
+      // if (isRedelegating) {
+      //   let feeAmount = tokensLockedDiffAmount.times(getDelegationTaxPercentage());
 
-        let grtAmountWithoutFee = tokensLockedDiffAmount.minus(feeAmount);
-        assetAmount = createAssetAmount(grtAsset, grtAmountWithoutFee, denominationAsset, 'grt-asset-amount', event);
+      //   let grtAmountWithoutFee = tokensLockedDiffAmount.minus(feeAmount);
+      //   assetAmount = createAssetAmount(grtAsset, grtAmountWithoutFee, denominationAsset, 'grt-asset-amount', event);
 
-        feeAssetAmount = createAssetAmount(grtAsset, feeAmount, denominationAsset, 'grt-fee-asset-amount', event);
-      } else {
-        assetAmount = createAssetAmount(grtAsset, tokensLockedDiffAmount, denominationAsset, 'grt-asset-amount', event);
-      }
+      //   feeAssetAmount = createAssetAmount(grtAsset, feeAmount, denominationAsset, 'grt-fee-asset-amount', event);
+      // } else {
+      //   assetAmount = createAssetAmount(grtAsset, tokensLockedDiffAmount, denominationAsset, 'grt-asset-amount', event);
+      // }
 
-      createTheGraphDelegationPositionChange(
-        event.params.externalPosition,
-        assetAmount,
-        indexer,
-        feeAssetAmount,
-        isRedelegating ? newIndexer : null,
-        null,
-        'Withdraw',
-        vault,
-        event,
-      );
+      // createTheGraphDelegationPositionChange(
+      //   event.params.externalPosition,
+      //   assetAmount,
+      //   indexer,
+      //   feeAssetAmount,
+      //   isRedelegating ? newIndexer : null,
+      //   null,
+      //   'Withdraw',
+      //   vault,
+      //   event,
+      // );
 
-      if (isRedelegating) {
-        trackTheGraphDelegationToIndexer(event.params.externalPosition, newIndexer, event);
-      }
+      // if (isRedelegating) {
+      //   trackTheGraphDelegationToIndexer(event.params.externalPosition, newIndexer, event);
+      // }
     }
 
     return;
