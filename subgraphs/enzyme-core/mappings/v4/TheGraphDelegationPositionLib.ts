@@ -9,6 +9,6 @@ export function handleIndexerAdded(event: IndexerAdded): void {}
 export function handleIndexerRemoved(event: IndexerRemoved): void {
   let id = getTheGraphDelegationToIndexerId(event.address, event.params.indexer);
   let theGraphDelegationToIndexer = useTheGraphDelegationToIndexer(id);
-  theGraphDelegationToIndexer.externalPosition = null;
+  theGraphDelegationToIndexer.active = false;
   theGraphDelegationToIndexer.save();
 }

@@ -36,6 +36,7 @@ export function ensureTheGraphDelegationToIndexer(
   delegation.indexer = indexer;
   delegation.tokensLocked = ZERO_BD;
   delegation.tokensLockedUntil = 0;
+  delegation.active = true;
   delegation.save();
 
   return delegation;
@@ -51,7 +52,7 @@ export function trackTheGraphDelegationToIndexer(
   let theGraphStakingContract = ExternalSdk.bind(theGraphStakingProxyAddress);
   let delegationCall = theGraphStakingContract.try_getDelegation(
     Address.fromBytes(delegation.indexer),
-    Address.fromString(delegation.externalPosition as string),
+    Address.fromString(delegation.externalPosition),
   );
 
   if (delegationCall.reverted) {

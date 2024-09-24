@@ -1415,11 +1415,12 @@ type ConvexVotingPositionChange implements Activity & VaultActivity & ExternalPo
 
 type TheGraphDelegationToIndexer @entity {
   id: ID!
-  externalPosition: TheGraphDelegationPosition
+  externalPosition: TheGraphDelegationPosition!
   indexer: Bytes!
   shares: BigInt!
   tokensLocked: BigDecimal!
   tokensLockedUntil: Int!
+  active: Boolean!
 }
 
 type TheGraphDelegationPosition implements ExternalPosition @entity {
