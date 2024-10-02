@@ -503,6 +503,31 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       );
     }
 
+    if (actionId == AaveV3DebtPositionActionId.ClaimRewards) {
+      let decoded = ethereum.decode('(address[],uint256,address)', tuplePrefixBytes(event.params.actionArgs));
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+      let rewardAmount = tuple[1].toBigInt();
+      let rewardToken = tuple[2].toAddress();
+
+      let rewardAsset = ensureAsset(rewardToken);
+      let amount = toBigDecimal(rewardAmount, rewardAsset.decimals);
+      let rewardAssetAmount = createAssetAmount(rewardAsset, amount, denominationAsset, 'av3dp', event);
+
+      createAaveV3DebtPositionChange(
+        event.params.externalPosition,
+        [rewardAssetAmount],
+        null,
+        'ClaimRewards',
+        vault,
+        event,
+      );
+    }
+
     return;
   }
 

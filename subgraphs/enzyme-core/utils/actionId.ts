@@ -13,6 +13,7 @@ export enum AaveV3DebtPositionActionId {
   RepayBorrow = 3,
   SetEMode = 4,
   SetUseReserveAsCollateral = 5,
+  ClaimRewards = 6,
 }
 
 export enum CompoundDebtPositionActionId {
