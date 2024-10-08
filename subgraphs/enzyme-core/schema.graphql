@@ -2284,6 +2284,7 @@ type SingleAssetRedemptionQueue @entity {
 
 type SingleAssetRedemptionQueueRequest @entity {
   id: ID!
+  requestId: BigInt!
   createdAt: Int!
   account: Account!
   vault: Vault!

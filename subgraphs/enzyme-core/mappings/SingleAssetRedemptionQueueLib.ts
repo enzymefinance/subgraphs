@@ -66,7 +66,7 @@ export function handleRedeemed(event: Redeemed): void {
   let amount = toBigDecimal(event.params.redemptionAssetAmount, asset.decimals);
   let assetAmount = createAssetAmount(asset, amount, denominationAsset, 'single-asset-redemption', event);
 
-  let request = ensureSingleAssetRedemptionQueueRequest(event.params.id, event);
+  let request = ensureSingleAssetRedemptionQueueRequest(queue, event.params.id, event);
   request.redeemed = true;
   request.redeemedAt = event.block.timestamp.toI32();
   request.redemptionAssetAmount = assetAmount.id;
@@ -76,7 +76,7 @@ export function handleRedeemed(event: Redeemed): void {
 export function handleRedemptionRequestAdded(event: RedemptionRequestAdded): void {
   let queue = ensureSingleAssetRedemptionQueue(event.address, event);
 
-  let request = ensureSingleAssetRedemptionQueueRequest(event.params.id, event);
+  let request = ensureSingleAssetRedemptionQueueRequest(queue, event.params.id, event);
   request.createdAt = event.block.timestamp.toI32();
   request.sharesAmount = toBigDecimal(event.params.sharesAmount);
   request.account = ensureAccount(event.params.user, event).id;
@@ -86,14 +86,18 @@ export function handleRedemptionRequestAdded(event: RedemptionRequestAdded): voi
 }
 
 export function handleRequestBypassed(event: RequestBypassed): void {
-  let request = ensureSingleAssetRedemptionQueueRequest(event.params.id, event);
+  let queue = ensureSingleAssetRedemptionQueue(event.address, event);
+
+  let request = ensureSingleAssetRedemptionQueueRequest(queue, event.params.id, event);
   request.bypassed = true;
   request.bypassedAt = event.block.timestamp.toI32();
   request.save();
 }
 
 export function handleRequestWithdrawn(event: RequestWithdrawn): void {
-  let request = ensureSingleAssetRedemptionQueueRequest(event.params.id, event);
+  let queue = ensureSingleAssetRedemptionQueue(event.address, event);
+
+  let request = ensureSingleAssetRedemptionQueueRequest(queue, event.params.id, event);
   request.withdrawn = true;
   request.withdrawnAt = event.block.timestamp.toI32();
   request.save();

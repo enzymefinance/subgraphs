@@ -22,17 +22,25 @@ export function ensureSingleAssetRedemptionQueue(address: Address, event: ethere
   return queue;
 }
 
+function singleAssetRedemptionQueueId(queue: SingleAssetRedemptionQueue, requestId: BigInt): string {
+  return queue.id + '/' + requestId.toString();
+}
+
 export function ensureSingleAssetRedemptionQueueRequest(
-  id: BigInt,
+  queue: SingleAssetRedemptionQueue,
+  requestId: BigInt,
   event: ethereum.Event,
 ): SingleAssetRedemptionQueueRequest {
-  let request = SingleAssetRedemptionQueueRequest.load(id.toString());
+  let id = singleAssetRedemptionQueueId(queue, requestId);
+
+  let request = SingleAssetRedemptionQueueRequest.load(id);
 
   if (request != null) {
     return request;
   }
 
-  request = new SingleAssetRedemptionQueueRequest(id.toString());
+  request = new SingleAssetRedemptionQueueRequest(id);
+  request.requestId = requestId;
   request.createdAt = event.block.timestamp.toI32();
   request.sharesAmount = ZERO_BD;
   request.vault = ZERO_ADDRESS.toHex();
