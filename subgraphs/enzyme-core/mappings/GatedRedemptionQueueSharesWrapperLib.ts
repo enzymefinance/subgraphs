@@ -247,13 +247,13 @@ export function handleTransfer(event: Transfer): void {
   }
 
   if (event.params.from.notEqual(ZERO_ADDRESS)) {
-    let senderBalance = ensureGatedRedemptionQueueSharesWrapperDepositorBalance(wrapper, sender);
+    let senderBalance = ensureGatedRedemptionQueueSharesWrapperDepositorBalance(wrapper, sender, event);
     senderBalance.shares = senderBalance.shares.minus(sharesAmount);
     senderBalance.save();
   }
 
   if (event.params.to.notEqual(ZERO_ADDRESS)) {
-    let recipientBalance = ensureGatedRedemptionQueueSharesWrapperDepositorBalance(wrapper, recipient);
+    let recipientBalance = ensureGatedRedemptionQueueSharesWrapperDepositorBalance(wrapper, recipient, event);
     recipientBalance.shares = recipientBalance.shares.plus(sharesAmount);
     recipientBalance.save();
   }
