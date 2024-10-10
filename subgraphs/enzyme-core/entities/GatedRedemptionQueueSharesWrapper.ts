@@ -1,4 +1,4 @@
-import { Address } from '@graphprotocol/graph-ts';
+import { Address, ethereum } from '@graphprotocol/graph-ts';
 import {
   Account,
   Asset,
@@ -215,6 +215,7 @@ export function gatedRedemptionQueueSharesWrapperDepositorBalanceId(
 export function ensureGatedRedemptionQueueSharesWrapperDepositorBalance(
   wrapper: GatedRedemptionQueueSharesWrapper,
   account: Account,
+  event: ethereum.Event,
 ): GatedRedemptionQueueSharesWrapperDepositorBalance {
   let id = gatedRedemptionQueueSharesWrapperDepositorBalanceId(wrapper, account);
   let balance = GatedRedemptionQueueSharesWrapperDepositorBalance.load(id);
@@ -227,6 +228,7 @@ export function ensureGatedRedemptionQueueSharesWrapperDepositorBalance(
   balance.wrapper = wrapper.id;
   balance.account = account.id;
   balance.shares = ZERO_BD;
+  balance.since = event.block.timestamp.toI32();
   balance.save();
 
   return balance;

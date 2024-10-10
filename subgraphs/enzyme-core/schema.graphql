@@ -2256,6 +2256,7 @@ type GatedRedemptionQueueSharesWrapperDepositorBalance @entity {
   wrapper: GatedRedemptionQueueSharesWrapper!
   account: Account!
   shares: BigDecimal!
+  since: Int!
 
   sharesChanges: [GatedRedemptionQueueSharesWrapperSharesChange!]! @derivedFrom(field: "depositorBalance")
 }
