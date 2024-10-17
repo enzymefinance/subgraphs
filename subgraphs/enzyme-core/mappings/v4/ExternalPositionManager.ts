@@ -1781,7 +1781,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     }
 
     if (actionId == KilnStakingPositionActionId.Unstake) {
-      let decoded = ethereum.decode('(address,bytes)', event.params.actionArgs);
+      let decoded = ethereum.decode('(address,bytes)', tuplePrefixBytes(event.params.actionArgs));
 
       if (decoded == null) {
         return;
