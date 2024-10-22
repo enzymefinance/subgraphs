@@ -83,3 +83,10 @@ All subgraphs are deployed on the Graph network:
 - [enzyme-vault-lineage-polygon](https://thegraph.com/explorer/subgraphs/hQMwVerKMpt8ChLU33jhZ4GLmcP8q2fBhJzw4JRFq4q)
 - [enzyme-vault-shares-polygon](https://thegraph.com/explorer/subgraphs/7Tahv9dmeKKcF2SUeHU3ZN4X52y8KGwPo5UaFidJb1hr)
 
+### ARbitrum
+
+- [enzyme-asset-universe-arbitrum](https://thegraph.com/explorer/subgraphs/J2DQQxBCL5qxzwickTR2YKxVH5Bnr3aUwYdVEYbaYbrJ)
+- [enzyme-core-arbitrum](https://thegraph.com/explorer/subgraphs/8UJ5Bkf2eazZhXsAshhzQ2Keibcb8NFHBvXis9pb2C2Y)
+- [enzyme-vault-balances-arbitrum](https://thegraph.com/explorer/subgraphs/F6uEWkrjChyqzfA3wdwRTKCBdzQYm9LPCFbaVj3tvudN)
+- [enzyme-vault-lineage-arbitrum](https://thegraph.com/explorer/subgraphs/ErvkSrie41cprdwYAnLz7PAN44ZjJoqrLm14SyPvhbHa)
+- [enzyme-vault-shares-arbitrum](https://thegraph.com/explorer/subgraphs/8pUZ51EFRYiMMdL5JLdjzYRjG5yqA2zv1KiMRHdrz9EH)
