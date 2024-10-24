@@ -2,6 +2,13 @@ import { logCritical } from '@enzymefinance/subgraph-utils';
 import { Address, BigInt, BigDecimal } from '@graphprotocol/graph-ts';
 import { ArbitraryLoanTotalNominalDeltaOracleModule } from '../generated/schema';
 
+export function arbitraryLoanTotalNominalDeltaOracleModuleId(
+  externalPositionAddress: Address,
+  acccountingModuleAddress: Address,
+): string {
+  return externalPositionAddress.toHex() + '/' + acccountingModuleAddress.toHex();
+}
+
 export function useArbitraryLoanTotalNominalDeltaOracleModule(id: string): ArbitraryLoanTotalNominalDeltaOracleModule {
   let arbitraryLoanTotalNominalDeltaOracleModule = ArbitraryLoanTotalNominalDeltaOracleModule.load(id);
   if (arbitraryLoanTotalNominalDeltaOracleModule == null) {
@@ -11,22 +18,14 @@ export function useArbitraryLoanTotalNominalDeltaOracleModule(id: string): Arbit
   return arbitraryLoanTotalNominalDeltaOracleModule as ArbitraryLoanTotalNominalDeltaOracleModule;
 }
 
-export function getArbitraryLoanTotalNominalDeltaOracleModuleID(
-  externalPositionAddress: Address,
-  acccountingModuleAddress: Address,
-): string {
-  return externalPositionAddress.toHex() + acccountingModuleAddress.toHex();
-}
-
 export function createArbitraryLoanTotalNominalDeltaOracleModule(
   externalPositionAddress: Address,
   acccountingModuleAddress: Address,
   oracle: Address,
   stalenessThreshold: BigInt,
 ): ArbitraryLoanTotalNominalDeltaOracleModule {
-  let arbitraryLoanTotalNominalDeltaOracleModule = new ArbitraryLoanTotalNominalDeltaOracleModule(
-    getArbitraryLoanTotalNominalDeltaOracleModuleID(externalPositionAddress, acccountingModuleAddress),
-  );
+  let id = arbitraryLoanTotalNominalDeltaOracleModuleId(externalPositionAddress, acccountingModuleAddress);
+  let arbitraryLoanTotalNominalDeltaOracleModule = new ArbitraryLoanTotalNominalDeltaOracleModule(id);
 
   arbitraryLoanTotalNominalDeltaOracleModule.externalPosition = externalPositionAddress.toHex();
   arbitraryLoanTotalNominalDeltaOracleModule.oracle = oracle;

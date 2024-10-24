@@ -40,6 +40,7 @@ export const polygon: Context<Variables> = {
       dispatcherAddress: polygonV4Deployment.contracts.Dispatcher,
       externalPositionFactoryAddress: polygonV4Deployment.contracts.ExternalPositionFactory,
       gatedRedemptionQueueSharesWrapperFactoryAddress: '0x7a68d541af898c14fbd5ecbda3b402b18d8c17d4',
+      manualValueOracleFactoryAddress: '0x0000000000000000000000000000000000000000',
       pendleMarketsRegistryAddress: '0x0000000000000000000000000000000000000000',
       protocolFeeReserveLibAddress: polygonV4Deployment.contracts.ProtocolFeeReserveLib,
       sharesSplitterFactoryAddress: polygonV4Deployment.contracts.SharesSplitterFactory,

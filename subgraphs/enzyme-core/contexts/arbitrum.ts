@@ -37,6 +37,7 @@ export const arbitrum: Context<Variables> = {
       dispatcherAddress: '0x8da28441a4c594fd2fac72726c1412d8cf9e4a19',
       externalPositionFactoryAddress: '0xd44256acea2193d4a50a9ad879a531666729962c',
       gatedRedemptionQueueSharesWrapperFactoryAddress: '0x0000000000000000000000000000000000000000',
+      manualValueOracleFactoryAddress: '0x0000000000000000000000000000000000000000',
       pendleMarketsRegistryAddress: '0x0000000000000000000000000000000000000000',
       protocolFeeReserveLibAddress: '0x642986a6bc5ec518cfb97d8afa5a7fa8477d3cf5',
       sharesSplitterFactoryAddress: '0x0000000000000000000000000000000000000000',

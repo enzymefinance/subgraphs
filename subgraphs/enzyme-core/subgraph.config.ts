@@ -37,6 +37,7 @@ export interface Variables {
     dispatcherAddress: string;
     externalPositionFactoryAddress: string;
     gatedRedemptionQueueSharesWrapperFactoryAddress: string;
+    manualValueOracleFactoryAddress: string;
     pendleMarketsRegistryAddress: string;
     protocolFeeReserveLibAddress: string;
     sharesSplitterFactoryAddress: string;

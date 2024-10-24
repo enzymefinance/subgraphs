@@ -40,6 +40,7 @@ export const testnet: Context<Variables> = {
       dispatcherAddress: testnetV4Deployment.contracts.Dispatcher,
       externalPositionFactoryAddress: testnetV4Deployment.contracts.ExternalPositionFactory,
       gatedRedemptionQueueSharesWrapperFactoryAddress: '0xd188ab263828d0bece1442da7dee7e0ae76f709c',
+      manualValueOracleFactoryAddress: '0x0000000000000000000000000000000000000000',
       pendleMarketsRegistryAddress: '0x0000000000000000000000000000000000000000',
       protocolFeeReserveLibAddress: testnetV4Deployment.contracts.ProtocolFeeReserveLib,
       sharesSplitterFactoryAddress: testnetV4Deployment.contracts.SharesSplitterFactory,

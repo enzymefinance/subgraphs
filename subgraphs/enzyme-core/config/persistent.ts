@@ -20,6 +20,11 @@ export const sources = (variables: Variables): DataSourceUserDeclaration[] => {
       address: variables.persistent.gatedRedemptionQueueSharesWrapperFactoryAddress,
     },
     {
+      name: 'ManualValueOracleFactory',
+      block: variables.block,
+      address: variables.persistent.manualValueOracleFactoryAddress,
+    },
+    {
       name: 'PendleMarketsRegistry',
       block: variables.block,
       address: variables.persistent.pendleMarketsRegistryAddress,
@@ -45,6 +50,7 @@ export const sources = (variables: Variables): DataSourceUserDeclaration[] => {
 
 export const templates: DataSourceTemplateUserDeclaration[] = [
   { name: 'GatedRedemptionQueueSharesWrapperLib' },
+  { name: 'ManualValueOracleLib' },
   { name: 'SharesSplitterLib' },
   { name: 'SingleAssetRedemptionQueueLib' },
 ];

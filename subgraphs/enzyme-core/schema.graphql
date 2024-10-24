@@ -1217,6 +1217,24 @@ type AaveV3DebtPositionChange implements Activity & VaultActivity & ExternalPosi
   activityType: ActivityType!
 }
 
+type ManualValueOracle @entity {
+  id: ID!
+  owner: Bytes!
+  nominatedOwner: Bytes!
+  updater: Bytes!
+  description: Bytes!
+  createdAt: Int!
+  value: BigInt! # Using bigint here because we don't easily know the asset this refers to
+  valueChanges: [ManualValueOracleValueChange!]! @derivedFrom(field: "oracle")
+}
+
+type ManualValueOracleValueChange @entity {
+  id: ID!
+  value: BigInt!
+  timestamp: Int!
+  oracle: ManualValueOracle!
+}
+
 enum RepaymentTrackingType {
   None
   PrincipalFirst
@@ -1254,10 +1272,10 @@ type ArbitraryLoanPosition implements ExternalPosition @entity {
   vault: Vault!
   type: ExternalPositionType!
   active: Boolean!
-  loanAsset: Asset
-  borrower: Bytes
-  accountingModule: Bytes
-  moduleType: ArbitraryLoanModuleType
+  loanAsset: Asset!
+  borrower: Bytes!
+  accountingModule: Bytes!
+  moduleType: ArbitraryLoanModuleType!
   fixedInterestModule: ArbitraryLoanFixedInterestModule @derivedFrom(field: "externalPosition")
   totalNominalDeltaOracleModule: ArbitraryLoanTotalNominalDeltaOracleModule @derivedFrom(field: "externalPosition")
   description: String!
