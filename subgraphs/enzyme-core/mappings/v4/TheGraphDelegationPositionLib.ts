@@ -7,8 +7,8 @@ import { IndexerAdded, IndexerRemoved } from '../../generated/contracts/TheGraph
 export function handleIndexerAdded(event: IndexerAdded): void {}
 
 export function handleIndexerRemoved(event: IndexerRemoved): void {
-  let id = getTheGraphDelegationToIndexerId(event.address, event.params.indexer);
-  let theGraphDelegationToIndexer = useTheGraphDelegationToIndexer(id);
-  theGraphDelegationToIndexer.active = false;
-  theGraphDelegationToIndexer.save();
+  // let id = getTheGraphDelegationToIndexerId(event.address, event.params.indexer);
+  // let theGraphDelegationToIndexer = useTheGraphDelegationToIndexer(id);
+  // theGraphDelegationToIndexer.active = false;
+  // theGraphDelegationToIndexer.save();
 }
