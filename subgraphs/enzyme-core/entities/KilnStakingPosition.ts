@@ -1,5 +1,5 @@
 import { logCritical, uniqueEventId, ZERO_BD } from '@enzymefinance/subgraph-utils';
-import { Address, Bytes, ethereum } from '@graphprotocol/graph-ts';
+import { Address, BigDecimal, Bytes, ethereum } from '@graphprotocol/graph-ts';
 import {
   KilnStakingPosition,
   KilnStakingPositionChange,
@@ -12,6 +12,8 @@ import {
 import { KilnStaking4DataSource } from '../generated/templates';
 import { getActivityCounter } from './Counter';
 import { useVault } from './Vault';
+
+export let ethPerKilnNode = BigDecimal.fromString('32');
 
 export function useKilnStakingPosition(id: string): KilnStakingPosition {
   let ksp = KilnStakingPosition.load(id);

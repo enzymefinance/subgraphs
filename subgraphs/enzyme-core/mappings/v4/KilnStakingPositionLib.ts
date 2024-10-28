@@ -1,5 +1,5 @@
 import { BigDecimal } from '@graphprotocol/graph-ts';
-import { useKilnStakingPosition } from '../../entities/KilnStakingPosition';
+import { ethPerKilnNode, useKilnStakingPosition } from '../../entities/KilnStakingPosition';
 import {
   PositionValuePaused,
   PositionValueUnpaused,
@@ -21,8 +21,7 @@ export function handlePositionValueUnpaused(event: PositionValueUnpaused): void 
 }
 
 export function handleValidatorsAdded(event: ValidatorsAdded): void {
-  let ethPerNode = BigDecimal.fromString('32');
-  let amount = toBigDecimal(event.params.validatorAmount, 0).times(ethPerNode);
+  let amount = toBigDecimal(event.params.validatorAmount, 0).times(ethPerKilnNode);
 
   let kilnStakingPosition = useKilnStakingPosition(event.address.toHex());
   kilnStakingPosition.stakedEthAmount = kilnStakingPosition.stakedEthAmount.plus(amount);
@@ -30,8 +29,7 @@ export function handleValidatorsAdded(event: ValidatorsAdded): void {
 }
 
 export function handleValidatorsRemoved(event: ValidatorsRemoved): void {
-  let ethPerNode = BigDecimal.fromString('32');
-  let amount = toBigDecimal(event.params.validatorAmount, 0).times(ethPerNode);
+  let amount = toBigDecimal(event.params.validatorAmount, 0).times(ethPerKilnNode);
 
   let kilnStakingPosition = useKilnStakingPosition(event.address.toHex());
   kilnStakingPosition.stakedEthAmount = kilnStakingPosition.stakedEthAmount.minus(amount);
