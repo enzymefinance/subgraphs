@@ -57,6 +57,7 @@ import {
   AlicePositionLib4DataSource,
   ArbitraryLoanPositionLib4DataSource,
   GMXV2LeverageTradingPositionLib4DataSource,
+  KilnStakingPositionLib4DataSource,
   LidoWithdrawalsPositionLib4DataSource,
   MapleLiquidityPositionLib4DataSource,
   // MorphoBluePositionLib4DataSource,
@@ -225,6 +226,8 @@ export function handleExternalPositionDeployedForFund(event: ExternalPositionDep
 
   if (type.label == 'KILN_STAKING') {
     createKilnStakingPosition(event.params.externalPosition, event.params.vaultProxy, type);
+
+    KilnStakingPositionLib4DataSource.create(event.params.externalPosition);
 
     return;
   }
@@ -1747,10 +1750,6 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let assetAmount = createAssetAmount(wethAsset, amount, denominationAsset, 'kiln-stake', event);
 
       createKilnStakingPositionChange(event.params.externalPosition, 'Stake', assetAmount, [], null, vault, event);
-
-      let kilnStakingPosition = useKilnStakingPosition(event.params.externalPosition.toHex());
-      kilnStakingPosition.stakedEthAmount = kilnStakingPosition.stakedEthAmount.plus(amount);
-      kilnStakingPosition.save();
     }
 
     if (actionId == KilnStakingPositionActionId.ClaimFees) {
@@ -1824,10 +1823,6 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     }
 
     if (actionId == KilnStakingPositionActionId.PausePositionValue) {
-      let kilnStakingPosition = useKilnStakingPosition(event.params.externalPosition.toHex());
-      kilnStakingPosition.positionValuePaused = true;
-      kilnStakingPosition.save();
-
       createKilnStakingPositionChange(
         event.params.externalPosition,
         'PausePositionValue',
@@ -1840,10 +1835,6 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     }
 
     if (actionId == KilnStakingPositionActionId.UnpausePositionValue) {
-      let kilnStakingPosition = useKilnStakingPosition(event.params.externalPosition.toHex());
-      kilnStakingPosition.positionValuePaused = false;
-      kilnStakingPosition.save();
-
       createKilnStakingPositionChange(
         event.params.externalPosition,
         'UnpausePositionValue',
