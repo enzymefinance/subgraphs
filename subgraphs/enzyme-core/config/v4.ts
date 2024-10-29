@@ -105,6 +105,7 @@ export const templates: DataSourceTemplateUserDeclaration[] = [
   { name: 'KilnStaking' },
   { name: 'StakeWiseV3StakingPositionLib' },
   { name: 'LidoWithdrawalsPositionLib' },
+  { name: 'KilnStakingPositionLib' },
   { name: 'GMXV2LeverageTradingPositionLib' },
   { name: 'MorphoBluePositionLib' },
   { name: 'AlicePositionLib' },
