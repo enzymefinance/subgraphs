@@ -11,6 +11,7 @@ export function ensureManualValueOracle(address: Address, event: ethereum.Event)
 
   manualValueOracle = new ManualValueOracle(address.toHex());
   manualValueOracle.owner = ZERO_ADDRESS;
+  manualValueOracle.nominatedOwner = ZERO_ADDRESS;
   manualValueOracle.updater = ZERO_ADDRESS;
   manualValueOracle.description = ZERO_HASH;
   manualValueOracle.createdAt = event.block.timestamp.toI32();

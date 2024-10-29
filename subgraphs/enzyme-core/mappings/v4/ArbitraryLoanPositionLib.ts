@@ -55,7 +55,10 @@ export function handleTotalBorrowedUpdated(event: TotalBorrowedUpdated): void {
   let loanAsset = ensureAsset(Address.fromString(arbitraryLoanPosition.loanAsset));
 
   if (arbitraryLoanPosition.moduleType == 'FixedInterest') {
-    let moduleId = arbitraryLoanFixedInterestModuleId(event.address, arbitraryLoanPosition.accountingModule);
+    let moduleId = arbitraryLoanFixedInterestModuleId(
+      event.address,
+      Address.fromBytes(arbitraryLoanPosition.accountingModule),
+    );
     let arbitraryLoanFixedInterestModule = useArbitraryLoanFixedInterestModule(moduleId);
 
     arbitraryLoanFixedInterestModule.totalInterestCachedTimestamp = event.block.timestamp.toI32();
