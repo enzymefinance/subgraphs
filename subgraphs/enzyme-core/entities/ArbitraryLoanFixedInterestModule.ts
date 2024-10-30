@@ -2,6 +2,13 @@ import { logCritical, ZERO_BD } from '@enzymefinance/subgraph-utils';
 import { Address, BigInt } from '@graphprotocol/graph-ts';
 import { ArbitraryLoanFixedInterestModule } from '../generated/schema';
 
+export function arbitraryLoanFixedInterestModuleId(
+  externalPositionAddress: Address,
+  acccountingModuleAddress: Address,
+): string {
+  return externalPositionAddress.toHex() + '/' + acccountingModuleAddress.toHex();
+}
+
 export function useArbitraryLoanFixedInterestModule(id: string): ArbitraryLoanFixedInterestModule {
   let arbitraryLoanFixedInterestModule = ArbitraryLoanFixedInterestModule.load(id);
   if (arbitraryLoanFixedInterestModule == null) {
@@ -9,13 +16,6 @@ export function useArbitraryLoanFixedInterestModule(id: string): ArbitraryLoanFi
   }
 
   return arbitraryLoanFixedInterestModule as ArbitraryLoanFixedInterestModule;
-}
-
-export function getArbitraryLoanFixedInterestModuleId(
-  externalPositionAddress: Address,
-  acccountingModuleAddress: Address,
-): string {
-  return externalPositionAddress.toHex() + acccountingModuleAddress.toHex();
 }
 
 export function createArbitraryLoanFixedInterestModule(
@@ -27,9 +27,8 @@ export function createArbitraryLoanFixedInterestModule(
   repaymentTrackingType: number,
   faceValueIsPrincipalOnly: boolean,
 ): ArbitraryLoanFixedInterestModule {
-  let arbitraryLoanFixedInterestModule = new ArbitraryLoanFixedInterestModule(
-    getArbitraryLoanFixedInterestModuleId(externalPositionAddress, acccountingModuleAddress),
-  );
+  let id = arbitraryLoanFixedInterestModuleId(externalPositionAddress, acccountingModuleAddress);
+  let arbitraryLoanFixedInterestModule = new ArbitraryLoanFixedInterestModule(id);
 
   let repaymentTrackingTypeName =
     repaymentTrackingType == 0 ? 'None' : repaymentTrackingType == 1 ? 'PrincipalFirst' : 'InterestFirst';

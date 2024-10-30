@@ -2,7 +2,7 @@ import { logCritical, toBigDecimal } from '@enzymefinance/subgraph-utils';
 import { Address } from '@graphprotocol/graph-ts';
 import {
   createArbitraryLoanFixedInterestModule,
-  getArbitraryLoanFixedInterestModuleId,
+  arbitraryLoanFixedInterestModuleId,
   useArbitraryLoanFixedInterestModule,
 } from '../../entities/ArbitraryLoanFixedInterestModule';
 import { useArbitraryLoanPosition } from '../../entities/ArbitraryLoanPosition';
@@ -15,8 +15,8 @@ import {
 
 export function handleConfigSetForLoan(event: ConfigSetForLoan): void {
   let arbitraryLoanPosition = useArbitraryLoanPosition(event.params.loan.toHex());
-
   arbitraryLoanPosition.moduleType = 'FixedInterest';
+  arbitraryLoanPosition.save();
 
   createArbitraryLoanFixedInterestModule(
     event.params.loan,
@@ -27,24 +27,15 @@ export function handleConfigSetForLoan(event: ConfigSetForLoan): void {
     event.params.repaymentTrackingType,
     event.params.faceValueIsPrincipalOnly,
   );
-
-  arbitraryLoanPosition.save();
 }
 
 export function handleTotalPrincipalRepaidUpdatedForLoan(event: TotalPrincipalRepaidUpdatedForLoan): void {
   let arbitraryLoanPosition = useArbitraryLoanPosition(event.params.loan.toHex());
 
-  let arbitraryLoanFixedInterestModule = useArbitraryLoanFixedInterestModule(
-    getArbitraryLoanFixedInterestModuleId(event.params.loan, event.address),
-  );
+  let moduleId = arbitraryLoanFixedInterestModuleId(event.params.loan, event.address);
+  let arbitraryLoanFixedInterestModule = useArbitraryLoanFixedInterestModule(moduleId);
 
-  if (arbitraryLoanPosition.loanAsset == null) {
-    logCritical('Loan asset is null ArbitraryLoanPosition {}.', [event.params.loan.toHex()]);
-
-    return;
-  }
-
-  let loanAsset = ensureAsset(Address.fromString(arbitraryLoanPosition.loanAsset as string));
+  let loanAsset = ensureAsset(Address.fromString(arbitraryLoanPosition.loanAsset));
 
   arbitraryLoanFixedInterestModule.totalPrincipalRepaid = toBigDecimal(
     event.params.totalPrincipalRepaid,
@@ -55,21 +46,13 @@ export function handleTotalPrincipalRepaidUpdatedForLoan(event: TotalPrincipalRe
 }
 
 export function handleTotalInterestUpdatedForLoan(event: TotalInterestUpdatedForLoan): void {
-  let arbitraryLoanFixedInterestModule = useArbitraryLoanFixedInterestModule(
-    getArbitraryLoanFixedInterestModuleId(event.params.loan, event.address),
-  );
+  let moduleId = arbitraryLoanFixedInterestModuleId(event.params.loan, event.address);
+  let arbitraryLoanFixedInterestModule = useArbitraryLoanFixedInterestModule(moduleId);
 
   let arbitraryLoanPosition = useArbitraryLoanPosition(event.params.loan.toHex());
-  if (arbitraryLoanPosition.loanAsset == null) {
-    logCritical('Loan asset is null ArbitraryLoanPosition {}.', [event.params.loan.toHex()]);
-
-    return;
-  }
-
-  let loanAsset = ensureAsset(Address.fromString(arbitraryLoanPosition.loanAsset as string));
+  let loanAsset = ensureAsset(Address.fromString(arbitraryLoanPosition.loanAsset));
 
   arbitraryLoanFixedInterestModule.totalInterestCached = toBigDecimal(event.params.totalInterest, loanAsset.decimals);
   arbitraryLoanFixedInterestModule.totalInterestCachedTimestamp = event.block.timestamp.toI32();
-
   arbitraryLoanFixedInterestModule.save();
 }
