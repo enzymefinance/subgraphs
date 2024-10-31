@@ -1,4 +1,4 @@
-import { logCritical, uniqueEventId, ZERO_BD } from '@enzymefinance/subgraph-utils';
+import { logCritical, uniqueEventId, ZERO_ADDRESS, ZERO_BD } from '@enzymefinance/subgraph-utils';
 import { Address, ethereum, Bytes } from '@graphprotocol/graph-ts';
 import {
   ArbitraryLoanPosition,
@@ -29,16 +29,15 @@ export function createArbitraryLoanPosition(
   arbitraryLoanPosition.vault = useVault(vaultAddress.toHex()).id;
   arbitraryLoanPosition.active = true;
   arbitraryLoanPosition.type = type.id;
-  arbitraryLoanPosition.loanAsset = null;
-  arbitraryLoanPosition.borrower = null;
-  arbitraryLoanPosition.accountingModule = null;
+  arbitraryLoanPosition.loanAsset = '';
+  arbitraryLoanPosition.borrower = ZERO_ADDRESS;
+  arbitraryLoanPosition.accountingModule = ZERO_ADDRESS;
   arbitraryLoanPosition.description = '';
-  arbitraryLoanPosition.moduleType = null;
+  arbitraryLoanPosition.moduleType = 'None';
   arbitraryLoanPosition.borrowableAmount = ZERO_BD;
   arbitraryLoanPosition.totalBorrowed = ZERO_BD;
   arbitraryLoanPosition.totalRepaid = ZERO_BD;
   arbitraryLoanPosition.isClosed = false;
-
   arbitraryLoanPosition.save();
 
   return arbitraryLoanPosition;
@@ -70,7 +69,6 @@ export function createArbitraryLoanPositionChange(
   change.activityCounter = getActivityCounter();
   change.activityCategories = ['Vault'];
   change.activityType = 'Trade';
-
   change.save();
 
   vault.lastAssetUpdate = event.block.timestamp.toI32();
