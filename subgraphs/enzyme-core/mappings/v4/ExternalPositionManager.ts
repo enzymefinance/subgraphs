@@ -2213,6 +2213,8 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
   if (type.label == 'GMX_V2_LEVERAGE_TRADING') {
     if (actionId == GMXV2LeverageTradingActionId.CreateOrder) {
+      // The shape of the tuple is different after the lib contracts were updated
+      // We first try to decode the tuple with the old shape, if that fails we try the new shape
       let firstDecodeSuccessful = false;
 
       let decoded = ethereum.decode(
@@ -2298,6 +2300,8 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     }
 
     if (actionId == GMXV2LeverageTradingActionId.UpdateOrder) {
+      // The shape of the tuple is different after the lib contracts were updated
+      // We first try to decode the tuple with the old shape, if that fails we try the new shape
       let firstDecodeSuccessful = false;
 
       let decoded = ethereum.decode(
