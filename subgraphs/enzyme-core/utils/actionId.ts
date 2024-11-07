@@ -118,14 +118,14 @@ export enum GMXV2LeverageTradingActionId {
   Sweep = 5,
 }
 
-// export enum MorphoBlueActionId {
-//   Lend = 0,
-//   Redeem = 1,
-//   AddCollateral = 2,
-//   RemoveCollateral = 3,
-//   Borrow = 4,
-//   Repay = 5,
-// }
+export enum MorphoBlueActionId {
+  Lend = 0,
+  Redeem = 1,
+  AddCollateral = 2,
+  RemoveCollateral = 3,
+  Borrow = 4,
+  Repay = 5,
+}
 
 export enum AliceActionId {
   PlaceOrder = 0,

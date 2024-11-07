@@ -254,7 +254,7 @@ export let lusdAddress = Address.fromString('{{external.lusdAddress}}');
 
 export let compAddress = Address.fromString('{{external.compAddress}}');
 
-// export let morphoBlueAddress = Address.fromString('{{external.morphoBlueAddress}}');
+export let morphoBlueAddress = Address.fromString('{{external.morphoBlueAddress}}');
 
 export let aliceOrderManagerAddress = Address.fromString('{{external.aliceOrderManager}}');
 
