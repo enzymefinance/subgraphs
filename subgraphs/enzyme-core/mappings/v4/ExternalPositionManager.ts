@@ -2215,7 +2215,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     if (actionId == GMXV2LeverageTradingActionId.CreateOrder) {
       // The shape of the tuple is different after the lib contracts were updated
       // We first try to decode the tuple with the old shape, if that fails we try the new shape
-      let firstDecodeSuccessful = false;
+      let firstDecodeSuccessful = true;
 
       let decoded = ethereum.decode(
         '(tuple(address,address,uint256,uint256,uint256,uint256,uint256,uint256,uint8,uint8,bool,address,bool))',
@@ -2223,6 +2223,8 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       );
 
       if (decoded == null) {
+        firstDecodeSuccessful = false;
+
         decoded = ethereum.decode(
           '(tuple(address,address,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint8,uint8,bool,address,bool))',
           event.params.actionArgs,
@@ -2231,8 +2233,6 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         if (decoded == null) {
           return;
         }
-      } else {
-        firstDecodeSuccessful = true;
       }
 
       let tuple = decoded.toTuple();
@@ -2302,7 +2302,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     if (actionId == GMXV2LeverageTradingActionId.UpdateOrder) {
       // The shape of the tuple is different after the lib contracts were updated
       // We first try to decode the tuple with the old shape, if that fails we try the new shape
-      let firstDecodeSuccessful = false;
+      let firstDecodeSuccessful = true;
 
       let decoded = ethereum.decode(
         '(tuple(bytes32,uint256,uint256,uint256,uint256,bool,uint256,address))',
@@ -2310,6 +2310,8 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       );
 
       if (decoded == null) {
+        firstDecodeSuccessful = false;
+
         decoded = ethereum.decode(
           '(tuple(bytes32,uint256,uint256,uint256,uint256,uint256,bool,uint256,address))',
           event.params.actionArgs,
@@ -2318,8 +2320,6 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         if (decoded == null) {
           return;
         }
-      } else {
-        firstDecodeSuccessful = true;
       }
 
       let tuple = decoded.toTuple();
