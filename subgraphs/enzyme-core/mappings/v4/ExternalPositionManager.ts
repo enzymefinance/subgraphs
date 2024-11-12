@@ -16,6 +16,7 @@ import {
   BigDecimal,
   BigInt,
   ByteArray,
+  dataSource,
 } from '@graphprotocol/graph-ts';
 import { createAaveDebtPosition, createAaveDebtPositionChange } from '../../entities/AaveDebtPosition';
 import {
@@ -1371,68 +1372,73 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       );
     }
 
-    // if (actionId == TheGraphDelegationPositionActionId.Withdraw) {
-    //   let decoded = ethereum.decode('(address,address)', event.params.actionArgs);
+    if (actionId == TheGraphDelegationPositionActionId.Withdraw) {
+      // Returning early on Arbitrum until this has been tested
+      if (dataSource.network() == 'arbitrum-one') {
+        return;
+      }
 
-    //   if (decoded == null) {
-    //     return;
-    //   }
+      let decoded = ethereum.decode('(address,address)', event.params.actionArgs);
 
-    //   let tuple = decoded.toTuple();
+      if (decoded == null) {
+        return;
+      }
 
-    //   let indexer = tuple[0].toAddress();
-    //   let newIndexer = tuple[1].toAddress();
+      let tuple = decoded.toTuple();
 
-    //   let isRedelegating = newIndexer.notEqual(ZERO_ADDRESS);
+      let indexer = tuple[0].toAddress();
+      let newIndexer = tuple[1].toAddress();
 
-    //   let delegationToIndexerId = getTheGraphDelegationToIndexerId(event.params.externalPosition, indexer);
+      let isRedelegating = newIndexer.notEqual(ZERO_ADDRESS);
 
-    //   let beforeWithdrawTokensLocked = useTheGraphDelegationToIndexer(delegationToIndexerId).tokensLocked;
+      let delegationToIndexerId = getTheGraphDelegationToIndexerId(event.params.externalPosition, indexer);
 
-    //   let afterWithdrawGraphDelegationToIndexer = trackTheGraphDelegationToIndexer(
-    //     event.params.externalPosition,
-    //     indexer,
-    //     event,
-    //   );
+      let beforeWithdrawTokensLocked = useTheGraphDelegationToIndexer(delegationToIndexerId).tokensLocked;
 
-    //   let afterWithdrawTokensLocked = BigDecimal.fromString('0');
-    //   // if null then the graph delegation was deleted by remove indexer event
-    //   if (afterWithdrawGraphDelegationToIndexer != null) {
-    //     afterWithdrawTokensLocked = afterWithdrawGraphDelegationToIndexer.tokensLocked;
-    //   }
+      let afterWithdrawGraphDelegationToIndexer = trackTheGraphDelegationToIndexer(
+        event.params.externalPosition,
+        indexer,
+        event,
+      );
 
-    //   let tokensLockedDiffAmount = beforeWithdrawTokensLocked.minus(afterWithdrawTokensLocked);
-    //   let grtAsset = ensureAsset(grtAddress);
-    //   let feeAssetAmount: AssetAmount | null = null;
-    //   let assetAmount: AssetAmount;
+      let afterWithdrawTokensLocked = BigDecimal.fromString('0');
+      // if null then the graph delegation was deleted by remove indexer event
+      if (afterWithdrawGraphDelegationToIndexer != null) {
+        afterWithdrawTokensLocked = afterWithdrawGraphDelegationToIndexer.tokensLocked;
+      }
 
-    //   if (isRedelegating) {
-    //     let feeAmount = tokensLockedDiffAmount.times(getDelegationTaxPercentage());
+      let tokensLockedDiffAmount = beforeWithdrawTokensLocked.minus(afterWithdrawTokensLocked);
+      let grtAsset = ensureAsset(grtAddress);
+      let feeAssetAmount: AssetAmount | null = null;
+      let assetAmount: AssetAmount;
 
-    //     let grtAmountWithoutFee = tokensLockedDiffAmount.minus(feeAmount);
-    //     assetAmount = createAssetAmount(grtAsset, grtAmountWithoutFee, denominationAsset, 'grt-asset-amount', event);
+      if (isRedelegating) {
+        let feeAmount = tokensLockedDiffAmount.times(getDelegationTaxPercentage());
 
-    //     feeAssetAmount = createAssetAmount(grtAsset, feeAmount, denominationAsset, 'grt-fee-asset-amount', event);
-    //   } else {
-    //     assetAmount = createAssetAmount(grtAsset, tokensLockedDiffAmount, denominationAsset, 'grt-asset-amount', event);
-    //   }
+        let grtAmountWithoutFee = tokensLockedDiffAmount.minus(feeAmount);
+        assetAmount = createAssetAmount(grtAsset, grtAmountWithoutFee, denominationAsset, 'grt-asset-amount', event);
 
-    //   createTheGraphDelegationPositionChange(
-    //     event.params.externalPosition,
-    //     assetAmount,
-    //     indexer,
-    //     feeAssetAmount,
-    //     isRedelegating ? newIndexer : null,
-    //     null,
-    //     'Withdraw',
-    //     vault,
-    //     event,
-    //   );
+        feeAssetAmount = createAssetAmount(grtAsset, feeAmount, denominationAsset, 'grt-fee-asset-amount', event);
+      } else {
+        assetAmount = createAssetAmount(grtAsset, tokensLockedDiffAmount, denominationAsset, 'grt-asset-amount', event);
+      }
 
-    //   if (isRedelegating) {
-    //     trackTheGraphDelegationToIndexer(event.params.externalPosition, newIndexer, event);
-    //   }
-    // }
+      createTheGraphDelegationPositionChange(
+        event.params.externalPosition,
+        assetAmount,
+        indexer,
+        feeAssetAmount,
+        isRedelegating ? newIndexer : null,
+        null,
+        'Withdraw',
+        vault,
+        event,
+      );
+
+      if (isRedelegating) {
+        trackTheGraphDelegationToIndexer(event.params.externalPosition, newIndexer, event);
+      }
+    }
 
     return;
   }
