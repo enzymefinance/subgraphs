@@ -16,6 +16,7 @@ import {
   BigDecimal,
   BigInt,
   ByteArray,
+  dataSource,
 } from '@graphprotocol/graph-ts';
 import { createAaveDebtPosition, createAaveDebtPositionChange } from '../../entities/AaveDebtPosition';
 import {
@@ -1372,6 +1373,11 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     }
 
     if (actionId == TheGraphDelegationPositionActionId.Withdraw) {
+      // Returning early on Arbitrum until this has been tested
+      if (dataSource.network() == 'arbitrum-one') {
+        return;
+      }
+
       let decoded = ethereum.decode('(address,address)', event.params.actionArgs);
 
       if (decoded == null) {
@@ -2213,23 +2219,45 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
   if (type.label == 'GMX_V2_LEVERAGE_TRADING') {
     if (actionId == GMXV2LeverageTradingActionId.CreateOrder) {
+      // The shape of the tuple is different after the lib contracts were updated
+      // We first try to decode the tuple with the old shape, if that fails we try the new shape
+      let firstDecodeSuccessful = true;
+
       let decoded = ethereum.decode(
         '(tuple(address,address,uint256,uint256,uint256,uint256,uint256,uint256,uint8,uint8,bool,address,bool))',
         event.params.actionArgs,
       );
 
       if (decoded == null) {
-        return;
-      }
+        firstDecodeSuccessful = false;
 
-      let wethAsset = ensureAsset(wethTokenAddress);
+        decoded = ethereum.decode(
+          '(tuple(address,address,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint8,uint8,bool,address,bool))',
+          event.params.actionArgs,
+        );
+
+        if (decoded == null) {
+          return;
+        }
+      }
 
       let tuple = decoded.toTuple();
       let innerTuple = tuple[0].toTuple();
 
-      let orderType = innerTuple[8].toBigInt();
-      let isLong = innerTuple[10].toBoolean();
-      let exchangeRouter = innerTuple[11].toAddress();
+      let orderType: BigInt;
+      let isLong: boolean;
+      let exchangeRouter: Address;
+      if (firstDecodeSuccessful) {
+        orderType = innerTuple[8].toBigInt();
+        isLong = innerTuple[10].toBoolean();
+        exchangeRouter = innerTuple[11].toAddress();
+      } else {
+        orderType = innerTuple[9].toBigInt();
+        isLong = innerTuple[11].toBoolean();
+        exchangeRouter = innerTuple[12].toAddress();
+      }
+
+      let wethAsset = ensureAsset(wethTokenAddress);
 
       let market = innerTuple[0].toAddress();
       let initialCollateralToken = ensureAsset(innerTuple[1].toAddress());
@@ -2278,25 +2306,47 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     }
 
     if (actionId == GMXV2LeverageTradingActionId.UpdateOrder) {
+      // The shape of the tuple is different after the lib contracts were updated
+      // We first try to decode the tuple with the old shape, if that fails we try the new shape
+      let firstDecodeSuccessful = true;
+
       let decoded = ethereum.decode(
         '(tuple(bytes32,uint256,uint256,uint256,uint256,bool,uint256,address))',
         event.params.actionArgs,
       );
 
       if (decoded == null) {
-        return;
+        firstDecodeSuccessful = false;
+
+        decoded = ethereum.decode(
+          '(tuple(bytes32,uint256,uint256,uint256,uint256,uint256,bool,uint256,address))',
+          event.params.actionArgs,
+        );
+
+        if (decoded == null) {
+          return;
+        }
       }
 
       let tuple = decoded.toTuple();
       let innerTuple = tuple[0].toTuple();
 
+      let wethAsset = ensureAsset(wethTokenAddress);
+
+      let executionFeeIncrease: BigDecimal;
+      let exchangeRouter: Address;
+      if (firstDecodeSuccessful) {
+        executionFeeIncrease = toBigDecimal(innerTuple[6].toBigInt(), wethAsset.decimals);
+        exchangeRouter = innerTuple[7].toAddress();
+      } else {
+        executionFeeIncrease = toBigDecimal(innerTuple[7].toBigInt(), wethAsset.decimals);
+        exchangeRouter = innerTuple[8].toAddress();
+      }
+
       let orderKey = innerTuple[0].toBytes();
       let sizeDeltaUsd = toBigDecimal(innerTuple[1].toBigInt(), gmxUsdDecimals);
       let acceptablePrice = innerTuple[2].toBigInt();
       let triggerPrice = innerTuple[3].toBigInt();
-      let wethAsset = ensureAsset(wethTokenAddress);
-      let executionFeeIncrease = toBigDecimal(innerTuple[6].toBigInt(), wethAsset.decimals);
-      let exchangeRouter = innerTuple[7].toAddress();
 
       let executionFeeAssetAmount = createAssetAmount(
         wethAsset,
