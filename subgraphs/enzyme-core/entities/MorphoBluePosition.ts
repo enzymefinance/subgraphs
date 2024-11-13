@@ -71,7 +71,7 @@ export function useMorphoBluePosition(id: string): MorphoBluePosition {
 }
 
 export function createMorphoBluePositionChange(
-  MorphoBluePositionAddress: Address,
+  morphoBluePositionAddress: Address,
   changeType: string,
   vault: Vault,
   market: MorphoBlueMarket,
@@ -80,7 +80,7 @@ export function createMorphoBluePositionChange(
 ): MorphoBluePositionChange {
   let change = new MorphoBluePositionChange(uniqueEventId(event));
   change.morphoBluePositionChangeType = changeType;
-  change.externalPosition = MorphoBluePositionAddress.toHex();
+  change.externalPosition = morphoBluePositionAddress.toHex();
   change.vault = vault.id;
   change.timestamp = event.block.timestamp.toI32();
   change.market = market.id;

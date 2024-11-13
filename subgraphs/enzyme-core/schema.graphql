@@ -1657,6 +1657,7 @@ type MorphoBluePosition implements ExternalPosition @entity {
   vault: Vault!
   type: ExternalPositionType!
   active: Boolean!
+  markets: [MorphoBlueMarket!]! @derivedFrom(field: "morphoBluePosition")
   changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
 }
 
