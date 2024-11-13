@@ -38,7 +38,7 @@ export function ensureMorphoBlueMarket(morphoBluePosition: Address, marketId: By
 
   market = new MorphoBlueMarket(id);
   market.marketId = marketId;
-  market.morpheBluePosition = morphoBluePosition.toHex();
+  market.morphoBluePosition = morphoBluePosition.toHex();
   market.loanToken = loanToken.id;
   market.collateralToken = collateralToken.id;
   market.removed = false;

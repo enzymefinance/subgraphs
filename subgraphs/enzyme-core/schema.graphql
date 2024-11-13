@@ -1664,7 +1664,7 @@ type MorphoBluePosition implements ExternalPosition @entity {
 type MorphoBlueMarket @entity {
   id: ID!
   marketId: Bytes!
-  morpheBluePosition: MorphoBluePosition!
+  morphoBluePosition: MorphoBluePosition!
   loanToken: Asset!
   collateralToken: Asset!
   removed: Boolean!
