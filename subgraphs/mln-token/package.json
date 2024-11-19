@@ -1,5 +1,6 @@
 {
   "name": "@enzymefinance/mln-token-subgraph",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "codegen": "enzyme-graph codegen",

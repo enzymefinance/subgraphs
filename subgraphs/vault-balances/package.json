@@ -1,5 +1,6 @@
 {
   "name": "@enzymefinance/vault-balances-subgraph",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "codegen": "enzyme-graph codegen",

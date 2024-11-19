@@ -1,5 +1,6 @@
 {
   "name": "@enzymefinance/enzyme-core-subgraph",
+  "version": "1.2.2",
   "private": true,
   "scripts": {
     "codegen": "enzyme-graph codegen",
