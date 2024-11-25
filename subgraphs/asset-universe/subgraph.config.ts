@@ -5,7 +5,7 @@ import {
   SdkUserDeclaration,
   Template,
 } from '@enzymefinance/subgraph-cli';
-import { getEnvironment } from '@enzymefinance/environment/all';
+import { getEnvironment } from '@enzymefinance/environment/deployments/all';
 import { Deployment, Version } from '@enzymefinance/environment';
 
 interface Variables {
@@ -35,14 +35,38 @@ interface Variables {
 const name = 'enzyme-asset-universe';
 
 const deployments = {
+  arbitrum: getEnvironment(Deployment.ARBITRUM, Version.SULU),
+  base: getEnvironment(Deployment.BASE, Version.SULU),
   ethereum: getEnvironment(Deployment.ETHEREUM, Version.SULU),
   polygon: getEnvironment(Deployment.POLYGON, Version.SULU),
   testnet: getEnvironment(Deployment.TESTNET, Version.SULU),
 };
 
+const arbitrum: Variables = {
+  wethTokenAddress: deployments.arbitrum.namedTokens.weth.id,
+  startBlock: deployments.arbitrum.deployment.inception,
+  releaseConfiguration: {
+    v4: {
+      fundDeployer: deployments.arbitrum.contracts.FundDeployer,
+      valueInterpreter: deployments.arbitrum.contracts.ValueInterpreter,
+    },
+  },
+};
+
+const base: Variables = {
+  wethTokenAddress: deployments.base.namedTokens.weth.id,
+  startBlock: deployments.base.deployment.inception,
+  releaseConfiguration: {
+    v4: {
+      fundDeployer: deployments.base.contracts.FundDeployer,
+      valueInterpreter: deployments.base.contracts.ValueInterpreter,
+    },
+  },
+};
+
 const ethereum: Variables = {
   wethTokenAddress: deployments.ethereum.namedTokens.weth.id,
-  startBlock: 11636534,
+  startBlock: deployments.ethereum.deployment.inception,
   releaseConfiguration: {
     v2: {
       fundDeployer: '0x9134c9975244b46692ad9a7da36dba8734ec6da3',
@@ -61,20 +85,9 @@ const ethereum: Variables = {
   },
 };
 
-const arbitrum: Variables = {
-  wethTokenAddress: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
-  startBlock: 230330283,
-  releaseConfiguration: {
-    v4: {
-      fundDeployer: '0xa2b4c827de13d4e9801ea1ca837524a1a148dec3',
-      valueInterpreter: '0xdd5f18a52a63ececf502a165a459d33be5c0a06c',
-    },
-  },
-};
-
 const polygon: Variables = {
   wethTokenAddress: deployments.polygon.namedTokens.weth.id,
-  startBlock: 25825424,
+  startBlock: deployments.polygon.deployment.inception,
   releaseConfiguration: {
     v4: {
       fundDeployer: deployments.polygon.contracts.FundDeployer,
@@ -85,7 +98,7 @@ const polygon: Variables = {
 
 const testnet: Variables = {
   wethTokenAddress: deployments.testnet.namedTokens.weth.id,
-  startBlock: 25731749,
+  startBlock: deployments.testnet.deployment.inception,
   releaseConfiguration: {
     v4: {
       fundDeployer: deployments.testnet.contracts.FundDeployer,
@@ -99,6 +112,11 @@ export const contexts: Contexts<Variables> = {
     name: `${name}-arbitrum`,
     network: 'arbitrum-one',
     variables: arbitrum,
+  },
+  base: {
+    name: `${name}-base`,
+    network: 'base',
+    variables: base,
   },
   ethereum: {
     name,

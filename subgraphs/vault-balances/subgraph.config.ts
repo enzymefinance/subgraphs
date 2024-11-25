@@ -7,7 +7,7 @@ import {
   Template,
 } from '@enzymefinance/subgraph-cli';
 
-import { getEnvironment } from '@enzymefinance/environment/all';
+import { getEnvironment } from '@enzymefinance/environment/deployments/all';
 import { Deployment } from '@enzymefinance/environment';
 
 interface Variables {
@@ -20,6 +20,8 @@ interface Variables {
 const name = 'enzyme-vault-balances';
 
 const deployments = {
+  arbitrum: getEnvironment(Deployment.ARBITRUM),
+  base: getEnvironment(Deployment.BASE),
   ethereum: getEnvironment(Deployment.ETHEREUM),
   polygon: getEnvironment(Deployment.POLYGON),
   testnet: getEnvironment(Deployment.TESTNET),
@@ -30,8 +32,18 @@ export const contexts: Contexts<Variables> = {
     name: `${name}-arbitrum`,
     network: 'arbitrum-one',
     variables: {
-      dispatcher: '0x8da28441a4c594fd2fac72726c1412d8cf9e4a19',
-      weth: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
+      dispatcher: deployments.arbitrum.contracts.Dispatcher,
+      weth: deployments.arbitrum.namedTokens.weth.id,
+      savingsDai: '0x0000000000000000000000000000000000000000',
+      start: 230330283,
+    },
+  },
+  base: {
+    name: `${name}-base`,
+    network: 'base',
+    variables: {
+      dispatcher: deployments.base.contracts.Dispatcher,
+      weth: deployments.base.namedTokens.weth.id,
       savingsDai: '0x0000000000000000000000000000000000000000',
       start: 230330283,
     },

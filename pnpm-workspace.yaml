@@ -1,3 +1,7 @@
 packages:
   - packages/*
   - subgraphs/*
+
+catalogs:
+  enzymefinance:
+    '@enzymefinance/environment': 'https://pkg.pr.new/enzymefinance/sdk/@enzymefinance/environment@551369a'
