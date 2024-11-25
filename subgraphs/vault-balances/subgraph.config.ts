@@ -35,7 +35,7 @@ export const contexts: Contexts<Variables> = {
       dispatcher: deployments.arbitrum.contracts.Dispatcher,
       weth: deployments.arbitrum.namedTokens.weth.id,
       savingsDai: '0x0000000000000000000000000000000000000000',
-      start: 230330283,
+      start: deployments.arbitrum.deployment.inception,
     },
   },
   base: {
@@ -45,7 +45,7 @@ export const contexts: Contexts<Variables> = {
       dispatcher: deployments.base.contracts.Dispatcher,
       weth: deployments.base.namedTokens.weth.id,
       savingsDai: '0x0000000000000000000000000000000000000000',
-      start: 230330283,
+      start: deployments.base.deployment.inception,
     },
   },
   ethereum: {
@@ -55,7 +55,7 @@ export const contexts: Contexts<Variables> = {
       dispatcher: deployments.ethereum.contracts.Dispatcher,
       weth: deployments.ethereum.namedTokens.weth.id,
       savingsDai: '0x83f20f44975d03b1b09e64809b757c47f942beea',
-      start: 11681281,
+      start: deployments.ethereum.deployment.inception,
     },
   },
   polygon: {
@@ -65,7 +65,7 @@ export const contexts: Contexts<Variables> = {
       dispatcher: deployments.polygon.contracts.Dispatcher,
       weth: deployments.polygon.namedTokens.weth.id,
       savingsDai: '0x0000000000000000000000000000000000000000',
-      start: 26191606,
+      start: deployments.polygon.deployment.inception,
     },
   },
   testnet: {
@@ -75,7 +75,7 @@ export const contexts: Contexts<Variables> = {
       dispatcher: deployments.testnet.contracts.Dispatcher,
       weth: deployments.testnet.namedTokens.weth.id,
       savingsDai: '0x0000000000000000000000000000000000000000',
-      start: 25731749,
+      start: deployments.testnet.deployment.inception,
     },
   },
 };
