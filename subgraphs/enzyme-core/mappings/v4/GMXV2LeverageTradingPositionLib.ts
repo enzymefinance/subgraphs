@@ -2,6 +2,7 @@ import { arrayDiff } from '@enzymefinance/subgraph-utils';
 import {
   CallbackContractSet,
   ClaimableCollateralAdded,
+  ClaimableCollateralRemoved,
   TrackedAssetAdded,
   TrackedAssetsCleared,
   TrackedMarketAdded,
@@ -12,6 +13,8 @@ import { useGMXV2LeverageTradingPosition } from '../../entities/GMXV2LeverageTra
 export function handleCallbackContractSet(event: CallbackContractSet): void {}
 
 export function handleClaimableCollateralAdded(event: ClaimableCollateralAdded): void {}
+
+export function handleClaimableCollateralRemoved(event: ClaimableCollateralRemoved): void {}
 
 export function handleTrackedAssetAdded(event: TrackedAssetAdded): void {
   let position = useGMXV2LeverageTradingPosition(event.address.toHex());
