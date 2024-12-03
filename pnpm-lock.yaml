@@ -7,8 +7,8 @@ settings:
 catalogs:
   enzymefinance:
     '@enzymefinance/environment':
-      specifier: https://pkg.pr.new/enzymefinance/sdk/@enzymefinance/environment@551369a
-      version: 6.1.1
+      specifier: https://pkg.pr.new/enzymefinance/sdk/@enzymefinance/environment@69e046b
+      version: 6.1.5
 
 importers:
 
@@ -28,7 +28,7 @@ importers:
         version: 5.7.0
       '@graphprotocol/graph-cli':
         specifier: ^0.89.0
-        version: 0.89.0(@types/node@22.9.3)(encoding@0.1.13)(node-fetch@3.3.2)(typescript@5.7.2)
+        version: 0.89.0(@types/node@22.9.3)(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13))(typescript@5.7.2)
       ethers:
         specifier: ^5.7.2
         version: 5.7.2
@@ -82,7 +82,7 @@ importers:
     devDependencies:
       '@enzymefinance/environment':
         specifier: catalog:enzymefinance
-        version: https://pkg.pr.new/enzymefinance/sdk/@enzymefinance/environment@551369a(@enzymefinance/sdk@1.1.0(@enzymefinance/abis@1.1.0)(decimal.js@10.4.3)(viem@2.21.50(typescript@5.7.2)))(viem@2.21.50(typescript@5.7.2))
+        version: https://pkg.pr.new/enzymefinance/sdk/@enzymefinance/environment@69e046b(@enzymefinance/sdk@1.1.0(@enzymefinance/abis@1.1.0)(decimal.js@10.4.3)(viem@2.21.50(typescript@5.7.2)))(viem@2.21.50(typescript@5.7.2))
       '@enzymefinance/subgraph-cli':
         specifier: workspace:*
         version: link:../../packages/cli
@@ -91,7 +91,7 @@ importers:
         version: link:../../packages/utils
       '@graphprotocol/graph-cli':
         specifier: ^0.89.0
-        version: 0.89.0(@types/node@22.9.3)(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13))(typescript@5.7.2)
+        version: 0.89.0(@types/node@22.9.3)(encoding@0.1.13)(node-fetch@3.3.2)(typescript@5.7.2)
       '@graphprotocol/graph-ts':
         specifier: ^0.35.1
         version: 0.35.1
@@ -110,7 +110,7 @@ importers:
     devDependencies:
       '@enzymefinance/environment':
         specifier: catalog:enzymefinance
-        version: https://pkg.pr.new/enzymefinance/sdk/@enzymefinance/environment@551369a(@enzymefinance/sdk@1.1.0(@enzymefinance/abis@1.1.0)(decimal.js@10.4.3)(viem@2.21.50(typescript@5.7.2)))(viem@2.21.50(typescript@5.7.2))
+        version: https://pkg.pr.new/enzymefinance/sdk/@enzymefinance/environment@69e046b(@enzymefinance/sdk@1.1.0(@enzymefinance/abis@1.1.0)(decimal.js@10.4.3)(viem@2.21.50(typescript@5.7.2)))(viem@2.21.50(typescript@5.7.2))
       '@enzymefinance/subgraph-cli':
         specifier: workspace:*
         version: link:../../packages/cli
@@ -138,7 +138,7 @@ importers:
     devDependencies:
       '@enzymefinance/environment':
         specifier: catalog:enzymefinance
-        version: https://pkg.pr.new/enzymefinance/sdk/@enzymefinance/environment@551369a(@enzymefinance/sdk@1.1.0(@enzymefinance/abis@1.1.0)(decimal.js@10.4.3)(viem@2.21.50(typescript@5.7.2)))(viem@2.21.50(typescript@5.7.2))
+        version: https://pkg.pr.new/enzymefinance/sdk/@enzymefinance/environment@69e046b(@enzymefinance/sdk@1.1.0(@enzymefinance/abis@1.1.0)(decimal.js@10.4.3)(viem@2.21.50(typescript@5.7.2)))(viem@2.21.50(typescript@5.7.2))
       '@enzymefinance/subgraph-cli':
         specifier: workspace:*
         version: link:../../packages/cli
@@ -166,7 +166,7 @@ importers:
     devDependencies:
       '@enzymefinance/environment':
         specifier: catalog:enzymefinance
-        version: https://pkg.pr.new/enzymefinance/sdk/@enzymefinance/environment@551369a(@enzymefinance/sdk@1.1.0(@enzymefinance/abis@1.1.0)(decimal.js@10.4.3)(viem@2.21.50(typescript@5.7.2)))(viem@2.21.50(typescript@5.7.2))
+        version: https://pkg.pr.new/enzymefinance/sdk/@enzymefinance/environment@69e046b(@enzymefinance/sdk@1.1.0(@enzymefinance/abis@1.1.0)(decimal.js@10.4.3)(viem@2.21.50(typescript@5.7.2)))(viem@2.21.50(typescript@5.7.2))
       '@enzymefinance/subgraph-cli':
         specifier: workspace:*
         version: link:../../packages/cli
@@ -194,7 +194,7 @@ importers:
     devDependencies:
       '@enzymefinance/environment':
         specifier: catalog:enzymefinance
-        version: https://pkg.pr.new/enzymefinance/sdk/@enzymefinance/environment@551369a(@enzymefinance/sdk@1.1.0(@enzymefinance/abis@1.1.0)(decimal.js@10.4.3)(viem@2.21.50(typescript@5.7.2)))(viem@2.21.50(typescript@5.7.2))
+        version: https://pkg.pr.new/enzymefinance/sdk/@enzymefinance/environment@69e046b(@enzymefinance/sdk@1.1.0(@enzymefinance/abis@1.1.0)(decimal.js@10.4.3)(viem@2.21.50(typescript@5.7.2)))(viem@2.21.50(typescript@5.7.2))
       '@enzymefinance/subgraph-cli':
         specifier: workspace:*
         version: link:../../packages/cli
@@ -222,7 +222,7 @@ importers:
     devDependencies:
       '@enzymefinance/environment':
         specifier: catalog:enzymefinance
-        version: https://pkg.pr.new/enzymefinance/sdk/@enzymefinance/environment@551369a(@enzymefinance/sdk@1.1.0(@enzymefinance/abis@1.1.0)(decimal.js@10.4.3)(viem@2.21.50(typescript@5.7.2)))(viem@2.21.50(typescript@5.7.2))
+        version: https://pkg.pr.new/enzymefinance/sdk/@enzymefinance/environment@69e046b(@enzymefinance/sdk@1.1.0(@enzymefinance/abis@1.1.0)(decimal.js@10.4.3)(viem@2.21.50(typescript@5.7.2)))(viem@2.21.50(typescript@5.7.2))
       '@enzymefinance/subgraph-cli':
         specifier: workspace:*
         version: link:../../packages/cli
@@ -250,7 +250,7 @@ importers:
     devDependencies:
       '@enzymefinance/environment':
         specifier: catalog:enzymefinance
-        version: https://pkg.pr.new/enzymefinance/sdk/@enzymefinance/environment@551369a(@enzymefinance/sdk@1.1.0(@enzymefinance/abis@1.1.0)(decimal.js@10.4.3)(viem@2.21.50(typescript@5.7.2)))(viem@2.21.50(typescript@5.7.2))
+        version: https://pkg.pr.new/enzymefinance/sdk/@enzymefinance/environment@69e046b(@enzymefinance/sdk@1.1.0(@enzymefinance/abis@1.1.0)(decimal.js@10.4.3)(viem@2.21.50(typescript@5.7.2)))(viem@2.21.50(typescript@5.7.2))
       '@enzymefinance/subgraph-cli':
         specifier: workspace:*
         version: link:../../packages/cli
@@ -290,11 +290,11 @@ packages:
   '@enzymefinance/abis@1.1.0':
     resolution: {integrity: sha512-yb4HCc858aZ0iA/WsEbjXD/A2I6vOrEGvGwD4Rbepo/FTIUPASr1EuoqNRvPGgwMQ2Gbj/feZBLlrdERfWsJEQ==}
 
-  '@enzymefinance/environment@https://pkg.pr.new/enzymefinance/sdk/@enzymefinance/environment@551369a':
-    resolution: {tarball: https://pkg.pr.new/enzymefinance/sdk/@enzymefinance/environment@551369a}
-    version: 6.1.1
+  '@enzymefinance/environment@https://pkg.pr.new/enzymefinance/sdk/@enzymefinance/environment@69e046b':
+    resolution: {tarball: https://pkg.pr.new/enzymefinance/sdk/@enzymefinance/environment@69e046b}
+    version: 6.1.5
     peerDependencies:
-      '@enzymefinance/sdk': 1.1.0
+      '@enzymefinance/sdk': 1.1.1
       viem: ^2.7.16
 
   '@enzymefinance/prettier-config@1.0.10':
@@ -2654,7 +2654,7 @@ snapshots:
 
   '@enzymefinance/abis@1.1.0': {}
 
-  '@enzymefinance/environment@https://pkg.pr.new/enzymefinance/sdk/@enzymefinance/environment@551369a(@enzymefinance/sdk@1.1.0(@enzymefinance/abis@1.1.0)(decimal.js@10.4.3)(viem@2.21.50(typescript@5.7.2)))(viem@2.21.50(typescript@5.7.2))':
+  '@enzymefinance/environment@https://pkg.pr.new/enzymefinance/sdk/@enzymefinance/environment@69e046b(@enzymefinance/sdk@1.1.0(@enzymefinance/abis@1.1.0)(decimal.js@10.4.3)(viem@2.21.50(typescript@5.7.2)))(viem@2.21.50(typescript@5.7.2))':
     dependencies:
       '@enzymefinance/sdk': 1.1.0(@enzymefinance/abis@1.1.0)(decimal.js@10.4.3)(viem@2.21.50(typescript@5.7.2))
       viem: 2.21.50(typescript@5.7.2)
