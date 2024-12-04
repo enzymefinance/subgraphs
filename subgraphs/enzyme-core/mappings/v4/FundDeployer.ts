@@ -209,7 +209,7 @@ export function handleVaultCallDeregistered(event: VaultCallDeregistered): void 
   vaultCall.timestamp = event.block.timestamp.toI32();
   vaultCall.save();
 
-  let activity = new VaultCallRegisteredEvent(uniqueEventId(event));
+  let activity = new VaultCallDeregisteredEvent(uniqueEventId(event));
   activity.timestamp = event.block.timestamp.toI32();
   activity.registeredVaultCall = vaultCall.id;
   activity.activityCounter = getActivityCounter();
@@ -228,7 +228,7 @@ export function handleVaultCallRegistered(event: VaultCallRegistered): void {
   vaultCall.timestamp = event.block.timestamp.toI32();
   vaultCall.save();
 
-  let activity = new VaultCallDeregisteredEvent(uniqueEventId(event));
+  let activity = new VaultCallRegisteredEvent(uniqueEventId(event));
   activity.timestamp = event.block.timestamp.toI32();
   activity.registeredVaultCall = vaultCall.id;
   activity.activityCounter = getActivityCounter();
