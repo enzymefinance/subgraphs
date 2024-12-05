@@ -1821,6 +1821,44 @@ type AlicePositionChange implements Activity & VaultActivity & ExternalPositionC
   activityType: ActivityType!
 }
 
+type StaderWithdrawalsPosition implements ExternalPosition @entity {
+  id: ID!
+  vault: Vault!
+  type: ExternalPositionType!
+  active: Boolean!
+  changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
+  withdrawalRequests: [StaderWithdrawalsRequest!]! @derivedFrom(field: "staderWithdrawalsPosition")
+}
+
+enum StaderWithdrawalsPositionChangeType {
+  RequestWithdrawals
+  ClaimWithdrawals
+}
+
+type StaderWithdrawalsPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: Int!
+  externalPosition: ExternalPosition!
+  staderWithdrawalsPositionChangeType: StaderWithdrawalsPositionChangeType!
+  amount: BigDecimal
+  requestId: BigInt
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
+type StaderWithdrawalsRequest @entity {
+  id: ID!
+  staderWithdrawalsPosition: StaderWithdrawalsPosition!
+  vault: Vault!
+  amount: BigDecimal!
+  claimed: Boolean!
+  requestedTimestamp: Int!
+  claimedTimestamp: Int!
+}
+
+
 type UnknownExternalPosition implements ExternalPosition @entity {
   id: ID!
   vault: Vault!
