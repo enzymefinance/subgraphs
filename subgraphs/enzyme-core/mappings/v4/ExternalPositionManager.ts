@@ -60,6 +60,7 @@ import {
   GMXV2LeverageTradingPositionLib4DataSource,
   KilnStakingPositionLib4DataSource,
   LidoWithdrawalsPositionLib4DataSource,
+  StaderWithdrawalsPositionLib4DataSource,
   MapleLiquidityPositionLib4DataSource,
   // MorphoBluePositionLib4DataSource,
   StakeWiseV3StakingPositionLib4DataSource,
@@ -77,6 +78,7 @@ import {
   UniswapV3LiquidityPositionActionId,
   KilnStakingPositionActionId,
   LidoWithdrawalsActionId,
+  StaderWithdrawalsActionId,
   AaveV3DebtPositionActionId,
   StakeWiseV3StakingPositionActionId,
   PendleV2ActionId,
@@ -133,6 +135,10 @@ import {
   createLidoWithdrawalsPosition,
   createLidoWithdrawalsPositionChange,
 } from '../../entities/LidoWithdrawalsPosition';
+import {
+  createStaderWithdrawalsPosition,
+  createStaderWithdrawalsPositionChange,
+} from '../../entities/StaderWithdrawalsPosition';
 import {
   createAaveV3DebtPosition,
   createAaveV3DebtPositionChange,
@@ -238,6 +244,14 @@ export function handleExternalPositionDeployedForFund(event: ExternalPositionDep
     createLidoWithdrawalsPosition(event.params.externalPosition, event.params.vaultProxy, type);
 
     LidoWithdrawalsPositionLib4DataSource.create(event.params.externalPosition);
+
+    return;
+  }
+
+  if (type.label == 'STADER_WITHDRAWALS') {
+    createStaderWithdrawalsPosition(event.params.externalPosition, event.params.vaultProxy, type);
+
+    StaderWithdrawalsPositionLib4DataSource.create(event.params.externalPosition);
 
     return;
   }
@@ -1893,6 +1907,52 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         'ClaimWithdrawals',
         null,
         requestIds,
+        vault,
+        event,
+      );
+    }
+
+    return;
+  }
+
+  if (type.label == 'STADER_WITHDRAWALS') {
+    if (actionId == StaderWithdrawalsActionId.RequestWithdrawals) {
+      let decoded = ethereum.decode('(uint256)', event.params.actionArgs);
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+
+      let amount = toBigDecimal(tuple[0].toBigInt(), 18);
+
+      createStaderWithdrawalsPositionChange(
+        event.params.externalPosition,
+        'RequestWithdrawals',
+        amount,
+        null,
+        vault,
+        event,
+      );
+    }
+
+    if (actionId == StaderWithdrawalsActionId.ClaimWithdrawals) {
+      let decoded = ethereum.decode('(uint256)', event.params.actionArgs);
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+
+      let requestId = tuple[0].toBigInt();
+
+      createStaderWithdrawalsPositionChange(
+        event.params.externalPosition,
+        'ClaimWithdrawals',
+        null,
+        requestId,
         vault,
         event,
       );

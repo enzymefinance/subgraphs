@@ -101,6 +101,11 @@ export enum LidoWithdrawalsActionId {
   ClaimWithdrawals = 1,
 }
 
+export enum StaderWithdrawalsActionId {
+  RequestWithdrawals = 0,
+  ClaimWithdrawals = 1,
+}
+
 export enum PendleV2ActionId {
   BuyPrincipalToken = 0,
   SellPrincipalToken = 1,
