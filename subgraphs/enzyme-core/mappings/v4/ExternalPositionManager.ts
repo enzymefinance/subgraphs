@@ -60,7 +60,6 @@ import {
   GMXV2LeverageTradingPositionLib4DataSource,
   KilnStakingPositionLib4DataSource,
   LidoWithdrawalsPositionLib4DataSource,
-  StaderWithdrawalsPositionLib4DataSource,
   MapleLiquidityPositionLib4DataSource,
   // MorphoBluePositionLib4DataSource,
   StakeWiseV3StakingPositionLib4DataSource,
@@ -250,8 +249,6 @@ export function handleExternalPositionDeployedForFund(event: ExternalPositionDep
 
   if (type.label == 'STADER_WITHDRAWALS') {
     createStaderWithdrawalsPosition(event.params.externalPosition, event.params.vaultProxy, type);
-
-    StaderWithdrawalsPositionLib4DataSource.create(event.params.externalPosition);
 
     return;
   }

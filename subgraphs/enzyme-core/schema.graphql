@@ -1827,7 +1827,6 @@ type StaderWithdrawalsPosition implements ExternalPosition @entity {
   type: ExternalPositionType!
   active: Boolean!
   changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
-  withdrawalRequests: [StaderWithdrawalsRequest!]! @derivedFrom(field: "staderWithdrawalsPosition")
 }
 
 enum StaderWithdrawalsPositionChangeType {
@@ -1847,17 +1846,6 @@ type StaderWithdrawalsPositionChange implements Activity & VaultActivity & Exter
   activityCategories: [ActivityCategory!]!
   activityType: ActivityType!
 }
-
-type StaderWithdrawalsRequest @entity {
-  id: ID!
-  staderWithdrawalsPosition: StaderWithdrawalsPosition!
-  vault: Vault!
-  amount: BigDecimal!
-  claimed: Boolean!
-  requestedTimestamp: Int!
-  claimedTimestamp: Int!
-}
-
 
 type UnknownExternalPosition implements ExternalPosition @entity {
   id: ID!
