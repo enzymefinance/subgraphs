@@ -29,7 +29,7 @@ export const arbitrum: Context<Variables> = {
       theGraphStakingProxyAddress: '0x00669a4cf01450b64e8a2a20e9b1fcb71e61ef03',
       lusdAddress: '0x0000000000000000000000000000000000000000',
       compAddress: '0x354a6da3fcde098f8389cad84b0182725c6c91de',
-      // morphoBlueAddress: "0x0000000000000000000000000000000000000000",
+      morphoBlueAddress: '0x0000000000000000000000000000000000000000',
       aliceOrderManager: '0x0000000000000000000000000000000000000000',
     },
     persistent: {

@@ -61,7 +61,7 @@ import {
   KilnStakingPositionLib4DataSource,
   LidoWithdrawalsPositionLib4DataSource,
   MapleLiquidityPositionLib4DataSource,
-  // MorphoBluePositionLib4DataSource,
+  MorphoBluePositionLib4DataSource,
   StakeWiseV3StakingPositionLib4DataSource,
   TheGraphDelegationPositionLib4DataSource,
   UniswapV3LiquidityPositionLib4DataSource,
@@ -82,7 +82,7 @@ import {
   PendleV2ActionId,
   GMXV2LeverageTradingActionId,
   AliceActionId,
-  // MorphoBlueActionId,
+  MorphoBlueActionId,
 } from '../../utils/actionId';
 import { ensureMapleLiquidityPoolV1, ensureMapleLiquidityPoolV2 } from '../../entities/MapleLiquidityPool';
 import { ExternalSdk } from '../../generated/contracts/ExternalSdk';
@@ -126,7 +126,6 @@ import {
   createKilnStakingPositionChange,
   ensureKilnStaking,
   ethPerKilnNode,
-  useKilnStakingPosition,
 } from '../../entities/KilnStakingPosition';
 import { kilnClaimFeeType } from '../../utils/kilnClaimFeeType';
 import {
@@ -160,11 +159,11 @@ import {
   gmxUsdDecimals,
 } from '../../entities/GMXV2LeverageTradingPosition';
 import { createAlicePosition, createAlicePositionChange, useAliceOrder } from '../../entities/AlicePosition';
-// import {
-//   createMorphoBluePosition,
-//   createMorphoBluePositionChange,
-//   ensureMorphoBlueMarket,
-// } from '../../entities/MorphoBluePosition';
+import {
+  createMorphoBluePosition,
+  createMorphoBluePositionChange,
+  ensureMorphoBlueMarket,
+} from '../../entities/MorphoBluePosition';
 
 export function handleExternalPositionDeployedForFund(event: ExternalPositionDeployedForFund): void {
   let type = useExternalPositionType(event.params.externalPositionTypeId);
@@ -255,13 +254,13 @@ export function handleExternalPositionDeployedForFund(event: ExternalPositionDep
     return;
   }
 
-  // if (type.label == 'MORPHO_BLUE') {
-  //   createMorphoBluePosition(event.params.externalPosition, event.params.vaultProxy, type);
+  if (type.label == 'MORPHO_BLUE') {
+    createMorphoBluePosition(event.params.externalPosition, event.params.vaultProxy, type);
 
-  //   MorphoBluePositionLib4DataSource.create(event.params.externalPosition);
+    MorphoBluePositionLib4DataSource.create(event.params.externalPosition);
 
-  //   return;
-  // }
+    return;
+  }
 
   if (type.label == 'STAKEWISE_V3') {
     createStakeWiseStakingPosition(event.params.externalPosition, event.params.vaultProxy, type);
@@ -2501,176 +2500,188 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     return;
   }
 
-  // if (type.label == 'MORPHO_BLUE') {
-  //   if (actionId == MorphoBlueActionId.Lend) {
-  //     let decoded = ethereum.decode('(bytes32,uint256)', event.params.actionArgs);
+  if (type.label == 'MORPHO_BLUE') {
+    if (actionId == MorphoBlueActionId.Lend) {
+      let decoded = ethereum.decode('(bytes32,uint256)', event.params.actionArgs);
 
-  //     if (decoded == null) {
-  //       return;
-  //     }
+      if (decoded == null) {
+        return;
+      }
 
-  //     let tuple = decoded.toTuple();
+      let tuple = decoded.toTuple();
 
-  //     let marketId = tuple[0].toBytes();
+      let marketId = tuple[0].toBytes();
 
-  //     let morphoBlueMarket = ensureMorphoBlueMarket(event.address, marketId);
-  //     let loanToken = ensureAsset(Address.fromString(morphoBlueMarket.loanToken));
+      let morphoBlueMarket = ensureMorphoBlueMarket(event.address, marketId);
+      let loanToken = ensureAsset(Address.fromString(morphoBlueMarket.loanToken));
 
-  //     let amount = toBigDecimal(tuple[1].toBigInt(), loanToken.decimals);
+      let amount = toBigDecimal(tuple[1].toBigInt(), loanToken.decimals);
 
-  //     let assetAmount = createAssetAmount(loanToken, amount, denominationAsset, 'morpho-blue-lend', event);
+      let assetAmount = createAssetAmount(loanToken, amount, denominationAsset, 'morpho-blue-lend', event);
 
-  //     createMorphoBluePositionChange(
-  //       event.params.externalPosition,
-  //       'Lend',
-  //       vault,
-  //       morphoBlueMarket,
-  //       assetAmount,
-  //       event,
-  //     );
-  //   }
+      createMorphoBluePositionChange(
+        event.params.externalPosition,
+        'Lend',
+        vault,
+        morphoBlueMarket,
+        assetAmount,
+        event,
+      );
+    }
 
-  //   if (actionId == MorphoBlueActionId.Redeem) {
-  //       let decoded = ethereum.decode('(bytes32,uint256)', event.params.actionArgs);
+    if (actionId == MorphoBlueActionId.Redeem) {
+      let decoded = ethereum.decode('(bytes32,uint256)', event.params.actionArgs);
 
-  //       if (decoded == null) {
-  //         return;
-  //       }
+      if (decoded == null) {
+        return;
+      }
 
-  //       let tuple = decoded.toTuple();
+      let tuple = decoded.toTuple();
 
-  //       let marketId = tuple[0].toBytes();
+      let marketId = tuple[0].toBytes();
 
-  //       let morphoBlueMarket = ensureMorphoBlueMarket(event.address, marketId);
-  //       let loanToken = ensureAsset(Address.fromString(morphoBlueMarket.loanToken));
+      let morphoBlueMarket = ensureMorphoBlueMarket(event.address, marketId);
+      let loanToken = ensureAsset(Address.fromString(morphoBlueMarket.loanToken));
 
-  //       let amount = toBigDecimal(tuple[1].toBigInt(), loanToken.decimals);
+      let amount = toBigDecimal(tuple[1].toBigInt(), loanToken.decimals);
 
-  //       let assetAmount = createAssetAmount(loanToken, amount, denominationAsset, 'morpho-blue-redeem', event);
+      let assetAmount = createAssetAmount(loanToken, amount, denominationAsset, 'morpho-blue-redeem', event);
 
-  //       createMorphoBluePositionChange(
-  //         event.params.externalPosition,
-  //         'Redeem',
-  //         vault,
-  //         morphoBlueMarket,
-  //         assetAmount,
-  //         event,
-  //       );
-  //   }
+      createMorphoBluePositionChange(
+        event.params.externalPosition,
+        'Redeem',
+        vault,
+        morphoBlueMarket,
+        assetAmount,
+        event,
+      );
+    }
 
-  //   if (actionId == MorphoBlueActionId.AddCollateral) {
-  //     let decoded = ethereum.decode('(bytes32,uint256)', event.params.actionArgs);
+    if (actionId == MorphoBlueActionId.AddCollateral) {
+      let decoded = ethereum.decode('(bytes32,uint256)', event.params.actionArgs);
 
-  //     if (decoded == null) {
-  //       return;
-  //     }
+      if (decoded == null) {
+        return;
+      }
 
-  //     let tuple = decoded.toTuple();
+      let tuple = decoded.toTuple();
 
-  //     let marketId = tuple[0].toBytes();
+      let marketId = tuple[0].toBytes();
 
-  //     let morphoBlueMarket = ensureMorphoBlueMarket(event.address, marketId);
-  //     let collateralToken = ensureAsset(Address.fromString(morphoBlueMarket.collateralToken));
+      let morphoBlueMarket = ensureMorphoBlueMarket(event.address, marketId);
+      let collateralToken = ensureAsset(Address.fromString(morphoBlueMarket.collateralToken));
 
-  //     let amount = toBigDecimal(tuple[1].toBigInt(), collateralToken.decimals);
+      let amount = toBigDecimal(tuple[1].toBigInt(), collateralToken.decimals);
 
-  //     let assetAmount = createAssetAmount(collateralToken, amount, denominationAsset, 'morpho-blue-add-collateral', event);
+      let assetAmount = createAssetAmount(
+        collateralToken,
+        amount,
+        denominationAsset,
+        'morpho-blue-add-collateral',
+        event,
+      );
 
-  //     createMorphoBluePositionChange(
-  //       event.params.externalPosition,
-  //       'AddCollateral',
-  //       vault,
-  //       morphoBlueMarket,
-  //       assetAmount,
-  //       event,
-  //     );
-  //   }
+      createMorphoBluePositionChange(
+        event.params.externalPosition,
+        'AddCollateral',
+        vault,
+        morphoBlueMarket,
+        assetAmount,
+        event,
+      );
+    }
 
-  //   if (actionId == MorphoBlueActionId.RemoveCollateral) {
-  //     let decoded = ethereum.decode('(bytes32,uint256)', event.params.actionArgs);
+    if (actionId == MorphoBlueActionId.RemoveCollateral) {
+      let decoded = ethereum.decode('(bytes32,uint256)', event.params.actionArgs);
 
-  //     if (decoded == null) {
-  //       return;
-  //     }
+      if (decoded == null) {
+        return;
+      }
 
-  //     let tuple = decoded.toTuple();
+      let tuple = decoded.toTuple();
 
-  //     let marketId = tuple[0].toBytes();
+      let marketId = tuple[0].toBytes();
 
-  //     let morphoBlueMarket = ensureMorphoBlueMarket(event.address, marketId);
-  //     let collateralToken = ensureAsset(Address.fromString(morphoBlueMarket.collateralToken));
+      let morphoBlueMarket = ensureMorphoBlueMarket(event.address, marketId);
+      let collateralToken = ensureAsset(Address.fromString(morphoBlueMarket.collateralToken));
 
-  //     let amount = toBigDecimal(tuple[1].toBigInt(), collateralToken.decimals);
+      let amount = toBigDecimal(tuple[1].toBigInt(), collateralToken.decimals);
 
-  //     let assetAmount = createAssetAmount(collateralToken, amount, denominationAsset, 'morpho-blue-remove-collateral', event);
+      let assetAmount = createAssetAmount(
+        collateralToken,
+        amount,
+        denominationAsset,
+        'morpho-blue-remove-collateral',
+        event,
+      );
 
-  //     createMorphoBluePositionChange(
-  //       event.params.externalPosition,
-  //       'RemoveCollateral',
-  //       vault,
-  //       morphoBlueMarket,
-  //       assetAmount,
-  //       event,
-  //     );
-  //   }
+      createMorphoBluePositionChange(
+        event.params.externalPosition,
+        'RemoveCollateral',
+        vault,
+        morphoBlueMarket,
+        assetAmount,
+        event,
+      );
+    }
 
-  //   if (actionId == MorphoBlueActionId.Borrow) {
-  //     let decoded = ethereum.decode('(bytes32,uint256)', event.params.actionArgs);
+    if (actionId == MorphoBlueActionId.Borrow) {
+      let decoded = ethereum.decode('(bytes32,uint256)', event.params.actionArgs);
 
-  //     if (decoded == null) {
-  //       return;
-  //     }
+      if (decoded == null) {
+        return;
+      }
 
-  //     let tuple = decoded.toTuple();
+      let tuple = decoded.toTuple();
 
-  //     let marketId = tuple[0].toBytes();
+      let marketId = tuple[0].toBytes();
 
-  //     let morphoBlueMarket = ensureMorphoBlueMarket(event.address, marketId);
-  //     let borrowToken = ensureAsset(Address.fromString(morphoBlueMarket.loanToken));
+      let morphoBlueMarket = ensureMorphoBlueMarket(event.address, marketId);
+      let borrowToken = ensureAsset(Address.fromString(morphoBlueMarket.loanToken));
 
-  //     let amount = toBigDecimal(tuple[1].toBigInt(), borrowToken.decimals);
+      let amount = toBigDecimal(tuple[1].toBigInt(), borrowToken.decimals);
 
-  //     let assetAmount = createAssetAmount(borrowToken, amount, denominationAsset, 'morpho-blue-borrow', event);
+      let assetAmount = createAssetAmount(borrowToken, amount, denominationAsset, 'morpho-blue-borrow', event);
 
-  //     createMorphoBluePositionChange(
-  //       event.params.externalPosition,
-  //       'Borrow',
-  //       vault,
-  //       morphoBlueMarket,
-  //       assetAmount,
-  //       event,
-  //     );
-  //   }
+      createMorphoBluePositionChange(
+        event.params.externalPosition,
+        'Borrow',
+        vault,
+        morphoBlueMarket,
+        assetAmount,
+        event,
+      );
+    }
 
-  //   if (actionId == MorphoBlueActionId.Repay) {
-  //     let decoded = ethereum.decode('(bytes32,uint256)', event.params.actionArgs);
+    if (actionId == MorphoBlueActionId.Repay) {
+      let decoded = ethereum.decode('(bytes32,uint256)', event.params.actionArgs);
 
-  //     if (decoded == null) {
-  //       return;
-  //     }
+      if (decoded == null) {
+        return;
+      }
 
-  //     let tuple = decoded.toTuple();
+      let tuple = decoded.toTuple();
 
-  //     let marketId = tuple[0].toBytes();
+      let marketId = tuple[0].toBytes();
 
-  //     let morphoBlueMarket = ensureMorphoBlueMarket(event.address, marketId);
-  //     let borrowToken = ensureAsset(Address.fromString(morphoBlueMarket.loanToken));
+      let morphoBlueMarket = ensureMorphoBlueMarket(event.address, marketId);
+      let borrowToken = ensureAsset(Address.fromString(morphoBlueMarket.loanToken));
 
-  //     let amount = toBigDecimal(tuple[1].toBigInt(), borrowToken.decimals);
+      let amount = toBigDecimal(tuple[1].toBigInt(), borrowToken.decimals);
 
-  //     let assetAmount = createAssetAmount(borrowToken, amount, denominationAsset, 'morpho-blue-repay', event);
+      let assetAmount = createAssetAmount(borrowToken, amount, denominationAsset, 'morpho-blue-repay', event);
 
-  //     createMorphoBluePositionChange(
-  //       event.params.externalPosition,
-  //       'Repay',
-  //       vault,
-  //       morphoBlueMarket,
-  //       assetAmount,
-  //       event,
-  //     );
-  //   }
-  //   return;
-  // }
+      createMorphoBluePositionChange(
+        event.params.externalPosition,
+        'Repay',
+        vault,
+        morphoBlueMarket,
+        assetAmount,
+        event,
+      );
+    }
+    return;
+  }
 
   if (type.label == 'ALICE') {
     if (actionId == AliceActionId.PlaceOrder) {
