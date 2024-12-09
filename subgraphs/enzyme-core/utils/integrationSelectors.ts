@@ -50,6 +50,14 @@ export let unstakeAndRedeemSelector = '0x8334eb99';
 export let unstakeAndRedeemMethod = 'unstakeAndRedeem(address,bytes,bytes)';
 export let unstakeAndRedeemType = 'UNSTAKE_AND_REDEEM';
 
+export let transferSelector = '0x3461917c';
+export let transferMethod = 'transfer(address,bytes,bytes)';
+export let transferType = 'TRANSFER';
+
+export let actionSelector = '0xa7a19e00';
+export let actionMethod = 'action(address,bytes,bytes)';
+export let actionType = 'ACTION';
+
 export function convertSelectorToType(selector: string): string {
   if (selector == addTrackedAssetsSelector) {
     return addTrackedAssetsType;
@@ -101,6 +109,14 @@ export function convertSelectorToType(selector: string): string {
 
   if (selector == unstakeAndRedeemSelector) {
     return unstakeAndRedeemType;
+  }
+
+  if (selector == transferSelector) {
+    return transferType;
+  }
+
+  if (selector == actionSelector) {
+    return actionType;
   }
 
   return 'UNKNOWN';
