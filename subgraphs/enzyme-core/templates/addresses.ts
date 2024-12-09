@@ -78,7 +78,6 @@ export class Release4Addresses {
   compoundV3AdapterAddress: Address;
   comptrollerLibAddress: Address;
   convexCurveLpStakingAdapterAddress: Address;
-  convexCurveLpStakingWrapperFactoryAddress: Address;
   cumulativeSlippageTolerancePolicyAddress: Address;
   curveLiquidityAdapterAddress: Address;
   disallowedAdapterIncomingAssetsPolicyAddress: Address;
@@ -189,9 +188,6 @@ export let release4Addresses: Release4Addresses = {
   compoundV3AdapterAddress: Address.fromString('{{releases.v4.compoundV3AdapterAddress}}'),
   comptrollerLibAddress: Address.fromString('{{releases.v4.comptrollerLibAddress}}'),
   convexCurveLpStakingAdapterAddress: Address.fromString('{{releases.v4.convexCurveLpStakingAdapterAddress}}'),
-  convexCurveLpStakingWrapperFactoryAddress: Address.fromString(
-    '{{releases.v4.convexCurveLpStakingWrapperFactoryAddress}}',
-  ),
   cumulativeSlippageTolerancePolicyAddress: Address.fromString(
     '{{releases.v4.cumulativeSlippageTolerancePolicyAddress}}',
   ),

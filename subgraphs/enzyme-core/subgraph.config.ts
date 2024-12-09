@@ -11,6 +11,7 @@ import * as v2 from './config/v2';
 import * as v3 from './config/v3';
 import * as v4 from './config/v4';
 import { arbitrum } from './contexts/arbitrum';
+import { base } from './contexts/base';
 import { ethereum } from './contexts/ethereum';
 import { ethereumDev } from './contexts/ethereum-dev';
 import { ethereumDevTwo } from './contexts/ethereum-dev-two';
@@ -66,6 +67,7 @@ export interface Variables {
 
 export const contexts: Contexts<Variables> = {
   arbitrum,
+  base,
   ethereum,
   'ethereum-dev': ethereumDev,
   'ethereum-dev-two': ethereumDevTwo,
