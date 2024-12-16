@@ -1,3 +1,7 @@
 packages:
   - packages/*
   - subgraphs/*
+
+catalogs:
+  enzymefinance:
+    '@enzymefinance/environment': '6.2.7'

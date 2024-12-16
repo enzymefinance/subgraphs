@@ -7,12 +7,15 @@
     "upload": "enzyme-graph deploy"
   },
   "devDependencies": {
-    "@enzymefinance/environment": "^4.0.30",
+    "@enzymefinance/environment": "catalog:enzymefinance",
     "@enzymefinance/subgraph-cli": "workspace:*",
     "@enzymefinance/subgraph-utils": "workspace:*",
-    "@graphprotocol/graph-cli": "^0.73.0",
+    "@graphprotocol/graph-cli": "^0.89.0",
     "@graphprotocol/graph-ts": "^0.35.1",
-    "assemblyscript": "^0.27.27",
-    "tsx": "^4.11.0"
+    "assemblyscript": "^0.27.31",
+    "tsx": "^4.19.2"
+  },
+  "peerDependencies": {
+    "@types/node": "^22.9.3"
   }
 }
