@@ -10,14 +10,12 @@ export interface ReleaseVariables {
   allowedExternalPositionTypesPolicyAddress: string;
   allowedRedeemersForSpecificAssetsPolicyAddress: string;
   allowedSharesTransferRecipientsPolicyAddress: string;
-  arbitraryLoanFixedInterestModuleAddress: string;
   arbitraryLoanTotalNominalDeltaOracleModuleAddress: string;
   auraBalancerV2LpStakingAdapterAddress: string;
   balancerV2LiquidityAdapterAddress: string;
+  convexCurveLpStakingAdapterAddress: string;
   compoundV3AdapterAddress: string;
   comptrollerLibAddress: string;
-  convexCurveLpStakingAdapterAddress: string;
-  convexCurveLpStakingWrapperFactoryAddress: string;
   cumulativeSlippageTolerancePolicyAddress: string;
   curveLiquidityAdapterAddress: string;
   disallowedAdapterIncomingAssetsPolicyAddress: string;
@@ -61,12 +59,10 @@ export const sources = (variables: ReleaseVariables): DataSourceUserDeclaration[
     address: variables.allowedRedeemersForSpecificAssetsPolicyAddress,
   },
   { name: 'AllowedSharesTransferRecipientsPolicy', address: variables.allowedSharesTransferRecipientsPolicyAddress },
-  { name: 'ArbitraryLoanFixedInterestModule', address: variables.arbitraryLoanFixedInterestModuleAddress },
   {
     name: 'ArbitraryLoanTotalNominalDeltaOracleModule',
     address: variables.arbitraryLoanTotalNominalDeltaOracleModuleAddress,
   },
-  { name: 'ConvexCurveLpStakingWrapperFactory', address: variables.convexCurveLpStakingWrapperFactoryAddress },
   { name: 'CumulativeSlippageTolerancePolicy', address: variables.cumulativeSlippageTolerancePolicyAddress },
   { name: 'DisallowedAdapterIncomingAssetsPolicy', address: variables.disallowedAdapterIncomingAssetsPolicyAddress },
   { name: 'EntranceRateBurnFee', address: variables.entranceRateBurnFeeAddress },

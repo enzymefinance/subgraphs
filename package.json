@@ -6,7 +6,7 @@
   },
   "dependencies": {
     "@enzymefinance/prettier-config": "^1.0.10",
-    "prettier": "^3.2.5"
+    "prettier": "^2.5.1"
   },
   "prettier": "@enzymefinance/prettier-config"
 }
