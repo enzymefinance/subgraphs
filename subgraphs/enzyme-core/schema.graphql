@@ -23,6 +23,7 @@ enum SharesChangeType {
 }
 
 enum TradeType {
+  ACTION
   APPROVE_ASSETS
   CLAIM_REWARDS
   CLAIM_REWARDS_AND_REINVEST
@@ -32,6 +33,7 @@ enum TradeType {
   REDEEM
   STAKE
   TAKE_ORDER
+  TRANSFER
   UNKNOWN
   UNSTAKE
   UNSTAKE_AND_REDEEM

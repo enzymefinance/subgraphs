@@ -1,37 +1,37 @@
 import { Context } from '@enzymefinance/subgraph-cli';
 import { Variables } from '../subgraph.config';
-import { getEnvironment } from '@enzymefinance/environment/deployments/all';
 import { Deployment, Version } from '@enzymefinance/environment';
+import { getEnvironment } from '@enzymefinance/environment/deployments/all';
 
-const environment = getEnvironment(Deployment.TESTNET, Version.SULU);
+const environment = getEnvironment(Deployment.BASE, Version.SULU);
 
-export const testnet: Context<Variables> = {
-  name: 'enzyme-core-testnet',
-  network: 'matic',
+export const base: Context<Variables> = {
+  name: 'enzyme-core-base',
+  network: 'base',
   variables: {
-    block: 25731749,
+    block: environment.deployment.inception,
     wethTokenAddress: environment.namedTokens.weth.id,
     wrappedNativeTokenAddress: environment.namedTokens.nativeTokenWrapper.id,
     chainlinkAggregatorAddresses: {
-      audUsd: '0x062df9c4efd2030e243ffcc398b652e8b8f95c6f',
-      btcEth: '0x19b0f0833c78c0848109e3842d34d2fdf2ca69ba',
-      btcusd: '0xc907e116054ad103354f2d350fd2514433d57f6f',
-      chfusd: '0xc76f762cedf0f78a439727861628e0fdfe1e70c2',
-      ethUsd: '0xf9680d99d6c9589e2a93a78a04a279e509205945',
-      eurUsd: '0x73366fe0aa0ded304479862808e02506fe556a98',
-      gbpUsd: '0x099a2540848573e94fb1ca0fa420b00acbbc845a',
-      jpyUsd: '0xd647a6fc9bc6402301583c91decc5989d8bc382d',
+      audUsd: '0x0000000000000000000000000000000000000000',
+      btcEth: '0x0000000000000000000000000000000000000000',
+      btcusd: '0x64c911996D3c6aC71f9b455B1E8E7266BcbD848F',
+      chfusd: '0x0000000000000000000000000000000000000000',
+      ethUsd: '0x71041dddad3595F9CEd3DcCFBe3D1F4b0a16Bb70',
+      eurUsd: '0xc91D87E81faB8f93699ECf7Ee9B44D11e1D53F0F',
+      gbpUsd: '0x0000000000000000000000000000000000000000',
+      jpyUsd: '0x0000000000000000000000000000000000000000',
     },
     external: {
       balancerMinterAddress: '0x0000000000000000000000000000000000000000',
-      curveMinterAddress: environment.externalContracts.curveMinter,
-      cvxLockerV2Address: environment.externalContracts.voteLockedConvexToken,
-      cvxAddress: environment.namedTokens.cvx.id,
+      curveMinterAddress: '0x0000000000000000000000000000000000000000',
+      cvxLockerV2Address: '0x0000000000000000000000000000000000000000',
+      cvxAddress: '0x0000000000000000000000000000000000000000',
       mplAddress: '0x0000000000000000000000000000000000000000',
-      grtAddress: environment.namedTokens.grt.id,
-      theGraphStakingProxyAddress: environment.externalContracts.theGraphDelegationStakingProxy,
+      grtAddress: '0x0000000000000000000000000000000000000000',
+      theGraphStakingProxyAddress: '0x0000000000000000000000000000000000000000',
       lusdAddress: '0x0000000000000000000000000000000000000000',
-      compAddress: environment.namedTokens.comp.id,
+      compAddress: '0x0000000000000000000000000000000000000000',
       // morphoBlueAddress: "0x0000000000000000000000000000000000000000",
       aliceOrderManager: '0x0000000000000000000000000000000000000000',
     },

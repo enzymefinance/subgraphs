@@ -1,6 +1,6 @@
 import { Context } from '@enzymefinance/subgraph-cli';
 import { Variables } from '../subgraph.config';
-import { getEnvironment } from '@enzymefinance/environment/all';
+import { getEnvironment } from '@enzymefinance/environment/deployments/all';
 import { Deployment, Version } from '@enzymefinance/environment';
 
 const v2Deployment = getEnvironment(Deployment.ETHEREUM, Version.PHOENIX);
@@ -31,7 +31,7 @@ export const ethereum: Context<Variables> = {
       cvxAddress: suluDeployment.namedTokens.cvx.id,
       mplAddress: suluDeployment.namedTokens.mpl.id,
       grtAddress: suluDeployment.namedTokens.grt.id,
-      theGraphStakingProxyAddress: suluDeployment.externalContracts.theGraphStakingProxy,
+      theGraphStakingProxyAddress: suluDeployment.externalContracts.theGraphDelegationStakingProxy,
       lusdAddress: '0x5f98805a4e8be255a32880fdec7f6728c6568ba0',
       compAddress: '0xc00e94cb662c3520282e6f5717214004a7f26888',
       // morphoBlueAddress: "0xbbbbbbbbbb9cc5e90e3b3af64bdaf62c37eeffcb",
@@ -41,12 +41,13 @@ export const ethereum: Context<Variables> = {
       addressListRegistryAddress: suluDeployment.contracts.AddressListRegistry,
       dispatcherAddress: suluDeployment.contracts.Dispatcher,
       externalPositionFactoryAddress: suluDeployment.contracts.ExternalPositionFactory,
-      gatedRedemptionQueueSharesWrapperFactoryAddress: '0x73b9c40530311b49b526f230d01bdf5725b3290d',
-      manualValueOracleFactoryAddress: '0x0edbb060a8f00f5967eecfc87c8559fa65501a3d',
-      pendleMarketsRegistryAddress: '0x31391adf6402fdd4eb4b57801a612b0987a0b0f2',
+      gatedRedemptionQueueSharesWrapperFactoryAddress:
+        suluDeployment.contracts.GatedRedemptionQueueSharesWrapperFactory,
+      manualValueOracleFactoryAddress: suluDeployment.contracts.ManualValueOracleFactory,
+      pendleMarketsRegistryAddress: suluDeployment.contracts.PendleMarketsRegistry,
       protocolFeeReserveLibAddress: suluDeployment.contracts.ProtocolFeeReserveLib,
       sharesSplitterFactoryAddress: suluDeployment.contracts.SharesSplitterFactory,
-      singleAssetRedemptionQueueFactoryAddress: '0xfe84d5209054254389c9d6a754b821f3a297d56a',
+      singleAssetRedemptionQueueFactoryAddress: suluDeployment.contracts.SingleAssetRedemptionQueueFactory,
       uintListRegistryAddress: suluDeployment.contracts.UintListRegistry,
     },
     releases: {
@@ -109,20 +110,19 @@ export const ethereum: Context<Variables> = {
         allowedExternalPositionTypesPerManagerPolicyAddress:
           suluDeployment.contracts.AllowedExternalPositionTypesPerManagerPolicy,
         allowedExternalPositionTypesPolicyAddress: suluDeployment.contracts.AllowedExternalPositionTypesPolicy,
-        allowedRedeemersForSpecificAssetsPolicyAddress: '0xed4aa74490843e7ad64b445ef18cece8a0562433',
+        allowedRedeemersForSpecificAssetsPolicyAddress:
+          suluDeployment.contracts.AllowedRedeemersForSpecificAssetsPolicy,
         allowedSharesTransferRecipientsPolicyAddress: suluDeployment.contracts.AllowedSharesTransferRecipientsPolicy,
-        arbitraryLoanFixedInterestModuleAddress: suluDeployment.contracts.ArbitraryLoanFixedInterestModule,
         arbitraryLoanTotalNominalDeltaOracleModuleAddress:
           suluDeployment.contracts.ArbitraryLoanTotalNominalDeltaOracleModule,
         auraBalancerV2LpStakingAdapterAddress: '0x581a1e865285144c32ebd8205ca144156920b5fd',
-        balancerV2LiquidityAdapterAddress: '0xab5da4aa08b56c7e5a9d5d8a5ff19cf09a88c305',
-        compoundV3AdapterAddress: '0xfaa9b9cc98503f51a54f6038dfdd0e43aa0ac98e',
+        balancerV2LiquidityAdapterAddress: suluDeployment.contracts.BalancerV2LiquidityAdapter,
+        convexCurveLpStakingAdapterAddress: '0xe8943f116c974c05f637920fff3dfe0463528d9a',
+        compoundV3AdapterAddress: suluDeployment.contracts.CompoundV3Adapter,
         comptrollerLibAddress: suluDeployment.contracts.ComptrollerLib,
-        convexCurveLpStakingAdapterAddress: suluDeployment.contracts.ConvexCurveLpStakingAdapter,
-        convexCurveLpStakingWrapperFactoryAddress: suluDeployment.contracts.ConvexCurveLpStakingWrapperFactory,
         cumulativeSlippageTolerancePolicyAddress: suluDeployment.contracts.CumulativeSlippageTolerancePolicy,
         curveLiquidityAdapterAddress: suluDeployment.contracts.CurveLiquidityAdapter,
-        disallowedAdapterIncomingAssetsPolicyAddress: '0x5e216f370e3555feb9a0575a57ada732a9e50386',
+        disallowedAdapterIncomingAssetsPolicyAddress: suluDeployment.contracts.DisallowedAdapterIncomingAssetsPolicy,
         entranceRateBurnFeeAddress: suluDeployment.contracts.EntranceRateBurnFee,
         entranceRateDirectFeeAddress: suluDeployment.contracts.EntranceRateDirectFee,
         exitRateBurnFeeAddress: suluDeployment.contracts.ExitRateBurnFee,
@@ -136,7 +136,8 @@ export const ethereum: Context<Variables> = {
         minAssetBalancesPostRedemptionPolicyAddress: suluDeployment.contracts.MinAssetBalancesPostRedemptionPolicy,
         minMaxInvestmentPolicyAddress: suluDeployment.contracts.MinMaxInvestmentPolicy,
         minSharesSupplyFeeAddress: suluDeployment.contracts.MinSharesSupplyFee,
-        noDepegOnRedeemSharesForSpecificAssetsPolicyAddress: '0x96ef0f7c10505460fa39c57a037a5ec2520b8b25',
+        noDepegOnRedeemSharesForSpecificAssetsPolicyAddress:
+          suluDeployment.contracts.NoDepegOnRedeemSharesForSpecificAssetsPolicy,
         onlyRemoveDustExternalPositionPolicyAddress: suluDeployment.contracts.OnlyRemoveDustExternalPositionPolicy,
         onlyUntrackDustOrPricelessAssetsPolicyAddress: suluDeployment.contracts.OnlyUntrackDustOrPricelessAssetsPolicy,
         performanceFeeAddress: suluDeployment.contracts.PerformanceFee,
