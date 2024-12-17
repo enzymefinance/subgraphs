@@ -4,4 +4,4 @@ packages:
 
 catalogs:
   enzymefinance:
-    '@enzymefinance/environment': '6.2.7'
+    '@enzymefinance/environment': 'https://pkg.pr.new/enzymefinance/sdk/@enzymefinance/environment@31ac849'
