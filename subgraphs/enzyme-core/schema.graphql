@@ -1596,7 +1596,7 @@ type LidoWithdrawalsPositionChange implements Activity & VaultActivity & Externa
   timestamp: Int!
   externalPosition: ExternalPosition!
   lidoWithdrawalsPositionChangeType: LidoWithdrawalsPositionChangeType!
-  amounts: [BigDecimal!]
+  amounts: [AssetAmount!]
   requestIds: [BigInt!]
   activityCounter: Int!
   activityCategories: [ActivityCategory!]!
@@ -1842,7 +1842,7 @@ type StaderWithdrawalsPositionChange implements Activity & VaultActivity & Exter
   timestamp: Int!
   externalPosition: ExternalPosition!
   staderWithdrawalsPositionChangeType: StaderWithdrawalsPositionChangeType!
-  amount: BigDecimal
+  amount: AssetAmount
   requestId: BigInt
   activityCounter: Int!
   activityCategories: [ActivityCategory!]!

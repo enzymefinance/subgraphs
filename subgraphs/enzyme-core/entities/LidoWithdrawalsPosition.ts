@@ -1,5 +1,6 @@
 import { Address, BigDecimal, BigInt, ethereum } from '@graphprotocol/graph-ts';
 import {
+  AssetAmount,
   ExternalPositionType,
   LidoWithdrawalsPosition,
   LidoWithdrawalsPositionChange,
@@ -35,7 +36,7 @@ export function createLidoWithdrawalsPosition(
 export function createLidoWithdrawalsPositionChange(
   lidoWithdrawalsPositionAddress: Address,
   changeType: string,
-  amounts: BigDecimal[] | null,
+  amounts: AssetAmount[] | null,
   requestIds: BigInt[] | null,
   vault: Vault,
   event: ethereum.Event,
@@ -43,7 +44,7 @@ export function createLidoWithdrawalsPositionChange(
   let change = new LidoWithdrawalsPositionChange(uniqueEventId(event));
   change.lidoWithdrawalsPositionChangeType = changeType;
   change.externalPosition = lidoWithdrawalsPositionAddress.toHex();
-  change.amounts = amounts;
+  change.amounts = amounts != null ? amounts.map<string>((assetAmount) => assetAmount.id) : null;
   change.requestIds = requestIds;
   change.vault = vault.id;
   change.timestamp = event.block.timestamp.toI32();

@@ -34,6 +34,8 @@ export const arbitrum: Context<Variables> = {
       compAddress: environment.namedTokens.comp.id,
       // morphoBlueAddress: "0x0000000000000000000000000000000000000000",
       aliceOrderManager: '0x0000000000000000000000000000000000000000',
+      stethAddress: '0x0000000000000000000000000000000000000000',
+      ethxAddress: '0x0000000000000000000000000000000000000000',
     },
     persistent: {
       addressListRegistryAddress: environment.contracts.AddressListRegistry,

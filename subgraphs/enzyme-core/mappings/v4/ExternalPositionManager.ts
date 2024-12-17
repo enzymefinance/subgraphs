@@ -101,6 +101,8 @@ import {
   wethTokenAddress,
   mplAddress,
   aliceOrderManagerAddress,
+  stethAddress,
+  ethxAddress,
 } from '../../generated/addresses';
 import {
   createTheGraphDelegationPosition,
@@ -1873,9 +1875,24 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         return;
       }
 
+      let stethAsset = ensureAsset(stethAddress);
+
       let tuple = decoded.toTuple();
 
-      let amounts = tuple[0].toBigIntArray().map<BigDecimal>((value) => toBigDecimal(value, 18));
+      let amountBI = tuple[0].toBigIntArray();
+
+      let amounts: AssetAmount[] = [];
+      for (let i: i32 = 0; i < amountBI.length; i++) {
+        amounts.push(
+          createAssetAmount(
+            stethAsset,
+            toBigDecimal(amountBI[i], 18),
+            denominationAsset,
+            'lido-request-' + i.toString(),
+            event,
+          ),
+        );
+      }
 
       createLidoWithdrawalsPositionChange(
         event.params.externalPosition,
@@ -1920,9 +1937,17 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         return;
       }
 
+      let ethxAsset = ensureAsset(ethxAddress);
+
       let tuple = decoded.toTuple();
 
-      let amount = toBigDecimal(tuple[0].toBigInt(), 18);
+      let amount = createAssetAmount(
+        ethxAsset,
+        toBigDecimal(tuple[0].toBigInt(), 18),
+        denominationAsset,
+        'stader-request',
+        event,
+      );
 
       createStaderWithdrawalsPositionChange(
         event.params.externalPosition,

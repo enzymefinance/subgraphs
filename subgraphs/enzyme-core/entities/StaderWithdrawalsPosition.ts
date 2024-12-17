@@ -1,5 +1,6 @@
 import { Address, BigDecimal, BigInt, ethereum } from '@graphprotocol/graph-ts';
 import {
+  AssetAmount,
   ExternalPositionType,
   StaderWithdrawalsPosition,
   StaderWithdrawalsPositionChange,
@@ -35,7 +36,7 @@ export function createStaderWithdrawalsPosition(
 export function createStaderWithdrawalsPositionChange(
   lidoWithdrawalsPositionAddress: Address,
   changeType: string,
-  amount: BigDecimal | null,
+  amount: AssetAmount | null,
   requestId: BigInt | null,
   vault: Vault,
   event: ethereum.Event,
@@ -43,7 +44,7 @@ export function createStaderWithdrawalsPositionChange(
   let change = new StaderWithdrawalsPositionChange(uniqueEventId(event));
   change.staderWithdrawalsPositionChangeType = changeType;
   change.externalPosition = lidoWithdrawalsPositionAddress.toHex();
-  change.amount = amount;
+  change.amount = amount != null ? amount.id : null;
   change.requestId = requestId;
   change.vault = vault.id;
   change.timestamp = event.block.timestamp.toI32();
