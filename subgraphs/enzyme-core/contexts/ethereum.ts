@@ -36,6 +36,8 @@ export const ethereum: Context<Variables> = {
       compAddress: '0xc00e94cb662c3520282e6f5717214004a7f26888',
       // morphoBlueAddress: "0xbbbbbbbbbb9cc5e90e3b3af64bdaf62c37eeffcb",
       aliceOrderManager: '0x841473a19279e54a850e9083a3a57de9e6244d2e',
+      stethAddress: '0xae7ab96520de3a18e5e111b5eaab095312d7fe84',
+      ethxAddress: '0xa35b1b31ce002fbf2058d22f30f95d405200a15b',
     },
     persistent: {
       addressListRegistryAddress: suluDeployment.contracts.AddressListRegistry,

@@ -62,6 +62,8 @@ export interface Variables {
     compAddress: string;
     // morphoBlueAddress: string;
     aliceOrderManager: string;
+    stethAddress: string;
+    ethxAddress: string;
   };
 }
 

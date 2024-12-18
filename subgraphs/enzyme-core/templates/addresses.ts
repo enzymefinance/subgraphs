@@ -254,6 +254,10 @@ export let compAddress = Address.fromString('{{external.compAddress}}');
 
 export let aliceOrderManagerAddress = Address.fromString('{{external.aliceOrderManager}}');
 
+export let stethAddress = Address.fromString('{{external.stethAddress}}');
+
+export let ethxAddress = Address.fromString('{{external.ethxAddress}}');
+
 export class ChainlinkAggregatorAddresses {
   audUsdAddress: Address;
   btcEthAddress: Address;

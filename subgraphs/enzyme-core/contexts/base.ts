@@ -34,6 +34,8 @@ export const base: Context<Variables> = {
       compAddress: '0x0000000000000000000000000000000000000000',
       // morphoBlueAddress: "0x0000000000000000000000000000000000000000",
       aliceOrderManager: '0x0000000000000000000000000000000000000000',
+      stethAddress: '0x0000000000000000000000000000000000000000',
+      ethxAddress: '0x0000000000000000000000000000000000000000',
     },
     persistent: {
       addressListRegistryAddress: environment.contracts.AddressListRegistry,

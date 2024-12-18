@@ -77,6 +77,7 @@ import {
   UniswapV3LiquidityPositionActionId,
   KilnStakingPositionActionId,
   LidoWithdrawalsActionId,
+  StaderWithdrawalsActionId,
   AaveV3DebtPositionActionId,
   StakeWiseV3StakingPositionActionId,
   PendleV2ActionId,
@@ -100,6 +101,8 @@ import {
   wethTokenAddress,
   mplAddress,
   aliceOrderManagerAddress,
+  stethAddress,
+  ethxAddress,
 } from '../../generated/addresses';
 import {
   createTheGraphDelegationPosition,
@@ -133,6 +136,10 @@ import {
   createLidoWithdrawalsPosition,
   createLidoWithdrawalsPositionChange,
 } from '../../entities/LidoWithdrawalsPosition';
+import {
+  createStaderWithdrawalsPosition,
+  createStaderWithdrawalsPositionChange,
+} from '../../entities/StaderWithdrawalsPosition';
 import {
   createAaveV3DebtPosition,
   createAaveV3DebtPositionChange,
@@ -238,6 +245,12 @@ export function handleExternalPositionDeployedForFund(event: ExternalPositionDep
     createLidoWithdrawalsPosition(event.params.externalPosition, event.params.vaultProxy, type);
 
     LidoWithdrawalsPositionLib4DataSource.create(event.params.externalPosition);
+
+    return;
+  }
+
+  if (type.label == 'STADER_WITHDRAWALS') {
+    createStaderWithdrawalsPosition(event.params.externalPosition, event.params.vaultProxy, type);
 
     return;
   }
@@ -1862,9 +1875,24 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         return;
       }
 
+      let stethAsset = ensureAsset(stethAddress);
+
       let tuple = decoded.toTuple();
 
-      let amounts = tuple[0].toBigIntArray().map<BigDecimal>((value) => toBigDecimal(value, 18));
+      let amountBI = tuple[0].toBigIntArray();
+
+      let amounts: AssetAmount[] = [];
+      for (let i: i32 = 0; i < amountBI.length; i++) {
+        amounts.push(
+          createAssetAmount(
+            stethAsset,
+            toBigDecimal(amountBI[i], 18),
+            denominationAsset,
+            'lido-request-' + i.toString(),
+            event,
+          ),
+        );
+      }
 
       createLidoWithdrawalsPositionChange(
         event.params.externalPosition,
@@ -1893,6 +1921,60 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         'ClaimWithdrawals',
         null,
         requestIds,
+        vault,
+        event,
+      );
+    }
+
+    return;
+  }
+
+  if (type.label == 'STADER_WITHDRAWALS') {
+    if (actionId == StaderWithdrawalsActionId.RequestWithdrawals) {
+      let decoded = ethereum.decode('(uint256)', event.params.actionArgs);
+
+      if (decoded == null) {
+        return;
+      }
+
+      let ethxAsset = ensureAsset(ethxAddress);
+
+      let tuple = decoded.toTuple();
+
+      let amount = createAssetAmount(
+        ethxAsset,
+        toBigDecimal(tuple[0].toBigInt(), 18),
+        denominationAsset,
+        'stader-request',
+        event,
+      );
+
+      createStaderWithdrawalsPositionChange(
+        event.params.externalPosition,
+        'RequestWithdrawals',
+        amount,
+        null,
+        vault,
+        event,
+      );
+    }
+
+    if (actionId == StaderWithdrawalsActionId.ClaimWithdrawals) {
+      let decoded = ethereum.decode('(uint256)', event.params.actionArgs);
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+
+      let requestId = tuple[0].toBigInt();
+
+      createStaderWithdrawalsPositionChange(
+        event.params.externalPosition,
+        'ClaimWithdrawals',
+        null,
+        requestId,
         vault,
         event,
       );

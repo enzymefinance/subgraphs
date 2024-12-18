@@ -1596,7 +1596,7 @@ type LidoWithdrawalsPositionChange implements Activity & VaultActivity & Externa
   timestamp: Int!
   externalPosition: ExternalPosition!
   lidoWithdrawalsPositionChangeType: LidoWithdrawalsPositionChangeType!
-  amounts: [BigDecimal!]
+  amounts: [AssetAmount!]
   requestIds: [BigInt!]
   activityCounter: Int!
   activityCategories: [ActivityCategory!]!
@@ -1818,6 +1818,32 @@ type AlicePositionChange implements Activity & VaultActivity & ExternalPositionC
   orders: [AliceOrder!]!
   outgoingAssetAmount: AssetAmount
   incomingAssetAmount: AssetAmount
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
+type StaderWithdrawalsPosition implements ExternalPosition @entity {
+  id: ID!
+  vault: Vault!
+  type: ExternalPositionType!
+  active: Boolean!
+  changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
+}
+
+enum StaderWithdrawalsPositionChangeType {
+  RequestWithdrawals
+  ClaimWithdrawals
+}
+
+type StaderWithdrawalsPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+  id: ID!
+  vault: Vault!
+  timestamp: Int!
+  externalPosition: ExternalPosition!
+  staderWithdrawalsPositionChangeType: StaderWithdrawalsPositionChangeType!
+  amount: AssetAmount
+  requestId: BigInt
   activityCounter: Int!
   activityCategories: [ActivityCategory!]!
   activityType: ActivityType!
