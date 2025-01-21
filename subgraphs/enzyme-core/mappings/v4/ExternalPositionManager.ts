@@ -1386,11 +1386,6 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     }
 
     if (actionId == TheGraphDelegationPositionActionId.Withdraw) {
-      // Returning early on Arbitrum until this has been tested
-      if (dataSource.network() == 'arbitrum-one') {
-        return;
-      }
-
       let decoded = ethereum.decode('(address,address)', event.params.actionArgs);
 
       if (decoded == null) {
