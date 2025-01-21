@@ -1,7 +1,7 @@
 import { ONE_DAY } from '@enzymefinance/subgraph-utils';
 import { BigInt, BigDecimal } from '@graphprotocol/graph-ts';
 
-export let mainnetLaunchTimestamp = BigInt.fromI32(1746050400); // May 01 2025 00:00:00 UTC
+export let mainnetLaunchTimestamp = BigInt.fromI32(2061583200); // May 01 2035 00:00:00 UTC
 
 export let cooldownDays: i32 = 30;
 
