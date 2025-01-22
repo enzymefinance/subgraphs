@@ -1,5 +1,5 @@
 import { uniqueEventId } from '@enzymefinance/subgraph-utils';
-import { Address, ethereum } from '@graphprotocol/graph-ts';
+import { Address, Bytes, ethereum } from '@graphprotocol/graph-ts';
 import { Asset, AssetAmount, Trade, Vault } from '../generated/schema';
 import { addTrackedAssetsType, convertSelectorToType, removeTrackedAssetsType } from '../utils/integrationSelectors';
 import { getActivityCounter } from './Counter';
@@ -12,6 +12,7 @@ export function trackTrade(
   outgoingAssets: Asset[],
   incomingAssetAmounts: AssetAmount[],
   outgoingAssetAmounts: AssetAmount[],
+  integrationData: Bytes,
   event: ethereum.Event,
 ): void {
   let tradeType = convertSelectorToType(selector);
@@ -36,6 +37,7 @@ export function trackTrade(
   trade.activityCounter = getActivityCounter();
   trade.activityCategories = ['Vault'];
   trade.activityType = 'Trade';
+  trade.integrationData = integrationData;
   trade.save();
 
   vault.lastAssetUpdate = event.block.timestamp.toI32();
