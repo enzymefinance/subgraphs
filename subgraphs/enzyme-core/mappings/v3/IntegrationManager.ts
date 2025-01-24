@@ -71,6 +71,7 @@ export function handleCallOnIntegrationExecutedForFund(event: CallOnIntegrationE
     outgoingAssets,
     incomingAssetAmounts,
     outgoingAssetAmounts,
+    event.params.integrationData,
     event,
   );
 }
