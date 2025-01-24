@@ -1,1 +1,5 @@
-export let aaveV3LikeDebtTypes = ['AAVE_V3_DEBT', 'ZERO_LEND_RWA_AAVE_V3_DEBT', 'ZERO_LEND_BTC_AAVE_V3_DEBT'];
+export let aaveV3LikeDebtTypes = [
+  'AAVE_V3_DEBT',
+  'ZERO_LEND_RWA_STABLECOINS_AAVE_V3_DEBT',
+  'ZERO_LEND_BTC_AAVE_V3_DEBT',
+];
