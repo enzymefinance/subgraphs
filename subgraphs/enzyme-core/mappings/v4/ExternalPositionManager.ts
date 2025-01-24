@@ -173,6 +173,8 @@ import { createAlicePosition, createAlicePositionChange, useAliceOrder } from '.
 //   ensureMorphoBlueMarket,
 // } from '../../entities/MorphoBluePosition';
 
+let aaveV3LikeDebtTypes = ['AAVE_V3_DEBT', 'ZERO_LEND_RWA_AAVE_V3_DEBT', 'ZERO_LEND_BTC_AAVE_V3_DEBT'];
+
 export function handleExternalPositionDeployedForFund(event: ExternalPositionDeployedForFund): void {
   let type = useExternalPositionType(event.params.externalPositionTypeId);
 
@@ -186,7 +188,7 @@ export function handleExternalPositionDeployedForFund(event: ExternalPositionDep
     return;
   }
 
-  if (type.label == 'AAVE_V3_DEBT') {
+  if (aaveV3LikeDebtTypes.includes(type.label)) {
     createAaveV3DebtPosition(event.params.externalPosition, event.params.vaultProxy, type);
     return;
   }
@@ -397,7 +399,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     return;
   }
 
-  if (type.label == 'AAVE_V3_DEBT') {
+  if (aaveV3LikeDebtTypes.includes(type.label)) {
     if (actionId == AaveV3DebtPositionActionId.AddCollateral) {
       let decoded = ethereum.decode('(address[],uint256[],bool)', tuplePrefixBytes(event.params.actionArgs));
 
