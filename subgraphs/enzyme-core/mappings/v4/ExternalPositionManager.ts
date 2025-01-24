@@ -167,13 +167,12 @@ import {
   gmxUsdDecimals,
 } from '../../entities/GMXV2LeverageTradingPosition';
 import { createAlicePosition, createAlicePositionChange, useAliceOrder } from '../../entities/AlicePosition';
+import { aaveV3LikeDebtTypes } from '../../utils/aaveV3Like';
 // import {
 //   createMorphoBluePosition,
 //   createMorphoBluePositionChange,
 //   ensureMorphoBlueMarket,
 // } from '../../entities/MorphoBluePosition';
-
-let aaveV3LikeDebtTypes = ['AAVE_V3_DEBT', 'ZERO_LEND_RWA_AAVE_V3_DEBT', 'ZERO_LEND_BTC_AAVE_V3_DEBT'];
 
 export function handleExternalPositionDeployedForFund(event: ExternalPositionDeployedForFund): void {
   let type = useExternalPositionType(event.params.externalPositionTypeId);
