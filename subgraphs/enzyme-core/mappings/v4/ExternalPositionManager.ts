@@ -167,6 +167,7 @@ import {
   gmxUsdDecimals,
 } from '../../entities/GMXV2LeverageTradingPosition';
 import { createAlicePosition, createAlicePositionChange, useAliceOrder } from '../../entities/AlicePosition';
+import { aaveV3LikeDebtTypes } from '../../utils/aaveV3Like';
 // import {
 //   createMorphoBluePosition,
 //   createMorphoBluePositionChange,
@@ -186,7 +187,7 @@ export function handleExternalPositionDeployedForFund(event: ExternalPositionDep
     return;
   }
 
-  if (type.label == 'AAVE_V3_DEBT') {
+  if (aaveV3LikeDebtTypes.includes(type.label)) {
     createAaveV3DebtPosition(event.params.externalPosition, event.params.vaultProxy, type);
     return;
   }
@@ -397,7 +398,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     return;
   }
 
-  if (type.label == 'AAVE_V3_DEBT') {
+  if (aaveV3LikeDebtTypes.includes(type.label)) {
     if (actionId == AaveV3DebtPositionActionId.AddCollateral) {
       let decoded = ethereum.decode('(address[],uint256[],bool)', tuplePrefixBytes(event.params.actionArgs));
 
