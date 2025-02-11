@@ -1078,6 +1078,7 @@ type Trade implements Activity & VaultActivity @entity {
   vault: Vault!
   adapter: Bytes!
   tradeType: TradeType!
+  integrationData: Bytes!
   incomingAssets: [Asset!]!
   outgoingAssets: [Asset!]!
   incomingAssetAmounts: [AssetAmount!]!

@@ -62,6 +62,7 @@ import { usePendleV2Position } from '../../entities/PendleV2Position';
 import { useGMXV2LeverageTradingPosition } from '../../entities/GMXV2LeverageTradingPosition';
 import { useAlicePosition } from '../../entities/AlicePosition';
 import { useStaderWithdrawalsPosition } from '../../entities/StaderWithdrawalsPosition';
+import { aaveV3LikeDebtTypes } from '../../utils/aaveV3Like';
 // import { useMorphoBluePosition } from '../../entities/MorphoBluePosition';
 
 export function handleTransfer(event: Transfer): void {
@@ -332,7 +333,7 @@ export function handleExternalPositionAdded(event: ExternalPositionAdded): void 
     adp.save();
   }
 
-  if (type.label == 'AAVE_V3_DEBT') {
+  if (aaveV3LikeDebtTypes.includes(type.label)) {
     let adp = useAaveV3DebtPosition(event.params.externalPosition.toHex());
     adp.active = true;
     adp.save();
@@ -444,7 +445,7 @@ export function handleExternalPositionRemoved(event: ExternalPositionRemoved): v
     adp.save();
   }
 
-  if (type.label == 'AAVE_V3_DEBT') {
+  if (aaveV3LikeDebtTypes.includes(type.label)) {
     let adp = useAaveV3DebtPosition(event.params.externalPosition.toHex());
     adp.active = false;
     adp.save();
