@@ -47,6 +47,7 @@ export const testnet: Context<Variables> = {
       protocolFeeReserveLibAddress: environment.contracts.ProtocolFeeReserveLib,
       sharesSplitterFactoryAddress: environment.contracts.SharesSplitterFactory,
       singleAssetRedemptionQueueFactoryAddress: environment.contracts.SingleAssetRedemptionQueueFactory,
+      singleAssetDepositQueueFactoryAddress: '0x5b7af1c2962bCC9d0D702951fCc00BDbd00c6eAA',
       uintListRegistryAddress: environment.contracts.UintListRegistry,
     },
     releases: {
