@@ -9,6 +9,7 @@ import { Address } from '@graphprotocol/graph-ts';
 
 export class PersistentAddresses {
   dispatcherAddress: Address;
+  singleAssetDepositQueueFactoryAddress: Address;
 }
 
 export class Release2Addresses {
@@ -107,6 +108,7 @@ export class Release4Addresses {
 
 export let persistentAddresses: PersistentAddresses = {
   dispatcherAddress: Address.fromString('{{persistent.dispatcherAddress}}'),
+  singleAssetDepositQueueFactoryAddress: Address.fromString('{{persistent.singleAssetDepositQueueFactoryAddress}}'),
 };
 
 export let release2Addresses: Release2Addresses = {

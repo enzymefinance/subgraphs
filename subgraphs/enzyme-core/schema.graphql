@@ -362,6 +362,7 @@ type Account @entity {
   gatedRedepmtionQueueSharesWrapperDepositorBalances: [GatedRedemptionQueueSharesWrapperDepositorBalance!]!
     @derivedFrom(field: "account")
   singleAssetRedemptionQueueManagements: [SingleAssetRedemptionQueue!]! @derivedFrom(field: "managers")
+  singleAssetDepositQueueManagements: [SingleAssetDepositQueue!]! @derivedFrom(field: "managers")
 
   deposits: [Deposit!]! @derivedFrom(field: "depositor")
   sharesChanges: [SharesChange!]! @derivedFrom(field: "depositor")
@@ -2345,4 +2346,41 @@ type SingleAssetRedemptionQueueRequest @entity {
   bypassedAt: Int
   withdrawn: Boolean!
   withdrawnAt: Int
+}
+
+#################################################
+# Single Asset Deposit Queue
+#################################################
+
+type SingleAssetDepositQueue @entity {
+  id: ID!
+  vault: Vault!
+  managers: [Account!]!
+  createdAt: Int!
+  creator: Account!
+  depositAsset: Bytes!
+  depositorAllowlist: AddressList!
+  minRequestTime: Int!
+  minDepositAssetAmount: BigDecimal!
+  shutdown: Boolean!
+  shutdownAt: Int
+  requests: [SingleAssetDepositQueueRequest!]! @derivedFrom(field: "singleAssetDepositQueue")
+}
+
+type SingleAssetDepositQueueRequest @entity {
+  id: ID!
+  requestId: BigInt!
+  createdAt: Int!
+  account: Account!
+  vault: Vault!
+  sharesAmount: BigDecimal
+  singleAssetDepositQueue: SingleAssetDepositQueue!
+  depositAssetAmount: AssetAmount!
+  deposited: Boolean!
+  depositedAt: Int
+  bypassed: Boolean!
+  bypassedAt: Int
+  cancelableAt: Int!
+  canceled: Boolean!
+  canceledAt: Int
 }
