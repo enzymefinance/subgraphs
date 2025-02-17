@@ -44,7 +44,7 @@ export function ensureSingleAssetDepositQueueRequest(
   request = new SingleAssetDepositQueueRequest(id);
   request.requestId = requestId;
   request.createdAt = event.block.timestamp.toI32();
-  request.sharesAmount = ZERO_BD;
+  request.depositAssetAmount = '';
   request.vault = ZERO_ADDRESS.toHex();
   request.account = ZERO_ADDRESS.toHex();
   request.singleAssetDepositQueue = ZERO_ADDRESS.toHex();

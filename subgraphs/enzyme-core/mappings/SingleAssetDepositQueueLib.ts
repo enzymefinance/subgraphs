@@ -1,4 +1,5 @@
 import { arrayDiff, arrayUnique, toBigDecimal } from '@enzymefinance/subgraph-utils';
+import { Address } from '@graphprotocol/graph-ts';
 import {
   ensureSingleAssetDepositQueue,
   ensureSingleAssetDepositQueueRequest,
@@ -60,7 +61,7 @@ export function handleDepositRequestAdded(event: DepositRequestAdded): void {
   let request = ensureSingleAssetDepositQueueRequest(queue, event.params.id, event);
   request.createdAt = event.block.timestamp.toI32();
 
-  let asset = ensureAsset(queue.depositAsset);
+  let asset = ensureAsset(Address.fromBytes(queue.depositAsset));
   let amount = toBigDecimal(event.params.depositAssetAmount, asset.decimals);
   let assetAmount = createAssetAmount(asset, amount, asset, 'single-asset-deposit', event);
   request.depositAssetAmount = assetAmount.id;
@@ -100,7 +101,7 @@ export function handleShutdown(event: Shutdown): void {
 export function handleMinDepositAssetAmountSet(event: MinDepositAssetAmountSet): void {
   let depositQueue = ensureSingleAssetDepositQueue(event.address, event);
 
-  let asset = ensureAsset(depositQueue.depositAsset);
+  let asset = ensureAsset(Address.fromBytes(depositQueue.depositAsset));
 
   depositQueue.minDepositAssetAmount = toBigDecimal(event.params.minDepositAssetAmount, asset.decimals);
   depositQueue.save();
