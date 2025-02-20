@@ -2361,7 +2361,7 @@ type SingleAssetDepositQueue @entity {
   depositAsset: Bytes!
   depositorAllowlist: AddressList!
   minRequestTime: Int!
-  minDepositAssetAmount: BigDecimal!
+  minDepositAssetAmount: BigInt!
   shutdown: Boolean!
   shutdownAt: Int
   requests: [SingleAssetDepositQueueRequest!]! @derivedFrom(field: "singleAssetDepositQueue")

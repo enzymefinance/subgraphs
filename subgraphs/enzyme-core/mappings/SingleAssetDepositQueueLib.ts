@@ -101,9 +101,8 @@ export function handleShutdown(event: Shutdown): void {
 export function handleMinDepositAssetAmountSet(event: MinDepositAssetAmountSet): void {
   let depositQueue = ensureSingleAssetDepositQueue(event.address, event);
 
-  let asset = ensureAsset(Address.fromBytes(depositQueue.depositAsset));
-
-  depositQueue.minDepositAssetAmount = toBigDecimal(event.params.minDepositAssetAmount, asset.decimals);
+  // Initialized is called after this event, so we cannot use depositAsset to get decimals, and store as BigDecimal
+  depositQueue.minDepositAssetAmount = event.params.minDepositAssetAmount;
   depositQueue.save();
 }
 
