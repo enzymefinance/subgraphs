@@ -1,6 +1,6 @@
 import { Address, BigInt, ethereum } from '@graphprotocol/graph-ts';
 import { SingleAssetDepositQueue, SingleAssetDepositQueueRequest } from '../generated/schema';
-import { ZERO_ADDRESS, ZERO_BD } from '@enzymefinance/subgraph-utils';
+import { ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
 
 export function ensureSingleAssetDepositQueue(address: Address, event: ethereum.Event): SingleAssetDepositQueue {
   let queue = SingleAssetDepositQueue.load(address.toHex());
@@ -16,7 +16,7 @@ export function ensureSingleAssetDepositQueue(address: Address, event: ethereum.
   queue.depositAsset = ZERO_ADDRESS;
   queue.minRequestTime = 0;
   queue.minDepositAssetAmount = BigInt.fromI32(0);
-  queue.depositorAllowlist = '';
+  queue.depositorAllowlist = null;
   queue.managers = new Array<string>();
   queue.shutdown = false;
   queue.save();

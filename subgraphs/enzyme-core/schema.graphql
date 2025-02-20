@@ -2359,7 +2359,7 @@ type SingleAssetDepositQueue @entity {
   createdAt: Int!
   creator: Account!
   depositAsset: Bytes!
-  depositorAllowlist: AddressList!
+  depositorAllowlist: AddressList
   minRequestTime: Int!
   minDepositAssetAmount: BigInt!
   shutdown: Boolean!
