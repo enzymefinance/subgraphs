@@ -25,7 +25,7 @@ import { ensureAccount } from '../entities/Account';
 export function handleInitialized(event: Initialized): void {
   let depositQueue = ensureSingleAssetDepositQueue(event.address, event);
   depositQueue.vault = useVault(event.params.vaultProxy.toHex()).id;
-  if (!isAsset(event.params.depositAsset)) {
+  if (isAsset(event.params.depositAsset)) {
     let depositAsset = ensureAsset(event.params.depositAsset);
     depositQueue.depositAsset = depositAsset.id;
   }
