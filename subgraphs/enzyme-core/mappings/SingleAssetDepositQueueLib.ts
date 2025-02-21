@@ -61,14 +61,20 @@ export function handleDeposited(event: Deposited): void {
 export function handleDepositRequestAdded(event: DepositRequestAdded): void {
   let queue = ensureSingleAssetDepositQueue(event.address, event);
 
-  if (queue.depositAsset == null) {
+  let depositAssetAddress = queue.depositAsset;
+  if (depositAssetAddress == null) {
     return;
   }
 
   let request = ensureSingleAssetDepositQueueRequest(queue, event.params.id, event);
   request.createdAt = event.block.timestamp.toI32();
 
-  let depositAsset = ensureAsset(Address.fromString(queue.depositAsset));
+  let depositAsset = ensureAsset(
+    Address.fromString(
+      // as string added because subgraph is not smart enough to checkout that depositAssetAddress is not null, because of the condition above
+      depositAssetAddress as string,
+    ),
+  );
   let amount = toBigDecimal(event.params.depositAssetAmount, depositAsset.decimals);
   let assetAmount = createAssetAmount(depositAsset, amount, depositAsset, 'single-asset-deposit', event);
   request.depositAssetAmount = assetAmount.id;
