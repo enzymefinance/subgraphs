@@ -2358,7 +2358,7 @@ type SingleAssetDepositQueue @entity {
   managers: [Account!]!
   createdAt: Int!
   creator: Account!
-  depositAsset: Bytes!
+  depositAsset: Asset
   depositorAllowlist: AddressList
   minRequestTime: Int!
   minDepositAssetAmount: BigInt!

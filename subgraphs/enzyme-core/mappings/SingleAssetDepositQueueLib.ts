@@ -19,13 +19,16 @@ import {
   DepositorAllowlistIdSet,
 } from '../generated/contracts/SingleAssetDepositQueueLibEvents';
 import { createAssetAmount } from '../entities/AssetAmount';
-import { ensureAsset } from '../entities/Asset';
+import { ensureAsset, isAsset } from '../entities/Asset';
 import { ensureAccount } from '../entities/Account';
 
 export function handleInitialized(event: Initialized): void {
   let depositQueue = ensureSingleAssetDepositQueue(event.address, event);
   depositQueue.vault = useVault(event.params.vaultProxy.toHex()).id;
-  depositQueue.depositAsset = event.params.depositAsset;
+  if (!isAsset(event.params.depositAsset)) {
+    let depositAsset = ensureAsset(event.params.depositAsset);
+    depositQueue.depositAsset = depositAsset.id;
+  }
   depositQueue.save();
 }
 
@@ -58,12 +61,16 @@ export function handleDeposited(event: Deposited): void {
 export function handleDepositRequestAdded(event: DepositRequestAdded): void {
   let queue = ensureSingleAssetDepositQueue(event.address, event);
 
+  if (queue.depositAsset == null) {
+    return;
+  }
+
   let request = ensureSingleAssetDepositQueueRequest(queue, event.params.id, event);
   request.createdAt = event.block.timestamp.toI32();
 
-  let asset = ensureAsset(Address.fromBytes(queue.depositAsset));
-  let amount = toBigDecimal(event.params.depositAssetAmount, asset.decimals);
-  let assetAmount = createAssetAmount(asset, amount, asset, 'single-asset-deposit', event);
+  let depositAsset = ensureAsset(Address.fromString(queue.depositAsset));
+  let amount = toBigDecimal(event.params.depositAssetAmount, depositAsset.decimals);
+  let assetAmount = createAssetAmount(depositAsset, amount, depositAsset, 'single-asset-deposit', event);
   request.depositAssetAmount = assetAmount.id;
 
   request.account = ensureAccount(event.params.user, event).id;

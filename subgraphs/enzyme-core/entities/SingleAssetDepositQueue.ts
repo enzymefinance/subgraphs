@@ -13,7 +13,7 @@ export function ensureSingleAssetDepositQueue(address: Address, event: ethereum.
   queue.creator = ZERO_ADDRESS.toHex();
   queue.createdAt = event.block.timestamp.toI32();
   queue.vault = ZERO_ADDRESS.toHex();
-  queue.depositAsset = ZERO_ADDRESS;
+  queue.depositAsset = null;
   queue.minRequestTime = 0;
   queue.minDepositAssetAmount = BigInt.fromI32(0);
   queue.depositorAllowlist = null;
