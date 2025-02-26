@@ -413,6 +413,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let fromUnderlying = tuple[2].toBoolean();
 
       let assetAmounts: AssetAmount[] = new Array<AssetAmount>();
+      let assets: Asset[] = new Array<Asset>();
       for (let i = 0; i < aTokens.length; i++) {
         let asset = fromUnderlying
           ? ensureAsset(ExternalSdk.bind(aTokens[i]).UNDERLYING_ASSET_ADDRESS())
@@ -420,9 +421,18 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         let amount = toBigDecimal(amounts[i], asset.decimals);
         let assetAmount = createAssetAmount(asset, amount, denominationAsset, 'av3dp', event);
         assetAmounts = assetAmounts.concat([assetAmount]);
+        assets = assets.concat([asset]);
       }
 
-      createAaveV3DebtPositionChange(event.params.externalPosition, assetAmounts, null, 'AddCollateral', vault, event);
+      createAaveV3DebtPositionChange(
+        event.params.externalPosition,
+        assetAmounts,
+        assets,
+        null,
+        'AddCollateral',
+        vault,
+        event,
+      );
     }
 
     if (actionId == AaveV3DebtPositionActionId.RemoveCollateral) {
@@ -439,6 +449,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let toUnderlying = tuple[2].toBoolean();
 
       let assetAmounts: AssetAmount[] = new Array<AssetAmount>();
+      let assets: Asset[] = new Array<Asset>();
       for (let i = 0; i < aTokens.length; i++) {
         let asset = toUnderlying
           ? ensureAsset(ExternalSdk.bind(aTokens[i]).UNDERLYING_ASSET_ADDRESS())
@@ -446,11 +457,13 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         let amount = toBigDecimal(amounts[i], asset.decimals);
         let assetAmount = createAssetAmount(asset, amount, denominationAsset, 'av3dp', event);
         assetAmounts = assetAmounts.concat([assetAmount]);
+        assets = assets.concat([asset]);
       }
 
       createAaveV3DebtPositionChange(
         event.params.externalPosition,
         assetAmounts,
+        assets,
         null,
         'RemoveCollateral',
         vault,
@@ -471,14 +484,16 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let amounts = tuple[1].toBigIntArray();
 
       let assetAmounts: AssetAmount[] = new Array<AssetAmount>();
+      let assets: Asset[] = new Array<Asset>();
       for (let i = 0; i < underlyings.length; i++) {
         let asset = ensureAsset(underlyings[i]);
         let amount = toBigDecimal(amounts[i], asset.decimals);
         let assetAmount = createAssetAmount(asset, amount, denominationAsset, 'av3dp', event);
         assetAmounts = assetAmounts.concat([assetAmount]);
+        assets = assets.concat([asset]);
       }
 
-      createAaveV3DebtPositionChange(event.params.externalPosition, assetAmounts, null, 'Borrow', vault, event);
+      createAaveV3DebtPositionChange(event.params.externalPosition, assetAmounts, assets, null, 'Borrow', vault, event);
     }
 
     if (actionId == AaveV3DebtPositionActionId.RepayBorrow) {
@@ -494,14 +509,24 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let amounts = tuple[1].toBigIntArray();
 
       let assetAmounts: AssetAmount[] = new Array<AssetAmount>();
+      let assets: Asset[] = new Array<Asset>();
       for (let i = 0; i < underlyings.length; i++) {
         let asset = ensureAsset(underlyings[i]);
         let amount = toBigDecimal(amounts[i], asset.decimals);
         let assetAmount = createAssetAmount(asset, amount, denominationAsset, 'av3dp', event);
         assetAmounts = assetAmounts.concat([assetAmount]);
+        assets = assets.concat([asset]);
       }
 
-      createAaveV3DebtPositionChange(event.params.externalPosition, assetAmounts, null, 'RepayBorrow', vault, event);
+      createAaveV3DebtPositionChange(
+        event.params.externalPosition,
+        assetAmounts,
+        assets,
+        null,
+        'RepayBorrow',
+        vault,
+        event,
+      );
     }
 
     if (actionId == AaveV3DebtPositionActionId.SetEMode) {
@@ -516,13 +541,14 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
       setEModeAaveV3DebtPosition(event.params.externalPosition, categoryId);
 
-      createAaveV3DebtPositionChange(event.params.externalPosition, null, categoryId, 'SetEMode', vault, event);
+      createAaveV3DebtPositionChange(event.params.externalPosition, null, null, categoryId, 'SetEMode', vault, event);
     }
 
     if (actionId == AaveV3DebtPositionActionId.SetUseReserveAsCollateral) {
       // TODO: handle this event properly, when we will decide to implement it in the frontend
       createAaveV3DebtPositionChange(
         event.params.externalPosition,
+        null,
         null,
         null,
         'SetUseReserveAsCollateral',
@@ -549,8 +575,60 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       createAaveV3DebtPositionChange(
         event.params.externalPosition,
         [rewardAssetAmount],
+        [rewardAsset],
         null,
         'ClaimRewards',
+        vault,
+        event,
+      );
+    }
+
+    if (actionId == AaveV3DebtPositionActionId.Sweep) {
+      let decoded = ethereum.decode('(address[])', tuplePrefixBytes(event.params.actionArgs));
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+      let assetAddresses = tuple[0].toAddressArray();
+
+      let assets: Asset[] = new Array<Asset>();
+      for (let i = 0; i < assetAddresses.length; i++) {
+        let asset = ensureAsset(assetAddresses[i]);
+        assets = assets.concat([asset]);
+      }
+
+      createAaveV3DebtPositionChange(event.params.externalPosition, null, assets, null, 'Sweep', vault, event);
+    }
+
+    if (actionId == AaveV3DebtPositionActionId.ClaimMerklRewards) {
+      let decoded = ethereum.decode('(address[],uint256[],bytes32[][])', tuplePrefixBytes(event.params.actionArgs));
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+      let assetAddresses = tuple[0].toAddressArray();
+      let amounts = tuple[1].toBigIntArray();
+
+      let assetAmounts: AssetAmount[] = new Array<AssetAmount>();
+      let assets: Asset[] = new Array<Asset>();
+      for (let i = 0; i < assetAddresses.length; i++) {
+        let asset = ensureAsset(assetAddresses[i]);
+        let amount = toBigDecimal(amounts[i], asset.decimals);
+        let assetAmount = createAssetAmount(asset, amount, denominationAsset, 'av3dp', event);
+        assetAmounts = assetAmounts.concat([assetAmount]);
+        assets = assets.concat([asset]);
+      }
+
+      createAaveV3DebtPositionChange(
+        event.params.externalPosition,
+        assetAmounts,
+        assets,
+        null,
+        'ClaimMerklRewards',
         vault,
         event,
       );
