@@ -44,6 +44,11 @@ export const sources = (variables: Variables): DataSourceUserDeclaration[] => {
       block: variables.block,
       address: variables.persistent.singleAssetRedemptionQueueFactoryAddress,
     },
+    {
+      name: 'DispatcherOwnedBeaconFactory',
+      block: variables.block,
+      address: variables.persistent.singleAssetDepositQueueFactoryAddress,
+    },
     { name: 'UintListRegistry', block: variables.block, address: variables.persistent.uintListRegistryAddress },
   ];
 };
@@ -53,4 +58,5 @@ export const templates: DataSourceTemplateUserDeclaration[] = [
   { name: 'ManualValueOracleLib' },
   { name: 'SharesSplitterLib' },
   { name: 'SingleAssetRedemptionQueueLib' },
+  { name: 'SingleAssetDepositQueueLib' },
 ];
