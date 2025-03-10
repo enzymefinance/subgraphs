@@ -4,4 +4,4 @@ packages:
 
 catalogs:
   enzymefinance:
-    '@enzymefinance/environment': '6.3.2'
+    '@enzymefinance/environment': '6.3.24'
