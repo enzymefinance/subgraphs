@@ -63,6 +63,7 @@ import { useGMXV2LeverageTradingPosition } from '../../entities/GMXV2LeverageTra
 import { useAlicePosition } from '../../entities/AlicePosition';
 import { useStaderWithdrawalsPosition } from '../../entities/StaderWithdrawalsPosition';
 import { aaveV3LikeDebtTypes } from '../../utils/aaveV3Like';
+import { useMysoV3Position } from '../../entities/MysoV3Position';
 // import { useMorphoBluePosition } from '../../entities/MorphoBluePosition';
 
 export function handleTransfer(event: Transfer): void {
@@ -417,6 +418,12 @@ export function handleExternalPositionAdded(event: ExternalPositionAdded): void 
     ap.save();
   }
 
+  if (type.label == 'MYSO_V3') {
+    let ap = useMysoV3Position(event.params.externalPosition.toHex());
+    ap.active = true;
+    ap.save();
+  }
+
   let activity = new ExternalPositionAddedEvent(uniqueEventId(event));
   activity.timestamp = event.block.timestamp.toI32();
   activity.vault = event.address.toHex();
@@ -519,6 +526,12 @@ export function handleExternalPositionRemoved(event: ExternalPositionRemoved): v
 
   if (type.label == 'ALICE') {
     let ap = useAlicePosition(event.params.externalPosition.toHex());
+    ap.active = false;
+    ap.save();
+  }
+
+  if (type.label == 'MYSO_V3') {
+    let ap = useMysoV3Position(event.params.externalPosition.toHex());
     ap.active = false;
     ap.save();
   }
