@@ -1,0 +1,191 @@
+[
+    {
+        "type": "constructor",
+        "inputs": [
+            {
+                "name": "_mysoRouterAddress",
+                "type": "address",
+                "internalType": "address"
+            }
+        ],
+        "stateMutability": "nonpayable"
+    },
+    {
+        "type": "function",
+        "name": "MYSO_ROUTER",
+        "inputs": [],
+        "outputs": [
+            {
+                "name": "",
+                "type": "address",
+                "internalType": "contract IMysoV3Router"
+            }
+        ],
+        "stateMutability": "view"
+    },
+    {
+        "type": "function",
+        "name": "getDebtAssets",
+        "inputs": [],
+        "outputs": [
+            {
+                "name": "assets_",
+                "type": "address[]",
+                "internalType": "address[]"
+            },
+            {
+                "name": "amounts_",
+                "type": "uint256[]",
+                "internalType": "uint256[]"
+            }
+        ],
+        "stateMutability": "pure"
+    },
+    {
+        "type": "function",
+        "name": "getEscrowIdxs",
+        "inputs": [
+            {
+                "name": "_from",
+                "type": "uint256",
+                "internalType": "uint256"
+            },
+            {
+                "name": "_numElements",
+                "type": "uint256",
+                "internalType": "uint256"
+            }
+        ],
+        "outputs": [
+            {
+                "name": "openEscrowsIdxs_",
+                "type": "uint32[]",
+                "internalType": "uint32[]"
+            }
+        ],
+        "stateMutability": "view"
+    },
+    {
+        "type": "function",
+        "name": "getManagedAssets",
+        "inputs": [],
+        "outputs": [
+            {
+                "name": "assets_",
+                "type": "address[]",
+                "internalType": "address[]"
+            },
+            {
+                "name": "amounts_",
+                "type": "uint256[]",
+                "internalType": "uint256[]"
+            }
+        ],
+        "stateMutability": "view"
+    },
+    {
+        "type": "function",
+        "name": "getNumOpenEscrows",
+        "inputs": [],
+        "outputs": [
+            {
+                "name": "numOpenEscrows_",
+                "type": "uint256",
+                "internalType": "uint256"
+            }
+        ],
+        "stateMutability": "view"
+    },
+    {
+        "type": "function",
+        "name": "init",
+        "inputs": [
+            {
+                "name": "",
+                "type": "bytes",
+                "internalType": "bytes"
+            }
+        ],
+        "outputs": [],
+        "stateMutability": "nonpayable"
+    },
+    {
+        "type": "function",
+        "name": "receiveCallFromVault",
+        "inputs": [
+            {
+                "name": "_actionData",
+                "type": "bytes",
+                "internalType": "bytes"
+            }
+        ],
+        "outputs": [],
+        "stateMutability": "nonpayable"
+    },
+    {
+        "type": "event",
+        "name": "EscrowClosedAndSwept",
+        "inputs": [
+            {
+                "name": "escrowIdx",
+                "type": "uint256",
+                "indexed": false,
+                "internalType": "uint256"
+            }
+        ],
+        "anonymous": false
+    },
+    {
+        "type": "event",
+        "name": "EscrowCreated",
+        "inputs": [
+            {
+                "name": "escrowIdx",
+                "type": "uint256",
+                "indexed": false,
+                "internalType": "uint256"
+            }
+        ],
+        "anonymous": false
+    },
+    {
+        "type": "error",
+        "name": "MysoV3OptionWritingPositionLib__ReceiveCallFromVault__InvalidActionId",
+        "inputs": []
+    },
+    {
+        "type": "error",
+        "name": "MysoV3OptionWritingPosition__CloseAndSweep__InvalidEmptyArray",
+        "inputs": []
+    },
+    {
+        "type": "error",
+        "name": "MysoV3OptionWritingPosition__CloseAndSweep__NotExpiredOption",
+        "inputs": []
+    },
+    {
+        "type": "error",
+        "name": "MysoV3OptionWritingPosition__CloseAndSweep__UnassociatedEscrow",
+        "inputs": []
+    },
+    {
+        "type": "error",
+        "name": "MysoV3OptionWritingPosition__GetEscrowIndices__InvalidRange",
+        "inputs": []
+    },
+    {
+        "type": "error",
+        "name": "MysoV3OptionWritingPosition__GetManagedAssets__OpenEscrowsExist",
+        "inputs": []
+    },
+    {
+        "type": "error",
+        "name": "MysoV3OptionWritingPosition__InputArraysLengthMismatch",
+        "inputs": []
+    },
+    {
+        "type": "error",
+        "name": "MysoV3OptionWritingPosition__Sweep__EscrowAlreadyClosed",
+        "inputs": []
+    }
+]
