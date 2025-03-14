@@ -63,7 +63,7 @@ import { useGMXV2LeverageTradingPosition } from '../../entities/GMXV2LeverageTra
 import { useAlicePosition } from '../../entities/AlicePosition';
 import { useStaderWithdrawalsPosition } from '../../entities/StaderWithdrawalsPosition';
 import { aaveV3LikeDebtTypes } from '../../utils/aaveV3Like';
-import { useMysoV3Position } from '../../entities/MysoV3Position';
+import { useMysoV3OptionsWritingPosition } from '../../entities/MysoV3OptionsWritingPosition';
 // import { useMorphoBluePosition } from '../../entities/MorphoBluePosition';
 
 export function handleTransfer(event: Transfer): void {
@@ -418,8 +418,8 @@ export function handleExternalPositionAdded(event: ExternalPositionAdded): void 
     ap.save();
   }
 
-  if (type.label == 'MYSO_V3') {
-    let ap = useMysoV3Position(event.params.externalPosition.toHex());
+  if (type.label == 'MYSO_V3_OPTIONS_WRITING') {
+    let ap = useMysoV3OptionsWritingPosition(event.params.externalPosition.toHex());
     ap.active = true;
     ap.save();
   }
@@ -530,8 +530,8 @@ export function handleExternalPositionRemoved(event: ExternalPositionRemoved): v
     ap.save();
   }
 
-  if (type.label == 'MYSO_V3') {
-    let ap = useMysoV3Position(event.params.externalPosition.toHex());
+  if (type.label == 'MYSO_V3_OPTIONS_WRITING') {
+    let ap = useMysoV3OptionsWritingPosition(event.params.externalPosition.toHex());
     ap.active = false;
     ap.save();
   }
