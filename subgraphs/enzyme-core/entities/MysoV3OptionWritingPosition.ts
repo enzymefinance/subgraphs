@@ -1,8 +1,8 @@
 import { logCritical, uniqueEventId } from '@enzymefinance/subgraph-utils';
 import {
   MysoV3Escrow,
-  MysoV3OptionsWritingPosition,
-  MysoV3OptionsWritingPositionChange,
+  MysoV3OptionWritingPosition,
+  MysoV3OptionWritingPositionChange,
   AssetAmount,
   ExternalPositionType,
   Vault,
@@ -13,21 +13,21 @@ import { useVault } from './Vault';
 import { getActivityCounter } from './Counter';
 import { EscrowClosedAndSwept } from '../generated/contracts/MysoV3OptionWritingPositionLib4Events';
 
-export function useMysoV3OptionsWritingPosition(id: string): MysoV3OptionsWritingPosition {
-  let position = MysoV3OptionsWritingPosition.load(id);
+export function useMysoV3OptionWritingPosition(id: string): MysoV3OptionWritingPosition {
+  let position = MysoV3OptionWritingPosition.load(id);
   if (position == null) {
-    logCritical('Failed to load MysoV3OptionsWritingPosition {}.', [id]);
+    logCritical('Failed to load MysoV3OptionWritingPosition {}.', [id]);
   }
 
-  return position as MysoV3OptionsWritingPosition;
+  return position as MysoV3OptionWritingPosition;
 }
 
-export function createMysoV3OptionsWritingPosition(
+export function createMysoV3OptionWritingPosition(
   externalPositionAddress: Address,
   vaultAddress: Address,
   type: ExternalPositionType,
-): MysoV3OptionsWritingPosition {
-  let position = new MysoV3OptionsWritingPosition(externalPositionAddress.toHex());
+): MysoV3OptionWritingPosition {
+  let position = new MysoV3OptionWritingPosition(externalPositionAddress.toHex());
   position.vault = useVault(vaultAddress.toHex()).id;
   position.active = true;
   position.type = type.id;
@@ -36,21 +36,21 @@ export function createMysoV3OptionsWritingPosition(
   return position;
 }
 
-export function createMysoV3OptionsWritingPositionChange(
-  MysoV3OptionsWritingPositionAddress: Address,
-  escrows: MysoV3Escrow[],
+export function createMysoV3OptionWritingPositionChange(
+  MysoV3OptionWritingPositionAddress: Address,
+  escrows: MysoV3Escrow[] | null,
   assets: Asset[] | null,
   assetAmount: AssetAmount | null,
   changeType: string,
   vault: Vault,
   event: ethereum.Event,
-): MysoV3OptionsWritingPositionChange {
-  let change = new MysoV3OptionsWritingPositionChange(uniqueEventId(event));
+): MysoV3OptionWritingPositionChange {
+  let change = new MysoV3OptionWritingPositionChange(uniqueEventId(event));
   change.assets = assets == null ? null : assets.map<string>((asset) => asset.id);
   change.assetAmount = assetAmount == null ? null : assetAmount.id;
-  change.escrows = escrows.map<string>((escrow) => escrow.id);
-  change.mysoV3OptionsWritingPositionChangeType = changeType;
-  change.externalPosition = MysoV3OptionsWritingPositionAddress.toHex();
+  change.escrows = escrows == null ? null : escrows.map<string>((escrow) => escrow.id);
+  change.mysoV3OptionWritingPositionChangeType = changeType;
+  change.externalPosition = MysoV3OptionWritingPositionAddress.toHex();
   change.vault = vault.id;
   change.timestamp = event.block.timestamp.toI32();
   change.activityCounter = getActivityCounter();

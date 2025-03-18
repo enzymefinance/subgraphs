@@ -1,4 +1,4 @@
-import { createMysoV3Escrow, useMysoV3Escrow } from "../../entities/MysoV3OptionsWritingPosition";
+import { createMysoV3Escrow, useMysoV3Escrow } from "../../entities/MysoV3OptionWritingPosition";
 import { EscrowClosedAndSwept, EscrowCreated } from "../../generated/contracts/MysoV3OptionWritingPositionLib4Events";
 
 
@@ -7,7 +7,7 @@ export function handleEscrowCreated(event: EscrowCreated): void {
 
   escrow.createdAt = event.block.timestamp.toI32();
   escrow.closed = false;
-  escrow.mysoV3OptionsWritingPosition = event.address.toHex();
+  escrow.mysoV3OptionWritingPosition = event.address.toHex();
   
   escrow.save();
 }

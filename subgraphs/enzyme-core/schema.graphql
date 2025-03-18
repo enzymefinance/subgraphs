@@ -1850,25 +1850,25 @@ type StaderWithdrawalsPositionChange implements Activity & VaultActivity & Exter
   activityType: ActivityType!
 }
 
-type MysoV3OptionsWritingPosition implements ExternalPosition @entity {
+type MysoV3OptionWritingPosition implements ExternalPosition @entity {
   id: ID!
   vault: Vault!
   type: ExternalPositionType!
   active: Boolean!
-  escrows: [MysoV3Escrow!]! @derivedFrom(field: "mysoV3OptionsWritingPosition")
+  escrows: [MysoV3Escrow!]! @derivedFrom(field: "mysoV3OptionWritingPosition")
   changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
 }
 
 type MysoV3Escrow @entity {
   id: ID!
   createdAt: Int!
-  mysoV3OptionsWritingPosition: MysoV3OptionsWritingPosition!
+  mysoV3OptionWritingPosition: MysoV3OptionWritingPosition!
   escrowId: BigInt!
   closed: Boolean!
   closedAt: Int
 }
 
-enum MysoV3OptionsWritingPositionChangeType {
+enum MysoV3OptionWritingPositionChangeType {
   CreateEscrowByTakingQuote
   CreateEscrowByStartingAuction
   CloseAndSweepEscrows
@@ -1876,15 +1876,15 @@ enum MysoV3OptionsWritingPositionChangeType {
   Sweep
 }
 
-type MysoV3OptionsWritingPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+type MysoV3OptionWritingPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
   id: ID!
   vault: Vault!
   timestamp: Int!
   externalPosition: ExternalPosition!
-  mysoV3OptionsWritingPositionChangeType: MysoV3OptionsWritingPositionChangeType!
+  mysoV3OptionWritingPositionChangeType: MysoV3OptionWritingPositionChangeType!
   assetAmount: AssetAmount
   assets: [Asset!]
-  escrows: [MysoV3Escrow!]!
+  escrows: [MysoV3Escrow!]
   activityCounter: Int!
   activityCategories: [ActivityCategory!]!
   activityType: ActivityType!
