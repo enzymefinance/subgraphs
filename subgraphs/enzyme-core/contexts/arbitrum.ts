@@ -47,7 +47,7 @@ export const arbitrum: Context<Variables> = {
       protocolFeeReserveLibAddress: environment.contracts.ProtocolFeeReserveLib,
       sharesSplitterFactoryAddress: environment.contracts.SharesSplitterFactory,
       singleAssetRedemptionQueueFactoryAddress: environment.contracts.SingleAssetRedemptionQueueFactory,
-      singleAssetDepositQueueFactoryAddress: '0x0000000000000000000000000000000000000000',
+      singleAssetDepositQueueFactoryAddress: '0x78c89968b121e64fa559f3b4ed1b35222a42c059',
       uintListRegistryAddress: environment.contracts.UintListRegistry,
     },
     releases: {
