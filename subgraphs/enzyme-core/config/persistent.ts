@@ -45,7 +45,7 @@ export const sources = (variables: Variables): DataSourceUserDeclaration[] => {
       address: variables.persistent.singleAssetRedemptionQueueFactoryAddress,
     },
     {
-      name: 'DispatcherOwnedBeaconFactory',
+      name: 'SingleAssetDepositQueueFactory',
       block: variables.block,
       address: variables.persistent.singleAssetDepositQueueFactoryAddress,
     },
