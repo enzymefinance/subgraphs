@@ -25,6 +25,7 @@ import { ensureAccount } from '../entities/Account';
 export function handleInitialized(event: Initialized): void {
   let depositQueue = ensureSingleAssetDepositQueue(event.address, event);
   depositQueue.vault = useVault(event.params.vaultProxy.toHex()).id;
+  depositQueue.depositAssetAddress = event.params.depositAsset;
   if (isAsset(event.params.depositAsset)) {
     let depositAsset = ensureAsset(event.params.depositAsset);
     depositQueue.depositAsset = depositAsset.id;
@@ -69,12 +70,7 @@ export function handleDepositRequestAdded(event: DepositRequestAdded): void {
   let request = ensureSingleAssetDepositQueueRequest(queue, event.params.id, event);
   request.createdAt = event.block.timestamp.toI32();
 
-  let depositAsset = ensureAsset(
-    Address.fromString(
-      // as string added because subgraph is not smart enough to checkout that depositAssetAddress is not null, because of the condition above
-      depositAssetAddress as string,
-    ),
-  );
+  let depositAsset = ensureAsset(Address.fromBytes(queue.depositAssetAddress));
   let amount = toBigDecimal(event.params.depositAssetAmount, depositAsset.decimals);
   let assetAmount = createAssetAmount(depositAsset, amount, depositAsset, 'single-asset-deposit', event);
   request.depositAssetAmount = assetAmount.id;
