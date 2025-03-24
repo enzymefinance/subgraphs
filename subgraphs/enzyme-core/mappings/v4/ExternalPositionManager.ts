@@ -2901,7 +2901,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     if (actionId == MysoV3ActionId.CreateEscrowByTakingQuote) {
       let decoded = ethereum.decode(
         '((address,uint48,address,uint48,uint128,uint128,(uint64,address,bool,bool,address)),(uint128,uint256,bytes,address),address)',
-        event.params.actionArgs
+        tuplePrefixBytes(event.params.actionArgs)
       );
       if (decoded == null) {
         return;
