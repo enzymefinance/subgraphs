@@ -169,7 +169,7 @@ import {
 } from '../../entities/GMXV2LeverageTradingPosition';
 import { createAlicePosition, createAlicePositionChange, useAliceOrder } from '../../entities/AlicePosition';
 import { aaveV3LikeDebtTypes } from '../../utils/aaveV3Like';
-import { createMysoV3Escrow, createMysoV3OptionWritingPosition, createMysoV3OptionWritingPositionChange, useMysoV3Escrow } from '../../entities/MysoV3OptionWritingPosition';
+import { createMysoV3OptionWritingPosition, createMysoV3OptionWritingPositionChange, useMysoV3Escrow } from '../../entities/MysoV3OptionWritingPosition';
 // import {
 //   createMorphoBluePosition,
 //   createMorphoBluePositionChange,
@@ -2979,7 +2979,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     }
   
     if (actionId == MysoV3ActionId.CloseAndSweepEscrows) {
-      let decoded = ethereum.decode('(uint32[],bool)', event.params.actionArgs);
+      let decoded = ethereum.decode('(uint32[],bool)', tuplePrefixBytes(event.params.actionArgs));
       if (decoded == null) {
         return;
       }

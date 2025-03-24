@@ -80,10 +80,4 @@ export function useMysoV3Escrow(escrowId: BigInt): MysoV3Escrow {
   return escrow as MysoV3Escrow;
 }
 
-export function handleMysoV3EscrowClose(event: EscrowClosedAndSwept): void {
-  let mysoV3Escrow = useMysoV3Escrow(event.params.escrowIdx);
-  mysoV3Escrow.closed = true;
-  mysoV3Escrow.closedAt = event.block.timestamp.toI32();
-  mysoV3Escrow.save();
-}
 
