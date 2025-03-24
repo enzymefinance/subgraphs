@@ -3037,7 +3037,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     }
   
     if (actionId == MysoV3ActionId.Sweep) {
-      let decoded = ethereum.decode('(address[])', event.params.actionArgs);
+      let decoded = ethereum.decode('(address[])', tuplePrefixBytes (event.params.actionArgs));
       if (decoded == null) {
         return;
       }
