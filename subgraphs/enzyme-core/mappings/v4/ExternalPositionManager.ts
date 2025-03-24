@@ -3007,7 +3007,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     }
   
     if (actionId == MysoV3ActionId.WithdrawTokensFromEscrows) {
-      let decoded = ethereum.decode('(address[],address[])', event.params.actionArgs);
+      let decoded = ethereum.decode('(address[],address[])', tuplePrefixBytes(event.params.actionArgs));
       if (decoded == null) {
         return;
       }
