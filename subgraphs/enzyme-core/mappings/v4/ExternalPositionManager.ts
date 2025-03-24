@@ -2901,7 +2901,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     if (actionId == MysoV3ActionId.CreateEscrowByTakingQuote) {
       let decoded = ethereum.decode(
         '((address,uint48,address,uint48,uint128,uint128,(uint64,address,bool,bool,address)),(uint128,uint256,bytes,address),address)',
-        event.params.actionArgs
+        tuplePrefixBytes(event.params.actionArgs)
       );
       if (decoded == null) {
         return;
@@ -3007,7 +3007,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     }
   
     if (actionId == MysoV3ActionId.WithdrawTokensFromEscrows) {
-      let decoded = ethereum.decode('(address[],address[])', event.params.actionArgs);
+      let decoded = ethereum.decode('(address[],address[])', tuplePrefixBytes(event.params.actionArgs));
       if (decoded == null) {
         return;
       }
@@ -3037,7 +3037,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     }
   
     if (actionId == MysoV3ActionId.Sweep) {
-      let decoded = ethereum.decode('(address[])', event.params.actionArgs);
+      let decoded = ethereum.decode('(address[])', tuplePrefixBytes (event.params.actionArgs));
       if (decoded == null) {
         return;
       }
