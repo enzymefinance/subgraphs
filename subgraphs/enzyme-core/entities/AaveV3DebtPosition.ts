@@ -5,6 +5,7 @@ import {
   AaveV3DebtPositionChange,
   Vault,
   AssetAmount,
+  Asset,
   ExternalPositionType,
 } from '../generated/schema';
 import { getActivityCounter } from './Counter';
@@ -46,6 +47,7 @@ export function createAaveV3DebtPosition(
 export function createAaveV3DebtPositionChange(
   aaveV3DebtPositionAddress: Address,
   assetAmounts: AssetAmount[] | null,
+  assets: Asset[] | null,
   eModeCategoryId: BigInt | null,
   changeType: string,
   vault: Vault,
@@ -55,6 +57,7 @@ export function createAaveV3DebtPositionChange(
   change.aaveV3DebtPositionChangeType = changeType;
   change.externalPosition = aaveV3DebtPositionAddress.toHex();
   change.assetAmounts = assetAmounts != null ? assetAmounts.map<string>((assetAmount) => assetAmount.id) : null;
+  change.assets = assets != null ? assets.map<string>((asset) => asset.id) : null;
   change.vault = vault.id;
   change.timestamp = event.block.timestamp.toI32();
   change.activityCounter = getActivityCounter();
