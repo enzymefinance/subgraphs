@@ -47,7 +47,7 @@ export const base: Context<Variables> = {
       protocolFeeReserveLibAddress: environment.contracts.ProtocolFeeReserveLib,
       sharesSplitterFactoryAddress: environment.contracts.SharesSplitterFactory,
       singleAssetRedemptionQueueFactoryAddress: environment.contracts.SingleAssetRedemptionQueueFactory,
-      singleAssetDepositQueueFactoryAddress: '0x633d9deb8fe276000fb31b4255e5ad83d96ede25',
+      singleAssetDepositQueueFactoryAddress: environment.contracts.SingleAssetDepositQueueFactory,
       uintListRegistryAddress: environment.contracts.UintListRegistry,
     },
     releases: {

@@ -47,7 +47,7 @@ export const polygon: Context<Variables> = {
       protocolFeeReserveLibAddress: environment.contracts.ProtocolFeeReserveLib,
       sharesSplitterFactoryAddress: environment.contracts.SharesSplitterFactory,
       singleAssetRedemptionQueueFactoryAddress: environment.contracts.SingleAssetRedemptionQueueFactory,
-      singleAssetDepositQueueFactoryAddress: '0xa825861dd852a9aae44612228bf72e9b14048017',
+      singleAssetDepositQueueFactoryAddress: environment.contracts.SingleAssetDepositQueueFactory,
       uintListRegistryAddress: environment.contracts.UintListRegistry,
     },
     releases: {
