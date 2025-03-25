@@ -3012,10 +3012,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         return;
       }
       let argsTuple = decoded.toTuple();
-      let escrowIdxs = argsTuple[0].toBigIntArray();
       let tokenAddresses = argsTuple[1].toAddressArray();
-      
-      let escrows = escrowIdxs.map<MysoV3Escrow>((escrowId) => useMysoV3Escrow(escrowId));
       
       let assets: Asset[] = new Array<Asset>();
       for (let i = 0; i < tokenAddresses.length; i++) {
@@ -3026,7 +3023,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
   
       let change = createMysoV3OptionWritingPositionChange(
         event.params.externalPosition,
-        escrows,
+        null,
         assets,
         null,
         'WithdrawTokensFromEscrows',
