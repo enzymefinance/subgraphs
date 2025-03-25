@@ -2917,7 +2917,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
   
       let underlyingAsset = ensureAsset(underlyingToken);
       
-      let assetAmount = createAssetAmount(
+      let outgoingAssetAmount = createAssetAmount(
         underlyingAsset,
         toBigDecimal(notional, underlyingAsset.decimals),
         denominationAsset,
@@ -2930,13 +2930,13 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         ? underlyingAsset
         : ensureAsset(settlementToken);
   
-      let assets: Asset[] = [assetToReceive];
+      let incomingAsset: Asset[] = [assetToReceive];
   
       let change = createMysoV3OptionWritingPositionChange(
         event.params.externalPosition, 
         null,
-        assets,
-        assetAmount,
+        incomingAsset,
+        outgoingAssetAmount,
         'CreateEscrowByTakingQuote',
         vault,
         event
@@ -2958,7 +2958,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let notional = auctionInitTuple[2].toBigInt();
   
       let underlyingAsset = ensureAsset(underlyingToken);
-      let assetAmount = createAssetAmount(
+      let outgoingAssetAmount = createAssetAmount(
         underlyingAsset,
         toBigDecimal(notional, underlyingAsset.decimals),
         denominationAsset,
@@ -2970,7 +2970,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         event.params.externalPosition,
         null,
         null,
-        assetAmount,
+        outgoingAssetAmount,
         'CreateEscrowByStartingAuction',
         vault,
         event
@@ -2987,17 +2987,17 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let escrowIdxs = argsTuple[0].toBigIntArray();
 
       let escrows = escrowIdxs.map<MysoV3Escrow>((escrowId) => useMysoV3Escrow(escrowId));
-      let assets: Asset[] = new Array<Asset>();
+      let incomingAssets: Asset[] = new Array<Asset>();
       for (let i = 0; i < event.params.assetsToReceive.length; i++) {
         let asset = ensureAsset(event.params.assetsToReceive[i]);
 
-        assets = assets.concat([asset]);
+       incomingAssets =incomingAssets.concat([asset]);
       }
   
       let change = createMysoV3OptionWritingPositionChange(
         event.params.externalPosition,
         escrows,
-        assets,
+       incomingAssets,
         null,
         'CloseAndSweepEscrows',
         vault,
@@ -3014,17 +3014,17 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let argsTuple = decoded.toTuple();
       let tokenAddresses = argsTuple[1].toAddressArray();
       
-      let assets: Asset[] = new Array<Asset>();
+      let incomingAssets: Asset[] = new Array<Asset>();
       for (let i = 0; i < tokenAddresses.length; i++) {
         let asset = ensureAsset(tokenAddresses[i]);
 
-        assets = assets.concat([asset]);
+        incomingAssets = incomingAssets.concat([asset]);
       }
   
       let change = createMysoV3OptionWritingPositionChange(
         event.params.externalPosition,
         null,
-        assets,
+        incomingAssets,
         null,
         'WithdrawTokensFromEscrows',
         vault,
@@ -3040,18 +3040,18 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       }
       let tokenAddresses = decoded.toAddressArray();
   
-      let assets: Asset[] = new Array<Asset>();
+      let incomingAssets: Asset[] = new Array<Asset>();
       for (let i = 0; i < tokenAddresses.length; i++) {
         let asset = ensureAsset(tokenAddresses[i]);
 
-        assets = assets.concat([asset]);
+        incomingAssets = incomingAssets.concat([asset]);
       }
   
   
       let change = createMysoV3OptionWritingPositionChange(
         event.params.externalPosition,
         null,
-        assets,
+        incomingAssets,
         null,
         'Sweep',
         vault,

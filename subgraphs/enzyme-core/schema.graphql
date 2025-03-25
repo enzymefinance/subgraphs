@@ -1882,8 +1882,8 @@ type MysoV3OptionWritingPositionChange implements Activity & VaultActivity & Ext
   timestamp: Int!
   externalPosition: ExternalPosition!
   mysoV3OptionWritingPositionChangeType: MysoV3OptionWritingPositionChangeType!
-  assetAmount: AssetAmount
-  assets: [Asset!]
+  outgoingAssetAmount: AssetAmount
+  incomingAssets: [Asset!]
   escrows: [MysoV3Escrow!]
   activityCounter: Int!
   activityCategories: [ActivityCategory!]!

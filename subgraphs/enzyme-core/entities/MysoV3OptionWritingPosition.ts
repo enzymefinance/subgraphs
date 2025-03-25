@@ -39,15 +39,15 @@ export function createMysoV3OptionWritingPosition(
 export function createMysoV3OptionWritingPositionChange(
   MysoV3OptionWritingPositionAddress: Address,
   escrows: MysoV3Escrow[] | null,
-  assets: Asset[] | null,
-  assetAmount: AssetAmount | null,
+  incomingAssets: Asset[] | null,
+  outgoingAssetAmount: AssetAmount | null,
   changeType: string,
   vault: Vault,
   event: ethereum.Event,
 ): MysoV3OptionWritingPositionChange {
   let change = new MysoV3OptionWritingPositionChange(uniqueEventId(event));
-  change.assets = assets == null ? null : assets.map<string>((asset) => asset.id);
-  change.assetAmount = assetAmount == null ? null : assetAmount.id;
+  change.incomingAssets = incomingAssets == null ? null : incomingAssets.map<string>((asset) => asset.id);
+  change.outgoingAssetAmount = outgoingAssetAmount == null ? null : outgoingAssetAmount.id;
   change.escrows = escrows == null ? null : escrows.map<string>((escrow) => escrow.id);
   change.mysoV3OptionWritingPositionChangeType = changeType;
   change.externalPosition = MysoV3OptionWritingPositionAddress.toHex();
