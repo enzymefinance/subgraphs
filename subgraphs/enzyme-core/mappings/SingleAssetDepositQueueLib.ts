@@ -4,7 +4,7 @@ import {
   ensureSingleAssetDepositQueue,
   ensureSingleAssetDepositQueueRequest,
 } from '../entities/SingleAssetDepositQueue';
-import { try_useVault, useVault } from '../entities/Vault';
+import { isVault, useVault } from '../entities/Vault';
 import {
   Initialized,
   ManagerAdded,
@@ -24,9 +24,8 @@ import { ensureAccount } from '../entities/Account';
 
 export function handleInitialized(event: Initialized): void {
   let depositQueue = ensureSingleAssetDepositQueue(event.address, event);
-  let vault = try_useVault(event.params.vaultProxy.toHex());
-  if (vault != null) {
-    depositQueue.vault = vault.id;
+  if (isVault(event.params.vaultProxy.toHex())) {
+    depositQueue.vault = useVault(event.params.vaultProxy.toHex()).id;
   }
   depositQueue.depositAssetAddress = event.params.depositAsset;
   if (isAsset(event.params.depositAsset)) {
@@ -79,8 +78,9 @@ export function handleDepositRequestAdded(event: DepositRequestAdded): void {
   request.depositAssetAmount = assetAmount.id;
 
   request.account = ensureAccount(event.params.user, event).id;
-  let vault = try_useVault(queue.vault);
-  request.vault = vault == null ? ZERO_ADDRESS.toHex() : vault.id;
+  if (isVault(queue.vault)) {
+    request.vault = useVault(queue.vault).id;
+  }
   request.cancelableAt = event.params.canCancelTime.toI32();
   request.singleAssetDepositQueue = ensureSingleAssetDepositQueue(event.address, event).id;
   request.save();

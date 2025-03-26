@@ -50,6 +50,6 @@ export function useVault(id: string): Vault {
   return vault as Vault;
 }
 
-export function try_useVault(id: string): Vault | null {
-  return Vault.load(id);
+export function isVault(id: string): boolean {
+  return Vault.load(id) != null;
 }
