@@ -1,10 +1,10 @@
-import { arrayDiff, arrayUnique, toBigDecimal } from '@enzymefinance/subgraph-utils';
+import { arrayDiff, arrayUnique, toBigDecimal, ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
 import { Address } from '@graphprotocol/graph-ts';
 import {
   ensureSingleAssetDepositQueue,
   ensureSingleAssetDepositQueueRequest,
 } from '../entities/SingleAssetDepositQueue';
-import { useVault } from '../entities/Vault';
+import { try_useVault, useVault } from '../entities/Vault';
 import {
   Initialized,
   ManagerAdded,
@@ -24,7 +24,10 @@ import { ensureAccount } from '../entities/Account';
 
 export function handleInitialized(event: Initialized): void {
   let depositQueue = ensureSingleAssetDepositQueue(event.address, event);
-  depositQueue.vault = useVault(event.params.vaultProxy.toHex()).id;
+  let vault = try_useVault(event.params.vaultProxy.toHex());
+  if (vault != null) {
+    depositQueue.vault = vault.id;
+  }
   depositQueue.depositAssetAddress = event.params.depositAsset;
   if (isAsset(event.params.depositAsset)) {
     let depositAsset = ensureAsset(event.params.depositAsset);
@@ -76,7 +79,8 @@ export function handleDepositRequestAdded(event: DepositRequestAdded): void {
   request.depositAssetAmount = assetAmount.id;
 
   request.account = ensureAccount(event.params.user, event).id;
-  request.vault = useVault(queue.vault).id;
+  let vault = try_useVault(queue.vault);
+  request.vault = vault == null ? ZERO_ADDRESS.toHex() : vault.id;
   request.cancelableAt = event.params.canCancelTime.toI32();
   request.singleAssetDepositQueue = ensureSingleAssetDepositQueue(event.address, event).id;
   request.save();

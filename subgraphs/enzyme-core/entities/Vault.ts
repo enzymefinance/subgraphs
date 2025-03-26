@@ -49,3 +49,7 @@ export function useVault(id: string): Vault {
 
   return vault as Vault;
 }
+
+export function try_useVault(id: string): Vault | null {
+  return Vault.load(id);
+}
