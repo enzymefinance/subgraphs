@@ -75,9 +75,7 @@ export function createMysoV3Escrow(escrowId: BigInt): MysoV3Escrow {
 export function useMysoV3Escrow(escrowId: BigInt): MysoV3Escrow {
   let escrow = MysoV3Escrow.load(escrowId.toHex());
   if (escrow == null) {
-    logCritical("Failed to load MysoV3Escrow with id {}.", [escrowId.toString()]);
+    logCritical('Failed to load MysoV3Escrow with id {}.', [escrowId.toString()]);
   }
   return escrow as MysoV3Escrow;
 }
-
-

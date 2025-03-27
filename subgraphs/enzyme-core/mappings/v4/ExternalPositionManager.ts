@@ -169,7 +169,11 @@ import {
 } from '../../entities/GMXV2LeverageTradingPosition';
 import { createAlicePosition, createAlicePositionChange, useAliceOrder } from '../../entities/AlicePosition';
 import { aaveV3LikeDebtTypes } from '../../utils/aaveV3Like';
-import { createMysoV3OptionWritingPosition, createMysoV3OptionWritingPositionChange, useMysoV3Escrow } from '../../entities/MysoV3OptionWritingPosition';
+import {
+  createMysoV3OptionWritingPosition,
+  createMysoV3OptionWritingPositionChange,
+  useMysoV3Escrow,
+} from '../../entities/MysoV3OptionWritingPosition';
 // import {
 //   createMorphoBluePosition,
 //   createMorphoBluePositionChange,
@@ -2901,7 +2905,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     if (actionId == MysoV3ActionId.CreateEscrowByTakingQuote) {
       let decoded = ethereum.decode(
         '((address,uint48,address,uint48,uint128,uint128,(uint64,address,bool,bool,address)),(uint128,uint256,bytes,address),address)',
-        tuplePrefixBytes(event.params.actionArgs)
+        tuplePrefixBytes(event.params.actionArgs),
       );
       if (decoded == null) {
         return;
@@ -2914,9 +2918,9 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let advancedSettingsTuple = optionInfoTuple[6].toTuple();
       let premiumTokenIsUnderlying = advancedSettingsTuple[2].toBoolean();
       let settlementToken = optionInfoTuple[2].toAddress();
-  
+
       let underlyingAsset = ensureAsset(underlyingToken);
-      
+
       let outgoingAssetAmount = createAssetAmount(
         underlyingAsset,
         toBigDecimal(notional, underlyingAsset.decimals),
@@ -2926,28 +2930,26 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       );
 
       // Determine which token will be received as premium.
-      let assetToReceive = premiumTokenIsUnderlying
-        ? underlyingAsset
-        : ensureAsset(settlementToken);
-  
+      let assetToReceive = premiumTokenIsUnderlying ? underlyingAsset : ensureAsset(settlementToken);
+
       let incomingAsset: Asset[] = [assetToReceive];
-  
+
       let change = createMysoV3OptionWritingPositionChange(
-        event.params.externalPosition, 
+        event.params.externalPosition,
         null,
         incomingAsset,
         outgoingAssetAmount,
         'CreateEscrowByTakingQuote',
         vault,
-        event
+        event,
       );
       change.save();
     }
-  
+
     if (actionId == MysoV3ActionId.CreateEscrowByStartingAuction) {
       let decoded = ethereum.decode(
         '((address,address,uint128,(uint128,uint48,uint48,uint32,uint32,uint64,uint64,uint128,uint128),(uint64,address,bool,bool,address)),address)',
-        event.params.actionArgs
+        event.params.actionArgs,
       );
       if (decoded == null) {
         return;
@@ -2956,7 +2958,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let auctionInitTuple = argsTuple[0].toTuple();
       let underlyingToken = auctionInitTuple[0].toAddress();
       let notional = auctionInitTuple[2].toBigInt();
-  
+
       let underlyingAsset = ensureAsset(underlyingToken);
       let outgoingAssetAmount = createAssetAmount(
         underlyingAsset,
@@ -2973,11 +2975,11 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         outgoingAssetAmount,
         'CreateEscrowByStartingAuction',
         vault,
-        event
+        event,
       );
       change.save();
     }
-  
+
     if (actionId == MysoV3ActionId.CloseAndSweepEscrows) {
       let decoded = ethereum.decode('(uint32[],bool)', tuplePrefixBytes(event.params.actionArgs));
       if (decoded == null) {
@@ -2991,21 +2993,21 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       for (let i = 0; i < event.params.assetsToReceive.length; i++) {
         let asset = ensureAsset(event.params.assetsToReceive[i]);
 
-       incomingAssets =incomingAssets.concat([asset]);
+        incomingAssets = incomingAssets.concat([asset]);
       }
-  
+
       let change = createMysoV3OptionWritingPositionChange(
         event.params.externalPosition,
         escrows,
-       incomingAssets,
+        incomingAssets,
         null,
         'CloseAndSweepEscrows',
         vault,
-        event
+        event,
       );
       change.save();
     }
-  
+
     if (actionId == MysoV3ActionId.WithdrawTokensFromEscrows) {
       let decoded = ethereum.decode('(address[],address[])', tuplePrefixBytes(event.params.actionArgs));
       if (decoded == null) {
@@ -3013,14 +3015,14 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       }
       let argsTuple = decoded.toTuple();
       let tokenAddresses = argsTuple[1].toAddressArray();
-      
+
       let incomingAssets: Asset[] = new Array<Asset>();
       for (let i = 0; i < tokenAddresses.length; i++) {
         let asset = ensureAsset(tokenAddresses[i]);
 
         incomingAssets = incomingAssets.concat([asset]);
       }
-  
+
       let change = createMysoV3OptionWritingPositionChange(
         event.params.externalPosition,
         null,
@@ -3028,26 +3030,25 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         null,
         'WithdrawTokensFromEscrows',
         vault,
-        event
+        event,
       );
       change.save();
     }
-  
+
     if (actionId == MysoV3ActionId.Sweep) {
-      let decoded = ethereum.decode('(address[])', tuplePrefixBytes (event.params.actionArgs));
+      let decoded = ethereum.decode('(address[])', tuplePrefixBytes(event.params.actionArgs));
       if (decoded == null) {
         return;
       }
       let tokenAddresses = decoded.toAddressArray();
-  
+
       let incomingAssets: Asset[] = new Array<Asset>();
       for (let i = 0; i < tokenAddresses.length; i++) {
         let asset = ensureAsset(tokenAddresses[i]);
 
         incomingAssets = incomingAssets.concat([asset]);
       }
-  
-  
+
       let change = createMysoV3OptionWritingPositionChange(
         event.params.externalPosition,
         null,
@@ -3055,15 +3056,13 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         null,
         'Sweep',
         vault,
-        event
+        event,
       );
       change.save();
     }
-  
+
     return;
   }
-    
-
 
   createUnknownExternalPositionChange(event.params.externalPosition, vault, event);
 }
