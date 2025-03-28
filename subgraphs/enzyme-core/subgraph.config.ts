@@ -43,6 +43,7 @@ export interface Variables {
     protocolFeeReserveLibAddress: string;
     sharesSplitterFactoryAddress: string;
     singleAssetRedemptionQueueFactoryAddress: string;
+    singleAssetDepositQueueFactoryAddress: string;
     uintListRegistryAddress: string;
   };
   releases: {
