@@ -49,3 +49,7 @@ export function useVault(id: string): Vault {
 
   return vault as Vault;
 }
+
+export function isVault(id: string): boolean {
+  return Vault.load(id) != null;
+}

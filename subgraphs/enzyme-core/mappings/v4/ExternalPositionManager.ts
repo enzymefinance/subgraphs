@@ -130,7 +130,6 @@ import {
   createKilnStakingPositionChange,
   ensureKilnStaking,
   ethPerKilnNode,
-  useKilnStakingPosition,
 } from '../../entities/KilnStakingPosition';
 import { kilnClaimFeeType } from '../../utils/kilnClaimFeeType';
 import {
