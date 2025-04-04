@@ -3,7 +3,7 @@ import {
   ensureSingleAssetRedemptionQueue,
   ensureSingleAssetRedemptionQueueRequest,
 } from '../entities/SingleAssetRedemptionQueue';
-import { useVault } from '../entities/Vault';
+import { isVault, useVault } from '../entities/Vault';
 import {
   Initialized,
   ManagerAdded,
@@ -30,7 +30,9 @@ export function handleBypassableSharesThresholdSet(event: BypassableSharesThresh
 
 export function handleInitialized(event: Initialized): void {
   let redemptionQueue = ensureSingleAssetRedemptionQueue(event.address, event);
-  redemptionQueue.vault = useVault(event.params.vaultProxy.toHex()).id;
+  if (isVault(event.params.vaultProxy.toHex())) {
+    redemptionQueue.vault = useVault(event.params.vaultProxy.toHex()).id;
+  }
   redemptionQueue.save();
 }
 
@@ -80,7 +82,9 @@ export function handleRedemptionRequestAdded(event: RedemptionRequestAdded): voi
   request.createdAt = event.block.timestamp.toI32();
   request.sharesAmount = toBigDecimal(event.params.sharesAmount);
   request.account = ensureAccount(event.params.user, event).id;
-  request.vault = useVault(queue.vault).id;
+  if (isVault(queue.vault)) {
+    request.vault = useVault(queue.vault).id;
+  }
   request.singleAssetRedemptionQueue = ensureSingleAssetRedemptionQueue(event.address, event).id;
   request.save();
 }
