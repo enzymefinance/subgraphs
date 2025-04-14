@@ -11,7 +11,6 @@ import {
 import { Address, BigInt, ethereum } from '@graphprotocol/graph-ts';
 import { useVault } from './Vault';
 import { getActivityCounter } from './Counter';
-import { EscrowClosedAndSwept } from '../generated/contracts/MysoV3OptionWritingPositionLib4Events';
 
 export function useMysoV3OptionWritingPosition(id: string): MysoV3OptionWritingPosition {
   let position = MysoV3OptionWritingPosition.load(id);
