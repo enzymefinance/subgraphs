@@ -66,7 +66,6 @@ export function createMysoV3OptionWritingPositionChange(
 export function createMysoV3Escrow(escrowId: BigInt): MysoV3Escrow {
   let escrow = new MysoV3Escrow(escrowId.toHex());
   escrow.escrowId = escrowId;
-  escrow.save();
 
   return escrow;
 }

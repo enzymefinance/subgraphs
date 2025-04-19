@@ -16,7 +16,7 @@ import {
   BigDecimal,
   BigInt,
   ByteArray,
-  dataSource,
+  log,
 } from '@graphprotocol/graph-ts';
 import { createAaveDebtPosition, createAaveDebtPositionChange } from '../../entities/AaveDebtPosition';
 import {
@@ -61,6 +61,7 @@ import {
   KilnStakingPositionLib4DataSource,
   LidoWithdrawalsPositionLib4DataSource,
   MapleLiquidityPositionLib4DataSource,
+  MysoV3OptionWritingPositionLib4DataSource,
   // MorphoBluePositionLib4DataSource,
   StakeWiseV3StakingPositionLib4DataSource,
   TheGraphDelegationPositionLib4DataSource,
@@ -300,6 +301,8 @@ export function handleExternalPositionDeployedForFund(event: ExternalPositionDep
 
   if (type.label == 'MYSO_V3_OPTION_WRITING') {
     createMysoV3OptionWritingPosition(event.params.externalPosition, event.params.vaultProxy, type);
+
+    MysoV3OptionWritingPositionLib4DataSource.create(event.params.externalPosition);
 
     return;
   }
@@ -1376,12 +1379,12 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
       let withdrewWhileUndelegatingAssetAmount = withdrewWhileUndelegatingAssetAmountBD.gt(BigDecimal.fromString('0'))
         ? createAssetAmount(
-            grtAsset,
-            withdrewWhileUndelegatingAssetAmountBD,
-            denominationAsset,
-            'grt-withdrew-while-undelegating-asset-amount',
-            event,
-          )
+          grtAsset,
+          withdrewWhileUndelegatingAssetAmountBD,
+          denominationAsset,
+          'grt-withdrew-while-undelegating-asset-amount',
+          event,
+        )
         : null;
 
       createTheGraphDelegationPositionChange(
@@ -2285,7 +2288,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let exitRequestId = stakeWiseStakingExitRequestId(stakingPosition, stakeWiseVaultToken, positionTicket);
       let exitRequest = useStakeWiseStakingExitRequest(exitRequestId);
 
-      const sharesBI = fromBigDecimal(exitRequest.shares);
+      let sharesBI = fromBigDecimal(exitRequest.shares);
 
       let stakeWiseV3EthVault = ExternalSdk.bind(stakeWiseVault);
       let amount = toBigDecimal(stakeWiseV3EthVault.convertToAssets(sharesBI), 18);
@@ -2902,24 +2905,48 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
   if (type.label == 'MYSO_V3_OPTION_WRITING') {
     if (actionId == MysoV3ActionId.CreateEscrowByTakingQuote) {
-      let decoded = ethereum.decode(
-        '((address,uint48,address,uint48,uint128,uint128,(uint64,address,bool,bool,address)),(uint128,uint256,bytes,address),address)',
+      let outerType = '(tuple(tuple(tuple(address,uint48,address,uint48,uint128,uint128,tuple(uint64,address,bool,bool,address)),bytes),address))'
+
+      let outerDecoded = ethereum.decode(
+        outerType,
         tuplePrefixBytes(event.params.actionArgs),
       );
-      if (decoded == null) {
+      if (outerDecoded == null) {
+        log.warning("CreateEscrowByTakingQuote: outer decode failed", []);
         return;
       }
-      let argsTuple = decoded.toTuple();
-      let rfqInitializationTuple = argsTuple[0].toTuple();
-      let optionInfoTuple = rfqInitializationTuple[0].toTuple();
-      let underlyingToken = optionInfoTuple[0].toAddress();
-      let notional = optionInfoTuple[4].toBigInt();
-      let advancedSettingsTuple = optionInfoTuple[6].toTuple();
-      let premiumTokenIsUnderlying = advancedSettingsTuple[2].toBoolean();
-      let settlementToken = optionInfoTuple[2].toAddress();
+
+      let rfqInitType =
+        "(tuple(" +
+        "tuple(" + // OptionInfo 
+        "address,uint48,address,uint48,uint128,uint128," +
+        "tuple(uint64,address,bool,bool,address)" +  // AdvancedSettings
+        ")," +
+        "bytes" +                                     // raw RFQQuote payload (dynamic-size struct)
+        "))";
+
+      let rfqInitBytes = outerDecoded.toTuple()[0];
+      let rfqInitDecoded = ethereum.decode(
+        rfqInitType,
+        tuplePrefixBytes(rfqInitBytes.toBytes())
+      );
+
+      if (rfqInitDecoded == null) {
+        log.warning("RFQInitialization decode failed", []);
+        return;
+      }
+
+      let optionInfoTuple = rfqInitDecoded.toTuple()[0];
+
+      let optionInfo = optionInfoTuple.toTuple();
+      let underlyingToken = optionInfo[0].toAddress();
+      let settlementToken = optionInfo[2].toAddress();
+      let notional = optionInfo[4].toBigInt();
+      let advancedSettings = optionInfo[6].toTuple();
+      let premiumTokenIsUnderlying = advancedSettings[2].toBoolean();
+
 
       let underlyingAsset = ensureAsset(underlyingToken);
-
       let outgoingAssetAmount = createAssetAmount(
         underlyingAsset,
         toBigDecimal(notional, underlyingAsset.decimals),
@@ -2928,15 +2955,13 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         event,
       );
 
-      // Determine which token will be received as premium.
       let assetToReceive = premiumTokenIsUnderlying ? underlyingAsset : ensureAsset(settlementToken);
-
-      let incomingAsset: Asset[] = [assetToReceive];
+      let incomingAssets: Asset[] = [assetToReceive];
 
       let change = createMysoV3OptionWritingPositionChange(
         event.params.externalPosition,
         null,
-        incomingAsset,
+        incomingAssets,
         outgoingAssetAmount,
         'CreateEscrowByTakingQuote',
         vault,
@@ -2947,14 +2972,17 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
     if (actionId == MysoV3ActionId.CreateEscrowByStartingAuction) {
       let decoded = ethereum.decode(
-        '((address,address,uint128,(uint128,uint48,uint48,uint32,uint32,uint64,uint64,uint128,uint128),(uint64,address,bool,bool,address)),address)',
+        '(tuple(tuple(address,address,uint128,tuple(uint128,uint48,uint48,uint32,uint32,uint64,uint64,uint128,uint128),tuple(uint64,address,bool,bool,address)),address))'
+        ,
         event.params.actionArgs,
       );
       if (decoded == null) {
         return;
       }
-      let argsTuple = decoded.toTuple();
+      let tuple = decoded.toTuple();
+      let argsTuple = tuple[0].toTuple();
       let auctionInitTuple = argsTuple[0].toTuple();
+
       let underlyingToken = auctionInitTuple[0].toAddress();
       let notional = auctionInitTuple[2].toBigInt();
 
@@ -2980,18 +3008,18 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     }
 
     if (actionId == MysoV3ActionId.CloseAndSweepEscrows) {
-      let decoded = ethereum.decode('(uint32[],bool)', tuplePrefixBytes(event.params.actionArgs));
+      let decoded = ethereum.decode('(tuple(uint32[],bool))', tuplePrefixBytes(event.params.actionArgs));
       if (decoded == null) {
         return;
       }
-      let argsTuple = decoded.toTuple();
+      let tuple = decoded.toTuple();
+      let argsTuple = tuple[0].toTuple();
       let escrowIdxs = argsTuple[0].toBigIntArray();
 
       let escrows = escrowIdxs.map<MysoV3Escrow>((escrowId) => useMysoV3Escrow(escrowId));
       let incomingAssets: Asset[] = new Array<Asset>();
       for (let i = 0; i < event.params.assetsToReceive.length; i++) {
         let asset = ensureAsset(event.params.assetsToReceive[i]);
-
         incomingAssets = incomingAssets.concat([asset]);
       }
 
@@ -3008,17 +3036,17 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     }
 
     if (actionId == MysoV3ActionId.WithdrawTokensFromEscrows) {
-      let decoded = ethereum.decode('(address[],address[])', tuplePrefixBytes(event.params.actionArgs));
+      let decoded = ethereum.decode('(tuple(address[],address[]))', tuplePrefixBytes(event.params.actionArgs));
       if (decoded == null) {
         return;
       }
-      let argsTuple = decoded.toTuple();
-      let tokenAddresses = argsTuple[1].toAddressArray();
+      let tuple = decoded.toTuple();
+      let argsTuple = tuple[0].toTuple();
+      let tokens = argsTuple[1].toAddressArray();
 
       let incomingAssets: Asset[] = new Array<Asset>();
-      for (let i = 0; i < tokenAddresses.length; i++) {
-        let asset = ensureAsset(tokenAddresses[i]);
-
+      for (let i = 0; i < tokens.length; i++) {
+        let asset = ensureAsset(tokens[i]);
         incomingAssets = incomingAssets.concat([asset]);
       }
 
@@ -3035,16 +3063,17 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     }
 
     if (actionId == MysoV3ActionId.Sweep) {
-      let decoded = ethereum.decode('(address[])', tuplePrefixBytes(event.params.actionArgs));
+      let decoded = ethereum.decode('(tuple(address[]))', tuplePrefixBytes(event.params.actionArgs));
       if (decoded == null) {
         return;
       }
-      let tokenAddresses = decoded.toAddressArray();
+      let tuple = decoded.toTuple();
+      let argsTuple = tuple[0].toTuple();
+      let tokens = argsTuple[0].toAddressArray();
 
       let incomingAssets: Asset[] = new Array<Asset>();
-      for (let i = 0; i < tokenAddresses.length; i++) {
-        let asset = ensureAsset(tokenAddresses[i]);
-
+      for (let i = 0; i < tokens.length; i++) {
+        let asset = ensureAsset(tokens[i]);
         incomingAssets = incomingAssets.concat([asset]);
       }
 
@@ -3066,5 +3095,5 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
   createUnknownExternalPositionChange(event.params.externalPosition, vault, event);
 }
 
-export function handleExternalPositionTypeInfoUpdated(event: ExternalPositionTypeInfoUpdated): void {}
-export function handleValidatedVaultProxySetForFund(event: ValidatedVaultProxySetForFund): void {}
+export function handleExternalPositionTypeInfoUpdated(event: ExternalPositionTypeInfoUpdated): void { }
+export function handleValidatedVaultProxySetForFund(event: ValidatedVaultProxySetForFund): void { }
