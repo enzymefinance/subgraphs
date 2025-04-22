@@ -2905,48 +2905,26 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
   if (type.label == 'MYSO_V3_OPTION_WRITING') {
     if (actionId == MysoV3ActionId.CreateEscrowByTakingQuote) {
-      let outerType = '(tuple(tuple(tuple(address,uint48,address,uint48,uint128,uint128,tuple(uint64,address,bool,bool,address)),bytes),address))'
+      // We are decoding only the relevant part of the actionArgs
+      // The rest of the tuple involves complex dynamic-size nested tuples that TheGraph utils can't seem to decode, even with tuplePrefixBytes handling
+      // The full tuple signature is: '(tuple(tuple(tuple(address,uint48,address,uint48,uint128,uint128,tuple(uint64,address,bool,bool,address)),tuple(uint128,uint256,bytes,address)),address))'
+      const truncatedActionArgs = Bytes.fromUint8Array(event.params.actionArgs.slice(96, 96 + 32 * 6));
 
-      let outerDecoded = ethereum.decode(
-        outerType,
-        tuplePrefixBytes(event.params.actionArgs),
+      const decoded = ethereum.decode(
+        '(address,uint48,address,uint48,uint128,uint128)',
+        truncatedActionArgs
       );
-      if (outerDecoded == null) {
-        log.warning("CreateEscrowByTakingQuote: outer decode failed", []);
+
+      if (decoded == null) {
         return;
       }
 
-      let rfqInitType =
-        "(tuple(" +
-        "tuple(" + // OptionInfo 
-        "address,uint48,address,uint48,uint128,uint128," +
-        "tuple(uint64,address,bool,bool,address)" +  // AdvancedSettings
-        ")," +
-        "bytes" +                                     // raw RFQQuote payload (dynamic-size struct)
-        "))";
+      const optionInfo = decoded.toTuple();
+      const underlying = optionInfo[0].toAddress();
+      const settlement = optionInfo[2].toAddress();
+      const notional = optionInfo[4].toBigInt();
 
-      let rfqInitBytes = outerDecoded.toTuple()[0];
-      let rfqInitDecoded = ethereum.decode(
-        rfqInitType,
-        tuplePrefixBytes(rfqInitBytes.toBytes())
-      );
-
-      if (rfqInitDecoded == null) {
-        log.warning("RFQInitialization decode failed", []);
-        return;
-      }
-
-      let optionInfoTuple = rfqInitDecoded.toTuple()[0];
-
-      let optionInfo = optionInfoTuple.toTuple();
-      let underlyingToken = optionInfo[0].toAddress();
-      let settlementToken = optionInfo[2].toAddress();
-      let notional = optionInfo[4].toBigInt();
-      let advancedSettings = optionInfo[6].toTuple();
-      let premiumTokenIsUnderlying = advancedSettings[2].toBoolean();
-
-
-      let underlyingAsset = ensureAsset(underlyingToken);
+      let underlyingAsset = ensureAsset(underlying);
       let outgoingAssetAmount = createAssetAmount(
         underlyingAsset,
         toBigDecimal(notional, underlyingAsset.decimals),
@@ -2955,8 +2933,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         event,
       );
 
-      let assetToReceive = premiumTokenIsUnderlying ? underlyingAsset : ensureAsset(settlementToken);
-      let incomingAssets: Asset[] = [assetToReceive];
+      let incomingAssets: Asset[] = [ensureAsset(settlement)];
 
       let change = createMysoV3OptionWritingPositionChange(
         event.params.externalPosition,
