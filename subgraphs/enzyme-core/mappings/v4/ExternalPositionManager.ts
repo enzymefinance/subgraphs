@@ -1379,12 +1379,12 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
       let withdrewWhileUndelegatingAssetAmount = withdrewWhileUndelegatingAssetAmountBD.gt(BigDecimal.fromString('0'))
         ? createAssetAmount(
-          grtAsset,
-          withdrewWhileUndelegatingAssetAmountBD,
-          denominationAsset,
-          'grt-withdrew-while-undelegating-asset-amount',
-          event,
-        )
+            grtAsset,
+            withdrewWhileUndelegatingAssetAmountBD,
+            denominationAsset,
+            'grt-withdrew-while-undelegating-asset-amount',
+            event,
+          )
         : null;
 
       createTheGraphDelegationPositionChange(
@@ -2910,10 +2910,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       // The full tuple signature is: '(tuple(tuple(tuple(address,uint48,address,uint48,uint128,uint128,tuple(uint64,address,bool,bool,address)),tuple(uint128,uint256,bytes,address)),address))'
       const truncatedActionArgs = Bytes.fromUint8Array(event.params.actionArgs.slice(96, 96 + 32 * 6));
 
-      const decoded = ethereum.decode(
-        '(address,uint48,address,uint48,uint128,uint128)',
-        truncatedActionArgs
-      );
+      const decoded = ethereum.decode('(address,uint48,address,uint48,uint128,uint128)', truncatedActionArgs);
 
       if (decoded == null) {
         return;
@@ -2949,8 +2946,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
     if (actionId == MysoV3ActionId.CreateEscrowByStartingAuction) {
       let decoded = ethereum.decode(
-        '(tuple(tuple(address,address,uint128,tuple(uint128,uint48,uint48,uint32,uint32,uint64,uint64,uint128,uint128),tuple(uint64,address,bool,bool,address)),address))'
-        ,
+        '(tuple(tuple(address,address,uint128,tuple(uint128,uint48,uint48,uint32,uint32,uint64,uint64,uint128,uint128),tuple(uint64,address,bool,bool,address)),address))',
         event.params.actionArgs,
       );
       if (decoded == null) {
@@ -3072,5 +3068,5 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
   createUnknownExternalPositionChange(event.params.externalPosition, vault, event);
 }
 
-export function handleExternalPositionTypeInfoUpdated(event: ExternalPositionTypeInfoUpdated): void { }
-export function handleValidatedVaultProxySetForFund(event: ValidatedVaultProxySetForFund): void { }
+export function handleExternalPositionTypeInfoUpdated(event: ExternalPositionTypeInfoUpdated): void {}
+export function handleValidatedVaultProxySetForFund(event: ValidatedVaultProxySetForFund): void {}

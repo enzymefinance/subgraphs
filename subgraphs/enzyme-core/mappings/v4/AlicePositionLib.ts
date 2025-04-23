@@ -15,7 +15,9 @@ export function handleOrderIdAdded(event: OrderIdAdded): void {
   let comptroller = ensureComptroller(Address.fromString(vault.comptroller), event);
   let denominationAsset = ensureAsset(Address.fromString(comptroller.denomination));
 
-  let outgoingAssetAddress = event.params.orderDetails.outgoingAssetAddress.equals(ZERO_ADDRESS) ? wethTokenAddress : event.params.orderDetails.outgoingAssetAddress;
+  let outgoingAssetAddress = event.params.orderDetails.outgoingAssetAddress.equals(ZERO_ADDRESS)
+    ? wethTokenAddress
+    : event.params.orderDetails.outgoingAssetAddress;
   let outgoingAsset = ensureAsset(outgoingAssetAddress);
   let outgoingAssetAmount = createAssetAmount(
     outgoingAsset,
@@ -25,7 +27,9 @@ export function handleOrderIdAdded(event: OrderIdAdded): void {
     event,
   );
 
-  let incomingAssetAddress = event.params.orderDetails.incomingAssetAddress.equals(ZERO_ADDRESS) ? wethTokenAddress : event.params.orderDetails.incomingAssetAddress;
+  let incomingAssetAddress = event.params.orderDetails.incomingAssetAddress.equals(ZERO_ADDRESS)
+    ? wethTokenAddress
+    : event.params.orderDetails.incomingAssetAddress;
   let incomingAsset = ensureAsset(incomingAssetAddress);
 
   let order = new AliceOrder(event.params.orderId.toString());

@@ -143,6 +143,5 @@ export enum MysoV3ActionId {
   CreateEscrowByStartingAuction = 1,
   CloseAndSweepEscrows = 2,
   WithdrawTokensFromEscrows = 3,
-  Sweep = 4 
+  Sweep = 4,
 }
-
