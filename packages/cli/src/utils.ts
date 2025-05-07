@@ -146,14 +146,11 @@ export function templateDeclaration(
 }
 
 export function sdkDeclaration(sdk: SdkUserDeclaration, root: string): SdkAbiDeclaration {
-  const abis = Object.entries(sdk.abis as any).reduce(
-    (carry, [name, file]) => {
-      const abiPathAbsolute = resolveUserDefinedPath(file as string, root);
-      const abiInterface = loadAbiAtPath(abiPathAbsolute);
-      return { ...carry, [name]: abiInterface };
-    },
-    {} as Record<string, utils.Interface>,
-  );
+  const abis = Object.entries(sdk.abis as any).reduce((carry, [name, file]) => {
+    const abiPathAbsolute = resolveUserDefinedPath(file as string, root);
+    const abiInterface = loadAbiAtPath(abiPathAbsolute);
+    return { ...carry, [name]: abiInterface };
+  }, {} as Record<string, utils.Interface>);
 
   return {
     type: AbiDeclarationType.SDK,

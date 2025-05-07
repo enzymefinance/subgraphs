@@ -16,7 +16,7 @@ import {
   BigDecimal,
   BigInt,
   ByteArray,
-  dataSource,
+  log,
 } from '@graphprotocol/graph-ts';
 import { createAaveDebtPosition, createAaveDebtPositionChange } from '../../entities/AaveDebtPosition';
 import {
@@ -53,7 +53,7 @@ import {
   ValidatedVaultProxySetForFund,
 } from '../../generated/contracts/ExternalPositionManager4Events';
 import { ProtocolSdk } from '../../generated/contracts/ProtocolSdk';
-import { AliceOrder, Asset, AssetAmount } from '../../generated/schema';
+import { AliceOrder, Asset, AssetAmount, MysoV3Escrow } from '../../generated/schema';
 import {
   AlicePositionLib4DataSource,
   ArbitraryLoanPositionLib4DataSource,
@@ -61,6 +61,7 @@ import {
   KilnStakingPositionLib4DataSource,
   LidoWithdrawalsPositionLib4DataSource,
   MapleLiquidityPositionLib4DataSource,
+  MysoV3OptionWritingPositionLib4DataSource,
   // MorphoBluePositionLib4DataSource,
   StakeWiseV3StakingPositionLib4DataSource,
   TheGraphDelegationPositionLib4DataSource,
@@ -84,6 +85,7 @@ import {
   GMXV2LeverageTradingActionId,
   AliceActionId,
   // MorphoBlueActionId,
+  MysoV3ActionId,
 } from '../../utils/actionId';
 import { ensureMapleLiquidityPoolV1, ensureMapleLiquidityPoolV2 } from '../../entities/MapleLiquidityPool';
 import { ExternalSdk } from '../../generated/contracts/ExternalSdk';
@@ -167,6 +169,11 @@ import {
 } from '../../entities/GMXV2LeverageTradingPosition';
 import { createAlicePosition, createAlicePositionChange, useAliceOrder } from '../../entities/AlicePosition';
 import { aaveV3LikeDebtTypes } from '../../utils/aaveV3Like';
+import {
+  createMysoV3OptionWritingPosition,
+  createMysoV3OptionWritingPositionChange,
+  useMysoV3Escrow,
+} from '../../entities/MysoV3OptionWritingPosition';
 // import {
 //   createMorphoBluePosition,
 //   createMorphoBluePositionChange,
@@ -288,6 +295,14 @@ export function handleExternalPositionDeployedForFund(event: ExternalPositionDep
     createAlicePosition(event.params.externalPosition, event.params.vaultProxy, type);
 
     AlicePositionLib4DataSource.create(event.params.externalPosition);
+
+    return;
+  }
+
+  if (type.label == 'MYSO_V3_OPTION_WRITING') {
+    createMysoV3OptionWritingPosition(event.params.externalPosition, event.params.vaultProxy, type);
+
+    MysoV3OptionWritingPositionLib4DataSource.create(event.params.externalPosition);
 
     return;
   }
@@ -2273,7 +2288,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let exitRequestId = stakeWiseStakingExitRequestId(stakingPosition, stakeWiseVaultToken, positionTicket);
       let exitRequest = useStakeWiseStakingExitRequest(exitRequestId);
 
-      const sharesBI = fromBigDecimal(exitRequest.shares);
+      let sharesBI = fromBigDecimal(exitRequest.shares);
 
       let stakeWiseV3EthVault = ExternalSdk.bind(stakeWiseVault);
       let amount = toBigDecimal(stakeWiseV3EthVault.convertToAssets(sharesBI), 18);
@@ -2883,6 +2898,168 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let orders = orderIds.map<AliceOrder>((orderId) => useAliceOrder(orderId.toString()));
 
       createAlicePositionChange(event.params.externalPosition, orders, null, null, 'Sweep', vault, event);
+    }
+
+    return;
+  }
+
+  if (type.label == 'MYSO_V3_OPTION_WRITING') {
+    if (actionId == MysoV3ActionId.CreateEscrowByTakingQuote) {
+      // We are decoding only the relevant part of the actionArgs
+      // The rest of the tuple involves complex dynamic-size nested tuples that TheGraph utils can't seem to decode, even with tuplePrefixBytes handling
+      // The full tuple signature is: '(tuple(tuple(tuple(address,uint48,address,uint48,uint128,uint128,tuple(uint64,address,bool,bool,address)),tuple(uint128,uint256,bytes,address)),address))'
+      const truncatedActionArgs = Bytes.fromUint8Array(event.params.actionArgs.slice(96, 96 + 32 * 6));
+
+      const decoded = ethereum.decode('(address,uint48,address,uint48,uint128,uint128)', truncatedActionArgs);
+
+      if (decoded == null) {
+        return;
+      }
+
+      const optionInfo = decoded.toTuple();
+      const underlying = optionInfo[0].toAddress();
+      const settlement = optionInfo[2].toAddress();
+      const notional = optionInfo[4].toBigInt();
+
+      let underlyingAsset = ensureAsset(underlying);
+      let outgoingAssetAmount = createAssetAmount(
+        underlyingAsset,
+        toBigDecimal(notional, underlyingAsset.decimals),
+        denominationAsset,
+        'myso-v3-underlying',
+        event,
+      );
+
+      let incomingAssets: Asset[] = [ensureAsset(settlement)];
+
+      let change = createMysoV3OptionWritingPositionChange(
+        event.params.externalPosition,
+        null,
+        incomingAssets,
+        outgoingAssetAmount,
+        'CreateEscrowByTakingQuote',
+        vault,
+        event,
+      );
+      change.save();
+    }
+
+    if (actionId == MysoV3ActionId.CreateEscrowByStartingAuction) {
+      let decoded = ethereum.decode(
+        '(tuple(tuple(address,address,uint128,tuple(uint128,uint48,uint48,uint32,uint32,uint64,uint64,uint128,uint128),tuple(uint64,address,bool,bool,address)),address))',
+        event.params.actionArgs,
+      );
+      if (decoded == null) {
+        return;
+      }
+      let tuple = decoded.toTuple();
+      let argsTuple = tuple[0].toTuple();
+      let auctionInitTuple = argsTuple[0].toTuple();
+
+      let underlyingToken = auctionInitTuple[0].toAddress();
+      let notional = auctionInitTuple[2].toBigInt();
+
+      let underlyingAsset = ensureAsset(underlyingToken);
+      let outgoingAssetAmount = createAssetAmount(
+        underlyingAsset,
+        toBigDecimal(notional, underlyingAsset.decimals),
+        denominationAsset,
+        'myso-v3-underlying',
+        event,
+      );
+
+      let change = createMysoV3OptionWritingPositionChange(
+        event.params.externalPosition,
+        null,
+        null,
+        outgoingAssetAmount,
+        'CreateEscrowByStartingAuction',
+        vault,
+        event,
+      );
+      change.save();
+    }
+
+    if (actionId == MysoV3ActionId.CloseAndSweepEscrows) {
+      let decoded = ethereum.decode('(tuple(uint32[],bool))', tuplePrefixBytes(event.params.actionArgs));
+      if (decoded == null) {
+        return;
+      }
+      let tuple = decoded.toTuple();
+      let argsTuple = tuple[0].toTuple();
+      let escrowIdxs = argsTuple[0].toBigIntArray();
+
+      let escrows = escrowIdxs.map<MysoV3Escrow>((escrowId) => useMysoV3Escrow(escrowId));
+      let incomingAssets: Asset[] = new Array<Asset>();
+      for (let i = 0; i < event.params.assetsToReceive.length; i++) {
+        let asset = ensureAsset(event.params.assetsToReceive[i]);
+        incomingAssets = incomingAssets.concat([asset]);
+      }
+
+      let change = createMysoV3OptionWritingPositionChange(
+        event.params.externalPosition,
+        escrows,
+        incomingAssets,
+        null,
+        'CloseAndSweepEscrows',
+        vault,
+        event,
+      );
+      change.save();
+    }
+
+    if (actionId == MysoV3ActionId.WithdrawTokensFromEscrows) {
+      let decoded = ethereum.decode('(tuple(address[],address[]))', tuplePrefixBytes(event.params.actionArgs));
+      if (decoded == null) {
+        return;
+      }
+      let tuple = decoded.toTuple();
+      let argsTuple = tuple[0].toTuple();
+      let tokens = argsTuple[1].toAddressArray();
+
+      let incomingAssets: Asset[] = new Array<Asset>();
+      for (let i = 0; i < tokens.length; i++) {
+        let asset = ensureAsset(tokens[i]);
+        incomingAssets = incomingAssets.concat([asset]);
+      }
+
+      let change = createMysoV3OptionWritingPositionChange(
+        event.params.externalPosition,
+        null,
+        incomingAssets,
+        null,
+        'WithdrawTokensFromEscrows',
+        vault,
+        event,
+      );
+      change.save();
+    }
+
+    if (actionId == MysoV3ActionId.Sweep) {
+      let decoded = ethereum.decode('(tuple(address[]))', tuplePrefixBytes(event.params.actionArgs));
+      if (decoded == null) {
+        return;
+      }
+      let tuple = decoded.toTuple();
+      let argsTuple = tuple[0].toTuple();
+      let tokens = argsTuple[0].toAddressArray();
+
+      let incomingAssets: Asset[] = new Array<Asset>();
+      for (let i = 0; i < tokens.length; i++) {
+        let asset = ensureAsset(tokens[i]);
+        incomingAssets = incomingAssets.concat([asset]);
+      }
+
+      let change = createMysoV3OptionWritingPositionChange(
+        event.params.externalPosition,
+        null,
+        incomingAssets,
+        null,
+        'Sweep',
+        vault,
+        event,
+      );
+      change.save();
     }
 
     return;
