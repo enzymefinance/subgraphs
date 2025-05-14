@@ -24,7 +24,7 @@ pnpm install
 
 ## Subgraph Contexts
 
-Each subgraph can be used in different contexts, i.e. for different deployements and chains.
+Each subgraph can be used in different contexts, i.e. for different deployments and chains.
 
 Default contexts are:
 
