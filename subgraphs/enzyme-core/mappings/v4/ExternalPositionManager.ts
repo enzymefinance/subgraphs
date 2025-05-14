@@ -610,17 +610,21 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
       let tuple = decoded.toTuple();
       let assetAddresses = tuple[0].toAddressArray();
+      let amounts = tuple[1].toBigIntArray();
 
       let assetAmounts: AssetAmount[] = new Array<AssetAmount>();
       let assets: Asset[] = new Array<Asset>();
       for (let i = 0; i < assetAddresses.length; i++) {
         let asset = ensureAsset(assetAddresses[i]);
+        let amount = toBigDecimal(amounts[i], asset.decimals);
+        let assetAmount = createAssetAmount(asset, amount, denominationAsset, 'av3dp', event);
+        assetAmounts = assetAmounts.concat([assetAmount]);
         assets = assets.concat([asset]);
       }
 
       createAaveV3DebtPositionChange(
         event.params.externalPosition,
-        null,
+        assetAmounts,
         assets,
         null,
         'ClaimMerklRewards',
