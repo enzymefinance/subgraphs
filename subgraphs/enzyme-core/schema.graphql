@@ -1206,6 +1206,8 @@ enum AaveV3DebtPositionChangeType {
   SetEMode
   SetUseReserveAsCollateral
   ClaimRewards
+  Sweep
+  ClaimMerklRewards
 }
 
 type AaveV3DebtPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
@@ -1215,6 +1217,7 @@ type AaveV3DebtPositionChange implements Activity & VaultActivity & ExternalPosi
   externalPosition: ExternalPosition!
   aaveV3DebtPositionChangeType: AaveV3DebtPositionChangeType!
   assetAmounts: [AssetAmount!]
+  assets: [Asset!]
   eModeCategoryId: BigInt
   activityCounter: Int!
   activityCategories: [ActivityCategory!]!
