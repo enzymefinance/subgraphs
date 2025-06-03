@@ -7,8 +7,8 @@ settings:
 catalogs:
   enzymefinance:
     '@enzymefinance/environment':
-      specifier: 6.3.44
-      version: 6.3.44
+      specifier: 6.3.52
+      version: 6.3.52
 
 importers:
 
@@ -82,7 +82,7 @@ importers:
     devDependencies:
       '@enzymefinance/environment':
         specifier: catalog:enzymefinance
-        version: 6.3.44(@enzymefinance/sdk@1.1.0(@enzymefinance/abis@1.1.0)(decimal.js@10.4.3)(viem@2.21.50(typescript@5.8.3)(zod@3.25.49)))(viem@2.21.50(typescript@5.8.3)(zod@3.25.49))
+        version: 6.3.52(@enzymefinance/sdk@1.1.0(@enzymefinance/abis@1.1.0)(decimal.js@10.4.3)(viem@2.21.50(typescript@5.8.3)(zod@3.25.49)))(viem@2.21.50(typescript@5.8.3)(zod@3.25.49))
       '@enzymefinance/subgraph-cli':
         specifier: workspace:*
         version: link:../../packages/cli
@@ -91,7 +91,7 @@ importers:
         version: link:../../packages/utils
       '@graphprotocol/graph-cli':
         specifier: ^0.97.1
-        version: 0.97.1(@types/node@22.15.29)(typescript@5.8.3)(zod@3.25.49)
+        version: 0.97.1(@types/node@22.9.3)(typescript@5.8.3)(zod@3.25.49)
       '@graphprotocol/graph-ts':
         specifier: ^0.38.1
         version: 0.38.1
@@ -110,7 +110,7 @@ importers:
     devDependencies:
       '@enzymefinance/environment':
         specifier: catalog:enzymefinance
-        version: 6.3.44(@enzymefinance/sdk@1.1.0(@enzymefinance/abis@1.1.0)(decimal.js@10.4.3)(viem@2.21.50(typescript@5.8.3)(zod@3.25.49)))(viem@2.21.50(typescript@5.8.3)(zod@3.25.49))
+        version: 6.3.52(@enzymefinance/sdk@1.1.0(@enzymefinance/abis@1.1.0)(decimal.js@10.4.3)(viem@2.21.50(typescript@5.8.3)(zod@3.25.49)))(viem@2.21.50(typescript@5.8.3)(zod@3.25.49))
       '@enzymefinance/subgraph-cli':
         specifier: workspace:*
         version: link:../../packages/cli
@@ -119,7 +119,7 @@ importers:
         version: link:../../packages/utils
       '@graphprotocol/graph-cli':
         specifier: ^0.97.1
-        version: 0.97.1(@types/node@22.15.29)(typescript@5.8.3)(zod@3.25.49)
+        version: 0.97.1(@types/node@22.9.3)(typescript@5.8.3)(zod@3.25.49)
       '@graphprotocol/graph-ts':
         specifier: ^0.38.1
         version: 0.38.1
@@ -138,7 +138,7 @@ importers:
     devDependencies:
       '@enzymefinance/environment':
         specifier: catalog:enzymefinance
-        version: 6.3.44(@enzymefinance/sdk@1.1.0(@enzymefinance/abis@1.1.0)(decimal.js@10.4.3)(viem@2.21.50(typescript@5.8.3)(zod@3.25.49)))(viem@2.21.50(typescript@5.8.3)(zod@3.25.49))
+        version: 6.3.52(@enzymefinance/sdk@1.1.0(@enzymefinance/abis@1.1.0)(decimal.js@10.4.3)(viem@2.21.50(typescript@5.8.3)(zod@3.25.49)))(viem@2.21.50(typescript@5.8.3)(zod@3.25.49))
       '@enzymefinance/subgraph-cli':
         specifier: workspace:*
         version: link:../../packages/cli
@@ -147,7 +147,7 @@ importers:
         version: link:../../packages/utils
       '@graphprotocol/graph-cli':
         specifier: ^0.97.1
-        version: 0.97.1(@types/node@22.15.29)(typescript@5.8.3)(zod@3.25.49)
+        version: 0.97.1(@types/node@22.9.3)(typescript@5.8.3)(zod@3.25.49)
       '@graphprotocol/graph-ts':
         specifier: ^0.38.1
         version: 0.38.1
@@ -166,7 +166,7 @@ importers:
     devDependencies:
       '@enzymefinance/environment':
         specifier: catalog:enzymefinance
-        version: 6.3.44(@enzymefinance/sdk@1.1.0(@enzymefinance/abis@1.1.0)(decimal.js@10.4.3)(viem@2.21.50(typescript@5.8.3)(zod@3.25.49)))(viem@2.21.50(typescript@5.8.3)(zod@3.25.49))
+        version: 6.3.52(@enzymefinance/sdk@1.1.0(@enzymefinance/abis@1.1.0)(decimal.js@10.4.3)(viem@2.21.50(typescript@5.8.3)(zod@3.25.49)))(viem@2.21.50(typescript@5.8.3)(zod@3.25.49))
       '@enzymefinance/subgraph-cli':
         specifier: workspace:*
         version: link:../../packages/cli
@@ -175,7 +175,7 @@ importers:
         version: link:../../packages/utils
       '@graphprotocol/graph-cli':
         specifier: ^0.97.1
-        version: 0.97.1(@types/node@22.15.29)(typescript@5.8.3)(zod@3.25.49)
+        version: 0.97.1(@types/node@22.9.3)(typescript@5.8.3)(zod@3.25.49)
       '@graphprotocol/graph-ts':
         specifier: ^0.38.1
         version: 0.38.1
@@ -194,7 +194,7 @@ importers:
     devDependencies:
       '@enzymefinance/environment':
         specifier: catalog:enzymefinance
-        version: 6.3.44(@enzymefinance/sdk@1.1.0(@enzymefinance/abis@1.1.0)(decimal.js@10.4.3)(viem@2.21.50(typescript@5.8.3)(zod@3.25.49)))(viem@2.21.50(typescript@5.8.3)(zod@3.25.49))
+        version: 6.3.52(@enzymefinance/sdk@1.1.0(@enzymefinance/abis@1.1.0)(decimal.js@10.4.3)(viem@2.21.50(typescript@5.8.3)(zod@3.25.49)))(viem@2.21.50(typescript@5.8.3)(zod@3.25.49))
       '@enzymefinance/subgraph-cli':
         specifier: workspace:*
         version: link:../../packages/cli
@@ -203,7 +203,7 @@ importers:
         version: link:../../packages/utils
       '@graphprotocol/graph-cli':
         specifier: ^0.97.1
-        version: 0.97.1(@types/node@22.15.29)(typescript@5.8.3)(zod@3.25.49)
+        version: 0.97.1(@types/node@22.9.3)(typescript@5.8.3)(zod@3.25.49)
       '@graphprotocol/graph-ts':
         specifier: ^0.38.1
         version: 0.38.1
@@ -222,7 +222,7 @@ importers:
     devDependencies:
       '@enzymefinance/environment':
         specifier: catalog:enzymefinance
-        version: 6.3.44(@enzymefinance/sdk@1.1.0(@enzymefinance/abis@1.1.0)(decimal.js@10.4.3)(viem@2.21.50(typescript@5.8.3)(zod@3.25.49)))(viem@2.21.50(typescript@5.8.3)(zod@3.25.49))
+        version: 6.3.52(@enzymefinance/sdk@1.1.0(@enzymefinance/abis@1.1.0)(decimal.js@10.4.3)(viem@2.21.50(typescript@5.8.3)(zod@3.25.49)))(viem@2.21.50(typescript@5.8.3)(zod@3.25.49))
       '@enzymefinance/subgraph-cli':
         specifier: workspace:*
         version: link:../../packages/cli
@@ -231,7 +231,7 @@ importers:
         version: link:../../packages/utils
       '@graphprotocol/graph-cli':
         specifier: ^0.97.1
-        version: 0.97.1(@types/node@22.15.29)(typescript@5.8.3)(zod@3.25.49)
+        version: 0.97.1(@types/node@22.9.3)(typescript@5.8.3)(zod@3.25.49)
       '@graphprotocol/graph-ts':
         specifier: ^0.38.1
         version: 0.38.1
@@ -250,7 +250,7 @@ importers:
     devDependencies:
       '@enzymefinance/environment':
         specifier: catalog:enzymefinance
-        version: 6.3.44(@enzymefinance/sdk@1.1.0(@enzymefinance/abis@1.1.0)(decimal.js@10.4.3)(viem@2.21.50(typescript@5.8.3)(zod@3.25.49)))(viem@2.21.50(typescript@5.8.3)(zod@3.25.49))
+        version: 6.3.52(@enzymefinance/sdk@1.1.0(@enzymefinance/abis@1.1.0)(decimal.js@10.4.3)(viem@2.21.50(typescript@5.8.3)(zod@3.25.49)))(viem@2.21.50(typescript@5.8.3)(zod@3.25.49))
       '@enzymefinance/subgraph-cli':
         specifier: workspace:*
         version: link:../../packages/cli
@@ -259,7 +259,7 @@ importers:
         version: link:../../packages/utils
       '@graphprotocol/graph-cli':
         specifier: ^0.97.1
-        version: 0.97.1(@types/node@22.15.29)(typescript@5.8.3)(zod@3.25.49)
+        version: 0.97.1(@types/node@22.9.3)(typescript@5.8.3)(zod@3.25.49)
       '@graphprotocol/graph-ts':
         specifier: ^0.38.1
         version: 0.38.1
@@ -296,10 +296,10 @@ packages:
   '@enzymefinance/abis@1.1.0':
     resolution: {integrity: sha512-yb4HCc858aZ0iA/WsEbjXD/A2I6vOrEGvGwD4Rbepo/FTIUPASr1EuoqNRvPGgwMQ2Gbj/feZBLlrdERfWsJEQ==}
 
-  '@enzymefinance/environment@6.3.44':
-    resolution: {integrity: sha512-04QrC9FkMprNCy1IRBGuQhw5mZ4xknXAtiZRqtGWFNe0oqcN7gOm+yxI1362P6Wgz6b5SoJOJRGylomQh54VMw==}
+  '@enzymefinance/environment@6.3.52':
+    resolution: {integrity: sha512-sDDmG6fOmpJNFzTub4iINelpzyZ2Cv+xSU5yx5W2IIY85X8nkAv7ySPH4neQib2XmNC2VjaXEmHXgCPtNDz0dA==}
     peerDependencies:
-      '@enzymefinance/sdk': 1.2.15
+      '@enzymefinance/sdk': 1.2.18
       viem: ^2.7.16
 
   '@enzymefinance/prettier-config@1.0.10':
@@ -2506,7 +2506,7 @@ snapshots:
 
   '@enzymefinance/abis@1.1.0': {}
 
-  '@enzymefinance/environment@6.3.44(@enzymefinance/sdk@1.1.0(@enzymefinance/abis@1.1.0)(decimal.js@10.4.3)(viem@2.21.50(typescript@5.8.3)(zod@3.25.49)))(viem@2.21.50(typescript@5.8.3)(zod@3.25.49))':
+  '@enzymefinance/environment@6.3.52(@enzymefinance/sdk@1.1.0(@enzymefinance/abis@1.1.0)(decimal.js@10.4.3)(viem@2.21.50(typescript@5.8.3)(zod@3.25.49)))(viem@2.21.50(typescript@5.8.3)(zod@3.25.49))':
     dependencies:
       '@enzymefinance/sdk': 1.1.0(@enzymefinance/abis@1.1.0)(decimal.js@10.4.3)(viem@2.21.50(typescript@5.8.3)(zod@3.25.49))
       viem: 2.21.50(typescript@5.8.3)(zod@3.25.49)
@@ -3020,6 +3020,42 @@ snapshots:
       - utf-8-validate
       - zod
 
+  '@graphprotocol/graph-cli@0.97.1(@types/node@22.9.3)(typescript@5.8.3)(zod@3.25.49)':
+    dependencies:
+      '@float-capital/float-subgraph-uncrashable': 0.0.0-internal-testing.5
+      '@oclif/core': 4.3.0
+      '@oclif/plugin-autocomplete': 3.2.29
+      '@oclif/plugin-not-found': 3.2.55(@types/node@22.9.3)
+      '@oclif/plugin-warn-if-update-available': 3.1.40
+      '@pinax/graph-networks-registry': 0.6.7
+      '@whatwg-node/fetch': 0.10.8
+      assemblyscript: 0.19.23
+      chokidar: 4.0.3
+      debug: 4.4.1(supports-color@8.1.1)
+      docker-compose: 1.2.0
+      fs-extra: 11.3.0
+      glob: 11.0.2
+      gluegun: 5.2.0(debug@4.4.1)
+      graphql: 16.11.0
+      immutable: 5.1.2
+      jayson: 4.2.0
+      js-yaml: 4.1.0
+      kubo-rpc-client: 5.1.0(undici@7.9.0)
+      open: 10.1.2
+      prettier: 3.5.3
+      semver: 7.7.2
+      tmp-promise: 3.0.3
+      undici: 7.9.0
+      web3-eth-abi: 4.4.1(typescript@5.8.3)(zod@3.25.49)
+      yaml: 2.8.0
+    transitivePeerDependencies:
+      - '@types/node'
+      - bufferutil
+      - supports-color
+      - typescript
+      - utf-8-validate
+      - zod
+
   '@graphprotocol/graph-ts@0.38.1':
     dependencies:
       assemblyscript: 0.27.31
@@ -3034,12 +3070,29 @@ snapshots:
     optionalDependencies:
       '@types/node': 22.15.29
 
+  '@inquirer/checkbox@4.1.8(@types/node@22.9.3)':
+    dependencies:
+      '@inquirer/core': 10.1.13(@types/node@22.9.3)
+      '@inquirer/figures': 1.0.12
+      '@inquirer/type': 3.0.7(@types/node@22.9.3)
+      ansi-escapes: 4.3.2
+      yoctocolors-cjs: 2.1.2
+    optionalDependencies:
+      '@types/node': 22.9.3
+
   '@inquirer/confirm@5.1.12(@types/node@22.15.29)':
     dependencies:
       '@inquirer/core': 10.1.13(@types/node@22.15.29)
       '@inquirer/type': 3.0.7(@types/node@22.15.29)
     optionalDependencies:
       '@types/node': 22.15.29
+
+  '@inquirer/confirm@5.1.12(@types/node@22.9.3)':
+    dependencies:
+      '@inquirer/core': 10.1.13(@types/node@22.9.3)
+      '@inquirer/type': 3.0.7(@types/node@22.9.3)
+    optionalDependencies:
+      '@types/node': 22.9.3
 
   '@inquirer/core@10.1.13(@types/node@22.15.29)':
     dependencies:
@@ -3054,6 +3107,19 @@ snapshots:
     optionalDependencies:
       '@types/node': 22.15.29
 
+  '@inquirer/core@10.1.13(@types/node@22.9.3)':
+    dependencies:
+      '@inquirer/figures': 1.0.12
+      '@inquirer/type': 3.0.7(@types/node@22.9.3)
+      ansi-escapes: 4.3.2
+      cli-width: 4.1.0
+      mute-stream: 2.0.0
+      signal-exit: 4.1.0
+      wrap-ansi: 6.2.0
+      yoctocolors-cjs: 2.1.2
+    optionalDependencies:
+      '@types/node': 22.9.3
+
   '@inquirer/editor@4.2.13(@types/node@22.15.29)':
     dependencies:
       '@inquirer/core': 10.1.13(@types/node@22.15.29)
@@ -3062,6 +3128,14 @@ snapshots:
     optionalDependencies:
       '@types/node': 22.15.29
 
+  '@inquirer/editor@4.2.13(@types/node@22.9.3)':
+    dependencies:
+      '@inquirer/core': 10.1.13(@types/node@22.9.3)
+      '@inquirer/type': 3.0.7(@types/node@22.9.3)
+      external-editor: 3.1.0
+    optionalDependencies:
+      '@types/node': 22.9.3
+
   '@inquirer/expand@4.0.15(@types/node@22.15.29)':
     dependencies:
       '@inquirer/core': 10.1.13(@types/node@22.15.29)
@@ -3069,6 +3143,14 @@ snapshots:
       yoctocolors-cjs: 2.1.2
     optionalDependencies:
       '@types/node': 22.15.29
+
+  '@inquirer/expand@4.0.15(@types/node@22.9.3)':
+    dependencies:
+      '@inquirer/core': 10.1.13(@types/node@22.9.3)
+      '@inquirer/type': 3.0.7(@types/node@22.9.3)
+      yoctocolors-cjs: 2.1.2
+    optionalDependencies:
+      '@types/node': 22.9.3
 
   '@inquirer/figures@1.0.12': {}
 
@@ -3079,12 +3161,26 @@ snapshots:
     optionalDependencies:
       '@types/node': 22.15.29
 
+  '@inquirer/input@4.1.12(@types/node@22.9.3)':
+    dependencies:
+      '@inquirer/core': 10.1.13(@types/node@22.9.3)
+      '@inquirer/type': 3.0.7(@types/node@22.9.3)
+    optionalDependencies:
+      '@types/node': 22.9.3
+
   '@inquirer/number@3.0.15(@types/node@22.15.29)':
     dependencies:
       '@inquirer/core': 10.1.13(@types/node@22.15.29)
       '@inquirer/type': 3.0.7(@types/node@22.15.29)
     optionalDependencies:
       '@types/node': 22.15.29
+
+  '@inquirer/number@3.0.15(@types/node@22.9.3)':
+    dependencies:
+      '@inquirer/core': 10.1.13(@types/node@22.9.3)
+      '@inquirer/type': 3.0.7(@types/node@22.9.3)
+    optionalDependencies:
+      '@types/node': 22.9.3
 
   '@inquirer/password@4.0.15(@types/node@22.15.29)':
     dependencies:
@@ -3093,6 +3189,14 @@ snapshots:
       ansi-escapes: 4.3.2
     optionalDependencies:
       '@types/node': 22.15.29
+
+  '@inquirer/password@4.0.15(@types/node@22.9.3)':
+    dependencies:
+      '@inquirer/core': 10.1.13(@types/node@22.9.3)
+      '@inquirer/type': 3.0.7(@types/node@22.9.3)
+      ansi-escapes: 4.3.2
+    optionalDependencies:
+      '@types/node': 22.9.3
 
   '@inquirer/prompts@7.5.3(@types/node@22.15.29)':
     dependencies:
@@ -3109,6 +3213,21 @@ snapshots:
     optionalDependencies:
       '@types/node': 22.15.29
 
+  '@inquirer/prompts@7.5.3(@types/node@22.9.3)':
+    dependencies:
+      '@inquirer/checkbox': 4.1.8(@types/node@22.9.3)
+      '@inquirer/confirm': 5.1.12(@types/node@22.9.3)
+      '@inquirer/editor': 4.2.13(@types/node@22.9.3)
+      '@inquirer/expand': 4.0.15(@types/node@22.9.3)
+      '@inquirer/input': 4.1.12(@types/node@22.9.3)
+      '@inquirer/number': 3.0.15(@types/node@22.9.3)
+      '@inquirer/password': 4.0.15(@types/node@22.9.3)
+      '@inquirer/rawlist': 4.1.3(@types/node@22.9.3)
+      '@inquirer/search': 3.0.15(@types/node@22.9.3)
+      '@inquirer/select': 4.2.3(@types/node@22.9.3)
+    optionalDependencies:
+      '@types/node': 22.9.3
+
   '@inquirer/rawlist@4.1.3(@types/node@22.15.29)':
     dependencies:
       '@inquirer/core': 10.1.13(@types/node@22.15.29)
@@ -3116,6 +3235,14 @@ snapshots:
       yoctocolors-cjs: 2.1.2
     optionalDependencies:
       '@types/node': 22.15.29
+
+  '@inquirer/rawlist@4.1.3(@types/node@22.9.3)':
+    dependencies:
+      '@inquirer/core': 10.1.13(@types/node@22.9.3)
+      '@inquirer/type': 3.0.7(@types/node@22.9.3)
+      yoctocolors-cjs: 2.1.2
+    optionalDependencies:
+      '@types/node': 22.9.3
 
   '@inquirer/search@3.0.15(@types/node@22.15.29)':
     dependencies:
@@ -3125,6 +3252,15 @@ snapshots:
       yoctocolors-cjs: 2.1.2
     optionalDependencies:
       '@types/node': 22.15.29
+
+  '@inquirer/search@3.0.15(@types/node@22.9.3)':
+    dependencies:
+      '@inquirer/core': 10.1.13(@types/node@22.9.3)
+      '@inquirer/figures': 1.0.12
+      '@inquirer/type': 3.0.7(@types/node@22.9.3)
+      yoctocolors-cjs: 2.1.2
+    optionalDependencies:
+      '@types/node': 22.9.3
 
   '@inquirer/select@4.2.3(@types/node@22.15.29)':
     dependencies:
@@ -3136,9 +3272,23 @@ snapshots:
     optionalDependencies:
       '@types/node': 22.15.29
 
+  '@inquirer/select@4.2.3(@types/node@22.9.3)':
+    dependencies:
+      '@inquirer/core': 10.1.13(@types/node@22.9.3)
+      '@inquirer/figures': 1.0.12
+      '@inquirer/type': 3.0.7(@types/node@22.9.3)
+      ansi-escapes: 4.3.2
+      yoctocolors-cjs: 2.1.2
+    optionalDependencies:
+      '@types/node': 22.9.3
+
   '@inquirer/type@3.0.7(@types/node@22.15.29)':
     optionalDependencies:
       '@types/node': 22.15.29
+
+  '@inquirer/type@3.0.7(@types/node@22.9.3)':
+    optionalDependencies:
+      '@types/node': 22.9.3
 
   '@ipld/dag-cbor@9.2.4':
     dependencies:
@@ -3294,6 +3444,15 @@ snapshots:
   '@oclif/plugin-not-found@3.2.55(@types/node@22.15.29)':
     dependencies:
       '@inquirer/prompts': 7.5.3(@types/node@22.15.29)
+      '@oclif/core': 4.3.0
+      ansis: 3.17.0
+      fast-levenshtein: 3.0.0
+    transitivePeerDependencies:
+      - '@types/node'
+
+  '@oclif/plugin-not-found@3.2.55(@types/node@22.9.3)':
+    dependencies:
+      '@inquirer/prompts': 7.5.3(@types/node@22.9.3)
       '@oclif/core': 4.3.0
       ansis: 3.17.0
       fast-levenshtein: 3.0.0
@@ -4536,8 +4695,8 @@ snapshots:
   ox@0.1.2(typescript@5.8.3)(zod@3.25.49):
     dependencies:
       '@adraffy/ens-normalize': 1.11.0
-      '@noble/curves': 1.6.0
-      '@noble/hashes': 1.5.0
+      '@noble/curves': 1.9.1
+      '@noble/hashes': 1.8.0
       '@scure/bip32': 1.5.0
       '@scure/bip39': 1.4.0
       abitype: 1.0.6(typescript@5.8.3)(zod@3.25.49)
@@ -4921,8 +5080,8 @@ snapshots:
 
   webauthn-p256@0.0.10:
     dependencies:
-      '@noble/curves': 1.6.0
-      '@noble/hashes': 1.5.0
+      '@noble/curves': 1.9.1
+      '@noble/hashes': 1.8.0
 
   wherearewe@2.0.1:
     dependencies:
