@@ -1,4 +1,4 @@
-type Account @entity {
+type Account @entity(immutable: false) {
   id: Bytes!
   balance: BigDecimal!
   balanceHistory: [Balance!]! @derivedFrom(field: "account")

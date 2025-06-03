@@ -5,7 +5,7 @@
 """
 A release.
 """
-type Release @entity {
+type Release @entity(immutable: true) {
   id: ID!
   counter: Int!
   changes: [RegistrationChange!]! @derivedFrom(field: "release")
@@ -19,7 +19,7 @@ type Release @entity {
 """
 A registered asset.
 """
-type Asset @entity {
+type Asset @entity(immutable: false) {
   id: ID!
   """
   The symbol of the asset.
@@ -51,7 +51,7 @@ type Asset @entity {
 # Asset registrations
 #################################################
 
-type Registration @entity {
+type Registration @entity(immutable: false) {
   id: ID!
   """
   The asset.
@@ -96,7 +96,7 @@ enum RegistrationChangeType {
   REMOVED
 }
 
-type RegistrationChange @entity {
+type RegistrationChange @entity(immutable: true) {
   id: ID!
   """
   The type of the change.
@@ -139,7 +139,7 @@ type RegistrationChange @entity {
 """
 Generic counter entity to allow safe data scraping.
 """
-type Counter @entity {
+type Counter @entity(immutable: false) {
   id: ID!
   """
   Strictly incremental counter for data scraping.

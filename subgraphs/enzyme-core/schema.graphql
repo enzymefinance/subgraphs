@@ -48,7 +48,7 @@ enum PerformanceFeeType {
 # Network
 #################################################
 
-type Network @entity {
+type Network @entity(immutable: false) {
   id: ID!
   currentRelease: Release
   vaults: Int!
@@ -67,7 +67,7 @@ type Network @entity {
   releases: [Release!]! @derivedFrom(field: "network")
 }
 
-type Release @entity {
+type Release @entity(immutable: false) {
   id: ID!
   current: Boolean!
   open: Int!
@@ -81,7 +81,7 @@ type Release @entity {
   vaults: [Vault!] @derivedFrom(field: "release")
 }
 
-type NetworkReleaseChanged implements Activity & NetworkActivity @entity {
+type NetworkReleaseChanged implements Activity & NetworkActivity @entity(immutable: true) {
   id: ID!
   timestamp: Int!
   prevRelease: Release
@@ -91,7 +91,7 @@ type NetworkReleaseChanged implements Activity & NetworkActivity @entity {
   activityType: ActivityType!
 }
 
-type AssetAdded implements Activity & NetworkActivity @entity {
+type AssetAdded implements Activity & NetworkActivity @entity(immutable: true) {
   id: ID!
   timestamp: Int!
   asset: Asset!
@@ -101,7 +101,7 @@ type AssetAdded implements Activity & NetworkActivity @entity {
   activityType: ActivityType!
 }
 
-type AssetRemoved implements Activity & NetworkActivity @entity {
+type AssetRemoved implements Activity & NetworkActivity @entity(immutable: true) {
   id: ID!
   timestamp: Int!
   asset: Asset!
@@ -111,7 +111,7 @@ type AssetRemoved implements Activity & NetworkActivity @entity {
   activityType: ActivityType!
 }
 
-type RegisteredVaultCall @entity {
+type RegisteredVaultCall @entity(immutable: false) {
   id: ID!
   contract: Bytes!
   selector: Bytes!
@@ -120,7 +120,7 @@ type RegisteredVaultCall @entity {
   timestamp: Int!
 }
 
-type VaultCallRegisteredEvent implements Activity & NetworkActivity @entity {
+type VaultCallRegisteredEvent implements Activity & NetworkActivity @entity(immutable: true) {
   id: ID!
   timestamp: Int!
   registeredVaultCall: RegisteredVaultCall!
@@ -129,7 +129,7 @@ type VaultCallRegisteredEvent implements Activity & NetworkActivity @entity {
   activityType: ActivityType!
 }
 
-type VaultCallDeregisteredEvent implements Activity & NetworkActivity @entity {
+type VaultCallDeregisteredEvent implements Activity & NetworkActivity @entity(immutable: true) {
   id: ID!
   timestamp: Int!
   registeredVaultCall: RegisteredVaultCall!
@@ -142,7 +142,7 @@ type VaultCallDeregisteredEvent implements Activity & NetworkActivity @entity {
 # Vault
 #################################################
 
-type Vault @entity {
+type Vault @entity(immutable: false) {
   id: ID!
   counter: Int!
   name: String!
@@ -179,7 +179,7 @@ type Vault @entity {
   vaultActivity: [VaultActivity!]! @derivedFrom(field: "vault")
 }
 
-type Comptroller @entity {
+type Comptroller @entity(immutable: false) {
   id: ID!
   vault: Vault
   creator: Account!
@@ -197,7 +197,7 @@ type Comptroller @entity {
   policies: [Policy!]! @derivedFrom(field: "comptroller")
 }
 
-type Migration @entity {
+type Migration @entity(immutable: false) {
   id: ID!
   vault: Vault!
   comptroller: Comptroller!
@@ -210,7 +210,7 @@ type Migration @entity {
   cancelledTimestamp: Int
 }
 
-type Reconfiguration @entity {
+type Reconfiguration @entity(immutable: false) {
   id: ID!
   vault: Vault!
   comptroller: Comptroller!
@@ -222,7 +222,7 @@ type Reconfiguration @entity {
   cancelledTimestamp: Int
 }
 
-type VaultCreated implements Activity & VaultActivity @entity {
+type VaultCreated implements Activity & VaultActivity @entity(immutable: true) {
   id: ID!
   vault: Vault!
   timestamp: Int!
@@ -233,7 +233,7 @@ type VaultCreated implements Activity & VaultActivity @entity {
   activityType: ActivityType!
 }
 
-type VaultMigrationSignalled implements Activity & VaultActivity @entity {
+type VaultMigrationSignalled implements Activity & VaultActivity @entity(immutable: true) {
   id: ID!
   vault: Vault!
   timestamp: Int!
@@ -244,7 +244,7 @@ type VaultMigrationSignalled implements Activity & VaultActivity @entity {
   activityType: ActivityType!
 }
 
-type VaultMigrationCancelled implements Activity & VaultActivity @entity {
+type VaultMigrationCancelled implements Activity & VaultActivity @entity(immutable: true) {
   id: ID!
   vault: Vault!
   timestamp: Int!
@@ -254,7 +254,7 @@ type VaultMigrationCancelled implements Activity & VaultActivity @entity {
   activityType: ActivityType!
 }
 
-type VaultMigrationExecuted implements Activity & VaultActivity @entity {
+type VaultMigrationExecuted implements Activity & VaultActivity @entity(immutable: true) {
   id: ID!
   vault: Vault!
   timestamp: Int!
@@ -265,7 +265,7 @@ type VaultMigrationExecuted implements Activity & VaultActivity @entity {
   activityType: ActivityType!
 }
 
-type VaultReconfigurationSignalled implements Activity & VaultActivity @entity {
+type VaultReconfigurationSignalled implements Activity & VaultActivity @entity(immutable: true) {
   id: ID!
   vault: Vault!
   timestamp: Int!
@@ -276,7 +276,7 @@ type VaultReconfigurationSignalled implements Activity & VaultActivity @entity {
   activityType: ActivityType!
 }
 
-type VaultReconfigurationCancelled implements Activity & VaultActivity @entity {
+type VaultReconfigurationCancelled implements Activity & VaultActivity @entity(immutable: true) {
   id: ID!
   vault: Vault!
   timestamp: Int!
@@ -286,7 +286,7 @@ type VaultReconfigurationCancelled implements Activity & VaultActivity @entity {
   activityType: ActivityType!
 }
 
-type VaultReconfigurationExecuted implements Activity & VaultActivity @entity {
+type VaultReconfigurationExecuted implements Activity & VaultActivity @entity(immutable: true) {
   id: ID!
   vault: Vault!
   timestamp: Int!
@@ -297,7 +297,7 @@ type VaultReconfigurationExecuted implements Activity & VaultActivity @entity {
   activityType: ActivityType!
 }
 
-type VaultNominatedOwnerSet implements Activity & VaultActivity @entity {
+type VaultNominatedOwnerSet implements Activity & VaultActivity @entity(immutable: true) {
   id: ID!
   vault: Vault!
   timestamp: Int!
@@ -307,7 +307,7 @@ type VaultNominatedOwnerSet implements Activity & VaultActivity @entity {
   activityType: ActivityType!
 }
 
-type VaultNominatedOwnerRemoved implements Activity & VaultActivity @entity {
+type VaultNominatedOwnerRemoved implements Activity & VaultActivity @entity(immutable: true) {
   id: ID!
   vault: Vault!
   timestamp: Int!
@@ -317,7 +317,7 @@ type VaultNominatedOwnerRemoved implements Activity & VaultActivity @entity {
   activityType: ActivityType!
 }
 
-type VaultOwnershipTransferred implements Activity & VaultActivity @entity {
+type VaultOwnershipTransferred implements Activity & VaultActivity @entity(immutable: true) {
   id: ID!
   vault: Vault!
   timestamp: Int!
@@ -328,7 +328,7 @@ type VaultOwnershipTransferred implements Activity & VaultActivity @entity {
   activityType: ActivityType!
 }
 
-type FreelyTransferableSharesSetEvent implements Activity & VaultActivity @entity {
+type FreelyTransferableSharesSetEvent implements Activity & VaultActivity @entity(immutable: true) {
   id: ID!
   vault: Vault!
   timestamp: Int!
@@ -341,7 +341,7 @@ type FreelyTransferableSharesSetEvent implements Activity & VaultActivity @entit
 # Account
 #################################################
 
-type Account @entity {
+type Account @entity(immutable: false) {
   id: ID!
 
   isOwner: Boolean!
@@ -373,7 +373,7 @@ type Account @entity {
 # Deposit / Shares Changes
 #################################################
 
-type Deposit @entity {
+type Deposit @entity(immutable: false) {
   id: ID!
   since: Int!
   vault: Vault!
@@ -393,7 +393,7 @@ interface SharesChange {
   shares: BigDecimal!
 }
 
-type SharesBoughtEvent implements Activity & VaultActivity & DepositorActivity & SharesChange @entity {
+type SharesBoughtEvent implements Activity & VaultActivity & DepositorActivity & SharesChange @entity(immutable: true) {
   id: ID!
   vault: Vault!
   sharesChangeType: SharesChangeType!
@@ -408,7 +408,7 @@ type SharesBoughtEvent implements Activity & VaultActivity & DepositorActivity &
   activityType: ActivityType!
 }
 
-type SharesTransferEvent implements Activity & VaultActivity @entity {
+type SharesTransferEvent implements Activity & VaultActivity @entity(immutable: true) {
   id: ID!
   vault: Vault!
   from: Account!
@@ -420,7 +420,7 @@ type SharesTransferEvent implements Activity & VaultActivity @entity {
   activityType: ActivityType!
 }
 
-type SharesTransferredOutEvent implements Activity & DepositorActivity & SharesChange @entity {
+type SharesTransferredOutEvent implements Activity & DepositorActivity & SharesChange @entity(immutable: true) {
   id: ID!
   vault: Vault!
   sharesChangeType: SharesChangeType!
@@ -433,7 +433,7 @@ type SharesTransferredOutEvent implements Activity & DepositorActivity & SharesC
   activityType: ActivityType!
 }
 
-type SharesTransferredInEvent implements Activity & DepositorActivity & SharesChange @entity {
+type SharesTransferredInEvent implements Activity & DepositorActivity & SharesChange @entity(immutable: true) {
   id: ID!
   vault: Vault!
   sharesChangeType: SharesChangeType!
@@ -446,7 +446,8 @@ type SharesTransferredInEvent implements Activity & DepositorActivity & SharesCh
   activityType: ActivityType!
 }
 
-type SharesRedeemedEvent implements Activity & VaultActivity & DepositorActivity & SharesChange @entity {
+type SharesRedeemedEvent implements Activity & VaultActivity & DepositorActivity & SharesChange
+  @entity(immutable: true) {
   id: ID!
   vault: Vault!
   sharesChangeType: SharesChangeType!
@@ -460,7 +461,8 @@ type SharesRedeemedEvent implements Activity & VaultActivity & DepositorActivity
   activityType: ActivityType!
 }
 
-type FeeSharesPaidEvent implements Activity & VaultActivity & DepositorActivity & SharesChange @entity {
+type FeeSharesPaidEvent implements Activity & VaultActivity & DepositorActivity & SharesChange
+  @entity(immutable: true) {
   id: ID!
   vault: Vault!
   sharesChangeType: SharesChangeType!
@@ -474,7 +476,8 @@ type FeeSharesPaidEvent implements Activity & VaultActivity & DepositorActivity 
   activityType: ActivityType!
 }
 
-type FeeSharesReceivedEvent implements Activity & VaultActivity & DepositorActivity & SharesChange @entity {
+type FeeSharesReceivedEvent implements Activity & VaultActivity & DepositorActivity & SharesChange
+  @entity(immutable: true) {
   id: ID!
   vault: Vault!
   sharesChangeType: SharesChangeType!
@@ -488,7 +491,7 @@ type FeeSharesReceivedEvent implements Activity & VaultActivity & DepositorActiv
   activityType: ActivityType!
 }
 
-type FeeSharesBurnedEvent implements Activity & VaultActivity & SharesChange @entity {
+type FeeSharesBurnedEvent implements Activity & VaultActivity & SharesChange @entity(immutable: true) {
   id: ID!
   vault: Vault!
   sharesChangeType: SharesChangeType!
@@ -502,7 +505,8 @@ type FeeSharesBurnedEvent implements Activity & VaultActivity & SharesChange @en
   activityType: ActivityType!
 }
 
-type FeeSharesAllocationChangedEvent implements Activity & VaultActivity & DepositorActivity & SharesChange @entity {
+type FeeSharesAllocationChangedEvent implements Activity & VaultActivity & DepositorActivity & SharesChange
+  @entity(immutable: true) {
   id: ID!
   vault: Vault!
   sharesChangeType: SharesChangeType!
@@ -529,7 +533,7 @@ interface Fee {
   settings: String!
 }
 
-type EntranceRateBurnFee implements Fee @entity {
+type EntranceRateBurnFee implements Fee @entity(immutable: false) {
   id: ID!
   fee: Bytes!
   feeType: FeeType!
@@ -540,7 +544,7 @@ type EntranceRateBurnFee implements Fee @entity {
   lastSettled: Int!
 }
 
-type EntranceRateDirectFee implements Fee @entity {
+type EntranceRateDirectFee implements Fee @entity(immutable: false) {
   id: ID!
   fee: Bytes!
   feeType: FeeType!
@@ -552,7 +556,7 @@ type EntranceRateDirectFee implements Fee @entity {
   recipient: Account
 }
 
-type ExitRateBurnFee implements Fee @entity {
+type ExitRateBurnFee implements Fee @entity(immutable: false) {
   id: ID!
   fee: Bytes!
   feeType: FeeType!
@@ -564,7 +568,7 @@ type ExitRateBurnFee implements Fee @entity {
   lastSettled: Int!
 }
 
-type ExitRateDirectFee implements Fee @entity {
+type ExitRateDirectFee implements Fee @entity(immutable: false) {
   id: ID!
   fee: Bytes!
   feeType: FeeType!
@@ -577,7 +581,7 @@ type ExitRateDirectFee implements Fee @entity {
   recipient: Account
 }
 
-type ManagementFee implements Fee @entity {
+type ManagementFee implements Fee @entity(immutable: false) {
   id: ID!
   fee: Bytes!
   feeType: FeeType!
@@ -590,7 +594,7 @@ type ManagementFee implements Fee @entity {
   recipient: Account
 }
 
-type PerformanceFee implements Fee @entity {
+type PerformanceFee implements Fee @entity(immutable: false) {
   id: ID!
   fee: Bytes!
   feeType: FeeType!
@@ -610,7 +614,7 @@ type PerformanceFee implements Fee @entity {
   performanceFeeType: PerformanceFeeType!
 }
 
-type MinSharesSupplyFee implements Fee @entity {
+type MinSharesSupplyFee implements Fee @entity(immutable: false) {
   id: ID!
   fee: Bytes!
   feeType: FeeType!
@@ -620,7 +624,7 @@ type MinSharesSupplyFee implements Fee @entity {
   lastSettled: Int!
 }
 
-type UnknownFee implements Fee @entity {
+type UnknownFee implements Fee @entity(immutable: false) {
   id: ID!
   fee: Bytes!
   feeType: FeeType!
@@ -655,7 +659,7 @@ interface Policy {
   settings: String!
 }
 
-type AdapterBlacklistPolicy implements Policy @entity {
+type AdapterBlacklistPolicy implements Policy @entity(immutable: false) {
   id: ID!
   policy: Bytes!
   policyType: PolicyType!
@@ -666,7 +670,7 @@ type AdapterBlacklistPolicy implements Policy @entity {
   adapters: [Bytes!]!
 }
 
-type AdapterWhitelistPolicy implements Policy @entity {
+type AdapterWhitelistPolicy implements Policy @entity(immutable: false) {
   id: ID!
   policy: Bytes!
   policyType: PolicyType!
@@ -677,7 +681,7 @@ type AdapterWhitelistPolicy implements Policy @entity {
   adapters: [Bytes!]!
 }
 
-type AllowedAdapterIncomingAssetsPolicy implements Policy @entity {
+type AllowedAdapterIncomingAssetsPolicy implements Policy @entity(immutable: false) {
   id: ID!
   policy: Bytes!
   policyType: PolicyType!
@@ -688,7 +692,7 @@ type AllowedAdapterIncomingAssetsPolicy implements Policy @entity {
   addressLists: [AddressList!]!
 }
 
-type AllowedAdaptersPolicy implements Policy @entity {
+type AllowedAdaptersPolicy implements Policy @entity(immutable: false) {
   id: ID!
   policy: Bytes!
   policyType: PolicyType!
@@ -699,7 +703,7 @@ type AllowedAdaptersPolicy implements Policy @entity {
   addressLists: [AddressList!]!
 }
 
-type AllowedAssetsForRedemptionPolicy implements Policy @entity {
+type AllowedAssetsForRedemptionPolicy implements Policy @entity(immutable: false) {
   id: ID!
   policy: Bytes!
   policyType: PolicyType!
@@ -710,7 +714,7 @@ type AllowedAssetsForRedemptionPolicy implements Policy @entity {
   addressLists: [AddressList!]!
 }
 
-type AllowedDepositRecipientsPolicy implements Policy @entity {
+type AllowedDepositRecipientsPolicy implements Policy @entity(immutable: false) {
   id: ID!
   policy: Bytes!
   policyType: PolicyType!
@@ -721,7 +725,7 @@ type AllowedDepositRecipientsPolicy implements Policy @entity {
   addressLists: [AddressList!]!
 }
 
-type AllowedAdaptersPerManagerPolicy implements Policy @entity {
+type AllowedAdaptersPerManagerPolicy implements Policy @entity(immutable: false) {
   id: ID!
   policy: Bytes!
   policyType: PolicyType!
@@ -732,7 +736,7 @@ type AllowedAdaptersPerManagerPolicy implements Policy @entity {
   userAddressLists: [UserAddressList!]!
 }
 
-type AllowedExternalPositionTypesPerManagerPolicy implements Policy @entity {
+type AllowedExternalPositionTypesPerManagerPolicy implements Policy @entity(immutable: false) {
   id: ID!
   policy: Bytes!
   policyType: PolicyType!
@@ -743,7 +747,7 @@ type AllowedExternalPositionTypesPerManagerPolicy implements Policy @entity {
   userUintLists: [UserUintList!]!
 }
 
-type AllowedExternalPositionTypesPolicy implements Policy @entity {
+type AllowedExternalPositionTypesPolicy implements Policy @entity(immutable: false) {
   id: ID!
   policy: Bytes!
   policyType: PolicyType!
@@ -754,7 +758,7 @@ type AllowedExternalPositionTypesPolicy implements Policy @entity {
   externalPositionTypes: [BigInt!]!
 }
 
-type AllowedRedeemersForSpecificAssetsPolicy implements Policy @entity {
+type AllowedRedeemersForSpecificAssetsPolicy implements Policy @entity(immutable: false) {
   id: ID!
   policy: Bytes!
   policyType: PolicyType!
@@ -765,7 +769,7 @@ type AllowedRedeemersForSpecificAssetsPolicy implements Policy @entity {
   addressLists: [AddressList!]!
 }
 
-type AllowedSharesTransferRecipientsPolicy implements Policy @entity {
+type AllowedSharesTransferRecipientsPolicy implements Policy @entity(immutable: false) {
   id: ID!
   policy: Bytes!
   policyType: PolicyType!
@@ -776,7 +780,7 @@ type AllowedSharesTransferRecipientsPolicy implements Policy @entity {
   addressLists: [AddressList!]!
 }
 
-type AssetBlacklistPolicy implements Policy @entity {
+type AssetBlacklistPolicy implements Policy @entity(immutable: false) {
   id: ID!
   policy: Bytes!
   policyType: PolicyType!
@@ -787,7 +791,7 @@ type AssetBlacklistPolicy implements Policy @entity {
   assets: [Bytes!]!
 }
 
-type AssetWhitelistPolicy implements Policy @entity {
+type AssetWhitelistPolicy implements Policy @entity(immutable: false) {
   id: ID!
   policy: Bytes!
   policyType: PolicyType!
@@ -798,7 +802,7 @@ type AssetWhitelistPolicy implements Policy @entity {
   assets: [Bytes!]!
 }
 
-type BuySharesCallerWhitelistPolicy implements Policy @entity {
+type BuySharesCallerWhitelistPolicy implements Policy @entity(immutable: false) {
   id: ID!
   policy: Bytes!
   policyType: PolicyType!
@@ -810,7 +814,7 @@ type BuySharesCallerWhitelistPolicy implements Policy @entity {
   updatedAt: Int!
 }
 
-type CumulativeSlippageTolerancePolicy implements Policy @entity {
+type CumulativeSlippageTolerancePolicy implements Policy @entity(immutable: false) {
   id: ID!
   policy: Bytes!
   policyType: PolicyType!
@@ -823,7 +827,7 @@ type CumulativeSlippageTolerancePolicy implements Policy @entity {
   lastSlippageTimestamp: Int!
 }
 
-type DepositorWhitelistPolicy implements Policy @entity {
+type DepositorWhitelistPolicy implements Policy @entity(immutable: false) {
   id: ID!
   policy: Bytes!
   policyType: PolicyType!
@@ -835,7 +839,7 @@ type DepositorWhitelistPolicy implements Policy @entity {
   updatedAt: Int!
 }
 
-type DisallowedAdapterIncomingAssetsPolicy implements Policy @entity {
+type DisallowedAdapterIncomingAssetsPolicy implements Policy @entity(immutable: false) {
   id: ID!
   policy: Bytes!
   policyType: PolicyType!
@@ -846,7 +850,7 @@ type DisallowedAdapterIncomingAssetsPolicy implements Policy @entity {
   addressLists: [AddressList!]!
 }
 
-type GuaranteedRedemptionPolicy implements Policy @entity {
+type GuaranteedRedemptionPolicy implements Policy @entity(immutable: false) {
   id: ID!
   policy: Bytes!
   policyType: PolicyType!
@@ -858,7 +862,7 @@ type GuaranteedRedemptionPolicy implements Policy @entity {
   duration: Int!
 }
 
-type MaxConcentrationPolicy implements Policy @entity {
+type MaxConcentrationPolicy implements Policy @entity(immutable: false) {
   id: ID!
   policy: Bytes!
   policyType: PolicyType!
@@ -869,7 +873,7 @@ type MaxConcentrationPolicy implements Policy @entity {
   maxConcentration: BigDecimal!
 }
 
-type MinAssetBalancesPostRedemptionPolicy implements Policy @entity {
+type MinAssetBalancesPostRedemptionPolicy implements Policy @entity(immutable: false) {
   id: ID!
   policy: Bytes!
   policyType: PolicyType!
@@ -881,7 +885,7 @@ type MinAssetBalancesPostRedemptionPolicy implements Policy @entity {
   updatedAt: Int!
 }
 
-type MinMaxDepositPolicy implements Policy @entity {
+type MinMaxDepositPolicy implements Policy @entity(immutable: false) {
   id: ID!
   policy: Bytes!
   policyType: PolicyType!
@@ -894,7 +898,7 @@ type MinMaxDepositPolicy implements Policy @entity {
   updatedAt: Int!
 }
 
-type NoDepegOnRedeemSharesForSpecificAssetsPolicy implements Policy @entity {
+type NoDepegOnRedeemSharesForSpecificAssetsPolicy implements Policy @entity(immutable: false) {
   id: ID!
   policy: Bytes!
   policyType: PolicyType!
@@ -908,7 +912,7 @@ type NoDepegOnRedeemSharesForSpecificAssetsPolicy implements Policy @entity {
   updatedAt: Int!
 }
 
-type OnlyRemoveDustExternalPositionPolicy implements Policy @entity {
+type OnlyRemoveDustExternalPositionPolicy implements Policy @entity(immutable: false) {
   id: ID!
   policy: Bytes!
   policyType: PolicyType!
@@ -918,7 +922,7 @@ type OnlyRemoveDustExternalPositionPolicy implements Policy @entity {
   settings: String!
 }
 
-type OnlyUntrackDustOrPricelessAssetsPolicy implements Policy @entity {
+type OnlyUntrackDustOrPricelessAssetsPolicy implements Policy @entity(immutable: false) {
   id: ID!
   policy: Bytes!
   policyType: PolicyType!
@@ -928,7 +932,7 @@ type OnlyUntrackDustOrPricelessAssetsPolicy implements Policy @entity {
   settings: String!
 }
 
-type UnknownPolicy implements Policy @entity {
+type UnknownPolicy implements Policy @entity(immutable: false) {
   id: ID!
   policy: Bytes!
   policyType: PolicyType!
@@ -966,7 +970,7 @@ enum PolicyType {
   Unknown
 }
 
-type PolicyEnabledForVault implements Activity & VaultActivity @entity {
+type PolicyEnabledForVault implements Activity & VaultActivity @entity(immutable: true) {
   id: ID!
   timestamp: Int!
   vault: Vault!
@@ -976,7 +980,7 @@ type PolicyEnabledForVault implements Activity & VaultActivity @entity {
   activityType: ActivityType!
 }
 
-type PolicyDisabledForVault implements Activity & VaultActivity @entity {
+type PolicyDisabledForVault implements Activity & VaultActivity @entity(immutable: true) {
   id: ID!
   timestamp: Int!
   vault: Vault!
@@ -997,7 +1001,7 @@ enum UintListUpdateType {
   AddAndRemove
 }
 
-type UserUintList @entity {
+type UserUintList @entity(immutable: false) {
   id: ID!
   userAddress: Bytes!
   createdAt: Int!
@@ -1005,7 +1009,7 @@ type UserUintList @entity {
   uintLists: [UintList!]!
 }
 
-type UintList @entity {
+type UintList @entity(immutable: false) {
   id: ID!
   description: String
   createdAt: Int!
@@ -1020,7 +1024,7 @@ type UintList @entity {
 # Address Lists (for various policies)
 #################################################
 
-type UserAddressList @entity {
+type UserAddressList @entity(immutable: false) {
   id: ID!
   userAddress: Bytes!
   createdAt: Int!
@@ -1028,7 +1032,7 @@ type UserAddressList @entity {
   addressLists: [AddressList!]!
 }
 
-type AddressList @entity {
+type AddressList @entity(immutable: false) {
   id: ID!
   description: String
   createdAt: Int!
@@ -1050,7 +1054,7 @@ enum AddressListUpdateType {
 # TrackingAssets
 #################################################
 
-type TrackedAssetAdded implements Activity & VaultActivity @entity {
+type TrackedAssetAdded implements Activity & VaultActivity @entity(immutable: true) {
   id: ID!
   vault: Vault!
   asset: Asset!
@@ -1060,7 +1064,7 @@ type TrackedAssetAdded implements Activity & VaultActivity @entity {
   activityType: ActivityType!
 }
 
-type TrackedAssetRemoved implements Activity & VaultActivity @entity {
+type TrackedAssetRemoved implements Activity & VaultActivity @entity(immutable: true) {
   id: ID!
   vault: Vault!
   asset: Asset!
@@ -1074,7 +1078,7 @@ type TrackedAssetRemoved implements Activity & VaultActivity @entity {
 # Trading
 #################################################
 
-type Trade implements Activity & VaultActivity @entity {
+type Trade implements Activity & VaultActivity @entity(immutable: true) {
   id: ID!
   vault: Vault!
   adapter: Bytes!
@@ -1094,7 +1098,7 @@ type Trade implements Activity & VaultActivity @entity {
 # External Positions
 #################################################
 
-type ExternalPositionType @entity {
+type ExternalPositionType @entity(immutable: false) {
   id: ID!
   label: String!
   externalPositions: [ExternalPosition!]! @derivedFrom(field: "type")
@@ -1108,7 +1112,7 @@ interface ExternalPosition {
   changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
 }
 
-type ExternalPositionAddedEvent implements Activity & VaultActivity @entity {
+type ExternalPositionAddedEvent implements Activity & VaultActivity @entity(immutable: true) {
   id: ID!
   timestamp: Int!
   vault: Vault!
@@ -1118,7 +1122,7 @@ type ExternalPositionAddedEvent implements Activity & VaultActivity @entity {
   activityType: ActivityType!
 }
 
-type ExternalPositionRemovedEvent implements Activity & VaultActivity @entity {
+type ExternalPositionRemovedEvent implements Activity & VaultActivity @entity(immutable: true) {
   id: ID!
   timestamp: Int!
   vault: Vault!
@@ -1133,7 +1137,7 @@ interface ExternalPositionChange {
   externalPosition: ExternalPosition!
 }
 
-type CompoundDebtPosition implements ExternalPosition @entity {
+type CompoundDebtPosition implements ExternalPosition @entity(immutable: false) {
   id: ID!
   vault: Vault!
   type: ExternalPositionType!
@@ -1149,7 +1153,7 @@ enum CompoundDebtPositionChangeType {
   ClaimComp
 }
 
-type CompoundDebtPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+type CompoundDebtPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity(immutable: true) {
   id: ID!
   vault: Vault!
   timestamp: Int!
@@ -1161,7 +1165,7 @@ type CompoundDebtPositionChange implements Activity & VaultActivity & ExternalPo
   activityType: ActivityType!
 }
 
-type AaveDebtPosition implements ExternalPosition @entity {
+type AaveDebtPosition implements ExternalPosition @entity(immutable: false) {
   id: ID!
   vault: Vault!
   type: ExternalPositionType!
@@ -1177,7 +1181,7 @@ enum AaveDebtPositionChangeType {
   ClaimRewards
 }
 
-type AaveDebtPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+type AaveDebtPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity(immutable: true) {
   id: ID!
   vault: Vault!
   timestamp: Int!
@@ -1189,7 +1193,7 @@ type AaveDebtPositionChange implements Activity & VaultActivity & ExternalPositi
   activityType: ActivityType!
 }
 
-type AaveV3DebtPosition implements ExternalPosition @entity {
+type AaveV3DebtPosition implements ExternalPosition @entity(immutable: false) {
   id: ID!
   vault: Vault!
   type: ExternalPositionType!
@@ -1210,7 +1214,7 @@ enum AaveV3DebtPositionChangeType {
   ClaimMerklRewards
 }
 
-type AaveV3DebtPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+type AaveV3DebtPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity(immutable: true) {
   id: ID!
   vault: Vault!
   timestamp: Int!
@@ -1224,7 +1228,7 @@ type AaveV3DebtPositionChange implements Activity & VaultActivity & ExternalPosi
   activityType: ActivityType!
 }
 
-type ManualValueOracle @entity {
+type ManualValueOracle @entity(immutable: false) {
   id: ID!
   owner: Bytes!
   nominatedOwner: Bytes!
@@ -1235,7 +1239,7 @@ type ManualValueOracle @entity {
   valueChanges: [ManualValueOracleValueChange!]! @derivedFrom(field: "oracle")
 }
 
-type ManualValueOracleValueChange @entity {
+type ManualValueOracleValueChange @entity(immutable: false) {
   id: ID!
   value: BigInt!
   timestamp: Int!
@@ -1248,7 +1252,7 @@ enum RepaymentTrackingType {
   InterestFirst
 }
 
-type ArbitraryLoanFixedInterestModule @entity {
+type ArbitraryLoanFixedInterestModule @entity(immutable: false) {
   id: ID!
   externalPosition: ArbitraryLoanPosition!
   scaledPerSecondRatePreMaturity: BigInt!
@@ -1261,7 +1265,7 @@ type ArbitraryLoanFixedInterestModule @entity {
   totalInterestCached: BigDecimal!
 }
 
-type ArbitraryLoanTotalNominalDeltaOracleModule @entity {
+type ArbitraryLoanTotalNominalDeltaOracleModule @entity(immutable: false) {
   id: ID!
   externalPosition: ArbitraryLoanPosition!
   oracle: Bytes!
@@ -1274,7 +1278,7 @@ enum ArbitraryLoanModuleType {
   TotalNominalDeltaOracle
 }
 
-type ArbitraryLoanPosition implements ExternalPosition @entity {
+type ArbitraryLoanPosition implements ExternalPosition @entity(immutable: false) {
   id: ID!
   vault: Vault!
   type: ExternalPositionType!
@@ -1301,7 +1305,7 @@ enum ArbitraryLoanPositionChangeType {
   CloseLoan
 }
 
-type ArbitraryLoanPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+type ArbitraryLoanPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity(immutable: true) {
   id: ID!
   vault: Vault!
   timestamp: Int!
@@ -1318,19 +1322,19 @@ type ArbitraryLoanPositionChange implements Activity & VaultActivity & ExternalP
   activityType: ActivityType!
 }
 
-type MapleLiquidityPoolV1 @entity {
+type MapleLiquidityPoolV1 @entity(immutable: false) {
   id: ID!
   liquidityAsset: Asset!
   rewardsContract: Bytes
 }
 
-type MapleLiquidityPoolV2 @entity {
+type MapleLiquidityPoolV2 @entity(immutable: false) {
   id: ID!
   liquidityAsset: Asset!
   manager: Bytes!
 }
 
-type MapleLiquidityPosition implements ExternalPosition @entity {
+type MapleLiquidityPosition implements ExternalPosition @entity(immutable: false) {
   id: ID!
   vault: Vault!
   type: ExternalPositionType!
@@ -1355,7 +1359,8 @@ enum MapleLiquidityPositionChangeType {
   CancelRedeemV2
 }
 
-type MapleLiquidityPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+type MapleLiquidityPositionChange implements Activity & VaultActivity & ExternalPositionChange
+  @entity(immutable: true) {
   id: ID!
   vault: Vault!
   timestamp: Int!
@@ -1370,7 +1375,7 @@ type MapleLiquidityPositionChange implements Activity & VaultActivity & External
   activityType: ActivityType!
 }
 
-type LiquityDebtPosition implements ExternalPosition @entity {
+type LiquityDebtPosition implements ExternalPosition @entity(immutable: false) {
   id: ID!
   vault: Vault!
   type: ExternalPositionType!
@@ -1390,7 +1395,7 @@ enum LiquityDebtPositionChangeType {
   ClaimCollateral
 }
 
-type LiquityDebtPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+type LiquityDebtPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity(immutable: true) {
   id: ID!
   vault: Vault!
   timestamp: Int!
@@ -1405,7 +1410,7 @@ type LiquityDebtPositionChange implements Activity & VaultActivity & ExternalPos
   activityType: ActivityType!
 }
 
-type ConvexVotingPosition implements ExternalPosition @entity {
+type ConvexVotingPosition implements ExternalPosition @entity(immutable: false) {
   id: ID!
   vault: Vault!
   type: ExternalPositionType!
@@ -1425,7 +1430,7 @@ enum ConvexVotingPositionChangeType {
   Delegate
 }
 
-type ConvexVotingPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+type ConvexVotingPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity(immutable: true) {
   id: ID!
   vault: Vault!
   timestamp: Int!
@@ -1439,7 +1444,7 @@ type ConvexVotingPositionChange implements Activity & VaultActivity & ExternalPo
   activityType: ActivityType!
 }
 
-type TheGraphDelegationToIndexer @entity {
+type TheGraphDelegationToIndexer @entity(immutable: false) {
   id: ID!
   externalPosition: TheGraphDelegationPosition!
   indexer: Bytes!
@@ -1449,7 +1454,7 @@ type TheGraphDelegationToIndexer @entity {
   active: Boolean!
 }
 
-type TheGraphDelegationPosition implements ExternalPosition @entity {
+type TheGraphDelegationPosition implements ExternalPosition @entity(immutable: false) {
   id: ID!
   vault: Vault!
   type: ExternalPositionType!
@@ -1464,7 +1469,8 @@ enum TheGraphDelegationPositionChangeType {
   Withdraw
 }
 
-type TheGraphDelegationPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+type TheGraphDelegationPositionChange implements Activity & VaultActivity & ExternalPositionChange
+  @entity(immutable: true) {
   id: ID!
   vault: Vault!
   timestamp: Int!
@@ -1480,7 +1486,7 @@ type TheGraphDelegationPositionChange implements Activity & VaultActivity & Exte
   activityType: ActivityType!
 }
 
-type UniswapV3LiquidityPosition implements ExternalPosition @entity {
+type UniswapV3LiquidityPosition implements ExternalPosition @entity(immutable: false) {
   id: ID!
   vault: Vault!
   type: ExternalPositionType!
@@ -1489,7 +1495,7 @@ type UniswapV3LiquidityPosition implements ExternalPosition @entity {
   changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
 }
 
-type UniswapV3Nft @entity {
+type UniswapV3Nft @entity(immutable: false) {
   id: ID!
   externalPosition: UniswapV3LiquidityPosition
   token0: Asset!
@@ -1510,7 +1516,8 @@ enum UniswapV3LiquidityPositionChangeType {
   Purge
 }
 
-type UniswapV3LiquidityPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+type UniswapV3LiquidityPositionChange implements Activity & VaultActivity & ExternalPositionChange
+  @entity(immutable: true) {
   id: ID!
   vault: Vault!
   timestamp: Int!
@@ -1527,11 +1534,11 @@ type UniswapV3LiquidityPositionChange implements Activity & VaultActivity & Exte
   activityType: ActivityType!
 }
 
-type KilnStaking @entity {
+type KilnStaking @entity(immutable: false) {
   id: ID!
 }
 
-type KilnStakingPosition implements ExternalPosition @entity {
+type KilnStakingPosition implements ExternalPosition @entity(immutable: false) {
   id: ID!
   vault: Vault!
   type: ExternalPositionType!
@@ -1542,7 +1549,7 @@ type KilnStakingPosition implements ExternalPosition @entity {
   changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
 }
 
-type KilnStakingPositionValidator @entity {
+type KilnStakingPositionValidator @entity(immutable: false) {
   # Validator id is its publicKey
   id: Bytes!
   createdAt: Int!
@@ -1566,7 +1573,7 @@ enum KilnStakingPositionActionClaimType {
   All
 }
 
-type KilnStakingPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+type KilnStakingPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity(immutable: true) {
   id: ID!
   vault: Vault!
   timestamp: Int!
@@ -1581,7 +1588,7 @@ type KilnStakingPositionChange implements Activity & VaultActivity & ExternalPos
   activityType: ActivityType!
 }
 
-type LidoWithdrawalsPosition implements ExternalPosition @entity {
+type LidoWithdrawalsPosition implements ExternalPosition @entity(immutable: false) {
   id: ID!
   vault: Vault!
   type: ExternalPositionType!
@@ -1595,7 +1602,8 @@ enum LidoWithdrawalsPositionChangeType {
   ClaimWithdrawals
 }
 
-type LidoWithdrawalsPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+type LidoWithdrawalsPositionChange implements Activity & VaultActivity & ExternalPositionChange
+  @entity(immutable: true) {
   id: ID!
   vault: Vault!
   timestamp: Int!
@@ -1608,7 +1616,7 @@ type LidoWithdrawalsPositionChange implements Activity & VaultActivity & Externa
   activityType: ActivityType!
 }
 
-type LidoWithdrawalsRequest @entity {
+type LidoWithdrawalsRequest @entity(immutable: false) {
   id: ID!
   lidoWithdrawalsPosition: LidoWithdrawalsPosition!
   vault: Vault!
@@ -1618,7 +1626,7 @@ type LidoWithdrawalsRequest @entity {
   claimedTimestamp: Int!
 }
 
-type PendleV2Position implements ExternalPosition @entity {
+type PendleV2Position implements ExternalPosition @entity(immutable: false) {
   id: ID!
   vault: Vault!
   type: ExternalPositionType!
@@ -1628,7 +1636,7 @@ type PendleV2Position implements ExternalPosition @entity {
   changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
 }
 
-type PendleV2AllowedMarket @entity {
+type PendleV2AllowedMarket @entity(immutable: false) {
   id: ID!
   vault: Bytes!
   market: Bytes!
@@ -1645,7 +1653,7 @@ enum PendleV2PositionChangeType {
   ClaimRewards
 }
 
-type PendleV2PositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+type PendleV2PositionChange implements Activity & VaultActivity & ExternalPositionChange @entity(immutable: true) {
   id: ID!
   vault: Vault!
   timestamp: Int!
@@ -1659,7 +1667,7 @@ type PendleV2PositionChange implements Activity & VaultActivity & ExternalPositi
   activityType: ActivityType!
 }
 
-# type MorphoBluePosition implements ExternalPosition @entity {
+# type MorphoBluePosition implements ExternalPosition @entity(immutable: false){
 #   id: ID!
 #   vault: Vault!
 #   type: ExternalPositionType!
@@ -1667,7 +1675,7 @@ type PendleV2PositionChange implements Activity & VaultActivity & ExternalPositi
 #   changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
 # }
 
-# type MorphoBlueMarket @entity {
+# type MorphoBlueMarket @entity(immutable: false){
 #   id: ID!
 #   marketId: Bytes!
 #   morpheBluePosition: MorphoBluePosition!
@@ -1685,7 +1693,7 @@ type PendleV2PositionChange implements Activity & VaultActivity & ExternalPositi
 #   Repay
 # }
 
-# type MorphoBluePositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+# type MorphoBluePositionChange implements Activity & VaultActivity & ExternalPositionChange @entity(immutable: false){
 #   id: ID!
 #   vault: Vault!
 #   timestamp: Int!
@@ -1698,7 +1706,7 @@ type PendleV2PositionChange implements Activity & VaultActivity & ExternalPositi
 #   activityType: ActivityType!
 # }
 
-type StakeWiseStakingPosition implements ExternalPosition @entity {
+type StakeWiseStakingPosition implements ExternalPosition @entity(immutable: false) {
   id: ID!
   vault: Vault!
   type: ExternalPositionType!
@@ -1709,7 +1717,7 @@ type StakeWiseStakingPosition implements ExternalPosition @entity {
   changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
 }
 
-type StakeWiseVaultToken @entity {
+type StakeWiseVaultToken @entity(immutable: false) {
   id: ID!
   createdAt: Int!
   stakeWiseStakingPosition: [StakeWiseStakingPosition!]! @derivedFrom(field: "vaultTokens")
@@ -1723,7 +1731,8 @@ enum StakeWiseStakingPositionChangeType {
   ClaimExitedAssets
 }
 
-type StakeWiseStakingPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+type StakeWiseStakingPositionChange implements Activity & VaultActivity & ExternalPositionChange
+  @entity(immutable: true) {
   id: ID!
   vault: Vault!
   timestamp: Int!
@@ -1737,7 +1746,7 @@ type StakeWiseStakingPositionChange implements Activity & VaultActivity & Extern
   activityType: ActivityType!
 }
 
-type StakeWiseStakingExitRequest @entity {
+type StakeWiseStakingExitRequest @entity(immutable: false) {
   id: ID!
   createdAt: Int!
   claimed: Boolean!
@@ -1748,7 +1757,7 @@ type StakeWiseStakingExitRequest @entity {
   shares: BigDecimal!
 }
 
-type GMXV2LeverageTradingPosition implements ExternalPosition @entity {
+type GMXV2LeverageTradingPosition implements ExternalPosition @entity(immutable: false) {
   id: ID!
   vault: Vault!
   type: ExternalPositionType!
@@ -1767,7 +1776,8 @@ enum GMXV2LeverageTradingPositionChangeType {
   Sweep
 }
 
-type GMXV2LeverageTradingPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+type GMXV2LeverageTradingPositionChange implements Activity & VaultActivity & ExternalPositionChange
+  @entity(immutable: true) {
   id: ID!
   vault: Vault!
   timestamp: Int!
@@ -1789,7 +1799,7 @@ type GMXV2LeverageTradingPositionChange implements Activity & VaultActivity & Ex
   activityType: ActivityType!
 }
 
-type AlicePosition implements ExternalPosition @entity {
+type AlicePosition implements ExternalPosition @entity(immutable: false) {
   id: ID!
   vault: Vault!
   type: ExternalPositionType!
@@ -1798,7 +1808,7 @@ type AlicePosition implements ExternalPosition @entity {
   changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
 }
 
-type AliceOrder @entity {
+type AliceOrder @entity(immutable: false) {
   id: ID!
   createdAt: Int!
   alicePosition: AlicePosition!
@@ -1814,7 +1824,7 @@ enum AlicePositionChangeType {
   Sweep
 }
 
-type AlicePositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+type AlicePositionChange implements Activity & VaultActivity & ExternalPositionChange @entity(immutable: true) {
   id: ID!
   vault: Vault!
   timestamp: Int!
@@ -1828,7 +1838,7 @@ type AlicePositionChange implements Activity & VaultActivity & ExternalPositionC
   activityType: ActivityType!
 }
 
-type StaderWithdrawalsPosition implements ExternalPosition @entity {
+type StaderWithdrawalsPosition implements ExternalPosition @entity(immutable: false) {
   id: ID!
   vault: Vault!
   type: ExternalPositionType!
@@ -1841,7 +1851,8 @@ enum StaderWithdrawalsPositionChangeType {
   ClaimWithdrawals
 }
 
-type StaderWithdrawalsPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+type StaderWithdrawalsPositionChange implements Activity & VaultActivity & ExternalPositionChange
+  @entity(immutable: true) {
   id: ID!
   vault: Vault!
   timestamp: Int!
@@ -1854,7 +1865,7 @@ type StaderWithdrawalsPositionChange implements Activity & VaultActivity & Exter
   activityType: ActivityType!
 }
 
-type MysoV3OptionWritingPosition implements ExternalPosition @entity {
+type MysoV3OptionWritingPosition implements ExternalPosition @entity(immutable: false) {
   id: ID!
   vault: Vault!
   type: ExternalPositionType!
@@ -1863,7 +1874,7 @@ type MysoV3OptionWritingPosition implements ExternalPosition @entity {
   changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
 }
 
-type MysoV3Escrow @entity {
+type MysoV3Escrow @entity(immutable: false) {
   id: ID!
   createdAt: Int!
   mysoV3OptionWritingPosition: MysoV3OptionWritingPosition!
@@ -1880,7 +1891,8 @@ enum MysoV3OptionWritingPositionChangeType {
   Sweep
 }
 
-type MysoV3OptionWritingPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+type MysoV3OptionWritingPositionChange implements Activity & VaultActivity & ExternalPositionChange
+  @entity(immutable: true) {
   id: ID!
   vault: Vault!
   timestamp: Int!
@@ -1894,7 +1906,7 @@ type MysoV3OptionWritingPositionChange implements Activity & VaultActivity & Ext
   activityType: ActivityType!
 }
 
-type UnknownExternalPosition implements ExternalPosition @entity {
+type UnknownExternalPosition implements ExternalPosition @entity(immutable: false) {
   id: ID!
   vault: Vault!
   type: ExternalPositionType!
@@ -1902,7 +1914,8 @@ type UnknownExternalPosition implements ExternalPosition @entity {
   changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
 }
 
-type UnknownExternalPositionChange implements Activity & VaultActivity & ExternalPositionChange @entity {
+type UnknownExternalPositionChange implements Activity & VaultActivity & ExternalPositionChange
+  @entity(immutable: true) {
   id: ID!
   vault: Vault!
   timestamp: Int!
@@ -1916,7 +1929,7 @@ type UnknownExternalPositionChange implements Activity & VaultActivity & Externa
 # Gas Relayer
 #################################################
 
-type GasRelayer @entity {
+type GasRelayer @entity(immutable: false) {
   id: ID!
   comptroller: Comptroller!
   balance: BigDecimal!
@@ -1926,7 +1939,7 @@ type GasRelayer @entity {
   transactions: [GasRelayerTransaction!]! @derivedFrom(field: "gasRelayer")
 }
 
-type GasRelayerDeposited implements Activity & VaultActivity @entity {
+type GasRelayerDeposited implements Activity & VaultActivity @entity(immutable: true) {
   id: ID!
   vault: Vault!
   timestamp: Int!
@@ -1937,7 +1950,7 @@ type GasRelayerDeposited implements Activity & VaultActivity @entity {
   activityType: ActivityType!
 }
 
-type GasRelayerWithdrawn implements Activity & VaultActivity @entity {
+type GasRelayerWithdrawn implements Activity & VaultActivity @entity(immutable: true) {
   id: ID!
   vault: Vault!
   timestamp: Int!
@@ -1948,7 +1961,7 @@ type GasRelayerWithdrawn implements Activity & VaultActivity @entity {
   activityType: ActivityType!
 }
 
-type GasRelayerTransaction @entity {
+type GasRelayerTransaction @entity(immutable: false) {
   id: ID!
   gasRelayer: GasRelayer!
   authorizer: Bytes!
@@ -1960,7 +1973,7 @@ type GasRelayerTransaction @entity {
 # Protocol Fees
 #################################################
 
-type ProtocolFee @entity {
+type ProtocolFee @entity(immutable: false) {
   id: ID!
   vault: Vault!
   feeTracker: Bytes!
@@ -1968,7 +1981,7 @@ type ProtocolFee @entity {
   lastPaid: Int!
 }
 
-type ProtocolFeePaid implements Activity & VaultActivity & SharesChange @entity {
+type ProtocolFeePaid implements Activity & VaultActivity & SharesChange @entity(immutable: true) {
   id: ID!
   timestamp: Int!
   vault: Vault!
@@ -1981,7 +1994,7 @@ type ProtocolFeePaid implements Activity & VaultActivity & SharesChange @entity 
   activityType: ActivityType!
 }
 
-type ProtocolFeeBurned implements Activity & VaultActivity & SharesChange @entity {
+type ProtocolFeeBurned implements Activity & VaultActivity & SharesChange @entity(immutable: true) {
   id: ID!
   timestamp: Int!
   vault: Vault!
@@ -1999,7 +2012,7 @@ type ProtocolFeeBurned implements Activity & VaultActivity & SharesChange @entit
 # Assets and prices
 #################################################
 
-type Asset @entity {
+type Asset @entity(immutable: false) {
   id: ID!
   name: String!
   symbol: String!
@@ -2010,13 +2023,13 @@ type Asset @entity {
 }
 
 # AssetBalance is AssetAmount without currency values
-type AssetBalance @entity {
+type AssetBalance @entity(immutable: false) {
   id: ID!
   asset: Asset!
   amount: BigDecimal!
 }
 
-type AssetAmount @entity {
+type AssetAmount @entity(immutable: false) {
   id: ID!
   asset: Asset!
   amount: BigDecimal!
@@ -2033,14 +2046,14 @@ type AssetAmount @entity {
   timestamp: Int!
 }
 
-type AssetPrice @entity {
+type AssetPrice @entity(immutable: false) {
   id: ID!
   timestamp: Int!
   asset: Asset!
   price: BigDecimal!
 }
 
-type PricelessAssetTimelock implements Activity & VaultActivity @entity {
+type PricelessAssetTimelock implements Activity & VaultActivity @entity(immutable: true) {
   id: ID!
   vault: Vault!
   policy: Policy!
@@ -2051,7 +2064,7 @@ type PricelessAssetTimelock implements Activity & VaultActivity @entity {
   activityType: ActivityType!
 }
 
-type PricelessAssetBypass implements Activity & VaultActivity @entity {
+type PricelessAssetBypass implements Activity & VaultActivity @entity(immutable: true) {
   id: ID!
   vault: Vault!
   policy: Policy!
@@ -2062,7 +2075,7 @@ type PricelessAssetBypass implements Activity & VaultActivity @entity {
   activityType: ActivityType!
 }
 
-type CurrencyPrice @entity {
+type CurrencyPrice @entity(immutable: false) {
   id: ID!
   timestamp: Int!
   ethAud: BigDecimal!
@@ -2132,7 +2145,7 @@ interface DepositorActivity {
 # Counter
 #################################################
 
-type Counter @entity {
+type Counter @entity(immutable: false) {
   id: ID!
   count: Int!
 }
@@ -2141,7 +2154,7 @@ type Counter @entity {
 # Shares Splitter
 #################################################
 
-type SharesSplitter @entity {
+type SharesSplitter @entity(immutable: false) {
   id: ID!
   creator: Account!
   createdAt: Int!
@@ -2150,14 +2163,14 @@ type SharesSplitter @entity {
   vaults: [Vault!]!
 }
 
-type SharesSplitterUserPercentage @entity {
+type SharesSplitterUserPercentage @entity(immutable: false) {
   id: ID!
   sharesSplitter: SharesSplitter!
   user: Account!
   percentage: BigDecimal!
 }
 
-type SharesSplitterTokenClaims @entity {
+type SharesSplitterTokenClaims @entity(immutable: false) {
   id: ID!
   sharesSplitter: SharesSplitter!
   user: Account!
@@ -2169,7 +2182,7 @@ type SharesSplitterTokenClaims @entity {
 # Convex Curve LP Staking Wrapper
 #################################################
 
-type ConvexCurveLpStakingWrapper @entity {
+type ConvexCurveLpStakingWrapper @entity(immutable: false) {
   id: ID!
   pid: Int!
   lpToken: Asset!
@@ -2180,7 +2193,7 @@ type ConvexCurveLpStakingWrapper @entity {
 # GatedRedemptionQueueSharesWrapper
 #################################################
 
-type GatedRedemptionQueueSharesWrapper @entity {
+type GatedRedemptionQueueSharesWrapper @entity(immutable: false) {
   id: ID!
   vault: Vault!
   managers: [Account!]!
@@ -2214,7 +2227,7 @@ interface GatedRedemptionQueueSharesWrapperSharesChange {
   depositorBalance: GatedRedemptionQueueSharesWrapperDepositorBalance!
 }
 
-type GatedRedemptionQueueSharesWrapperDepositApproval @entity {
+type GatedRedemptionQueueSharesWrapperDepositApproval @entity(immutable: false) {
   id: ID!
   timestamp: Int!
   vault: Vault!
@@ -2224,7 +2237,7 @@ type GatedRedemptionQueueSharesWrapperDepositApproval @entity {
   amount: BigDecimal!
 }
 
-type GatedRedemptionQueueSharesWrapperDepositRequest @entity {
+type GatedRedemptionQueueSharesWrapperDepositRequest @entity(immutable: false) {
   id: ID!
   timestamp: Int!
   vault: Vault!
@@ -2234,7 +2247,8 @@ type GatedRedemptionQueueSharesWrapperDepositRequest @entity {
   amount: BigDecimal!
 }
 
-type GatedRedemptionQueueSharesWrapperDeposit implements GatedRedemptionQueueSharesWrapperSharesChange @entity {
+type GatedRedemptionQueueSharesWrapperDeposit implements GatedRedemptionQueueSharesWrapperSharesChange
+  @entity(immutable: true) {
   id: ID!
   timestamp: Int!
   vault: Vault!
@@ -2245,7 +2259,7 @@ type GatedRedemptionQueueSharesWrapperDeposit implements GatedRedemptionQueueSha
   depositorBalance: GatedRedemptionQueueSharesWrapperDepositorBalance!
 }
 
-type GatedRedemptionQueueSharesWrapperTransferApproval @entity {
+type GatedRedemptionQueueSharesWrapperTransferApproval @entity(immutable: false) {
   id: ID!
   timestamp: Int!
   vault: Vault!
@@ -2255,7 +2269,8 @@ type GatedRedemptionQueueSharesWrapperTransferApproval @entity {
   amount: BigDecimal!
 }
 
-type GatedRedemptionQueueSharesWrapperTransferOut implements GatedRedemptionQueueSharesWrapperSharesChange @entity {
+type GatedRedemptionQueueSharesWrapperTransferOut implements GatedRedemptionQueueSharesWrapperSharesChange
+  @entity(immutable: true) {
   id: ID!
   timestamp: Int!
   vault: Vault!
@@ -2266,7 +2281,8 @@ type GatedRedemptionQueueSharesWrapperTransferOut implements GatedRedemptionQueu
   depositorBalance: GatedRedemptionQueueSharesWrapperDepositorBalance!
 }
 
-type GatedRedemptionQueueSharesWrapperTransferIn implements GatedRedemptionQueueSharesWrapperSharesChange @entity {
+type GatedRedemptionQueueSharesWrapperTransferIn implements GatedRedemptionQueueSharesWrapperSharesChange
+  @entity(immutable: false) {
   id: ID!
   timestamp: Int!
   vault: Vault!
@@ -2278,7 +2294,7 @@ type GatedRedemptionQueueSharesWrapperTransferIn implements GatedRedemptionQueue
 }
 
 type GatedRedemptionQueueSharesWrapperTransferOutForced implements GatedRedemptionQueueSharesWrapperSharesChange
-  @entity {
+  @entity(immutable: true) {
   id: ID!
   timestamp: Int!
   vault: Vault!
@@ -2290,7 +2306,7 @@ type GatedRedemptionQueueSharesWrapperTransferOutForced implements GatedRedempti
 }
 
 type GatedRedemptionQueueSharesWrapperTransferInForced implements GatedRedemptionQueueSharesWrapperSharesChange
-  @entity {
+  @entity(immutable: true) {
   id: ID!
   timestamp: Int!
   vault: Vault!
@@ -2301,7 +2317,7 @@ type GatedRedemptionQueueSharesWrapperTransferInForced implements GatedRedemptio
   depositorBalance: GatedRedemptionQueueSharesWrapperDepositorBalance!
 }
 
-type GatedRedemptionQueueSharesWrapperRedemptionApproval @entity {
+type GatedRedemptionQueueSharesWrapperRedemptionApproval @entity(immutable: false) {
   id: ID!
   timestamp: Int!
   vault: Vault!
@@ -2310,7 +2326,7 @@ type GatedRedemptionQueueSharesWrapperRedemptionApproval @entity {
   amount: BigDecimal!
 }
 
-type GatedRedemptionQueueSharesWrapperRedemptionRequest @entity {
+type GatedRedemptionQueueSharesWrapperRedemptionRequest @entity(immutable: false) {
   id: ID!
   timestamp: Int!
   vault: Vault!
@@ -2320,7 +2336,8 @@ type GatedRedemptionQueueSharesWrapperRedemptionRequest @entity {
   updatedAt: Int!
 }
 
-type GatedRedemptionQueueSharesWrapperRedemption implements GatedRedemptionQueueSharesWrapperSharesChange @entity {
+type GatedRedemptionQueueSharesWrapperRedemption implements GatedRedemptionQueueSharesWrapperSharesChange
+  @entity(immutable: true) {
   id: ID!
   timestamp: Int!
   vault: Vault!
@@ -2331,7 +2348,8 @@ type GatedRedemptionQueueSharesWrapperRedemption implements GatedRedemptionQueue
   depositorBalance: GatedRedemptionQueueSharesWrapperDepositorBalance!
 }
 
-type GatedRedemptionQueueSharesWrapperKick implements GatedRedemptionQueueSharesWrapperSharesChange @entity {
+type GatedRedemptionQueueSharesWrapperKick implements GatedRedemptionQueueSharesWrapperSharesChange
+  @entity(immutable: true) {
   id: ID!
   timestamp: Int!
   vault: Vault!
@@ -2342,7 +2360,7 @@ type GatedRedemptionQueueSharesWrapperKick implements GatedRedemptionQueueShares
   depositorBalance: GatedRedemptionQueueSharesWrapperDepositorBalance!
 }
 
-type GatedRedemptionQueueSharesWrapperDepositorBalance @entity {
+type GatedRedemptionQueueSharesWrapperDepositorBalance @entity(immutable: false) {
   id: ID!
   wrapper: GatedRedemptionQueueSharesWrapper!
   account: Account!
@@ -2361,7 +2379,7 @@ enum GatedRedemptionQueueSharesWrapperDepositMode {
 # Single Asset Redemption Queue
 #################################################
 
-type SingleAssetRedemptionQueue @entity {
+type SingleAssetRedemptionQueue @entity(immutable: false) {
   id: ID!
   vault: Vault!
   managers: [Account!]!
@@ -2374,7 +2392,7 @@ type SingleAssetRedemptionQueue @entity {
   requests: [SingleAssetRedemptionQueueRequest!]! @derivedFrom(field: "singleAssetRedemptionQueue")
 }
 
-type SingleAssetRedemptionQueueRequest @entity {
+type SingleAssetRedemptionQueueRequest @entity(immutable: false) {
   id: ID!
   requestId: BigInt!
   createdAt: Int!
@@ -2395,7 +2413,7 @@ type SingleAssetRedemptionQueueRequest @entity {
 # Single Asset Deposit Queue
 #################################################
 
-type SingleAssetDepositQueue @entity {
+type SingleAssetDepositQueue @entity(immutable: false) {
   id: ID!
   vault: Vault!
   managers: [Account!]!
@@ -2411,7 +2429,7 @@ type SingleAssetDepositQueue @entity {
   requests: [SingleAssetDepositQueueRequest!]! @derivedFrom(field: "singleAssetDepositQueue")
 }
 
-type SingleAssetDepositQueueRequest @entity {
+type SingleAssetDepositQueueRequest @entity(immutable: false) {
   id: ID!
   requestId: BigInt!
   createdAt: Int!

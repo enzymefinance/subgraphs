@@ -1,7 +1,7 @@
 """
 A vault.
 """
-type Vault @entity {
+type Vault @entity(immutable: false) {
   """
   The address of the vault.
   """
@@ -47,7 +47,7 @@ type Vault @entity {
 """
 A comptroller.
 """
-type Comptroller @entity {
+type Comptroller @entity(immutable: false) {
   """
   The address of the vault.
   """
@@ -77,7 +77,7 @@ type Comptroller @entity {
 """
 A release.
 """
-type Release @entity {
+type Release @entity(immutable: true) {
   id: ID!
   """
   Strictly incremental counter for data scraping.
@@ -96,7 +96,7 @@ type Release @entity {
 """
 Generic counter entity to allow safe data scraping.
 """
-type Counter @entity {
+type Counter @entity(immutable: false) {
   id: ID!
   """
   Strictly incremental counter for data scraping.
