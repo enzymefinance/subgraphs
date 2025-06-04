@@ -1,7 +1,7 @@
 """
 A vault.
 """
-type Vault @entity {
+type Vault @entity(immutable: false) {
   """
   The address of the vault.
   """
@@ -31,7 +31,7 @@ type Vault @entity {
 """
 A depositor (owner of shares).
 """
-type Depositor @entity {
+type Depositor @entity(immutable: true) {
   """
   The address of the vault.
   """
@@ -57,7 +57,7 @@ type Depositor @entity {
 """
 A deposit (shares count held by a depositor).
 """
-type Deposit @entity {
+type Deposit @entity(immutable: false) {
   id: ID!
   """
   The owner of the shares.
@@ -147,7 +147,7 @@ interface Transfer {
 """
 Outgoing transfers (transfers where an asset leaves a vault).
 """
-type OutgoingTransfer implements Transfer @entity {
+type OutgoingTransfer implements Transfer @entity(immutable: true) {
   id: ID!
   """
   Strictly incremental counter for data scraping.
@@ -202,7 +202,7 @@ type OutgoingTransfer implements Transfer @entity {
 """
 Incoming transfers (transfers where an asset enters a vault).
 """
-type IncomingTransfer implements Transfer @entity {
+type IncomingTransfer implements Transfer @entity(immutable: true) {
   id: ID!
   """
   Strictly incremental counter for data scraping.
@@ -258,7 +258,7 @@ type IncomingTransfer implements Transfer @entity {
 # Metrics
 #################################################
 
-type DepositMetric @entity {
+type DepositMetric @entity(immutable: true) {
   id: ID!
   """
   Strictly incremental counter for data scraping.
@@ -286,7 +286,7 @@ type DepositMetric @entity {
   shares: BigDecimal!
 }
 
-type SupplyMetric @entity {
+type SupplyMetric @entity(immutable: true) {
   id: ID!
   """
   Strictly incremental counter for data scraping.
@@ -317,7 +317,7 @@ type SupplyMetric @entity {
 """
 Generic counter entity to allow safe data scraping.
 """
-type Counter @entity {
+type Counter @entity(immutable: false) {
   id: ID!
   """
   Strictly incremental counter for data scraping.

@@ -10,10 +10,10 @@
     "@enzymefinance/environment": "catalog:enzymefinance",
     "@enzymefinance/subgraph-cli": "workspace:*",
     "@enzymefinance/subgraph-utils": "workspace:*",
-    "@graphprotocol/graph-cli": "^0.89.0",
-    "@graphprotocol/graph-ts": "^0.35.1",
-    "assemblyscript": "^0.27.31",
-    "tsx": "^4.19.2"
+    "@graphprotocol/graph-cli": "^0.97.1",
+    "@graphprotocol/graph-ts": "^0.38.1",
+    "assemblyscript": "^0.28.1",
+    "tsx": "^4.19.4"
   },
   "peerDependencies": {
     "@types/node": "^22.9.3"

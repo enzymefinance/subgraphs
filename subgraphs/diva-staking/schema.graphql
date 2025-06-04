@@ -1,21 +1,21 @@
-type Amount @entity {
+type Amount @entity(immutable: false) {
   id: ID!
   updatedAt: Int!
   amount: BigDecimal!
 }
 
-type Counter @entity {
+type Counter @entity(immutable: false) {
   id: ID!
   updatedAt: Int!
   count: Int!
 }
 
-type Comptroller @entity {
+type Comptroller @entity(immutable: true) {
   id: ID!
   vault: Bytes!
 }
 
-type Depositor @entity {
+type Depositor @entity(immutable: false) {
   id: Bytes!
   updatedAt: Int!
   createdAt: Int!
@@ -47,7 +47,7 @@ enum ActivityType {
   Redemption
 }
 
-type Deposit implements Activity @entity {
+type Deposit implements Activity @entity(immutable: false) {
   id: ID!
   createdAt: Int!
   updatedAt: Int!
@@ -59,14 +59,14 @@ type Deposit implements Activity @entity {
   shares: BigDecimal!
   initialAmount: BigDecimal!
   amount: BigDecimal!
-  initialTrancheAmounts: [TrancheAmount!]! 
+  initialTrancheAmounts: [TrancheAmount!]!
   trancheAmounts: [TrancheAmount!]!
   firstPhaseRewards: BigDecimal!
   secondPhaseRewards: BigDecimal!
   totalRewards: BigDecimal!
 }
 
-type Redemption implements Activity @entity {
+type Redemption implements Activity @entity(immutable: true) {
   id: ID!
   createdAt: Int!
   vault: Bytes!
@@ -82,15 +82,15 @@ type Redemption implements Activity @entity {
   totalRewards: BigDecimal!
 }
 
-type TrancheAmount @entity {
+type TrancheAmount @entity(immutable: false) {
   id: ID!
   createdAt: Int!
   updatedAt: Int!
   trancheId: Int!
-  amount: BigDecimal! 
+  amount: BigDecimal!
   startStakingAt: Int!
   endStakingAt: Int!
   firstPhaseRewards: BigDecimal!
-  secondPhaseRewards: BigDecimal! 
+  secondPhaseRewards: BigDecimal!
   totalRewards: BigDecimal!
 }

@@ -1,14 +1,14 @@
 """
 An unsupported (hence ignored) asset.
 """
-type IgnoredAsset @entity {
+type IgnoredAsset @entity(immutable: true) {
   id: ID!
 }
 
 """
 A monitored asset.
 """
-type Asset @entity {
+type Asset @entity(immutable: true) {
   """
   The address of the asset.
   """
@@ -38,7 +38,7 @@ type Asset @entity {
 """
 A vault.
 """
-type Vault @entity {
+type Vault @entity(immutable: true) {
   """
   The address of the vault.
   """
@@ -64,7 +64,7 @@ type Vault @entity {
 """
 A vault balance (asset balance held by a vault).
 """
-type Balance @entity {
+type Balance @entity(immutable: false) {
   id: ID!
   """
   The owning vault.
@@ -150,7 +150,7 @@ interface Transfer {
 """
 Outgoing transfers (transfers where an asset leaves a vault).
 """
-type OutgoingTransfer implements Transfer @entity {
+type OutgoingTransfer implements Transfer @entity(immutable: true) {
   id: ID!
   """
   Strictly incremental counter for data scraping.
@@ -197,7 +197,7 @@ type OutgoingTransfer implements Transfer @entity {
 """
 Incoming transfers (transfers where an asset enters a vault).
 """
-type IncomingTransfer implements Transfer @entity {
+type IncomingTransfer implements Transfer @entity(immutable: true) {
   id: ID!
   """
   Strictly incremental counter for data scraping.
@@ -245,7 +245,7 @@ type IncomingTransfer implements Transfer @entity {
 # Metrics
 #################################################
 
-type BalanceMetric @entity {
+type BalanceMetric @entity(immutable: true) {
   id: ID!
   """
   Strictly incremental counter for data scraping.
@@ -284,7 +284,7 @@ type BalanceMetric @entity {
 """
 Generic counter entity to allow safe data scraping.
 """
-type Counter @entity {
+type Counter @entity(immutable: false) {
   id: ID!
   """
   Strictly incremental counter for data scraping.
