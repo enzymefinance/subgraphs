@@ -140,6 +140,13 @@ export enum AliceActionId {
   Sweep = 2,
 }
 
+export enum AliceV2ActionId {
+  PlaceOrder = 0,
+  RefundOrder = 1,
+  Sweep = 2,
+  PlaceOrderWithRefId = 3,
+}
+
 export enum MysoV3ActionId {
   CreateEscrowByTakingQuote = 0,
   CreateEscrowByStartingAuction = 1,

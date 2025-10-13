@@ -106,4 +106,5 @@ export const templates: DataSourceTemplateUserDeclaration[] = [
   { name: 'MorphoBluePositionLib' },
   { name: 'AlicePositionLib' },
   { name: 'MysoV3OptionWritingPositionLib' },
+  { name: 'AliceV2PositionLib' },
 ];
