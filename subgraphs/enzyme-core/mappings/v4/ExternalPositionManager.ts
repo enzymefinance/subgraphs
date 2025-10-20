@@ -53,7 +53,7 @@ import {
   ValidatedVaultProxySetForFund,
 } from '../../generated/contracts/ExternalPositionManager4Events';
 import { ProtocolSdk } from '../../generated/contracts/ProtocolSdk';
-import { AliceOrder, Asset, AssetAmount, MysoV3Escrow } from '../../generated/schema';
+import { AliceOrder, AliceV2Order, Asset, AssetAmount, MysoV3Escrow } from '../../generated/schema';
 import {
   AlicePositionLib4DataSource,
   ArbitraryLoanPositionLib4DataSource,
@@ -84,6 +84,7 @@ import {
   PendleV2ActionId,
   GMXV2LeverageTradingActionId,
   AliceActionId,
+  AliceV2ActionId,
   // MorphoBlueActionId,
   MysoV3ActionId,
 } from '../../utils/actionId';
@@ -174,6 +175,7 @@ import {
   createMysoV3OptionWritingPositionChange,
   useMysoV3Escrow,
 } from '../../entities/MysoV3OptionWritingPosition';
+import { createAliceV2PositionChange, useAliceV2Order } from '../../entities/AliceV2Position';
 // import {
 //   createMorphoBluePosition,
 //   createMorphoBluePositionChange,
@@ -2976,6 +2978,120 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let orders = orderIds.map<AliceOrder>((orderId) => useAliceOrder(orderId.toString()));
 
       createAlicePositionChange(event.params.externalPosition, orders, null, null, 'Sweep', vault, event);
+    }
+
+    return;
+  }
+
+  if (type.label == 'ALICE_V2') {
+    if (actionId == AliceV2ActionId.PlaceOrder || AliceV2ActionId.PlaceOrderWithRefId) {
+      let decoded = ethereum.decode('(tuple(address,address,uint256,uint256))', event.params.actionArgs);
+
+      if (decoded == null) {
+        return;
+      }
+
+
+      let tuple = decoded.toTuple();
+      let innerTuple = tuple[0].toTuple();
+      let tokenToSell = innerTuple[0].toAddress();
+      let tokenToBuy = innerTuple[1].toAddress();
+      let quantityToSell = innerTuple[2].toBigInt();
+      let limitAmountToGet = innerTuple[3].toBigInt();
+
+      let outgoingAsset = tokenToBuy.equals(ZERO_ADDRESS) ? ensureAsset(wethTokenAddress) : ensureAsset(tokenToSell)
+      let incomingAsset = tokenToBuy.equals(ZERO_ADDRESS) ? ensureAsset(wethTokenAddress) : ensureAsset(tokenToBuy);
+
+      let outgoingAssetAmount = createAssetAmount(
+        outgoingAsset,
+        toBigDecimal(quantityToSell, outgoingAsset.decimals),
+        denominationAsset,
+        'alice-v2-sell',
+        event,
+      );
+
+      let minIncomingAssetAmount = createAssetAmount(
+        incomingAsset,
+        toBigDecimal(limitAmountToGet, incomingAsset.decimals),
+        denominationAsset,
+        'alice-v2-buy',
+        event,
+      );
+
+      createAliceV2PositionChange(
+        event.params.externalPosition,
+        new Array<AliceV2Order>(0),
+        outgoingAssetAmount,
+        minIncomingAssetAmount,
+        actionId == AliceV2ActionId.PlaceOrder ? 'PlaceOrder' : 'PlaceOrderWithRefId',
+        vault,
+        event,
+      );
+    }
+
+    if (actionId == AliceV2ActionId.RefundOrder) {
+      let decoded = ethereum.decode('(tuple(uint256,address,address,uint256,uint256,uint256))', event.params.actionArgs);
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+      let innerTuple = tuple[0].toTuple();
+      let orderId = innerTuple[0].toBigInt();
+      let tokenToSell = innerTuple[1].toAddress();
+      let tokenToBuy = innerTuple[2].toAddress();
+      let quantityToSell = innerTuple[3].toBigInt();
+      let limitAmountToGet = innerTuple[4].toBigInt();
+      let timestamp = innerTuple[5].toBigInt();
+
+
+      let aliceV2Order = useAliceV2Order(orderId.toString());
+
+      let outgoingAsset = tokenToSell.equals(ZERO_ADDRESS) ? ensureAsset(wethTokenAddress) : ensureAsset(tokenToSell);
+      let incomingAsset = tokenToBuy.equals(ZERO_ADDRESS) ? ensureAsset(wethTokenAddress) : ensureAsset(tokenToBuy);
+
+      let outgoingAssetAmount = createAssetAmount(
+        outgoingAsset,
+        toBigDecimal(quantityToSell, outgoingAsset.decimals),
+        denominationAsset,
+        'alice-v2-sell',
+        event,
+      );
+
+      let minIncomingAssetAmount = createAssetAmount(
+        incomingAsset,
+        toBigDecimal(limitAmountToGet, incomingAsset.decimals),
+        denominationAsset,
+        'alice-v2-buy',
+        event,
+      );
+
+      createAliceV2PositionChange(
+        event.params.externalPosition,
+        [aliceV2Order],
+        outgoingAssetAmount,
+        minIncomingAssetAmount,
+        'RefundOrder',
+        vault,
+        event,
+      );
+    }
+
+    if (actionId == AliceV2ActionId.Sweep) {
+      let decoded = ethereum.decode('(tuple(uint256[]))', tuplePrefixBytes(event.params.actionArgs));
+
+      if (decoded == null) {
+        return;
+      }
+
+      let tuple = decoded.toTuple();
+      let innerTuple = tuple[0].toTuple();
+      let orderIds = innerTuple[0].toBigIntArray();
+
+      let orders = orderIds.map<AliceV2Order>((orderId) => useAliceV2Order(orderId.toString()));
+
+      createAliceV2PositionChange(event.params.externalPosition, orders, null, null, 'Sweep', vault, event);
     }
 
     return;
