@@ -22,6 +22,7 @@ export function handleTokenClaimed(event: TokenClaimed): void {
   let user = event.params.user;
   let token = event.params.token;
   let amount = event.params.amount;
+  let timestamp = event.block.timestamp.toI32();
 
   let decimals = tokenDecimals(token);
 
@@ -30,5 +31,6 @@ export function handleTokenClaimed(event: TokenClaimed): void {
   tokenClaim.token = token;
   tokenClaim.amount = toBigDecimal(amount, decimals);
   tokenClaim.sharesSplitter = address.toHex();
+  tokenClaim.timestamp = timestamp;
   tokenClaim.save();
 }

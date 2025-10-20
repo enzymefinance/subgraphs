@@ -2172,6 +2172,7 @@ type SharesSplitterUserPercentage @entity(immutable: false) {
 
 type SharesSplitterTokenClaims @entity(immutable: false) {
   id: ID!
+  timestamp: Int!
   sharesSplitter: SharesSplitter!
   user: Account!
   token: Bytes!
