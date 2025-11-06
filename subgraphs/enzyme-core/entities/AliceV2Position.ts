@@ -1,13 +1,13 @@
 import { logCritical, uniqueEventId } from '@enzymefinance/subgraph-utils';
 import {
   AliceV2Order,
-  AlicePositionChange,
   AssetAmount,
   ExternalPositionType,
   Vault,
   AliceV2Position,
+  AliceV2PositionChange,
 } from '../generated/schema';
-import { Address, BigInt, ethereum } from '@graphprotocol/graph-ts';
+import { Address, ethereum } from '@graphprotocol/graph-ts';
 import { useVault } from './Vault';
 import { getActivityCounter } from './Counter';
 
@@ -42,12 +42,12 @@ export function createAliceV2PositionChange(
   changeType: string,
   vault: Vault,
   event: ethereum.Event,
-): AlicePositionChange {
-  let change = new AlicePositionChange(uniqueEventId(event));
+): AliceV2PositionChange {
+  let change = new AliceV2PositionChange(uniqueEventId(event));
   change.outgoingAssetAmount = outgoingAssetAmount != null ? outgoingAssetAmount.id : null;
   change.incomingAssetAmount = minIncomingAssetAmount != null ? minIncomingAssetAmount.id : null;
   change.orders = orders.map<string>((order) => order.id);
-  change.alicePositionChangeType = changeType;
+  change.aliceV2PositionChangeType = changeType;
   change.externalPosition = aliceV2PositionAddress.toHex();
   change.vault = vault.id;
   change.timestamp = event.block.timestamp.toI32();
@@ -65,7 +65,7 @@ export function createAliceV2PositionChange(
 export function useAliceV2Order(id: string): AliceV2Order {
   let order = AliceV2Order.load(id);
   if (order == null) {
-    logCritical('Failed to load AliceOrder {}.', [id]);
+    logCritical('Failed to load AliceV2Order {}.', [id]);
   }
 
   return order as AliceV2Order;

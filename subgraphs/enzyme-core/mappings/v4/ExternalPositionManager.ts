@@ -56,6 +56,7 @@ import { ProtocolSdk } from '../../generated/contracts/ProtocolSdk';
 import { AliceOrder, AliceV2Order, Asset, AssetAmount, MysoV3Escrow } from '../../generated/schema';
 import {
   AlicePositionLib4DataSource,
+  AliceV2PositionLib4DataSource,
   ArbitraryLoanPositionLib4DataSource,
   GMXV2LeverageTradingPositionLib4DataSource,
   KilnStakingPositionLib4DataSource,
@@ -175,7 +176,7 @@ import {
   createMysoV3OptionWritingPositionChange,
   useMysoV3Escrow,
 } from '../../entities/MysoV3OptionWritingPosition';
-import { createAliceV2PositionChange, useAliceV2Order } from '../../entities/AliceV2Position';
+import { createAliceV2Position, createAliceV2PositionChange, useAliceV2Order } from '../../entities/AliceV2Position';
 // import {
 //   createMorphoBluePosition,
 //   createMorphoBluePositionChange,
@@ -297,6 +298,14 @@ export function handleExternalPositionDeployedForFund(event: ExternalPositionDep
     createAlicePosition(event.params.externalPosition, event.params.vaultProxy, type);
 
     AlicePositionLib4DataSource.create(event.params.externalPosition);
+
+    return;
+  }
+
+  if (type.label == 'ALICE_V2') {
+    createAliceV2Position(event.params.externalPosition, event.params.vaultProxy, type);
+
+    AliceV2PositionLib4DataSource.create(event.params.externalPosition);
 
     return;
   }
@@ -2991,7 +3000,6 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
         return;
       }
 
-
       let tuple = decoded.toTuple();
       let innerTuple = tuple[0].toTuple();
       let tokenToSell = innerTuple[0].toAddress();
@@ -2999,7 +3007,7 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let quantityToSell = innerTuple[2].toBigInt();
       let limitAmountToGet = innerTuple[3].toBigInt();
 
-      let outgoingAsset = tokenToBuy.equals(ZERO_ADDRESS) ? ensureAsset(wethTokenAddress) : ensureAsset(tokenToSell)
+      let outgoingAsset = tokenToBuy.equals(ZERO_ADDRESS) ? ensureAsset(wethTokenAddress) : ensureAsset(tokenToSell);
       let incomingAsset = tokenToBuy.equals(ZERO_ADDRESS) ? ensureAsset(wethTokenAddress) : ensureAsset(tokenToBuy);
 
       let outgoingAssetAmount = createAssetAmount(
@@ -3030,7 +3038,10 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
     }
 
     if (actionId == AliceV2ActionId.RefundOrder) {
-      let decoded = ethereum.decode('(tuple(uint256,address,address,uint256,uint256,uint256))', event.params.actionArgs);
+      let decoded = ethereum.decode(
+        '(tuple(uint256,address,address,uint256,uint256,uint256))',
+        event.params.actionArgs,
+      );
 
       if (decoded == null) {
         return;
@@ -3044,7 +3055,6 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let quantityToSell = innerTuple[3].toBigInt();
       let limitAmountToGet = innerTuple[4].toBigInt();
       let timestamp = innerTuple[5].toBigInt();
-
 
       let aliceV2Order = useAliceV2Order(orderId.toString());
 

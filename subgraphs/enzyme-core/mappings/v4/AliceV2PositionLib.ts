@@ -1,8 +1,8 @@
 import { Address } from '@graphprotocol/graph-ts';
-import { OrderIdAdded, OrderIdRemoved } from '../../generated/contracts/AliceV2PositionLib4Events';
+import { OrderIdAdded, OrderIdRemoved, ReferenceIdAdded, ReferenceIdRemoved } from '../../generated/contracts/AliceV2PositionLib4Events';
 import { AliceV2Order } from '../../generated/schema';
 import { useAliceV2Order, useAliceV2Position } from '../../entities/AliceV2Position';
-import { ensureAsset } from '../../entities/Asset'; 
+import { ensureAsset } from '../../entities/Asset';
 import { createAssetAmount } from '../../entities/AssetAmount';
 import { toBigDecimal, ZERO_ADDRESS } from '@enzymefinance/subgraph-utils';
 import { useVault } from '../../entities/Vault';
@@ -47,3 +47,6 @@ export function handleOrderIdRemoved(event: OrderIdRemoved): void {
   order.removed = true;
   order.save();
 }
+
+export function handleReferenceIdAdded(event: ReferenceIdAdded): void {}
+export function handleReferenceIdRemoved(event: ReferenceIdRemoved): void {}
