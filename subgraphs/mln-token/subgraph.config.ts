@@ -5,6 +5,7 @@ const name = 'mln-token';
 export const contexts: Contexts<{}> = {
   ethereum: {
     name,
+    deploymentId: 'QmQXQcNKVNSuuw6DZJC3dL3efCKcEuTcZK4mSzwA4Tcdco',
     network: 'mainnet',
     variables: {},
   },

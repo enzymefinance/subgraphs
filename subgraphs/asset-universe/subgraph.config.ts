@@ -110,26 +110,31 @@ const testnet: Variables = {
 export const contexts: Contexts<Variables> = {
   arbitrum: {
     name: `${name}-arbitrum`,
+    deploymentId: 'Qmdg9GdvmQ8455V4TUwRaUhnB44GZ4jpX6GjTgE9YryY8t',
     network: 'arbitrum-one',
     variables: arbitrum,
   },
   base: {
     name: `${name}-base`,
+    deploymentId: 'QmSb9nshaakut4uee9CAaszYY3WWwkiaPNwmB4JEWqQKH8',
     network: 'base',
     variables: base,
   },
   ethereum: {
     name,
+    deploymentId: 'QmfUWyQQvLyCKevoXVtUH4nmX8oLpw8FrZByNRjwVbSJ1T',
     network: 'mainnet',
     variables: ethereum,
   },
   polygon: {
     name: `${name}-polygon`,
+    deploymentId: 'QmNnfu9z8ZwrVni5HBJjqJMybBNioSGq9ofDQJykzgsBAK',
     network: 'matic',
     variables: polygon,
   },
   testnet: {
     name: `${name}-testnet`,
+    deploymentId: 'QmXKSweRRzpdemBn4xaebg6PdWGbfH3bpNwg9vMS1rFEHF',
     network: 'matic',
     variables: testnet,
   },

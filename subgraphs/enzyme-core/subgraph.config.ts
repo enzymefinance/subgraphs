@@ -14,10 +14,8 @@ import { arbitrum } from './contexts/arbitrum';
 import { base } from './contexts/base';
 import { ethereum } from './contexts/ethereum';
 import { ethereumDev } from './contexts/ethereum-dev';
-import { ethereumDevTwo } from './contexts/ethereum-dev-two';
 import { polygon } from './contexts/polygon';
 import { testnet } from './contexts/testnet';
-import { polygonDev } from './contexts/polygon-dev';
 
 export interface Variables {
   block: number;
@@ -73,9 +71,7 @@ export const contexts: Contexts<Variables> = {
   base,
   ethereum,
   'ethereum-dev': ethereumDev,
-  'ethereum-dev-two': ethereumDevTwo,
   polygon,
-  'polygon-dev': polygonDev,
   testnet,
 };
 

@@ -20,6 +20,7 @@ const deployments = {
 export const contexts: Contexts<Variables> = {
   arbitrum: {
     name: `${name}-arbitrum`,
+    deploymentId: 'QmbXjfoaBn2VVKYcs3Zb29ZK8bBWTEdKgeKLAFeDv33DKW',
     network: 'arbitrum-one',
     variables: {
       dispatcher: deployments.arbitrum.contracts.Dispatcher,
@@ -28,6 +29,7 @@ export const contexts: Contexts<Variables> = {
   },
   base: {
     name: `${name}-base`,
+    deploymentId: 'QmbRXUwbi5PuyHnMAfYJoJnosB7JZ7ZBAjxS7RHgonECcm',
     network: 'base',
     variables: {
       dispatcher: deployments.base.contracts.Dispatcher,
@@ -36,6 +38,7 @@ export const contexts: Contexts<Variables> = {
   },
   ethereum: {
     name,
+    deploymentId: 'QmQvWjkGqnAk1YBfSogasskPhJ5dG46yxvrzYeJsowjhqb',
     network: 'mainnet',
     variables: {
       dispatcher: deployments.ethereum.contracts.Dispatcher,
@@ -44,6 +47,7 @@ export const contexts: Contexts<Variables> = {
   },
   polygon: {
     name: `${name}-polygon`,
+    deploymentId: 'QmYyV5mynEQ3RV6oEtPupQWryFtHVjhtBzY8pLTZ5ruKs2',
     network: 'matic',
     variables: {
       dispatcher: deployments.polygon.contracts.Dispatcher,
@@ -52,6 +56,7 @@ export const contexts: Contexts<Variables> = {
   },
   testnet: {
     name: `${name}-testnet`,
+    deploymentId: 'QmQmA4tAyiMPvRLNmbkmm5eQYnxwB8yTRZDv4z78tMyaZr',
     network: 'matic',
     variables: {
       dispatcher: deployments.testnet.contracts.Dispatcher,
