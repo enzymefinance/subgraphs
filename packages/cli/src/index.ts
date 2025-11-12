@@ -159,12 +159,6 @@ class Subgraph<TVariables = any> {
       this.environment.deploymentId
     } --output-dir ${path.join(this.root, 'build/subgraph')}`;
 
-    console.log(
-      'COMMAND:',
-      `graph deploy --skip-migrations ${this.environment.name} --ipfs-hash ${
-        this.environment.deploymentId
-      } --output-dir ${path.join(this.root, 'build/subgraph')}`,
-    );
     command.stdout?.pipe(process.stdout);
     command.stderr?.pipe(process.stderr);
     await command;
@@ -172,13 +166,6 @@ class Subgraph<TVariables = any> {
 
   public async buildSubgraph() {
     const command = $`graph build --skip-migrations --output-dir ${path.join(this.root, 'build/subgraph')}`;
-    command.stdout?.pipe(process.stdout);
-    command.stderr?.pipe(process.stderr);
-    await command;
-  }
-
-  public async createSubgraph() {
-    const command = $`graph create --studio ${this.environment.name}`;
     command.stdout?.pipe(process.stdout);
     command.stderr?.pipe(process.stderr);
     await command;
@@ -257,7 +244,6 @@ yargs
       await subgraph.generateCode();
 
       console.log('Deploying subgraph');
-      await subgraph.createSubgraph();
       await subgraph.deploySubgraph();
     },
   )

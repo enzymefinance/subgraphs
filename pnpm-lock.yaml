@@ -23,9 +23,6 @@ importers:
 
   packages/cli:
     dependencies:
-      '@enzymefinance/environment':
-        specifier: catalog:enzymefinance
-        version: 6.3.52(@enzymefinance/sdk@1.1.0(@enzymefinance/abis@1.1.0)(decimal.js@10.4.3)(viem@2.21.50(typescript@5.8.3)(zod@3.25.49)))(viem@2.21.50(typescript@5.8.3)(zod@3.25.49))
       '@ethersproject/abi':
         specifier: ^5.8.0
         version: 5.8.0
