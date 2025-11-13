@@ -1838,6 +1838,46 @@ type AlicePositionChange implements Activity & VaultActivity & ExternalPositionC
   activityType: ActivityType!
 }
 
+type AliceV2Position implements ExternalPosition @entity(immutable: false) {
+  id: ID!
+  vault: Vault!
+  type: ExternalPositionType!
+  active: Boolean!
+  orders: [AliceV2Order!]! @derivedFrom(field: "aliceV2Position")
+  changes: [ExternalPositionChange!]! @derivedFrom(field: "externalPosition")
+}
+
+type AliceV2Order @entity(immutable: false) {
+  id: ID!
+  createdAt: Int!
+  aliceV2Position: AliceV2Position!
+  outgoingAssetAmount: AssetAmount!
+  incomingAsset: Asset!
+  removed: Boolean!
+  removedAt: Int
+}
+
+enum AliceV2PositionChangeType {
+  PlaceOrder
+  RefundOrder
+  Sweep
+  PlaceOrderWithRefId
+}
+
+type AliceV2PositionChange implements Activity & VaultActivity & ExternalPositionChange @entity(immutable: true) {
+  id: ID!
+  vault: Vault!
+  timestamp: Int!
+  externalPosition: ExternalPosition!
+  aliceV2PositionChangeType: AliceV2PositionChangeType!
+  orders: [AliceV2Order!]!
+  outgoingAssetAmount: AssetAmount
+  incomingAssetAmount: AssetAmount
+  activityCounter: Int!
+  activityCategories: [ActivityCategory!]!
+  activityType: ActivityType!
+}
+
 type StaderWithdrawalsPosition implements ExternalPosition @entity(immutable: false) {
   id: ID!
   vault: Vault!
