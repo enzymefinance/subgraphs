@@ -7,6 +7,7 @@ export enum AbiDeclarationType {
 
 export interface Context<TVariables> {
   name: string;
+  deploymentId: string;
   network: string;
   variables: TVariables;
   local?: boolean;
@@ -106,9 +107,7 @@ export interface SdkUserDeclaration {
 export interface Environment<TVariables> {
   name: string;
   network: string;
-  local: boolean;
-  node: string;
-  ipfs: string;
+  deploymentId: string;
   variables: TVariables;
   manifest: ManifestValues;
 }

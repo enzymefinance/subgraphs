@@ -1,18 +1,13 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { $ } from 'execa';
-import glob, { globSync } from 'glob';
+import { globSync } from 'glob';
 import handlebars from 'handlebars';
 import yargs from 'yargs';
 import { Configurator, Context, Contexts, Environment, ManifestValues, Template } from './types';
 import { formatJson, sdkDeclaration, sourceDeclaration, templateDeclaration } from './utils';
 
 const root = path.join(__dirname, '..');
-
-const defaultLocalNode = 'http://localhost:8020/';
-const defaultLocalIpfs = 'http://localhost:5001/';
-const defaultRemoteNode = 'https://api.studio.thegraph.com/deploy/';
-const defaultRemoteIpfs = 'https://api.thegraph.com/ipfs/api/v0';
 
 class SubgraphLoader<TVariables = any> {
   public readonly contexts: Contexts<TVariables>;
@@ -51,10 +46,8 @@ class SubgraphLoader<TVariables = any> {
     const environment: Environment<TVariables> = {
       name: context.name,
       network: context.network,
-      local: context.local ? true : false,
-      node: context.node ? context.node : context.local ? defaultLocalNode : defaultRemoteNode,
-      ipfs: context.ipfs ? context.ipfs : context.local ? defaultLocalIpfs : defaultRemoteIpfs,
       variables: context.variables,
+      deploymentId: context.deploymentId,
       manifest,
     };
 
@@ -162,9 +155,10 @@ class Subgraph<TVariables = any> {
   }
 
   public async deploySubgraph() {
-    const command = $`graph deploy --skip-migrations ${this.environment.name} --node ${this.environment.node} --ipfs ${
-      this.environment.ipfs
+    const command = $`graph deploy --skip-migrations ${this.environment.name} --ipfs-hash ${
+      this.environment.deploymentId
     } --output-dir ${path.join(this.root, 'build/subgraph')}`;
+
     command.stdout?.pipe(process.stdout);
     command.stderr?.pipe(process.stderr);
     await command;
@@ -172,17 +166,6 @@ class Subgraph<TVariables = any> {
 
   public async buildSubgraph() {
     const command = $`graph build --skip-migrations --output-dir ${path.join(this.root, 'build/subgraph')}`;
-    command.stdout?.pipe(process.stdout);
-    command.stderr?.pipe(process.stderr);
-    await command;
-  }
-
-  public async createSubgraph() {
-    if (!this.environment.local) {
-      return;
-    }
-
-    const command = $`graph create --studio ${this.environment.name} --node ${this.environment.node}`;
     command.stdout?.pipe(process.stdout);
     command.stderr?.pipe(process.stderr);
     await command;
@@ -261,7 +244,6 @@ yargs
       await subgraph.generateCode();
 
       console.log('Deploying subgraph');
-      await subgraph.createSubgraph();
       await subgraph.deploySubgraph();
     },
   )

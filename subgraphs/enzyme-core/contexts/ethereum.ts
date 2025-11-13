@@ -9,6 +9,7 @@ const suluDeployment = getEnvironment(Deployment.ETHEREUM, Version.SULU);
 
 export const ethereum: Context<Variables> = {
   name: 'enzyme-core',
+  deploymentId: 'Qmbnvjz1qeXhSoSR43ZWEAiv3kyZBcNtf8b26rARg3W4ew',
   network: 'mainnet',
   variables: {
     block: 11636493,

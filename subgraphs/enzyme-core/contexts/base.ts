@@ -7,6 +7,7 @@ const environment = getEnvironment(Deployment.BASE, Version.SULU);
 
 export const base: Context<Variables> = {
   name: 'enzyme-core-base',
+  deploymentId: 'QmaQMhQSUzKb28uV87AeveBKtiiJuUcSYK8pP2BMgKRniF',
   network: 'base',
   variables: {
     block: environment.deployment.inception,

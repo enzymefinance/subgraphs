@@ -7,6 +7,7 @@ const environment = getEnvironment(Deployment.POLYGON, Version.SULU);
 
 export const polygon: Context<Variables> = {
   name: 'enzyme-core-polygon',
+  deploymentId: 'QmTX35Mxs6FKGc5VZBeh48nzn8yaPAR1CaUKJxFHDF5Tay',
   network: 'matic',
   variables: {
     block: 25825424,
