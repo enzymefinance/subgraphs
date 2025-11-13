@@ -7,6 +7,7 @@ const environment = getEnvironment(Deployment.TESTNET, Version.SULU);
 
 export const testnet: Context<Variables> = {
   name: 'enzyme-core-testnet',
+  deploymentId: 'QmSF9Bk2ptNhHz6fJqtd9dBPeHGxDgJEEjHtB1Nx3ycBEP',
   network: 'matic',
   variables: {
     block: 25731749,

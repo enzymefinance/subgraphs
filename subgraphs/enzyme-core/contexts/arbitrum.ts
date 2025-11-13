@@ -7,6 +7,7 @@ const environment = getEnvironment(Deployment.ARBITRUM, Version.SULU);
 
 export const arbitrum: Context<Variables> = {
   name: 'enzyme-core-arbitrum',
+  deploymentId: 'Qmd7D14kyLETq6LBvxLrnq2nUhQXKXjQ4CvUF1SpDdX7EM',
   network: 'arbitrum-one',
   variables: {
     block: environment.deployment.inception,

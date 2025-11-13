@@ -26,11 +26,7 @@ export const contexts: Contexts<Variables> = {
     name,
     network,
     variables,
-  },
-  ['ethereum-dev']: {
-    name: `${name}-dev`,
-    network,
-    variables,
+    deploymentId: 'QmPrxdjD7235amiKP81d1uqMetuiZQndQ8SJQ4WvrEj8Ha',
   },
 };
 
