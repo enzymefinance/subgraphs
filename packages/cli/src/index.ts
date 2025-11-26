@@ -155,13 +155,24 @@ class Subgraph<TVariables = any> {
   }
 
   public async deploySubgraph() {
-    const command = $`graph deploy --skip-migrations ${this.environment.name} --ipfs-hash ${
-      this.environment.deploymentId
-    } --output-dir ${path.join(this.root, 'build/subgraph')}`;
+    // Build locally first
+    console.log('Building subgraph locally...');
+    await this.buildSubgraph();
 
-    command.stdout?.pipe(process.stdout);
-    command.stderr?.pipe(process.stderr);
-    await command;
+    const buildDir = path.join(this.root, 'build/subgraph');
+    
+    // Use The Graph's IPFS network endpoint to avoid rate limiting on api.thegraph.com
+    // This IPFS node is accessible by The Graph indexers
+    const ipfsNode = 'https://ipfs.network.thegraph.com';
+    
+    // Deploy using our local build and upload to the public IPFS node
+    // The --output-dir flag uses our pre-built subgraph, and --ipfs specifies where to upload
+    console.log(`Deploying subgraph (uploading to ${ipfsNode})...`);
+    const deployCommand = $`graph deploy --skip-migrations ${this.environment.name} --ipfs ${ipfsNode} --output-dir ${buildDir}`;
+    
+    deployCommand.stdout?.pipe(process.stdout);
+    deployCommand.stderr?.pipe(process.stderr);
+    await deployCommand;
   }
 
   public async buildSubgraph() {
