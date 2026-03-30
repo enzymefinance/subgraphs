@@ -1,0 +1,318 @@
+[
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_aliceV2OrderManagerAddress",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "_wrappedNativeAssetAddress",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+    },
+    {
+        "inputs": [],
+        "name": "InvalidActionId",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "InvalidReferenceId",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "InvalidSender",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "OrderNotSettledOrCancelled",
+        "type": "error"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "orderId",
+                "type": "uint256"
+            },
+            {
+                "components": [
+                    {
+                        "internalType": "address",
+                        "name": "outgoingAssetAddress",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "incomingAssetAddress",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "outgoingAmount",
+                        "type": "uint256"
+                    }
+                ],
+                "indexed": false,
+                "internalType": "struct AliceV2PositionLibBase1.OrderDetails",
+                "name": "orderDetails",
+                "type": "tuple"
+            }
+        ],
+        "name": "OrderIdAdded",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "orderId",
+                "type": "uint256"
+            }
+        ],
+        "name": "OrderIdRemoved",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "bytes32",
+                "name": "referenceId",
+                "type": "bytes32"
+            }
+        ],
+        "name": "ReferenceIdAdded",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "bytes32",
+                "name": "referenceId",
+                "type": "bytes32"
+            }
+        ],
+        "name": "ReferenceIdRemoved",
+        "type": "event"
+    },
+    {
+        "inputs": [],
+        "name": "ALICEV2_NATIVE_ASSET_ADDRESS",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "ALICE_INSTANT_ORDER_V2",
+        "outputs": [
+            {
+                "internalType": "contract IAliceInstantOrderV2",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "WRAPPED_NATIVE_TOKEN",
+        "outputs": [
+            {
+                "internalType": "contract IWETH",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getDebtAssets",
+        "outputs": [
+            {
+                "internalType": "address[]",
+                "name": "assets_",
+                "type": "address[]"
+            },
+            {
+                "internalType": "uint256[]",
+                "name": "amounts_",
+                "type": "uint256[]"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getManagedAssets",
+        "outputs": [
+            {
+                "internalType": "address[]",
+                "name": "assets_",
+                "type": "address[]"
+            },
+            {
+                "internalType": "uint256[]",
+                "name": "amounts_",
+                "type": "uint256[]"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_orderId",
+                "type": "uint256"
+            }
+        ],
+        "name": "getOrderDetails",
+        "outputs": [
+            {
+                "components": [
+                    {
+                        "internalType": "address",
+                        "name": "outgoingAssetAddress",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "incomingAssetAddress",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "outgoingAmount",
+                        "type": "uint256"
+                    }
+                ],
+                "internalType": "struct AliceV2PositionLibBase1.OrderDetails",
+                "name": "orderDetails_",
+                "type": "tuple"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getOrderIds",
+        "outputs": [
+            {
+                "internalType": "uint256[]",
+                "name": "orderIds_",
+                "type": "uint256[]"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes",
+                "name": "",
+                "type": "bytes"
+            }
+        ],
+        "name": "init",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes32",
+                "name": "_referenceId",
+                "type": "bytes32"
+            }
+        ],
+        "name": "isPendingReferenceId",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "isPending_",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes32",
+                "name": "_referenceId",
+                "type": "bytes32"
+            }
+        ],
+        "name": "notifyCancel",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            },
+            {
+                "internalType": "bytes32",
+                "name": "_referenceId",
+                "type": "bytes32"
+            }
+        ],
+        "name": "notifySettle",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes",
+                "name": "_actionData",
+                "type": "bytes"
+            }
+        ],
+        "name": "receiveCallFromVault",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }
+]
