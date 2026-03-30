@@ -2390,19 +2390,21 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
   if (type.label == 'GMX_V2_LEVERAGE_TRADING') {
     if (actionId == GMXV2LeverageTradingActionId.CreateOrder) {
       // The shape of the tuple is different after the lib contracts were updated
-      // We first try to decode the tuple with the old shape, if that fails we try the new shape
-      let firstDecodeSuccessful = true;
+      // We first try to decode the tuple with the new shape, if that fails we try the old shape
+      // Important: the new (longer) shape must be tried first, because the old (shorter) shape
+      // can silently succeed on new-format data (extra field inserted in the middle, not appended)
+      let newDecodeSuccessful = true;
 
       let decoded = ethereum.decode(
-        '(tuple(address,address,uint256,uint256,uint256,uint256,uint256,uint256,uint8,uint8,bool,address,bool))',
+        '(tuple(address,address,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint8,uint8,bool,address,bool))',
         event.params.actionArgs,
       );
 
       if (decoded == null) {
-        firstDecodeSuccessful = false;
+        newDecodeSuccessful = false;
 
         decoded = ethereum.decode(
-          '(tuple(address,address,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint8,uint8,bool,address,bool))',
+          '(tuple(address,address,uint256,uint256,uint256,uint256,uint256,uint256,uint8,uint8,bool,address,bool))',
           event.params.actionArgs,
         );
 
@@ -2417,14 +2419,14 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
       let orderType: BigInt;
       let isLong: boolean;
       let exchangeRouter: Address;
-      if (firstDecodeSuccessful) {
-        orderType = innerTuple[8].toBigInt();
-        isLong = innerTuple[10].toBoolean();
-        exchangeRouter = innerTuple[11].toAddress();
-      } else {
+      if (newDecodeSuccessful) {
         orderType = innerTuple[9].toBigInt();
         isLong = innerTuple[11].toBoolean();
         exchangeRouter = innerTuple[12].toAddress();
+      } else {
+        orderType = innerTuple[8].toBigInt();
+        isLong = innerTuple[10].toBoolean();
+        exchangeRouter = innerTuple[11].toAddress();
       }
 
       let wethAsset = ensureAsset(wethTokenAddress);
@@ -2477,19 +2479,21 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
     if (actionId == GMXV2LeverageTradingActionId.UpdateOrder) {
       // The shape of the tuple is different after the lib contracts were updated
-      // We first try to decode the tuple with the old shape, if that fails we try the new shape
-      let firstDecodeSuccessful = true;
+      // We first try to decode the tuple with the new shape, if that fails we try the old shape
+      // Important: the new (longer) shape must be tried first, because the old (shorter) shape
+      // can silently succeed on new-format data (extra field inserted in the middle, not appended)
+      let newDecodeSuccessful = true;
 
       let decoded = ethereum.decode(
-        '(tuple(bytes32,uint256,uint256,uint256,uint256,bool,uint256,address))',
+        '(tuple(bytes32,uint256,uint256,uint256,uint256,uint256,bool,uint256,address))',
         event.params.actionArgs,
       );
 
       if (decoded == null) {
-        firstDecodeSuccessful = false;
+        newDecodeSuccessful = false;
 
         decoded = ethereum.decode(
-          '(tuple(bytes32,uint256,uint256,uint256,uint256,uint256,bool,uint256,address))',
+          '(tuple(bytes32,uint256,uint256,uint256,uint256,bool,uint256,address))',
           event.params.actionArgs,
         );
 
@@ -2505,12 +2509,12 @@ export function handleCallOnExternalPositionExecutedForFund(event: CallOnExterna
 
       let executionFeeIncrease: BigDecimal;
       let exchangeRouter: Address;
-      if (firstDecodeSuccessful) {
-        executionFeeIncrease = toBigDecimal(innerTuple[6].toBigInt(), wethAsset.decimals);
-        exchangeRouter = innerTuple[7].toAddress();
-      } else {
+      if (newDecodeSuccessful) {
         executionFeeIncrease = toBigDecimal(innerTuple[7].toBigInt(), wethAsset.decimals);
         exchangeRouter = innerTuple[8].toAddress();
+      } else {
+        executionFeeIncrease = toBigDecimal(innerTuple[6].toBigInt(), wethAsset.decimals);
+        exchangeRouter = innerTuple[7].toAddress();
       }
 
       let orderKey = innerTuple[0].toBytes();
